@@ -56,13 +56,13 @@ namespace iText.Pdfua.Checkers {
         public virtual void PuaValueInLayoutTest() {
             String filename = "puaValueInLayoutTest";
             UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
-            framework.AddSuppliers(new _Generator_75());
+            framework.AddSuppliers(new _Generator_73());
             framework.AssertBothFail(filename, PdfUAExceptionMessageConstants.PUA_CONTENT_WITHOUT_ALT, PdfUAConformance
                 .PDF_UA_2);
         }
 
-        private sealed class _Generator_75 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_75() {
+        private sealed class _Generator_73 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_73() {
             }
 
             public IBlockElement Generate() {
@@ -90,8 +90,7 @@ namespace iText.Pdfua.Checkers {
                 canvas.EndText();
             }
             );
-            framework.AssertBothFail(filename, PdfUAExceptionMessageConstants.PUA_CONTENT_WITHOUT_ALT, PdfUAConformance
-                .PDF_UA_2);
+            AssertResult(false, textRepresentation, filename, framework);
         }
 
         [NUnit.Framework.TestCaseSource("TextRepresentation")]
@@ -116,7 +115,7 @@ namespace iText.Pdfua.Checkers {
                 canvas.EndText();
             }
             );
-            framework.AssertBothValid(filename, PdfUAConformance.PDF_UA_2);
+            AssertResult(true, textRepresentation, filename, framework);
         }
 
         [NUnit.Framework.TestCaseSource("TextRepresentation")]
@@ -141,7 +140,7 @@ namespace iText.Pdfua.Checkers {
                 canvas.EndText();
             }
             );
-            framework.AssertBothValid(filename, PdfUAConformance.PDF_UA_2);
+            AssertResult(true, textRepresentation, filename, framework);
         }
 
         [NUnit.Framework.TestCaseSource("TextRepresentation")]
@@ -165,7 +164,7 @@ namespace iText.Pdfua.Checkers {
                 canvas.EndText();
             }
             );
-            framework.AssertBothValid(filename, PdfUAConformance.PDF_UA_2);
+            AssertResult(true, textRepresentation, filename, framework);
         }
 
         [NUnit.Framework.TestCaseSource("TextRepresentation")]
@@ -189,7 +188,7 @@ namespace iText.Pdfua.Checkers {
                 canvas.EndText();
             }
             );
-            framework.AssertBothValid(filename, PdfUAConformance.PDF_UA_2);
+            AssertResult(true, textRepresentation, filename, framework);
         }
 
         [NUnit.Framework.TestCaseSource("TextRepresentation")]
@@ -227,8 +226,25 @@ namespace iText.Pdfua.Checkers {
                 canvasOnPageTwo.EndText();
             }
             );
-            framework.AssertBothFail(filename, PdfUAExceptionMessageConstants.PUA_CONTENT_WITHOUT_ALT, PdfUAConformance
-                .PDF_UA_2);
+            AssertResult(false, textRepresentation, filename, framework);
+        }
+
+        private void AssertResult(bool expectedValid, String textRepresentation, String filename, UaValidationTestFramework
+             framework) {
+            if (expectedValid) {
+                framework.AssertBothValid(filename, PdfUAConformance.PDF_UA_2);
+            }
+            else {
+                if ("array".Equals(textRepresentation)) {
+                    // In case of "array" PdfCanvas#showText(PdfArray) is used. In this method we don't have this check, because
+                    // of the complications regarding not symbolic fonts.
+                    framework.AssertOnlyVeraPdfFail(filename, PdfUAConformance.PDF_UA_2);
+                }
+                else {
+                    framework.AssertBothFail(filename, PdfUAExceptionMessageConstants.PUA_CONTENT_WITHOUT_ALT, PdfUAConformance
+                        .PDF_UA_2);
+                }
+            }
         }
 
         private void AddPuaTextToCanvas(PdfCanvas canvas, String textRepresentation, PdfFont font) {

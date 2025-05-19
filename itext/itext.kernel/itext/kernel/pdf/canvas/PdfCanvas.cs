@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using iText.Commons.Datastructures;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
@@ -818,15 +817,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 throw new PdfException(KernelExceptionMessageConstant.FONT_AND_SIZE_MUST_BE_SET_BEFORE_WRITING_ANY_TEXT, currentGs
                     );
             }
-            // Take text part to process
-            StringBuilder decodedText = new StringBuilder();
-            foreach (PdfObject obj in textArray) {
-                if (obj is PdfString) {
-                    decodedText.Append(currentGs.GetFont().Decode((PdfString)obj));
-                }
-            }
-            CheckTextOnAddition(decodedText.ToString());
-            document.CheckIsoConformance(new FontValidationContext(decodedText.ToString(), currentGs.GetFont()));
             contentStream.GetOutputStream().WriteBytes(ByteUtils.GetIsoBytes("["));
             foreach (PdfObject obj in textArray) {
                 if (obj.IsString()) {

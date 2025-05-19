@@ -34,7 +34,6 @@ using iText.Layout;
 using iText.Layout.Element;
 using iText.Pdfa.Exceptions;
 using iText.Test;
-using iText.Test.Attributes;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
@@ -325,8 +324,6 @@ namespace iText.Pdfa {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, Count = 6)]
-        [NUnit.Framework.Ignore("DEVSIX-9125")]
         public virtual void PdfArrayWithUndefinedGlyphsTest() {
             String outPdf = DESTINATION_FOLDER + "pdfArrayWithUndefinedGlyphs.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
@@ -341,10 +338,8 @@ namespace iText.Pdfa {
             pdfArray.Add(new PdfString("ABC"));
             pdfArray.Add(new PdfNumber(1));
             pdfArray.Add(new PdfString("\u898B\u7A4D\u3082\u308A"));
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => canvas.ShowText(pdfArray
-                ));
-            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                , e.Message);
+            // PdfCanvas#showText(PdfArray) doesn't contain any checks.
+            NUnit.Framework.Assert.DoesNotThrow(() => canvas.ShowText(pdfArray));
         }
 
         [NUnit.Framework.Test]
