@@ -58,13 +58,13 @@ namespace iText.Kernel.Utils.Checkers {
 
         /// <summary>Character checker which performs check of passed symbol against the font.</summary>
         public interface CharacterChecker {
-            /// <summary>Checks passed symbol against the font</summary>
+            /// <summary>Checks passed symbol against the font.</summary>
             /// <param name="ch">character to check</param>
             /// <param name="font">font to check</param>
             /// <returns>
             /// 
             /// <see langword="true"/>
-            /// if check passes, otherwise
+            /// if font doesn't contain passed symbol or this symbol is invalid, otherwise
             /// <see langword="false"/>
             /// </returns>
             bool Check(int ch, PdfFont font);

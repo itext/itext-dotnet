@@ -90,7 +90,6 @@ namespace iText.Pdfua.Checkers {
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    // TODO DEVSIX-8242 PDF/UA-2 checks
                     framework.AssertOnlyITextFail("imageWithEmptyAltDescription", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT
                         , pdfUAConformance);
                 }
@@ -111,12 +110,12 @@ namespace iText.Pdfua.Checkers {
                 root.AddRoleMapping("CustomImage", StandardRoles.FIGURE);
             }
             );
-            framework.AddSuppliers(new _Generator_128());
+            framework.AddSuppliers(new _Generator_127());
             framework.AssertBothValid("imageWithCustomRoleOk", pdfUAConformance);
         }
 
-        private sealed class _Generator_128 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_128() {
+        private sealed class _Generator_127 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_127() {
             }
 
             public IBlockElement Generate() {
@@ -143,12 +142,12 @@ namespace iText.Pdfua.Checkers {
                 root.AddRoleMapping("CustomImage2", "CustomImage");
             }
             );
-            framework.AddSuppliers(new _Generator_156());
+            framework.AddSuppliers(new _Generator_155());
             framework.AssertBothValid("imageWithDoubleMapping", pdfUAConformance);
         }
 
-        private sealed class _Generator_156 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_156() {
+        private sealed class _Generator_155 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_155() {
             }
 
             public IBlockElement Generate() {
@@ -173,12 +172,12 @@ namespace iText.Pdfua.Checkers {
                 root.AddRoleMapping("CustomImage", StandardRoles.FIGURE);
             }
             );
-            framework.AddSuppliers(new _Generator_182());
+            framework.AddSuppliers(new _Generator_181());
             framework.AssertBothFail("imageWithCustomRoleAndNoDescription", pdfUAConformance);
         }
 
-        private sealed class _Generator_182 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_182() {
+        private sealed class _Generator_181 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_181() {
             }
 
             public IBlockElement Generate() {
@@ -204,12 +203,12 @@ namespace iText.Pdfua.Checkers {
                 root.AddRoleMapping("CustomImage2", "CustomImage");
             }
             );
-            framework.AddSuppliers(new _Generator_210());
+            framework.AddSuppliers(new _Generator_209());
             framework.AssertBothFail("imageCustomDoubleMapping_Throws", pdfUAConformance);
         }
 
-        private sealed class _Generator_210 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_210() {
+        private sealed class _Generator_209 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_209() {
             }
 
             public IBlockElement Generate() {

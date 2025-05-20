@@ -29,6 +29,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Navigation;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -271,6 +272,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_splitLinkTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
+            pdfDocument.SetTagged();
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com");
             PdfLinkAnnotation annotation = new PdfLinkAnnotation(new Rectangle(1, 1)).SetAction(action);
             Link linkByAnnotation = new Link(LONG_TEXT, annotation);
@@ -286,8 +288,10 @@ namespace iText.Layout {
         public virtual void LinkAnnotationOnDivSplitTest01() {
             String outFileName = destinationFolder + "linkAnnotationOnDivSplitTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_linkAnnotationOnDivSplitTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName, new WriterProperties().SetPdfVersion(
+                PdfVersion.PDF_2_0)));
             Document doc = new Document(pdfDocument);
+            pdfDocument.SetTagged();
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com");
             PdfLinkAnnotation annotation = new PdfLinkAnnotation(new Rectangle(1, 1)).SetAction(action);
             Div div = new Div().SetHeight(2000).SetBackgroundColor(ColorConstants.RED);
@@ -361,6 +365,25 @@ namespace iText.Layout {
             pdfDoc.GetPage(2).Flush();
             doc.Add(text);
             doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DestinationToFlushedPageTest() {
+            String outFileName = destinationFolder + "destinationToFlushedPage.pdf";
+            String cmpFileName = sourceFolder + "cmp_destinationToFlushedPage.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)))) {
+                using (Document doc = new Document(pdfDoc)) {
+                    pdfDoc.SetTagged();
+                    doc.Add(new Paragraph("text")).Add(new AreaBreak());
+                    pdfDoc.GetPage(1).Flush();
+                    Link link = new Link("Goto page 1", PdfExplicitDestination.CreateXYZ(pdfDoc.GetPage(1), 36f, 806f, 0f));
+                    link.GetAccessibilityProperties().SetRole(StandardRoles.P);
+                    doc.Add(new Paragraph(link));
+                }
+            }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
