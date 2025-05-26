@@ -41,8 +41,8 @@ namespace iText.Forms.Xfa
 		/// <summary>The data to do a search from the bottom hierarchy.</summary>
 		protected internal IDictionary<String, InverseStore> inverseSearch;
 
-		/// <summary>A stack to be used when parsing.</summary>
-		protected internal Stack<String> stack;
+		/// <summary>A som parts list in LIFO order as encountered when parsing dataset.</summary>
+		protected internal List<String> somParts;
 
 		/// <summary>A temporary store for the repetition count.</summary>
 		protected internal int anform;
@@ -97,31 +97,20 @@ namespace iText.Forms.Xfa
 		}
 
 		/// <summary>
-		/// Outputs the stack as the sequence of elements separated
+		/// Outputs the som parts list as the sequence of elements separated
 		/// by '.'.
 		/// </summary>
-		/// <returns>the stack as the sequence of elements separated by '.'</returns>
+		/// <returns>the som name</returns>
 		protected internal virtual String PrintStack()
 		{
-			if (stack.Count == 0)
+			if (somParts.Count == 0)
 			{
 				return "";
 			}
-
-            IList<string> temp = new List<string>();
-
-            while ( stack.Count > 0 )
-            {
-                temp.Add(stack.Pop());
-            }
-
 			StringBuilder s = new StringBuilder();
-
-            for ( int k = temp.Count - 1; k >= 0; --k )
+			for ( int k = 0; k < somParts.Count; ++k )
 			{
-                string name = temp.ElementAt(k);
-                s.Append('.').Append(name);
-                stack.Push(name);
+                s.Append('.').Append(somParts.ElementAt(k));
 			}
 
 			return s.ToString().Substring(1);
@@ -155,29 +144,29 @@ namespace iText.Forms.Xfa
 		}
 
 		/// <summary>Adds a SOM name to the search node chain.</summary>
-		/// <param name="unstack">the SOM name</param>
-		public virtual void InverseSearchAdd(String unstack)
+		/// <param name="somName">the SOM name</param>
+		public virtual void InverseSearchAdd(String somName)
 		{
-			InverseSearchAdd(inverseSearch, stack, unstack);
+			InverseSearchAdd(inverseSearch, somParts, somName);
 		}
 
 		/// <summary>Adds a SOM name to the search node chain.</summary>
 		/// <param name="inverseSearch">the start point</param>
-		/// <param name="stack">the stack with the separated SOM parts</param>
-		/// <param name="unstack">the full name</param>
+		/// <param name="somParts">the list with the separated SOM parts in LIFO order</param>
+		/// <param name="somName">the full name</param>
 		public static void InverseSearchAdd(IDictionary<String, InverseStore> inverseSearch
-			, Stack<String> stack, String unstack)
+			, List<String> somParts, String somName)
 		{
-			String last = stack.Peek();
+			String last = somParts[somParts.Count - 1];
 			InverseStore store = inverseSearch.Get(last);
 			if (store == null)
 			{
 				store = new InverseStore();
 				inverseSearch[last] = store;
 			}
-			for (int k = stack.Count - 2; k >= 0; --k)
+			for (int k = somParts.Count - 2; k >= 0; --k)
 			{
-				last = stack.ElementAt(k);
+				last = somParts.ElementAt(k);
 				InverseStore store2;
 				int idx = store.part.IndexOf(last);
 				if (idx < 0)
@@ -193,7 +182,7 @@ namespace iText.Forms.Xfa
 				store = store2;
 			}
 			store.part.Add("");
-			store.follow.Add(unstack);
+			store.follow.Add(somName);
 		}
 
 		/// <summary>Searches the SOM hierarchy from the bottom.</summary>
@@ -230,13 +219,13 @@ namespace iText.Forms.Xfa
 		/// <summary>Splits a SOM name in the individual parts.</summary>
 		/// <param name="name">the full SOM name</param>
 		/// <returns>the split name</returns>
-		public static Stack<String> SplitParts(String name)
+		public static List<String> SplitParts(String name)
 		{
 			while (name.StartsWith("."))
 			{
 				name = name.Substring(1);
 			}
-			Stack<String> parts = new Stack<String>();
+			List<String> parts = new List<String>();
 			int last = 0;
 			int pos = 0;
 			String part;
@@ -268,7 +257,7 @@ namespace iText.Forms.Xfa
 				{
 					part += "[0]";
 				}
-				parts.Push(part);
+				parts.Add(part);
 				last = pos + 1;
 			}
 			part = name.Substring(last);
@@ -276,7 +265,7 @@ namespace iText.Forms.Xfa
 			{
 				part += "[0]";
 			}
-			parts.Push(part);
+			parts.Add(part);
 			return parts;
 		}
 
