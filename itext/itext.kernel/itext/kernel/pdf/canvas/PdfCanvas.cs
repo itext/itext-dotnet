@@ -974,53 +974,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>a list of double[] with the bezier curves.</returns>
         public static IList<double[]> BezierArc(double x1, double y1, double x2, double y2, double startAng, double
              extent) {
-            double tmp;
-            if (x1 > x2) {
-                tmp = x1;
-                x1 = x2;
-                x2 = tmp;
-            }
-            if (y2 > y1) {
-                tmp = y1;
-                y1 = y2;
-                y2 = tmp;
-            }
-            double fragAngle;
-            int Nfrag;
-            if (Math.Abs(extent) <= 90f) {
-                fragAngle = extent;
-                Nfrag = 1;
-            }
-            else {
-                Nfrag = (int)Math.Ceiling(Math.Abs(extent) / 90f);
-                fragAngle = extent / Nfrag;
-            }
-            double x_cen = (x1 + x2) / 2f;
-            double y_cen = (y1 + y2) / 2f;
-            double rx = (x2 - x1) / 2f;
-            double ry = (y2 - y1) / 2f;
-            double halfAng = (fragAngle * Math.PI / 360.0);
-            double kappa = Math.Abs(4.0 / 3.0 * (1.0 - Math.Cos(halfAng)) / Math.Sin(halfAng));
-            IList<double[]> pointList = new List<double[]>();
-            for (int iter = 0; iter < Nfrag; ++iter) {
-                double theta0 = ((startAng + iter * fragAngle) * Math.PI / 180.0);
-                double theta1 = ((startAng + (iter + 1) * fragAngle) * Math.PI / 180.0);
-                double cos0 = Math.Cos(theta0);
-                double cos1 = Math.Cos(theta1);
-                double sin0 = Math.Sin(theta0);
-                double sin1 = Math.Sin(theta1);
-                if (fragAngle > 0.0) {
-                    pointList.Add(new double[] { x_cen + rx * cos0, y_cen - ry * sin0, x_cen + rx * (cos0 - kappa * sin0), y_cen
-                         - ry * (sin0 + kappa * cos0), x_cen + rx * (cos1 + kappa * sin1), y_cen - ry * (sin1 - kappa * cos1), 
-                        x_cen + rx * cos1, y_cen - ry * sin1 });
-                }
-                else {
-                    pointList.Add(new double[] { x_cen + rx * cos0, y_cen - ry * sin0, x_cen + rx * (cos0 + kappa * sin0), y_cen
-                         - ry * (sin0 - kappa * cos0), x_cen + rx * (cos1 - kappa * sin1), y_cen - ry * (sin1 + kappa * cos1), 
-                        x_cen + rx * cos1, y_cen - ry * sin1 });
-                }
-            }
-            return pointList;
+            return Bezier.BezierArc(x1, y1, x2, y2, startAng, extent);
         }
 
         /// <summary>Draws a rectangle.</summary>
