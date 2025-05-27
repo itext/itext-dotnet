@@ -443,6 +443,9 @@ namespace iText.Kernel.Geom {
             NUnit.Framework.Assert.IsTrue(PageSize.A4.EqualsWithEpsilon(page.GetPageSize()));
             // Test rectangle
             Rectangle testRectangle = new Rectangle(200, 200, 100, 200);
+            Rectangle testRectangle2 = new Rectangle(20, 500, 100, 50);
+            Rectangle testRectangle3 = new Rectangle(170, 500, 100, 50);
+            Rectangle testRectangle4 = new Rectangle(320, 500, 100, 50);
             NUnit.Framework.Assert.AreEqual(0, page.GetRotation());
             NUnit.Framework.Assert.IsTrue(new Rectangle(200, 200, 100, 200).EqualsWithEpsilon(Rectangle.GetRectangleOnRotatedPage
                 (testRectangle, page)));
@@ -458,6 +461,12 @@ namespace iText.Kernel.Geom {
             NUnit.Framework.Assert.AreEqual(270, page.GetRotation());
             NUnit.Framework.Assert.IsTrue(new Rectangle(200, 542, 200, 100).EqualsWithEpsilon(Rectangle.GetRectangleOnRotatedPage
                 (testRectangle, page)));
+            NUnit.Framework.Assert.IsTrue(new Rectangle(500, 722, 50, 100).EqualsWithEpsilon(Rectangle.GetRectangleOnRotatedPage
+                (testRectangle2, page)));
+            NUnit.Framework.Assert.IsTrue(new Rectangle(500, 572, 50, 100).EqualsWithEpsilon(Rectangle.GetRectangleOnRotatedPage
+                (testRectangle3, page)));
+            NUnit.Framework.Assert.IsTrue(new Rectangle(500, 422, 50, 100).EqualsWithEpsilon(Rectangle.GetRectangleOnRotatedPage
+                (testRectangle4, page)));
             page.SetRotation(360);
             NUnit.Framework.Assert.AreEqual(0, page.GetRotation());
             NUnit.Framework.Assert.IsTrue(new Rectangle(200, 200, 100, 200).EqualsWithEpsilon(Rectangle.GetRectangleOnRotatedPage
