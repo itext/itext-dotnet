@@ -92,9 +92,18 @@ namespace iText.Signatures {
         internal static IMessageDigest GetMessageDigest(String hashAlgorithm, IExternalDigest externalDigest) {
             return externalDigest.GetMessageDigest(hashAlgorithm);
         }
+        
+        internal static Stream GetHttpResponse(Uri urlt)
+        {
+            return GetHttpResponse(urlt, -1);
+        }
 
-        internal static Stream GetHttpResponse(Uri urlt) {
+        internal static Stream GetHttpResponse(Uri urlt, int connectionTimeout) {
             HttpWebRequest con = (HttpWebRequest) WebRequest.Create(urlt);
+            if (connectionTimeout >= 0)
+            {
+                con.Timeout = connectionTimeout;
+            }
             HttpWebResponse response = (HttpWebResponse) con.GetResponse();
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new PdfException(

@@ -154,6 +154,7 @@ namespace iText.Signatures.Sign {
             )]
         public virtual void UnreachableCrlDistributionPointFromCertChainTest() {
             CrlClientOnline crlClientOnline = new CrlClientOnline();
+            crlClientOnline.SetConnectionTimeout(2000);
             IX509Certificate checkCert = new X509MockCertificate();
             ICollection<byte[]> bytes = crlClientOnline.GetEncoded(checkCert, "http://www.example.com/crl/test.crl");
             NUnit.Framework.Assert.IsTrue(bytes.IsEmpty());

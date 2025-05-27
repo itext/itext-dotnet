@@ -21,6 +21,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 using System;
+using System.Threading;
 using NUnit.Framework;
 
 namespace iText.Test {
@@ -35,6 +36,50 @@ namespace iText.Test {
         public static void AssertThrows(string message, Type expectedThrowable, TestDelegate runnable)
         {
             Assert.That(runnable, Throws.InstanceOf(expectedThrowable).With.Message.EqualTo(message));
+        }
+
+        /// <summary>
+        /// Assert that the assertion passed within the timeout.
+        /// </summary>
+        /// <param name="assertion">Callback to the actuals asserts to be safeguarded.</param>
+        /// <param name="timeout">The maximum tilme it can take before passing the assertions.</param>
+        public static void AssertPassedWithinTimeout(Action assertion, TimeSpan timeout) 
+        {
+            // Pass 1 millis sleepTime to force thread yield
+            AssertPassedWithinTimeout(assertion, timeout, TimeSpan.FromMilliseconds(1)); 
+        }
+
+        /// <summary>
+        /// Assert that the assertion passed within the timeout.
+        /// </summary>
+        /// <param name="assertion">Callback to the actuals asserts to be safeguarded.</param>
+        /// <param name="timeout">The maximum tilme it can take before passing the assertions.</param>
+        /// <param name="sleepTime">The time to sleep between polls.</param>
+        public static void AssertPassedWithinTimeout(Action assertion, TimeSpan timeout, TimeSpan sleepTime)
+        {               
+            int  sleepTimeInMillies = (int) sleepTime.TotalMilliseconds;
+            var watch = System.Diagnostics.Stopwatch.StartNew();            
+            
+            var elapsedMs = watch.ElapsedMilliseconds;
+            bool passed = false;            
+             while (!passed) {
+                try
+                {
+                    assertion.Invoke();
+                    passed = true;
+                }
+                catch (AssertionException e)
+                {
+                    if (timeout.TotalMilliseconds < watch.ElapsedMilliseconds)
+                    {
+                        throw e;
+                    }
+                    Thread.Sleep(sleepTimeInMillies);
+                    //ignore assertion failure if timeout not spent.                                                                                       
+                }
+                
+            }
+            watch.Stop();
         }
     }
 }
