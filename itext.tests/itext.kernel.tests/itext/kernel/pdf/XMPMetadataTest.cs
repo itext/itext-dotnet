@@ -32,9 +32,9 @@ namespace iText.Kernel.Pdf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class XMPMetadataTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/XmpWriterTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/XMPMetadataTest/";
 
-        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/pdf/XmpWriterTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/pdf/XMPMetadataTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -288,6 +288,43 @@ namespace iText.Kernel.Pdf {
                  + "   </rdf:RDF>\n" + "</x:xmpmeta>";
             NUnit.Framework.Assert.Catch(typeof(XMPException), () => XMPMetaFactory.ParseFromBuffer(xmp.GetBytes(System.Text.Encoding
                 .UTF8)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReadDocumentWithControlCharactersInXMPMetadata() {
+            String src = SOURCE_FOLDER + "docWithControlCharactersInXmp.pdf";
+            using (PdfDocument document = new PdfDocument(new PdfReader(src), new PdfWriter(new MemoryStream()), new StampingProperties
+                ())) {
+                NUnit.Framework.Assert.AreEqual(PdfConformance.PDF_A_3A, document.GetConformance());
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReadDocumentWithBrokenControlCharactersInXMPMetadata() {
+            String src = SOURCE_FOLDER + "docWithBrokenControlCharactersInXmp.pdf";
+            using (PdfDocument document = new PdfDocument(new PdfReader(src), new PdfWriter(new MemoryStream()), new StampingProperties
+                ())) {
+                NUnit.Framework.Assert.AreEqual(PdfConformance.PDF_A_3A, document.GetConformance());
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReadDocumentWithInvalidConformance() {
+            String src = SOURCE_FOLDER + "docWithInvalidConformance.pdf";
+            using (PdfDocument document = new PdfDocument(new PdfReader(src), new PdfWriter(new MemoryStream()), new StampingProperties
+                ())) {
+                NUnit.Framework.Assert.AreEqual(PdfConformance.PDF_NONE_CONFORMANCE, document.GetConformance());
+            }
+        }
+
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA)]
+        [NUnit.Framework.Test]
+        public virtual void ReadDocumentWithInvalidXMPMetadata() {
+            String src = SOURCE_FOLDER + "docWithInvalidMetadata.pdf";
+            using (PdfDocument document = new PdfDocument(new PdfReader(src), new PdfWriter(new MemoryStream()), new StampingProperties
+                ())) {
+                NUnit.Framework.Assert.AreEqual(PdfConformance.PDF_NONE_CONFORMANCE, document.GetConformance());
+            }
         }
     }
 }
