@@ -173,7 +173,6 @@ namespace iText.Signatures.Validation {
         private ValidationReport Validate(ValidationReport result, ValidationContext context, IX509Certificate certificate
             , DateTime validationDate, int certificateChainSize) {
             ValidationContext localContext = context.SetValidatorContext(ValidatorContext.CERTIFICATE_CHAIN_VALIDATOR);
-            ValidateValidityPeriod(result, certificate, validationDate);
             ValidateRequiredExtensions(result, localContext, certificate, certificateChainSize);
             if (StopValidation(result, localContext)) {
                 return result;
@@ -183,6 +182,7 @@ namespace iText.Signatures.Validation {
                 .INFO))) {
                 return result;
             }
+            ValidateValidityPeriod(result, certificate, validationDate);
             ValidateRevocationData(result, localContext, certificate, validationDate);
             if (StopValidation(result, localContext)) {
                 return result;

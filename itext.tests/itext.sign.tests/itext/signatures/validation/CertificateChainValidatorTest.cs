@@ -137,7 +137,7 @@ namespace iText.Signatures.Validation {
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate signingCert = (IX509Certificate)certificateChain[0];
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
-            IssuingCertificateRetriever customRetriever = new _IssuingCertificateRetriever_190();
+            IssuingCertificateRetriever customRetriever = new _IssuingCertificateRetriever_191();
             ValidatorChainBuilder validatorChainBuilder = SetUpValidatorChain(certificateRetriever, properties, mockRevocationDataValidator
                 );
             validatorChainBuilder.WithIssuingCertificateRetrieverFactory(() => customRetriever);
@@ -150,8 +150,8 @@ namespace iText.Signatures.Validation {
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
         }
 
-        private sealed class _IssuingCertificateRetriever_190 : IssuingCertificateRetriever {
-            public _IssuingCertificateRetriever_190() {
+        private sealed class _IssuingCertificateRetriever_191 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_191() {
             }
 
             protected internal override Stream GetIssuerCertByURI(String uri) {
@@ -170,7 +170,7 @@ namespace iText.Signatures.Validation {
             IX509Certificate signingCert = (IX509Certificate)certificateChain[0];
             IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
-            IssuingCertificateRetriever customRetriever = new _IssuingCertificateRetriever_218();
+            IssuingCertificateRetriever customRetriever = new _IssuingCertificateRetriever_219();
             ValidatorChainBuilder validatorChainBuilder = SetUpValidatorChain(certificateRetriever, properties, mockRevocationDataValidator
                 );
             validatorChainBuilder.WithIssuingCertificateRetrieverFactory(() => customRetriever);
@@ -185,8 +185,8 @@ namespace iText.Signatures.Validation {
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
         }
 
-        private sealed class _IssuingCertificateRetriever_218 : IssuingCertificateRetriever {
-            public _IssuingCertificateRetriever_218() {
+        private sealed class _IssuingCertificateRetriever_219 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_219() {
             }
 
             protected internal override Stream GetIssuerCertByURI(String uri) {
@@ -800,6 +800,26 @@ namespace iText.Signatures.Validation {
             return MessageFormatUtil.Format(CertificateChainValidator.EXTENSION_MISSING, MessageFormatUtil.Format(KeyUsageExtension
                 .EXPECTED_VALUE, expectedKeyUsage) + MessageFormatUtil.Format(KeyUsageExtension.ACTUAL_VALUE, stringBuilder
                 .ToString()));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ValidityPeriodCheckTrustedCertificateTest() {
+            MockRevocationDataValidator mockRevocationDataValidator = new MockRevocationDataValidator();
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties properties = new SignatureValidationProperties();
+            String chainName = CERTS_SRC + "chain.pem";
+            //certificate expiration date year 2400
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(chainName)[0];
+            ValidatorChainBuilder validatorChainBuilder = SetUpValidatorChain(certificateRetriever, properties, mockRevocationDataValidator
+                );
+            CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
+            certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList<IX509Certificate>(rootCert));
+            //validation year 2405
+            DateTime validationDate = new DateTime(13750537642000L);
+            ValidationReport report = validator.ValidateCertificate(baseContext, rootCert, validationDate);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
+                (0).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
+                .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
         }
     }
 }
