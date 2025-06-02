@@ -115,17 +115,17 @@ namespace iText.Layout.Properties {
         /// function.
         /// </summary>
         public class SingleTransform {
-            private float a;
+            private readonly float a;
 
-            private float b;
+            private readonly float b;
 
-            private float c;
+            private readonly float c;
 
-            private float d;
+            private readonly float d;
 
-            private UnitValue tx;
+            private readonly UnitValue e;
 
-            private UnitValue ty;
+            private readonly UnitValue f;
 
             /// <summary>
             /// Creates a default
@@ -137,8 +137,8 @@ namespace iText.Layout.Properties {
                 this.b = 0;
                 this.c = 0;
                 this.d = 1;
-                this.tx = new UnitValue(UnitValue.POINT, 0);
-                this.ty = new UnitValue(UnitValue.POINT, 0);
+                this.e = new UnitValue(UnitValue.POINT, 0);
+                this.f = new UnitValue(UnitValue.POINT, 0);
             }
 
             /// <summary>
@@ -146,19 +146,31 @@ namespace iText.Layout.Properties {
             /// <see cref="SingleTransform"/>
             /// instance.
             /// </summary>
+            /// <remarks>
+            /// Creates a
+            /// <see cref="SingleTransform"/>
+            /// instance.
+            /// <para />
+            /// Detailed explanation of
+            /// <c>[a b c d e f]</c>
+            /// parameters of transformation
+            /// matrix can be found in
+            /// <see cref="iText.Kernel.Geom.Matrix"/>
+            /// documentation.
+            /// </remarks>
             /// <param name="a">horizontal scaling</param>
             /// <param name="b">vertical skewing</param>
             /// <param name="c">horizontal skewing</param>
             /// <param name="d">vertical scaling</param>
-            /// <param name="tx">horizontal translation</param>
-            /// <param name="ty">vertical translation</param>
-            public SingleTransform(float a, float b, float c, float d, UnitValue tx, UnitValue ty) {
+            /// <param name="e">horizontal translation</param>
+            /// <param name="f">vertical translation</param>
+            public SingleTransform(float a, float b, float c, float d, UnitValue e, UnitValue f) {
                 this.a = a;
                 this.b = b;
                 this.c = c;
                 this.d = d;
-                this.tx = tx;
-                this.ty = ty;
+                this.e = e;
+                this.f = f;
             }
 
             /// <summary>Gets an array of values corresponding to transformation, i.e. scaling and skewing.</summary>
@@ -174,7 +186,7 @@ namespace iText.Layout.Properties {
             /// -s
             /// </returns>
             public virtual UnitValue[] GetUnitValues() {
-                return new UnitValue[] { tx, ty };
+                return new UnitValue[] { e, f };
             }
         }
     }

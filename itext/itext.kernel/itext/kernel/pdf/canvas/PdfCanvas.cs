@@ -337,14 +337,19 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         /// <summary>
-        /// Concatenates the 2x3 affine transformation matrix to the current matrix
-        /// in the content stream managed by this Canvas.
+        /// Concatenates the 2x3 affine transformation matrix to the current matrix in the
+        /// content stream managed by this Canvas.
         /// </summary>
         /// <remarks>
-        /// Concatenates the 2x3 affine transformation matrix to the current matrix
-        /// in the content stream managed by this Canvas.
-        /// Contrast with
-        /// <see cref="SetTextMatrix(iText.Kernel.Geom.AffineTransform)"/>
+        /// Concatenates the 2x3 affine transformation matrix to the current matrix in the
+        /// content stream managed by this Canvas.
+        /// <para />
+        /// Detailed explanation of
+        /// <c>[a b c d e f]</c>
+        /// parameters of transformation
+        /// matrix can be found in
+        /// <see cref="iText.Kernel.Geom.Matrix"/>
+        /// documentation.
         /// </remarks>
         /// <param name="a">operand 1,1 in the matrix.</param>
         /// <param name="b">operand 1,2 in the matrix.</param>
@@ -572,28 +577,30 @@ namespace iText.Kernel.Pdf.Canvas {
 
         /// <summary>Replaces the text matrix.</summary>
         /// <remarks>
-        /// Replaces the text matrix. Contrast with
-        /// <see cref="ConcatMatrix(iText.Kernel.Pdf.PdfArray)"/>
+        /// Replaces the text matrix.
+        /// <para />
+        /// Detailed explanation of
+        /// <c>[a b c d e f]</c>
+        /// parameters of transformation
+        /// matrix can be found in
+        /// <see cref="iText.Kernel.Geom.Matrix"/>
+        /// documentation.
         /// </remarks>
         /// <param name="a">operand 1,1 in the matrix.</param>
         /// <param name="b">operand 1,2 in the matrix.</param>
         /// <param name="c">operand 2,1 in the matrix.</param>
         /// <param name="d">operand 2,2 in the matrix.</param>
-        /// <param name="x">operand 3,1 in the matrix.</param>
-        /// <param name="y">operand 3,2 in the matrix.</param>
+        /// <param name="e">operand 3,1 in the matrix.</param>
+        /// <param name="f">operand 3,2 in the matrix.</param>
         /// <returns>current canvas.</returns>
-        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetTextMatrix(float a, float b, float c, float d, float x
-            , float y) {
+        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetTextMatrix(float a, float b, float c, float d, float e
+            , float f) {
             contentStream.GetOutputStream().WriteFloat(a).WriteSpace().WriteFloat(b).WriteSpace().WriteFloat(c).WriteSpace
-                ().WriteFloat(d).WriteSpace().WriteFloat(x).WriteSpace().WriteFloat(y).WriteSpace().WriteBytes(Tm);
+                ().WriteFloat(d).WriteSpace().WriteFloat(e).WriteSpace().WriteFloat(f).WriteSpace().WriteBytes(Tm);
             return this;
         }
 
         /// <summary>Replaces the text matrix.</summary>
-        /// <remarks>
-        /// Replaces the text matrix. Contrast with
-        /// <see cref="ConcatMatrix(iText.Kernel.Pdf.PdfArray)"/>
-        /// </remarks>
         /// <param name="transform">new textmatrix as transformation</param>
         /// <returns>current canvas</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetTextMatrix(AffineTransform transform) {
@@ -1658,6 +1665,13 @@ namespace iText.Kernel.Pdf.Canvas {
         /// from image and adds it to canvas.
         /// <para />
         /// The float arguments will be used in concatenating the transformation matrix as operands.
+        /// <para />
+        /// Detailed explanation of
+        /// <c>[a b c d e f]</c>
+        /// parameters of transformation
+        /// matrix can be found in
+        /// <see cref="iText.Kernel.Geom.Matrix"/>
+        /// documentation.
         /// </remarks>
         /// <param name="image">
         /// the image from which
@@ -1689,6 +1703,13 @@ namespace iText.Kernel.Pdf.Canvas {
         /// from image and adds it to canvas.
         /// <para />
         /// The float arguments will be used in concatenating the transformation matrix as operands.
+        /// <para />
+        /// Detailed explanation of
+        /// <c>[a b c d e f]</c>
+        /// parameters of transformation
+        /// matrix can be found in
+        /// <see cref="iText.Kernel.Geom.Matrix"/>
+        /// documentation.
         /// </remarks>
         /// <param name="image">
         /// the image from which
@@ -1807,6 +1828,13 @@ namespace iText.Kernel.Pdf.Canvas {
         /// to canvas.
         /// <para />
         /// The float arguments will be used in concatenating the transformation matrix as operands.
+        /// <para />
+        /// Detailed explanation of
+        /// <c>[a b c d e f]</c>
+        /// parameters of transformation
+        /// matrix can be found in
+        /// <see cref="iText.Kernel.Geom.Matrix"/>
+        /// documentation.
         /// </remarks>
         /// <param name="xObject">the xObject to add</param>
         /// <param name="a">an element of the transformation matrix</param>
@@ -2087,6 +2115,18 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <c>PdfImageXObject</c>
         /// to canvas.
         /// </summary>
+        /// <remarks>
+        /// Adds
+        /// <c>PdfImageXObject</c>
+        /// to canvas.
+        /// <para />
+        /// Detailed explanation of
+        /// <c>[a b c d e f]</c>
+        /// parameters of transformation
+        /// matrix can be found in
+        /// <see cref="iText.Kernel.Geom.Matrix"/>
+        /// documentation.
+        /// </remarks>
         /// <param name="imageXObject">
         /// the
         /// <c>PdfImageXObject</c>
@@ -2145,6 +2185,18 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
         /// to canvas.
         /// </summary>
+        /// <remarks>
+        /// Adds
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// to canvas.
+        /// <para />
+        /// Detailed explanation of
+        /// <c>[a b c d e f]</c>
+        /// parameters of transformation
+        /// matrix can be found in
+        /// <see cref="iText.Kernel.Geom.Matrix"/>
+        /// documentation.
+        /// </remarks>
         /// <param name="form">the formXObject to add</param>
         /// <param name="a">an element of the transformation matrix</param>
         /// <param name="b">an element of the transformation matrix</param>
@@ -2219,6 +2271,18 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
         /// to canvas.
         /// </summary>
+        /// <remarks>
+        /// Adds
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
+        /// to canvas.
+        /// <para />
+        /// Detailed explanation of
+        /// <c>[a b c d e f]</c>
+        /// parameters of transformation
+        /// matrix can be found in
+        /// <see cref="iText.Kernel.Geom.Matrix"/>
+        /// documentation.
+        /// </remarks>
         /// <param name="xObject">the xObject to add</param>
         /// <param name="a">an element of the transformation matrix</param>
         /// <param name="b">an element of the transformation matrix</param>
