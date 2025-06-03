@@ -41,6 +41,9 @@ namespace iText.StyledXmlParser.Exceptions {
         /// <summary>Message in case the font provider doesn't know about any fonts.</summary>
         public const String FontProviderContainsZeroFonts = "Font Provider contains zero fonts. At least one font shall be present";
 
+        /// <summary>The Constant UnsupportedEncodingException.</summary>
+        public const String UnsupportedEncodingException = "Unsupported encoding exception.";
+
         /// <summary>
         /// Creates a new
         /// <see cref="StyledXMLParserException"/>

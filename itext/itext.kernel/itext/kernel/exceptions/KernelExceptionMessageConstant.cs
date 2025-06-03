@@ -27,6 +27,8 @@ namespace iText.Kernel.Exceptions {
     public sealed class KernelExceptionMessageConstant {
         public const String ALGORITHM_IS_NOT_SUPPORTED = "Algorithm {0} is not supported.";
 
+        public const String ALREADY_CLOSED = "Already closed";
+
         public const String AMOUNT_OF_BYTES_LESS_THAN_ZERO = "Amount of bytes in the PDF document cannot be less than zero";
 
         public const String ANNOTATION_SHALL_HAVE_REFERENCE_TO_PAGE = "Annotation shall have reference to page.";
@@ -459,6 +461,8 @@ namespace iText.Kernel.Exceptions {
              + "to this document ({2}).";
 
         public const String PAGE_IS_NOT_SET_FOR_THE_PDF_TAG_STRUCTURE = "Page is not set for the pdf tag structure.";
+
+        public const String PASSED_BYTE_BUFFER_CAN_NOT_BE_NULL = "Passed byte buffer can not be null.";
 
         public const String PDF_DECRYPTION = "Exception occurred with PDF document decryption. One of the possible "
              + "reasons is wrong password or wrong public key certificate and private key.";

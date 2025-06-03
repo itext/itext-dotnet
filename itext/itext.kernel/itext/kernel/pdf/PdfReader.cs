@@ -1766,7 +1766,7 @@ namespace iText.Kernel.Pdf {
 
             public ReusableRandomAccessSource(ByteBuffer buffer) {
                 if (buffer == null) {
-                    throw new ArgumentException("Passed byte buffer can not be null.");
+                    throw new ArgumentException(KernelExceptionMessageConstant.PASSED_BYTE_BUFFER_CAN_NOT_BE_NULL);
                 }
                 this.buffer = buffer;
             }
@@ -1780,7 +1780,7 @@ namespace iText.Kernel.Pdf {
 
             public virtual int Get(long offset, byte[] bytes, int off, int len) {
                 if (buffer == null) {
-                    throw new InvalidOperationException(iText.IO.Exceptions.IoExceptionMessageConstant.ALREADY_CLOSED);
+                    throw new InvalidOperationException(KernelExceptionMessageConstant.ALREADY_CLOSED);
                 }
                 if (offset >= buffer.Size()) {
                     return -1;

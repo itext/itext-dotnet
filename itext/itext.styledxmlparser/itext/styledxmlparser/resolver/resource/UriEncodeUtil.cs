@@ -116,7 +116,7 @@ namespace iText.StyledXmlParser.Resolver.Resource
             BinaryWriter charArrayWriter = new BinaryWriter(new MemoryStream());
             if (enc == null)
             {
-                throw new StyledXMLParserException(IO.Exceptions.IoExceptionMessageConstant.UNSUPPORTED_ENCODING_EXCEPTION);
+                throw new StyledXMLParserException(StyledXMLParserException.UnsupportedEncodingException);
             }
             charset = EncodingUtil.GetEncoding(enc);
             int i = 0;
