@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 using iText.Kernel.Colors;
@@ -334,8 +335,9 @@ namespace iText.Layout {
             pdfDoc.GetPage(1).Flush();
             doc.Add(text);
             Paragraph customText = new Paragraph("Custom text");
-            customText.SetProperty(Property.DESTINATION, new Tuple2<String, PdfDictionary>("custom", linkAnnotation.GetAction
-                ()));
+            ICollection<Object> destinations = new HashSet<Object>();
+            destinations.Add(new Tuple2<String, PdfDictionary>("custom", linkAnnotation.GetAction()));
+            customText.SetProperty(Property.DESTINATION, destinations);
             doc.Add(customText);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -353,8 +355,9 @@ namespace iText.Layout {
             PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetAction(PdfAction.CreateGoTo
                 ("custom"));
             Paragraph customText = new Paragraph("Custom text");
-            customText.SetProperty(Property.DESTINATION, new Tuple2<String, PdfDictionary>("custom", linkAnnotation.GetAction
-                ()));
+            ICollection<Object> destinations = new HashSet<Object>();
+            destinations.Add(new Tuple2<String, PdfDictionary>("custom", linkAnnotation.GetAction()));
+            customText.SetProperty(Property.DESTINATION, destinations);
             doc.Add(customText);
             doc.Add(new AreaBreak());
             pdfDoc.GetPage(1).Flush();
@@ -365,6 +368,22 @@ namespace iText.Layout {
             pdfDoc.GetPage(2).Flush();
             doc.Add(text);
             doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinkWithSetDestinationTest() {
+            String outFileName = destinationFolder + "linkWithSetDestination.pdf";
+            String cmpFileName = sourceFolder + "cmp_linkWithSetDestination.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Link link = new Link("link", PdfAction.CreateGoTo("destination"));
+                document.Add(new Paragraph().Add(link));
+                document.Add(new AreaBreak());
+                Paragraph target = new Paragraph("target");
+                target.SetDestination("destination");
+                document.Add(target);
+            }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }

@@ -1931,46 +1931,51 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual void ApplyDestination(PdfDocument document) {
-            Object destination = this.GetProperty<Object>(Property.DESTINATION);
-            if (destination == null) {
+            ICollection<Object> destinations = this.GetProperty<ICollection<Object>>(Property.DESTINATION);
+            if (destinations == null) {
                 return;
             }
-            String destinationName = null;
-            PdfDictionary linkActionDict = null;
-            if (destination is String) {
-                destinationName = (String)destination;
-            }
-            else {
-                if (CHECK_TUPLE2_TYPE.GetType().Equals(destination.GetType())) {
-                    // 'If' above is the only autoportable way it seems
-                    Tuple2<String, PdfDictionary> destTuple = (Tuple2<String, PdfDictionary>)destination;
-                    destinationName = destTuple.GetFirst();
-                    linkActionDict = destTuple.GetSecond();
+            foreach (Object destination in destinations) {
+                String destinationName = null;
+                PdfDictionary linkActionDict = null;
+                if (destination == null) {
+                    continue;
                 }
-            }
-            if (destinationName != null) {
-                int pageNumber = occupiedArea.GetPageNumber();
-                if (pageNumber < 1 || pageNumber > document.GetNumberOfPages()) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                    String logMessageArg = "Property.DESTINATION, which specifies this element location as destination, see ElementPropertyContainer.setDestination.";
-                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN
-                        , logMessageArg));
-                    return;
+                if (destination is String) {
+                    destinationName = (String)destination;
                 }
-                PdfArray array = new PdfArray();
-                array.Add(document.GetPage(pageNumber).GetPdfObject());
-                array.Add(PdfName.XYZ);
-                array.Add(new PdfNumber(occupiedArea.GetBBox().GetX()));
-                array.Add(new PdfNumber(occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight()));
-                array.Add(new PdfNumber(0));
-                document.AddNamedDestination(destinationName, array.MakeIndirect(document));
-            }
-            bool isPdf20 = document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) >= 0;
-            if (linkActionDict != null && isPdf20 && document.IsTagged()) {
-                // Add structure destination for the action for tagged pdf 2.0
-                PdfStructElem structElem = GetCurrentStructElem(document);
-                PdfStructureDestination dest = PdfStructureDestination.CreateFit(structElem);
-                linkActionDict.Put(PdfName.SD, dest.GetPdfObject());
+                else {
+                    if (CHECK_TUPLE2_TYPE.GetType().Equals(destination.GetType())) {
+                        // 'If' above is the only autoportable way it seems
+                        Tuple2<String, PdfDictionary> destTuple = (Tuple2<String, PdfDictionary>)destination;
+                        destinationName = destTuple.GetFirst();
+                        linkActionDict = destTuple.GetSecond();
+                    }
+                }
+                if (destinationName != null) {
+                    int pageNumber = occupiedArea.GetPageNumber();
+                    if (pageNumber < 1 || pageNumber > document.GetNumberOfPages()) {
+                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                        String logMessageArg = "Property.DESTINATION, which specifies this element location as destination, " + "see ElementPropertyContainer.setDestination.";
+                        logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN
+                            , logMessageArg));
+                        return;
+                    }
+                    PdfArray array = new PdfArray();
+                    array.Add(document.GetPage(pageNumber).GetPdfObject());
+                    array.Add(PdfName.XYZ);
+                    array.Add(new PdfNumber(occupiedArea.GetBBox().GetX()));
+                    array.Add(new PdfNumber(occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight()));
+                    array.Add(new PdfNumber(0));
+                    document.AddNamedDestination(destinationName, array.MakeIndirect(document));
+                }
+                bool isPdf20 = document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) >= 0;
+                if (linkActionDict != null && isPdf20 && document.IsTagged()) {
+                    // Add structure destination for the action for tagged pdf 2.0
+                    PdfStructElem structElem = GetCurrentStructElem(document);
+                    PdfStructureDestination dest = PdfStructureDestination.CreateFit(structElem);
+                    linkActionDict.Put(PdfName.SD, dest.GetPdfObject());
+                }
             }
             DeleteProperty(Property.DESTINATION);
         }

@@ -939,7 +939,12 @@ namespace iText.Layout {
         /// <param name="destination">the destination name to be created</param>
         /// <returns>this Element.</returns>
         public virtual T SetDestination(String destination) {
-            SetProperty(Property.DESTINATION, destination);
+            ICollection<Object> existingDestinations = this.GetProperty<ICollection<Object>>(Property.DESTINATION);
+            if (existingDestinations == null) {
+                existingDestinations = new HashSet<Object>();
+            }
+            existingDestinations.Add(destination);
+            SetProperty(Property.DESTINATION, existingDestinations);
             return (T)(Object)this;
         }
 
