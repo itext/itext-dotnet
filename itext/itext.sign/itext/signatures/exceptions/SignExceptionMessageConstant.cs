@@ -151,6 +151,10 @@ namespace iText.Signatures.Exceptions {
 
         public const String CMS_MISSING_CERTIFICATES = "The certificate set must at least contains the signer certificate";
 
+        public const String FAILED_TO_READ_CERTIFICATE_BYTES_FROM_XML = "Failed to read certificate binary data from {0}.";
+
+        public const String FAILED_TO_RETRIEVE_CERTIFICATE = "Failed to retrieve certificates from binary data";
+
         private SignExceptionMessageConstant() {
         }
         // Private constructor will prevent the instantiation of this class directly
