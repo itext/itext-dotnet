@@ -2655,6 +2655,32 @@ namespace iText.Kernel.Pdf {
                 );
         }
 
+        [NUnit.Framework.Test]
+        public virtual void XrefStreamObjectPointsItselfTest() {
+            String fileName = SOURCE_FOLDER + "xrefObjPointsItself.pdf";
+            using (PdfReader pdfReader = new PdfReader(fileName)) {
+                Exception exception = NUnit.Framework.Assert.Catch(typeof(XrefCycledReferencesException), () => new PdfDocument
+                    (pdfReader));
+                // 2 0 R refers to 8 0 R, which refers to 8 0 R
+                NUnit.Framework.Assert.AreEqual(PdfReader.StrictnessLevel.LENIENT, pdfReader.GetStrictnessLevel());
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.XREF_STREAM_HAS_SELF_REFERENCED_OBJECT
+                    , 8), exception.Message);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XrefStreamObjectPointsLoopTest() {
+            String fileName = SOURCE_FOLDER + "xrefObjPointsLoop.pdf";
+            using (PdfReader pdfReader = new PdfReader(fileName)) {
+                Exception exception = NUnit.Framework.Assert.Catch(typeof(XrefCycledReferencesException), () => new PdfDocument
+                    (pdfReader));
+                // 2 0 R refers to 8 0 R, which refers to 7 0 R which refers to 2 0 R
+                NUnit.Framework.Assert.AreEqual(PdfReader.StrictnessLevel.LENIENT, pdfReader.GetStrictnessLevel());
+                NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.XREF_STREAM_HAS_SELF_REFERENCED_OBJECT
+                    , 2), exception.Message);
+            }
+        }
+
         private static PdfDictionary GetTestPdfDictionary() {
             Dictionary<PdfName, PdfObject> tmpMap = new Dictionary<PdfName, PdfObject>();
             tmpMap.Put(new PdfName("b"), new PdfName("c"));

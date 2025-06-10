@@ -667,6 +667,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String XREF_STREAM_HAS_CYCLED_REFERENCES = "Xref stream has cycled references. Prev pointer indicates an already visited xref stream.";
 
+        public const String XREF_STREAM_HAS_SELF_REFERENCED_OBJECT = "Xref stream has self referenced object. Objet {0} refers to itself.";
+
         public const String XREF_STRUCTURE_SIZE_EXCEEDED_THE_LIMIT = "Xref structure contains too many elements " 
             + "and may cause OOM exception. You can increase number of elements by setting custom " + "MemoryLimitsAwareHandler.";
 
