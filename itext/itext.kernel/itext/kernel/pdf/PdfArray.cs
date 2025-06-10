@@ -164,14 +164,33 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>Gets the size of the array.</summary>
+        /// <returns>the size of the array</returns>
         public virtual int Size() {
             return list.Count;
         }
 
+        /// <summary>Checks whether the array is empty or not.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the array is empty,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public virtual bool IsEmpty() {
             return list.Count == 0;
         }
 
+        /// <summary>Checks whether the array contains the passed object or not.</summary>
+        /// <param name="o">the object to check presence</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the object exists in the array,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public virtual bool Contains(PdfObject o) {
             if (list.Contains(o)) {
                 return true;
@@ -204,6 +223,12 @@ namespace iText.Kernel.Pdf {
             return new PdfArrayDirectIterator(list);
         }
 
+        /// <summary>
+        /// Adds the passed
+        /// <see cref="PdfObject"/>
+        /// to the array.
+        /// </summary>
+        /// <param name="pdfObject">the object to add</param>
         public virtual void Add(PdfObject pdfObject) {
             list.Add(pdfObject);
         }
@@ -282,6 +307,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>Remove all elements from the array.</summary>
         public virtual void Clear() {
             list.Clear();
         }

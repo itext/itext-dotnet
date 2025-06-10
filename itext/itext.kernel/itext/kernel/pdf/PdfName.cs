@@ -28,6 +28,11 @@ using iText.IO.Util;
 using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
+    /// <summary>
+    /// A
+    /// <c>PdfName</c>
+    /// -class is the PDF-equivalent of a string constant.
+    /// </summary>
     public class PdfName : PdfPrimitiveObject, IComparable<iText.Kernel.Pdf.PdfName> {
         //  ' '
         private static readonly byte[] space = ByteUtils.GetIsoBytes("#20");
@@ -1885,6 +1890,15 @@ namespace iText.Kernel.Pdf {
             return PdfObject.NAME;
         }
 
+        /// <summary>
+        /// Gets the string which represent
+        /// <c>PdfName</c>.
+        /// </summary>
+        /// <returns>
+        /// the string value of
+        /// <c>PdfName</c>
+        /// instance
+        /// </returns>
         public virtual String GetValue() {
             if (value == null) {
                 GenerateValue();
@@ -1915,6 +1929,11 @@ namespace iText.Kernel.Pdf {
             return GetValue().GetHashCode();
         }
 
+        /// <summary>
+        /// Generates the string value of the
+        /// <c>PdfName</c>
+        /// instance based on stored byte content.
+        /// </summary>
         protected internal virtual void GenerateValue() {
             value = PdfNameUtil.DecodeName(content);
         }

@@ -25,6 +25,26 @@ using System.Collections.Generic;
 using iText.IO.Font;
 
 namespace iText.Kernel.Pdf {
+    /// <summary>
+    /// The class is a wrapper around
+    /// <c>Info</c>
+    /// dictionary from
+    /// <c>PdfDocument</c>
+    /// root which provides utility methods to work with the
+    /// <c>Info</c>
+    /// dictionary.
+    /// </summary>
+    /// <remarks>
+    /// The class is a wrapper around
+    /// <c>Info</c>
+    /// dictionary from
+    /// <c>PdfDocument</c>
+    /// root which provides utility methods to work with the
+    /// <c>Info</c>
+    /// dictionary.
+    /// <para />
+    /// For more information about each of the PDF document info key, see ISO 32000-2 Table 349.
+    /// </remarks>
     public class PdfDocumentInfo {
 //\cond DO_NOT_DOCUMENT
         internal static readonly PdfName[] PDF20_DEPRECATED_KEYS = new PdfName[] { PdfName.Title, PdfName.Author, 
@@ -44,22 +64,72 @@ namespace iText.Kernel.Pdf {
         }
 //\endcond
 
+        /// <summary>
+        /// Sets title of the
+        /// <c>PdfDocument</c>.
+        /// </summary>
+        /// <param name="title">the title to set</param>
+        /// <returns>
+        /// the current
+        /// <c>PdfDocumentInfo</c>
+        /// instance
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfDocumentInfo SetTitle(String title) {
             return Put(PdfName.Title, new PdfString(title, PdfEncodings.UNICODE_BIG));
         }
 
+        /// <summary>
+        /// Sets the author of the
+        /// <c>PdfDocument</c>.
+        /// </summary>
+        /// <param name="author">the author to set</param>
+        /// <returns>
+        /// the current
+        /// <c>PdfDocumentInfo</c>
+        /// instance
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfDocumentInfo SetAuthor(String author) {
             return Put(PdfName.Author, new PdfString(author, PdfEncodings.UNICODE_BIG));
         }
 
+        /// <summary>
+        /// Sets the subject of the
+        /// <c>PdfDocument</c>.
+        /// </summary>
+        /// <param name="subject">the subject to set</param>
+        /// <returns>
+        /// the current
+        /// <c>PdfDocumentInfo</c>
+        /// instance
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfDocumentInfo SetSubject(String subject) {
             return Put(PdfName.Subject, new PdfString(subject, PdfEncodings.UNICODE_BIG));
         }
 
+        /// <summary>
+        /// Sets the keywords of the
+        /// <c>PdfDocument</c>.
+        /// </summary>
+        /// <param name="keywords">the keywords to set</param>
+        /// <returns>
+        /// the current
+        /// <c>PdfDocumentInfo</c>
+        /// instance
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfDocumentInfo SetKeywords(String keywords) {
             return Put(PdfName.Keywords, new PdfString(keywords, PdfEncodings.UNICODE_BIG));
         }
 
+        /// <summary>
+        /// Sets the creator of the
+        /// <c>PdfDocument</c>.
+        /// </summary>
+        /// <param name="creator">the creator to set</param>
+        /// <returns>
+        /// the current
+        /// <c>PdfDocumentInfo</c>
+        /// instance
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfDocumentInfo SetCreator(String creator) {
             return Put(PdfName.Creator, new PdfString(creator, PdfEncodings.UNICODE_BIG));
         }
@@ -76,38 +146,104 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
+        /// <summary>
+        /// Sets the trapped of the
+        /// <c>PdfDocument</c>.
+        /// </summary>
+        /// <remarks>
+        /// Sets the trapped of the
+        /// <c>PdfDocument</c>.
+        /// <para />
+        /// The value indicates whether the document has been modified to include trapping information or not.
+        /// </remarks>
+        /// <param name="trapped">trapped to set</param>
+        /// <returns>
+        /// the current
+        /// <c>PdfDocumentInfo</c>
+        /// instance
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfDocumentInfo SetTrapped(PdfName trapped) {
             return Put(PdfName.Trapped, trapped);
         }
 
+        /// <summary>
+        /// Gets the title of the
+        /// <c>PdfDocument</c>.
+        /// </summary>
+        /// <returns>the title</returns>
         public virtual String GetTitle() {
             return GetStringValue(PdfName.Title);
         }
 
+        /// <summary>
+        /// Gets the author of the
+        /// <c>PdfDocument</c>.
+        /// </summary>
+        /// <returns>the author</returns>
         public virtual String GetAuthor() {
             return GetStringValue(PdfName.Author);
         }
 
+        /// <summary>
+        /// Gets the subject of the
+        /// <c>PdfDocument</c>.
+        /// </summary>
+        /// <returns>the subject</returns>
         public virtual String GetSubject() {
             return GetStringValue(PdfName.Subject);
         }
 
+        /// <summary>
+        /// Gets the keywords of the
+        /// <c>PdfDocument</c>.
+        /// </summary>
+        /// <returns>the keywords</returns>
         public virtual String GetKeywords() {
             return GetStringValue(PdfName.Keywords);
         }
 
+        /// <summary>
+        /// Gets the creator of the
+        /// <c>PdfDocument</c>.
+        /// </summary>
+        /// <returns>the creator</returns>
         public virtual String GetCreator() {
             return GetStringValue(PdfName.Creator);
         }
 
+        /// <summary>
+        /// Gets the producer of the
+        /// <c>PdfDocument</c>.
+        /// </summary>
+        /// <returns>the producer</returns>
         public virtual String GetProducer() {
             return GetStringValue(PdfName.Producer);
         }
 
+        /// <summary>
+        /// Gets the trapped of the
+        /// <c>PdfDocument</c>.
+        /// </summary>
+        /// <remarks>
+        /// Gets the trapped of the
+        /// <c>PdfDocument</c>.
+        /// <para />
+        /// The value indicates whether the document has been modified to include trapping information or not.
+        /// </remarks>
+        /// <returns>the trapped</returns>
         public virtual PdfName GetTrapped() {
             return infoDictionary.GetAsName(PdfName.Trapped);
         }
 
+        /// <summary>
+        /// Adds the creation date of the
+        /// <c>PdfDocument</c>.
+        /// </summary>
+        /// <returns>
+        /// the current
+        /// <c>PdfDocumentInfo</c>
+        /// instance
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfDocumentInfo AddCreationDate() {
             return Put(PdfName.CreationDate, new PdfDate().GetPdfObject());
         }
@@ -119,10 +255,26 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
+        /// <summary>
+        /// Adds modification date of the
+        /// <c>PdfDocument</c>.
+        /// </summary>
+        /// <returns>
+        /// the current
+        /// <c>PdfDocumentInfo</c>
+        /// instance
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfDocumentInfo AddModDate() {
             return Put(PdfName.ModDate, new PdfDate().GetPdfObject());
         }
 
+        /// <summary>
+        /// Sets custom keys and values into
+        /// <c>Info</c>
+        /// dictionary of the
+        /// <c>PdfDocument</c>.
+        /// </summary>
+        /// <param name="moreInfo">the map of keys and values to be set</param>
         public virtual void SetMoreInfo(IDictionary<String, String> moreInfo) {
             if (moreInfo != null) {
                 foreach (KeyValuePair<String, String> entry in moreInfo) {
@@ -133,6 +285,14 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>
+        /// Sets custom key and value into
+        /// <c>Info</c>
+        /// dictionary of the
+        /// <c>PdfDocument</c>.
+        /// </summary>
+        /// <param name="key">the key</param>
+        /// <param name="value">the value</param>
         public virtual void SetMoreInfo(String key, String value) {
             PdfName keyName = new PdfName(key);
             if (value == null) {
@@ -144,6 +304,17 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>
+        /// Gets the value of additional key of
+        /// <c>Info</c>
+        /// dictionary.
+        /// </summary>
+        /// <param name="key">the key to get value for</param>
+        /// <returns>
+        /// the value or
+        /// <see langword="null"/>
+        /// if there is no value for such a key
+        /// </returns>
         public virtual String GetMoreInfo(String key) {
             return GetStringValue(new PdfName(key));
         }

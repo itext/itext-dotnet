@@ -222,6 +222,14 @@ namespace iText.Kernel.Pdf {
             return new iText.Kernel.Pdf.PdfNumber();
         }
 
+        /// <summary>Checks if the stored value originally was double or not.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the value was double originally,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         protected internal virtual bool IsDoubleNumber() {
             return isDouble;
         }
@@ -235,6 +243,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>Generates the value of the PDF number from stored byte content.</summary>
         protected internal virtual void GenerateValue() {
             try {
                 value = Double.Parse(iText.Commons.Utils.JavaUtil.GetStringForBytes(content, iText.Commons.Utils.EncodingUtil.ISO_8859_1

@@ -1696,6 +1696,14 @@ namespace iText.Kernel.Pdf {
             outputIntents.Add(outputIntent.GetPdfObject());
         }
 
+        /// <summary>
+        /// Checks ISO conformance of the passed context against
+        /// registered
+        /// <see cref="iText.Kernel.Validation.ValidationContainer"/>
+        /// inside the
+        /// <c>PdfDocument</c>.
+        /// </summary>
+        /// <param name="validationContext">the context to check</param>
         public virtual void CheckIsoConformance(IValidationContext validationContext) {
             if (!this.GetDiContainer().IsRegistered(typeof(ValidationContainer))) {
                 return;

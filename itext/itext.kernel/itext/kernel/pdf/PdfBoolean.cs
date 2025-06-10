@@ -25,6 +25,13 @@ using iText.IO.Source;
 using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
+    /// <summary>
+    /// The
+    /// <c>PdfBoolean</c>
+    /// class is a PDF analog of
+    /// <c>boolean</c>
+    /// value.
+    /// </summary>
     public class PdfBoolean : PdfPrimitiveObject {
         public static readonly iText.Kernel.Pdf.PdfBoolean TRUE = new iText.Kernel.Pdf.PdfBoolean(true, true);
 
@@ -51,6 +58,16 @@ namespace iText.Kernel.Pdf {
             : base() {
         }
 
+        /// <summary>
+        /// Gets the stored
+        /// <c>boolean</c>
+        /// value.
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <c>boolean</c>
+        /// value
+        /// </returns>
         public virtual bool GetValue() {
             return value;
         }
