@@ -26,10 +26,11 @@ using iText.Layout.Font;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
+using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
     [NUnit.Framework.Category("UnitTest")]
-    public class CircleSvgNodeRendererUnitTest {
+    public class CircleSvgNodeRendererUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void NoViewPortTest() {
             CircleSvgNodeRenderer renderer = new CircleSvgNodeRenderer();

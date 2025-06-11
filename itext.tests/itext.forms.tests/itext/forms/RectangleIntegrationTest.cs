@@ -29,7 +29,7 @@ using iText.Test;
 
 namespace iText.Forms {
     [NUnit.Framework.Category("IntegrationTest")]
-    public class RectangleIntegrationTest {
+    public class RectangleIntegrationTest : ExtendedITextTest {
         private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/forms/RectangleTest/";
 
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext

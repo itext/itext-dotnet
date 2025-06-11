@@ -23,7 +23,8 @@
 using System;
 
 namespace iText.Test {
-    internal class AssertUtilTest {
+    [NUnit.Framework.Category("UnitTest")]
+    internal class AssertUtilTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public void AssertPassedWithinTimeoutTestKeepsFailing() {
             var callCount = 0;
