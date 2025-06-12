@@ -25,22 +25,29 @@ using System.IO;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
+using iText.IO.Exceptions;
 using iText.IO.Util;
-using iText.StyledXmlParser.Exceptions;
 
-namespace iText.StyledXmlParser.Resolver.Resource {
+namespace iText.IO.Resolver.Resource {
     /// <summary>
     /// Default implementation of the
     /// <see cref="IResourceRetriever"/>
     /// interface, which can set a limit
     /// on the size of retrieved resources using input stream with a limit on the number of bytes read.
     /// </summary>
-    [System.ObsoleteAttribute(@"In favor of iText.IO.Resolver.Resource.DefaultResourceRetriever")]
     public class DefaultResourceRetriever : IResourceRetriever {
-        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Resolver.Resource.DefaultResourceRetriever
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.IO.Resolver.Resource.DefaultResourceRetriever
             ));
 
-        private iText.IO.Resolver.Resource.DefaultResourceRetriever proxy;
+        private const int DEFAULT_CONNECT_TIMEOUT = 300_000;
+
+        private const int DEFAULT_READ_TIMEOUT = 300_000;
+
+        private long resourceSizeByteLimit;
+
+        private int connectTimeout;
+
+        private int readTimeout;
 
         /// <summary>
         /// Creates a new
@@ -56,23 +63,26 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// bytes.
         /// </remarks>
         public DefaultResourceRetriever() {
-            // empty constructor
-            this.proxy = new iText.IO.Resolver.Resource.DefaultResourceRetriever();
+            resourceSizeByteLimit = long.MaxValue;
+            connectTimeout = DEFAULT_CONNECT_TIMEOUT;
+            readTimeout = DEFAULT_READ_TIMEOUT;
         }
 
         /// <summary>Gets the resource size byte limit.</summary>
         /// <remarks>
         /// Gets the resource size byte limit.
+        /// <para />
         /// The resourceSizeByteLimit is used to create input stream with a limit on the number of bytes read.
         /// </remarks>
         /// <returns>the resource size byte limit</returns>
         public virtual long GetResourceSizeByteLimit() {
-            return proxy.GetResourceSizeByteLimit();
+            return resourceSizeByteLimit;
         }
 
         /// <summary>Sets the resource size byte limit.</summary>
         /// <remarks>
         /// Sets the resource size byte limit.
+        /// <para />
         /// The resourceSizeByteLimit is used to create input stream with a limit on the number of bytes read.
         /// </remarks>
         /// <param name="resourceSizeByteLimit">the resource size byte limit</param>
@@ -82,23 +92,25 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// instance
         /// </returns>
         public virtual IResourceRetriever SetResourceSizeByteLimit(long resourceSizeByteLimit) {
-            proxy.SetResourceSizeByteLimit(resourceSizeByteLimit);
+            this.resourceSizeByteLimit = resourceSizeByteLimit;
             return this;
         }
 
         /// <summary>Gets the connect timeout.</summary>
         /// <remarks>
         /// Gets the connect timeout.
+        /// <para />
         /// The connect timeout is used to create input stream with a limited time to establish connection to resource.
         /// </remarks>
         /// <returns>the connect timeout in milliseconds</returns>
         public virtual int GetConnectTimeout() {
-            return proxy.GetConnectTimeout();
+            return connectTimeout;
         }
 
         /// <summary>Sets the connect timeout.</summary>
         /// <remarks>
         /// Sets the connect timeout.
+        /// <para />
         /// The connect timeout is used to create input stream with a limited time to establish connection to resource.
         /// </remarks>
         /// <param name="connectTimeout">the connect timeout in milliseconds</param>
@@ -108,23 +120,25 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// instance
         /// </returns>
         public virtual IResourceRetriever SetConnectTimeout(int connectTimeout) {
-            proxy.SetConnectTimeout(connectTimeout);
+            this.connectTimeout = connectTimeout;
             return this;
         }
 
         /// <summary>Gets the read timeout.</summary>
         /// <remarks>
         /// Gets the read timeout.
+        /// <para />
         /// The read timeout is used to create input stream with a limited time to receive data from resource.
         /// </remarks>
         /// <returns>the read timeout in milliseconds</returns>
         public virtual int GetReadTimeout() {
-            return proxy.GetReadTimeout();
+            return readTimeout;
         }
 
         /// <summary>Sets the read timeout.</summary>
         /// <remarks>
         /// Sets the read timeout.
+        /// <para />
         /// The read timeout is used to create input stream with a limited time to receive data from resource.
         /// </remarks>
         /// <param name="readTimeout">the read timeout in milliseconds</param>
@@ -134,7 +148,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// instance
         /// </returns>
         public virtual IResourceRetriever SetReadTimeout(int readTimeout) {
-            proxy.SetReadTimeout(readTimeout);
+            this.readTimeout = readTimeout;
             return this;
         }
 
@@ -145,13 +159,13 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <param name="url">the source URL</param>
         /// <returns>the limited input stream or null if the URL was filtered</returns>
         public virtual Stream GetInputStreamByUrl(Uri url) {
-            if (!UrlFilter(url)) {
-                logger.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT
-                    , url));
-                return null;
+            if (UrlFilter(url)) {
+                return new LimitedInputStream(UrlUtil.GetInputStreamOfFinalConnection(url, connectTimeout, readTimeout), resourceSizeByteLimit
+                    );
             }
-            return new LimitedInputStream(UrlUtil.GetInputStreamOfFinalConnection(url, proxy.GetConnectTimeout(), proxy
-                .GetReadTimeout()), proxy.GetResourceSizeByteLimit());
+            LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT
+                , url));
+            return null;
         }
 
         /// <summary>Gets the byte array that are retrieved from the source URL.</summary>
@@ -163,22 +177,23 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         public virtual byte[] GetByteArrayByUrl(Uri url) {
             try {
                 using (Stream stream = GetInputStreamByUrl(url)) {
-                    if (stream == null) {
-                        return null;
+                    if (stream != null) {
+                        return StreamUtil.InputStreamToArray(stream);
                     }
-                    return StreamUtil.InputStreamToArray(stream);
+                    return null;
                 }
             }
             catch (ReadingByteLimitException) {
-                logger.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_RESOURCE_WITH_GIVEN_RESOURCE_SIZE_BYTE_LIMIT
-                    , url, proxy.GetResourceSizeByteLimit()));
+                LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.UNABLE_TO_RETRIEVE_RESOURCE_WITH_GIVEN_RESOURCE_SIZE_BYTE_LIMIT
+                    , url, resourceSizeByteLimit));
+                return null;
             }
-            return null;
         }
 
         /// <summary>Method for filtering resources by URL.</summary>
         /// <remarks>
         /// Method for filtering resources by URL.
+        /// <para />
         /// The default implementation allows for all URLs. Override this method if want to set filtering.
         /// </remarks>
         /// <param name="url">the source URL</param>

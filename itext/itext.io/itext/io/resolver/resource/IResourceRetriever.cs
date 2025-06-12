@@ -23,9 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 
-namespace iText.StyledXmlParser.Resolver.Resource {
+namespace iText.IO.Resolver.Resource {
     /// <summary>Interface for classes that can retrieve data from resources by URL.</summary>
-    [System.ObsoleteAttribute(@"In favor of iText.IO.Resolver.Resource.IResourceRetriever")]
     public interface IResourceRetriever {
         /// <summary>
         /// Gets the

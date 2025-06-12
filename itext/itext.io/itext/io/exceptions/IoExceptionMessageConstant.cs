@@ -282,5 +282,8 @@ namespace iText.IO.Exceptions {
              + " {1}";
 
         public const String ONLY_BMP_ENCODING = "This encoder only accepts BMP codepoints";
+
+        public const String READING_BYTE_LIMIT_MUST_NOT_BE_LESS_ZERO = "The reading byte limit argument must not "
+             + "be less than zero.";
     }
 }

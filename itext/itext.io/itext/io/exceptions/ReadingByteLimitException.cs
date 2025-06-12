@@ -20,25 +20,18 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
-using System.IO;
+using iText.Commons.Exceptions;
 
-namespace iText.StyledXmlParser.Resolver.Resource {
-    /// <summary>Interface for classes that can retrieve data from resources by URL.</summary>
-    [System.ObsoleteAttribute(@"In favor of iText.IO.Resolver.Resource.IResourceRetriever")]
-    public interface IResourceRetriever {
+namespace iText.IO.Exceptions {
+    /// <summary>Thrown when the limit on the number of bytes read was violated.</summary>
+    public class ReadingByteLimitException : ITextException {
         /// <summary>
-        /// Gets the
-        /// <see cref="System.IO.Stream"/>
-        /// that connect with source URL for retrieving data from that connection.
+        /// Creates a new
+        /// <see cref="ReadingByteLimitException"/>
+        /// instance.
         /// </summary>
-        /// <param name="url">the source URL</param>
-        /// <returns>the input stream or null if the retrieving failed</returns>
-        Stream GetInputStreamByUrl(Uri url);
-
-        /// <summary>Gets the byte array that are retrieved from the source URL.</summary>
-        /// <param name="url">the source URL</param>
-        /// <returns>the byte array or null if the retrieving failed</returns>
-        byte[] GetByteArrayByUrl(Uri url);
+        public ReadingByteLimitException() {
+        }
+        // Empty constructor
     }
 }
