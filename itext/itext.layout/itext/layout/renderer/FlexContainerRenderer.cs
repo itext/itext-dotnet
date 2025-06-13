@@ -508,7 +508,7 @@ namespace iText.Layout.Renderer {
                         // Get rid of vertical alignment for item with partial result. For column direction, justify-content
                         // is applied to the entire line, not the single item, so there is no point in getting rid of it
                         if (!FlexUtil.IsColumnDirection(this)) {
-                            SetAlignSelfIfNotStretch(childResult.GetOverflowRenderer());
+                            StartContentOnTopOfNewPage(childResult.GetOverflowRenderer(), overflowRenderer);
                         }
                         overflowRenderer.AddChildRenderer(childResult.GetOverflowRenderer());
                     }
@@ -547,7 +547,7 @@ namespace iText.Layout.Renderer {
                         if (neighbourLayoutResult.GetOverflowRenderer() != null) {
                             if (neighbourLayoutResult.GetStatus() == LayoutResult.PARTIAL) {
                                 // Get rid of cross alignment for item with partial result
-                                SetAlignSelfIfNotStretch(neighbourLayoutResult.GetOverflowRenderer());
+                                StartContentOnTopOfNewPage(neighbourLayoutResult.GetOverflowRenderer(), overflowRenderer);
                             }
                             overflowRenderer.AddChildRenderer(neighbourLayoutResult.GetOverflowRenderer());
                         }
@@ -572,14 +572,16 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private void SetAlignSelfIfNotStretch(IRenderer overflowRenderer) {
+        private void StartContentOnTopOfNewPage(IRenderer overflowChildRenderer, AbstractRenderer overflowRenderer
+            ) {
             AlignmentPropertyValue alignItems = (AlignmentPropertyValue)this.GetProperty<AlignmentPropertyValue?>(Property
                 .ALIGN_ITEMS, AlignmentPropertyValue.STRETCH);
-            AlignmentPropertyValue alignSelf = (AlignmentPropertyValue)overflowRenderer.GetProperty<AlignmentPropertyValue?
+            AlignmentPropertyValue alignSelf = (AlignmentPropertyValue)overflowChildRenderer.GetProperty<AlignmentPropertyValue?
                 >(Property.ALIGN_SELF, alignItems);
             if (alignSelf != AlignmentPropertyValue.STRETCH) {
-                overflowRenderer.SetProperty(Property.ALIGN_SELF, AlignmentPropertyValue.START);
+                overflowChildRenderer.SetProperty(Property.ALIGN_SELF, AlignmentPropertyValue.START);
             }
+            overflowRenderer.SetProperty(Property.FLEX_FORCE_START_ON_TOP, true);
         }
 
         private void RestoreHeightForOverflowRenderer(IRenderer childRenderer, IRenderer overflowRenderer) {
@@ -676,6 +678,10 @@ namespace iText.Layout.Renderer {
         private IList<IRenderer> RetrieveRenderersToOverflow(Rectangle flexContainerBBox) {
             IList<IRenderer> renderersToOverflow = new List<IRenderer>();
             Rectangle layoutContextRectangle = flexContainerBBox.Clone();
+            UnitValue unitWidthValue = (UnitValue)this.modelElement.GetProperty<UnitValue>(Property.WIDTH);
+            if (unitWidthValue != null && unitWidthValue.GetValue() < layoutContextRectangle.GetWidth()) {
+                layoutContextRectangle.SetWidth(unitWidthValue.GetValue());
+            }
             ApplyMarginsBordersPaddings(layoutContextRectangle, false);
             if (FlexUtil.IsColumnDirection(this) && FlexUtil.GetMainSize(this, layoutContextRectangle) >= layoutContextRectangle
                 .GetHeight()) {
