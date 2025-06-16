@@ -282,17 +282,25 @@ namespace iText.Kernel.Pdf {
                     Stream fout = this;
                     DeflaterOutputStream def = null;
                     OutputStreamEncryption ose = null;
+                    long beginStreamContent;
                     if (crypto != null && (!crypto.IsEmbeddedFilesOnly() || document.DoesStreamBelongToEmbeddedFile(pdfStream)
                         )) {
+                        UpdateCryptFilterForEmbeddedFilesOnlyMode(pdfStream);
+                        // We should store current position here because crypto.getEncryptionStream(fout) may already
+                        // output something into the stream (iv vector for AES256)
+                        beginStreamContent = WritePdfStreamAndGetPosition(pdfStream);
                         fout = ose = crypto.GetEncryptionStream(fout);
                     }
-                    if (toCompress && (allowCompression || userDefinedCompression)) {
-                        UpdateCompressionFilter(pdfStream);
-                        fout = def = new DeflaterOutputStream(fout, pdfStream.GetCompressionLevel(), 0x8000);
+                    else {
+                        if (toCompress && (allowCompression || userDefinedCompression)) {
+                            UpdateCompressionFilter(pdfStream);
+                            beginStreamContent = WritePdfStreamAndGetPosition(pdfStream);
+                            fout = def = new DeflaterOutputStream(fout, pdfStream.GetCompressionLevel(), 0x8000);
+                        }
+                        else {
+                            beginStreamContent = WritePdfStreamAndGetPosition(pdfStream);
+                        }
                     }
-                    this.Write((PdfDictionary)pdfStream);
-                    WriteBytes(iText.Kernel.Pdf.PdfOutputStream.stream);
-                    long beginStreamContent = GetCurrentPos();
                     byte[] buf = new byte[4192];
                     while (true) {
                         int n = pdfStream.GetInputStream().Read(buf);
@@ -358,6 +366,7 @@ namespace iText.Kernel.Pdf {
                             }
                         }
                         if (CheckEncryption(pdfStream)) {
+                            UpdateCryptFilterForEmbeddedFilesOnlyMode(pdfStream);
                             ByteArrayOutputStream encodedStream = new ByteArrayOutputStream();
                             OutputStreamEncryption ose = crypto.GetEncryptionStream(encodedStream);
                             byteArrayStream.WriteTo(ose);
@@ -472,7 +481,61 @@ namespace iText.Kernel.Pdf {
                     }
                 }
             }
-            pdfStream.Put(PdfName.Filter, filters);
+        }
+
+        /// <summary>
+        /// Adds required Filter and DecodeParms to the pdf stream if the stream is embedded file stream
+        /// and only embedded files are expected to be encrypted.
+        /// </summary>
+        /// <remarks>
+        /// Adds required Filter and DecodeParms to the pdf stream if the stream is embedded file stream
+        /// and only embedded files are expected to be encrypted. See
+        /// <see cref="EncryptionConstants.EMBEDDED_FILES_ONLY"/>.
+        /// </remarks>
+        /// <param name="pdfStream">embedded file pdf stream.</param>
+        protected internal virtual void UpdateCryptFilterForEmbeddedFilesOnlyMode(PdfStream pdfStream) {
+            if (crypto != null && crypto.IsEmbeddedFilesOnly() && document.DoesStreamBelongToEmbeddedFile(pdfStream) &&
+                 
+                        // This code works only for AES256.
+                        
+                        // All tests we currently have for earlier versions do not work with and without this code.
+                        crypto.GetEncryptionAlgorithm() >= EncryptionConstants.ENCRYPTION_AES_256) {
+                // Filter
+                PdfObject currentFilters = pdfStream.Get(PdfName.Filter);
+                PdfArray filters = new PdfArray();
+                filters.Add(PdfName.Crypt);
+                if (currentFilters is PdfArray) {
+                    filters.AddAll((PdfArray)currentFilters);
+                }
+                else {
+                    if (currentFilters != null) {
+                        filters.Add(currentFilters);
+                    }
+                }
+                pdfStream.Put(PdfName.Filter, filters);
+                // DecodeParms
+                PdfDictionary crypt = new PdfDictionary();
+                crypt.Put(PdfName.Name, PdfName.StdCF);
+                crypt.Put(PdfName.Type, PdfName.CryptFilterDecodeParms);
+                PdfObject decodeParms = pdfStream.Get(PdfName.DecodeParms);
+                if (decodeParms is PdfDictionary || decodeParms == null) {
+                    PdfArray array = new PdfArray();
+                    array.Add(crypt);
+                    if (decodeParms != null) {
+                        array.Add(decodeParms);
+                    }
+                    pdfStream.Put(PdfName.DecodeParms, array);
+                }
+                else {
+                    if (decodeParms is PdfArray) {
+                        ((PdfArray)decodeParms).Add(0, crypt);
+                    }
+                    else {
+                        throw new PdfException(KernelExceptionMessageConstant.THIS_DECODE_PARAMETER_TYPE_IS_NOT_SUPPORTED).SetMessageParams
+                            (decodeParms.GetType().ToString());
+                    }
+                }
+            }
         }
 
         protected internal virtual byte[] DecodeFlateBytes(PdfStream stream, byte[] bytes) {
@@ -584,6 +647,12 @@ namespace iText.Kernel.Pdf {
                 stream.Put(PdfName.DecodeParms, decodeParamsObject);
             }
             return bytes;
+        }
+
+        private long WritePdfStreamAndGetPosition(PdfStream pdfStream) {
+            Write((PdfDictionary)pdfStream);
+            WriteBytes(iText.Kernel.Pdf.PdfOutputStream.stream);
+            return GetCurrentPos();
         }
 
         private static bool IsFlushed(PdfDictionary dict, PdfName name) {

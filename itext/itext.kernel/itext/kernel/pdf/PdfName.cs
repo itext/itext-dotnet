@@ -421,6 +421,9 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Crypt = CreateDirectName("Crypt");
 
+        public static readonly iText.Kernel.Pdf.PdfName CryptFilterDecodeParms = CreateDirectName("CryptFilterDecodeParms"
+            );
+
         public static readonly iText.Kernel.Pdf.PdfName CS = CreateDirectName("CS");
 
         public static readonly iText.Kernel.Pdf.PdfName CT = CreateDirectName("CT");
