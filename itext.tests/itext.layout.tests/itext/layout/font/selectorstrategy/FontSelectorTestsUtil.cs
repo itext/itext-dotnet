@@ -100,5 +100,17 @@ namespace iText.Layout.Font.Selectorstrategy {
             fontFamilies.Add("random");
             return fontProvider.CreateFontSelectorStrategy(fontFamilies, new FontCharacteristics(), null);
         }
+
+        public static IFontSelectorStrategy CreateStrategyWithNotoSansCJKAndFreeSans(IFontSelectorStrategyFactory 
+            factory) {
+            FontSet fs = new FontSet();
+            fs.AddFont(FONTS_FOLDER + "FreeSans.ttf");
+            fs.AddFont(FONTS_FOLDER + "NotoSansCJKjp-Regular.otf");
+            FontProvider fontProvider = new FontProvider(fs, StandardFontFamilies.TIMES);
+            fontProvider.SetFontSelectorStrategyFactory(factory);
+            IList<String> fontFamilies = new List<String>();
+            fontFamilies.Add("random");
+            return fontProvider.CreateFontSelectorStrategy(fontFamilies, new FontCharacteristics(), null);
+        }
     }
 }

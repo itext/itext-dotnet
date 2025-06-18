@@ -36,8 +36,8 @@ namespace iText.Layout.Font.Selectorstrategy {
             IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines("L with accent: \u004f\u0301\u0302 abc");
             NUnit.Framework.Assert.AreEqual(3, result.Count);
             NUnit.Framework.Assert.AreEqual("L with accent: ", result[0].GetFirst().ToString());
-            NUnit.Framework.Assert.AreEqual("\u004f\u0301\u0302 ", result[1].GetFirst().ToString());
-            NUnit.Framework.Assert.AreEqual("abc", result[2].GetFirst().ToString());
+            NUnit.Framework.Assert.AreEqual("\u004f\u0301\u0302", result[1].GetFirst().ToString());
+            NUnit.Framework.Assert.AreEqual(" abc", result[2].GetFirst().ToString());
             // Diacritics and symbol were separated, but the font is the same
             NUnit.Framework.Assert.AreEqual(result[0].GetSecond(), result[2].GetSecond());
         }
@@ -49,8 +49,8 @@ namespace iText.Layout.Font.Selectorstrategy {
             IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines("L with accent: \u004f\u0302 abc");
             NUnit.Framework.Assert.AreEqual(3, result.Count);
             NUnit.Framework.Assert.AreEqual("L with accent: ", result[0].GetFirst().ToString());
-            NUnit.Framework.Assert.AreEqual("\u004f\u0302 ", result[1].GetFirst().ToString());
-            NUnit.Framework.Assert.AreEqual("abc", result[2].GetFirst().ToString());
+            NUnit.Framework.Assert.AreEqual("\u004f\u0302", result[1].GetFirst().ToString());
+            NUnit.Framework.Assert.AreEqual(" abc", result[2].GetFirst().ToString());
             NUnit.Framework.Assert.AreNotEqual(result[0].GetSecond(), result[1].GetSecond());
         }
 
@@ -100,8 +100,8 @@ namespace iText.Layout.Font.Selectorstrategy {
             IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines("text \uD800\uDF10\uD800\uDF00\uD800\uDF11 text"
                 );
             NUnit.Framework.Assert.AreEqual(3, result.Count);
-            NUnit.Framework.Assert.AreEqual("text ", result[0].GetFirst().ToString());
-            NUnit.Framework.Assert.AreEqual("\uD800\uDF10\uD800\uDF00\uD800\uDF11 ", result[1].GetFirst().ToString());
+            NUnit.Framework.Assert.AreEqual("text", result[0].GetFirst().ToString());
+            NUnit.Framework.Assert.AreEqual(" \uD800\uDF10\uD800\uDF00\uD800\uDF11 ", result[1].GetFirst().ToString());
             NUnit.Framework.Assert.AreEqual("text", result[2].GetFirst().ToString());
             NUnit.Framework.Assert.AreEqual(result[0].GetSecond(), result[2].GetSecond());
         }
@@ -137,6 +137,50 @@ namespace iText.Layout.Font.Selectorstrategy {
             IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines("Hello\r\n   World!\r\n ");
             NUnit.Framework.Assert.AreEqual(1, result.Count);
             NUnit.Framework.Assert.AreEqual("Hello\r\n   World!\r\n ", result[0].GetFirst().ToString());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NonSignificantRequiresFontChangeToRightTest() {
+            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithNotoSansCJKAndFreeSans(new BestMatchFontSelectorStrategy.BestMatchFontSelectorStrategyFactory
+                ());
+            IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines(
+                        // u3000 is ideographicSpace from CJK, the same as u5F53 and u65B9
+                        "EC50:\u3000\u5F53\u65B9");
+            NUnit.Framework.Assert.AreEqual(2, result.Count);
+            NUnit.Framework.Assert.AreEqual("\u3000\u5F53\u65B9", result[1].GetFirst().ToString());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NonSignificantRequiresFontChangeToLeftTest() {
+            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithNotoSansCJKAndFreeSans(new BestMatchFontSelectorStrategy.BestMatchFontSelectorStrategyFactory
+                ());
+            IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines(
+                        // u3000 is ideographicSpace from CJK, the same as u5F53 and u65B9
+                        "\u5F53\u65B9\u3000:EC50");
+            NUnit.Framework.Assert.AreEqual(2, result.Count);
+            NUnit.Framework.Assert.AreEqual(":EC50", result[1].GetFirst().ToString());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NonSignificantRequiresFontChangeBetweenSameFontsTest() {
+            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithNotoSansCJKAndFreeSans(new BestMatchFontSelectorStrategy.BestMatchFontSelectorStrategyFactory
+                ());
+            IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines(
+                        // u3000 is ideographicSpace from CJK
+                        "EC50:\u3000:EC50");
+            NUnit.Framework.Assert.AreEqual(1, result.Count);
+            NUnit.Framework.Assert.AreEqual("EC50:\u3000:EC50", result[0].GetFirst().ToString());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NonSignificantRequiresFontChangeToNullFontTest() {
+            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithNotoSansCJKAndFreeSans(new BestMatchFontSelectorStrategy.BestMatchFontSelectorStrategyFactory
+                ());
+            IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines(
+                        // u3000 is ideographicSpace from CJK, uD800 + uDF10 is surrogate pair with no font
+                        "EC50:\u3000\uD800\uDF10");
+            NUnit.Framework.Assert.AreEqual(2, result.Count);
+            NUnit.Framework.Assert.AreEqual("\u3000\uD800\uDF10", result[1].GetFirst().ToString());
         }
     }
 }

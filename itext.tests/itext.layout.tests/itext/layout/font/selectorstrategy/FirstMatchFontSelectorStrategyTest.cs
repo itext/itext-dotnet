@@ -31,7 +31,7 @@ namespace iText.Layout.Font.Selectorstrategy {
     public class FirstMatchFontSelectorStrategyTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TwoDiacriticsInRowTest() {
-            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithFreeSansAndTNR(new FirstMatchFontSelectorStrategy.FirstMathFontSelectorStrategyFactory
+            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithFreeSansAndTNR(new FirstMatchFontSelectorStrategy.FirstMatchFontSelectorStrategyFactory
                 ());
             IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines("L with accent: \u004f\u0301\u0302 abc");
             NUnit.Framework.Assert.AreEqual(2, result.Count);
@@ -41,7 +41,7 @@ namespace iText.Layout.Font.Selectorstrategy {
 
         [NUnit.Framework.Test]
         public virtual void OneDiacriticTest() {
-            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithFreeSansAndTNR(new FirstMatchFontSelectorStrategy.FirstMathFontSelectorStrategyFactory
+            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithFreeSansAndTNR(new FirstMatchFontSelectorStrategy.FirstMatchFontSelectorStrategyFactory
                 ());
             IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines("L with accent: \u004f\u0302 abc");
             NUnit.Framework.Assert.AreEqual(2, result.Count);
@@ -52,7 +52,7 @@ namespace iText.Layout.Font.Selectorstrategy {
 
         [NUnit.Framework.Test]
         public virtual void DiacriticFontDoesnotContainPreviousSymbolTest() {
-            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithNotoSans(new FirstMatchFontSelectorStrategy.FirstMathFontSelectorStrategyFactory
+            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithNotoSans(new FirstMatchFontSelectorStrategy.FirstMatchFontSelectorStrategyFactory
                 ());
             IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines("Ми\u0301ръ (mírə)");
             NUnit.Framework.Assert.AreEqual(6, result.Count);
@@ -68,7 +68,7 @@ namespace iText.Layout.Font.Selectorstrategy {
 
         [NUnit.Framework.Test]
         public virtual void OneDiacriticWithUnsupportedFontTest() {
-            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithTNR(new FirstMatchFontSelectorStrategy.FirstMathFontSelectorStrategyFactory
+            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithTNR(new FirstMatchFontSelectorStrategy.FirstMatchFontSelectorStrategyFactory
                 ());
             IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines("L with accent: \u004f\u0302 abc");
             NUnit.Framework.Assert.AreEqual(3, result.Count);
@@ -81,7 +81,7 @@ namespace iText.Layout.Font.Selectorstrategy {
 
         [NUnit.Framework.Test]
         public virtual void OneDiacriticWithOneSupportedFontTest() {
-            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithFreeSans(new FirstMatchFontSelectorStrategy.FirstMathFontSelectorStrategyFactory
+            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithFreeSans(new FirstMatchFontSelectorStrategy.FirstMatchFontSelectorStrategyFactory
                 ());
             IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines("L with accent: \u004f\u0302 abc");
             NUnit.Framework.Assert.AreEqual(1, result.Count);
@@ -90,7 +90,7 @@ namespace iText.Layout.Font.Selectorstrategy {
 
         [NUnit.Framework.Test]
         public virtual void SurrogatePairsTest() {
-            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithOldItalic(new FirstMatchFontSelectorStrategy.FirstMathFontSelectorStrategyFactory
+            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithOldItalic(new FirstMatchFontSelectorStrategy.FirstMatchFontSelectorStrategyFactory
                 ());
             // this text contains three successive surrogate pairs
             IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines("text \uD800\uDF10\uD800\uDF00\uD800\uDF11 text"
@@ -104,7 +104,7 @@ namespace iText.Layout.Font.Selectorstrategy {
 
         [NUnit.Framework.Test]
         public virtual void SimpleThreeFontTest() {
-            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithLimitedThreeFonts(new FirstMatchFontSelectorStrategy.FirstMathFontSelectorStrategyFactory
+            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithLimitedThreeFonts(new FirstMatchFontSelectorStrategy.FirstMatchFontSelectorStrategyFactory
                 ());
             IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines("abcdefxyz");
             NUnit.Framework.Assert.AreEqual(1, result.Count);
@@ -113,11 +113,20 @@ namespace iText.Layout.Font.Selectorstrategy {
 
         [NUnit.Framework.Test]
         public virtual void ThreeFontWithSpacesTest() {
-            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithLimitedThreeFonts(new FirstMatchFontSelectorStrategy.FirstMathFontSelectorStrategyFactory
+            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithLimitedThreeFonts(new FirstMatchFontSelectorStrategy.FirstMatchFontSelectorStrategyFactory
                 ());
             IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines(" axadefa ");
             NUnit.Framework.Assert.AreEqual(1, result.Count);
             NUnit.Framework.Assert.AreEqual(" axadefa ", result[0].GetFirst().ToString());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IdeographicSpaceRequireFontChangeTest() {
+            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithNotoSansCJKAndFreeSans(new FirstMatchFontSelectorStrategy.FirstMatchFontSelectorStrategyFactory
+                ());
+            IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines("EC50:\u3000\u5F53\u65B9");
+            NUnit.Framework.Assert.AreEqual(2, result.Count);
+            NUnit.Framework.Assert.AreEqual("\u5F53\u65B9", result[1].GetFirst().ToString());
         }
     }
 }
