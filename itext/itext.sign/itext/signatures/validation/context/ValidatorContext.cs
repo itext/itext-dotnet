@@ -50,13 +50,19 @@ namespace iText.Signatures.Validation.Context {
         /// context.
         /// </summary>
         CERTIFICATE_CHAIN_VALIDATOR,
-        /// <summary>This value is expected to be used in SignatureValidator context.</summary>
+        /// <summary>
+        /// This value is expected to be used in
+        /// <see cref="SignatureValidator"/>
+        /// context.
+        /// </summary>
         SIGNATURE_VALIDATOR,
         /// <summary>
         /// This value is expected to be used in
         /// <see cref="DocumentRevisionsValidator"/>
         /// context.
         /// </summary>
-        DOCUMENT_REVISIONS_VALIDATOR
+        DOCUMENT_REVISIONS_VALIDATOR,
+        /// <summary>This value is expected to be used in XmlSignatureValidator context.</summary>
+        XML_SIGNATURE_VALIDATOR
     }
 }

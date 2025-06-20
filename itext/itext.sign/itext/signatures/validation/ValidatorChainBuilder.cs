@@ -55,6 +55,8 @@ namespace iText.Signatures.Validation {
 
         private Func<ICrlClient> crlClientFactory;
 
+        private Func<XmlSignatureValidator> xmlSignatureValidatorFactory;
+
         private ICollection<IX509Certificate> trustedCertificates;
 
         private ICollection<IX509Certificate> knownCertificates;
@@ -72,6 +74,7 @@ namespace iText.Signatures.Validation {
             documentRevisionsValidatorFactory = () => BuildDocumentRevisionsValidator();
             ocspClientFactory = () => new OcspClientBouncyCastle();
             crlClientFactory = () => new CrlClientOnline();
+            xmlSignatureValidatorFactory = () => BuildXmlSignatureValidator();
         }
 
         /// <summary>
@@ -391,6 +394,20 @@ namespace iText.Signatures.Validation {
             return adESReportAggregator;
         }
 
+        /// <summary>
+        /// Retrieves the explicitly added or automatically created
+        /// <see cref="iText.StyledXmlParser.Resolver.Resource.IResourceRetriever"/>
+        /// instance.
+        /// </summary>
+        /// <returns>
+        /// the explicitly added or automatically created
+        /// <see cref="iText.StyledXmlParser.Resolver.Resource.IResourceRetriever"/>
+        /// instance.
+        /// </returns>
+        public virtual IResourceRetriever GetResourceRetriever() {
+            return resourceRetrieverFactory();
+        }
+
 //\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Retrieves the explicitly added or automatically created
@@ -471,20 +488,6 @@ namespace iText.Signatures.Validation {
         }
 //\endcond
 
-        /// <summary>
-        /// Retrieves the explicitly added or automatically created
-        /// <see cref="iText.StyledXmlParser.Resolver.Resource.IResourceRetriever"/>
-        /// instance.
-        /// </summary>
-        /// <returns>
-        /// the explicitly added or automatically created
-        /// <see cref="iText.StyledXmlParser.Resolver.Resource.IResourceRetriever"/>
-        /// instance.
-        /// </returns>
-        public virtual IResourceRetriever GetResourceRetriever() {
-            return resourceRetrieverFactory();
-        }
-
 //\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Retrieves the explicitly added or automatically created
@@ -514,6 +517,26 @@ namespace iText.Signatures.Validation {
         /// </returns>
         internal virtual OCSPValidator GetOCSPValidator() {
             return ocspValidatorFactory();
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual iText.Signatures.Validation.ValidatorChainBuilder WithXmlSignatureValidator(Func<XmlSignatureValidator
+            > xmlSignatureValidatorFactory) {
+            this.xmlSignatureValidatorFactory = xmlSignatureValidatorFactory;
+            return this;
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual XmlSignatureValidator GetXmlSignatureValidator() {
+            return xmlSignatureValidatorFactory();
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual XmlSignatureValidator BuildXmlSignatureValidator() {
+            return new XmlSignatureValidator(this);
         }
 //\endcond
 
