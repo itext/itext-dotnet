@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of the iText (R) project.
 Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
@@ -33,38 +33,40 @@ using iText.Commons.Bouncycastle.Cert;
 using Org.BouncyCastle.Security.Certificates;
 using System.Xml;
 
-namespace iText.Signatures {
-    internal class XmlCertificateRetriever {
-        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory();
-
-        internal XmlCertificateRetriever() {
+namespace iText.Signatures.Validation
+{
+    internal class XmlCertificateRetriever
+    {
+        private AbstractXmlCertificateHandler handler;
+        internal XmlCertificateRetriever(AbstractXmlCertificateHandler handler)
+        {
+            this.handler = handler;
         }
 
-        internal static IList<IX509Certificate> GetCertificates(String path) {
-            XmlCertificateHandler handler = new XmlCertificateHandler();
+        internal IList<IX509Certificate> GetCertificates(String path)
+        {
+            if (!handler.GetCertificateList().IsEmpty())
+            {
+                handler.Clear();
+            }
 
-            XmlCertificateHandler certificateHandler = new XmlCertificateHandler();
             FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
-            try {
+            try
+            {
                 handler.ReadXml(stream);
             }
-            catch (XmlException e) {
+            catch (XmlException e)
+            {
                 throw new PdfException(MessageFormatUtil.Format(SignExceptionMessageConstant.FAILED_TO_READ_CERTIFICATE_BYTES_FROM_XML
                     , path), e);
             }
 
-            IList<byte[]> certificateBytes = handler.GetCertificatesBytes();
-            IList<IX509Certificate> certificates = new List<IX509Certificate>();
-            foreach (byte[] certificateByte in certificateBytes) {
-                try {
-                    IX509Certificate certificate = BOUNCY_CASTLE_FACTORY.CreateX509Certificate(certificateByte);
-                    certificates.Add(certificate);
-                }
-                catch (CertificateException e) {
-                    throw new PdfException(SignExceptionMessageConstant.FAILED_TO_RETRIEVE_CERTIFICATE, e);
-                }
-            }
-            return certificates;
+            return handler.GetCertificateList();
+        }
+
+        internal IServiceContext GetServiceContext(IX509Certificate certificate)
+        {
+            return handler.GetServiceContext(certificate);
         }
     }
 }
