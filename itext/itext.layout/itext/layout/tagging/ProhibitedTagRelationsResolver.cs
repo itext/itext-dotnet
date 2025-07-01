@@ -91,6 +91,9 @@ namespace iText.Layout.Tagging {
             }
             String normalizedParentRole = ResolveToFinalRole(taggingHelper, currentThk, false);
             foreach (IRenderer childRenderer in topRender.GetChildRenderers()) {
+                if (childRenderer is AreaBreakRenderer) {
+                    continue;
+                }
                 TaggingHintKey kid = LayoutTaggingHelper.GetOrCreateHintKey(childRenderer);
                 if (!kid.IsAccessible()) {
                     continue;

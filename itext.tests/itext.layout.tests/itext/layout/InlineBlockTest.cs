@@ -27,8 +27,10 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Logs;
 using iText.Layout.Properties;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -131,6 +133,23 @@ namespace iText.Layout {
                 inlineDiv.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
                 inlineDiv.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
                 doc.Add(new Div().Add(floatingDiv).Add(new Paragraph().Add(inlineDiv)));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, destinationFolder));
+        }
+
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [NUnit.Framework.Test]
+        public virtual void AreaBreakWithinInlineBlockTest() {
+            String name = "areaBreakWithinInlineBlockTest.pdf";
+            String output = destinationFolder + name;
+            String cmp = sourceFolder + "cmp_" + name;
+            using (Document doc = new Document(new PdfDocument(new PdfWriter(output)))) {
+                AnonymousInlineBox root = new AnonymousInlineBox();
+                Div container = new Div();
+                container.Add(new AreaBreak());
+                container.Add(new Paragraph("test"));
+                root.Add(container);
+                doc.Add(root);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, destinationFolder));
         }

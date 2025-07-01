@@ -379,7 +379,8 @@ namespace iText.Layout.Renderer {
                                     }
                                     else {
                                         floatRendererAreas.RetainAll(nonChildFloatingRendererAreas);
-                                        return new MinMaxWidthLayoutResult(LayoutResult.NOTHING, null, null, this, null == result.GetCauseOfNothing
+                                        IRenderer overflowRenderer = result.GetCauseOfNothing() is AreaBreakRenderer ? split[1] : this;
+                                        return new MinMaxWidthLayoutResult(LayoutResult.NOTHING, null, null, overflowRenderer, null == result.GetCauseOfNothing
                                             () ? this : result.GetCauseOfNothing());
                                     }
                                 }
@@ -435,14 +436,14 @@ namespace iText.Layout.Renderer {
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler.EndMarginsCollapse(layoutBox);
             }
-            AbstractRenderer overflowRenderer = ApplyMinHeight(overflowY, layoutBox);
-            if (overflowRenderer != null && IsKeepTogether()) {
+            AbstractRenderer overflowRenderer_1 = ApplyMinHeight(overflowY, layoutBox);
+            if (overflowRenderer_1 != null && IsKeepTogether()) {
                 floatRendererAreas.RetainAll(nonChildFloatingRendererAreas);
                 return new LayoutResult(LayoutResult.NOTHING, null, null, this, this);
             }
             ContinuousContainer continuousContainer = this.GetProperty<ContinuousContainer>(Property.TREAT_AS_CONTINUOUS_CONTAINER_RESULT
                 );
-            if (continuousContainer != null && overflowRenderer == null) {
+            if (continuousContainer != null && overflowRenderer_1 == null) {
                 continuousContainer.ReApplyProperties(this);
                 paddings = GetPaddings();
                 borders = GetBorders();
@@ -471,13 +472,13 @@ namespace iText.Layout.Renderer {
             FloatingHelper.RemoveFloatsAboveRendererBottom(floatRendererAreas, this);
             LayoutArea editedArea_1 = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
                 (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
-            ContinuousContainer.ClearPropertiesFromOverFlowRenderer(overflowRenderer);
-            if (null == overflowRenderer) {
+            ContinuousContainer.ClearPropertiesFromOverFlowRenderer(overflowRenderer_1);
+            if (null == overflowRenderer_1) {
                 return new MinMaxWidthLayoutResult(LayoutResult.FULL, editedArea_1, null, null, null).SetMinMaxWidth(minMaxWidth
                     );
             }
             else {
-                return new MinMaxWidthLayoutResult(LayoutResult.PARTIAL, editedArea_1, this, overflowRenderer, null).SetMinMaxWidth
+                return new MinMaxWidthLayoutResult(LayoutResult.PARTIAL, editedArea_1, this, overflowRenderer_1, null).SetMinMaxWidth
                     (minMaxWidth);
             }
         }
