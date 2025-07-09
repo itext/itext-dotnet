@@ -32,10 +32,12 @@ using iText.Test;
 
 namespace iText.Signatures.Validation {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
+    [iText.Commons.Utils.NoopAnnotation]
     public class XmlSignatureValidatorTest : ExtendedITextTest {
         private static readonly String SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/XmlSignatureValidatorTest/";
 
+        [iText.Commons.Utils.NoopAnnotation]
         [NUnit.Framework.Test]
         public virtual void LotlXmlValidationTest() {
             String chainName = SRC + "lotl_signing_cert.pem";
@@ -52,6 +54,7 @@ namespace iText.Signatures.Validation {
             }
         }
 
+        [iText.Commons.Utils.NoopAnnotation]
         [NUnit.Framework.Test]
         public virtual void SignedXmlContentModifiedTest() {
             String chainName = SRC + "signing_cert_rsa.pem";
@@ -67,6 +70,7 @@ namespace iText.Signatures.Validation {
             }
         }
 
+        [iText.Commons.Utils.NoopAnnotation]
         [NUnit.Framework.Test]
         public virtual void SignedXmlSignatureModifiedTest() {
             String chainName = SRC + "signing_cert_rsa.pem";
@@ -82,6 +86,7 @@ namespace iText.Signatures.Validation {
             }
         }
 
+        [iText.Commons.Utils.NoopAnnotation]
         [NUnit.Framework.Test]
         public virtual void SignedXmlSignedInfoModifiedTest() {
             String chainName = SRC + "signing_cert_rsa.pem";
@@ -97,6 +102,7 @@ namespace iText.Signatures.Validation {
             }
         }
 
+        [iText.Commons.Utils.NoopAnnotation]
         [NUnit.Framework.Test]
         public virtual void SignedXmlSignedInfoModifiedStopValidationTest() {
             String chainName = SRC + "signing_cert_rsa.pem";
@@ -114,6 +120,7 @@ namespace iText.Signatures.Validation {
             }
         }
 
+        [iText.Commons.Utils.NoopAnnotation]
         [NUnit.Framework.Test]
         public virtual void SignedXmlWithBrokenCertTest() {
             String chainName = SRC + "signing_cert_rsa.pem";
@@ -130,6 +137,7 @@ namespace iText.Signatures.Validation {
             }
         }
 
+        [iText.Commons.Utils.NoopAnnotation]
         [NUnit.Framework.Test]
         public virtual void SignedXmlWithoutKeyInfoTest() {
             String chainName = SRC + "signing_cert_rsa.pem";
@@ -147,6 +155,7 @@ namespace iText.Signatures.Validation {
             }
         }
 
+        [iText.Commons.Utils.NoopAnnotation]
         [NUnit.Framework.Test]
         public virtual void XmlValidationRSATest() {
             String chainName = SRC + "signing_cert_rsa.pem";
@@ -163,6 +172,7 @@ namespace iText.Signatures.Validation {
             }
         }
 
+        [iText.Commons.Utils.NoopAnnotation]
         [NUnit.Framework.Test]
         public virtual void XmlValidationDSATest() {
             String chainName = SRC + "signing_cert_dsa.pem";
@@ -179,6 +189,7 @@ namespace iText.Signatures.Validation {
             }
         }
 
+        [iText.Commons.Utils.NoopAnnotation]
         [NUnit.Framework.Test]
         public virtual void XmlValidationECDSA_SHA1Test() {
             String chainName = SRC + "signing_cert_ecdsa.pem";
@@ -195,6 +206,7 @@ namespace iText.Signatures.Validation {
             }
         }
 
+        [iText.Commons.Utils.NoopAnnotation]
         [NUnit.Framework.Test]
         public virtual void XmlValidationECDSA_SHA256Test() {
             String chainName = SRC + "signing_cert_ecdsa.pem";
@@ -211,6 +223,7 @@ namespace iText.Signatures.Validation {
             }
         }
 
+        [iText.Commons.Utils.NoopAnnotation]
         [NUnit.Framework.Test]
         public virtual void XmlValidationECDSA_SHA384Test() {
             String chainName = SRC + "signing_cert_ecdsa.pem";
@@ -227,6 +240,7 @@ namespace iText.Signatures.Validation {
             }
         }
 
+        [iText.Commons.Utils.NoopAnnotation]
         [NUnit.Framework.Test]
         public virtual void XmlValidationECDSA_SHA512Test() {
             String chainName = SRC + "signing_cert_ecdsa.pem";
