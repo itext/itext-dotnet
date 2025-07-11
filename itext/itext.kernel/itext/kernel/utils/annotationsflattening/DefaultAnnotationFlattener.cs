@@ -72,7 +72,11 @@ namespace iText.Kernel.Utils.Annotationsflattening {
                 Rectangle area = annotation.GetRectangle().ToRectangle();
                 PdfCanvas under = this.CreateCanvas(page);
                 PdfStream annotationNormalAppearanceStream = (PdfStream)normalAppearance;
-                under.AddXObjectFittedIntoRectangle(new PdfFormXObject(annotationNormalAppearanceStream), area);
+                PdfFormXObject xObject = new PdfFormXObject(annotationNormalAppearanceStream);
+                AffineTransform at = PdfFormXObject.CalcAppearanceTransformToAnnotRect(xObject, area);
+                float[] m = new float[6];
+                at.GetMatrix(m);
+                under.AddXObjectWithTransformationMatrix(xObject, m[0], m[1], m[2], m[3], m[4], m[5]);
                 page.RemoveAnnotation(annotation);
                 return true;
             }

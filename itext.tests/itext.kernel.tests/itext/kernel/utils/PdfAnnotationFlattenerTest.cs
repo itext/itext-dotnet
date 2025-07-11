@@ -539,6 +539,20 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
+        public virtual void FlattenAnnotationWithRotationTest() {
+            String sourceFile = SOURCE_FOLDER + "rotatedStampAnnotation.pdf";
+            String resultFile = DESTINATION_FOLDER + "rotatedStampAnnotationTest.pdf";
+            using (PdfDocument document = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(resultFile
+                ))) {
+                PdfAnnotationFlattener flattener = new PdfAnnotationFlattener();
+                flattener.Flatten(document);
+                NUnit.Framework.Assert.AreEqual(0, document.GetFirstPage().GetAnnotations().Count);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(resultFile, SOURCE_FOLDER + "cmp_rotatedStampAnnotation.pdf"
+                , DESTINATION_FOLDER, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void FlattenTrapNetAnnotationTest() {
             String sourceFile = SOURCE_FOLDER + "flattenTrapNetAnnotationTest.pdf";
             String resultFile = DESTINATION_FOLDER + "flattenTrapNetAnnotationTest.pdf";
@@ -758,13 +772,13 @@ namespace iText.Kernel.Utils {
         internal class CustomPdfAnnotationFlattenFactory : PdfAnnotationFlattenFactory {
             public override IAnnotationFlattener GetAnnotationFlattenWorker(PdfName name) {
                 if (PdfName.Link.Equals(name)) {
-                    return new _IAnnotationFlattener_872();
+                    return new _IAnnotationFlattener_889();
                 }
                 return base.GetAnnotationFlattenWorker(name);
             }
 
-            private sealed class _IAnnotationFlattener_872 : IAnnotationFlattener {
-                public _IAnnotationFlattener_872() {
+            private sealed class _IAnnotationFlattener_889 : IAnnotationFlattener {
+                public _IAnnotationFlattener_889() {
                 }
 
                 public bool Flatten(PdfAnnotation annotation, PdfPage page) {

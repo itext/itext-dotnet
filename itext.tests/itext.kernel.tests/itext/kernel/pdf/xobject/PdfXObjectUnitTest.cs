@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Kernel.Exceptions;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Test;
 
@@ -45,6 +46,16 @@ namespace iText.Kernel.Pdf.Xobject {
                 (pdfStream));
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.UNSUPPORTED_XOBJECT_TYPE, exception.Message
                 );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InvalidBBoxParametersTest() {
+            AffineTransform expectedTransform = new AffineTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0);
+            PdfFormXObject pdfFormXObject = new PdfFormXObject(new Rectangle(200, 200));
+            pdfFormXObject.SetBBox(new PdfArray(new int[] { 0, 0, 20 }));
+            AffineTransform affineTransform = PdfFormXObject.CalcAppearanceTransformToAnnotRect(pdfFormXObject, new Rectangle
+                (200, 200));
+            NUnit.Framework.Assert.AreEqual(expectedTransform, affineTransform);
         }
     }
 }
