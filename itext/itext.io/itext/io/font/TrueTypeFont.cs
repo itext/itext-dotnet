@@ -76,6 +76,10 @@ namespace iText.IO.Font {
             : this(new OpenTypeParser(ttf)) {
         }
 
+        public TrueTypeFont(byte[] ttf, bool isLenientMode)
+            : this(new OpenTypeParser(ttf, isLenientMode)) {
+        }
+
 //\cond DO_NOT_DOCUMENT
         internal TrueTypeFont(String ttcPath, int ttcIndex)
             : this(new OpenTypeParser(ttcPath, ttcIndex)) {
@@ -188,9 +192,39 @@ namespace iText.IO.Font {
             return gdefTable;
         }
 
-        public virtual byte[] GetSubset(ICollection<int> glyphs, bool subset) {
+        /// <summary>Gets subset of the current TrueType font based on the passed glyphs.</summary>
+        /// <param name="glyphs">the glyphs to subset the font</param>
+        /// <param name="subsetTables">
+        /// whether subset tables (remove `name` and `post` tables) or not. It's used in case of ttc
+        /// (true type collection) font where single "full" font is needed. Despite the value of that
+        /// flag, only used glyphs will be left in the font
+        /// </param>
+        /// <returns>the subset font</returns>
+        public virtual byte[] GetSubset(ICollection<int> glyphs, bool subsetTables) {
             try {
-                return fontParser.GetSubset(glyphs, subset);
+                return fontParser.GetSubset(glyphs, subsetTables);
+            }
+            catch (System.IO.IOException e) {
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.IO_EXCEPTION, e);
+            }
+        }
+
+        /// <summary>Merges the passed font into one.</summary>
+        /// <remarks>Merges the passed font into one. Used glyphs per each font are applied to subset the merged font.
+        ///     </remarks>
+        /// <param name="toMerge">the fonts to merge with used glyphs per each font</param>
+        /// <param name="fontName">the name of fonts to merge</param>
+        /// <returns>the raw data of merged font</returns>
+        public static byte[] Merge(IDictionary<iText.IO.Font.TrueTypeFont, ICollection<int>> toMerge, String fontName
+            ) {
+            try {
+                IDictionary<OpenTypeParser, ICollection<int>> toMergeWithParsers = new Dictionary<OpenTypeParser, ICollection
+                    <int>>();
+                foreach (KeyValuePair<iText.IO.Font.TrueTypeFont, ICollection<int>> entry in toMerge) {
+                    toMergeWithParsers.Put(entry.Key.fontParser, entry.Value);
+                }
+                TrueTypeFontMerger trueTypeFontMerger = new TrueTypeFontMerger(fontName, toMergeWithParsers);
+                return trueTypeFontMerger.Process();
             }
             catch (System.IO.IOException e) {
                 throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.IO_EXCEPTION, e);
@@ -356,7 +390,7 @@ namespace iText.IO.Font {
                 }
                 int cid;
                 Glyph glyph;
-                int[] glyphBBox = bBoxes != null ? bBoxes[index] : null;
+                int[] glyphBBox = (bBoxes != null && index < bBoxes.Length) ? bBoxes[index] : null;
                 if (cffFontSubset != null && cffFontSubset.IsCID()) {
                     cid = cffFontSubset.GetCidForGlyphId(index);
                     GidAwareGlyph cffGlyph = new GidAwareGlyph(cid, glyphWidths[index], charCode, glyphBBox);
@@ -384,7 +418,7 @@ namespace iText.IO.Font {
                 codeToGlyph.Put(index, glyph);
                 avgWidth += glyph.GetWidth();
             }
-            if (codeToGlyph.Count != 0) {
+            if (!codeToGlyph.IsEmpty()) {
                 avgWidth /= codeToGlyph.Count;
             }
             ReadGdefTable();

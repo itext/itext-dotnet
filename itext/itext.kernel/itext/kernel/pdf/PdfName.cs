@@ -337,6 +337,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Ch = CreateDirectName("Ch");
 
+        public static readonly iText.Kernel.Pdf.PdfName CharSet = new iText.Kernel.Pdf.PdfName("CharSet");
+
         public static readonly iText.Kernel.Pdf.PdfName CI = CreateDirectName("CI");
 
         public static readonly iText.Kernel.Pdf.PdfName CIDFontType0 = CreateDirectName("CIDFontType0");

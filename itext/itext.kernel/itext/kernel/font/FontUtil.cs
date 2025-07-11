@@ -29,10 +29,13 @@ using iText.Commons;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
+using iText.IO.Font.Otf;
+using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Font {
+    /// <summary>Utility class for font processing.</summary>
     public class FontUtil {
         private static readonly RNGCryptoServiceProvider NUMBER_GENERATOR = new RNGCryptoServiceProvider();
 
@@ -49,14 +52,33 @@ namespace iText.Kernel.Font {
         private FontUtil() {
         }
 
+        /// <summary>Adds random subset prefix (+ and 6 upper case letters) to passed font name.</summary>
+        /// <param name="fontName">the font add prefix to</param>
+        /// <returns>the font name with added prefix.</returns>
         public static String AddRandomSubsetPrefixForFontName(String fontName) {
             StringBuilder newFontName = GetRandomFontPrefix(6);
             newFontName.Append('+').Append(fontName);
             return newFontName.ToString();
         }
 
-//\cond DO_NOT_DOCUMENT
-        internal static CMapToUnicode ProcessToUnicode(PdfObject toUnicode) {
+        /// <summary>
+        /// Processes passed
+        /// <c>ToUnicode</c>
+        /// object to
+        /// <see cref="iText.IO.Font.Cmap.CMapToUnicode"/>
+        /// instance.
+        /// </summary>
+        /// <param name="toUnicode">
+        /// the
+        /// <c>ToUnicode</c>
+        /// object
+        /// </param>
+        /// <returns>
+        /// parsed
+        /// <see cref="iText.IO.Font.Cmap.CMapToUnicode"/>
+        /// instance
+        /// </returns>
+        public static CMapToUnicode ProcessToUnicode(PdfObject toUnicode) {
             CMapToUnicode cMapToUnicode = null;
             if (toUnicode is PdfStream) {
                 try {
@@ -77,7 +99,119 @@ namespace iText.Kernel.Font {
             }
             return cMapToUnicode;
         }
-//\endcond
+
+        /// <summary>
+        /// Converts passed
+        /// <c>W</c>
+        /// array to integer table.
+        /// </summary>
+        /// <param name="widthsArray">
+        /// the
+        /// <c>W</c>
+        /// array to convert
+        /// </param>
+        /// <returns>
+        /// converted
+        /// <c>W</c>
+        /// array as an integer table
+        /// </returns>
+        public static IntHashtable ConvertCompositeWidthsArray(PdfArray widthsArray) {
+            IntHashtable res = new IntHashtable();
+            if (widthsArray == null) {
+                return res;
+            }
+            for (int k = 0; k < widthsArray.Size(); ++k) {
+                int c1 = widthsArray.GetAsNumber(k).IntValue();
+                PdfObject obj = widthsArray.Get(++k);
+                if (obj.IsArray()) {
+                    PdfArray subWidths = (PdfArray)obj;
+                    for (int j = 0; j < subWidths.Size(); ++j) {
+                        int c2 = subWidths.GetAsNumber(j).IntValue();
+                        res.Put(c1++, c2);
+                    }
+                }
+                else {
+                    int c2 = ((PdfNumber)obj).IntValue();
+                    int w = widthsArray.GetAsNumber(++k).IntValue();
+                    for (; c1 <= c2; ++c1) {
+                        res.Put(c1, w);
+                    }
+                }
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// Gets a
+        /// <c>ToUnicode</c>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+        /// from passed glyphs.
+        /// </summary>
+        /// <param name="glyphs">
+        /// the glyphs
+        /// <c>ToUnicode</c>
+        /// will be based on
+        /// </param>
+        /// <returns>
+        /// the created
+        /// <c>ToUnicode</c>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+        /// </returns>
+        public static PdfStream GetToUnicodeStream(ICollection<Glyph> glyphs) {
+            HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream
+                >(new ByteArrayOutputStream());
+            stream.WriteString("/CIDInit /ProcSet findresource begin\n" + "12 dict begin\n" + "begincmap\n" + "/CIDSystemInfo\n"
+                 + "<< /Registry (Adobe)\n" + "/Ordering (UCS)\n" + "/Supplement 0\n" + ">> def\n" + "/CMapName /Adobe-Identity-UCS def\n"
+                 + "/CMapType 2 def\n" + "1 begincodespacerange\n" + "<0000><FFFF>\n" + "endcodespacerange\n");
+            //accumulate long tag into a subset and write it.
+            IList<Glyph> glyphGroup = new List<Glyph>(100);
+            int bfranges = 0;
+            foreach (Glyph glyph in glyphs) {
+                if (glyph.GetChars() != null) {
+                    glyphGroup.Add(glyph);
+                    if (glyphGroup.Count == 100) {
+                        bfranges += WriteBfrange(stream, glyphGroup);
+                    }
+                }
+            }
+            //flush leftovers
+            bfranges += WriteBfrange(stream, glyphGroup);
+            if (bfranges == 0) {
+                return null;
+            }
+            stream.WriteString("endcmap\n" + "CMapName currentdict /CMap defineresource pop\n" + "end end\n");
+            return new PdfStream(((ByteArrayOutputStream)stream.GetOutputStream()).ToArray());
+        }
+
+        private static int WriteBfrange(HighPrecisionOutputStream<ByteArrayOutputStream> stream, IList<Glyph> range
+            ) {
+            if (range.IsEmpty()) {
+                return 0;
+            }
+            stream.WriteInteger(range.Count);
+            stream.WriteString(" beginbfrange\n");
+            foreach (Glyph glyph in range) {
+                String fromTo = CMapContentParser.ToHex(glyph.GetCode());
+                stream.WriteString(fromTo);
+                stream.WriteString(fromTo);
+                stream.WriteByte('<');
+                foreach (char ch in glyph.GetChars()) {
+                    stream.WriteString(ToHex4(ch));
+                }
+                stream.WriteByte('>');
+                stream.WriteByte('\n');
+            }
+            stream.WriteString("endbfrange\n");
+            range.Clear();
+            return 1;
+        }
+
+        private static String ToHex4(char ch) {
+            String s = "0000" + JavaUtil.IntegerToHexString(ch);
+            return s.Substring(s.Length - 4);
+        }
 
 //\cond DO_NOT_DOCUMENT
         internal static CMapToUnicode ParseUniversalToUnicodeCMap(String ordering) {
@@ -138,34 +272,6 @@ namespace iText.Kernel.Font {
             for (int i = 0; i < widthsArray.Size() && first + i < 256; i++) {
                 PdfNumber number = widthsArray.GetAsNumber(i);
                 res[first + i] = number != null ? number.IntValue() : missingWidth;
-            }
-            return res;
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        internal static IntHashtable ConvertCompositeWidthsArray(PdfArray widthsArray) {
-            IntHashtable res = new IntHashtable();
-            if (widthsArray == null) {
-                return res;
-            }
-            for (int k = 0; k < widthsArray.Size(); ++k) {
-                int c1 = widthsArray.GetAsNumber(k).IntValue();
-                PdfObject obj = widthsArray.Get(++k);
-                if (obj.IsArray()) {
-                    PdfArray subWidths = (PdfArray)obj;
-                    for (int j = 0; j < subWidths.Size(); ++j) {
-                        int c2 = subWidths.GetAsNumber(j).IntValue();
-                        res.Put(c1++, c2);
-                    }
-                }
-                else {
-                    int c2 = ((PdfNumber)obj).IntValue();
-                    int w = widthsArray.GetAsNumber(++k).IntValue();
-                    for (; c1 <= c2; ++c1) {
-                        res.Put(c1, w);
-                    }
-                }
             }
             return res;
         }

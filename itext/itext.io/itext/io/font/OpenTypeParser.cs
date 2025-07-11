@@ -34,6 +34,16 @@ using iText.IO.Util;
 namespace iText.IO.Font {
 //\cond DO_NOT_DOCUMENT
     internal class OpenTypeParser : IDisposable {
+        private const int ARG_1_AND_2_ARE_WORDS = 1;
+
+        private const int WE_HAVE_A_SCALE = 8;
+
+        private const int MORE_COMPONENTS = 32;
+
+        private const int WE_HAVE_AN_X_AND_Y_SCALE = 64;
+
+        private const int WE_HAVE_A_TWO_BY_TWO = 128;
+
         private const int HEAD_LOCA_FORMAT_OFFSET = 51;
 
 //\cond DO_NOT_DOCUMENT
@@ -349,6 +359,11 @@ namespace iText.IO.Font {
 
         private int[] glyphWidthsByIndex;
 
+        private int[] locaTable;
+
+        // In case of lenient mode parsing 'name' table can be missed
+        private bool isLenientMode = false;
+
         protected internal OpenTypeParser.HeaderTable head;
 
         protected internal OpenTypeParser.HorizontalHeader hhea;
@@ -368,8 +383,27 @@ namespace iText.IO.Font {
         /// </remarks>
         protected internal IDictionary<String, int[]> tables;
 
-        public OpenTypeParser(byte[] ttf) {
+        /// <summary>
+        /// Instantiates a new
+        /// <see cref="OpenTypeParser"/>
+        /// instance based on raw font data.
+        /// </summary>
+        /// <param name="ttf">the raw font data</param>
+        public OpenTypeParser(byte[] ttf)
+            : this(ttf, false) {
+        }
+
+        /// <summary>
+        /// Instantiates a new
+        /// <see cref="OpenTypeParser"/>
+        /// instance based on raw font data.
+        /// </summary>
+        /// <param name="ttf">the raw font data</param>
+        /// <param name="isLenientMode">whether font parsing will be in lenient mode (when some tables are allowed to be absent) or not
+        ///     </param>
+        public OpenTypeParser(byte[] ttf, bool isLenientMode) {
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(ttf));
+            this.isLenientMode = isLenientMode;
             InitializeSfntTables();
         }
 
@@ -399,11 +433,13 @@ namespace iText.IO.Font {
         /// <summary>Gets the Postscript font name.</summary>
         public virtual String GetPsFontName() {
             if (fontName == null) {
-                IList<String[]> names = allNameEntries.Get(6);
-                if (names != null && names.Count > 0) {
-                    fontName = names[0][3];
+                if (!allNameEntries.IsEmpty()) {
+                    IList<String[]> names = allNameEntries.Get(6);
+                    if (names != null && !names.IsEmpty()) {
+                        fontName = names[0][3];
+                    }
                 }
-                else {
+                if (fontName == null && fileName != null) {
                     fontName = new FileInfo(fileName).Name.Replace(' ', '-');
                 }
             }
@@ -478,6 +514,8 @@ namespace iText.IO.Font {
             return cff;
         }
 
+        /// <summary>Gets the raw bytes of parsed font.</summary>
+        /// <returns>the raw bytes of parsed font</returns>
         public virtual byte[] GetFullFont() {
             RandomAccessFileOrArray rf2 = null;
             try {
@@ -495,6 +533,41 @@ namespace iText.IO.Font {
                 catch (Exception) {
                 }
             }
+        }
+
+        /// <summary>Gets glyph data from `glyph` table for passed GID (glyph ID).</summary>
+        /// <param name="gid">the glyph ID to get data for</param>
+        /// <returns>the raw glyph data</returns>
+        public virtual byte[] GetGlyphDataForGid(int gid) {
+            int[] tableLocation = tables.Get("glyf");
+            if (tableLocation == null) {
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN).SetMessageParams
+                    ("glyf", fileName);
+            }
+            int glyfOffset = tableLocation[0];
+            int start = locaTable[gid];
+            int len = locaTable[gid + 1] - start;
+            byte[] data = new byte[len];
+            raf.Seek(glyfOffset + start);
+            raf.ReadFully(data, 0, len);
+            return data;
+        }
+
+        /// <summary>Gets horizontal metric data from `hmtx` table for passed GID (glyph ID).</summary>
+        /// <param name="gid">the glyph ID to get data for</param>
+        /// <returns>the raw horizontal metric data</returns>
+        public virtual byte[] GetHorizontalMetricForGid(int gid) {
+            int[] tableLocation = tables.Get("hmtx");
+            if (tableLocation == null) {
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN).SetMessageParams
+                    ("hmtx", fileName);
+            }
+            int hmtxOffset = tableLocation[0];
+            // 4 bytes per each glyph, 2 bytes for width, 2 bytes for left side bearing
+            raf.Seek(hmtxOffset + gid * 4);
+            byte[] metric = new byte[4];
+            raf.Read(metric, 0, 4);
+            return metric;
         }
 
         /// <summary>
@@ -531,9 +604,16 @@ namespace iText.IO.Font {
         }
 
 //\cond DO_NOT_DOCUMENT
-        internal virtual byte[] GetSubset(ICollection<int> glyphs, bool subset) {
-            TrueTypeFontSubset sb = new TrueTypeFontSubset(fileName, raf.CreateView(), glyphs, directoryOffset, subset
-                );
+        /// <summary>Gets raw bytes of subset of parsed font.</summary>
+        /// <param name="glyphs">the glyphs to subset the font</param>
+        /// <param name="subsetTables">
+        /// whether subset tables (remove `name` and `post` tables) or not. It's used in case of ttc
+        /// (true type collection) font where single "full" font is needed. Despite the value of that
+        /// flag, only used glyphs will be left in the font
+        /// </param>
+        /// <returns>the raw data of subset font</returns>
+        internal virtual byte[] GetSubset(ICollection<int> glyphs, bool subsetTables) {
+            TrueTypeFontSubsetter sb = new TrueTypeFontSubsetter(fileName, this, glyphs, subsetTables);
             return sb.Process();
         }
 //\endcond
@@ -543,6 +623,79 @@ namespace iText.IO.Font {
                 raf.Close();
             }
             raf = null;
+        }
+
+        /// <summary>Gets flatten glyphs based on passed glyphs.</summary>
+        /// <remarks>
+        /// Gets flatten glyphs based on passed glyphs. Flattening means that for all
+        /// composite glyphs contour glyph will be added to the returned list.
+        /// </remarks>
+        /// <param name="glyphs">the glyphs to flatten</param>
+        /// <returns>the list of passed glyphs plus their contours (if there are)</returns>
+        public virtual IList<int> GetFlatGlyphs(ICollection<int> glyphs) {
+            ICollection<int> glyphsUsed = new HashSet<int>(glyphs);
+            IList<int> glyphsInList = new List<int>(glyphs);
+            int glyph0 = 0;
+            if (!glyphsUsed.Contains(glyph0)) {
+                glyphsUsed.Add(glyph0);
+                glyphsInList.Add(glyph0);
+            }
+            int[] tableLocation = tables.Get("glyf");
+            if (tableLocation == null) {
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN).SetMessageParams
+                    ("glyf", fileName);
+            }
+            int glyfOffset = tableLocation[0];
+            // Do not replace with foreach. ConcurrentModificationException will arise.
+            for (int i = 0; i < glyphsInList.Count; i++) {
+                CheckGlyphComposite((int)glyphsInList[i], glyphsUsed, glyphsInList, glyfOffset);
+            }
+            return glyphsInList;
+        }
+
+        private void CheckGlyphComposite(int glyph, ICollection<int> glyphsUsed, IList<int> glyphsInList, int glyfOffset
+            ) {
+            int start = locaTable[glyph];
+            // no contour
+            if (start == locaTable[glyph + 1]) {
+                return;
+            }
+            raf.Seek(glyfOffset + start);
+            int numContours = raf.ReadShort();
+            if (numContours >= 0) {
+                return;
+            }
+            raf.SkipBytes(8);
+            for (; ; ) {
+                int flags = raf.ReadUnsignedShort();
+                int cGlyph = raf.ReadUnsignedShort();
+                if (!glyphsUsed.Contains(cGlyph)) {
+                    glyphsUsed.Add(cGlyph);
+                    glyphsInList.Add(cGlyph);
+                }
+                if ((flags & MORE_COMPONENTS) == 0) {
+                    return;
+                }
+                int skip;
+                if ((flags & ARG_1_AND_2_ARE_WORDS) != 0) {
+                    skip = 4;
+                }
+                else {
+                    skip = 2;
+                }
+                if ((flags & WE_HAVE_A_SCALE) != 0) {
+                    skip += 2;
+                }
+                else {
+                    if ((flags & WE_HAVE_AN_X_AND_Y_SCALE) != 0) {
+                        skip += 4;
+                    }
+                }
+                if ((flags & WE_HAVE_A_TWO_BY_TWO) != 0) {
+                    skip += 8;
+                }
+                raf.SkipBytes(skip);
+            }
         }
 
         private void InitializeSfntTables() {
@@ -615,12 +768,15 @@ namespace iText.IO.Font {
             ReadNameTable();
             ReadHeadTable();
             ReadOs_2Table();
+            if (all) {
+                ReadHheaTable();
+            }
             ReadPostTable();
             if (all) {
                 CheckCff();
-                ReadHheaTable();
                 ReadGlyphWidths();
                 ReadCmapTable();
+                ReadLoca();
             }
         }
 
@@ -646,12 +802,11 @@ namespace iText.IO.Font {
         }
 
         protected internal virtual void CheckCff() {
-            int[] table_location;
-            table_location = tables.Get("CFF ");
-            if (table_location != null) {
+            int[] tableLocation = tables.Get("CFF ");
+            if (tableLocation != null) {
                 cff = true;
-                cffOffset = table_location[0];
-                cffLength = table_location[1];
+                cffOffset = tableLocation[0];
+                cffLength = tableLocation[1];
             }
         }
 
@@ -667,8 +822,7 @@ namespace iText.IO.Font {
         protected internal virtual void ReadGlyphWidths() {
             int numberOfHMetrics = hhea.numberOfHMetrics;
             int unitsPerEm = head.unitsPerEm;
-            int[] table_location;
-            table_location = tables.Get("hmtx");
+            int[] table_location = tables.Get("hmtx");
             if (table_location == null) {
                 if (fileName != null) {
                     throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN).SetMessageParams
@@ -735,41 +889,10 @@ namespace iText.IO.Font {
         /// <see cref="HeaderTable.unitsPerEm"/>
         /// </param>
         protected internal virtual int[][] ReadBbox(int unitsPerEm) {
-            int[] tableLocation;
-            tableLocation = tables.Get("head");
-            if (tableLocation == null) {
-                if (fileName != null) {
-                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN).SetMessageParams
-                        ("head", fileName);
-                }
-                else {
-                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXIST).SetMessageParams
-                        ("head");
-                }
-            }
-            raf.Seek(tableLocation[0] + HEAD_LOCA_FORMAT_OFFSET);
-            bool locaShortTable = raf.ReadUnsignedShort() == 0;
-            tableLocation = tables.Get("loca");
-            if (tableLocation == null) {
+            if (locaTable == null) {
                 return null;
             }
-            raf.Seek(tableLocation[0]);
-            int[] locaTable;
-            if (locaShortTable) {
-                int entries = tableLocation[1] / 2;
-                locaTable = new int[entries];
-                for (int k = 0; k < entries; ++k) {
-                    locaTable[k] = raf.ReadUnsignedShort() * 2;
-                }
-            }
-            else {
-                int entries = tableLocation[1] / 4;
-                locaTable = new int[entries];
-                for (int k = 0; k < entries; ++k) {
-                    locaTable[k] = raf.ReadInt();
-                }
-            }
-            tableLocation = tables.Get("glyf");
+            int[] tableLocation = tables.Get("glyf");
             if (tableLocation == null) {
                 if (fileName != null) {
                     throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN).SetMessageParams
@@ -805,10 +928,49 @@ namespace iText.IO.Font {
             }
         }
 
+        private void ReadLoca() {
+            int[] tableLocation = tables.Get("head");
+            if (tableLocation == null) {
+                if (fileName != null) {
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN).SetMessageParams
+                        ("head", fileName);
+                }
+                else {
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXIST).SetMessageParams
+                        ("head");
+                }
+            }
+            raf.Seek(tableLocation[0] + HEAD_LOCA_FORMAT_OFFSET);
+            bool locaShortTable = raf.ReadUnsignedShort() == 0;
+            tableLocation = tables.Get("loca");
+            if (tableLocation == null) {
+                return;
+            }
+            raf.Seek(tableLocation[0]);
+            if (locaShortTable) {
+                int entries = tableLocation[1] / 2;
+                locaTable = new int[entries];
+                for (int k = 0; k < entries; ++k) {
+                    locaTable[k] = raf.ReadUnsignedShort() * 2;
+                }
+            }
+            else {
+                int entries = tableLocation[1] / 4;
+                locaTable = new int[entries];
+                for (int k = 0; k < entries; ++k) {
+                    locaTable[k] = raf.ReadInt();
+                }
+            }
+        }
+
         /// <summary>Extracts the names of the font in all the languages available.</summary>
         private void ReadNameTable() {
             int[] table_location = tables.Get("name");
+            allNameEntries = new LinkedDictionary<int, IList<String[]>>();
             if (table_location == null) {
+                if (isLenientMode) {
+                    return;
+                }
                 if (fileName != null) {
                     throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN).SetMessageParams
                         ("name", fileName);
@@ -818,7 +980,6 @@ namespace iText.IO.Font {
                         ("name");
                 }
             }
-            allNameEntries = new LinkedDictionary<int, IList<String[]>>();
             raf.Seek(table_location[0] + 2);
             int numRecords = raf.ReadUnsignedShort();
             int startOfStorage = raf.ReadUnsignedShort();

@@ -152,6 +152,8 @@ namespace iText.IO.Exceptions {
 
         public const String IMAGE_MASK_CANNOT_CONTAIN_ANOTHER_IMAGE_MASK = "Image mask cannot contain another image mask.";
 
+        public const String INCOMPATIBLE_GLYPH_DATA_DURING_FONT_MERGING = "Incompatibility of glyph data/metrics between merged fonts";
+
         public const String INCOMPLETE_PALETTE = "Incomplete palette.";
 
         public const String INCORRECT_SIGNATURE = "Incorrect woff2 signature";
