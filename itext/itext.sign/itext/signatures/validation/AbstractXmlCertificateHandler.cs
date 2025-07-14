@@ -23,18 +23,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
-using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
-using iText.Kernel.Utils;
 using iText.Signatures.Exceptions;
-using System.Xml;
-using System.IO;
 using iText.Commons.Bouncycastle;
 using iText.Bouncycastleconnector;
+using iText.Signatures.Validation.Xml;
 using Org.BouncyCastle.Security.Certificates;
 
 namespace iText.Signatures.Validation {
-    internal abstract class AbstractXmlCertificateHandler
+    internal abstract class AbstractXmlCertificateHandler : IDefaultXmlHandler
     {
 
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY =
@@ -47,49 +44,11 @@ namespace iText.Signatures.Validation {
 
         internal abstract IList<IX509Certificate> GetCertificateList();
 
-        public abstract void StartElement(String uri, String localName, String qName, Attributes attributes);
+        public abstract void StartElement(String uri, String localName, String qName, Dictionary<string, string> attributes);
 
         public abstract void EndElement(String uri, String localName, String qName);
 
         public abstract void Characters(char[] ch, int start, int length);
-
-
-        internal void ReadXml(System.IO.Stream stream)
-        {
-            XmlReaderSettings settings = new XmlReaderSettings();
-        settings.Async = true;
-
-            using (XmlReader reader = XmlReader.Create(stream, settings))
-            {
-                while (reader.Read())
-                {
-                    switch (reader.NodeType)
-                    {
-                        case XmlNodeType.Element:
-                            Attributes attributes = new Attributes();
-                            if (reader.HasAttributes)
-                            {
-                                for (int i = 0; i < reader.AttributeCount; i++)
-                                {
-                                    reader.MoveToAttribute(i);
-                                    attributes.Add(reader.Name, reader.Value);
-                                }
-                            }
-                            StartElement(reader.BaseURI, RemoveNamespace(reader.Name), reader.Name, attributes);
-                            break;
-                        case XmlNodeType.Text:
-                            String value = reader.Value;
-                            Characters(value.ToCharArray(0, value.Length), 0, value.Length);
-                            break;
-                        case XmlNodeType.EndElement:
-                            EndElement(reader.BaseURI, RemoveNamespace(reader.Name), reader.Name);
-                            break;
-                        default:
-                            break;
-                    }
-}
-            }
-        }
 
         internal IX509Certificate GetCertificateFromEncodedData(String certificateString)
         {
