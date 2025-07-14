@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of the iText (R) project.
 Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
@@ -20,53 +20,37 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.Bouncycastleconnector;
-using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
-using iText.Commons.Utils;
-using iText.Kernel.Exceptions;
-using iText.Signatures.Exceptions;
-using iText.Commons.Bouncycastle.Cert;
-using Org.BouncyCastle.Security.Certificates;
-using System.Xml;
+using iText.Signatures.Validation.Xml;
 
-namespace iText.Signatures.Validation
-{
-    internal class XmlCertificateRetriever
-    {
-        private AbstractXmlCertificateHandler handler;
-        internal XmlCertificateRetriever(AbstractXmlCertificateHandler handler)
-        {
+namespace iText.Signatures.Validation {
+//\cond DO_NOT_DOCUMENT
+    internal class XmlCertificateRetriever {
+        private readonly AbstractXmlCertificateHandler handler;
+
+//\cond DO_NOT_DOCUMENT
+        internal XmlCertificateRetriever(AbstractXmlCertificateHandler handler) {
             this.handler = handler;
         }
+//\endcond
 
-        internal IList<IX509Certificate> GetCertificates(String path)
-        {
-            if (!handler.GetCertificateList().IsEmpty())
-            {
+//\cond DO_NOT_DOCUMENT
+        internal virtual IList<IX509Certificate> GetCertificates(Stream inputStream) {
+            if (!handler.GetCertificateList().IsEmpty()) {
                 handler.Clear();
             }
-
-            FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
-            try
-            {
-                handler.ReadXml(stream);
-            }
-            catch (XmlException e)
-            {
-                throw new PdfException(MessageFormatUtil.Format(SignExceptionMessageConstant.FAILED_TO_READ_CERTIFICATE_BYTES_FROM_XML
-                    , path), e);
-            }
-
+            new XmlSaxProcessor().Process(inputStream, handler);
             return handler.GetCertificateList();
         }
+//\endcond
 
-        internal IServiceContext GetServiceContext(IX509Certificate certificate)
-        {
+//\cond DO_NOT_DOCUMENT
+        internal virtual IServiceContext GetServiceContext(IX509Certificate certificate) {
             return handler.GetServiceContext(certificate);
         }
+//\endcond
     }
+//\endcond
 }

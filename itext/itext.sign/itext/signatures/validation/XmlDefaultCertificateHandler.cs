@@ -28,11 +28,11 @@ using iText.Commons.Bouncycastle.Cert;
 namespace iText.Signatures.Validation {
 //\cond DO_NOT_DOCUMENT
     internal class XmlDefaultCertificateHandler : AbstractXmlCertificateHandler {
-        private StringBuilder information;
-
         private readonly IList<IX509Certificate> certificateList = new List<IX509Certificate>();
 
         private readonly IList<SimpleServiceContext> serviceContextList = new List<SimpleServiceContext>();
+
+        private StringBuilder information;
 
 //\cond DO_NOT_DOCUMENT
         internal XmlDefaultCertificateHandler() {
@@ -40,7 +40,12 @@ namespace iText.Signatures.Validation {
 //\endcond
 
         //empty constructor
-        public override void StartElement(String uri, String localName, String qName, Attributes attributes) {
+        private static String RemoveWhitespacesAndBreakLines(String data) {
+            return data.Replace(" ", "").Replace("\n", "");
+        }
+
+        public override void StartElement(String uri, String localName, String qName, Dictionary<String, String> attributes
+            ) {
             if (XmlTagConstants.X509CERTIFICATE.Equals(localName)) {
                 information = new StringBuilder();
             }
@@ -85,10 +90,6 @@ namespace iText.Signatures.Validation {
             serviceContextList.Clear();
         }
 //\endcond
-
-        private static String RemoveWhitespacesAndBreakLines(String data) {
-            return data.Replace(" ", "").Replace("\n", "");
-        }
     }
 //\endcond
 }

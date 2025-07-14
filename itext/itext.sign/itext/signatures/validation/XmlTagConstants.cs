@@ -52,6 +52,22 @@ namespace iText.Signatures.Validation {
 //\cond DO_NOT_DOCUMENT
         internal const String SERVICE_HISTORY_INSTANCE = "ServiceHistoryInstance";
 //\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String OTHER_TSL_POINTER = "OtherTSLPointer";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String SCHEME_TERRITORY = "SchemeTerritory";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String TSLLOCATION = "TSLLocation";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String MIME_TYPE = "MimeType";
+//\endcond
     }
 //\endcond
 }

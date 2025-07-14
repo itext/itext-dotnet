@@ -30,16 +30,6 @@ namespace iText.Signatures.Validation {
     internal class XmlCountryCertificateHandler : AbstractXmlCertificateHandler {
         private static readonly IList<String> INFORMATION_TAGS = new List<String>();
 
-        private StringBuilder information;
-
-        private readonly IList<IX509Certificate> certificateList = new List<IX509Certificate>();
-
-        private CountryServiceContext currentServiceContext = null;
-
-        private ServiceStatusInfo currentServiceStatusInfo = null;
-
-        private readonly IList<CountryServiceContext> serviceContextList = new List<CountryServiceContext>();
-
         static XmlCountryCertificateHandler() {
             INFORMATION_TAGS.Add(XmlTagConstants.SERVICE_TYPE);
             INFORMATION_TAGS.Add(XmlTagConstants.SERVICE_STATUS);
@@ -47,13 +37,28 @@ namespace iText.Signatures.Validation {
             INFORMATION_TAGS.Add(XmlTagConstants.SERVICE_STATUS_STARTING_TIME);
         }
 
+        private readonly IList<IX509Certificate> certificateList = new List<IX509Certificate>();
+
+        private readonly IList<CountryServiceContext> serviceContextList = new List<CountryServiceContext>();
+
+        private StringBuilder information;
+
+        private CountryServiceContext currentServiceContext = null;
+
+        private ServiceStatusInfo currentServiceStatusInfo = null;
+
 //\cond DO_NOT_DOCUMENT
         internal XmlCountryCertificateHandler() {
         }
 //\endcond
 
         //empty constructor
-        public override void StartElement(String uri, String localName, String qName, Attributes attributes) {
+        private static String RemoveWhitespacesAndBreakLines(String data) {
+            return data.Replace(" ", "").Replace("\n", "");
+        }
+
+        public override void StartElement(String uri, String localName, String qName, Dictionary<String, String> attributes
+            ) {
             if (XmlTagConstants.TSP_SERVICE.Equals(localName)) {
                 StartProvider();
             }
@@ -172,10 +177,6 @@ namespace iText.Signatures.Validation {
             serviceContextList.Clear();
         }
 //\endcond
-
-        private static String RemoveWhitespacesAndBreakLines(String data) {
-            return data.Replace(" ", "").Replace("\n", "");
-        }
     }
 //\endcond
 }

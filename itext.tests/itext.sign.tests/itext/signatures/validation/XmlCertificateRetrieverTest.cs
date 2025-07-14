@@ -22,8 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using iText.Commons.Bouncycastle.Cert;
-using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;
@@ -33,14 +33,14 @@ namespace iText.Signatures.Validation {
     [NUnit.Framework.Category("UnitTest")]
     public class XmlCertificateRetrieverTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/XmlCertificateRetrieverTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation" + "/XmlCertificateRetrieverTest/";
 
         [NUnit.Framework.Test]
         public virtual void ReadSingleCertificateTest() {
             String xmlPath = SOURCE_FOLDER + "certificate.xml";
             String certPath = SOURCE_FOLDER + "certificate.pem";
             IX509Certificate actualCertificate = new XmlCertificateRetriever(new XmlDefaultCertificateHandler()).GetCertificates
-                (xmlPath)[0];
+                (iText.Commons.Utils.FileUtil.GetInputStreamForFile(System.IO.Path.Combine(xmlPath)))[0];
             IX509Certificate expectedCertificate = PemFileHelper.ReadFirstChain(certPath)[0];
             NUnit.Framework.Assert.AreEqual(expectedCertificate, actualCertificate);
         }
@@ -49,7 +49,7 @@ namespace iText.Signatures.Validation {
         public virtual void ReadLotlCertificatesTest() {
             String xmlPath = SOURCE_FOLDER + "eu-lotl.xml";
             IList<IX509Certificate> certificateList = new XmlCertificateRetriever(new XmlDefaultCertificateHandler()).
-                GetCertificates(xmlPath);
+                GetCertificates(iText.Commons.Utils.FileUtil.GetInputStreamForFile(System.IO.Path.Combine(xmlPath)));
             NUnit.Framework.Assert.AreEqual(142, certificateList.Count);
         }
 
@@ -58,7 +58,8 @@ namespace iText.Signatures.Validation {
             String xmlPath = SOURCE_FOLDER + "eu-lotl-pivot-282.xml";
             XmlCertificateRetriever xmlCertificateRetriever = new XmlCertificateRetriever(new XmlDefaultCertificateHandler
                 ());
-            IList<IX509Certificate> certificateList = xmlCertificateRetriever.GetCertificates(xmlPath);
+            IList<IX509Certificate> certificateList = xmlCertificateRetriever.GetCertificates(iText.Commons.Utils.FileUtil.GetInputStreamForFile
+                (System.IO.Path.Combine(xmlPath)));
             NUnit.Framework.Assert.AreEqual(126, certificateList.Count);
             IServiceContext context = xmlCertificateRetriever.GetServiceContext(certificateList[0]);
             NUnit.Framework.Assert.IsNotNull(context);
@@ -69,7 +70,7 @@ namespace iText.Signatures.Validation {
         public virtual void ReadAustriaCertificatesTest() {
             String xmlPath = SOURCE_FOLDER + "austriaTrustedList.xml";
             IList<IX509Certificate> certificateList = new XmlCertificateRetriever(new XmlDefaultCertificateHandler()).
-                GetCertificates(xmlPath);
+                GetCertificates(iText.Commons.Utils.FileUtil.GetInputStreamForFile(System.IO.Path.Combine(xmlPath)));
             NUnit.Framework.Assert.AreEqual(104, certificateList.Count);
         }
 
@@ -78,7 +79,8 @@ namespace iText.Signatures.Validation {
             String xmlPath = SOURCE_FOLDER + "BulgariaTrustedList.xml";
             XmlCertificateRetriever xmlCertificateRetriever = new XmlCertificateRetriever(new XmlCountryCertificateHandler
                 ());
-            IList<IX509Certificate> certificateList = xmlCertificateRetriever.GetCertificates(xmlPath);
+            IList<IX509Certificate> certificateList = xmlCertificateRetriever.GetCertificates(iText.Commons.Utils.FileUtil.GetInputStreamForFile
+                (System.IO.Path.Combine(xmlPath)));
             NUnit.Framework.Assert.AreEqual(104, certificateList.Count);
         }
 
@@ -87,7 +89,8 @@ namespace iText.Signatures.Validation {
             String xmlPath = SOURCE_FOLDER + "CzechiaTrustedList.txt";
             XmlCertificateRetriever xmlCertificateRetriever = new XmlCertificateRetriever(new XmlCountryCertificateHandler
                 ());
-            IList<IX509Certificate> certificateList = xmlCertificateRetriever.GetCertificates(xmlPath);
+            IList<IX509Certificate> certificateList = xmlCertificateRetriever.GetCertificates(iText.Commons.Utils.FileUtil.GetInputStreamForFile
+                (System.IO.Path.Combine(xmlPath)));
             NUnit.Framework.Assert.AreEqual(441, certificateList.Count);
         }
 
@@ -96,7 +99,8 @@ namespace iText.Signatures.Validation {
             String xmlPath = SOURCE_FOLDER + "cyprusTrustedList.xml";
             XmlCertificateRetriever xmlCertificateRetriever = new XmlCertificateRetriever(new XmlCountryCertificateHandler
                 ());
-            IList<IX509Certificate> certificateList = xmlCertificateRetriever.GetCertificates(xmlPath);
+            IList<IX509Certificate> certificateList = xmlCertificateRetriever.GetCertificates(iText.Commons.Utils.FileUtil.GetInputStreamForFile
+                (System.IO.Path.Combine(xmlPath)));
             NUnit.Framework.Assert.AreEqual(8, certificateList.Count);
             CountryServiceContext serviceContext = (CountryServiceContext)xmlCertificateRetriever.GetServiceContext(certificateList
                 [0]);
@@ -105,8 +109,8 @@ namespace iText.Signatures.Validation {
                 .GetCurrentStatusInfo().GetServiceStatus());
             NUnit.Framework.Assert.AreEqual("http://uri.etsi.org/TrstSvc/Svctype/CA/QC", serviceContext.GetServiceType
                 ());
-            NUnit.Framework.Assert.AreEqual(new DateTime(2021, 12, 16, 6, 0, 18), serviceContext.GetCurrentStatusInfo()
-                .GetServiceStatusStartingTime());
+            NUnit.Framework.Assert.AreEqual(iText.Commons.Utils.DateTimeUtil.CreateDateTime(2021, 12, 16, 6, 0, 18), serviceContext
+                .GetCurrentStatusInfo().GetServiceStatusStartingTime());
         }
 
         [NUnit.Framework.Test]
@@ -114,7 +118,8 @@ namespace iText.Signatures.Validation {
             String xmlPath = SOURCE_FOLDER + "estoniaTrustedList.xml";
             XmlCertificateRetriever xmlCertificateRetriever = new XmlCertificateRetriever(new XmlCountryCertificateHandler
                 ());
-            IList<IX509Certificate> certificateList = xmlCertificateRetriever.GetCertificates(xmlPath);
+            IList<IX509Certificate> certificateList = xmlCertificateRetriever.GetCertificates(iText.Commons.Utils.FileUtil.GetInputStreamForFile
+                (System.IO.Path.Combine(xmlPath)));
             NUnit.Framework.Assert.AreEqual(64, certificateList.Count);
             CountryServiceContext serviceContext = (CountryServiceContext)xmlCertificateRetriever.GetServiceContext(certificateList
                 [0]);
@@ -123,9 +128,9 @@ namespace iText.Signatures.Validation {
                 .GetCurrentStatusInfo().GetServiceStatus());
             NUnit.Framework.Assert.AreEqual("http://uri.etsi.org/TrstSvc/Svctype/CA/QC", serviceContext.GetServiceType
                 ());
-            NUnit.Framework.Assert.AreEqual(new DateTime(2017, 6, 30, 22, 0, 0), serviceContext.GetCurrentStatusInfo().GetServiceStatusStartingTime
-                ());
-            DateTime previousStatusTime = new DateTime(2016, 6, 30, 22, 0, 0);
+            NUnit.Framework.Assert.AreEqual(iText.Commons.Utils.DateTimeUtil.CreateDateTime(2017, 6, 30, 22, 0), serviceContext
+                .GetCurrentStatusInfo().GetServiceStatusStartingTime());
+            DateTime previousStatusTime = iText.Commons.Utils.DateTimeUtil.CreateDateTime(2016, 6, 30, 22, 0);
             String previousStatus = serviceContext.GetServiceStatusByDate(previousStatusTime);
             NUnit.Framework.Assert.AreEqual("http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision", previousStatus
                 );
@@ -136,7 +141,8 @@ namespace iText.Signatures.Validation {
             String xmlPath = SOURCE_FOLDER + "HungaryTrustedList.xml";
             XmlCertificateRetriever xmlCertificateRetriever = new XmlCertificateRetriever(new XmlCountryCertificateHandler
                 ());
-            IList<IX509Certificate> certificateList = xmlCertificateRetriever.GetCertificates(xmlPath);
+            IList<IX509Certificate> certificateList = xmlCertificateRetriever.GetCertificates(iText.Commons.Utils.FileUtil.GetInputStreamForFile
+                (System.IO.Path.Combine(xmlPath)));
             NUnit.Framework.Assert.AreEqual(346, certificateList.Count);
             CountryServiceContext serviceContext = (CountryServiceContext)xmlCertificateRetriever.GetServiceContext(certificateList
                 [0]);
@@ -145,8 +151,8 @@ namespace iText.Signatures.Validation {
                 .GetCurrentStatusInfo().GetServiceStatus());
             NUnit.Framework.Assert.AreEqual("http://uri.etsi.org/TrstSvc/Svctype/CA/QC", serviceContext.GetServiceType
                 ());
-            NUnit.Framework.Assert.AreEqual(new DateTime(2016, 6, 30, 22, 0, 0), serviceContext.GetCurrentStatusInfo().GetServiceStatusStartingTime
-                ());
+            NUnit.Framework.Assert.AreEqual(iText.Commons.Utils.DateTimeUtil.CreateDateTime(2016, 6, 30, 22, 0), serviceContext
+                .GetCurrentStatusInfo().GetServiceStatusStartingTime());
         }
 
         [NUnit.Framework.Test]
@@ -154,10 +160,9 @@ namespace iText.Signatures.Validation {
             String xmlPath = SOURCE_FOLDER + "emptyXml.xml";
             XmlCertificateRetriever certificateRetriever = new XmlCertificateRetriever(new XmlDefaultCertificateHandler
                 ());
-            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => certificateRetriever.GetCertificates
-                (xmlPath));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(SignExceptionMessageConstant.FAILED_TO_READ_CERTIFICATE_BYTES_FROM_XML
-                , xmlPath), exception.Message);
+            //No checking for message as it is different for C# and java because of differences in library
+            NUnit.Framework.Assert.Catch(typeof(PdfException), () => certificateRetriever.GetCertificates(iText.Commons.Utils.FileUtil.GetInputStreamForFile
+                (System.IO.Path.Combine(xmlPath))));
         }
 
         [NUnit.Framework.Test]
@@ -166,7 +171,7 @@ namespace iText.Signatures.Validation {
             XmlCertificateRetriever certificateRetriever = new XmlCertificateRetriever(new XmlDefaultCertificateHandler
                 ());
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => certificateRetriever.GetCertificates
-                (xmlPath));
+                (iText.Commons.Utils.FileUtil.GetInputStreamForFile(System.IO.Path.Combine(xmlPath))));
             NUnit.Framework.Assert.AreEqual(SignExceptionMessageConstant.FAILED_TO_RETRIEVE_CERTIFICATE, exception.Message
                 );
         }
