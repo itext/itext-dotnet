@@ -24,14 +24,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Signatures;
 
 namespace iText.Signatures.Validation {
 //\cond DO_NOT_DOCUMENT
     internal class XmlDefaultCertificateHandler : AbstractXmlCertificateHandler {
-        private readonly IList<IX509Certificate> certificateList = new List<IX509Certificate>();
-
-        private readonly IList<SimpleServiceContext> serviceContextList = new List<SimpleServiceContext>();
-
         private StringBuilder information;
 
 //\cond DO_NOT_DOCUMENT
@@ -53,10 +50,9 @@ namespace iText.Signatures.Validation {
 
         public override void EndElement(String uri, String localName, String qName) {
             if (XmlTagConstants.X509CERTIFICATE.Equals(localName)) {
-                IX509Certificate certificate = GetCertificateFromEncodedData(RemoveWhitespacesAndBreakLines(information.ToString
-                    ()));
+                IX509Certificate certificate = CertificateUtil.CreateCertificateFromEncodedData(RemoveWhitespacesAndBreakLines
+                    (information.ToString()));
                 serviceContextList.Add(new SimpleServiceContext(certificate));
-                certificateList.Add(certificate);
             }
             information = null;
         }
@@ -66,30 +62,6 @@ namespace iText.Signatures.Validation {
                 information.Append(ch, start, length);
             }
         }
-
-//\cond DO_NOT_DOCUMENT
-        internal override IServiceContext GetServiceContext(IX509Certificate certificate) {
-            foreach (SimpleServiceContext context in serviceContextList) {
-                if (context.GetCertificates().Contains(certificate)) {
-                    return context;
-                }
-            }
-            return null;
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        internal override IList<IX509Certificate> GetCertificateList() {
-            return new List<IX509Certificate>(certificateList);
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        internal override void Clear() {
-            certificateList.Clear();
-            serviceContextList.Clear();
-        }
-//\endcond
     }
 //\endcond
 }

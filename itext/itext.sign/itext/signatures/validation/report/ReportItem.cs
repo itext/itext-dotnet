@@ -89,6 +89,19 @@ namespace iText.Signatures.Validation.Report {
             this.status = status;
         }
 
+        /// <summary>Create report item from another report item.</summary>
+        /// <param name="otherReportItem">
+        /// 
+        /// <see cref="ReportItem"/>
+        /// from which new one will be created
+        /// </param>
+        public ReportItem(iText.Signatures.Validation.Report.ReportItem otherReportItem) {
+            this.checkName = otherReportItem.checkName;
+            this.message = otherReportItem.message;
+            this.cause = otherReportItem.cause;
+            this.status = otherReportItem.status;
+        }
+
         /// <summary>Get the check name related to this report item.</summary>
         /// <returns>
         /// 

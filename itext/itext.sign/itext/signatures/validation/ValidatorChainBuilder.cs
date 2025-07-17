@@ -59,6 +59,8 @@ namespace iText.Signatures.Validation {
 
         private Func<LOTLTrustedStore> lotlTrustedStoreFactory;
 
+        private Func<LOTLValidator> lotlValidatorFactory;
+
         private ICollection<IX509Certificate> trustedCertificates;
 
         private ICollection<IX509Certificate> knownCertificates;
@@ -78,6 +80,7 @@ namespace iText.Signatures.Validation {
             ocspClientFactory = () => new OcspClientBouncyCastle();
             crlClientFactory = () => new CrlClientOnline();
             xmlSignatureValidatorFactory = () => BuildXmlSignatureValidator();
+            lotlValidatorFactory = () => BuildLotlValidator();
         }
 
         /// <summary>
@@ -557,6 +560,20 @@ namespace iText.Signatures.Validation {
         }
 //\endcond
 
+//\cond DO_NOT_DOCUMENT
+        internal virtual LOTLValidator GetLotlValidator() {
+            return lotlValidatorFactory();
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual iText.Signatures.Validation.ValidatorChainBuilder WithLOTLValidator(Func<LOTLValidator> lotlValidatorFactory
+            ) {
+            this.lotlValidatorFactory = lotlValidatorFactory;
+            return this;
+        }
+//\endcond
+
         private IssuingCertificateRetriever BuildIssuingCertificateRetriever() {
             IssuingCertificateRetriever result = new IssuingCertificateRetriever(this.resourceRetrieverFactory());
             if (trustedCertificates != null) {
@@ -567,6 +584,10 @@ namespace iText.Signatures.Validation {
             }
             result.AddKnownCertificates(lotlTrustedStoreFactory().GetCertificates());
             return result;
+        }
+
+        private LOTLValidator BuildLotlValidator() {
+            return new LOTLValidator(this);
         }
 
         private LOTLTrustedStore BuildLOTLTrustedStore() {

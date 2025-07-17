@@ -47,8 +47,8 @@ namespace iText.Signatures.Validation {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal virtual IServiceContext GetServiceContext(IX509Certificate certificate) {
-            return handler.GetServiceContext(certificate);
+        internal virtual IList<IServiceContext> GetServiceContexts() {
+            return handler.GetServiceContexts();
         }
 //\endcond
     }

@@ -33,10 +33,13 @@ using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
+using iText.Commons.Bouncycastle.Openssl;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Kernel.Crypto;
+using iText.Kernel.Exceptions;
+using iText.Signatures.Exceptions;
 using iText.Signatures.Logs;
 
 namespace iText.Signatures {
@@ -406,6 +409,41 @@ namespace iText.Signatures {
         /// </returns>
         public static IAsn1Object GetExtensionValue(IX509Crl crl, String oid) {
             return GetExtensionValueFromByteArray(SignUtils.GetExtensionValueByOid(crl, oid));
+        }
+
+        public static IX509Certificate CreateCertificateFromEncodedData(String encodedCertificateBytes) {
+            try {
+                byte[] bytes = Convert.FromBase64String(encodedCertificateBytes);
+                return FACTORY.CreateX509Certificate(bytes);
+            }
+            catch (Exception e) {
+                throw new PdfException(SignExceptionMessageConstant.FAILED_TO_RETRIEVE_CERTIFICATE, e);
+            }
+        }
+        
+        public static IX509Certificate[] ReadCertificatesFromPem(Stream pemFileStream) {
+            return ReadCertificates(pemFileStream).ToArray(new IX509Certificate[0]);
+        }
+        
+        private static IList<IX509Certificate> ReadCertificates(Stream pemFileStream) {
+            try {
+                using (TextReader file = new StreamReader(pemFileStream)) {
+                    IPemReader parser = FACTORY.CreatePEMParser(file, null);
+                    Object readObject = parser.ReadObject();
+                    IList<IX509Certificate> certificates = new List<IX509Certificate>();
+                    while (readObject != null) {
+                        if (readObject is IX509Certificate) {
+                            certificates.Add((IX509Certificate)readObject);
+                        }
+
+                        readObject = parser.ReadObject();
+                    }
+                    return certificates;
+                }
+            }
+            catch (Exception e) {
+                throw new PdfException(SignExceptionMessageConstant.FAILED_TO_RETRIEVE_CERTIFICATE, e);
+            }
         }
 
         /// <summary>

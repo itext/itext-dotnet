@@ -28,7 +28,7 @@ using iText.Commons.Utils;
 namespace iText.Signatures.Validation {
 //\cond DO_NOT_DOCUMENT
     internal class CountryServiceContext : IServiceContext {
-        private IList<IX509Certificate> certificates;
+        private readonly IList<IX509Certificate> certificates = new List<IX509Certificate>();
 
         private String serviceType;
 
@@ -40,15 +40,12 @@ namespace iText.Signatures.Validation {
         }
 //\endcond
 
-        //empty constructor
+        // Empty constructor
         public virtual IList<IX509Certificate> GetCertificates() {
             return new List<IX509Certificate>(certificates);
         }
 
         public virtual void AddCertificate(IX509Certificate certificate) {
-            if (certificates == null) {
-                certificates = new List<IX509Certificate>();
-            }
             certificates.Add(certificate);
         }
 

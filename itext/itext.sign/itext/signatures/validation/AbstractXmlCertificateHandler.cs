@@ -23,72 +23,42 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
-using iText.Kernel.Exceptions;
-using iText.Signatures.Exceptions;
-using iText.Commons.Bouncycastle;
-using iText.Bouncycastleconnector;
 using iText.Signatures.Validation.Xml;
-using Org.BouncyCastle.Security.Certificates;
 
 namespace iText.Signatures.Validation {
-    internal abstract class AbstractXmlCertificateHandler : IDefaultXmlHandler
-    {
+//\cond DO_NOT_DOCUMENT
+    internal abstract class AbstractXmlCertificateHandler : IDefaultXmlHandler {
+//\cond DO_NOT_DOCUMENT
+        internal readonly IList<IServiceContext> serviceContextList = new List<IServiceContext>();
+//\endcond
 
-        private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY =
-            BouncyCastleFactoryCreator.GetFactory();
-
-        internal AbstractXmlCertificateHandler() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual IList<IServiceContext> GetServiceContexts() {
+            return serviceContextList;
         }
+//\endcond
 
-        internal abstract IServiceContext GetServiceContext(IX509Certificate certificate);
-
-        internal abstract IList<IX509Certificate> GetCertificateList();
-
-        public abstract void StartElement(String uri, String localName, String qName, Dictionary<string, string> attributes);
-
-        public abstract void EndElement(String uri, String localName, String qName);
-
-        public abstract void Characters(char[] ch, int start, int length);
-
-        internal IX509Certificate GetCertificateFromEncodedData(String certificateString)
-        {
-            try
-            {
-                byte[] bytes = Convert.FromBase64String(certificateString);
-                IX509Certificate certificate = BOUNCY_CASTLE_FACTORY.CreateX509Certificate(bytes);
-                return certificate;
+//\cond DO_NOT_DOCUMENT
+        internal virtual IList<IX509Certificate> GetCertificateList() {
+            IList<IX509Certificate> certificateList = new List<IX509Certificate>();
+            foreach (IServiceContext context in serviceContextList) {
+                certificateList.AddAll(context.GetCertificates());
             }
-            catch (FormatException e) {
-                throw new PdfException(SignExceptionMessageConstant.FAILED_TO_RETRIEVE_CERTIFICATE, e);
-            } 
-            catch (CertificateException e)
-            {
-                throw new PdfException(SignExceptionMessageConstant.FAILED_TO_RETRIEVE_CERTIFICATE, e);
-            }
+            return certificateList;
         }
+//\endcond
 
-        internal String RemoveNamespace(String name)
-        {
-            int indexOfNamespace = name.IndexOf(":");
-            if (indexOfNamespace != -1)
-            {
-                return name.Remove(0, indexOfNamespace + 1);
-                
-            } else
-            {
-                return name;
-            }
+//\cond DO_NOT_DOCUMENT
+        internal virtual void Clear() {
+            serviceContextList.Clear();
         }
+//\endcond
 
-        internal abstract void Clear();
+        public abstract void Characters(char[] arg1, int arg2, int arg3);
 
-        internal class Attributes : Dictionary<String, String>
-        {
-            public String GetValue(String qName)
-            {
-                String result;
-                return TryGetValue(qName, out result) ? result : null;
-            }
-        }
+        public abstract void EndElement(String arg1, String arg2, String arg3);
+
+        public abstract void StartElement(String arg1, String arg2, String arg3, Dictionary<String, String> arg4);
     }
+//\endcond
 }

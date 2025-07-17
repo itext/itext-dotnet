@@ -61,7 +61,7 @@ namespace iText.Signatures.Validation {
             IList<IX509Certificate> certificateList = xmlCertificateRetriever.GetCertificates(iText.Commons.Utils.FileUtil.GetInputStreamForFile
                 (System.IO.Path.Combine(xmlPath)));
             NUnit.Framework.Assert.AreEqual(126, certificateList.Count);
-            IServiceContext context = xmlCertificateRetriever.GetServiceContext(certificateList[0]);
+            IServiceContext context = xmlCertificateRetriever.GetServiceContexts()[0];
             NUnit.Framework.Assert.IsNotNull(context);
             NUnit.Framework.Assert.IsTrue(context is SimpleServiceContext);
         }
@@ -102,8 +102,8 @@ namespace iText.Signatures.Validation {
             IList<IX509Certificate> certificateList = xmlCertificateRetriever.GetCertificates(iText.Commons.Utils.FileUtil.GetInputStreamForFile
                 (System.IO.Path.Combine(xmlPath)));
             NUnit.Framework.Assert.AreEqual(8, certificateList.Count);
-            CountryServiceContext serviceContext = (CountryServiceContext)xmlCertificateRetriever.GetServiceContext(certificateList
-                [0]);
+            CountryServiceContext serviceContext = (CountryServiceContext)xmlCertificateRetriever.GetServiceContexts()
+                [0];
             NUnit.Framework.Assert.AreEqual(2, serviceContext.GetServiceStatusInfosSize());
             NUnit.Framework.Assert.AreEqual("http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/withdrawn", serviceContext
                 .GetCurrentStatusInfo().GetServiceStatus());
@@ -121,8 +121,8 @@ namespace iText.Signatures.Validation {
             IList<IX509Certificate> certificateList = xmlCertificateRetriever.GetCertificates(iText.Commons.Utils.FileUtil.GetInputStreamForFile
                 (System.IO.Path.Combine(xmlPath)));
             NUnit.Framework.Assert.AreEqual(64, certificateList.Count);
-            CountryServiceContext serviceContext = (CountryServiceContext)xmlCertificateRetriever.GetServiceContext(certificateList
-                [0]);
+            CountryServiceContext serviceContext = (CountryServiceContext)xmlCertificateRetriever.GetServiceContexts()
+                [0];
             NUnit.Framework.Assert.AreEqual(3, serviceContext.GetServiceStatusInfosSize());
             NUnit.Framework.Assert.AreEqual("http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/withdrawn", serviceContext
                 .GetCurrentStatusInfo().GetServiceStatus());
@@ -144,8 +144,8 @@ namespace iText.Signatures.Validation {
             IList<IX509Certificate> certificateList = xmlCertificateRetriever.GetCertificates(iText.Commons.Utils.FileUtil.GetInputStreamForFile
                 (System.IO.Path.Combine(xmlPath)));
             NUnit.Framework.Assert.AreEqual(346, certificateList.Count);
-            CountryServiceContext serviceContext = (CountryServiceContext)xmlCertificateRetriever.GetServiceContext(certificateList
-                [0]);
+            CountryServiceContext serviceContext = (CountryServiceContext)xmlCertificateRetriever.GetServiceContexts()
+                [0];
             NUnit.Framework.Assert.AreEqual(3, serviceContext.GetServiceStatusInfosSize());
             NUnit.Framework.Assert.AreEqual("http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/withdrawn", serviceContext
                 .GetCurrentStatusInfo().GetServiceStatus());

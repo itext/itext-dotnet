@@ -34,6 +34,10 @@ namespace iText.Signatures.Validation {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
+        internal const String SCHEME_INFORMATION_URI = "SchemeInformationURI";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         internal const String SERVICE_TYPE = "ServiceTypeIdentifier";
 //\endcond
 
@@ -67,6 +71,10 @@ namespace iText.Signatures.Validation {
 
 //\cond DO_NOT_DOCUMENT
         internal const String MIME_TYPE = "MimeType";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String URI = "URI";
 //\endcond
     }
 //\endcond

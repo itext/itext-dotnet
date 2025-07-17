@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 using iText.Signatures.Validation.Context;
 using iText.Signatures.Validation.Report;
@@ -45,7 +46,15 @@ namespace iText.Signatures.Validation {
         internal const String XML_SIGNATURE_VERIFICATION_FAILED = "XML Signature verification wasn't successful. Signature is invalid.";
 //\endcond
 
-        private readonly CertificateChainValidator certificateChainValidator;
+//\cond DO_NOT_DOCUMENT
+        internal const String CERTIFICATE_TRUSTED = "Certificate {0} is trusted. Validation is successful.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String CERTIFICATE_NOT_TRUSTED = "Certificate {0} is NOT trusted. Validation isn't successful.";
+//\endcond
+
+        private readonly TrustedCertificatesStore trustedCertificatesStore;
 
         private readonly SignatureValidationProperties properties;
 
@@ -53,7 +62,7 @@ namespace iText.Signatures.Validation {
 
 //\cond DO_NOT_DOCUMENT
         internal XmlSignatureValidator(ValidatorChainBuilder builder) {
-            this.certificateChainValidator = builder.GetCertificateChainValidator();
+            this.trustedCertificatesStore = builder.GetCertificateRetriever().GetTrustedCertificatesStore();
             this.properties = builder.GetProperties();
             this.context = new ValidationContext(ValidatorContext.XML_SIGNATURE_VALIDATOR, CertificateSource.LOTL_CERT
                 , TimeBasedContext.PRESENT);
@@ -76,7 +85,7 @@ namespace iText.Signatures.Validation {
                 report.AddReportItem(new ReportItem(XML_SIGNATURE_VERIFICATION, XML_SIGNATURE_VERIFICATION_EXCEPTION, e, ReportItem.ReportItemStatus
                     .INVALID));
             }
-            if (StopValidation(report, context)) {
+            if (report.GetValidationResult() == ValidationReport.ValidationResult.INVALID) {
                 return report;
             }
             if (keySelector.GetCertificate() == null) {
@@ -84,8 +93,15 @@ namespace iText.Signatures.Validation {
                     .INVALID));
                 return report;
             }
-            certificateChainValidator.Validate(report, context, keySelector.GetCertificate(), DateTimeUtil.GetCurrentUtcTime
-                ());
+            IX509Certificate certificate = keySelector.GetCertificate();
+            if (trustedCertificatesStore.IsCertificateGenerallyTrusted(certificate)) {
+                report.AddReportItem(new CertificateReportItem(certificate, XML_SIGNATURE_VERIFICATION, MessageFormatUtil.
+                    Format(CERTIFICATE_TRUSTED, certificate.GetSubjectDN()), ReportItem.ReportItemStatus.INFO));
+            }
+            else {
+                report.AddReportItem(new CertificateReportItem(certificate, XML_SIGNATURE_VERIFICATION, MessageFormatUtil.
+                    Format(CERTIFICATE_NOT_TRUSTED, certificate.GetSubjectDN()), ReportItem.ReportItemStatus.INVALID));
+            }
             return report;
         }
 //\endcond

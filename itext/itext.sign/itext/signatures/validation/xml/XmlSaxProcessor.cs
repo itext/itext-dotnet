@@ -31,13 +31,13 @@ namespace iText.Signatures.Validation.Xml {
         public virtual void Process(Stream inputStream, IDefaultXmlHandler handler) {
             XmlReaderSettings settings = new XmlReaderSettings();
             settings.Async = true;
-
             try {
                 using (XmlReader reader = XmlReader.Create(inputStream, settings)) {
                     while (reader.Read()) {
                         switch (reader.NodeType) {
                             case XmlNodeType.Element:
                                 Dictionary<string, string> attributes = new Dictionary<string, string>();
+                                string name = reader.Name;
                                 if (reader.HasAttributes) {
                                     for (int i = 0; i < reader.AttributeCount; i++) {
                                         reader.MoveToAttribute(i);
@@ -45,7 +45,7 @@ namespace iText.Signatures.Validation.Xml {
                                     }
                                 }
 
-                                handler.StartElement(reader.BaseURI, RemoveNamespace(reader.Name), reader.Name,
+                                handler.StartElement(reader.BaseURI, RemoveNamespace(name), name,
                                     attributes);
                                 break;
                             case XmlNodeType.Text:
@@ -66,9 +66,8 @@ namespace iText.Signatures.Validation.Xml {
             }
         }
 
-
         private String RemoveNamespace(String name) {
-            int indexOfNamespace = name.IndexOf(":");
+            int indexOfNamespace = name.IndexOf(":", StringComparison.Ordinal);
             if (indexOfNamespace != -1) {
                 return name.Remove(0, indexOfNamespace + 1);
             }

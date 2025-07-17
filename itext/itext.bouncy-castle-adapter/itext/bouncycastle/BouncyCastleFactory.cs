@@ -85,7 +85,6 @@ using Org.BouncyCastle.Asn1.Tsp;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Generators;
-using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Modes;
 using Org.BouncyCastle.Crypto.Operators;
 using Org.BouncyCastle.Crypto.Parameters;
@@ -1226,9 +1225,20 @@ namespace iText.Bouncycastle {
             return wrapper.Unwrap(key, 0, key.Length);
         }
 
+        /// <summary><inheritDoc/></summary>
         public IGCMBlockCipher CreateGCMBlockCipher() {
             GcmBlockCipher cipher = new GcmBlockCipher(new AesEngine());
             return new GCMBlockCipherBC(cipher);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public RSAParameters? GetRsaParametersFromCertificate(IX509Certificate certificate) {
+            AsymmetricKeyParameter asymmetricKeyParameter = ((PublicKeyBC)certificate.GetPublicKey()).GetPublicKey();
+            if (asymmetricKeyParameter is RsaKeyParameters) {
+                RSAParameters rsaParams = DotNetUtilities.ToRSAParameters((RsaKeyParameters)asymmetricKeyParameter);
+                return rsaParams;
+            }
+            return null;
         }
 
         //\cond DO_NOT_DOCUMENT

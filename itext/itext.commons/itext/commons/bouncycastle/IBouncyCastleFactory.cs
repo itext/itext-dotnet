@@ -1703,5 +1703,12 @@ namespace iText.Commons.Bouncycastle {
         byte[] GenerateDecryptedKeyWithAES256NoPad(byte[] key, byte[] kek);
 
         IGCMBlockCipher CreateGCMBlockCipher();
+
+        /// <summary>
+        /// Get asymmetric algorithm object instance from bouncy-castle X509 certificate wrapper.
+        /// </summary>
+        /// <param name="certificate">Bouncy-castle X509 certificate wrapper</param>
+        /// <returns>Asymmetric algorithm instance</returns>
+        RSAParameters? GetRsaParametersFromCertificate(IX509Certificate certificate);
     }
 }

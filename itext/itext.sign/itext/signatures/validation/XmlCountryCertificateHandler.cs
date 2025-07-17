@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Signatures;
 
 namespace iText.Signatures.Validation {
 //\cond DO_NOT_DOCUMENT
@@ -36,10 +37,6 @@ namespace iText.Signatures.Validation {
             INFORMATION_TAGS.Add(XmlTagConstants.X509CERTIFICATE);
             INFORMATION_TAGS.Add(XmlTagConstants.SERVICE_STATUS_STARTING_TIME);
         }
-
-        private readonly IList<IX509Certificate> certificateList = new List<IX509Certificate>();
-
-        private readonly IList<CountryServiceContext> serviceContextList = new List<CountryServiceContext>();
 
         private StringBuilder information;
 
@@ -130,23 +127,6 @@ namespace iText.Signatures.Validation {
         }
 
 //\cond DO_NOT_DOCUMENT
-        internal override IServiceContext GetServiceContext(IX509Certificate certificate) {
-            foreach (CountryServiceContext context in serviceContextList) {
-                if (context.GetCertificates().Contains(certificate)) {
-                    return context;
-                }
-            }
-            return null;
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        internal override IList<IX509Certificate> GetCertificateList() {
-            return certificateList;
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
         internal virtual void StartProvider() {
             currentServiceContext = new CountryServiceContext();
         }
@@ -157,10 +137,9 @@ namespace iText.Signatures.Validation {
             if (currentServiceContext == null) {
                 return;
             }
-            IX509Certificate certificate = GetCertificateFromEncodedData(RemoveWhitespacesAndBreakLines(certificateString
-                ));
+            IX509Certificate certificate = CertificateUtil.CreateCertificateFromEncodedData(RemoveWhitespacesAndBreakLines
+                (certificateString));
             currentServiceContext.AddCertificate(certificate);
-            certificateList.Add(certificate);
         }
 //\endcond
 
@@ -168,13 +147,6 @@ namespace iText.Signatures.Validation {
         internal virtual void EndProvider() {
             serviceContextList.Add(currentServiceContext);
             currentServiceContext = null;
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        internal override void Clear() {
-            certificateList.Clear();
-            serviceContextList.Clear();
         }
 //\endcond
     }

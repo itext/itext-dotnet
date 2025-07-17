@@ -39,11 +39,15 @@ namespace iText.Signatures.Validation {
                 this.key = key;
             }
 
-            public override void SetKey(AsymmetricAlgorithm key) => this.key = key as ECDsaCng;
+            public override void SetKey(AsymmetricAlgorithm key) {
+                this.key = key as ECDsaCng;
+            }
 
             public override void SetHashAlgorithm(string strName) { }
 
-            public override bool VerifySignature(byte[] rgbHash, byte[] rgbSignature) => key.VerifyHash(rgbHash, rgbSignature);
+            public override bool VerifySignature(byte[] rgbHash, byte[] rgbSignature) {
+                return key.VerifyHash(rgbHash, rgbSignature);
+            } 
         }
         
         public class ECDSASignatureDescritionSHA1 : ECDSASignatureDescription {

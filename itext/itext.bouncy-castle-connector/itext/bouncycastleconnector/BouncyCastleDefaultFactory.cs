@@ -756,5 +756,9 @@ namespace iText.Bouncycastleconnector {
         public IGCMBlockCipher CreateGCMBlockCipher() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
+
+        public RSAParameters? GetRsaParametersFromCertificate(IX509Certificate certificate) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
     }
 }

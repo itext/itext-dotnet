@@ -151,7 +151,7 @@ namespace iText.Signatures.Exceptions {
 
         public const String CMS_MISSING_CERTIFICATES = "The certificate set must at least contains the signer certificate";
 
-        public const String FAILED_TO_RETRIEVE_CERTIFICATE = "Failed to retrieve certificates from binary data";
+        public const String FAILED_TO_RETRIEVE_CERTIFICATE = "Failed to retrieve certificates from binary data.";
 
         public const String FAILED_TO_GET_EU_LOTL = "Failed to get European List of Trusted Lists (LOTL) from {0}.";
 

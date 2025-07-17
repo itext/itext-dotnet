@@ -26,6 +26,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Xml;
+using iText.Bouncycastleconnector;
 using iText.Kernel.Utils;
 
 namespace iText.Signatures.Validation {
@@ -44,6 +45,9 @@ namespace iText.Signatures.Validation {
             SignedXml signedXml = new SignedXml(xmlDoc);
             XmlNodeList nodeList = xmlDoc.GetElementsByTagName("ds:Signature");
             if (nodeList.Count == 0) {
+                nodeList = xmlDoc.GetElementsByTagName("dsig:Signature");
+            }
+            if (nodeList.Count == 0) {
                 nodeList = xmlDoc.GetElementsByTagName("Signature");
             }
             signedXml.LoadXml((XmlElement)nodeList[0]);
@@ -55,7 +59,20 @@ namespace iText.Signatures.Validation {
             catch (Exception) {
                 algorithm = keySelector.GetNetCert().GetECDsaPublicKey();
             }
-            return signedXml.CheckSignature(algorithm);
+            try {
+                return signedXml.CheckSignature(algorithm);
+            }
+            catch (Exception e) {
+                // Try with different public key
+                RSAParameters? rsaParameters = BouncyCastleFactoryCreator.GetFactory()
+                    .GetRsaParametersFromCertificate(keySelector.GetCertificate());
+                if (rsaParameters != null) {
+                    RSACng bcAlgorithm = new RSACng();
+                    bcAlgorithm.ImportParameters((RSAParameters)rsaParameters);
+                    return signedXml.CheckSignature(bcAlgorithm);
+                }
+                throw;
+            }
         }
 
         private static void RegisterNotSupportedAlgorithms() {
@@ -74,6 +91,23 @@ namespace iText.Signatures.Validation {
             if (CryptoConfig.CreateFromName("http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512") == null) {
                 CryptoConfig.AddAlgorithm(typeof(ECDSASignatureDescription.ECDSASignatureDescritionSHA512),
                     "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512");
+            }
+
+            if (CryptoConfig.CreateFromName("http://www.w3.org/2007/05/xmldsig-more#sha1-rsa-MGF1") == null) {
+                CryptoConfig.AddAlgorithm(typeof(RsaPssSignatureDescription.RsaPssSignatureDescriptionSHA1),
+                    "http://www.w3.org/2007/05/xmldsig-more#sha1-rsa-MGF1");
+            }
+            if (CryptoConfig.CreateFromName("http://www.w3.org/2007/05/xmldsig-more#sha256-rsa-MGF1") == null) {
+                CryptoConfig.AddAlgorithm(typeof(RsaPssSignatureDescription.RsaPssSignatureDescriptionSHA256),
+                    "http://www.w3.org/2007/05/xmldsig-more#sha256-rsa-MGF1");
+            }
+            if (CryptoConfig.CreateFromName("http://www.w3.org/2007/05/xmldsig-more#sha384-rsa-MGF1") == null) {
+                CryptoConfig.AddAlgorithm(typeof(RsaPssSignatureDescription.RsaPssSignatureDescriptionSHA384),
+                    "http://www.w3.org/2007/05/xmldsig-more#sha384-rsa-MGF1");
+            }
+            if (CryptoConfig.CreateFromName("http://www.w3.org/2007/05/xmldsig-more#sha512-rsa-MGF1") == null) {
+                CryptoConfig.AddAlgorithm(typeof(RsaPssSignatureDescription.RsaPssSignatureDescriptionSHA512),
+                    "http://www.w3.org/2007/05/xmldsig-more#sha512-rsa-MGF1");
             }
         }
     }
