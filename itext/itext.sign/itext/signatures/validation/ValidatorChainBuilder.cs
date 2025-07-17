@@ -57,6 +57,8 @@ namespace iText.Signatures.Validation {
 
         private Func<XmlSignatureValidator> xmlSignatureValidatorFactory;
 
+        private Func<LOTLTrustedStore> lotlTrustedStoreFactory;
+
         private ICollection<IX509Certificate> trustedCertificates;
 
         private ICollection<IX509Certificate> knownCertificates;
@@ -65,6 +67,7 @@ namespace iText.Signatures.Validation {
 
         /// <summary>Creates a ValidatorChainBuilder using default implementations</summary>
         public ValidatorChainBuilder() {
+            lotlTrustedStoreFactory = () => BuildLOTLTrustedStore();
             certificateRetrieverFactory = () => BuildIssuingCertificateRetriever();
             certificateChainValidatorFactory = () => BuildCertificateChainValidator();
             revocationDataValidatorFactory = () => BuildRevocationDataValidator();
@@ -540,6 +543,20 @@ namespace iText.Signatures.Validation {
         }
 //\endcond
 
+//\cond DO_NOT_DOCUMENT
+        internal virtual iText.Signatures.Validation.ValidatorChainBuilder WithLOTLTrustedStoreFactory(Func<LOTLTrustedStore
+            > lotlTrustedStoreFactory) {
+            this.lotlTrustedStoreFactory = lotlTrustedStoreFactory;
+            return this;
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual LOTLTrustedStore GetLOTLTrustedstore() {
+            return this.lotlTrustedStoreFactory();
+        }
+//\endcond
+
         private IssuingCertificateRetriever BuildIssuingCertificateRetriever() {
             IssuingCertificateRetriever result = new IssuingCertificateRetriever(this.resourceRetrieverFactory());
             if (trustedCertificates != null) {
@@ -548,7 +565,12 @@ namespace iText.Signatures.Validation {
             if (knownCertificates != null) {
                 result.AddKnownCertificates(knownCertificates);
             }
+            result.AddKnownCertificates(lotlTrustedStoreFactory().GetCertificates());
             return result;
+        }
+
+        private LOTLTrustedStore BuildLOTLTrustedStore() {
+            return new LOTLTrustedStore();
         }
     }
 }

@@ -137,7 +137,7 @@ namespace iText.Signatures.Validation {
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate signingCert = (IX509Certificate)certificateChain[0];
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
-            IssuingCertificateRetriever customRetriever = new _IssuingCertificateRetriever_191();
+            IssuingCertificateRetriever customRetriever = new _IssuingCertificateRetriever_193();
             ValidatorChainBuilder validatorChainBuilder = SetUpValidatorChain(certificateRetriever, properties, mockRevocationDataValidator
                 );
             validatorChainBuilder.WithIssuingCertificateRetrieverFactory(() => customRetriever);
@@ -150,8 +150,8 @@ namespace iText.Signatures.Validation {
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
         }
 
-        private sealed class _IssuingCertificateRetriever_191 : IssuingCertificateRetriever {
-            public _IssuingCertificateRetriever_191() {
+        private sealed class _IssuingCertificateRetriever_193 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_193() {
             }
 
             protected internal override Stream GetIssuerCertByURI(String uri) {
@@ -170,7 +170,7 @@ namespace iText.Signatures.Validation {
             IX509Certificate signingCert = (IX509Certificate)certificateChain[0];
             IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
-            IssuingCertificateRetriever customRetriever = new _IssuingCertificateRetriever_219();
+            IssuingCertificateRetriever customRetriever = new _IssuingCertificateRetriever_221();
             ValidatorChainBuilder validatorChainBuilder = SetUpValidatorChain(certificateRetriever, properties, mockRevocationDataValidator
                 );
             validatorChainBuilder.WithIssuingCertificateRetrieverFactory(() => customRetriever);
@@ -185,8 +185,8 @@ namespace iText.Signatures.Validation {
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
         }
 
-        private sealed class _IssuingCertificateRetriever_219 : IssuingCertificateRetriever {
-            public _IssuingCertificateRetriever_219() {
+        private sealed class _IssuingCertificateRetriever_221 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_221() {
             }
 
             protected internal override Stream GetIssuerCertByURI(String uri) {
@@ -818,6 +818,65 @@ namespace iText.Signatures.Validation {
             DateTime validationDate = new DateTime(13750537642000L);
             ValidationReport report = validator.ValidateCertificate(baseContext, rootCert, validationDate);
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
+                (0).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
+                .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LotlTrustedStoreTest() {
+            MockRevocationDataValidator mockRevocationDataValidator = new MockRevocationDataValidator();
+            SignatureValidationProperties properties = new SignatureValidationProperties();
+            String chainName = CERTS_SRC + "chain.pem";
+            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
+            IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
+            CountryServiceContext context = new CountryServiceContext();
+            context.AddCertificate(rootCert);
+            context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
+            context.AddNewServiceStatus(new ServiceStatusInfo(ServiceStatusInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
+                (1900, 1, 1, 0, 0)));
+            LOTLTrustedStore lotlTrustedStore = new LOTLTrustedStore();
+            lotlTrustedStore.AddCertificatesWithContext(JavaCollectionsUtil.SingletonList<CountryServiceContext>(context
+                ));
+            ValidatorChainBuilder validatorChainBuilder = new ValidatorChainBuilder();
+            validatorChainBuilder.WithSignatureValidationProperties(properties).WithRevocationDataValidatorFactory(() =>
+                 mockRevocationDataValidator).WithLOTLTrustedStoreFactory(() => lotlTrustedStore);
+            CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
+            properties.SetRequiredExtensions(CertificateSources.All(), JavaCollectionsUtil.EmptyList<CertificateExtension
+                >());
+            ValidationReport report1 = validator.ValidateCertificate(baseContext.SetCertificateSource(CertificateSource
+                .CRL_ISSUER), rootCert, TimeTestUtil.TEST_DATE_TIME);
+            AssertValidationReport.AssertThat(report1, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
+                (0).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
+                .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LotlTrustedStoreChainTest() {
+            MockRevocationDataValidator mockRevocationDataValidator = new MockRevocationDataValidator();
+            SignatureValidationProperties properties = new SignatureValidationProperties();
+            String chainName = CERTS_SRC + "chain.pem";
+            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
+            IX509Certificate signingCert = (IX509Certificate)certificateChain[0];
+            IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
+            IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
+            CountryServiceContext context = new CountryServiceContext();
+            context.AddCertificate(rootCert);
+            context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
+            context.AddNewServiceStatus(new ServiceStatusInfo(ServiceStatusInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
+                (1900, 1, 1, 0, 0)));
+            LOTLTrustedStore lotlTrustedStore = new LOTLTrustedStore();
+            lotlTrustedStore.AddCertificatesWithContext(JavaCollectionsUtil.SingletonList<CountryServiceContext>(context
+                ));
+            ValidatorChainBuilder validatorChainBuilder = new ValidatorChainBuilder();
+            validatorChainBuilder.WithKnownCertificates(JavaCollectionsUtil.SingletonList<IX509Certificate>(intermediateCert
+                )).WithSignatureValidationProperties(properties).WithRevocationDataValidatorFactory(() => mockRevocationDataValidator
+                ).WithLOTLTrustedStoreFactory(() => lotlTrustedStore);
+            CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
+            properties.SetRequiredExtensions(CertificateSources.All(), JavaCollectionsUtil.EmptyList<CertificateExtension
+                >());
+            ValidationReport report1 = validator.ValidateCertificate(baseContext.SetCertificateSource(CertificateSource
+                .CRL_ISSUER), signingCert, TimeTestUtil.TEST_DATE_TIME);
+            AssertValidationReport.AssertThat(report1, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
                 (0).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
         }

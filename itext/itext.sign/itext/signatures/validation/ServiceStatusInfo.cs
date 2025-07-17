@@ -21,7 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace iText.Signatures.Validation {
 
@@ -33,9 +35,22 @@ namespace iText.Signatures.Validation {
 
         private readonly String statusStartDateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
-        internal ServiceStatusInfo() {
+        internal const String GRANTED = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/granted";
+        internal const String GRANTED_NATIONALLY =
+            "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/recognisedatnationallevel";
+        internal const String WITHDRAWN = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/withdrawn";
+        internal const String ACCREDITED = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/accredited";
+        private static readonly HashSet<String> validStatuses = new HashSet<String>();
+
+        static ServiceStatusInfo()
+        {
+            validStatuses.Add(GRANTED);
+            validStatuses.Add(GRANTED_NATIONALLY);
+            validStatuses.Add(ACCREDITED);
         }
 
+        internal ServiceStatusInfo() {
+        }
 
         internal ServiceStatusInfo(String serviceStatus, DateTime serviceStatusStartingTime) {
             this.serviceStatus = serviceStatus;
@@ -61,6 +76,11 @@ namespace iText.Signatures.Validation {
 
         internal virtual DateTime GetServiceStatusStartingTime() {
             return serviceStatusStartingTime;
+        }
+
+        internal static Boolean IsStatusValid(String status)
+        {
+            return validStatuses.Contains(status);
         }
     }
 }

@@ -29,7 +29,7 @@ using iText.Test;
 
 namespace iText.Signatures {
     [NUnit.Framework.Category("BouncyCastleUnitTest")]
-    public class TrustedCerrtificatesStoreTest : ExtendedITextTest {
+    public class TrustedCertificatesStoreTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 

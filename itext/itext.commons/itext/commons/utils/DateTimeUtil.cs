@@ -183,7 +183,15 @@ namespace iText.Commons.Utils {
         public static DateTime CreateDateTime(int year, int month, int day, int hour, int minute) {
             return new DateTime(year, month, day, hour, minute,0);
         }
-
+        ///<summary>
+        /// Gets the DateTime from milliseconds.
+        /// </summary>
+        /// <param name="milliseconds"> the UTC milliseconds from the epoch</param>
+        /// <returns> DateTime converted from milliseconds</returns>
+        public static DateTime GetTimeFromMillis(long milliseconds)
+        {
+            return GetInitial().AddMilliseconds(milliseconds);
+        }
         private static DateTime GetInitial() {
             return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         }

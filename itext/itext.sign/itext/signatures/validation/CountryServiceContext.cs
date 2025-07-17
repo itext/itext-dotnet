@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Utils;
 
 namespace iText.Signatures.Validation {
 //\cond DO_NOT_DOCUMENT
@@ -66,6 +67,12 @@ namespace iText.Signatures.Validation {
 //\cond DO_NOT_DOCUMENT
         internal virtual void AddNewServiceStatus(ServiceStatusInfo serviceStatusInfo) {
             serviceStatusInfos.Add(serviceStatusInfo);
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual String GetServiceStatusByDate(long milliseconds) {
+            return GetServiceStatusByDate(DateTimeUtil.GetTimeFromMillis(milliseconds));
         }
 //\endcond
 
