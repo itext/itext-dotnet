@@ -24,11 +24,25 @@ using System;
 using System.Collections.Generic;
 
 namespace iText.Signatures.Validation.Xml {
+    /// <summary>Interface for handling XML elements during SAX processing.</summary>
     public interface IDefaultXmlHandler {
+        /// <summary>Called when a start element is encountered in the XML document.</summary>
+        /// <param name="uri">the namespace URI of the element</param>
+        /// <param name="localName">the local name of the element</param>
+        /// <param name="qName">the qualified name of the element</param>
+        /// <param name="attributes">a map of attributes associated with the element</param>
         void StartElement(String uri, String localName, String qName, Dictionary<String, String> attributes);
 
+        /// <summary>Called when an end element is encountered in the XML document.</summary>
+        /// <param name="uri">the namespace URI of the element</param>
+        /// <param name="localName">the local name of the element</param>
+        /// <param name="qName">the qualified name of the element</param>
         void EndElement(String uri, String localName, String qName);
 
+        /// <summary>Called when character data is encountered within an element.</summary>
+        /// <param name="ch">the character array containing the data</param>
+        /// <param name="start">the start index of the data in the array</param>
+        /// <param name="length">the length of the data</param>
         void Characters(char[] ch, int start, int length);
     }
 }
