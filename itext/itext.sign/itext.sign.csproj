@@ -33,6 +33,9 @@
     <NoWarn>1701;1702;1591;1570;1572;1573;1574;1580;1584;1658</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="itext.eu-trusted-lists-resources" Version="1.0.1" >
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
     <PackageReference Include="System.Security.Cryptography.Xml" Version="6.0.2" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
