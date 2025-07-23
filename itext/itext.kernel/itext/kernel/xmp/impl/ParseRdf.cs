@@ -31,6 +31,7 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Xml;
+using System.Xml.Linq;
 using iText.IO.Util;
 using iText.Kernel.XMP;
 using iText.Kernel.XMP.Options;
@@ -117,7 +118,7 @@ namespace iText.Kernel.XMP.Impl
 		/// <param name="rdfRdfNode">the top-level xml node</param>
 		internal static void Rdf_RDF(XMPMetaImpl xmp, XmlNode rdfRdfNode)
 		{
-			if (rdfRdfNode.Attributes != null && rdfRdfNode.Attributes.Count > 0) {
+			if (rdfRdfNode.Attributes != null && rdfRdfNode.Attributes.GetEnumerator().MoveNext()) {
 				Rdf_NodeElementList(xmp, xmp.GetRoot(), rdfRdfNode);
 			} else {
 				throw new XMPException("Invalid attributes of rdf:RDF element", XMPError.BADRDF);
@@ -136,10 +137,12 @@ namespace iText.Kernel.XMP.Impl
 		private static void Rdf_NodeElementList(XMPMetaImpl xmp, XMPNode xmpParent, XmlNode 
 			rdfRdfNode)
 		{
-			for (int i = 0; i < rdfRdfNode.ChildNodes.Count; i++) {
-				XmlNode child = rdfRdfNode.ChildNodes[i];
-				// filter whitespaces (and all text nodes)
-				if (!IsWhitespaceNode(child)) {
+
+
+            foreach (XmlNode child in rdfRdfNode.ChildNodes)
+            {
+                // filter whitespaces (and all text nodes)
+                if (!IsWhitespaceNode(child)) {
 					Rdf_NodeElement(xmp, xmpParent, child, true);
 				}
 			}
@@ -216,10 +219,8 @@ namespace iText.Kernel.XMP.Impl
 			int exclusiveAttrs = 0;
 			if (xmlNode == null || xmlNode.Attributes == null)
 				return;
-
-			for (int i = 0; i < xmlNode.Attributes.Count; i++) {
-				XmlNode attribute = xmlNode.Attributes[i];
-
+			foreach (XmlNode attribute in xmlNode.Attributes)
+            {                
 				// quick hack, ns declarations do not appear in C++
 				// ignore "ID" without namespace
 				if ("xmlns".Equals(attribute.Prefix) || (attribute.Prefix == null && "xmlns".Equals(attribute.Name))) {
@@ -277,15 +278,15 @@ namespace iText.Kernel.XMP.Impl
 		private static void Rdf_PropertyElementList(XMPMetaImpl xmp, XMPNode xmpParent, XmlNode
 			 xmlParent, bool isTopLevel)
 		{
-			for (int i = 0; i < xmlParent.ChildNodes.Count; i++) {
-				XmlNode currChild = xmlParent.ChildNodes[i];
-				if (IsWhitespaceNode(currChild)) {
+            foreach (XmlNode child in xmlParent.ChildNodes)
+            {
+                if (IsWhitespaceNode(child)) {
 					continue;
 				}
-				if (currChild.NodeType != XmlNodeType.Element) {
+				if (child.NodeType != XmlNodeType.Element) {
 					throw new XMPException("Expected property element node not found", XMPError.BADRDF);
 				}
-				Rdf_PropertyElement(xmp, xmpParent, currChild, isTopLevel);
+				Rdf_PropertyElement(xmp, xmpParent, child, isTopLevel);
 			}
 		}
 
@@ -389,9 +390,9 @@ namespace iText.Kernel.XMP.Impl
 			if (attributes == null)
 				return;
 			IList nsAttrs = null;
-			for (int i = 0; i < attributes.Count; i++) {
-				XmlNode attribute = attributes[i];
-				if ("xmlns".Equals(attribute.Prefix) || (attribute.Prefix == null && "xmlns".Equals(attribute.Name))) {
+            foreach (XmlNode attribute in xmlNode.Attributes)
+            {                			
+                if ("xmlns".Equals(attribute.Prefix) || (attribute.Prefix == null && "xmlns".Equals(attribute.Name))) {
 					if (nsAttrs == null) {
 						nsAttrs = new ArrayList();
 					}
@@ -411,13 +412,13 @@ namespace iText.Kernel.XMP.Impl
 				Rdf_EmptyPropertyElement(xmp, xmpParent, xmlNode, isTopLevel);
 			}
 			else {
-				// Look through the attributes for one that isn't rdf:ID or xml:lang, 
-				// it will usually tell what we should be dealing with. 
-				// The called routines must verify their specific syntax!
+                // Look through the attributes for one that isn't rdf:ID or xml:lang, 
+                // it will usually tell what we should be dealing with. 
+                // The called routines must verify their specific syntax!
 
-				for (int i = 0; i < attributes.Count; i++) {
-					XmlNode attribute = attributes[i];
-					string attrLocal = attribute.LocalName;
+                foreach (XmlNode attribute in xmlNode.Attributes)
+                {
+                    string attrLocal = attribute.LocalName;
 					string attrNs = attribute.NamespaceURI;
 					string attrValue = attribute.Value;
 					if (!(XML_LANG.Equals(attribute.Name) && !("ID".Equals(attrLocal) && NS_RDF.Equals(attrNs)))) {
@@ -448,9 +449,9 @@ namespace iText.Kernel.XMP.Impl
 				// or an emptyPropertyElt. Look at the child XML nodes to decide which.
 
 				if (xmlNode.HasChildNodes) {
-					for (int i = 0; i < xmlNode.ChildNodes.Count; i++) {
-						XmlNode currChild = xmlNode.ChildNodes[i];
-						if (currChild.NodeType != XmlNodeType.Text) {
+                    foreach (XmlNode child in xmlNode.ChildNodes)
+                    {
+                        if (child.NodeType != XmlNodeType.Text) {
 							Rdf_ResourcePropertyElement(xmp, xmpParent, xmlNode, isTopLevel);
 							return;
 						}
@@ -497,9 +498,9 @@ namespace iText.Kernel.XMP.Impl
 
 			// walk through the attributes
 			if (xmlNode.Attributes != null) {
-				for (int i = 0; i < xmlNode.Attributes.Count; i++) {
-					XmlNode attribute = xmlNode.Attributes[i];
-					if ("xmlns".Equals(attribute.Prefix) || (attribute.Prefix == null && "xmlns".Equals(attribute.Name))) {
+                foreach (XmlNode attribute in xmlNode.Attributes)
+                {
+                    if ("xmlns".Equals(attribute.Prefix) || (attribute.Prefix == null && "xmlns".Equals(attribute.Name))) {
 						continue;
 					}
 
@@ -518,12 +519,11 @@ namespace iText.Kernel.XMP.Impl
 			// walk through the children
 
 			bool found = false;
-			for (int i = 0; i < xmlNode.ChildNodes.Count; i++) {
-				XmlNode currChild = xmlNode.ChildNodes[i];
-				if (!IsWhitespaceNode(currChild)) {
-					if (currChild.NodeType == XmlNodeType.Element && !found) {
-						bool isRdf = NS_RDF.Equals(currChild.NamespaceURI);
-						string childLocal = currChild.LocalName;
+            foreach (XmlNode child in xmlNode.ChildNodes)            {				
+				if (!IsWhitespaceNode(child)) {
+					if (child.NodeType == XmlNodeType.Element && !found) {
+						bool isRdf = NS_RDF.Equals(child.NamespaceURI);
+						string childLocal = child.LocalName;
 
 						if (isRdf && "Bag".Equals(childLocal)) {
 							newCompound.GetOptions().SetArray(true);
@@ -540,7 +540,7 @@ namespace iText.Kernel.XMP.Impl
 						else {
 							newCompound.GetOptions().SetStruct(true);
 							if (!isRdf && !"Description".Equals(childLocal)) {
-								string typeName = currChild.NamespaceURI;
+								string typeName = child.NamespaceURI;
 								if (typeName == null) {
 									throw new XMPException("All XML elements must be in a namespace",
 										XMPError.BADXMP);
@@ -550,7 +550,7 @@ namespace iText.Kernel.XMP.Impl
 							}
 						}
 
-						Rdf_NodeElement(xmp, newCompound, currChild, false);
+						Rdf_NodeElement(xmp, newCompound, child, false);
 
 						if (newCompound.GetHasValueChild()) {
 							FixupQualifiedNode(newCompound);
@@ -595,9 +595,9 @@ namespace iText.Kernel.XMP.Impl
 		{
 			XMPNode newChild = AddChildNode(xmp, xmpParent, xmlNode, null, isTopLevel);
 			if (xmlNode.Attributes != null) {
-				for (int i = 0; i < xmlNode.Attributes.Count; i++) {
-					XmlNode attribute = xmlNode.Attributes[i];
-					if ("xmlns".Equals(attribute.Prefix) || (attribute.Prefix == null && "xmlns".Equals(attribute.Name))) {
+                foreach (XmlNode attribute in xmlNode.Attributes)
+                {
+                    if ("xmlns".Equals(attribute.Prefix) || (attribute.Prefix == null && "xmlns".Equals(attribute.Name))) {
 						continue;
 					}
 
@@ -612,9 +612,9 @@ namespace iText.Kernel.XMP.Impl
 				}
 			}
 			String textValue = "";
-			for (int i = 0; i < xmlNode.ChildNodes.Count; i++) {
-				XmlNode child = xmlNode.ChildNodes[i];
-				if (child.NodeType == XmlNodeType.Text) {
+            foreach (XmlNode child in xmlNode.ChildNodes)
+            {
+                if (child.NodeType == XmlNodeType.Text) {
 					textValue += child.Value;
 				}
 				else {
@@ -664,9 +664,9 @@ namespace iText.Kernel.XMP.Impl
 			newStruct.GetOptions().SetStruct(true);
 
 			if (xmlNode.Attributes != null) {
-				for (int i = 0; i < xmlNode.Attributes.Count; i++) {
-					XmlNode attribute = xmlNode.Attributes[i];
-					if ("xmlns".Equals(attribute.Prefix) || (attribute.Prefix == null && "xmlns".Equals(attribute.Name))) {
+                foreach (XmlNode attribute in xmlNode.Attributes)
+                {
+                    if ("xmlns".Equals(attribute.Prefix) || (attribute.Prefix == null && "xmlns".Equals(attribute.Name))) {
 						continue;
 					}
 
@@ -782,9 +782,9 @@ namespace iText.Kernel.XMP.Impl
 
 			// First figure out what XMP this maps to and remember the XML node for a simple value.
 			if (xmlNode.Attributes != null) {
-				for (int i = 0; i < xmlNode.Attributes.Count; i++) {
-					XmlNode attribute = xmlNode.Attributes[i];
-					if ("xmlns".Equals(attribute.Prefix) || (attribute.Prefix == null && "xmlns".Equals(attribute.Name))) {
+                foreach (XmlNode attribute in xmlNode.Attributes)
+                {
+                    if ("xmlns".Equals(attribute.Prefix) || (attribute.Prefix == null && "xmlns".Equals(attribute.Name))) {
 						continue;
 					}
 
@@ -866,9 +866,9 @@ namespace iText.Kernel.XMP.Impl
 			}
 
 			if (xmlNode.Attributes != null) {
-				for (int i = 0; i < xmlNode.Attributes.Count; i++) {
-					XmlNode attribute = xmlNode.Attributes[i];
-					if (attribute == valueNode || "xmlns".Equals(attribute.Prefix) ||
+                foreach (XmlNode attribute in xmlNode.Attributes)
+                {
+                    if (attribute == valueNode || "xmlns".Equals(attribute.Prefix) ||
 						(attribute.Prefix == null && "xmlns".Equals(attribute.Name))) {
 						continue; // Skip the rdf:value or rdf:resource attribute holding the value.
 					}
