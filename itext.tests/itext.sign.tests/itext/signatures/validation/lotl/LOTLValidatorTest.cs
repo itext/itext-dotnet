@@ -26,39 +26,73 @@ using System.IO;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
+using iText.Signatures.Validation;
 using iText.Signatures.Validation.Report;
 using iText.Test;
 
-namespace iText.Signatures.Validation {
+namespace iText.Signatures.Validation.Lotl {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     [iText.Commons.Utils.NoopAnnotation]
     public class LOTLValidatorTest : ExtendedITextTest {
         private static readonly String SOURCE = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/LOTLValidatorTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/lotl/LOTLValidatorTest/";
 
         [NUnit.Framework.Test]
         public virtual void ValidationTest() {
             ValidatorChainBuilder chainBuilder = new ValidatorChainBuilder();
+            chainBuilder.WithLOTLFetchingProperties(new LOTLFetchingProperties());
             LOTLValidator validator = chainBuilder.GetLotlValidator();
             ValidationReport report = validator.Validate();
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
                 (0));
-            IList<IServiceContext> trustedCertificates = validator.GetNationalTrustedCertificates();
+            IList<CountryServiceContext> trustedCertificates = validator.GetNationalTrustedCertificates();
             NUnit.Framework.Assert.IsFalse(trustedCertificates.IsEmpty());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LotlWithConfiguredSchemaNamesTest() {
+            ValidatorChainBuilder chainBuilder = new ValidatorChainBuilder();
+            LOTLFetchingProperties lotlFetchingProperties = new LOTLFetchingProperties();
+            lotlFetchingProperties.AddSchemaName("HU");
+            lotlFetchingProperties.AddSchemaName("EE");
+            chainBuilder.WithLOTLFetchingProperties(lotlFetchingProperties);
+            LOTLValidator validator = chainBuilder.GetLotlValidator();
+            ValidationReport report = validator.Validate();
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
+                (0));
+            IList<CountryServiceContext> trustedCertificates = validator.GetNationalTrustedCertificates();
+            NUnit.Framework.Assert.IsFalse(trustedCertificates.IsEmpty());
+            // Assuming Estonian and Hungarian LOTL files don't have more than a thousand certificates.
+            NUnit.Framework.Assert.IsTrue(trustedCertificates.Count < 1000);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LotlWithInvalidSchemaNameTest() {
+            ValidatorChainBuilder chainBuilder = new ValidatorChainBuilder();
+            LOTLFetchingProperties lotlFetchingProperties = new LOTLFetchingProperties();
+            lotlFetchingProperties.AddSchemaName("Invalid");
+            chainBuilder.WithLOTLFetchingProperties(lotlFetchingProperties);
+            LOTLValidator validator = chainBuilder.GetLotlValidator();
+            ValidationReport report = validator.Validate();
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
+                (0));
+            IList<CountryServiceContext> trustedCertificates = validator.GetNationalTrustedCertificates();
+            NUnit.Framework.Assert.IsTrue(trustedCertificates.IsEmpty());
         }
 
         [NUnit.Framework.Test]
         public virtual void LotlUnavailableTest() {
             ValidatorChainBuilder chainBuilder = new ValidatorChainBuilder();
-            chainBuilder.WithLOTLValidator(() => new _LOTLValidator_63(chainBuilder));
+            chainBuilder.WithLOTLFetchingProperties(new LOTLFetchingProperties());
+            chainBuilder.WithLOTLValidator(() => new _LOTLValidator_102(chainBuilder));
             ValidationReport report = chainBuilder.GetLotlValidator().Validate();
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
                 (1).HasLogItem((l) => l.WithCheckName(LOTLValidator.LOTL_VALIDATION).WithMessage(LOTLValidator.UNABLE_TO_RETRIEVE_LOTL
                 )));
         }
 
-        private sealed class _LOTLValidator_63 : LOTLValidator {
-            public _LOTLValidator_63(ValidatorChainBuilder baseArg1)
+        private sealed class _LOTLValidator_102 : LOTLValidator {
+            public _LOTLValidator_102(ValidatorChainBuilder baseArg1)
                 : base(baseArg1) {
             }
 
@@ -70,15 +104,16 @@ namespace iText.Signatures.Validation {
         [NUnit.Framework.Test]
         public virtual void EuJournalCertificatesEmptyTest() {
             ValidatorChainBuilder chainBuilder = new ValidatorChainBuilder();
-            chainBuilder.WithLOTLValidator(() => new _LOTLValidator_81(chainBuilder));
+            chainBuilder.WithLOTLFetchingProperties(new LOTLFetchingProperties());
+            chainBuilder.WithLOTLValidator(() => new _LOTLValidator_121(chainBuilder));
             ValidationReport report = chainBuilder.GetLotlValidator().Validate();
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
                 (2).HasLogItem((l) => l.WithCheckName(LOTLValidator.LOTL_VALIDATION).WithMessage(LOTLValidator.LOTL_VALIDATION_UNSUCCESSFUL
                 )));
         }
 
-        private sealed class _LOTLValidator_81 : LOTLValidator {
-            public _LOTLValidator_81(ValidatorChainBuilder baseArg1)
+        private sealed class _LOTLValidator_121 : LOTLValidator {
+            public _LOTLValidator_121(ValidatorChainBuilder baseArg1)
                 : base(baseArg1) {
             }
 
@@ -90,15 +125,16 @@ namespace iText.Signatures.Validation {
         [NUnit.Framework.Test]
         public virtual void LotlWithBrokenPivotsTest() {
             ValidatorChainBuilder chainBuilder = new ValidatorChainBuilder();
-            chainBuilder.WithLOTLValidator(() => new _LOTLValidator_99(chainBuilder));
+            chainBuilder.WithLOTLFetchingProperties(new LOTLFetchingProperties());
+            chainBuilder.WithLOTLValidator(() => new _LOTLValidator_140(chainBuilder));
             ValidationReport report = chainBuilder.GetLotlValidator().Validate();
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
                 (1).HasLogItem((l) => l.WithCheckName(LOTLValidator.LOTL_VALIDATION).WithMessage(LOTLValidator.UNABLE_TO_RETRIEVE_PIVOT
                 , (t) => "https://ec.europa.eu/tools/lotl/eu-lotl-pivot-335-BrokenUri.xml")));
         }
 
-        private sealed class _LOTLValidator_99 : LOTLValidator {
-            public _LOTLValidator_99(ValidatorChainBuilder baseArg1)
+        private sealed class _LOTLValidator_140 : LOTLValidator {
+            public _LOTLValidator_140(ValidatorChainBuilder baseArg1)
                 : base(baseArg1) {
             }
 

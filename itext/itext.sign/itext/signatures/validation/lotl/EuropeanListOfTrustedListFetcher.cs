@@ -26,7 +26,7 @@ using iText.Commons.Utils;
 using iText.IO.Resolver.Resource;
 using iText.Signatures.Exceptions;
 
-namespace iText.Signatures.Validation {
+namespace iText.Signatures.Validation.Lotl {
 //\cond DO_NOT_DOCUMENT
     /// <summary>Fetches the European List of Trusted Lists (LOTL) from a predefined URL.</summary>
     /// <remarks>

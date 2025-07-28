@@ -23,28 +23,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
 
-namespace iText.Signatures.Validation {
+namespace iText.Signatures.Validation.Lotl {
 //\cond DO_NOT_DOCUMENT
-    internal class SimpleServiceContext : IServiceContext {
-        private IList<IX509Certificate> certificates;
+    internal interface IServiceContext {
+        IList<IX509Certificate> GetCertificates();
 
-//\cond DO_NOT_DOCUMENT
-        internal SimpleServiceContext(IX509Certificate certificate) {
-            this.certificates = new List<IX509Certificate>();
-            certificates.Add(certificate);
-        }
-//\endcond
-
-        public virtual IList<IX509Certificate> GetCertificates() {
-            return new List<IX509Certificate>(certificates);
-        }
-
-        public virtual void AddCertificate(IX509Certificate certificate) {
-            if (certificates == null) {
-                certificates = new List<IX509Certificate>();
-            }
-            certificates.Add(certificate);
-        }
+        void AddCertificate(IX509Certificate certificate);
     }
 //\endcond
 }

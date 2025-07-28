@@ -24,12 +24,16 @@ using System;
 using System.IO;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
-using iText.Signatures.Validation.Context;
+using iText.Signatures.Validation;
 using iText.Signatures.Validation.Report;
 
-namespace iText.Signatures.Validation {
-//\cond DO_NOT_DOCUMENT
-    internal class XmlSignatureValidator {
+namespace iText.Signatures.Validation.Lotl {
+    /// <summary>Validator class responsible for XML signature validation.</summary>
+    /// <remarks>
+    /// Validator class responsible for XML signature validation.
+    /// This class is not intended to be used to validate anything besides LOTL files.
+    /// </remarks>
+    public class XmlSignatureValidator {
 //\cond DO_NOT_DOCUMENT
         internal const String XML_SIGNATURE_VERIFICATION = "XML Signature verification check.";
 //\endcond
@@ -56,21 +60,40 @@ namespace iText.Signatures.Validation {
 
         private readonly TrustedCertificatesStore trustedCertificatesStore;
 
-        private readonly SignatureValidationProperties properties;
-
-        private readonly ValidationContext context;
-
-//\cond DO_NOT_DOCUMENT
-        internal XmlSignatureValidator(ValidatorChainBuilder builder) {
+        /// <summary>
+        /// Creates
+        /// <see cref="XmlSignatureValidator"/>
+        /// instance.
+        /// </summary>
+        /// <remarks>
+        /// Creates
+        /// <see cref="XmlSignatureValidator"/>
+        /// instance. This constructor shall not be used directly.
+        /// Instead, in order to create such instance
+        /// <see cref="iText.Signatures.Validation.ValidatorChainBuilder.GetXmlSignatureValidator()"/>
+        /// shall be used.
+        /// </remarks>
+        /// <param name="builder">
+        /// 
+        /// <see cref="iText.Signatures.Validation.ValidatorChainBuilder"/>
+        /// which was responsible for creation
+        /// </param>
+        public XmlSignatureValidator(ValidatorChainBuilder builder) {
             this.trustedCertificatesStore = builder.GetCertificateRetriever().GetTrustedCertificatesStore();
-            this.properties = builder.GetProperties();
-            this.context = new ValidationContext(ValidatorContext.XML_SIGNATURE_VALIDATOR, CertificateSource.LOTL_CERT
-                , TimeBasedContext.PRESENT);
         }
-//\endcond
 
-//\cond DO_NOT_DOCUMENT
-        internal virtual ValidationReport Validate(Stream xmlDocumentInputStream) {
+        /// <summary>Validates provided XML LOTL file.</summary>
+        /// <param name="xmlDocumentInputStream">
+        /// 
+        /// <see cref="System.IO.Stream"/>
+        /// representing XML LOTL file to be validated
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Signatures.Validation.Report.ValidationReport"/>
+        /// containing all validation related information
+        /// </returns>
+        protected internal virtual ValidationReport Validate(Stream xmlDocumentInputStream) {
             ValidationReport report = new ValidationReport();
             CertificateSelector keySelector = new CertificateSelector();
             try {
@@ -104,12 +127,5 @@ namespace iText.Signatures.Validation {
             }
             return report;
         }
-//\endcond
-
-        private bool StopValidation(ValidationReport result, ValidationContext context) {
-            return !properties.GetContinueAfterFailure(context) && result.GetValidationResult() == ValidationReport.ValidationResult
-                .INVALID;
-        }
     }
-//\endcond
 }

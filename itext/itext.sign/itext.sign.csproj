@@ -39,4 +39,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="itext\signatures\validation\xml" />
+  </ItemGroup>
 </Project>

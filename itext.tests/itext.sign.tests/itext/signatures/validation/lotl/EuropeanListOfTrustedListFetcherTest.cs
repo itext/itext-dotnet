@@ -26,7 +26,7 @@ using iText.Commons.Exceptions;
 using iText.IO.Resolver.Resource;
 using iText.Test;
 
-namespace iText.Signatures.Validation {
+namespace iText.Signatures.Validation.Lotl {
 //\cond DO_NOT_DOCUMENT
     [NUnit.Framework.Category("IntegrationTest")]
     internal class EuropeanListOfTrustedListFetcherTest : ExtendedITextTest {

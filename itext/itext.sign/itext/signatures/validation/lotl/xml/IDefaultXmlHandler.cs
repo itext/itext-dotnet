@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 
-namespace iText.Signatures.Validation.Xml {
+namespace iText.Signatures.Validation.Lotl.Xml {
     /// <summary>Interface for handling XML elements during SAX processing.</summary>
     public interface IDefaultXmlHandler {
         /// <summary>Called when a start element is encountered in the XML document.</summary>

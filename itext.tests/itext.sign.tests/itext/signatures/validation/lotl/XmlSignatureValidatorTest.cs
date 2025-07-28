@@ -26,16 +26,17 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Signatures.Testutils;
+using iText.Signatures.Validation;
 using iText.Signatures.Validation.Context;
 using iText.Signatures.Validation.Report;
 using iText.Test;
 
-namespace iText.Signatures.Validation {
+namespace iText.Signatures.Validation.Lotl {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     [iText.Commons.Utils.NoopAnnotation]
     public class XmlSignatureValidatorTest : ExtendedITextTest {
         private static readonly String SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/XmlSignatureValidatorTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/lotl/XmlSignatureValidatorTest/";
 
         [NUnit.Framework.Test]
         public virtual void LotlXmlValidationTest() {

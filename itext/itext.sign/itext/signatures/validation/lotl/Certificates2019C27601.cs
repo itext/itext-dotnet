@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 
-namespace iText.Signatures.Validation {
+namespace iText.Signatures.Validation.Lotl {
 //\cond DO_NOT_DOCUMENT
     // TODO DEVSIX-9218 Remove this class when repository with EU Journal certificates is released.
     internal class Certificates2019C27601 {

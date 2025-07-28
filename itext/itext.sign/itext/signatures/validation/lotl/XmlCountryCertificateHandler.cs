@@ -26,10 +26,12 @@ using System.Text;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Signatures;
 
-namespace iText.Signatures.Validation {
+namespace iText.Signatures.Validation.Lotl {
 //\cond DO_NOT_DOCUMENT
     internal class XmlCountryCertificateHandler : AbstractXmlCertificateHandler {
         private static readonly IList<String> INFORMATION_TAGS = new List<String>();
+
+        private readonly ICollection<String> serviceTypes;
 
         static XmlCountryCertificateHandler() {
             INFORMATION_TAGS.Add(XmlTagConstants.SERVICE_TYPE);
@@ -45,15 +47,16 @@ namespace iText.Signatures.Validation {
         private ServiceStatusInfo currentServiceStatusInfo = null;
 
 //\cond DO_NOT_DOCUMENT
-        internal XmlCountryCertificateHandler() {
+        internal XmlCountryCertificateHandler(ICollection<String> serviceTypes) {
+            this.serviceTypes = new HashSet<String>(serviceTypes);
         }
 //\endcond
 
-        //empty constructor
         private static String RemoveWhitespacesAndBreakLines(String data) {
             return data.Replace(" ", "").Replace("\n", "");
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void StartElement(String uri, String localName, String qName, Dictionary<String, String> attributes
             ) {
             if (XmlTagConstants.TSP_SERVICE.Equals(localName)) {
@@ -72,6 +75,7 @@ namespace iText.Signatures.Validation {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void EndElement(String uri, String localName, String qName) {
             switch (localName) {
                 case XmlTagConstants.TSP_SERVICE: {
@@ -95,7 +99,13 @@ namespace iText.Signatures.Validation {
 
                 case XmlTagConstants.SERVICE_TYPE: {
                     if (currentServiceContext != null) {
-                        currentServiceContext.SetServiceType(information.ToString());
+                        if (serviceTypes.IsEmpty() || serviceTypes.Contains(information.ToString())) {
+                            currentServiceContext.SetServiceType(information.ToString());
+                        }
+                        else {
+                            // If this service type is not among those which were requested, we should skip such service.
+                            currentServiceContext = null;
+                        }
                     }
                     information = null;
                     break;
@@ -120,6 +130,7 @@ namespace iText.Signatures.Validation {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void Characters(char[] ch, int start, int length) {
             if (information != null) {
                 information.Append(ch, start, length);
@@ -145,8 +156,10 @@ namespace iText.Signatures.Validation {
 
 //\cond DO_NOT_DOCUMENT
         internal virtual void EndProvider() {
-            serviceContextList.Add(currentServiceContext);
-            currentServiceContext = null;
+            if (currentServiceContext != null) {
+                serviceContextList.Add(currentServiceContext);
+                currentServiceContext = null;
+            }
         }
 //\endcond
     }

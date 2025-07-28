@@ -28,7 +28,7 @@ using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Kernel.Exceptions;
 
-namespace iText.Signatures.Validation {
+namespace iText.Signatures.Validation.Lotl {
 //\cond DO_NOT_DOCUMENT
     internal class CertificateSelector {
 //\cond DO_NOT_DOCUMENT

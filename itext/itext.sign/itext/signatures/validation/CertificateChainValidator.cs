@@ -28,6 +28,7 @@ using iText.Commons.Utils;
 using iText.Signatures;
 using iText.Signatures.Validation.Context;
 using iText.Signatures.Validation.Extensions;
+using iText.Signatures.Validation.Lotl;
 using iText.Signatures.Validation.Report;
 
 namespace iText.Signatures.Validation {
@@ -196,8 +197,13 @@ namespace iText.Signatures.Validation {
 
         private bool CheckIfCertIsTrusted(ValidationReport result, ValidationContext context, IX509Certificate certificate
             , DateTime validationDate) {
-            return certificateRetriever.GetTrustedCertificatesStore().CheckIfCertIsTrusted(result, context, certificate
-                ) || lotlTrustedStore.CheckIfCertIsTrusted(result, context, certificate, validationDate);
+            if (certificateRetriever.GetTrustedCertificatesStore().CheckIfCertIsTrusted(result, context, certificate)) {
+                return true;
+            }
+            if (lotlTrustedStore == null) {
+                return false;
+            }
+            return lotlTrustedStore.CheckIfCertIsTrusted(result, context, certificate, validationDate);
         }
 
         private bool StopValidation(ValidationReport result, ValidationContext context) {

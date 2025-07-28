@@ -23,10 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
-namespace iText.Signatures.Validation {
-
+namespace iText.Signatures.Validation.Lotl {
+//\cond DO_NOT_DOCUMENT
     internal class ServiceStatusInfo {
         private String serviceStatus;
 
@@ -35,11 +34,19 @@ namespace iText.Signatures.Validation {
 
         private readonly String statusStartDateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
+        //\cond DO_NOT_DOCUMENT
         internal const String GRANTED = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/granted";
+        //\endcond
+        //\cond DO_NOT_DOCUMENT
         internal const String GRANTED_NATIONALLY =
             "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/recognisedatnationallevel";
+        //\endcond
+        //\cond DO_NOT_DOCUMENT
         internal const String WITHDRAWN = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/withdrawn";
+        //\endcond
+        //\cond DO_NOT_DOCUMENT
         internal const String ACCREDITED = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/accredited";
+        //\endcond
         private static readonly HashSet<String> validStatuses = new HashSet<String>();
 
         static ServiceStatusInfo()
@@ -49,38 +56,55 @@ namespace iText.Signatures.Validation {
             validStatuses.Add(ACCREDITED);
         }
 
+        //\cond DO_NOT_DOCUMENT
         internal ServiceStatusInfo() {
         }
+        //\endcond
 
+        //\cond DO_NOT_DOCUMENT
         internal ServiceStatusInfo(String serviceStatus, DateTime serviceStatusStartingTime) {
             this.serviceStatus = serviceStatus;
             this.serviceStatusStartingTime = serviceStatusStartingTime;
         }
+        //\endcond
 
+        //\cond DO_NOT_DOCUMENT
         internal virtual void SetServiceStatus(String serviceStatus) {
             this.serviceStatus = serviceStatus;
         }
+        //\endcond
 
+        //\cond DO_NOT_DOCUMENT
         internal virtual String GetServiceStatus() {
             return serviceStatus;
         }
+        //\endcond
 
+        //\cond DO_NOT_DOCUMENT
         internal virtual void SetServiceStatusStartingTime(String timeString) {
             DateTime.TryParseExact(timeString, statusStartDateFormat, null,
                                       DateTimeStyles.None, out this.serviceStatusStartingTime);
         }
+        //\endcond
 
+        //\cond DO_NOT_DOCUMENT
         internal virtual void SetServiceStatusStartingTime(DateTime serviceStatusStartingTime) {
             this.serviceStatusStartingTime = serviceStatusStartingTime;
         }
+        //\endcond
 
+        //\cond DO_NOT_DOCUMENT
         internal virtual DateTime GetServiceStatusStartingTime() {
             return serviceStatusStartingTime;
         }
+        //\endcond
 
+        //\cond DO_NOT_DOCUMENT
         internal static Boolean IsStatusValid(String status)
         {
             return validStatuses.Contains(status);
         }
+        //\endcond
     }
+//\endcond
 }

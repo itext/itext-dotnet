@@ -24,7 +24,7 @@ using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
 
-namespace iText.Signatures.Validation {
+namespace iText.Signatures.Validation.Lotl {
 //\cond DO_NOT_DOCUMENT
     // TODO DEVSIX-9218 Remove this class when repository with EU Journal certificates is released.
     internal class EuropeanTrustedListConfiguration {

@@ -23,9 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.Signatures.Validation.Xml;
+using iText.Signatures.Validation.Lotl.Xml;
 
-namespace iText.Signatures.Validation {
+namespace iText.Signatures.Validation.Lotl {
 //\cond DO_NOT_DOCUMENT
     internal class XmlPivotsHandler : IDefaultXmlHandler {
         private readonly IList<String> pivots = new List<String>();

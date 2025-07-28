@@ -29,7 +29,7 @@ using System.Xml;
 using iText.Bouncycastleconnector;
 using iText.Kernel.Utils;
 
-namespace iText.Signatures.Validation {
+namespace iText.Signatures.Validation.Lotl {
 //\cond DO_NOT_DOCUMENT
     internal sealed class XmlValidationUtils {
         private XmlValidationUtils() {

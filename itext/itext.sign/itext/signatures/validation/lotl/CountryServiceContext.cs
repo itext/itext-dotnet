@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 
-namespace iText.Signatures.Validation {
+namespace iText.Signatures.Validation.Lotl {
 //\cond DO_NOT_DOCUMENT
     internal class CountryServiceContext : IServiceContext {
         private readonly IList<IX509Certificate> certificates = new List<IX509Certificate>();
@@ -41,10 +41,12 @@ namespace iText.Signatures.Validation {
 //\endcond
 
         // Empty constructor
+        /// <summary><inheritDoc/></summary>
         public virtual IList<IX509Certificate> GetCertificates() {
             return new List<IX509Certificate>(certificates);
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual void AddCertificate(IX509Certificate certificate) {
             certificates.Add(certificate);
         }

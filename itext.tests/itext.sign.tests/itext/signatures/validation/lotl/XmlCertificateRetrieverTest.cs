@@ -24,16 +24,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;
 using iText.Test;
 
-namespace iText.Signatures.Validation {
+namespace iText.Signatures.Validation.Lotl {
     [NUnit.Framework.Category("UnitTest")]
     public class XmlCertificateRetrieverTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation" + "/XmlCertificateRetrieverTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/lotl/XmlCertificateRetrieverTest/";
 
         [NUnit.Framework.Test]
         public virtual void ReadSingleCertificateTest() {
@@ -75,10 +76,29 @@ namespace iText.Signatures.Validation {
         }
 
         [NUnit.Framework.Test]
+        public virtual void ReadAustriaCertificatesWithDefinedServiceTypeTest() {
+            String xmlPath = SOURCE_FOLDER + "austriaTrustedList.xml";
+            IList<IX509Certificate> certificateList = new XmlCertificateRetriever(new XmlCountryCertificateHandler(new 
+                HashSet<String>(JavaUtil.ArraysAsList("http://uri.etsi.org/TrstSvc/Svctype/CA/PKC", "http://uri.etsi.org/TrstSvc/Svctype/Certstatus/OCSP/QC"
+                )))).GetCertificates(iText.Commons.Utils.FileUtil.GetInputStreamForFile(System.IO.Path.Combine(xmlPath
+                )));
+            NUnit.Framework.Assert.AreEqual(38, certificateList.Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReadAustriaCertificatesWithInvalidServiceTypeTest() {
+            String xmlPath = SOURCE_FOLDER + "austriaTrustedList.xml";
+            IList<IX509Certificate> certificateList = new XmlCertificateRetriever(new XmlCountryCertificateHandler(new 
+                HashSet<String>(JavaCollectionsUtil.SingletonList("Invalid")))).GetCertificates(iText.Commons.Utils.FileUtil.GetInputStreamForFile
+                (System.IO.Path.Combine(xmlPath)));
+            NUnit.Framework.Assert.AreEqual(0, certificateList.Count);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ReadBulgariaCertificatesTest() {
             String xmlPath = SOURCE_FOLDER + "BulgariaTrustedList.xml";
             XmlCertificateRetriever xmlCertificateRetriever = new XmlCertificateRetriever(new XmlCountryCertificateHandler
-                ());
+                (JavaCollectionsUtil.EmptySet<String>()));
             IList<IX509Certificate> certificateList = xmlCertificateRetriever.GetCertificates(iText.Commons.Utils.FileUtil.GetInputStreamForFile
                 (System.IO.Path.Combine(xmlPath)));
             NUnit.Framework.Assert.AreEqual(104, certificateList.Count);
@@ -88,7 +108,7 @@ namespace iText.Signatures.Validation {
         public virtual void ReadCzechiaCertificatesTest() {
             String xmlPath = SOURCE_FOLDER + "CzechiaTrustedList.txt";
             XmlCertificateRetriever xmlCertificateRetriever = new XmlCertificateRetriever(new XmlCountryCertificateHandler
-                ());
+                (JavaCollectionsUtil.EmptySet<String>()));
             IList<IX509Certificate> certificateList = xmlCertificateRetriever.GetCertificates(iText.Commons.Utils.FileUtil.GetInputStreamForFile
                 (System.IO.Path.Combine(xmlPath)));
             NUnit.Framework.Assert.AreEqual(441, certificateList.Count);
@@ -98,7 +118,7 @@ namespace iText.Signatures.Validation {
         public virtual void ReadCyrpusCertificateContextTest() {
             String xmlPath = SOURCE_FOLDER + "cyprusTrustedList.xml";
             XmlCertificateRetriever xmlCertificateRetriever = new XmlCertificateRetriever(new XmlCountryCertificateHandler
-                ());
+                (JavaCollectionsUtil.EmptySet<String>()));
             IList<IX509Certificate> certificateList = xmlCertificateRetriever.GetCertificates(iText.Commons.Utils.FileUtil.GetInputStreamForFile
                 (System.IO.Path.Combine(xmlPath)));
             NUnit.Framework.Assert.AreEqual(8, certificateList.Count);
@@ -117,7 +137,7 @@ namespace iText.Signatures.Validation {
         public virtual void ReadEstoniaCertificateContextTest() {
             String xmlPath = SOURCE_FOLDER + "estoniaTrustedList.xml";
             XmlCertificateRetriever xmlCertificateRetriever = new XmlCertificateRetriever(new XmlCountryCertificateHandler
-                ());
+                (JavaCollectionsUtil.EmptySet<String>()));
             IList<IX509Certificate> certificateList = xmlCertificateRetriever.GetCertificates(iText.Commons.Utils.FileUtil.GetInputStreamForFile
                 (System.IO.Path.Combine(xmlPath)));
             NUnit.Framework.Assert.AreEqual(64, certificateList.Count);
@@ -140,7 +160,7 @@ namespace iText.Signatures.Validation {
         public virtual void ReadHungaryCertificateContextTest() {
             String xmlPath = SOURCE_FOLDER + "HungaryTrustedList.xml";
             XmlCertificateRetriever xmlCertificateRetriever = new XmlCertificateRetriever(new XmlCountryCertificateHandler
-                ());
+                (JavaCollectionsUtil.EmptySet<String>()));
             IList<IX509Certificate> certificateList = xmlCertificateRetriever.GetCertificates(iText.Commons.Utils.FileUtil.GetInputStreamForFile
                 (System.IO.Path.Combine(xmlPath)));
             NUnit.Framework.Assert.AreEqual(346, certificateList.Count);

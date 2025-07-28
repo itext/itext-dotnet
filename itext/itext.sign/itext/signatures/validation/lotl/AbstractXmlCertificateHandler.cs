@@ -23,9 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
-using iText.Signatures.Validation.Xml;
+using iText.Signatures.Validation.Lotl.Xml;
 
-namespace iText.Signatures.Validation {
+namespace iText.Signatures.Validation.Lotl {
 //\cond DO_NOT_DOCUMENT
     internal abstract class AbstractXmlCertificateHandler : IDefaultXmlHandler {
 //\cond DO_NOT_DOCUMENT

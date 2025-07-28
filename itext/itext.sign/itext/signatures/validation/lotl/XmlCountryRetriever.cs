@@ -23,9 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.Signatures.Validation.Xml;
+using iText.Signatures.Validation.Lotl.Xml;
 
-namespace iText.Signatures.Validation {
+namespace iText.Signatures.Validation.Lotl {
 //\cond DO_NOT_DOCUMENT
     /// <summary>
     /// This class is used to retrieve the list of countries and their corresponding TSL (Trusted List) locations

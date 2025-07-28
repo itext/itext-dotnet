@@ -26,7 +26,7 @@ using System.IO;
 using System.Xml;
 using iText.Kernel.Exceptions;
 
-namespace iText.Signatures.Validation.Xml {
+namespace iText.Signatures.Validation.Lotl.Xml {
     internal class XmlSaxProcessor {
         public virtual void Process(Stream inputStream, IDefaultXmlHandler handler) {
             XmlReaderSettings settings = new XmlReaderSettings();

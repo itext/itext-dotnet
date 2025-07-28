@@ -25,12 +25,12 @@ using System.Collections.Generic;
 using System.IO;
 using iText.Test;
 
-namespace iText.Signatures.Validation {
+namespace iText.Signatures.Validation.Lotl {
 //\cond DO_NOT_DOCUMENT
     [NUnit.Framework.Category("IntegrationTest")]
     internal class XmlCountryRetrieverTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation" + "/XmlCertificateRetrieverTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/lotl/XmlCertificateRetrieverTest/";
 
         [NUnit.Framework.Test]
         public virtual void ReadLotlCertificatesTest() {
