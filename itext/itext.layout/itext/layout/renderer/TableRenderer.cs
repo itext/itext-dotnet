@@ -1340,14 +1340,6 @@ namespace iText.Layout.Renderer {
             }
             float rightMaxBorder = bordersHandler.GetRightBorderMaxWidth();
             float leftMaxBorder = bordersHandler.GetLeftBorderMaxWidth();
-            TableWidths tableWidths = new TableWidths(this, MinMaxWidthUtils.GetInfWidth(), true, rightMaxBorder, leftMaxBorder
-                );
-            float maxColTotalWidth = 0;
-            float[] columns = isOriginalNonSplitRenderer ? tableWidths.Layout() : countedColumnWidth;
-            foreach (float column in columns) {
-                maxColTotalWidth += column;
-            }
-            float minWidth = isOriginalNonSplitRenderer ? tableWidths.GetMinWidth() : maxColTotalWidth;
             UnitValue marginRightUV = this.GetPropertyAsUnitValue(Property.MARGIN_RIGHT);
             if (!marginRightUV.IsPointValue()) {
                 LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
@@ -1360,7 +1352,20 @@ namespace iText.Layout.Renderer {
             }
             float additionalWidth = marginLefttUV.GetValue() + marginRightUV.GetValue() + rightMaxBorder / 2 + leftMaxBorder
                  / 2;
-            return new MinMaxWidth(minWidth, maxColTotalWidth, additionalWidth);
+            MinMaxWidth minMaxWidth = new MinMaxWidth(additionalWidth);
+            if (!SetMinMaxWidthBasedOnFixedWidth(minMaxWidth)) {
+                TableWidths tableWidths = new TableWidths(this, MinMaxWidthUtils.GetInfWidth(), true, rightMaxBorder, leftMaxBorder
+                    );
+                float maxColTotalWidth = 0;
+                float[] columns = isOriginalNonSplitRenderer ? tableWidths.Layout() : countedColumnWidth;
+                foreach (float column in columns) {
+                    maxColTotalWidth += column;
+                }
+                float minWidth = isOriginalNonSplitRenderer ? tableWidths.GetMinWidth() : maxColTotalWidth;
+                minMaxWidth.SetChildrenMinWidth(minWidth);
+                minMaxWidth.SetChildrenMaxWidth(maxColTotalWidth);
+            }
+            return minMaxWidth;
         }
 
         protected internal override bool AllowLastYLineRecursiveExtraction() {
