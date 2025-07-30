@@ -56,6 +56,14 @@ namespace iText.Signatures.Validation.Lotl {
         internal const String NOT_YET_VALID_CERTIFICATE = "Certificate {0} is not yet valid.";
 //\endcond
 
+//\cond DO_NOT_DOCUMENT
+        internal const String SCOPE_SPECIFIED_WITH_INVALID_TYPES = "Certificate {0} is trusted for {1}, " + "which is incorrect scope for pdf validation.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String EXTENSIONS_CHECK = "Certificate extensions check.";
+//\endcond
+
         private static readonly IDictionary<String, ICollection<CertificateSource>> serviceTypeIdentifiersScope;
 
         private readonly ICollection<CountryServiceContext> contexts = new HashSet<CountryServiceContext>();
@@ -212,7 +220,10 @@ namespace iText.Signatures.Validation.Lotl {
             result.MergeWithDifferentStatus(report, ReportItem.ReportItemStatus.INFO);
             IList<ReportItem> validationReportItems = new List<ReportItem>();
             foreach (CountryServiceContext currentContext in currentContextSet) {
-                if (!IsCertificateValidInTime(validationReportItems, certificate, currentContext, validationDate)) {
+                ServiceChronologicalInfo chronologicalInfo = GetCertificateChronologicalInfoByTime(validationReportItems, 
+                    certificate, currentContext, validationDate);
+                if (chronologicalInfo == null || !IsScopeCorrectlySpecified(validationReportItems, certificate, chronologicalInfo
+                    .GetExtensions())) {
                     continue;
                 }
                 ICollection<CertificateSource> currentScope = serviceTypeIdentifiersScope.Get(currentContext.GetServiceType
@@ -243,6 +254,46 @@ namespace iText.Signatures.Validation.Lotl {
         }
 
 //\cond DO_NOT_DOCUMENT
+        /// <summary>Check if scope specified by extensions contains valid types.</summary>
+        /// <param name="reportItems">
+        /// 
+        /// <see cref="iText.Signatures.Validation.Report.ValidationReport"/>
+        /// which is populated with detailed validation results
+        /// </param>
+        /// <param name="certificate">
+        /// 
+        /// <see cref="iText.Commons.Bouncycastle.Cert.IX509Certificate"/>
+        /// to be validated
+        /// </param>
+        /// <param name="extensions">
+        /// 
+        /// <see cref="AdditionalServiceInformationExtension"/>
+        /// that specify scope
+        /// </param>
+        /// <returns>false if extensions specify scope only with invalid types.</returns>
+        internal virtual bool IsScopeCorrectlySpecified(IList<ReportItem> reportItems, IX509Certificate certificate
+            , IList<AdditionalServiceInformationExtension> extensions) {
+            IList<ReportItem> currentReportItems = new List<ReportItem>();
+            foreach (AdditionalServiceInformationExtension extension in extensions) {
+                if (extension.IsScopeValid()) {
+                    return true;
+                }
+                else {
+                    currentReportItems.Add(new CertificateReportItem(certificate, EXTENSIONS_CHECK, MessageFormatUtil.Format(SCOPE_SPECIFIED_WITH_INVALID_TYPES
+                        , certificate.GetSubjectDN(), extension.GetUri()), ReportItem.ReportItemStatus.INVALID));
+                }
+            }
+            if (currentReportItems.IsEmpty()) {
+                return true;
+            }
+            else {
+                reportItems.AddAll(currentReportItems);
+                return false;
+            }
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         internal void AddCertificatesWithContext(ICollection<CountryServiceContext> contexts) {
             this.contexts.AddAll(contexts);
         }
@@ -258,20 +309,60 @@ namespace iText.Signatures.Validation.Lotl {
             return contextSet;
         }
 
-        private static bool IsCertificateValidInTime(IList<ReportItem> reportItems, IX509Certificate certificate, 
-            CountryServiceContext currentContext, DateTime validationDate) {
-            String status = currentContext.GetServiceStatusByDate(DateTimeUtil.GetRelativeTime(validationDate));
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Find
+        /// <see cref="ServiceChronologicalInfo"/>
+        /// corresponding to provided date.
+        /// </summary>
+        /// <remarks>
+        /// Find
+        /// <see cref="ServiceChronologicalInfo"/>
+        /// corresponding to provided date. If Service wasn't operating at that date
+        /// report item will be added and null will be returned.
+        /// </remarks>
+        /// <param name="reportItems">
+        /// 
+        /// <see cref="iText.Signatures.Validation.Report.ValidationReport"/>
+        /// which is populated with detailed validation results
+        /// </param>
+        /// <param name="certificate">
+        /// 
+        /// <see cref="iText.Commons.Bouncycastle.Cert.IX509Certificate"/>
+        /// to be validated
+        /// </param>
+        /// <param name="currentContext">
+        /// 
+        /// <see cref="CountryServiceContext"/>
+        /// which contains statuses and their starting time
+        /// </param>
+        /// <param name="validationDate">
+        /// 
+        /// <see cref="System.DateTime"/>
+        /// against which certificate is expected to be validated. Usually signing
+        /// date
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="ServiceChronologicalInfo"/>
+        /// which contains time specific service information.
+        /// </returns>
+        internal virtual ServiceChronologicalInfo GetCertificateChronologicalInfoByTime(IList<ReportItem> reportItems
+            , IX509Certificate certificate, CountryServiceContext currentContext, DateTime validationDate) {
+            ServiceChronologicalInfo status = currentContext.GetServiceChronologicalInfoByDate(DateTimeUtil.GetRelativeTime
+                (validationDate));
             if (status == null) {
                 reportItems.Add(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format(NOT_YET_VALID_CERTIFICATE
                     , certificate.GetSubjectDN()), ReportItem.ReportItemStatus.INVALID));
-                return false;
+                return null;
             }
-            if (!ServiceStatusInfo.IsStatusValid(status)) {
+            if (!ServiceChronologicalInfo.IsStatusValid(status.GetServiceStatus())) {
                 reportItems.Add(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format(REVOKED_CERTIFICATE
                     , certificate.GetSubjectDN()), ReportItem.ReportItemStatus.INVALID));
-                return false;
+                return null;
             }
-            return true;
+            return status;
         }
+//\endcond
     }
 }

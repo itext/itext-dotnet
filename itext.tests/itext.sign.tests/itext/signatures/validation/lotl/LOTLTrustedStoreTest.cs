@@ -49,7 +49,7 @@ namespace iText.Signatures.Validation.Lotl {
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
-            context.AddNewServiceStatus(new ServiceStatusInfo(ServiceStatusInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
+            context.AddServiceChronologicalInfo(new ServiceChronologicalInfo(ServiceChronologicalInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
                 (1900, 1, 1, 0, 0)));
             store.AddCertificatesWithContext(JavaCollectionsUtil.SingletonList(context));
             ValidationReport report = new ValidationReport();
@@ -67,7 +67,7 @@ namespace iText.Signatures.Validation.Lotl {
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/Certstatus/CRL");
-            context.AddNewServiceStatus(new ServiceStatusInfo(ServiceStatusInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
+            context.AddServiceChronologicalInfo(new ServiceChronologicalInfo(ServiceChronologicalInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
                 (1900, 1, 1, 0, 0)));
             store.AddCertificatesWithContext(JavaCollectionsUtil.SingletonList(context));
             ValidationReport report = new ValidationReport();
@@ -89,7 +89,7 @@ namespace iText.Signatures.Validation.Lotl {
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/TSA/QTST");
-            context.AddNewServiceStatus(new ServiceStatusInfo(ServiceStatusInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
+            context.AddServiceChronologicalInfo(new ServiceChronologicalInfo(ServiceChronologicalInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
                 (1900, 1, 1, 0, 0)));
             store.AddCertificatesWithContext(JavaCollectionsUtil.SingletonList(context));
             ValidationReport report = new ValidationReport();
@@ -107,7 +107,7 @@ namespace iText.Signatures.Validation.Lotl {
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("invalid service type");
-            context.AddNewServiceStatus(new ServiceStatusInfo(ServiceStatusInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
+            context.AddServiceChronologicalInfo(new ServiceChronologicalInfo(ServiceChronologicalInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
                 (1900, 1, 1, 0, 0)));
             store.AddCertificatesWithContext(JavaCollectionsUtil.SingletonList(context));
             ValidationReport report = new ValidationReport();
@@ -125,7 +125,7 @@ namespace iText.Signatures.Validation.Lotl {
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
-            context.AddNewServiceStatus(new ServiceStatusInfo(ServiceStatusInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
+            context.AddServiceChronologicalInfo(new ServiceChronologicalInfo(ServiceChronologicalInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
                 (2025, 1, 1, 0, 0)));
             store.AddCertificatesWithContext(JavaCollectionsUtil.SingletonList(context));
             ValidationReport report = new ValidationReport();
@@ -143,8 +143,8 @@ namespace iText.Signatures.Validation.Lotl {
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
-            context.AddNewServiceStatus(new ServiceStatusInfo(ServiceStatusInfo.WITHDRAWN, iText.Commons.Utils.DateTimeUtil.CreateDateTime
-                (1900, 1, 1, 0, 0)));
+            context.AddServiceChronologicalInfo(new ServiceChronologicalInfo("http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/withdrawn"
+                , iText.Commons.Utils.DateTimeUtil.CreateDateTime(1900, 1, 1, 0, 0)));
             store.AddCertificatesWithContext(JavaCollectionsUtil.SingletonList(context));
             ValidationReport report = new ValidationReport();
             NUnit.Framework.Assert.IsFalse(store.CheckIfCertIsTrusted(report, new ValidationContext(ValidatorContext.CERTIFICATE_CHAIN_VALIDATOR
@@ -152,6 +152,71 @@ namespace iText.Signatures.Validation.Lotl {
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
                 (1).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LOTLTrustedStore.CERTIFICATE_CHECK).WithMessage
                 ("Certificate {0} is revoked.", (l) => crlRootCert.GetSubjectDN()).WithCertificate(crlRootCert)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckCertificateWithCorrectExtensionScopeTest() {
+            LOTLTrustedStore store = new ValidatorChainBuilder().GetLOTLTrustedstore();
+            CountryServiceContext context = new CountryServiceContext();
+            context.AddCertificate(crlRootCert);
+            context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
+            ServiceChronologicalInfo info = new ServiceChronologicalInfo(ServiceChronologicalInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
+                (1900, 1, 1, 0, 0));
+            info.AddExtension(new AdditionalServiceInformationExtension("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForeSignatures"
+                ));
+            context.AddServiceChronologicalInfo(info);
+            store.AddCertificatesWithContext(JavaCollectionsUtil.SingletonList(context));
+            ValidationReport report = new ValidationReport();
+            NUnit.Framework.Assert.IsTrue(store.CheckIfCertIsTrusted(report, new ValidationContext(ValidatorContext.CERTIFICATE_CHAIN_VALIDATOR
+                , CertificateSource.SIGNER_CERT, TimeBasedContext.PRESENT), crlRootCert, TimeTestUtil.TEST_DATE_TIME));
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
+                (0).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LOTLTrustedStore.CERTIFICATE_CHECK).WithMessage
+                ("Certificate {0} is trusted, revocation data checks are not required.", (l) => crlRootCert.GetSubjectDN
+                ()).WithCertificate(crlRootCert)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckCertificateWithCorrectExtensionScope2Test() {
+            LOTLTrustedStore store = new ValidatorChainBuilder().GetLOTLTrustedstore();
+            CountryServiceContext context = new CountryServiceContext();
+            context.AddCertificate(crlRootCert);
+            context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
+            ServiceChronologicalInfo info = new ServiceChronologicalInfo(ServiceChronologicalInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
+                (1900, 1, 1, 0, 0));
+            info.AddExtension(new AdditionalServiceInformationExtension("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForeSignatures"
+                ));
+            info.AddExtension(new AdditionalServiceInformationExtension("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForWebSiteAuthentication"
+                ));
+            context.AddServiceChronologicalInfo(info);
+            store.AddCertificatesWithContext(JavaCollectionsUtil.SingletonList(context));
+            ValidationReport report = new ValidationReport();
+            NUnit.Framework.Assert.IsTrue(store.CheckIfCertIsTrusted(report, new ValidationContext(ValidatorContext.CERTIFICATE_CHAIN_VALIDATOR
+                , CertificateSource.SIGNER_CERT, TimeBasedContext.PRESENT), crlRootCert, TimeTestUtil.TEST_DATE_TIME));
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
+                (0).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LOTLTrustedStore.CERTIFICATE_CHECK).WithMessage
+                ("Certificate {0} is trusted, revocation data checks are not required.", (l) => crlRootCert.GetSubjectDN
+                ()).WithCertificate(crlRootCert)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckCertificateWithIncorrectExtensionScopeTest() {
+            LOTLTrustedStore store = new ValidatorChainBuilder().GetLOTLTrustedstore();
+            CountryServiceContext context = new CountryServiceContext();
+            context.AddCertificate(crlRootCert);
+            context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
+            ServiceChronologicalInfo info = new ServiceChronologicalInfo(ServiceChronologicalInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
+                (1900, 1, 1, 0, 0));
+            info.AddExtension(new AdditionalServiceInformationExtension("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForWebSiteAuthentication"
+                ));
+            context.AddServiceChronologicalInfo(info);
+            store.AddCertificatesWithContext(JavaCollectionsUtil.SingletonList(context));
+            ValidationReport report = new ValidationReport();
+            NUnit.Framework.Assert.IsFalse(store.CheckIfCertIsTrusted(report, new ValidationContext(ValidatorContext.CERTIFICATE_CHAIN_VALIDATOR
+                , CertificateSource.SIGNER_CERT, TimeBasedContext.PRESENT), crlRootCert, TimeTestUtil.TEST_DATE_TIME));
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                (1).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LOTLTrustedStore.EXTENSIONS_CHECK).WithMessage
+                (LOTLTrustedStore.SCOPE_SPECIFIED_WITH_INVALID_TYPES, (l) => crlRootCert.GetSubjectDN(), (k) => "http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForWebSiteAuthentication"
+                ).WithCertificate(crlRootCert)));
         }
     }
 //\endcond

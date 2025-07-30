@@ -20,91 +20,76 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Signatures.Validation.Lotl;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
-namespace iText.Signatures.Validation.Lotl {
-//\cond DO_NOT_DOCUMENT
-    internal class ServiceStatusInfo {
+namespace iText.Signatures.Validation {
+
+    internal class ServiceChronologicalInfo {
         private String serviceStatus;
-
         //Local time is used here because it is required to use UTC in a trusted lists, so no offset shall be presented.
         private DateTime serviceStatusStartingTime;
 
+        private readonly List<AdditionalServiceInformationExtension> extensions = new List<AdditionalServiceInformationExtension>();
         private readonly String statusStartDateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-
-        //\cond DO_NOT_DOCUMENT
         internal const String GRANTED = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/granted";
-        //\endcond
-        //\cond DO_NOT_DOCUMENT
         internal const String GRANTED_NATIONALLY =
             "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/recognisedatnationallevel";
-        //\endcond
-        //\cond DO_NOT_DOCUMENT
-        internal const String WITHDRAWN = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/withdrawn";
-        //\endcond
-        //\cond DO_NOT_DOCUMENT
         internal const String ACCREDITED = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/accredited";
-        //\endcond
         private static readonly HashSet<String> validStatuses = new HashSet<String>();
 
-        static ServiceStatusInfo()
+        static ServiceChronologicalInfo()
         {
             validStatuses.Add(GRANTED);
             validStatuses.Add(GRANTED_NATIONALLY);
             validStatuses.Add(ACCREDITED);
         }
 
-        //\cond DO_NOT_DOCUMENT
-        internal ServiceStatusInfo() {
+        internal ServiceChronologicalInfo() {
         }
-        //\endcond
 
-        //\cond DO_NOT_DOCUMENT
-        internal ServiceStatusInfo(String serviceStatus, DateTime serviceStatusStartingTime) {
+        internal ServiceChronologicalInfo(String serviceStatus, DateTime serviceStatusStartingTime) {
             this.serviceStatus = serviceStatus;
             this.serviceStatusStartingTime = serviceStatusStartingTime;
         }
-        //\endcond
 
-        //\cond DO_NOT_DOCUMENT
         internal virtual void SetServiceStatus(String serviceStatus) {
             this.serviceStatus = serviceStatus;
         }
-        //\endcond
 
-        //\cond DO_NOT_DOCUMENT
         internal virtual String GetServiceStatus() {
             return serviceStatus;
         }
-        //\endcond
 
-        //\cond DO_NOT_DOCUMENT
         internal virtual void SetServiceStatusStartingTime(String timeString) {
             DateTime.TryParseExact(timeString, statusStartDateFormat, null,
                                       DateTimeStyles.None, out this.serviceStatusStartingTime);
         }
-        //\endcond
 
-        //\cond DO_NOT_DOCUMENT
         internal virtual void SetServiceStatusStartingTime(DateTime serviceStatusStartingTime) {
             this.serviceStatusStartingTime = serviceStatusStartingTime;
         }
-        //\endcond
 
-        //\cond DO_NOT_DOCUMENT
         internal virtual DateTime GetServiceStatusStartingTime() {
             return serviceStatusStartingTime;
         }
-        //\endcond
 
-        //\cond DO_NOT_DOCUMENT
         internal static Boolean IsStatusValid(String status)
         {
             return validStatuses.Contains(status);
         }
-        //\endcond
+
+        internal virtual void AddExtension(AdditionalServiceInformationExtension extension)
+        {
+            extensions.Add(extension);
+        }
+
+        internal virtual List<AdditionalServiceInformationExtension> GetExtensions()
+        {
+            return extensions;
+        }
     }
-//\endcond
 }

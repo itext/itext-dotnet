@@ -74,6 +74,10 @@ namespace iText.Signatures.Validation.Lotl {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
+        internal const String ADDITIONAL_INFORMATION_EXTENSION = "AdditionalServiceInformation";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         internal const String URI = "URI";
 //\endcond
     }

@@ -50,7 +50,7 @@ namespace iText.Signatures.Validation.Lotl {
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(rootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
-            context.AddNewServiceStatus(new ServiceStatusInfo(ServiceStatusInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
+            context.AddServiceChronologicalInfo(new ServiceChronologicalInfo(ServiceChronologicalInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
                 (1900, 1, 1, 0, 0)));
             ValidatorChainBuilder validatorChainBuilder = new ValidatorChainBuilder();
             LOTLTrustedStore lotlTrustedStore = new LOTLTrustedStore(validatorChainBuilder);
@@ -80,7 +80,7 @@ namespace iText.Signatures.Validation.Lotl {
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(rootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
-            context.AddNewServiceStatus(new ServiceStatusInfo(ServiceStatusInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
+            context.AddServiceChronologicalInfo(new ServiceChronologicalInfo(ServiceChronologicalInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
                 (1900, 1, 1, 0, 0)));
             ValidatorChainBuilder validatorChainBuilder = new ValidatorChainBuilder();
             LOTLTrustedStore lotlTrustedStore = new LOTLTrustedStore(validatorChainBuilder);
@@ -97,6 +97,38 @@ namespace iText.Signatures.Validation.Lotl {
             AssertValidationReport.AssertThat(report1, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
                 (0).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(LOTLTrustedStore
                 .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LotlTrustedStoreExtensionTest() {
+            MockRevocationDataValidator mockRevocationDataValidator = new MockRevocationDataValidator();
+            SignatureValidationProperties properties = new SignatureValidationProperties();
+            String chainName = CERTS_SRC + "chain.pem";
+            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
+            IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
+            CountryServiceContext context = new CountryServiceContext();
+            context.AddCertificate(rootCert);
+            context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
+            ServiceChronologicalInfo info = new ServiceChronologicalInfo(ServiceChronologicalInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
+                (1900, 1, 1, 0, 0));
+            info.AddExtension(new AdditionalServiceInformationExtension("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForWebSiteAuthentication"
+                ));
+            context.AddServiceChronologicalInfo(info);
+            ValidatorChainBuilder validatorChainBuilder = new ValidatorChainBuilder();
+            LOTLTrustedStore lotlTrustedStore = new LOTLTrustedStore(validatorChainBuilder);
+            validatorChainBuilder.WithSignatureValidationProperties(properties).WithRevocationDataValidatorFactory(() =>
+                 mockRevocationDataValidator).WithLOTLTrustedStoreFactory(() => lotlTrustedStore);
+            lotlTrustedStore.AddCertificatesWithContext(JavaCollectionsUtil.SingletonList<CountryServiceContext>(context
+                ));
+            CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
+            properties.SetRequiredExtensions(CertificateSources.All(), JavaCollectionsUtil.EmptyList<CertificateExtension
+                >());
+            ValidationReport report = validator.ValidateCertificate(baseContext.SetCertificateSource(CertificateSource
+                .CRL_ISSUER), rootCert, TimeTestUtil.TEST_DATE_TIME);
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                (2).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName(LOTLTrustedStore.EXTENSIONS_CHECK).WithMessage
+                (LOTLTrustedStore.SCOPE_SPECIFIED_WITH_INVALID_TYPES, (i) => rootCert.GetSubjectDN(), (k) => "http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForWebSiteAuthentication"
+                ).WithCertificate(rootCert)));
         }
     }
 }

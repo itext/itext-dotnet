@@ -33,7 +33,8 @@ namespace iText.Signatures.Validation.Lotl {
         private String serviceType;
 
         //It is expected that service statuses are ordered starting from the newest one.
-        private readonly IList<ServiceStatusInfo> serviceStatusInfos = new List<ServiceStatusInfo>();
+        private readonly IList<ServiceChronologicalInfo> serviceChronologicalInfos = new List<ServiceChronologicalInfo
+            >();
 
 //\cond DO_NOT_DOCUMENT
         internal CountryServiceContext() {
@@ -64,22 +65,22 @@ namespace iText.Signatures.Validation.Lotl {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal virtual void AddNewServiceStatus(ServiceStatusInfo serviceStatusInfo) {
-            serviceStatusInfos.Add(serviceStatusInfo);
+        internal virtual void AddServiceChronologicalInfo(ServiceChronologicalInfo serviceChronologicalInfo) {
+            serviceChronologicalInfos.Add(serviceChronologicalInfo);
         }
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal virtual String GetServiceStatusByDate(long milliseconds) {
-            return GetServiceStatusByDate(DateTimeUtil.GetTimeFromMillis(milliseconds));
+        internal virtual ServiceChronologicalInfo GetServiceChronologicalInfoByDate(long milliseconds) {
+            return GetServiceChronologicalInfoByDate(DateTimeUtil.GetTimeFromMillis(milliseconds));
         }
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal virtual String GetServiceStatusByDate(DateTime time) {
-            foreach (ServiceStatusInfo serviceStatusInfo in serviceStatusInfos) {
-                if (serviceStatusInfo.GetServiceStatusStartingTime().Before(time)) {
-                    return serviceStatusInfo.GetServiceStatus();
+        internal virtual ServiceChronologicalInfo GetServiceChronologicalInfoByDate(DateTime time) {
+            foreach (ServiceChronologicalInfo serviceChronologicalInfo in serviceChronologicalInfos) {
+                if (serviceChronologicalInfo.GetServiceStatusStartingTime().Before(time)) {
+                    return serviceChronologicalInfo;
                 }
             }
             return null;
@@ -87,14 +88,14 @@ namespace iText.Signatures.Validation.Lotl {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal virtual ServiceStatusInfo GetCurrentStatusInfo() {
-            return serviceStatusInfos[0];
+        internal virtual ServiceChronologicalInfo GetCurrentChronologicalInfo() {
+            return serviceChronologicalInfos[0];
         }
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal virtual int GetServiceStatusInfosSize() {
-            return serviceStatusInfos.Count;
+        internal virtual int GetServiceChronologicalInfosSize() {
+            return serviceChronologicalInfos.Count;
         }
 //\endcond
     }

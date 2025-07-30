@@ -38,13 +38,16 @@ namespace iText.Signatures.Validation.Lotl {
             INFORMATION_TAGS.Add(XmlTagConstants.SERVICE_STATUS);
             INFORMATION_TAGS.Add(XmlTagConstants.X509CERTIFICATE);
             INFORMATION_TAGS.Add(XmlTagConstants.SERVICE_STATUS_STARTING_TIME);
+            INFORMATION_TAGS.Add(XmlTagConstants.URI);
         }
 
         private StringBuilder information;
 
         private CountryServiceContext currentServiceContext = null;
 
-        private ServiceStatusInfo currentServiceStatusInfo = null;
+        private ServiceChronologicalInfo currentServiceChronologicalInfo = null;
+
+        private AdditionalServiceInformationExtension currentExtension = null;
 
 //\cond DO_NOT_DOCUMENT
         internal XmlCountryCertificateHandler(ICollection<String> serviceTypes) {
@@ -65,11 +68,16 @@ namespace iText.Signatures.Validation.Lotl {
             else {
                 if (XmlTagConstants.SERVICE_HISTORY_INSTANCE.Equals(localName) || XmlTagConstants.SERVICE_INFORMATION.Equals
                     (localName)) {
-                    currentServiceStatusInfo = new ServiceStatusInfo();
+                    currentServiceChronologicalInfo = new ServiceChronologicalInfo();
                 }
                 else {
-                    if (INFORMATION_TAGS.Contains(localName)) {
-                        information = new StringBuilder();
+                    if (XmlTagConstants.ADDITIONAL_INFORMATION_EXTENSION.Equals(localName)) {
+                        currentExtension = new AdditionalServiceInformationExtension();
+                    }
+                    else {
+                        if (INFORMATION_TAGS.Contains(localName)) {
+                            information = new StringBuilder();
+                        }
                     }
                 }
             }
@@ -90,8 +98,8 @@ namespace iText.Signatures.Validation.Lotl {
                 }
 
                 case XmlTagConstants.SERVICE_STATUS: {
-                    if (currentServiceContext != null) {
-                        currentServiceStatusInfo.SetServiceStatus(information.ToString());
+                    if (currentServiceChronologicalInfo != null) {
+                        currentServiceChronologicalInfo.SetServiceStatus(information.ToString());
                     }
                     information = null;
                     break;
@@ -112,8 +120,8 @@ namespace iText.Signatures.Validation.Lotl {
                 }
 
                 case XmlTagConstants.SERVICE_STATUS_STARTING_TIME: {
-                    if (currentServiceContext != null) {
-                        currentServiceStatusInfo.SetServiceStatusStartingTime(information.ToString());
+                    if (currentServiceChronologicalInfo != null) {
+                        currentServiceChronologicalInfo.SetServiceStatusStartingTime(information.ToString());
                     }
                     information = null;
                     break;
@@ -122,9 +130,24 @@ namespace iText.Signatures.Validation.Lotl {
                 case XmlTagConstants.SERVICE_INFORMATION:
                 case XmlTagConstants.SERVICE_HISTORY_INSTANCE: {
                     if (currentServiceContext != null) {
-                        currentServiceContext.AddNewServiceStatus(currentServiceStatusInfo);
+                        currentServiceContext.AddServiceChronologicalInfo(currentServiceChronologicalInfo);
                     }
-                    currentServiceStatusInfo = null;
+                    currentServiceChronologicalInfo = null;
+                    break;
+                }
+
+                case XmlTagConstants.URI: {
+                    if (currentExtension != null) {
+                        currentExtension.SetUri(information.ToString());
+                    }
+                    break;
+                }
+
+                case XmlTagConstants.ADDITIONAL_INFORMATION_EXTENSION: {
+                    if (currentServiceChronologicalInfo != null) {
+                        currentServiceChronologicalInfo.AddExtension(currentExtension);
+                    }
+                    currentExtension = null;
                     break;
                 }
             }
