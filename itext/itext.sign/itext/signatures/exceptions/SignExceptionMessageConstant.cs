@@ -155,6 +155,13 @@ namespace iText.Signatures.Exceptions {
 
         public const String FAILED_TO_GET_EU_LOTL = "Failed to get European List of Trusted Lists (LOTL) from {0}.";
 
+        public const String CERTIFICATE_HASH_MISMATCH = "Certificate {0} hash mismatch.";
+
+        public const String CERTIFICATE_HASH_NULL = "Hash was null.";
+
+        public const String EU_RESOURCES_NOT_LOADED = "European Trusted List resources are not available. " + "Please ensure that the itextpdf-eutrustedlistsresources module is included in your project. "
+             + "Alternatively, " + " you can use the EuropeanTrustedListConfigurationFactory to load the resources from a custom location.";
+
         private SignExceptionMessageConstant() {
         }
         // Private constructor will prevent the instantiation of this class directly

@@ -24,10 +24,11 @@ using System;
 using iText.Commons.Exceptions;
 using iText.Commons.Utils;
 using iText.IO.Resolver.Resource;
+using iText.IO.Util;
 using iText.Signatures.Exceptions;
+using iText.Signatures.Validation;
 
 namespace iText.Signatures.Validation.Lotl {
-//\cond DO_NOT_DOCUMENT
     /// <summary>Fetches the European List of Trusted Lists (LOTL) from a predefined URL.</summary>
     /// <remarks>
     /// Fetches the European List of Trusted Lists (LOTL) from a predefined URL.
@@ -35,18 +36,7 @@ namespace iText.Signatures.Validation.Lotl {
     /// This class is used to retrieve the LOTL XML file, which contains information about trusted lists in the European
     /// Union.
     /// </remarks>
-    internal class EuropeanListOfTrustedListFetcher {
-        private static readonly Uri LOTL_URL;
-
-        static EuropeanListOfTrustedListFetcher() {
-            try {
-                LOTL_URL = new Uri("https://ec.europa.eu/tools/lotl/eu-lotl.xml");
-            }
-            catch (UriFormatException e) {
-                throw new Exception(e.Message);
-            }
-        }
-
+    public class EuropeanListOfTrustedListFetcher {
         private readonly IResourceRetriever resourceRetriever;
 
         private byte[] lotlData;
@@ -64,10 +54,12 @@ namespace iText.Signatures.Validation.Lotl {
 
         /// <summary>Loads the List of Trusted Lists (LOTL) from the predefined URL.</summary>
         public virtual void Load() {
-            byte[] data = resourceRetriever.GetByteArrayByUrl(LOTL_URL);
+            EuropeanTrustedListConfigurationFactory factory = EuropeanTrustedListConfigurationFactory.GetFactory()();
+            Uri url = UrlUtil.ToURL(factory.GetTrustedListUri());
+            byte[] data = resourceRetriever.GetByteArrayByUrl(url);
             if (data == null) {
-                throw new ITextException(MessageFormatUtil.Format(SignExceptionMessageConstant.FAILED_TO_GET_EU_LOTL, LOTL_URL
-                    .ToString()));
+                throw new ITextException(MessageFormatUtil.Format(SignExceptionMessageConstant.FAILED_TO_GET_EU_LOTL, url.
+                    ToString()));
             }
             this.lotlData = data;
             this.lastLoaded = new DateTime();
@@ -95,5 +87,4 @@ namespace iText.Signatures.Validation.Lotl {
             return lastLoaded;
         }
     }
-//\endcond
 }

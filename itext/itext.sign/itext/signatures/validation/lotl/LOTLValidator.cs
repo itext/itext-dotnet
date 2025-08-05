@@ -27,7 +27,6 @@ using System.Linq;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 using iText.IO.Resolver.Resource;
-using iText.Signatures;
 using iText.Signatures.Validation;
 using iText.Signatures.Validation.Lotl.Xml;
 using iText.Signatures.Validation.Report;
@@ -96,18 +95,37 @@ namespace iText.Signatures.Validation.Lotl {
             this.builder = builder;
         }
 
-//\cond DO_NOT_DOCUMENT
-        internal virtual ValidationReport Validate() {
+        private static IList<CountryServiceContext> MapIServiceContextToCountry(IList<IServiceContext> serviceContexts
+            ) {
+            return serviceContexts.Select((serviceContext) => serviceContext is CountryServiceContext ? (CountryServiceContext
+                )serviceContext : null).Where((countryServiceContext) => countryServiceContext != null).ToList();
+        }
+
+        /// <summary>Validates the List of Trusted Lists (LOTL) and country-specific LOTLs.</summary>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Signatures.Validation.Report.ValidationReport"/>
+        /// containing the results of the validation
+        /// </returns>
+        public virtual ValidationReport Validate() {
             ValidationReport report = new ValidationReport();
             if (builder.GetLotlFetchingProperties() == null) {
                 report.AddReportItem(new ReportItem(LOTL_VALIDATION, LOTL_FETCHING_PROPERTIES_NOT_PROVIDED, ReportItem.ReportItemStatus
                     .INVALID));
                 return report;
             }
-            byte[] lotlXml = GetLotlBytes();
-            if (lotlXml == null) {
-                report.AddReportItem(new ReportItem(LOTL_VALIDATION, UNABLE_TO_RETRIEVE_LOTL, ReportItem.ReportItemStatus.
-                    INVALID));
+            byte[] lotlXml = null;
+            try {
+                lotlXml = GetLotlBytes();
+                if (lotlXml == null) {
+                    report.AddReportItem(new ReportItem(LOTL_VALIDATION, UNABLE_TO_RETRIEVE_LOTL, ReportItem.ReportItemStatus.
+                        INVALID));
+                    return report;
+                }
+            }
+            catch (Exception e) {
+                report.AddReportItem(new ReportItem(LOTL_VALIDATION, MessageFormatUtil.Format(UNABLE_TO_RETRIEVE_LOTL, e.Message
+                    ), e, ReportItem.ReportItemStatus.INVALID));
                 return report;
             }
             if (ValidatePivotFiles(report, lotlXml)) {
@@ -115,7 +133,6 @@ namespace iText.Signatures.Validation.Lotl {
             }
             return report;
         }
-//\endcond
 
         /// <summary>Gets the bytes of a main LOTL file.</summary>
         /// <returns>
@@ -125,12 +142,7 @@ namespace iText.Signatures.Validation.Lotl {
         /// </returns>
         protected internal virtual byte[] GetLotlBytes() {
             byte[] lotlXml;
-            try {
-                lotlXml = new EuropeanListOfTrustedListFetcher(new DefaultResourceRetriever()).GetLotlData();
-            }
-            catch (Exception) {
-                return null;
-            }
+            lotlXml = new EuropeanListOfTrustedListFetcher(new DefaultResourceRetriever()).GetLotlData();
             return lotlXml;
         }
 
@@ -153,18 +165,15 @@ namespace iText.Signatures.Validation.Lotl {
         /// objects representing EU Journal certificates
         /// </returns>
         protected internal virtual IList<IX509Certificate> GetEUJournalCertificates(ValidationReport report) {
-            return new EuropeanTrustedListConfiguration().GetCertificates().Select((certificateWithHash) => {
-                try {
-                    return CertificateUtil.ReadCertificatesFromPem(new MemoryStream(certificateWithHash.GetPemCertificate().GetBytes
-                        (System.Text.Encoding.UTF8)))[0];
-                }
-                catch (Exception e) {
-                    report.AddReportItem(new ReportItem(LOTL_VALIDATION, JOURNAL_CERT_NOT_PARSABLE, e, ReportItem.ReportItemStatus
-                        .INFO));
-                    return null;
-                }
+            EuropeanTrustedListConfigurationFactory factory = EuropeanTrustedListConfigurationFactory.GetFactory()();
+            try {
+                return factory.GetCertificates();
             }
-            ).Where((certificate) => certificate != null).ToList();
+            catch (Exception e) {
+                report.AddReportItem(new ReportItem(LOTL_VALIDATION, JOURNAL_CERT_NOT_PARSABLE, e, ReportItem.ReportItemStatus
+                    .INFO));
+                return new List<IX509Certificate>();
+            }
         }
 
 //\cond DO_NOT_DOCUMENT
@@ -274,12 +283,6 @@ namespace iText.Signatures.Validation.Lotl {
                     ())).ToList();
             }
             return countrySpecificLotls;
-        }
-
-        private static IList<CountryServiceContext> MapIServiceContextToCountry(IList<IServiceContext> serviceContexts
-            ) {
-            return serviceContexts.Select((serviceContext) => serviceContext is CountryServiceContext ? (CountryServiceContext
-                )serviceContext : null).Where((countryServiceContext) => countryServiceContext != null).ToList();
         }
     }
 }
