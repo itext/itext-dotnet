@@ -103,5 +103,20 @@ namespace iText.IO.Font {
             String exp = MessageFormatUtil.Format(IoExceptionMessageConstant.TABLE_DOES_NOT_EXIST, "glyf");
             NUnit.Framework.Assert.AreEqual(exp, e.Message);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ReadFontSubsetWithoutOs2TableTest() {
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subsetWithoutOsTable.ttf"));
+            NUnit.Framework.Assert.DoesNotThrow(() => FontProgramFactory.CreateTrueTypeFont(fontBytes, true));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TryToReadFontSubsetWithoutOs2TableTest() {
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subsetWithoutOsTable.ttf"));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => FontProgramFactory
+                .CreateTrueTypeFont(fontBytes, false));
+            String exp = MessageFormatUtil.Format(IoExceptionMessageConstant.TABLE_DOES_NOT_EXIST, "os/2");
+            NUnit.Framework.Assert.AreEqual(exp, e.Message);
+        }
     }
 }

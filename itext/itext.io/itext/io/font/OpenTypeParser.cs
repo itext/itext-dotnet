@@ -361,7 +361,7 @@ namespace iText.IO.Font {
 
         private int[] locaTable;
 
-        // In case of lenient mode parsing 'name' table can be missed
+        // In case of lenient mode parsing 'name' and 'OS/2' table can be missed
         private bool isLenientMode = false;
 
         protected internal OpenTypeParser.HeaderTable head;
@@ -1074,7 +1074,11 @@ namespace iText.IO.Font {
         /// </remarks>
         private void ReadOs_2Table() {
             int[] table_location = tables.Get("OS/2");
+            os_2 = new OpenTypeParser.WindowsMetrics();
             if (table_location == null) {
+                if (isLenientMode) {
+                    return;
+                }
                 if (fileName != null) {
                     throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN).SetMessageParams
                         ("os/2", fileName);
@@ -1084,7 +1088,6 @@ namespace iText.IO.Font {
                         ("os/2");
                 }
             }
-            os_2 = new OpenTypeParser.WindowsMetrics();
             raf.Seek(table_location[0]);
             int version = raf.ReadUnsignedShort();
             os_2.xAvgCharWidth = raf.ReadShort();

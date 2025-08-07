@@ -218,7 +218,7 @@ namespace iText.IO.Font {
         public static byte[] Merge(IDictionary<iText.IO.Font.TrueTypeFont, ICollection<int>> toMerge, String fontName
             ) {
             try {
-                IDictionary<OpenTypeParser, ICollection<int>> toMergeWithParsers = new Dictionary<OpenTypeParser, ICollection
+                IDictionary<OpenTypeParser, ICollection<int>> toMergeWithParsers = new LinkedDictionary<OpenTypeParser, ICollection
                     <int>>();
                 foreach (KeyValuePair<iText.IO.Font.TrueTypeFont, ICollection<int>> entry in toMerge) {
                     toMergeWithParsers.Put(entry.Key.fontParser, entry.Value);
