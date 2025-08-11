@@ -37,10 +37,6 @@ namespace iText.Signatures.Validation.Lotl {
 //\endcond
 
         //empty constructor
-        private static String RemoveWhitespacesAndBreakLines(String data) {
-            return data.Replace(" ", "").Replace("\n", "");
-        }
-
         public override void StartElement(String uri, String localName, String qName, Dictionary<String, String> attributes
             ) {
             if (XmlTagConstants.X509CERTIFICATE.Equals(localName)) {
@@ -61,6 +57,10 @@ namespace iText.Signatures.Validation.Lotl {
             if (information != null) {
                 information.Append(ch, start, length);
             }
+        }
+
+        private static String RemoveWhitespacesAndBreakLines(String data) {
+            return data.Replace(" ", "").Replace("\n", "");
         }
     }
 //\endcond

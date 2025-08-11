@@ -34,7 +34,7 @@ namespace iText.Signatures.Validation.Lotl {
     [NUnit.Framework.Category("UnitTest")]
     public class XmlCertificateRetrieverTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/lotl/XmlCertificateRetrieverTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/lotl" + "/XmlCertificateRetrieverTest/";
 
         [NUnit.Framework.Test]
         public virtual void ReadSingleCertificateTest() {
@@ -64,7 +64,7 @@ namespace iText.Signatures.Validation.Lotl {
             NUnit.Framework.Assert.AreEqual(126, certificateList.Count);
             IServiceContext context = xmlCertificateRetriever.GetServiceContexts()[0];
             NUnit.Framework.Assert.IsNotNull(context);
-            NUnit.Framework.Assert.IsTrue(context is SimpleServiceContext);
+            NUnit.Framework.Assert.IsTrue(typeof(SimpleServiceContext) == context.GetType());
         }
 
         [NUnit.Framework.Test]

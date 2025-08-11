@@ -30,11 +30,11 @@ namespace iText.Signatures.Validation.Lotl {
     internal class CountryServiceContext : IServiceContext {
         private readonly IList<IX509Certificate> certificates = new List<IX509Certificate>();
 
-        private String serviceType;
-
         //It is expected that service statuses are ordered starting from the newest one.
         private readonly IList<ServiceChronologicalInfo> serviceChronologicalInfos = new List<ServiceChronologicalInfo
             >();
+
+        private String serviceType;
 
 //\cond DO_NOT_DOCUMENT
         internal CountryServiceContext() {
@@ -53,14 +53,14 @@ namespace iText.Signatures.Validation.Lotl {
         }
 
 //\cond DO_NOT_DOCUMENT
-        internal virtual void SetServiceType(String serviceType) {
-            this.serviceType = serviceType;
+        internal virtual String GetServiceType() {
+            return serviceType;
         }
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal virtual String GetServiceType() {
-            return serviceType;
+        internal virtual void SetServiceType(String serviceType) {
+            this.serviceType = serviceType;
         }
 //\endcond
 

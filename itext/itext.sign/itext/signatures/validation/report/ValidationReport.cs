@@ -137,8 +137,10 @@ namespace iText.Signatures.Validation.Report {
         /// </returns>
         public virtual iText.Signatures.Validation.Report.ValidationReport Merge(iText.Signatures.Validation.Report.ValidationReport
              subReport) {
-            foreach (ReportItem item in subReport.GetLogs()) {
-                AddReportItem(item);
+            if (subReport != null) {
+                foreach (ReportItem item in subReport.GetLogs()) {
+                    AddReportItem(item);
+                }
             }
             return this;
         }
@@ -161,8 +163,10 @@ namespace iText.Signatures.Validation.Report {
         /// </returns>
         public virtual iText.Signatures.Validation.Report.ValidationReport MergeWithDifferentStatus(iText.Signatures.Validation.Report.ValidationReport
              subReport, ReportItem.ReportItemStatus newStatus) {
-            foreach (ReportItem item in subReport.GetLogs()) {
-                AddReportItem(new ReportItem(item).SetStatus(newStatus));
+            if (subReport != null) {
+                foreach (ReportItem item in subReport.GetLogs()) {
+                    AddReportItem(new ReportItem(item).SetStatus(newStatus));
+                }
             }
             return this;
         }

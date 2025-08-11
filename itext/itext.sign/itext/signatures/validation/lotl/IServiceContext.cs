@@ -24,11 +24,22 @@ using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
 
 namespace iText.Signatures.Validation.Lotl {
-//\cond DO_NOT_DOCUMENT
-    internal interface IServiceContext {
+    /// <summary>Interface for managing service context related to certificates.</summary>
+    /// <remarks>
+    /// Interface for managing service context related to certificates.
+    /// This interface provides methods to retrieve and add certificates.
+    /// </remarks>
+    public interface IServiceContext {
+        /// <summary>Retrieves the list of certificates associated with the service context.</summary>
+        /// <returns>
+        /// a list of
+        /// <see cref="iText.Commons.Bouncycastle.Cert.IX509Certificate"/>
+        /// objects
+        /// </returns>
         IList<IX509Certificate> GetCertificates();
 
+        /// <summary>Adds a certificate to the service context.</summary>
+        /// <param name="certificate">the certificate to be added</param>
         void AddCertificate(IX509Certificate certificate);
     }
-//\endcond
 }

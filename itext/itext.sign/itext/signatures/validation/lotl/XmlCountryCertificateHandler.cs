@@ -33,14 +33,6 @@ namespace iText.Signatures.Validation.Lotl {
 
         private readonly ICollection<String> serviceTypes;
 
-        static XmlCountryCertificateHandler() {
-            INFORMATION_TAGS.Add(XmlTagConstants.SERVICE_TYPE);
-            INFORMATION_TAGS.Add(XmlTagConstants.SERVICE_STATUS);
-            INFORMATION_TAGS.Add(XmlTagConstants.X509CERTIFICATE);
-            INFORMATION_TAGS.Add(XmlTagConstants.SERVICE_STATUS_STARTING_TIME);
-            INFORMATION_TAGS.Add(XmlTagConstants.URI);
-        }
-
         private StringBuilder information;
 
         private CountryServiceContext currentServiceContext = null;
@@ -49,15 +41,19 @@ namespace iText.Signatures.Validation.Lotl {
 
         private AdditionalServiceInformationExtension currentExtension = null;
 
+        static XmlCountryCertificateHandler() {
+            INFORMATION_TAGS.Add(XmlTagConstants.SERVICE_TYPE);
+            INFORMATION_TAGS.Add(XmlTagConstants.SERVICE_STATUS);
+            INFORMATION_TAGS.Add(XmlTagConstants.X509CERTIFICATE);
+            INFORMATION_TAGS.Add(XmlTagConstants.SERVICE_STATUS_STARTING_TIME);
+            INFORMATION_TAGS.Add(XmlTagConstants.URI);
+        }
+
 //\cond DO_NOT_DOCUMENT
         internal XmlCountryCertificateHandler(ICollection<String> serviceTypes) {
             this.serviceTypes = new HashSet<String>(serviceTypes);
         }
 //\endcond
-
-        private static String RemoveWhitespacesAndBreakLines(String data) {
-            return data.Replace(" ", "").Replace("\n", "");
-        }
 
         /// <summary><inheritDoc/></summary>
         public override void StartElement(String uri, String localName, String qName, Dictionary<String, String> attributes
@@ -185,6 +181,10 @@ namespace iText.Signatures.Validation.Lotl {
             }
         }
 //\endcond
+
+        private static String RemoveWhitespacesAndBreakLines(String data) {
+            return data.Replace(" ", "").Replace("\n", "");
+        }
     }
 //\endcond
 }

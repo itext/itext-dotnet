@@ -31,7 +31,7 @@ namespace iText.Signatures.Validation.Lotl {
     /// <summary>Validator class responsible for XML signature validation.</summary>
     /// <remarks>
     /// Validator class responsible for XML signature validation.
-    /// This class is not intended to be used to validate anything besides LOTL files.
+    /// This class is not intended to be used to validate anything besides Lotl files.
     /// </remarks>
     public class XmlSignatureValidator {
 //\cond DO_NOT_DOCUMENT
@@ -73,20 +73,20 @@ namespace iText.Signatures.Validation.Lotl {
         /// <see cref="iText.Signatures.Validation.ValidatorChainBuilder.GetXmlSignatureValidator()"/>
         /// shall be used.
         /// </remarks>
-        /// <param name="builder">
+        /// <param name="trustedCertificatesStore">
         /// 
-        /// <see cref="iText.Signatures.Validation.ValidatorChainBuilder"/>
-        /// which was responsible for creation
+        /// <see cref="iText.Signatures.Validation.TrustedCertificatesStore"/>
+        /// which contains trusted certificates
         /// </param>
-        public XmlSignatureValidator(ValidatorChainBuilder builder) {
-            this.trustedCertificatesStore = builder.GetCertificateRetriever().GetTrustedCertificatesStore();
+        public XmlSignatureValidator(TrustedCertificatesStore trustedCertificatesStore) {
+            this.trustedCertificatesStore = trustedCertificatesStore;
         }
 
-        /// <summary>Validates provided XML LOTL file.</summary>
+        /// <summary>Validates provided XML Lotl file.</summary>
         /// <param name="xmlDocumentInputStream">
         /// 
         /// <see cref="System.IO.Stream"/>
-        /// representing XML LOTL file to be validated
+        /// representing XML Lotl file to be validated
         /// </param>
         /// <returns>
         /// 

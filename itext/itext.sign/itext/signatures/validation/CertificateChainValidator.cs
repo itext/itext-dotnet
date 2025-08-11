@@ -115,7 +115,7 @@ namespace iText.Signatures.Validation {
             this.certificateRetriever = builder.GetCertificateRetriever();
             this.properties = builder.GetProperties();
             this.revocationDataValidator = builder.GetRevocationDataValidator();
-            this.lotlTrustedStore = builder.GetLOTLTrustedstore();
+            this.lotlTrustedStore = builder.GetLotlTrustedstore();
         }
 
         /// <summary>Validate given certificate using provided validation date and required extensions.</summary>

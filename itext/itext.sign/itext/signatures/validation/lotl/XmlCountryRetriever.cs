@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using iText.Signatures.Validation.Lotl.Xml;
 
 namespace iText.Signatures.Validation.Lotl {
@@ -49,63 +50,22 @@ namespace iText.Signatures.Validation.Lotl {
         /// </summary>
         /// <param name="data">the InputStream of the XML data containing country-specific TSL locations</param>
         /// <returns>a list of CountrySpecificLotl objects, each containing the scheme territory and TSL location.</returns>
-        public IList<XmlCountryRetriever.CountrySpecificLotl> GetAllCountriesLotlFilesLocation(Stream data) {
+        public IList<CountrySpecificLotl> GetAllCountriesLotlFilesLocation(Stream data, LotlFetchingProperties lotlFetchingProperties
+            ) {
             XmlCountryRetriever.TSLLocationExtractor tslLocationExtractor = new XmlCountryRetriever.TSLLocationExtractor
                 ();
             new XmlSaxProcessor().Process(data, tslLocationExtractor);
-            return tslLocationExtractor.tslLocations;
-        }
-
-        /// <summary>This class represents a country-specific TSL (Trusted List) location.</summary>
-        /// <remarks>
-        /// This class represents a country-specific TSL (Trusted List) location.
-        /// It contains the scheme territory and the TSL location URL.
-        /// </remarks>
-        public sealed class CountrySpecificLotl {
-            private readonly String schemeTerritory;
-
-            private readonly String tslLocation;
-
-            private readonly String mimeType;
-
-//\cond DO_NOT_DOCUMENT
-            internal CountrySpecificLotl(String schemeTerritory, String tslLocation, String mimeType) {
-                this.schemeTerritory = schemeTerritory;
-                this.tslLocation = tslLocation;
-                this.mimeType = mimeType;
-            }
-//\endcond
-
-            /// <summary>Returns the scheme territory of this country-specific TSL.</summary>
-            /// <returns>The scheme territory</returns>
-            public String GetSchemeTerritory() {
-                return schemeTerritory;
-            }
-
-            /// <summary>Returns the TSL location URL of this country-specific TSL.</summary>
-            /// <returns>The TSL location URL</returns>
-            public String GetTslLocation() {
-                return tslLocation;
-            }
-
-            /// <summary>Returns the MIME type of the TSL location.</summary>
-            /// <returns>The MIME type of the TSL location</returns>
-            public String GetMimeType() {
-                return mimeType;
-            }
-
-            public override String ToString() {
-                return "CountrySpecificLotl{" + "schemeTerritory='" + schemeTerritory + '\'' + ", tslLocation='" + tslLocation
-                     + '\'' + ", mimeType='" + mimeType + '\'' + '}';
-            }
+            IList<CountrySpecificLotl> countrySpecificLotls = tslLocationExtractor.tslLocations;
+            // Ignored country specific Lotl files which were not requested.
+            return countrySpecificLotls.Where((countrySpecificLotl) => lotlFetchingProperties.ShouldProcessCountry(countrySpecificLotl
+                .GetSchemeTerritory())).ToList();
         }
 
         private sealed class TSLLocationExtractor : IDefaultXmlHandler {
             private const String MIME_TYPE_ETSI_TSL = "application/vnd.etsi.tsl+xml";
 
 //\cond DO_NOT_DOCUMENT
-            internal readonly IList<XmlCountryRetriever.CountrySpecificLotl> tslLocations = new List<XmlCountryRetriever.CountrySpecificLotl
-                >();
+            internal readonly IList<CountrySpecificLotl> tslLocations = new List<CountrySpecificLotl>();
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
@@ -130,10 +90,6 @@ namespace iText.Signatures.Validation.Lotl {
 //\endcond
 
             //Empty constructor
-            private static bool IsXmlLink(XmlCountryRetriever.CountrySpecificLotl data) {
-                return MIME_TYPE_ETSI_TSL.Equals(data.GetMimeType());
-            }
-
             public void StartElement(String uri, String localName, String qName, Dictionary<String, String> attributes
                 ) {
                 parsingState = localName;
@@ -141,8 +97,7 @@ namespace iText.Signatures.Validation.Lotl {
 
             public void EndElement(String uri, String localName, String qName) {
                 if (XmlTagConstants.OTHER_TSL_POINTER.Equals(localName)) {
-                    XmlCountryRetriever.CountrySpecificLotl data = new XmlCountryRetriever.CountrySpecificLotl(schemeTerritory
-                        , tslLocation, mimeType);
+                    CountrySpecificLotl data = new CountrySpecificLotl(schemeTerritory, tslLocation, mimeType);
                     if (IsXmlLink(data)) {
                         tslLocations.Add(data);
                     }
@@ -185,6 +140,10 @@ namespace iText.Signatures.Validation.Lotl {
                 tslLocation = null;
                 parsingState = null;
                 mimeType = null;
+            }
+
+            private static bool IsXmlLink(CountrySpecificLotl data) {
+                return MIME_TYPE_ETSI_TSL.Equals(data.GetMimeType());
             }
         }
     }

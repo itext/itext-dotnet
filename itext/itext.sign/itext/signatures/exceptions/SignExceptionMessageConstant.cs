@@ -33,30 +33,30 @@ namespace iText.Signatures.Exceptions {
         public const String AVAILABLE_SPACE_IS_NOT_ENOUGH_FOR_SIGNATURE = "Available space is not enough for " + "signature.";
 
         public const String TOKEN_ESTIMATION_SIZE_IS_NOT_LARGE_ENOUGH = "Timestamp token estimation size is not " 
-            + "large enough to accommodate the entire timestamp token. Timestamp token estimation size is: {0} bytes, "
-             + "however real timestamp token size is: {1} bytes.";
+            + "large enough to accommodate the entire timestamp token. " + "Timestamp token estimation size is: {0} bytes, "
+             + "however real timestamp token size is: {1} " + "bytes.";
 
         public const String CANNOT_DECODE_PKCS7_SIGNED_DATA_OBJECT = "Cannot decode PKCS#7 SignedData object.";
 
         public const String CANNOT_FIND_SIGNING_CERTIFICATE_WITH_THIS_SERIAL = "Cannot find signing certificate " 
             + "with serial {0}.";
 
-        public const String CANNOT_BE_VERIFIED_CERTIFICATE_CHAIN = "Cannot be verified against the KeyStore or the "
-             + "certificate chain.";
+        public const String CANNOT_BE_VERIFIED_CERTIFICATE_CHAIN = "Cannot be verified against the KeyStore or the"
+             + " " + "certificate chain.";
 
         public const String CERTIFICATION_SIGNATURE_CREATION_FAILED_DOC_SHALL_NOT_CONTAIN_SIGS = "Certification " 
-            + "signature creation failed. Document shall not contain any certification or approval signatures before "
+            + "signature creation failed. Document shall not contain any certification or approval " + "signatures before "
              + "signing with certification signature.";
 
         public const String CERTIFICATE_TEMPLATE_FOR_EXCEPTION_MESSAGE = "Certificate {0} failed: {1}";
 
         public const String DEFAULT_CLIENTS_CANNOT_BE_CREATED = "Default implementation of OCSP and CRL clients " 
-            + "cannot be created, because signing certificate doesn't contain revocation data sources. " + "Please try to explicitly add OCSP or CRL client.";
+            + "cannot be created, because signing certificate " + "doesn't contain revocation data sources. " + "Please try to explicitly add OCSP or CRL client.";
 
         public const String DICTIONARY_THIS_KEY_IS_NOT_A_NAME = "Dictionary key {0} is not a name.";
 
         public const String DIGEST_ALGORITHMS_ARE_NOT_SAME = "Digest algorithm used in the provided " + "IExternalSignature shall be the same as digest algorithm in the provided CMSContainer. "
-             + "Digest algorithm in CMS container: \"{0}\". Digest algorithm in IExternalSignature: \"{1}\"";
+             + "Digest " + "algorithm in CMS container: \"{0}\". Digest algorithm in IExternalSignature: \"{1}\"";
 
         public const String DOCUMENT_ALREADY_PRE_CLOSED = "Document has been already pre closed.";
 
@@ -92,14 +92,17 @@ namespace iText.Signatures.Exceptions {
 
         public const String NOT_ENOUGH_SPACE = "Not enough space allocated for the signature.";
 
-        public const String NOT_POSSIBLE_TO_EMBED_MAC_TO_SIGNATURE = "It was not possible to embed MAC token into signature. Most likely signature container is empty.";
+        public const String NOT_POSSIBLE_TO_EMBED_MAC_TO_SIGNATURE = "It was not possible to embed MAC token into "
+             + "signature. Most likely signature container is empty.";
 
-        public const String PATH_IS_NOT_DIRECTORY = "Provided path: {0} is not a directory. " + "Please provide a directory path to store temporary pdf files which are required for signing.";
+        public const String PATH_IS_NOT_DIRECTORY = "Provided path: {0} is not a directory. " + "Please provide a "
+             + "directory path to store temporary pdf files which are required for signing.";
 
-        public const String PROVIDED_TSA_CLIENT_IS_NULL = "Provided TSA client is null. TSA client is required for timestamp signing.";
+        public const String PROVIDED_TSA_CLIENT_IS_NULL = "Provided TSA client is null. TSA client is required for"
+             + " timestamp signing.";
 
-        public const String SIGNATURE_WITH_THIS_NAME_IS_NOT_THE_LAST_IT_DOES_NOT_COVER_WHOLE_DOCUMENT = "Signature "
-             + "with name {0} is not the last. It doesn't cover the whole document.";
+        public const String SIGNATURE_WITH_THIS_NAME_IS_NOT_THE_LAST_IT_DOES_NOT_COVER_WHOLE_DOCUMENT = "Signature"
+             + " " + "with name {0} is not the last. It doesn't cover the whole document.";
 
         public const String THERE_IS_NO_FIELD_IN_THE_DOCUMENT_WITH_SUCH_NAME = "There is no field in the document "
              + "with such name: {0}.";
@@ -123,11 +126,13 @@ namespace iText.Signatures.Exceptions {
 
         public const String UNKNOWN_HASH_ALGORITHM = "Unknown hash algorithm: {0}.";
 
-        public const String COULD_NOT_DETERMINE_SIGNATURE_MECHANISM_OID = "Could not determine OID for signature algorithm {0} with digest {1}.";
+        public const String COULD_NOT_DETERMINE_SIGNATURE_MECHANISM_OID = "Could not determine OID for signature "
+             + "algorithm {0} with digest {1}.";
 
         public const String VERIFICATION_ALREADY_OUTPUT = "Verification already output.";
 
-        public const String ALGO_REQUIRES_SPECIFIC_HASH = "{0} requires the document to be digested using {1}, not {2}";
+        public const String ALGO_REQUIRES_SPECIFIC_HASH = "{0} requires the document to be digested using {1}, not"
+             + " {2}";
 
         public const String ONLY_MGF1_SUPPORTED_IN_RSASSA_PSS = "Only MGF1 is supported in RSASSA-PSS";
 
@@ -138,8 +143,8 @@ namespace iText.Signatures.Exceptions {
 
         public const String INVALID_ARGUMENTS = "Invalid parameters provided.";
 
-        public const String CMS_SIGNERINFO_READONLY = "Updating the signed attributes of this SignerInfo instance is"
-             + " not possible because it has been serialized or been initiated from a serialized version.";
+        public const String CMS_SIGNERINFO_READONLY = "Updating the signed attributes of this SignerInfo instance "
+             + "is" + " not possible because it has been serialized or been initiated from a serialized version.";
 
         public const String CMS_SIGNERINFO_NOT_INITIALIZED = "Signer info is not yet initialized";
 
@@ -149,18 +154,44 @@ namespace iText.Signatures.Exceptions {
 
         public const String CMS_CERTIFICATE_NOT_FOUND = "Signer certificate not found in list of certificates";
 
-        public const String CMS_MISSING_CERTIFICATES = "The certificate set must at least contains the signer certificate";
+        public const String CMS_MISSING_CERTIFICATES = "The certificate set must at least contains the signer " + 
+            "certificate";
 
         public const String FAILED_TO_RETRIEVE_CERTIFICATE = "Failed to retrieve certificates from binary data.";
 
-        public const String FAILED_TO_GET_EU_LOTL = "Failed to get European List of Trusted Lists (LOTL) from {0}.";
+        public const String FAILED_TO_GET_EU_LOTL = "Failed to get European List of Trusted Lists (Lotl) from {0}.";
 
         public const String CERTIFICATE_HASH_MISMATCH = "Certificate {0} hash mismatch.";
 
         public const String CERTIFICATE_HASH_NULL = "Hash was null.";
 
         public const String EU_RESOURCES_NOT_LOADED = "European Trusted List resources are not available. " + "Please ensure that the itextpdf-eutrustedlistsresources module is included in your project. "
-             + "Alternatively, " + " you can use the EuropeanTrustedListConfigurationFactory to load the resources from a custom location.";
+             + "Alternatively, " + " you can use the EuropeanTrustedListConfigurationFactory to load the resources from "
+             + "a custom location.";
+
+        public const String EITHER_USE_SCHEMA_NAME_OR_IGNORE_SCHEMA_NAME = "You cannot use both 'addSchemaName' " 
+            + "and 'addSchemaNameToIgnore' methods. " + "either provide specific countries to process, or provide "
+             + "specific countries to ignore (All " + "countries not ignored will be processed). ";
+
+        public const String STALE_DATA_IS_USED = "Cached data is older then configured staleness. This means that "
+             + "the cache has failed to update automatically for the configured period " + "Please refresh using "
+             + "LotlService#intializeCache, or look into the generated log messages for more " + "details" + " why the "
+             + "cache has not been updated.";
+
+        public const String STALENESS_MUST_BE_POSITIVE = "Staleness must be a positive value. " + "It is used to "
+             + "determine how long the cache is valid before it needs to be refreshed.";
+
+        public const String FAILED_TO_FETCH_LOTL_FOR_COUNTRY = "Failed to fetch Lotl for country {0} from {1}. " +
+             "Report {2}";
+
+        public const String CACHE_NOT_INITIALIZED = "Lotl cache has not been initialized. " + "Please call " + "LotlFetchingProperties#initializeCache before using LotlValidator.\n"
+             + "If you are using a custom Lotl " + "service, " + "please make sure to call #initializeCache on your custom implementation.";
+
+        public const String FAILED_TO_FETCH_EU_JOURNAL_CERTIFICATES = "Problem occurred while fetching " + "EU " +
+             "Journal certificates.\n{0}";
+
+        public const String CACHE_ALREADY_INITIALIZED = "Global Lotl service has already been initialized. " + "You cannot initialize it again. If you want to use a different configuration, please create a new "
+             + "instance " + "of LotlService with the desired properties and use this one in the LotlValidator.";
 
         private SignExceptionMessageConstant() {
         }
