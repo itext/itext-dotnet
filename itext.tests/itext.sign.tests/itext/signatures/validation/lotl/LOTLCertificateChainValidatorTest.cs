@@ -33,7 +33,7 @@ using iText.Test;
 
 namespace iText.Signatures.Validation.Lotl {
     [NUnit.Framework.Category("BouncyCastleUnitTest")]
-    public class LOTLCertificateChainValidatorTest : ExtendedITextTest {
+    public class LotlCertificateChainValidatorTest : ExtendedITextTest {
         private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/lotl/LOTLCertificateChainValidatorTest/";
 
@@ -53,7 +53,7 @@ namespace iText.Signatures.Validation.Lotl {
             context.AddServiceChronologicalInfo(new ServiceChronologicalInfo(ServiceChronologicalInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
                 (1900, 1, 1, 0, 0)));
             ValidatorChainBuilder validatorChainBuilder = new ValidatorChainBuilder();
-            LOTLTrustedStore lotlTrustedStore = new LOTLTrustedStore(validatorChainBuilder);
+            LotlTrustedStore lotlTrustedStore = new LotlTrustedStore(validatorChainBuilder);
             lotlTrustedStore.AddCertificatesWithContext(JavaCollectionsUtil.SingletonList<CountryServiceContext>(context
                 ));
             validatorChainBuilder.WithSignatureValidationProperties(properties).WithRevocationDataValidatorFactory(() =>
@@ -64,7 +64,7 @@ namespace iText.Signatures.Validation.Lotl {
             ValidationReport report1 = validator.ValidateCertificate(baseContext.SetCertificateSource(CertificateSource
                 .CRL_ISSUER), rootCert, TimeTestUtil.TEST_DATE_TIME);
             AssertValidationReport.AssertThat(report1, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                (0).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(LOTLTrustedStore
+                (0).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(LotlTrustedStore
                 .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
         }
 
@@ -83,7 +83,7 @@ namespace iText.Signatures.Validation.Lotl {
             context.AddServiceChronologicalInfo(new ServiceChronologicalInfo(ServiceChronologicalInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
                 (1900, 1, 1, 0, 0)));
             ValidatorChainBuilder validatorChainBuilder = new ValidatorChainBuilder();
-            LOTLTrustedStore lotlTrustedStore = new LOTLTrustedStore(validatorChainBuilder);
+            LotlTrustedStore lotlTrustedStore = new LotlTrustedStore(validatorChainBuilder);
             lotlTrustedStore.AddCertificatesWithContext(JavaCollectionsUtil.SingletonList<CountryServiceContext>(context
                 ));
             validatorChainBuilder.WithKnownCertificates(JavaCollectionsUtil.SingletonList<IX509Certificate>(intermediateCert
@@ -95,7 +95,7 @@ namespace iText.Signatures.Validation.Lotl {
             ValidationReport report1 = validator.ValidateCertificate(baseContext.SetCertificateSource(CertificateSource
                 .CRL_ISSUER), signingCert, TimeTestUtil.TEST_DATE_TIME);
             AssertValidationReport.AssertThat(report1, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                (0).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(LOTLTrustedStore
+                (0).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(LotlTrustedStore
                 .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
         }
 
@@ -115,7 +115,7 @@ namespace iText.Signatures.Validation.Lotl {
                 ));
             context.AddServiceChronologicalInfo(info);
             ValidatorChainBuilder validatorChainBuilder = new ValidatorChainBuilder();
-            LOTLTrustedStore lotlTrustedStore = new LOTLTrustedStore(validatorChainBuilder);
+            LotlTrustedStore lotlTrustedStore = new LotlTrustedStore(validatorChainBuilder);
             validatorChainBuilder.WithSignatureValidationProperties(properties).WithRevocationDataValidatorFactory(() =>
                  mockRevocationDataValidator).WithLOTLTrustedStoreFactory(() => lotlTrustedStore);
             lotlTrustedStore.AddCertificatesWithContext(JavaCollectionsUtil.SingletonList<CountryServiceContext>(context
@@ -126,8 +126,8 @@ namespace iText.Signatures.Validation.Lotl {
             ValidationReport report = validator.ValidateCertificate(baseContext.SetCertificateSource(CertificateSource
                 .CRL_ISSUER), rootCert, TimeTestUtil.TEST_DATE_TIME);
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
-                (2).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName(LOTLTrustedStore.EXTENSIONS_CHECK).WithMessage
-                (LOTLTrustedStore.SCOPE_SPECIFIED_WITH_INVALID_TYPES, (i) => rootCert.GetSubjectDN(), (k) => "http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForWebSiteAuthentication"
+                (2).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName(LotlTrustedStore.EXTENSIONS_CHECK).WithMessage
+                (LotlTrustedStore.SCOPE_SPECIFIED_WITH_INVALID_TYPES, (i) => rootCert.GetSubjectDN(), (k) => "http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForWebSiteAuthentication"
                 ).WithCertificate(rootCert)));
         }
     }

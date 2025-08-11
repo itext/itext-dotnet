@@ -33,7 +33,7 @@ using iText.Signatures.Validation.Report;
 
 namespace iText.Signatures.Validation.Lotl {
     /// <summary>Class responsible for complete LOTL validation.</summary>
-    public class LOTLValidator {
+    public class LotlValidator {
 //\cond DO_NOT_DOCUMENT
         internal const String LOTL_VALIDATION = "LOTL validation.";
 //\endcond
@@ -75,12 +75,12 @@ namespace iText.Signatures.Validation.Lotl {
 
         /// <summary>
         /// Creates new
-        /// <see cref="LOTLValidator"/>
+        /// <see cref="LotlValidator"/>
         /// instance.
         /// </summary>
         /// <remarks>
         /// Creates new
-        /// <see cref="LOTLValidator"/>
+        /// <see cref="LotlValidator"/>
         /// instance. This constructor shall not be used directly.
         /// Instead, in order to create such instance
         /// <see cref="iText.Signatures.Validation.ValidatorChainBuilder.GetLotlValidator()"/>
@@ -91,7 +91,7 @@ namespace iText.Signatures.Validation.Lotl {
         /// <see cref="iText.Signatures.Validation.ValidatorChainBuilder"/>
         /// which was responsible for creation
         /// </param>
-        public LOTLValidator(ValidatorChainBuilder builder) {
+        public LotlValidator(ValidatorChainBuilder builder) {
             this.builder = builder;
         }
 

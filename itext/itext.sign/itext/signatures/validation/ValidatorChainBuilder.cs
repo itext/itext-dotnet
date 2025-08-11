@@ -38,7 +38,7 @@ namespace iText.Signatures.Validation {
     public class ValidatorChainBuilder {
         private SignatureValidationProperties properties = new SignatureValidationProperties();
 
-        private LOTLFetchingProperties lotlFetchingProperties;
+        private LotlFetchingProperties lotlFetchingProperties;
 
         private Func<IssuingCertificateRetriever> certificateRetrieverFactory;
 
@@ -60,9 +60,9 @@ namespace iText.Signatures.Validation {
 
         private Func<XmlSignatureValidator> xmlSignatureValidatorFactory;
 
-        private Func<LOTLTrustedStore> lotlTrustedStoreFactory;
+        private Func<LotlTrustedStore> lotlTrustedStoreFactory;
 
-        private Func<LOTLValidator> lotlValidatorFactory;
+        private Func<LotlValidator> lotlValidatorFactory;
 
         private ICollection<IX509Certificate> trustedCertificates;
 
@@ -275,19 +275,19 @@ namespace iText.Signatures.Validation {
 
         /// <summary>
         /// Sets this instance of
-        /// <see cref="iText.Signatures.Validation.Lotl.LOTLFetchingProperties"/>
+        /// <see cref="LotlFetchingProperties"/>
         /// to be used in the validation chain.
         /// </summary>
         /// <param name="lotlFetchingProperties">
         /// 
-        /// <see cref="iText.Signatures.Validation.Lotl.LOTLFetchingProperties"/>
+        /// <see cref="LotlFetchingProperties"/>
         /// to be used
         /// </param>
         /// <returns>
         /// this same instance of
         /// <see cref="ValidatorChainBuilder"/>.
         /// </returns>
-        public virtual iText.Signatures.Validation.ValidatorChainBuilder WithLOTLFetchingProperties(LOTLFetchingProperties
+        public virtual iText.Signatures.Validation.ValidatorChainBuilder WithLOTLFetchingProperties(LotlFetchingProperties
              lotlFetchingProperties) {
             this.lotlFetchingProperties = lotlFetchingProperties;
             return this;
@@ -404,13 +404,13 @@ namespace iText.Signatures.Validation {
 
         /// <summary>
         /// Gets explicitly added or automatically created
-        /// <see cref="iText.Signatures.Validation.Lotl.LOTLFetchingProperties"/>.
+        /// <see cref="LotlFetchingProperties"/>.
         /// </summary>
         /// <returns>
         /// explicitly added or automatically created
-        /// <see cref="iText.Signatures.Validation.Lotl.LOTLFetchingProperties"/>
+        /// <see cref="LotlFetchingProperties"/>
         /// </returns>
-        public virtual LOTLFetchingProperties GetLotlFetchingProperties() {
+        public virtual LotlFetchingProperties GetLotlFetchingProperties() {
             return lotlFetchingProperties;
         }
 
@@ -597,19 +597,19 @@ namespace iText.Signatures.Validation {
 
         /// <summary>
         /// Sets up factory which is responsible for
-        /// <see cref="iText.Signatures.Validation.Lotl.LOTLTrustedStore"/>
+        /// <see cref="LotlTrustedStore"/>
         /// creation.
         /// </summary>
         /// <param name="lotlTrustedStoreFactory">
         /// factory responsible for
-        /// <see cref="iText.Signatures.Validation.Lotl.LOTLTrustedStore"/>
+        /// <see cref="LotlTrustedStore"/>
         /// creation
         /// </param>
         /// <returns>
         /// this same instance of
         /// <see cref="ValidatorChainBuilder"/>
         /// </returns>
-        public virtual iText.Signatures.Validation.ValidatorChainBuilder WithLOTLTrustedStoreFactory(Func<LOTLTrustedStore
+        public virtual iText.Signatures.Validation.ValidatorChainBuilder WithLOTLTrustedStoreFactory(Func<LotlTrustedStore
             > lotlTrustedStoreFactory) {
             this.lotlTrustedStoreFactory = lotlTrustedStoreFactory;
             return this;
@@ -617,47 +617,47 @@ namespace iText.Signatures.Validation {
 
         /// <summary>
         /// Retrieves explicitly added or automatically created
-        /// <see cref="iText.Signatures.Validation.Lotl.LOTLTrustedStore"/>
+        /// <see cref="LotlTrustedStore"/>
         /// instance.
         /// </summary>
         /// <returns>
         /// explicitly added or automatically created
-        /// <see cref="iText.Signatures.Validation.Lotl.LOTLTrustedStore"/>
+        /// <see cref="LotlTrustedStore"/>
         /// instance
         /// </returns>
-        public virtual LOTLTrustedStore GetLOTLTrustedstore() {
+        public virtual LotlTrustedStore GetLOTLTrustedstore() {
             return this.lotlTrustedStoreFactory();
         }
 
         /// <summary>
         /// Retrieves explicitly added or automatically created
-        /// <see cref="iText.Signatures.Validation.Lotl.LOTLValidator"/>
+        /// <see cref="LotlValidator"/>
         /// instance.
         /// </summary>
         /// <returns>
         /// explicitly added or automatically created
-        /// <see cref="iText.Signatures.Validation.Lotl.LOTLValidator"/>
+        /// <see cref="LotlValidator"/>
         /// instance
         /// </returns>
-        public virtual LOTLValidator GetLotlValidator() {
+        public virtual LotlValidator GetLotlValidator() {
             return lotlValidatorFactory();
         }
 
         /// <summary>
         /// Sets up factory which is responsible for
-        /// <see cref="iText.Signatures.Validation.Lotl.LOTLValidator"/>
+        /// <see cref="LotlValidator"/>
         /// creation.
         /// </summary>
         /// <param name="lotlValidatorFactory">
         /// factory responsible for
-        /// <see cref="iText.Signatures.Validation.Lotl.LOTLValidator"/>
+        /// <see cref="LotlValidator"/>
         /// creation
         /// </param>
         /// <returns>
         /// this same instance of
         /// <see cref="ValidatorChainBuilder"/>
         /// </returns>
-        public virtual iText.Signatures.Validation.ValidatorChainBuilder WithLOTLValidator(Func<LOTLValidator> lotlValidatorFactory
+        public virtual iText.Signatures.Validation.ValidatorChainBuilder WithLOTLValidator(Func<LotlValidator> lotlValidatorFactory
             ) {
             this.lotlValidatorFactory = lotlValidatorFactory;
             return this;
@@ -679,12 +679,12 @@ namespace iText.Signatures.Validation {
             return new XmlSignatureValidator(this);
         }
 
-        private LOTLValidator BuildLotlValidator() {
-            return new LOTLValidator(this);
+        private LotlValidator BuildLotlValidator() {
+            return new LotlValidator(this);
         }
 
-        private LOTLTrustedStore BuildLOTLTrustedStore() {
-            return new LOTLTrustedStore(this);
+        private LotlTrustedStore BuildLOTLTrustedStore() {
+            return new LotlTrustedStore(this);
         }
     }
 }

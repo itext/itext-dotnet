@@ -40,7 +40,7 @@ namespace iText.Signatures.Validation {
 
         private readonly RevocationDataValidator revocationDataValidator;
 
-        private readonly LOTLTrustedStore lotlTrustedStore;
+        private readonly LotlTrustedStore lotlTrustedStore;
 
 //\cond DO_NOT_DOCUMENT
         internal const String CERTIFICATE_CHECK = "Certificate check.";

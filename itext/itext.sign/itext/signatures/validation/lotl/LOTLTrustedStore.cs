@@ -30,7 +30,7 @@ using iText.Signatures.Validation.Report;
 
 namespace iText.Signatures.Validation.Lotl {
     /// <summary>Trusted certificates storage class for country specific LOTL trusted certificates.</summary>
-    public class LOTLTrustedStore {
+    public class LotlTrustedStore {
 //\cond DO_NOT_DOCUMENT
         internal const String REVOKED_CERTIFICATE = "Certificate {0} is revoked.";
 //\endcond
@@ -70,7 +70,7 @@ namespace iText.Signatures.Validation.Lotl {
 
         private readonly ValidationReport report;
 
-        static LOTLTrustedStore() {
+        static LotlTrustedStore() {
             ICollection<CertificateSource> crlOcspSignScope = new HashSet<CertificateSource>();
             crlOcspSignScope.Add(CertificateSource.CRL_ISSUER);
             crlOcspSignScope.Add(CertificateSource.OCSP_ISSUER);
@@ -144,11 +144,11 @@ namespace iText.Signatures.Validation.Lotl {
 
         /// <summary>
         /// Creates new instance of
-        /// <see cref="LOTLTrustedStore"/>.
+        /// <see cref="LotlTrustedStore"/>.
         /// </summary>
         /// <remarks>
         /// Creates new instance of
-        /// <see cref="LOTLTrustedStore"/>
+        /// <see cref="LotlTrustedStore"/>
         /// . This constructor shall not be used directly.
         /// Instead, in order to create such instance
         /// <see cref="iText.Signatures.Validation.ValidatorChainBuilder.GetLOTLTrustedstore()"/>
@@ -159,9 +159,9 @@ namespace iText.Signatures.Validation.Lotl {
         /// <see cref="iText.Signatures.Validation.ValidatorChainBuilder"/>
         /// which was responsible for creation
         /// </param>
-        public LOTLTrustedStore(ValidatorChainBuilder builder) {
+        public LotlTrustedStore(ValidatorChainBuilder builder) {
             if (builder.GetLotlFetchingProperties() != null) {
-                LOTLValidator lotlValidator = builder.GetLotlValidator();
+                LotlValidator lotlValidator = builder.GetLotlValidator();
                 this.report = lotlValidator.Validate();
                 if (report.GetValidationResult() == ValidationReport.ValidationResult.VALID) {
                     AddCertificatesWithContext(lotlValidator.GetNationalTrustedCertificates());

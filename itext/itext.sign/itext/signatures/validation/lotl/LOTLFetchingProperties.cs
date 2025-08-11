@@ -27,16 +27,16 @@ using iText.Commons.Utils;
 namespace iText.Signatures.Validation.Lotl {
     /// <summary>Class which stores properties related to LOTL (List of Trusted Lists) fetching and validation process.
     ///     </summary>
-    public class LOTLFetchingProperties {
+    public class LotlFetchingProperties {
         private readonly HashSet<String> schemaNames = new HashSet<String>();
 
         private readonly HashSet<String> serviceTypes = new HashSet<String>();
 
         /// <summary>
         /// Creates an instance of
-        /// <see cref="LOTLFetchingProperties"/>.
+        /// <see cref="LotlFetchingProperties"/>.
         /// </summary>
-        public LOTLFetchingProperties() {
+        public LotlFetchingProperties() {
         }
 
         // Empty constructor.
@@ -52,10 +52,10 @@ namespace iText.Signatures.Validation.Lotl {
         /// </param>
         /// <returns>
         /// this same
-        /// <see cref="LOTLFetchingProperties"/>
+        /// <see cref="LotlFetchingProperties"/>
         /// instance
         /// </returns>
-        public virtual iText.Signatures.Validation.Lotl.LOTLFetchingProperties AddSchemaName(String schemaName) {
+        public virtual iText.Signatures.Validation.Lotl.LotlFetchingProperties AddSchemaName(String schemaName) {
             schemaNames.Add(schemaName);
             return this;
         }
@@ -72,10 +72,10 @@ namespace iText.Signatures.Validation.Lotl {
         /// </param>
         /// <returns>
         /// this same
-        /// <see cref="LOTLFetchingProperties"/>
+        /// <see cref="LotlFetchingProperties"/>
         /// instance
         /// </returns>
-        public virtual iText.Signatures.Validation.Lotl.LOTLFetchingProperties AddServiceType(String serviceType) {
+        public virtual iText.Signatures.Validation.Lotl.LotlFetchingProperties AddServiceType(String serviceType) {
             serviceTypes.Add(serviceType);
             return this;
         }

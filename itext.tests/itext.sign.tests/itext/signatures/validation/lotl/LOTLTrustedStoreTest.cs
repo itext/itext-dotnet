@@ -32,7 +32,7 @@ using iText.Test;
 namespace iText.Signatures.Validation.Lotl {
 //\cond DO_NOT_DOCUMENT
     [NUnit.Framework.Category("BouncyCastleUnitTest")]
-    internal class LOTLTrustedStoreTest : ExtendedITextTest {
+    internal class LotlTrustedStoreTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
@@ -45,7 +45,7 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void CheckCertificateTest() {
-            LOTLTrustedStore store = new ValidatorChainBuilder().GetLOTLTrustedstore();
+            LotlTrustedStore store = new ValidatorChainBuilder().GetLOTLTrustedstore();
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
@@ -56,14 +56,14 @@ namespace iText.Signatures.Validation.Lotl {
             NUnit.Framework.Assert.IsTrue(store.CheckIfCertIsTrusted(report, new ValidationContext(ValidatorContext.CERTIFICATE_CHAIN_VALIDATOR
                 , CertificateSource.CRL_ISSUER, TimeBasedContext.PRESENT), crlRootCert, TimeTestUtil.TEST_DATE_TIME));
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                (0).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LOTLTrustedStore.CERTIFICATE_CHECK).WithMessage
+                (0).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LotlTrustedStore.CERTIFICATE_CHECK).WithMessage
                 ("Certificate {0} is trusted, revocation data checks are not required.", (l) => crlRootCert.GetSubjectDN
                 ()).WithCertificate(crlRootCert)));
         }
 
         [NUnit.Framework.Test]
         public virtual void CheckCertificateWithValidationContextChainTest() {
-            LOTLTrustedStore store = new ValidatorChainBuilder().GetLOTLTrustedstore();
+            LotlTrustedStore store = new ValidatorChainBuilder().GetLOTLTrustedstore();
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/Certstatus/CRL");
@@ -78,14 +78,14 @@ namespace iText.Signatures.Validation.Lotl {
             NUnit.Framework.Assert.IsTrue(store.CheckIfCertIsTrusted(report, validationContext, crlRootCert, TimeTestUtil
                 .TEST_DATE_TIME));
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                (0).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LOTLTrustedStore.CERTIFICATE_CHECK).WithMessage
+                (0).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LotlTrustedStore.CERTIFICATE_CHECK).WithMessage
                 ("Certificate {0} is trusted, revocation data checks are not required.", (l) => crlRootCert.GetSubjectDN
                 ()).WithCertificate(crlRootCert)));
         }
 
         [NUnit.Framework.Test]
         public virtual void IncorrectContextTest() {
-            LOTLTrustedStore store = new ValidatorChainBuilder().GetLOTLTrustedstore();
+            LotlTrustedStore store = new ValidatorChainBuilder().GetLOTLTrustedstore();
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/TSA/QTST");
@@ -96,14 +96,14 @@ namespace iText.Signatures.Validation.Lotl {
             NUnit.Framework.Assert.IsFalse(store.CheckIfCertIsTrusted(report, new ValidationContext(ValidatorContext.CERTIFICATE_CHAIN_VALIDATOR
                 , CertificateSource.CRL_ISSUER, TimeBasedContext.PRESENT), crlRootCert, TimeTestUtil.TEST_DATE_TIME));
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                (0).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LOTLTrustedStore.CERTIFICATE_CHECK).WithMessage
-                (LOTLTrustedStore.CERTIFICATE_TRUSTED_FOR_DIFFERENT_CONTEXT, (l) => crlRootCert.GetSubjectDN(), (l) =>
+                (0).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LotlTrustedStore.CERTIFICATE_CHECK).WithMessage
+                (LotlTrustedStore.CERTIFICATE_TRUSTED_FOR_DIFFERENT_CONTEXT, (l) => crlRootCert.GetSubjectDN(), (l) =>
                  "http://uri.etsi.org/TrstSvc/Svctype/TSA/QTST").WithCertificate(crlRootCert)));
         }
 
         [NUnit.Framework.Test]
         public virtual void ServiceTypeNotRecognizedTest() {
-            LOTLTrustedStore store = new ValidatorChainBuilder().GetLOTLTrustedstore();
+            LotlTrustedStore store = new ValidatorChainBuilder().GetLOTLTrustedstore();
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("invalid service type");
@@ -114,14 +114,14 @@ namespace iText.Signatures.Validation.Lotl {
             NUnit.Framework.Assert.IsFalse(store.CheckIfCertIsTrusted(report, new ValidationContext(ValidatorContext.CERTIFICATE_CHAIN_VALIDATOR
                 , CertificateSource.CRL_ISSUER, TimeBasedContext.PRESENT), crlRootCert, TimeTestUtil.TEST_DATE_TIME));
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                (0).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LOTLTrustedStore.CERTIFICATE_CHECK).WithMessage
-                (LOTLTrustedStore.CERTIFICATE_SERVICE_TYPE_NOT_RECOGNIZED, (l) => crlRootCert.GetSubjectDN(), (l) => "invalid service type"
+                (0).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LotlTrustedStore.CERTIFICATE_CHECK).WithMessage
+                (LotlTrustedStore.CERTIFICATE_SERVICE_TYPE_NOT_RECOGNIZED, (l) => crlRootCert.GetSubjectDN(), (l) => "invalid service type"
                 ).WithCertificate(crlRootCert)));
         }
 
         [NUnit.Framework.Test]
         public virtual void IncorrectTimeBeforeValidTest() {
-            LOTLTrustedStore store = new ValidatorChainBuilder().GetLOTLTrustedstore();
+            LotlTrustedStore store = new ValidatorChainBuilder().GetLOTLTrustedstore();
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
@@ -132,14 +132,14 @@ namespace iText.Signatures.Validation.Lotl {
             NUnit.Framework.Assert.IsFalse(store.CheckIfCertIsTrusted(report, new ValidationContext(ValidatorContext.CERTIFICATE_CHAIN_VALIDATOR
                 , CertificateSource.CRL_ISSUER, TimeBasedContext.PRESENT), crlRootCert, TimeTestUtil.TEST_DATE_TIME));
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
-                (1).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LOTLTrustedStore.CERTIFICATE_CHECK).WithMessage
+                (1).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LotlTrustedStore.CERTIFICATE_CHECK).WithMessage
                 ("Certificate {0} is not yet valid.", (l) => crlRootCert.GetSubjectDN()).WithCertificate(crlRootCert))
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void IncorrectTimeAfterValidTest() {
-            LOTLTrustedStore store = new ValidatorChainBuilder().GetLOTLTrustedstore();
+            LotlTrustedStore store = new ValidatorChainBuilder().GetLOTLTrustedstore();
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
@@ -150,13 +150,13 @@ namespace iText.Signatures.Validation.Lotl {
             NUnit.Framework.Assert.IsFalse(store.CheckIfCertIsTrusted(report, new ValidationContext(ValidatorContext.CERTIFICATE_CHAIN_VALIDATOR
                 , CertificateSource.CRL_ISSUER, TimeBasedContext.PRESENT), crlRootCert, TimeTestUtil.TEST_DATE_TIME));
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
-                (1).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LOTLTrustedStore.CERTIFICATE_CHECK).WithMessage
+                (1).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LotlTrustedStore.CERTIFICATE_CHECK).WithMessage
                 ("Certificate {0} is revoked.", (l) => crlRootCert.GetSubjectDN()).WithCertificate(crlRootCert)));
         }
 
         [NUnit.Framework.Test]
         public virtual void CheckCertificateWithCorrectExtensionScopeTest() {
-            LOTLTrustedStore store = new ValidatorChainBuilder().GetLOTLTrustedstore();
+            LotlTrustedStore store = new ValidatorChainBuilder().GetLOTLTrustedstore();
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
@@ -170,14 +170,14 @@ namespace iText.Signatures.Validation.Lotl {
             NUnit.Framework.Assert.IsTrue(store.CheckIfCertIsTrusted(report, new ValidationContext(ValidatorContext.CERTIFICATE_CHAIN_VALIDATOR
                 , CertificateSource.SIGNER_CERT, TimeBasedContext.PRESENT), crlRootCert, TimeTestUtil.TEST_DATE_TIME));
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                (0).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LOTLTrustedStore.CERTIFICATE_CHECK).WithMessage
+                (0).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LotlTrustedStore.CERTIFICATE_CHECK).WithMessage
                 ("Certificate {0} is trusted, revocation data checks are not required.", (l) => crlRootCert.GetSubjectDN
                 ()).WithCertificate(crlRootCert)));
         }
 
         [NUnit.Framework.Test]
         public virtual void CheckCertificateWithCorrectExtensionScope2Test() {
-            LOTLTrustedStore store = new ValidatorChainBuilder().GetLOTLTrustedstore();
+            LotlTrustedStore store = new ValidatorChainBuilder().GetLOTLTrustedstore();
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
@@ -193,14 +193,14 @@ namespace iText.Signatures.Validation.Lotl {
             NUnit.Framework.Assert.IsTrue(store.CheckIfCertIsTrusted(report, new ValidationContext(ValidatorContext.CERTIFICATE_CHAIN_VALIDATOR
                 , CertificateSource.SIGNER_CERT, TimeBasedContext.PRESENT), crlRootCert, TimeTestUtil.TEST_DATE_TIME));
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                (0).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LOTLTrustedStore.CERTIFICATE_CHECK).WithMessage
+                (0).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LotlTrustedStore.CERTIFICATE_CHECK).WithMessage
                 ("Certificate {0} is trusted, revocation data checks are not required.", (l) => crlRootCert.GetSubjectDN
                 ()).WithCertificate(crlRootCert)));
         }
 
         [NUnit.Framework.Test]
         public virtual void CheckCertificateWithIncorrectExtensionScopeTest() {
-            LOTLTrustedStore store = new ValidatorChainBuilder().GetLOTLTrustedstore();
+            LotlTrustedStore store = new ValidatorChainBuilder().GetLOTLTrustedstore();
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
@@ -214,8 +214,8 @@ namespace iText.Signatures.Validation.Lotl {
             NUnit.Framework.Assert.IsFalse(store.CheckIfCertIsTrusted(report, new ValidationContext(ValidatorContext.CERTIFICATE_CHAIN_VALIDATOR
                 , CertificateSource.SIGNER_CERT, TimeBasedContext.PRESENT), crlRootCert, TimeTestUtil.TEST_DATE_TIME));
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
-                (1).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LOTLTrustedStore.EXTENSIONS_CHECK).WithMessage
-                (LOTLTrustedStore.SCOPE_SPECIFIED_WITH_INVALID_TYPES, (l) => crlRootCert.GetSubjectDN(), (k) => "http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForWebSiteAuthentication"
+                (1).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LotlTrustedStore.EXTENSIONS_CHECK).WithMessage
+                (LotlTrustedStore.SCOPE_SPECIFIED_WITH_INVALID_TYPES, (l) => crlRootCert.GetSubjectDN(), (k) => "http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForWebSiteAuthentication"
                 ).WithCertificate(crlRootCert)));
         }
     }
