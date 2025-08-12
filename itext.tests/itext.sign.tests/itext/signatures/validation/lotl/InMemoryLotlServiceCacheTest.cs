@@ -70,7 +70,7 @@ namespace iText.Signatures.Validation.Lotl {
             byte[] data = "test data".GetBytes(System.Text.Encoding.UTF8);
             EuropeanLotlFetcher.Result result = new EuropeanLotlFetcher.Result(data);
             // Simulate staleness by waiting longer than the max allowed staleness
-            Thread.Sleep(50);
+            Thread.Sleep(250);
             cache.SetLotlResult(result);
             NUnit.Framework.Assert.AreEqual(data, cache.GetLotlResult().GetLotlXml(), "The byte data should match the set data."
                 );

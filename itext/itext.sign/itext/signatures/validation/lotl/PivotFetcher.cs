@@ -37,6 +37,9 @@ namespace iText.Signatures.Validation.Lotl {
 
         private readonly ValidatorChainBuilder builder;
 
+        /// <summary>Constructs a PivotFetcher with the specified LotlService and ValidatorChainBuilder.</summary>
+        /// <param name="service">the LotlService used to retrieve resources</param>
+        /// <param name="builder">the ValidatorChainBuilder used to build the XML signature validator</param>
         public PivotFetcher(LotlService service, ValidatorChainBuilder builder) {
             this.service = service;
             this.builder = builder;

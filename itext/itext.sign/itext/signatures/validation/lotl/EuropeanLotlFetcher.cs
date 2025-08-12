@@ -38,6 +38,12 @@ namespace iText.Signatures.Validation.Lotl {
     public class EuropeanLotlFetcher {
         private readonly LotlService service;
 
+        /// <summary>
+        /// Constructs a new instance of
+        /// <see cref="EuropeanLotlFetcher"/>
+        /// with the specified LotlService.
+        /// </summary>
+        /// <param name="service">the LotlService used to retrieve resources</param>
         public EuropeanLotlFetcher(LotlService service) {
             this.service = service;
         }
