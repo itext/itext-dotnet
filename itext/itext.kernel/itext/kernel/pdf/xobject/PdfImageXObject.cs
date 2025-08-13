@@ -190,7 +190,9 @@ namespace iText.Kernel.Pdf.Xobject {
                 ImageType imageType = IdentifyImageType();
                 if (imageType == ImageType.TIFF || imageType == ImageType.PNG) {
                     try {
-                        bytes = new ImagePdfBytesInfo(this).DecodeTiffAndPngBytes(bytes);
+                        bytes = new ImagePdfBytesInfo((int)width, (int)height, GetPdfObject().GetAsNumber(PdfName.BitsPerComponent
+                            ).IntValue(), GetPdfObject().Get(PdfName.ColorSpace), GetPdfObject().GetAsArray(PdfName.Decode)).DecodeTiffAndPngBytes
+                            (bytes);
                     }
                     catch (System.IO.IOException e) {
                         throw new Exception("IO exception in PdfImageXObject", e);
@@ -254,7 +256,9 @@ namespace iText.Kernel.Pdf.Xobject {
                 }
             }
             // None of the previous types match
-            ImagePdfBytesInfo imageInfo = new ImagePdfBytesInfo(this);
+            ImagePdfBytesInfo imageInfo = new ImagePdfBytesInfo((int)width, (int)height, GetPdfObject().GetAsNumber(PdfName
+                .BitsPerComponent).IntValue(), GetPdfObject().Get(PdfName.ColorSpace), GetPdfObject().GetAsArray(PdfName
+                .Decode));
             if (imageInfo.GetPngColorType() < 0) {
                 return ImageType.TIFF;
             }

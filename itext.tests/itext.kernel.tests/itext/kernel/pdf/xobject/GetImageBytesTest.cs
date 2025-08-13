@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 using iText.IO.Codec;
 using iText.IO.Exceptions;
@@ -128,6 +129,7 @@ namespace iText.Kernel.Pdf.Xobject {
 
         [NUnit.Framework.Test]
         public virtual void TestSeparationCSWithDeviceCMYKAsAlternative() {
+            // TODO: DEVSIX-6757 (update test after fix)
             // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
             NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => {
                 TestFile("separationCSWithDeviceCMYKAsAlternative.pdf", "Im1", "png");
@@ -142,12 +144,14 @@ namespace iText.Kernel.Pdf.Xobject {
 
         [NUnit.Framework.Test]
         public virtual void TestSeparationCSWithDeviceRGBAsAlternative() {
+            // TODO: DEVSIX-6757 (update test after fix)
             // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
             TestFile("separationCSWithDeviceRgbAsAlternative.pdf", "Im1", "png");
         }
 
         [NUnit.Framework.Test]
         public virtual void TestSeparationCSWithDeviceRGBAsAlternative2() {
+            // TODO: DEVSIX-6757 (update test after fix)
             // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
             TestFile("spotColorImagesSmall.pdf", "Im1", "png");
         }
@@ -199,16 +203,16 @@ namespace iText.Kernel.Pdf.Xobject {
             String outImageFileName = DESTINATION_FOLDER + "extractedByteAlignedImage.png";
             String cmpImageFileName = SOURCE_FOLDER + "cmp_extractByteAlignedG4TiffImage.png";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
-            GetImageBytesTest.ImageExtractor listener = new GetImageBytesTest.ImageExtractor(this);
+            GetImageBytesTest.ImageAndTypeExtractor listener = new GetImageBytesTest.ImageAndTypeExtractor();
             PdfCanvasProcessor processor = new PdfCanvasProcessor(listener);
             processor.ProcessPageContent(pdfDocument.GetPage(1));
-            IList<byte[]> images = listener.GetImages();
+            IList<Tuple2<String, byte[]>> images = listener.GetImages();
             NUnit.Framework.Assert.AreEqual(1, images.Count);
             using (Stream fos = FileUtil.GetFileOutputStream(outImageFileName)) {
-                fos.Write(images[0], 0, images.Count);
+                fos.Write(images[0].GetSecond(), 0, images.Count);
             }
             // expected and actual are swapped here for simplicity
-            int expectedLen = images[0].Length;
+            int expectedLen = images[0].GetSecond().Length;
             byte[] buf = new byte[expectedLen];
             using (Stream @is = FileUtil.GetInputStreamForFile(cmpImageFileName)) {
                 int read = @is.JRead(buf, 0, buf.Length);
@@ -216,7 +220,7 @@ namespace iText.Kernel.Pdf.Xobject {
                 read = @is.JRead(buf, 0, buf.Length);
                 NUnit.Framework.Assert.IsTrue(read <= 0);
             }
-            NUnit.Framework.Assert.AreEqual(images[0], buf);
+            NUnit.Framework.Assert.AreEqual(images[0].GetSecond(), buf);
         }
 
         [NUnit.Framework.Test]
@@ -224,12 +228,29 @@ namespace iText.Kernel.Pdf.Xobject {
             //Byte-aligned image is expected in pdf file, but in fact it's not
             String inFileName = SOURCE_FOLDER + "expectedByteAlignedTiffImageExtraction.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
-            GetImageBytesTest.ImageExtractor listener = new GetImageBytesTest.ImageExtractor(this);
+            GetImageBytesTest.ImageAndTypeExtractor listener = new GetImageBytesTest.ImageAndTypeExtractor();
             PdfCanvasProcessor processor = new PdfCanvasProcessor(listener);
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => processor.ProcessPageContent
                 (pdfDocument.GetPage(1)));
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.EXPECTED_TRAILING_ZERO_BITS_FOR_BYTE_ALIGNED_LINES
                 ), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InlineImageColorDepth1Test() {
+            //Byte-aligned image is expected in pdf file, but in fact it's not
+            String inFileName = SOURCE_FOLDER + "inline_image_with_cs_object.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
+            GetImageBytesTest.ImageAndTypeExtractor listener = new GetImageBytesTest.ImageAndTypeExtractor();
+            PdfCanvasProcessor processor = new PdfCanvasProcessor(listener);
+            processor.ProcessPageContent(pdfDocument.GetPage(1));
+            System.IO.File.WriteAllBytes(System.IO.Path.Combine(DESTINATION_FOLDER, "inline_image_with_cs_object.new."
+                 + listener.images[0].GetFirst()), listener.images[0].GetSecond());
+            NUnit.Framework.Assert.AreEqual(1, listener.images.Count);
+            NUnit.Framework.Assert.AreEqual("png", listener.images[0].GetFirst());
+            byte[] cmpBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER, "inline_image_with_cs_object.png"
+                ));
+            NUnit.Framework.Assert.AreEqual(cmpBytes, listener.images[0].GetSecond());
         }
 
         [NUnit.Framework.Test]
@@ -244,7 +265,7 @@ namespace iText.Kernel.Pdf.Xobject {
 
         [NUnit.Framework.Test]
         public virtual void DeviceGray1bitFlateDecodeInvertedTest() {
-            TestFile("deviceGray1bitFlateDecodeInverted.pdf", "Im0", "png", true);
+            TestFile("deviceGray1bitFlateDecodeInverted.pdf", "Im0", "png");
         }
 
         [NUnit.Framework.Test]
@@ -1005,15 +1026,15 @@ namespace iText.Kernel.Pdf.Xobject {
             return JavaUtil.ArraysCopyOfRange(array, beg, end + 1);
         }
 
-        private class ImageExtractor : IEventListener {
-            private readonly IList<byte[]> images = new List<byte[]>();
+        private class ImageAndTypeExtractor : IEventListener {
+            public readonly IList<Tuple2<String, byte[]>> images = new List<Tuple2<String, byte[]>>();
 
             public virtual void EventOccurred(IEventData data, EventType type) {
                 switch (type) {
                     case EventType.RENDER_IMAGE: {
                         ImageRenderInfo renderInfo = (ImageRenderInfo)data;
                         byte[] bytes = renderInfo.GetImage().GetImageBytes();
-                        this.images.Add(bytes);
+                        images.Add(new Tuple2<String, byte[]>(renderInfo.GetImage().IdentifyImageFileExtension(), bytes));
                         break;
                     }
 
@@ -1027,15 +1048,9 @@ namespace iText.Kernel.Pdf.Xobject {
                 return null;
             }
 
-            public virtual IList<byte[]> GetImages() {
-                return this.images;
+            public virtual IList<Tuple2<String, byte[]>> GetImages() {
+                return images;
             }
-
-            internal ImageExtractor(GetImageBytesTest _enclosing) {
-                this._enclosing = _enclosing;
-            }
-
-            private readonly GetImageBytesTest _enclosing;
         }
     }
 }

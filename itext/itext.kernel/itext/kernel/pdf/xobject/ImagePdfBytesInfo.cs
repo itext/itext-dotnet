@@ -57,19 +57,21 @@ namespace iText.Kernel.Pdf.Xobject {
 
         private int stride;
 
-        public ImagePdfBytesInfo(PdfImageXObject imageXObject) {
+//\cond DO_NOT_DOCUMENT
+        internal ImagePdfBytesInfo(int width, int height, int bpc, PdfObject colorspace, PdfArray decode) {
             pngColorType = -1;
-            bpc = imageXObject.GetPdfObject().GetAsNumber(PdfName.BitsPerComponent).IntValue();
+            this.bpc = bpc;
             pngBitDepth = bpc;
             palette = null;
             icc = null;
             stride = 0;
-            width = (int)imageXObject.GetWidth();
-            height = (int)imageXObject.GetHeight();
-            colorspace = imageXObject.GetPdfObject().Get(PdfName.ColorSpace);
-            decode = imageXObject.GetPdfObject().GetAsArray(PdfName.Decode);
+            this.width = width;
+            this.height = height;
+            this.colorspace = colorspace;
+            this.decode = decode;
             FindColorspace(colorspace, false);
         }
+//\endcond
 
         public virtual int GetPngColorType() {
             return pngColorType;

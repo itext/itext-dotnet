@@ -115,6 +115,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         public static PdfStream Parse(PdfCanvasParser ps, PdfDictionary colorSpaceDic) {
             PdfDictionary inlineImageDict = ParseDictionary(ps);
             byte[] samples = ParseSamples(inlineImageDict, colorSpaceDic, ps);
+            PdfName colorSpaceName = inlineImageDict.GetAsName(PdfName.ColorSpace);
+            if (colorSpaceDic != null && colorSpaceName != null) {
+                inlineImageDict.Put(PdfName.ColorSpace, colorSpaceDic.Get(colorSpaceName));
+            }
             PdfStream inlineImageAsStreamObject = new PdfStream(samples);
             inlineImageAsStreamObject.PutAll(inlineImageDict);
             return inlineImageAsStreamObject;
