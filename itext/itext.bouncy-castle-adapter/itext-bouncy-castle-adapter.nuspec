@@ -19,11 +19,11 @@
     <dependencies>
       <group targetFramework="net461">
 		<dependency id="itext.commons" version="9.3.0-SNAPSHOT" />
-		<dependency id="BouncyCastle.Cryptography" version="2.4.0" />
+		<dependency id="BouncyCastle.Cryptography" version="2.6.2" />
       </group>
       <group targetFramework="netstandard2.0">
 		<dependency id="itext.commons" version="9.3.0-SNAPSHOT" />
-		<dependency id="BouncyCastle.Cryptography" version="2.4.0" />
+		<dependency id="BouncyCastle.Cryptography" version="2.6.2" />
       </group>
     </dependencies>
   </metadata>

@@ -45,24 +45,12 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
         public virtual void VerifyNistECDSASha3SignatureTest() {
-            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
-                VerifyIsoExtensionExample("SHA3-256withECDSA", "sample-nistp256-sha3_256.pdf");
-            } else {
-                // Signer SHA3-256WITHECDSA not recognised in BC mode
-                NUnit.Framework.Assert.Catch(typeof(PdfException), () => VerifyIsoExtensionExample("SHA3-256withECDSA", "sample-nistp256-sha3_256.pdf"
-                    ));
-            }
+            VerifyIsoExtensionExample("SHA3-256withECDSA", "sample-nistp256-sha3_256.pdf");
         }
 
         [NUnit.Framework.Test]
         public virtual void VerifyBrainpoolSha3SignatureTest() {
-            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
-                VerifyIsoExtensionExample("SHA3-384withECDSA", "sample-brainpoolP384r1-sha3_384.pdf");
-            } else {
-                // Signer SHA3-384WITHECDSA not recognised in BC mode
-                NUnit.Framework.Assert.Catch(typeof(PdfException), () => VerifyIsoExtensionExample("SHA3-384withECDSA", "sample-brainpoolP384r1-sha3_384.pdf"
-                    ));
-            }
+            VerifyIsoExtensionExample("SHA3-384withECDSA", "sample-brainpoolP384r1-sha3_384.pdf");
         }
 
         [NUnit.Framework.Test]
