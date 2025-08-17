@@ -20,7 +20,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
 using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Signatures.Validation;
@@ -47,13 +46,9 @@ namespace iText.Signatures.Validation.Lotl {
         public virtual EuropeanResourceFetcher.Result GetEUJournalCertificates() {
             EuropeanResourceFetcher.Result result = new EuropeanResourceFetcher.Result();
             EuropeanTrustedListConfigurationFactory factory = EuropeanTrustedListConfigurationFactory.GetFactory()();
-            try {
-                result.SetCertificates(factory.GetCertificates());
-            }
-            catch (Exception e) {
-                result.GetLocalReport().AddReportItem(new ReportItem(LotlValidator.LOTL_VALIDATION, LotlValidator.JOURNAL_CERT_NOT_PARSABLE
-                    , e, ReportItem.ReportItemStatus.INFO));
-            }
+            SafeCalling.OnExceptionLog(() => result.SetCertificates(factory.GetCertificates()), result.GetLocalReport(
+                ), (e) => new ReportItem(LotlValidator.LOTL_VALIDATION, LotlValidator.JOURNAL_CERT_NOT_PARSABLE, e, ReportItem.ReportItemStatus
+                .INFO));
             return result;
         }
 

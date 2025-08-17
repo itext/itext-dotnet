@@ -37,7 +37,8 @@ namespace iText.Signatures.Validation.Lotl {
             String xmlPath = SOURCE_FOLDER + "eu-lotl.xml";
             XmlCountryRetriever xmlCountryRetriever = new XmlCountryRetriever();
             IList<CountrySpecificLotl> otherCountryList = xmlCountryRetriever.GetAllCountriesLotlFilesLocation(iText.Commons.Utils.FileUtil.GetInputStreamForFile
-                (System.IO.Path.Combine(xmlPath)), new LotlFetchingProperties(new ThrowExceptionIOnFailureStrategy()));
+                (System.IO.Path.Combine(xmlPath)), new LotlFetchingProperties(new ThrowExceptionOnFailingCountryData()
+                ));
             NUnit.Framework.Assert.AreEqual(32, otherCountryList.Count);
             foreach (CountrySpecificLotl countrySpecificLotl in otherCountryList) {
                 NUnit.Framework.Assert.IsNotNull(countrySpecificLotl.GetSchemeTerritory(), "Scheme territory should not be null for country: "

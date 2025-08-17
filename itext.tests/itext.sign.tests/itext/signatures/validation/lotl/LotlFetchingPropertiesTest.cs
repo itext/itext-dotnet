@@ -30,7 +30,7 @@ namespace iText.Signatures.Validation.Lotl {
     internal class LotlFetchingPropertiesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestAddCountryName() {
-            LotlFetchingProperties properties = new LotlFetchingProperties(new IgnoreCountrySpecificCertificates());
+            LotlFetchingProperties properties = new LotlFetchingProperties(new RemoveOnFailingCountryData());
             properties.SetCountryNames("BE");
             NUnit.Framework.Assert.IsTrue(properties.ShouldProcessCountry("BE"));
             NUnit.Framework.Assert.IsFalse(properties.ShouldProcessCountry("NL"));
@@ -38,7 +38,7 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void AddIgnoredCountryName() {
-            LotlFetchingProperties properties = new LotlFetchingProperties(new IgnoreCountrySpecificCertificates());
+            LotlFetchingProperties properties = new LotlFetchingProperties(new RemoveOnFailingCountryData());
             properties.SetCountryNamesToIgnore("BE");
             NUnit.Framework.Assert.IsFalse(properties.ShouldProcessCountry("BE"));
             NUnit.Framework.Assert.IsTrue(properties.ShouldProcessCountry("NL"));
@@ -46,20 +46,20 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void ByDefaultShouldProcessCountryReturnsTrue() {
-            LotlFetchingProperties properties = new LotlFetchingProperties(new IgnoreCountrySpecificCertificates());
+            LotlFetchingProperties properties = new LotlFetchingProperties(new RemoveOnFailingCountryData());
             NUnit.Framework.Assert.IsTrue(properties.ShouldProcessCountry("BE"));
             NUnit.Framework.Assert.IsTrue(properties.ShouldProcessCountry("NL"));
         }
 
         [NUnit.Framework.Test]
         public virtual void ByDefaultShouldProcessCountryReturnsTrueEvenIfItsNotACountry() {
-            LotlFetchingProperties properties = new LotlFetchingProperties(new IgnoreCountrySpecificCertificates());
+            LotlFetchingProperties properties = new LotlFetchingProperties(new RemoveOnFailingCountryData());
             NUnit.Framework.Assert.IsTrue(properties.ShouldProcessCountry("INVALID"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TryAddingBothCountryAndIgnoredCountryThrowsException() {
-            LotlFetchingProperties properties = new LotlFetchingProperties(new IgnoreCountrySpecificCertificates());
+            LotlFetchingProperties properties = new LotlFetchingProperties(new RemoveOnFailingCountryData());
             properties.SetCountryNames("BE");
             Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => {
                 properties.SetCountryNamesToIgnore("NL");
@@ -71,7 +71,7 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void TryAddingCountryNameToIgnoreAndCountryNameThrowsException() {
-            LotlFetchingProperties properties = new LotlFetchingProperties(new IgnoreCountrySpecificCertificates());
+            LotlFetchingProperties properties = new LotlFetchingProperties(new RemoveOnFailingCountryData());
             properties.SetCountryNamesToIgnore("BE");
             Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => {
                 properties.SetCountryNames("NL");

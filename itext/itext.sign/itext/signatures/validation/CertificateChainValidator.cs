@@ -115,7 +115,7 @@ namespace iText.Signatures.Validation {
             this.certificateRetriever = builder.GetCertificateRetriever();
             this.properties = builder.GetProperties();
             this.revocationDataValidator = builder.GetRevocationDataValidator();
-            this.lotlTrustedStore = builder.GetLotlTrustedstore();
+            this.lotlTrustedStore = builder.GetLotlTrustedStore();
         }
 
         /// <summary>Validate given certificate using provided validation date and required extensions.</summary>
@@ -207,8 +207,8 @@ namespace iText.Signatures.Validation {
         }
 
         private bool StopValidation(ValidationReport result, ValidationContext context) {
-            return !properties.GetContinueAfterFailure(context) && result.GetValidationResult() == ValidationReport.ValidationResult
-                .INVALID;
+            return result.GetValidationResult() == ValidationReport.ValidationResult.INVALID && !properties.GetContinueAfterFailure
+                (context);
         }
 
         private void ValidateValidityPeriod(ValidationReport result, IX509Certificate certificate, DateTime validationDate

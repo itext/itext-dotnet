@@ -53,7 +53,7 @@ namespace iText.Signatures.Validation.Lotl {
         public virtual EuropeanLotlFetcher.Result Fetch() {
             EuropeanLotlFetcher.Result result = new EuropeanLotlFetcher.Result();
             EuropeanTrustedListConfigurationFactory factory = EuropeanTrustedListConfigurationFactory.GetFactory()();
-            try {
+            SafeCalling.OnExceptionLog(() => {
                 Uri url = UrlUtil.ToURL(factory.GetTrustedListUri());
                 result.SetLotlXml(service.GetResourceRetriever().GetByteArrayByUrl(url));
                 if (result.GetLotlXml() == null || result.GetLotlXml().Length == 0) {
@@ -62,11 +62,8 @@ namespace iText.Signatures.Validation.Lotl {
                     result.GetLocalReport().AddReportItem(reportItem);
                 }
             }
-            catch (Exception e) {
-                ReportItem reportItem = new ReportItem(LotlValidator.LOTL_VALIDATION, SignExceptionMessageConstant.FAILED_TO_GET_EU_LOTL
-                    , e, ReportItem.ReportItemStatus.INVALID);
-                result.GetLocalReport().AddReportItem(reportItem);
-            }
+            , result.GetLocalReport(), (e) => new ReportItem(LotlValidator.LOTL_VALIDATION, SignExceptionMessageConstant
+                .FAILED_TO_GET_EU_LOTL, e, ReportItem.ReportItemStatus.INVALID));
             return result;
         }
 

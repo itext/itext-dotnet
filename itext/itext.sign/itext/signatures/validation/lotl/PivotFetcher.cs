@@ -35,25 +35,20 @@ namespace iText.Signatures.Validation.Lotl {
     public class PivotFetcher {
         private readonly LotlService service;
 
-        private readonly ValidatorChainBuilder builder;
-
         /// <summary>Constructs a PivotFetcher with the specified LotlService and ValidatorChainBuilder.</summary>
         /// <param name="service">the LotlService used to retrieve resources</param>
-        /// <param name="builder">the ValidatorChainBuilder used to build the XML signature validator</param>
-        public PivotFetcher(LotlService service, ValidatorChainBuilder builder) {
+        public PivotFetcher(LotlService service) {
             this.service = service;
-            this.builder = builder;
         }
 
         /// <summary>Fetches and validates pivot files from the provided Lotl XML.</summary>
         /// <param name="lotlXml">the byte array of the Lotl XML</param>
         /// <param name="certificates">the list of trusted certificates</param>
-        /// <param name="properties">the signature validation properties</param>
         /// <returns>a Result object containing the validation result and report items</returns>
         public virtual PivotFetcher.Result DownloadAndValidatePivotFiles(byte[] lotlXml, IList<IX509Certificate> certificates
-            , SignatureValidationProperties properties) {
-            if (lotlXml == null || lotlXml.Length == 0) {
-                throw new PdfException(LotlValidator.UNABLE_TO_RETRIEVE_Lotl);
+            ) {
+            if (lotlXml == null) {
+                throw new PdfException(LotlValidator.UNABLE_TO_RETRIEVE_LOTL);
             }
             XmlPivotsHandler pivotsHandler = new XmlPivotsHandler();
             new XmlSaxProcessor().Process(new MemoryStream(lotlXml), pivotsHandler);
@@ -64,12 +59,10 @@ namespace iText.Signatures.Validation.Lotl {
             // We need to process pivots backwards.
             for (int i = pivotsUrlList.Count - 1; i >= 0; i--) {
                 String pivotUrl = pivotsUrlList[i];
-                try {
-                    pivotFiles.Add(service.GetResourceRetriever().GetByteArrayByUrl(new Uri(pivotUrl)));
-                }
-                catch (Exception e) {
-                    result.GetLocalReport().AddReportItem(new ReportItem(LotlValidator.LOTL_VALIDATION, MessageFormatUtil.Format
-                        (LotlValidator.UNABLE_TO_RETRIEVE_PIVOT, pivotUrl), e, ReportItem.ReportItemStatus.INVALID));
+                SafeCalling.OnExceptionLog(() => pivotFiles.Add(service.GetResourceRetriever().GetByteArrayByUrl(new Uri(pivotUrl
+                    ))), result.GetLocalReport(), (e) => new ReportItem(LotlValidator.LOTL_VALIDATION, MessageFormatUtil.Format
+                    (LotlValidator.UNABLE_TO_RETRIEVE_PIVOT, pivotUrl), e, ReportItem.ReportItemStatus.INVALID));
+                if (result.GetLocalReport().GetValidationResult() != ValidationReport.ValidationResult.VALID) {
                     return result;
                 }
             }
@@ -78,13 +71,12 @@ namespace iText.Signatures.Validation.Lotl {
             foreach (byte[] pivotFile in pivotFiles) {
                 TrustedCertificatesStore trustedCertificatesStore = new TrustedCertificatesStore();
                 trustedCertificatesStore.AddGenerallyTrustedCertificates(trustedCertificates);
-                XmlSignatureValidator xmlSignatureValidator = this.builder.BuildXmlSignatureValidator(trustedCertificatesStore
-                    );
-                if (pivotFile == null || pivotFile.Length == 0) {
+                if (pivotFile == null) {
                     result.GetLocalReport().AddReportItem(new ReportItem(LotlValidator.LOTL_VALIDATION, LotlValidator.LOTL_VALIDATION_UNSUCCESSFUL
                         , ReportItem.ReportItemStatus.INVALID));
                     return result;
                 }
+                XmlSignatureValidator xmlSignatureValidator = service.GetXmlSignatureValidator(trustedCertificatesStore);
                 ValidationReport localReport = xmlSignatureValidator.Validate(new MemoryStream(pivotFile));
                 if (localReport.GetValidationResult() != ValidationReport.ValidationResult.VALID) {
                     result.GetLocalReport().AddReportItem(new ReportItem(LotlValidator.LOTL_VALIDATION, LotlValidator.LOTL_VALIDATION_UNSUCCESSFUL
@@ -130,9 +122,6 @@ namespace iText.Signatures.Validation.Lotl {
             /// <summary>Gets the list of pivot URLs.</summary>
             /// <returns>a list of pivot URLs</returns>
             public virtual IList<String> GetPivotUrls() {
-                if (pivotsUrlList == null) {
-                    return JavaCollectionsUtil.EmptyList<String>();
-                }
                 return JavaCollectionsUtil.UnmodifiableList(pivotsUrlList);
             }
 

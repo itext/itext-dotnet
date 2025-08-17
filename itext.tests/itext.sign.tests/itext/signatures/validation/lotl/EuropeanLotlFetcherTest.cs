@@ -23,22 +23,23 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using iText.IO.Resolver.Resource;
-using iText.Signatures.Validation;
 using iText.Test;
 
 namespace iText.Signatures.Validation.Lotl {
 //\cond DO_NOT_DOCUMENT
     [NUnit.Framework.Category("IntegrationTest")]
-    internal class EULotlFetcherTest : ExtendedITextTest {
+    internal class EuropeanLotlFetcherTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER_LOTL = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation" + "/lotl/LotlState2025_08_08/";
 
         [NUnit.Framework.Test]
         public virtual void SimpleTestFetchesLotlCorrectly() {
-            LotlService service = new LotlService(new ValidatorChainBuilder().WithLotlFetchingProperties(new LotlFetchingProperties
-                (new IgnoreCountrySpecificCertificates())));
-            service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL));
-            EuropeanLotlFetcher fetcher = new EuropeanLotlFetcher(service);
+            EuropeanLotlFetcher fetcher;
+            using (LotlService service = new LotlService(new LotlFetchingProperties(new RemoveOnFailingCountryData()))
+                ) {
+                service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL));
+                fetcher = new EuropeanLotlFetcher(service);
+            }
             NUnit.Framework.Assert.IsNotNull(fetcher);
             EuropeanLotlFetcher.Result result = fetcher.Fetch();
             NUnit.Framework.Assert.IsNotNull(result);
@@ -49,9 +50,11 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void LoadReloadsTheLotl() {
-            LotlService service = new LotlService(new ValidatorChainBuilder().WithLotlFetchingProperties(new LotlFetchingProperties
-                (new IgnoreCountrySpecificCertificates())));
-            EuropeanLotlFetcher fetcher = new EuropeanLotlFetcher(service);
+            EuropeanLotlFetcher fetcher;
+            using (LotlService service = new LotlService(new LotlFetchingProperties(new RemoveOnFailingCountryData()))
+                ) {
+                fetcher = new EuropeanLotlFetcher(service);
+            }
             EuropeanLotlFetcher.Result result = fetcher.Fetch();
             NUnit.Framework.Assert.IsNotNull(result);
             EuropeanLotlFetcher.Result result2 = fetcher.Fetch();
@@ -59,18 +62,20 @@ namespace iText.Signatures.Validation.Lotl {
         }
 
         [NUnit.Framework.Test]
-        public virtual void DummmyRetrieverCausesException() {
-            LotlService service = new LotlService(new ValidatorChainBuilder().WithLotlFetchingProperties(new LotlFetchingProperties
-                (new IgnoreCountrySpecificCertificates()))).WithCustomResourceRetriever(new _IResourceRetriever_81());
-            EuropeanLotlFetcher fetcher = new EuropeanLotlFetcher(service);
+        public virtual void DummyRetrieverCausesException() {
+            EuropeanLotlFetcher fetcher;
+            using (LotlService service = new LotlService(new LotlFetchingProperties(new RemoveOnFailingCountryData()))
+                .WithCustomResourceRetriever(new _IResourceRetriever_78())) {
+                fetcher = new EuropeanLotlFetcher(service);
+            }
             EuropeanLotlFetcher.Result result = fetcher.Fetch();
             NUnit.Framework.Assert.IsNotNull(result);
             NUnit.Framework.Assert.IsNull(result.GetLotlXml());
             NUnit.Framework.Assert.IsFalse(result.GetLocalReport().GetLogs().IsEmpty());
         }
 
-        private sealed class _IResourceRetriever_81 : IResourceRetriever {
-            public _IResourceRetriever_81() {
+        private sealed class _IResourceRetriever_78 : IResourceRetriever {
+            public _IResourceRetriever_78() {
             }
 
             public Stream GetInputStreamByUrl(Uri url) {

@@ -36,6 +36,9 @@ namespace iText.Signatures.Validation.Lotl {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
+        private static readonly String SOURCE_FOLDER_LOTL_FILES = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation" + "/lotl/LotlState2025_08_08/";
+
         private static IX509Certificate crlRootCert;
 
         [NUnit.Framework.OneTimeSetUp]
@@ -45,7 +48,7 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void CheckCertificateTest() {
-            LotlTrustedStore store = new ValidatorChainBuilder().GetLotlTrustedstore();
+            LotlTrustedStore store = new ValidatorChainBuilder().GetLotlTrustedStore();
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
@@ -63,7 +66,7 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void CheckCertificateWithValidationContextChainTest() {
-            LotlTrustedStore store = new ValidatorChainBuilder().GetLotlTrustedstore();
+            LotlTrustedStore store = new ValidatorChainBuilder().GetLotlTrustedStore();
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/Certstatus/CRL");
@@ -85,7 +88,7 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void IncorrectContextTest() {
-            LotlTrustedStore store = new ValidatorChainBuilder().GetLotlTrustedstore();
+            LotlTrustedStore store = new ValidatorChainBuilder().GetLotlTrustedStore();
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/TSA/QTST");
@@ -103,7 +106,7 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void ServiceTypeNotRecognizedTest() {
-            LotlTrustedStore store = new ValidatorChainBuilder().GetLotlTrustedstore();
+            LotlTrustedStore store = new ValidatorChainBuilder().GetLotlTrustedStore();
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("invalid service type");
@@ -121,7 +124,7 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void IncorrectTimeBeforeValidTest() {
-            LotlTrustedStore store = new ValidatorChainBuilder().GetLotlTrustedstore();
+            LotlTrustedStore store = new ValidatorChainBuilder().GetLotlTrustedStore();
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
@@ -139,7 +142,7 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void IncorrectTimeAfterValidTest() {
-            LotlTrustedStore store = new ValidatorChainBuilder().GetLotlTrustedstore();
+            LotlTrustedStore store = new ValidatorChainBuilder().GetLotlTrustedStore();
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
@@ -156,7 +159,7 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void CheckCertificateWithCorrectExtensionScopeTest() {
-            LotlTrustedStore store = new ValidatorChainBuilder().GetLotlTrustedstore();
+            LotlTrustedStore store = new ValidatorChainBuilder().GetLotlTrustedStore();
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
@@ -177,7 +180,7 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void CheckCertificateWithCorrectExtensionScope2Test() {
-            LotlTrustedStore store = new ValidatorChainBuilder().GetLotlTrustedstore();
+            LotlTrustedStore store = new ValidatorChainBuilder().GetLotlTrustedStore();
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
@@ -200,7 +203,7 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void CheckCertificateWithIncorrectExtensionScopeTest() {
-            LotlTrustedStore store = new ValidatorChainBuilder().GetLotlTrustedstore();
+            LotlTrustedStore store = new ValidatorChainBuilder().GetLotlTrustedStore();
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(crlRootCert);
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
@@ -217,6 +220,48 @@ namespace iText.Signatures.Validation.Lotl {
                 (1).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(LotlTrustedStore.EXTENSIONS_CHECK).WithMessage
                 (LotlTrustedStore.SCOPE_SPECIFIED_WITH_INVALID_TYPES, (l) => crlRootCert.GetSubjectDN(), (k) => "http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForWebSiteAuthentication"
                 ).WithCertificate(crlRootCert)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateTrustedStoreWithValidLotl() {
+            ValidatorChainBuilder chainBuilder = new ValidatorChainBuilder();
+            chainBuilder.TrustEuropeanLotl(true);
+            LotlFetchingProperties fetchingProperties = new LotlFetchingProperties(new RemoveOnFailingCountryData());
+            using (LotlService lotlService = new LotlService(fetchingProperties)) {
+                lotlService.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
+                chainBuilder.WithLotlService(() => lotlService);
+                lotlService.InitializeCache();
+            }
+            LotlTrustedStore trustedStore = chainBuilder.GetLotlTrustedStore();
+            NUnit.Framework.Assert.IsFalse(trustedStore.GetCertificates().IsEmpty());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateTrustedStoreWithInvalidLotl() {
+            ValidatorChainBuilder chainBuilder = new ValidatorChainBuilder();
+            chainBuilder.TrustEuropeanLotl(true);
+            LotlFetchingProperties fetchingProperties = new LotlFetchingProperties(new RemoveOnFailingCountryData());
+            using (LotlService lotlService = new LotlService(fetchingProperties)) {
+                lotlService.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
+                chainBuilder.WithLotlService(() => lotlService);
+                lotlService.InitializeCache();
+                LotlValidator invalidValidator = new _LotlValidator_341(lotlService);
+                lotlService.WithLotlValidator(() => invalidValidator);
+            }
+            LotlTrustedStore trustedStore = chainBuilder.GetLotlTrustedStore();
+            NUnit.Framework.Assert.IsTrue(trustedStore.GetCertificates().IsEmpty());
+        }
+
+        private sealed class _LotlValidator_341 : LotlValidator {
+            public _LotlValidator_341(LotlService baseArg1)
+                : base(baseArg1) {
+            }
+
+            public override ValidationReport Validate() {
+                ValidationReport report = new ValidationReport();
+                report.AddReportItem(new ReportItem("check", "test invalid", ReportItem.ReportItemStatus.INVALID));
+                return report;
+            }
         }
     }
 //\endcond

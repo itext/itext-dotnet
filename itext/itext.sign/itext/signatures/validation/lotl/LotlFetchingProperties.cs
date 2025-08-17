@@ -27,10 +27,10 @@ using iText.Kernel.Exceptions;
 using iText.Signatures.Exceptions;
 
 namespace iText.Signatures.Validation.Lotl {
-    /// <summary>Class which stores properties related to Lotl (List of Trusted Lists) fetching and validation process.
+    /// <summary>Class which stores properties related to LOTL (List of Trusted Lists) fetching and validation process.
     ///     </summary>
     public class LotlFetchingProperties {
-        private readonly IOnCountryFetchFailureStrategy onCountryFetchFailureStrategy;
+        private readonly IOnFailingCountryLotlData onCountryFetchFailureStrategy;
 
         private ICollection<String> ignoredSchemaNames = new HashSet<String>();
 
@@ -38,16 +38,16 @@ namespace iText.Signatures.Validation.Lotl {
 
         private HashSet<String> schemaNames = new HashSet<String>();
 
-        //default time out for invalidating cache is  24 hours in milliseconds
+        // Default timeout for invalidating cache is 24 hours in milliseconds.
         private long staleNessInMillis = 24L * 60L * 60L * 1000L;
 
         private Func<long, long> refreshIntervalCalculator = (stalenessTime) => {
             // This function can be used to set a custom cache refresh timer based on the staleness time.
-            // For now, we take 70% of the staleness time as the refresh interval.
+            // For now, we take 23% of the staleness time as the refresh interval.
             if (stalenessTime <= 0) {
                 throw new PdfException(SignExceptionMessageConstant.STALENESS_MUST_BE_POSITIVE);
             }
-            double PERCENTAGE = 0.7D;
+            double PERCENTAGE = 0.23D;
             return (long)(stalenessTime * PERCENTAGE);
         }
         ;
@@ -56,16 +56,31 @@ namespace iText.Signatures.Validation.Lotl {
         /// Creates an instance of
         /// <see cref="LotlFetchingProperties"/>.
         /// </summary>
-        /// <param name="countryFetchFailureStrategy">strategy to be used when fetching a country specific Lotl fails</param>
-        public LotlFetchingProperties(IOnCountryFetchFailureStrategy countryFetchFailureStrategy) {
+        /// <remarks>
+        /// Creates an instance of
+        /// <see cref="LotlFetchingProperties"/>.
+        /// See
+        /// <see cref="IOnFailingCountryLotlData"/>
+        /// for more details.
+        /// </remarks>
+        /// <param name="countryFetchFailureStrategy">strategy to be used when fetching of a country specific LOTL fails
+        ///     </param>
+        public LotlFetchingProperties(IOnFailingCountryLotlData countryFetchFailureStrategy) {
             this.onCountryFetchFailureStrategy = countryFetchFailureStrategy;
         }
 
-        /// <summary>Adds schema name (usually two letters) of a country which shall be used during Lotl fetching.</summary>
+        /// <summary>Adds schema name (usually two letters) of a country which shall be used during LOTL fetching.</summary>
         /// <remarks>
-        /// Adds schema name (usually two letters) of a country which shall be used during Lotl fetching.
+        /// Adds schema name (usually two letters) of a country which shall be used during LOTL fetching.
         /// <para />
-        /// If no schema names are added, all country specific Lotl files will be used.
+        /// This method cannot be used together with
+        /// <see cref="SetCountryNamesToIgnore(System.String[])"/>.
+        /// <para />
+        /// If no schema names are added or ignored, all country specific LOTL files will be used.
+        /// <para />
+        /// Most of the country names are present in
+        /// <see cref="LotlCountryCodeConstants"/>
+        /// class.
         /// </remarks>
         /// <param name="countryNames">schema names of countries to use</param>
         /// <returns>
@@ -82,10 +97,18 @@ namespace iText.Signatures.Validation.Lotl {
             return this;
         }
 
-        /// <summary>Adds schema name (usually two letters) of a country which shall be ignored during Lotl fetching.</summary>
+        /// <summary>Adds schema name (usually two letters) of a country which shall be ignored during LOTL fetching.</summary>
         /// <remarks>
-        /// Adds schema name (usually two letters) of a country which shall be ignored during Lotl fetching.
+        /// Adds schema name (usually two letters) of a country which shall be ignored during LOTL fetching.
         /// <para />
+        /// This method cannot be used together with
+        /// <see cref="SetCountryNames(System.String[])"/>.
+        /// <para />
+        /// If no schema names are added or ignored, all country specific LOTL files will be used.
+        /// <para />
+        /// Most of the country names are present in
+        /// <see cref="LotlCountryCodeConstants"/>
+        /// class.
         /// </remarks>
         /// <param name="countryNamesToIgnore">countries to ignore</param>
         /// <returns>
@@ -102,33 +125,51 @@ namespace iText.Signatures.Validation.Lotl {
             return this;
         }
 
-        /// <summary>Get the cache staleness in milliseconds.</summary>
+        /// <summary>Get the cache staleness threshold value in milliseconds.</summary>
         /// <returns>a set cache staleness in milliseconds.</returns>
         public virtual long GetCacheStalenessInMilliseconds() {
             return staleNessInMillis;
         }
 
-        /// <summary>Sets the cache staleness in milliseconds.</summary>
+        /// <summary>Sets the allowed staleness of cached EU trusted list entries in milliseconds.</summary>
         /// <remarks>
-        /// Sets the cache staleness in milliseconds.
+        /// Sets the allowed staleness of cached EU trusted list entries in milliseconds.
         /// <para />
-        /// This value determines how long the cache will be considered valid before it is refreshed.
-        /// If the cache is older than this value, it will be refreshed.
+        /// This value determines how long the cached EU trusted lists certificates will be considered
+        /// valid to be used in the signatures validation if they are not updated. The cached entries are attempted
+        /// to be updated regularly according to
+        /// <see cref="SetRefreshIntervalCalculator(System.Func<long, long>)"/>
+        /// configuration.
+        /// If the update fails for some reason and the configured staleness threshold for the cached entry is
+        /// eventually reached then the
+        /// <see cref="IOnFailingCountryLotlData"/>
+        /// strategy instance provided in the
+        /// <see cref="LotlFetchingProperties(IOnFailingCountryLotlData)"/>
+        /// will be invoked.
         /// <para />
         /// The default value is 24 hours (24 * 60 * 60 * 1000 milliseconds).
+        /// <para />
+        /// You can set this property to positive infinity in order to never consider the certificates stale and to keep
+        /// using them in validation even if they are not updated. Consider updating the
+        /// <see cref="SetRefreshIntervalCalculator(System.Func<long, long>)"/>
+        /// to return static value in this case though.
+        /// <para />
+        /// See
+        /// <see cref="IOnFailingCountryLotlData"/>
+        /// for more details.
         /// </remarks>
-        /// <param name="staleNessInMillis">the staleness time in milliseconds</param>
+        /// <param name="stalenessInMillis">the staleness time in milliseconds</param>
         /// <returns>
         /// this same
         /// <see cref="LotlFetchingProperties"/>
         /// instance
         /// </returns>
         public virtual iText.Signatures.Validation.Lotl.LotlFetchingProperties SetCacheStalenessInMilliseconds(long
-             staleNessInMillis) {
-            if (staleNessInMillis <= 0) {
+             stalenessInMillis) {
+            if (stalenessInMillis <= 0) {
                 throw new PdfException(SignExceptionMessageConstant.STALENESS_MUST_BE_POSITIVE);
             }
-            this.staleNessInMillis = staleNessInMillis;
+            this.staleNessInMillis = stalenessInMillis;
             return this;
         }
 
@@ -152,35 +193,41 @@ namespace iText.Signatures.Validation.Lotl {
         /// Sets a custom cache refresh timer function. This function will be used to determine the refresh interval
         /// based on the staleness time.
         /// <para />
-        /// By default, it takes 70% of the staleness time as the refresh interval.
-        /// So if the staleness time is 24 hours, the refresh interval will be set to 16.8 hours. Which means the cache will
-        /// be refreshed every 16.8 hours.
+        /// By default, it takes 23% of the staleness time as the refresh interval.
+        /// So if the staleness time is 24 hours, the refresh interval will be set to  5.52 hours.
         /// </remarks>
         /// <param name="refreshIntervalCalculator">
         /// a function that takes the staleness time in milliseconds and returns the refresh
         /// interval in milliseconds.
         /// </param>
-        public virtual void SetRefreshIntervalCalculator(Func<long, long> refreshIntervalCalculator) {
+        /// <returns>
+        /// this same
+        /// <see cref="LotlFetchingProperties"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Signatures.Validation.Lotl.LotlFetchingProperties SetRefreshIntervalCalculator(Func<long, long>
+             refreshIntervalCalculator) {
             this.refreshIntervalCalculator = refreshIntervalCalculator;
+            return this;
         }
 
-        /// <summary>Gets the strategy to be used when fetching a country specific Lotl fails.</summary>
-        /// <returns>the strategy to be used when fetching a country specific Lotl fails</returns>
-        public virtual IOnCountryFetchFailureStrategy GetOnCountryFetchFailureStrategy() {
+        /// <summary>Gets the strategy to be used when fetching a country specific LOTL fails.</summary>
+        /// <returns>the strategy to be used when fetching a country specific LOTL fails</returns>
+        public virtual IOnFailingCountryLotlData GetOnCountryFetchFailureStrategy() {
             return onCountryFetchFailureStrategy;
         }
 
-//\cond DO_NOT_DOCUMENT
-        internal virtual ICollection<String> GetServiceTypes() {
-            return JavaCollectionsUtil.UnmodifiableSet(serviceTypes);
-        }
-//\endcond
-
-        /// <summary>Adds service type identifier which shall be used during country specific Lotl fetching.</summary>
+        /// <summary>Adds service type identifier which shall be used during country specific LOTL fetching.</summary>
         /// <remarks>
-        /// Adds service type identifier which shall be used during country specific Lotl fetching.
+        /// Adds service type identifier which shall be used during country specific LOTL fetching.
         /// <para />
-        /// If no service type identifiers are added, all certificates in country specific Lotl files will be used.
+        /// If no service type identifiers are added,
+        /// all service types from
+        /// <see cref="ServiceTypeIdentifiersConstants"/>
+        /// will be used.
+        /// <para />
+        /// Only values supported by this logic are predefined in
+        /// <see cref="ServiceTypeIdentifiersConstants"/>.
         /// </remarks>
         /// <param name="serviceType">
         /// service type identifier as a
@@ -196,6 +243,12 @@ namespace iText.Signatures.Validation.Lotl {
             this.serviceTypes = new HashSet<String>(JavaUtil.ArraysAsList(serviceType));
             return this;
         }
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual ICollection<String> GetServiceTypes() {
+            return JavaCollectionsUtil.UnmodifiableSet(serviceTypes);
+        }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>Checks if the schema should be processed based on the current configuration.</summary>

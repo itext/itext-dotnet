@@ -39,13 +39,14 @@ namespace iText.Signatures.Validation {
         internal const String GRANTED_NATIONALLY =
             "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/recognisedatnationallevel";
         internal const String ACCREDITED = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/accredited";
+        internal const String SET_BY_NATIONAL_LAW = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/setbynationallaw";
         private static readonly HashSet<String> validStatuses = new HashSet<String>();
 
-        static ServiceChronologicalInfo()
-        {
+        static ServiceChronologicalInfo() {
             validStatuses.Add(GRANTED);
             validStatuses.Add(GRANTED_NATIONALLY);
             validStatuses.Add(ACCREDITED);
+            validStatuses.Add(SET_BY_NATIONAL_LAW);
         }
 
         internal ServiceChronologicalInfo() {

@@ -69,16 +69,13 @@ namespace iText.Signatures.Validation.Lotl {
         /// Creates
         /// <see cref="XmlSignatureValidator"/>
         /// instance. This constructor shall not be used directly.
-        /// Instead, in order to create such instance
-        /// <see cref="iText.Signatures.Validation.ValidatorChainBuilder.GetXmlSignatureValidator()"/>
-        /// shall be used.
         /// </remarks>
         /// <param name="trustedCertificatesStore">
         /// 
         /// <see cref="iText.Signatures.Validation.TrustedCertificatesStore"/>
         /// which contains trusted certificates
         /// </param>
-        public XmlSignatureValidator(TrustedCertificatesStore trustedCertificatesStore) {
+        protected internal XmlSignatureValidator(TrustedCertificatesStore trustedCertificatesStore) {
             this.trustedCertificatesStore = trustedCertificatesStore;
         }
 
@@ -96,7 +93,7 @@ namespace iText.Signatures.Validation.Lotl {
         protected internal virtual ValidationReport Validate(Stream xmlDocumentInputStream) {
             ValidationReport report = new ValidationReport();
             CertificateSelector keySelector = new CertificateSelector();
-            try {
+            SafeCalling.OnExceptionLog(() => {
                 bool coreValidity = XmlValidationUtils.CreateXmlDocumentAndCheckValidity(xmlDocumentInputStream, keySelector
                     );
                 if (!coreValidity) {
@@ -104,10 +101,8 @@ namespace iText.Signatures.Validation.Lotl {
                         .INVALID));
                 }
             }
-            catch (Exception e) {
-                report.AddReportItem(new ReportItem(XML_SIGNATURE_VERIFICATION, XML_SIGNATURE_VERIFICATION_EXCEPTION, e, ReportItem.ReportItemStatus
-                    .INVALID));
-            }
+            , report, (e) => new ReportItem(XML_SIGNATURE_VERIFICATION, XML_SIGNATURE_VERIFICATION_EXCEPTION, e, ReportItem.ReportItemStatus
+                .INVALID));
             if (report.GetValidationResult() == ValidationReport.ValidationResult.INVALID) {
                 return report;
             }

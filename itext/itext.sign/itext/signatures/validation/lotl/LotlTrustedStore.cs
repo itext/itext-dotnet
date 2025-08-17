@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
+using iText.Signatures.Exceptions;
 using iText.Signatures.Validation;
 using iText.Signatures.Validation.Context;
 using iText.Signatures.Validation.Report;
@@ -84,61 +85,56 @@ namespace iText.Signatures.Validation.Lotl {
             ICollection<CertificateSource> signScope = new HashSet<CertificateSource>(JavaCollectionsUtil.SingletonList
                 (CertificateSource.SIGNER_CERT));
             IDictionary<String, ICollection<CertificateSource>> tempServiceTypeIdentifiersScope = new Dictionary<String
-                , ICollection<CertificateSource>>();
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/CA/QC", crlOcspSignScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/CA/PKC", crlOcspSignScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/Certstatus/OCSP/QC", ocspScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/Certstatus/CRL/QC", crlScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/TSA/QTST", timestampScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/EDS/Q", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/EDS/REM/Q", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/PSES/Q", timestampScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/QESValidation/Q", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/RemoteQSigCDManagement/Q", signScope
+                , ICollection<CertificateSource>>(ServiceTypeIdentifiersConstants.GetAllValues().Count);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.CA_QC, crlOcspSignScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.CA_PKC, crlOcspSignScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.OCSP_QC, ocspScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.CRL_QC, crlScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.TSA_QTST, timestampScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.EDS_Q, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.REM_Q, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.PSES_Q, timestampScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.QES_VALIDATION_Q, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.REMOTE_Q_SIG_CD_MANAGEMENT_Q, signScope
                 );
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/RemoteQSealCDManagement/Q", signScope
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.REMOTE_Q_SEAL_CD_MANAGEMENT_Q, signScope
                 );
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/EAA/Q", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/ElectronicArchiving/Q", signScope
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.EAA_Q, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.ELECTRONIC_ARCHIVING_Q, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.LEDGERS_Q, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.OCSP, crlScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.CRL, crlScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.TS, timestampScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.TSA_TSS_QC, timestampScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.TSA_TSS_ADES_Q_CAND_QES, timestampScope
                 );
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/Ledgers/Q", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/Certstatus/OCSP", crlScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/Certstatus/CRL", crlScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/TS/", timestampScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/TSA/TSS-QC", timestampScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/TSA/TSS-AdESQCandQES", timestampScope
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.PSES, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.ADES_VALIDATION, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.ADES_GENERATION, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.REMOTE_SIG_CD_MANAGEMENT, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.REMOTE_SEAL_CD_MANAGEMENT, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.EAA, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.ELECTRONIC_ARCHIVING, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.LEDGERS, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.PKC_VALIDATION, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.PKC_PRESERVATION, timestampScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.EAA_VALIDATION, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.TST_VALIDATION, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.EDS_VALIDATION, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.EAA_PUB_EAA, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.CERTS_FOR_OTHER_TYPES_OF_TS, signScope
                 );
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/PSES", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/AdESValidation", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/AdESGeneration", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/RemoteSigCDManagemen", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/RemoteSealCDManagement", signScope
-                );
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/EAA", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/ElectronicArchiving", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/Ledgers", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/PKCValidation", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/PKCPreservation", timestampScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/EAAValidation", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/TSTValidation", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/EDSValidation", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/EAA/Pub-EAA", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/PKCValidation/CertsforOtherTypesOfTS"
-                , signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/RA", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/RA/nothavingPKIid", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/SignaturePolicyAuthority", signScope
-                );
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/Archiv", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/Archiv/nothavingPKIid", signScope
-                );
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/IdV", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/KEscrow", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/KEscrow/nothavingPKIid", signScope
-                );
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/PPwd", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/PPwd/nothavingPKIid", signScope);
-            tempServiceTypeIdentifiersScope.Put("http://uri.etsi.org/TrstSvc/Svctype/TLIssuer", signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.RA, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.RA_NOT_HAVING_PKI_ID, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.SIGNATURE_POLICY_AUTHORITY, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.ARCHIV, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.ARCHIV_NOT_HAVING_PKI_ID, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.ID_V, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.K_ESCROW, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.K_ESCROW_NOT_HAVING_PKI_ID, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.PP_WD, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.PP_WD_NOT_HAVING_PKI_ID, signScope);
+            tempServiceTypeIdentifiersScope.Put(ServiceTypeIdentifiersConstants.TL_ISSUER, signScope);
             serviceTypeIdentifiersScope = JavaCollectionsUtil.UnmodifiableMap(tempServiceTypeIdentifiersScope);
         }
 
@@ -151,7 +147,7 @@ namespace iText.Signatures.Validation.Lotl {
         /// <see cref="LotlTrustedStore"/>
         /// . This constructor shall not be used directly.
         /// Instead, in order to create such instance
-        /// <see cref="iText.Signatures.Validation.ValidatorChainBuilder.GetLotlTrustedstore()"/>
+        /// <see cref="iText.Signatures.Validation.ValidatorChainBuilder.GetLotlTrustedStore()"/>
         /// shall be used.
         /// </remarks>
         /// <param name="builder">
@@ -160,8 +156,12 @@ namespace iText.Signatures.Validation.Lotl {
         /// which was responsible for creation
         /// </param>
         public LotlTrustedStore(ValidatorChainBuilder builder) {
-            if (builder.GetLotlFetchingProperties() != null) {
-                LotlValidator lotlValidator = builder.GetLotlValidator();
+            if (builder.IsEuropeanLotlTrusted()) {
+                LotlService lotlService = builder.GetLotlService();
+                if (lotlService == null || !lotlService.IsCacheInitialized()) {
+                    throw new SafeCallingAvoidantException(SignExceptionMessageConstant.CACHE_NOT_INITIALIZED);
+                }
+                LotlValidator lotlValidator = builder.GetLotlService().GetLotlValidator();
                 this.report = lotlValidator.Validate();
                 if (report.GetValidationResult() == ValidationReport.ValidationResult.VALID) {
                     AddCertificatesWithContext(MapIServiceContextToCountry(lotlValidator.GetNationalTrustedCertificates()));
@@ -226,24 +226,25 @@ namespace iText.Signatures.Validation.Lotl {
                     .GetExtensions())) {
                     continue;
                 }
-                ICollection<CertificateSource> currentScope = serviceTypeIdentifiersScope.Get(currentContext.GetServiceType
+                ICollection<CertificateSource> currentScope = GetCertificateSourceBasedOnServiceType(currentContext.GetServiceType
                     ());
                 if (currentScope == null) {
                     validationReportItems.Add(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format
                         (CERTIFICATE_SERVICE_TYPE_NOT_RECOGNIZED, certificate.GetSubjectDN(), currentContext.GetServiceType())
                         , ReportItem.ReportItemStatus.INFO));
-                    continue;
                 }
-                foreach (CertificateSource source in currentScope) {
-                    if (ValidationContext.CheckIfContextChainContainsCertificateSource(context, source)) {
-                        result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format(CERTIFICATE_TRUSTED
-                            , certificate.GetSubjectDN()), ReportItem.ReportItemStatus.INFO));
-                        return true;
-                    }
-                    else {
-                        validationReportItems.Add(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format
-                            (CERTIFICATE_TRUSTED_FOR_DIFFERENT_CONTEXT, certificate.GetSubjectDN(), currentContext.GetServiceType(
-                            )), ReportItem.ReportItemStatus.INFO));
+                else {
+                    foreach (CertificateSource source in currentScope) {
+                        if (ValidationContext.CheckIfContextChainContainsCertificateSource(context, source)) {
+                            result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format(CERTIFICATE_TRUSTED
+                                , certificate.GetSubjectDN()), ReportItem.ReportItemStatus.INFO));
+                            return true;
+                        }
+                        else {
+                            validationReportItems.Add(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format
+                                (CERTIFICATE_TRUSTED_FOR_DIFFERENT_CONTEXT, certificate.GetSubjectDN(), currentContext.GetServiceType(
+                                )), ReportItem.ReportItemStatus.INFO));
+                        }
                     }
                 }
             }
@@ -253,23 +254,34 @@ namespace iText.Signatures.Validation.Lotl {
             return false;
         }
 
-//\cond DO_NOT_DOCUMENT
-        internal static IList<CountryServiceContext> MapIServiceContextToCountry(IList<IServiceContext> serviceContexts
+        /// <summary>
+        /// Gets set of
+        /// <see cref="iText.Signatures.Validation.Context.CertificateSource"/>
+        /// items based on service type identifier of a given certificate in LOTL file.
+        /// </summary>
+        /// <remarks>
+        /// Gets set of
+        /// <see cref="iText.Signatures.Validation.Context.CertificateSource"/>
+        /// items based on service type identifier of a given certificate in LOTL file.
+        /// <para />
+        /// Certificate source defines in which context this certificate is supposed to be trusted.
+        /// </remarks>
+        /// <param name="serviceType">
+        /// 
+        /// <see cref="System.String"/>
+        /// representing service type identifier field in LOTL file.
+        /// </param>
+        /// <returns>
+        /// set of
+        /// <see cref="iText.Signatures.Validation.Context.CertificateSource"/>
+        /// representing contexts, in which certificate is supposed to be trusted.
+        /// </returns>
+        protected internal virtual ICollection<CertificateSource> GetCertificateSourceBasedOnServiceType(String serviceType
             ) {
-            IList<CountryServiceContext> list = new List<CountryServiceContext>();
-            foreach (IServiceContext serviceContext in serviceContexts) {
-                CountryServiceContext countryServiceContext = serviceContext is CountryServiceContext ? (CountryServiceContext
-                    )serviceContext : null;
-                if (countryServiceContext != null) {
-                    list.Add(countryServiceContext);
-                }
-            }
-            return list;
+            return serviceTypeIdentifiersScope.Get(serviceType);
         }
-//\endcond
 
-//\cond DO_NOT_DOCUMENT
-        /// <summary>Check if scope specified by extensions contains valid types.</summary>
+        /// <summary>Checks if scope specified by extensions contains valid types.</summary>
         /// <param name="reportItems">
         /// 
         /// <see cref="iText.Signatures.Validation.Report.ValidationReport"/>
@@ -286,8 +298,8 @@ namespace iText.Signatures.Validation.Lotl {
         /// that specify scope
         /// </param>
         /// <returns>false if extensions specify scope only with invalid types.</returns>
-        internal virtual bool IsScopeCorrectlySpecified(IList<ReportItem> reportItems, IX509Certificate certificate
-            , IList<AdditionalServiceInformationExtension> extensions) {
+        protected internal virtual bool IsScopeCorrectlySpecified(IList<ReportItem> reportItems, IX509Certificate 
+            certificate, IList<AdditionalServiceInformationExtension> extensions) {
             IList<ReportItem> currentReportItems = new List<ReportItem>();
             foreach (AdditionalServiceInformationExtension extension in extensions) {
                 if (extension.IsScopeValid()) {
@@ -305,6 +317,20 @@ namespace iText.Signatures.Validation.Lotl {
                 reportItems.AddAll(currentReportItems);
                 return false;
             }
+        }
+
+//\cond DO_NOT_DOCUMENT
+        internal static IList<CountryServiceContext> MapIServiceContextToCountry(IList<IServiceContext> serviceContexts
+            ) {
+            IList<CountryServiceContext> list = new List<CountryServiceContext>();
+            foreach (IServiceContext serviceContext in serviceContexts) {
+                CountryServiceContext countryServiceContext = serviceContext is CountryServiceContext ? (CountryServiceContext
+                    )serviceContext : null;
+                if (countryServiceContext != null) {
+                    list.Add(countryServiceContext);
+                }
+            }
+            return list;
         }
 //\endcond
 

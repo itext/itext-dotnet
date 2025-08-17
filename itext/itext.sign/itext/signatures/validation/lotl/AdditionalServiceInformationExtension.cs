@@ -24,8 +24,8 @@ using System;
 using System.Collections.Generic;
 
 namespace iText.Signatures.Validation.Lotl {
-//\cond DO_NOT_DOCUMENT
-    internal class AdditionalServiceInformationExtension {
+    /// <summary>Wrapper class for additional service information extension.</summary>
+    public class AdditionalServiceInformationExtension {
         private static readonly ICollection<String> invalidScopes = new HashSet<String>();
 
         private String uri;
@@ -34,10 +34,12 @@ namespace iText.Signatures.Validation.Lotl {
             invalidScopes.Add("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForWebSiteAuthentication");
         }
 
-//\cond DO_NOT_DOCUMENT
-        internal AdditionalServiceInformationExtension() {
+        /// <summary>
+        /// Creates empty instance of
+        /// <see cref="AdditionalServiceInformationExtension"/>.
+        /// </summary>
+        public AdditionalServiceInformationExtension() {
         }
-//\endcond
 
 //\cond DO_NOT_DOCUMENT
         // Empty constructor.
@@ -46,11 +48,17 @@ namespace iText.Signatures.Validation.Lotl {
         }
 //\endcond
 
-//\cond DO_NOT_DOCUMENT
-        internal virtual String GetUri() {
+        /// <summary>
+        /// Gets URI representing a value of
+        /// <see cref="AdditionalServiceInformationExtension"/>.
+        /// </summary>
+        /// <returns>
+        /// URI representing a value of
+        /// <see cref="AdditionalServiceInformationExtension"/>
+        /// </returns>
+        public virtual String GetUri() {
             return uri;
         }
-//\endcond
 
 //\cond DO_NOT_DOCUMENT
         internal virtual void SetUri(String uri) {
@@ -64,5 +72,4 @@ namespace iText.Signatures.Validation.Lotl {
         }
 //\endcond
     }
-//\endcond
 }

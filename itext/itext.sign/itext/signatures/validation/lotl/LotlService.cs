@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
@@ -44,52 +43,98 @@ namespace iText.Signatures.Validation.Lotl {
     /// Fetcher and Country-Specific Lotl Fetcher.
     /// It also allows for setting custom resource retrievers and cache timeouts.
     /// </remarks>
-    public class LotlService {
+    public class LotlService : IDisposable {
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.Validation.Lotl.LotlService
             ));
-
-        private ValidatorChainBuilder builder;
 
         //Services
         private LotlServiceCache cache;
 
         private EuropeanResourceFetcher europeanResourceFetcher = new EuropeanResourceFetcher();
 
-        private EuropeanLotlFetcher lotlByteFetcher = null;
+        private EuropeanLotlFetcher lotlByteFetcher;
 
-        private PivotFetcher pivotFetcher = null;
+        private PivotFetcher pivotFetcher;
 
-        private CountrySpecificLotlFetcher countrySpecificLotlFetcher = null;
+        private CountrySpecificLotlFetcher countrySpecificLotlFetcher;
 
         private bool cacheInitialized = false;
 
         private Timer cacheTimer = null;
 
-        private IResourceRetriever resourceRetriever = new DefaultResourceRetriever();
+        private IResourceRetriever resourceRetriever = new LotlService.LoggableResourceRetriever();
+
+        private Func<TrustedCertificatesStore, XmlSignatureValidator> xmlSignatureValidatorFactory;
+
+        private Func<LotlValidator> lotlValidatorFactory;
+
+        private readonly LotlFetchingProperties lotlFetchingProperties;
+
+//\cond DO_NOT_DOCUMENT
+        // Global service
+        internal static iText.Signatures.Validation.Lotl.LotlService GLOBAL_SERVICE;
+//\endcond
+
+        private static readonly Object GLOBAL_SERVICE_LOCK = new Object();
 
         /// <summary>
         /// Creates a new instance of
         /// <see cref="LotlService"/>.
         /// </summary>
-        /// <param name="builder">
-        /// the
-        /// <see cref="iText.Signatures.Validation.ValidatorChainBuilder"/>
-        /// used to build the validation chain
+        /// <param name="lotlFetchingProperties">
+        /// 
+        /// <see cref="LotlFetchingProperties"/>
+        /// to configure the way in which LOTL will be fetched
         /// </param>
-        public LotlService(ValidatorChainBuilder builder) {
-            long staleNessInMillis = builder.GetLotlFetchingProperties().GetCacheStalenessInMilliseconds();
-            WithChainBuilder(builder);
-            SetupTimer();
-            WithCustomResourceRetriever(new LotlService.LoggableResourceRetriever());
-            this.cache = new InMemoryLotlServiceCache(staleNessInMillis);
+        public LotlService(LotlFetchingProperties lotlFetchingProperties) {
+            this.lotlFetchingProperties = lotlFetchingProperties;
+            this.cache = new InMemoryLotlServiceCache(lotlFetchingProperties.GetCacheStalenessInMilliseconds(), lotlFetchingProperties
+                .GetOnCountryFetchFailureStrategy());
             this.lotlByteFetcher = new EuropeanLotlFetcher(this);
-            this.pivotFetcher = new PivotFetcher(this, builder);
+            this.pivotFetcher = new PivotFetcher(this);
             this.countrySpecificLotlFetcher = new CountrySpecificLotlFetcher(this);
+            this.xmlSignatureValidatorFactory = (trustedCertificatesStore) => BuildXmlSignatureValidator(trustedCertificatesStore
+                );
+            this.lotlValidatorFactory = () => BuildLotlValidator();
         }
 
-        /// <summary>Sets the cache for the Lotl service.</summary>
+        /// <summary>Initializes the global cache with the provided LotlFetchingProperties.</summary>
         /// <remarks>
-        /// Sets the cache for the Lotl service.
+        /// Initializes the global cache with the provided LotlFetchingProperties.
+        /// This method must be called before using the LotlService to ensure that the cache is set up.
+        /// <para />
+        /// If you are using a custom implementation of
+        /// <see cref="LotlService"/>
+        /// you can use the instance method.
+        /// </remarks>
+        /// <param name="lotlFetchingProperties">the LotlFetchingProperties to use for initializing the cache</param>
+        public static void InitializeGlobalCache(LotlFetchingProperties lotlFetchingProperties) {
+            lock (GLOBAL_SERVICE_LOCK) {
+                if (GLOBAL_SERVICE == null) {
+                    GLOBAL_SERVICE = new iText.Signatures.Validation.Lotl.LotlService(lotlFetchingProperties);
+                    GLOBAL_SERVICE.InitializeCache();
+                }
+                else {
+                    throw new PdfException(SignExceptionMessageConstant.CACHE_ALREADY_INITIALIZED);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets global static instance of
+        /// <see cref="LotlService"/>.
+        /// </summary>
+        /// <returns>
+        /// global static instance of
+        /// <see cref="LotlService"/>
+        /// </returns>
+        public static iText.Signatures.Validation.Lotl.LotlService GetGlobalService() {
+            return GLOBAL_SERVICE;
+        }
+
+        /// <summary>Sets the cache for the LotlService.</summary>
+        /// <remarks>
+        /// Sets the cache for the LotlService.
         /// <para />
         /// This method allows you to provide a custom implementation of
         /// <see cref="LotlServiceCache"/>
@@ -102,7 +147,7 @@ namespace iText.Signatures.Validation.Lotl {
         /// <see cref="LotlService"/>
         /// for method chaining
         /// </returns>
-        public virtual iText.Signatures.Validation.Lotl.LotlService WithCache(LotlServiceCache cache) {
+        public virtual iText.Signatures.Validation.Lotl.LotlService WithLotlServiceCache(LotlServiceCache cache) {
             this.cache = cache;
             return this;
         }
@@ -130,22 +175,23 @@ namespace iText.Signatures.Validation.Lotl {
 
         /// <summary>Initializes the cache with the latest Lotl data and related resources.</summary>
         public virtual void InitializeCache() {
+            SetupTimer();
             EuropeanLotlFetcher.Result mainLotlResult = lotlByteFetcher.Fetch();
             if (!mainLotlResult.GetLocalReport().GetFailures().IsEmpty()) {
-                //We throw on main Lotl fetch failure, so we don't proceed to pivot and country specific LOT fetches
+                //We throw on main Lotl fetch failure, so we don't proceed to pivot and country specific LOTL fetches
                 ReportItem reportItem = mainLotlResult.GetLocalReport().GetFailures()[0];
                 throw new PdfException(reportItem.GetMessage(), reportItem.GetExceptionCause());
             }
             EuropeanResourceFetcher.Result europeanResourceFetcherEUJournalCertificates = europeanResourceFetcher.GetEUJournalCertificates
                 ();
             PivotFetcher.Result pivotsResult = pivotFetcher.DownloadAndValidatePivotFiles(mainLotlResult.GetLotlXml(), 
-                europeanResourceFetcherEUJournalCertificates.GetCertificates(), builder.GetProperties());
+                europeanResourceFetcherEUJournalCertificates.GetCertificates());
             if (!pivotsResult.GetLocalReport().GetFailures().IsEmpty()) {
                 ReportItem failure = pivotsResult.GetLocalReport().GetFailures()[0];
                 throw new PdfException(failure.GetMessage(), failure.GetExceptionCause());
             }
             IDictionary<String, CountrySpecificLotlFetcher.Result> countrySpecificResults = countrySpecificLotlFetcher
-                .GetAndValidateCountrySpecificLotlFiles(mainLotlResult.GetLotlXml(), builder);
+                .GetAndValidateCountrySpecificLotlFiles(mainLotlResult.GetLotlXml(), this);
             IDictionary<String, CountrySpecificLotlFetcher.Result> resultToAddToCache = new Dictionary<String, CountrySpecificLotlFetcher.Result
                 >(countrySpecificResults.Count);
             foreach (KeyValuePair<String, CountrySpecificLotlFetcher.Result> entry in countrySpecificResults) {
@@ -155,8 +201,7 @@ namespace iText.Signatures.Validation.Lotl {
                     foreach (ReportItem log in countrySpecificResult.GetLocalReport().GetLogs()) {
                         log.SetStatus(ReportItem.ReportItemStatus.INFO);
                     }
-                    builder.GetLotlFetchingProperties().GetOnCountryFetchFailureStrategy().OnCountryFetchFailure(countrySpecificResult
-                        );
+                    lotlFetchingProperties.GetOnCountryFetchFailureStrategy().OnCountryFailure(countrySpecificResult);
                 }
                 resultToAddToCache.Put(entry.Key, countrySpecificResult);
             }
@@ -200,22 +245,54 @@ namespace iText.Signatures.Validation.Lotl {
         /// <see cref="LotlService"/>
         /// for method chaining
         /// </returns>
-        public virtual iText.Signatures.Validation.Lotl.LotlService WithEULotlFetcher(EuropeanLotlFetcher fetcher) {
+        public virtual iText.Signatures.Validation.Lotl.LotlService WithEuropeanLotlFetcher(EuropeanLotlFetcher fetcher
+            ) {
             this.lotlByteFetcher = fetcher;
             return this;
         }
 
-        /// <summary>Gets the resource retriever used by the Lotl service.</summary>
+        /// <summary>
+        /// Sets up factory which is responsible for
+        /// <see cref="XmlSignatureValidator"/>
+        /// creation.
+        /// </summary>
+        /// <param name="xmlSignatureValidatorFactory">
+        /// factory responsible for
+        /// <see cref="XmlSignatureValidator"/>
+        /// creation
+        /// </param>
         /// <returns>
-        /// the
-        /// <see cref="iText.IO.Resolver.Resource.IResourceRetriever"/>
-        /// instance used for fetching resources
+        /// the current instance of
+        /// <see cref="LotlService"/>
+        /// for method chaining
         /// </returns>
-        public virtual IResourceRetriever GetResourceRetriever() {
-            return resourceRetriever;
+        public virtual iText.Signatures.Validation.Lotl.LotlService WithXmlSignatureValidator(Func<TrustedCertificatesStore
+            , XmlSignatureValidator> xmlSignatureValidatorFactory) {
+            this.xmlSignatureValidatorFactory = xmlSignatureValidatorFactory;
+            return this;
         }
 
-        /// <summary>Sets the European Resource Fetcher for the Lotl service.</summary>
+        /// <summary>
+        /// Sets up factory which is responsible for
+        /// <see cref="LotlValidator"/>
+        /// creation.
+        /// </summary>
+        /// <param name="lotlValidatorFactory">
+        /// factory responsible for
+        /// <see cref="LotlValidator"/>
+        /// creation
+        /// </param>
+        /// <returns>
+        /// this same instance of
+        /// <see cref="LotlService"/>
+        /// </returns>
+        public virtual iText.Signatures.Validation.Lotl.LotlService WithLotlValidator(Func<LotlValidator> lotlValidatorFactory
+            ) {
+            this.lotlValidatorFactory = lotlValidatorFactory;
+            return this;
+        }
+
+        /// <summary>Sets the European Resource Fetcher for the LotlService.</summary>
         /// <param name="europeanResourceFetcher">the European Resource Fetcher to be used for fetching EU journal certificates
         ///     </param>
         /// <returns>
@@ -223,49 +300,59 @@ namespace iText.Signatures.Validation.Lotl {
         /// <see cref="LotlService"/>
         /// for method chaining
         /// </returns>
-        public virtual iText.Signatures.Validation.Lotl.LotlService WithDefaultEuropeanResourceFetcher(EuropeanResourceFetcher
+        public virtual iText.Signatures.Validation.Lotl.LotlService WithEuropeanResourceFetcher(EuropeanResourceFetcher
              europeanResourceFetcher) {
             this.europeanResourceFetcher = europeanResourceFetcher;
             return this;
         }
 
-        /// <summary>Sets up a timer to periodically refresh the Lotl cache.</summary>
+        /// <summary>
+        /// <inheritDoc/>.
+        /// </summary>
+        public virtual void Close() {
+            CancelTimer();
+        }
+
+        /// <summary>Sets up a timer to periodically refresh the LOTL cache.</summary>
         /// <remarks>
-        /// Sets up a timer to periodically refresh the Lotl cache.
+        /// Sets up a timer to periodically refresh the LOTL cache.
         /// <para />
         /// The timer will use the refresh interval calculated based on the stale-ness of the cache.
         /// If the cache is null, it will create a new instance of
         /// <see cref="InMemoryLotlServiceCache"/>.
         /// </remarks>
         protected internal virtual void SetupTimer() {
-            long staleNessInMillis = builder.GetLotlFetchingProperties().GetCacheStalenessInMilliseconds();
-            if (cache == null) {
-                cache = new InMemoryLotlServiceCache(staleNessInMillis);
-            }
+            long staleNessInMillis = lotlFetchingProperties.GetCacheStalenessInMilliseconds();
             TimerUtil.StopTimer(cacheTimer);
-            Func<long, long> cacheRefreshTimer = builder.GetLotlFetchingProperties().GetRefreshIntervalCalculator();
+            Func<long, long> cacheRefreshTimer = lotlFetchingProperties.GetRefreshIntervalCalculator();
             long refreshInterval = cacheRefreshTimer.Invoke(staleNessInMillis);
-            cacheTimer = TimerUtil.NewTimerWithRecurringTask(() => {
-                TryAndRefreshCache();
+            cacheTimer = TimerUtil.NewTimerWithRecurringTask(() => TryAndRefreshCache(), refreshInterval, refreshInterval
+                );
+        }
+
+        /// <summary>Cancels timer, if it was already set up.</summary>
+        protected internal virtual void CancelTimer() {
+            if (cacheTimer != null) {
+                TimerUtil.StopTimer(cacheTimer);
             }
-            , refreshInterval, refreshInterval);
         }
 
         /// <summary>
-        /// This method is intended to refresh the cache, it will try and download the latest Lotl data and update the
+        /// This method is intended to refresh the cache, it will try to download the latest LOTL data and update the
         /// cache accordingly.
         /// </summary>
         /// <remarks>
-        /// This method is intended to refresh the cache, it will try and download the latest Lotl data and update the
+        /// This method is intended to refresh the cache, it will try to download the latest LOTL data and update the
         /// cache accordingly.
         /// <para />
         /// The rules taken into account are:
-        /// Country specific Lotl files will be fetched, validated and updated per country. If country fails to fetch,
-        /// the cache will not be updated for that country.
+        /// Country specific LOTL files will be fetched, validated and updated per country. If country fails to fetch,
+        /// <see cref="LotlFetchingProperties.GetOnCountryFetchFailureStrategy()"/>
+        /// will be used to perform corresponding action.
         /// <para />
-        /// For the main Lotl file, if the fetch fails, the cache will not be updated. Also, we will NOT proceed to update
+        /// For the main LOTL file, if the fetch fails, the cache will not be updated. Also, we will NOT proceed to update
         /// the pivot files.
-        /// If the main Lotl file is fetched successfully, the pivot files will be fetched, validated and stored in the
+        /// If the main LOTL file is fetched successfully, the pivot files will be fetched, validated and stored in the
         /// cache.
         /// </remarks>
         protected internal virtual void TryAndRefreshCache() {
@@ -275,7 +362,8 @@ namespace iText.Signatures.Validation.Lotl {
             try {
                 EuropeanResourceFetcher.Result europeanResourceFetcherEUJournalCertificates = europeanResourceFetcher.GetEUJournalCertificates
                     ();
-                if (!europeanResourceFetcherEUJournalCertificates.GetLocalReport().GetFailures().IsEmpty()) {
+                if (europeanResourceFetcherEUJournalCertificates.GetLocalReport().GetValidationResult() != ValidationReport.ValidationResult
+                    .VALID) {
                     throw new PdfException(MessageFormatUtil.Format(SignExceptionMessageConstant.FAILED_TO_FETCH_EU_JOURNAL_CERTIFICATES
                         , europeanResourceFetcherEUJournalCertificates.GetLocalReport().GetFailures()[0].GetMessage()));
                 }
@@ -301,7 +389,7 @@ namespace iText.Signatures.Validation.Lotl {
                 //Only if the main Lotl was fetched successfully, we proceed to re-fetch the new pivot files.
                 try {
                     pivotResult = pivotFetcher.DownloadAndValidatePivotFiles(mainLotlResult.GetLotlXml(), europeanResourceFetcher
-                        .GetEUJournalCertificates().GetCertificates(), this.builder.GetProperties());
+                        .GetEUJournalCertificates().GetCertificates());
                     fetchPivotFilesSuccessful = pivotResult.GetLocalReport().GetValidationResult() == ValidationReport.ValidationResult
                         .VALID;
                 }
@@ -327,7 +415,7 @@ namespace iText.Signatures.Validation.Lotl {
             try {
                 //Try updating the country specific Lotl files.
                 allCountries = countrySpecificLotlFetcher.GetAndValidateCountrySpecificLotlFiles(mainLotlResult.GetLotlXml
-                    (), this.builder);
+                    (), this);
             }
             catch (Exception e) {
                 LOGGER.LogWarning(MessageFormatUtil.Format(SignLogMessageConstant.FAILED_TO_FETCH_COUNTRY_SPECIFIC_LOTL, e
@@ -351,39 +439,29 @@ namespace iText.Signatures.Validation.Lotl {
         }
 
 //\cond DO_NOT_DOCUMENT
-        internal iText.Signatures.Validation.Lotl.LotlService WithChainBuilder(ValidatorChainBuilder builder) {
-            this.builder = builder;
-            return this;
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
         internal virtual PivotFetcher.Result GetAndValidatePivotFiles(byte[] lotlXml, IList<IX509Certificate> certificates
-            , SignatureValidationProperties properties) {
+            ) {
             PivotFetcher.Result result = cache.GetPivotResult();
             if (result != null) {
                 return result;
             }
-            PivotFetcher.Result newResult = pivotFetcher.DownloadAndValidatePivotFiles(lotlXml, certificates, properties
-                );
+            PivotFetcher.Result newResult = pivotFetcher.DownloadAndValidatePivotFiles(lotlXml, certificates);
             cache.SetPivotResult(newResult);
             return newResult;
         }
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal virtual IList<CountrySpecificLotlFetcher.Result> GetCountrySpecificLotlFiles(byte[] lotlXml, ValidatorChainBuilder
-             builder) {
+        internal virtual IList<CountrySpecificLotlFetcher.Result> GetCountrySpecificLotlFiles(byte[] lotlXml) {
             IDictionary<String, CountrySpecificLotlFetcher.Result> result = cache.GetCountrySpecificLotls();
             if (result != null) {
                 return new List<CountrySpecificLotlFetcher.Result>(result.Values);
             }
             IDictionary<String, CountrySpecificLotlFetcher.Result> countrySpecificLotlResults = countrySpecificLotlFetcher
-                .GetAndValidateCountrySpecificLotlFiles(lotlXml, builder);
+                .GetAndValidateCountrySpecificLotlFiles(lotlXml, this);
             foreach (KeyValuePair<String, CountrySpecificLotlFetcher.Result> s in countrySpecificLotlResults) {
-                bool hasError = s.Value.GetLocalReport().GetLogs().Any((reportItem) => reportItem.GetStatus() == ReportItem.ReportItemStatus
-                    .INVALID);
-                if (!hasError || s.Value.GetLocalReport().GetLogs().IsEmpty()) {
+                bool successful = s.Value.GetLocalReport().GetValidationResult() == ValidationReport.ValidationResult.VALID;
+                if (successful || s.Value.GetLocalReport().GetLogs().IsEmpty()) {
                     cache.SetCountrySpecificLotlResult(s.Value);
                 }
             }
@@ -422,10 +500,64 @@ namespace iText.Signatures.Validation.Lotl {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal virtual ValidatorChainBuilder GetBuilder() {
-            return builder;
+        /// <summary>Gets the resource retriever used by the Lotl service.</summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.IO.Resolver.Resource.IResourceRetriever"/>
+        /// instance used for fetching resources
+        /// </returns>
+        internal virtual IResourceRetriever GetResourceRetriever() {
+            return resourceRetriever;
         }
 //\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Retrieves explicitly added or automatically created
+        /// <see cref="XmlSignatureValidator"/>
+        /// instance.
+        /// </summary>
+        /// <returns>
+        /// explicitly added or automatically created
+        /// <see cref="XmlSignatureValidator"/>
+        /// instance.
+        /// </returns>
+        internal virtual XmlSignatureValidator GetXmlSignatureValidator(TrustedCertificatesStore trustedCertificatesStore
+            ) {
+            return xmlSignatureValidatorFactory.Invoke(trustedCertificatesStore);
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual LotlFetchingProperties GetLotlFetchingProperties() {
+            return lotlFetchingProperties;
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Retrieves explicitly added or automatically created
+        /// <see cref="LotlValidator"/>
+        /// instance.
+        /// </summary>
+        /// <returns>
+        /// explicitly added or automatically created
+        /// <see cref="LotlValidator"/>
+        /// instance
+        /// </returns>
+        internal virtual LotlValidator GetLotlValidator() {
+            return lotlValidatorFactory();
+        }
+//\endcond
+
+        private static XmlSignatureValidator BuildXmlSignatureValidator(TrustedCertificatesStore trustedCertificatesStore
+            ) {
+            return new XmlSignatureValidator(trustedCertificatesStore);
+        }
+
+        private LotlValidator BuildLotlValidator() {
+            return new LotlValidator(this);
+        }
 
         private sealed class LoggableResourceRetriever : DefaultResourceRetriever {
             private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(LotlService));
@@ -438,6 +570,10 @@ namespace iText.Signatures.Validation.Lotl {
                 LOGGER.LogInformation(MessageFormatUtil.Format("Fetching resource from URL: {0}", url));
                 return base.GetByteArrayByUrl(url);
             }
+        }
+
+        void System.IDisposable.Dispose() {
+            Close();
         }
     }
 }

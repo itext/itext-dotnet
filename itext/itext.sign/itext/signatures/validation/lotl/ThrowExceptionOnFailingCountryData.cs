@@ -20,34 +20,41 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Commons.Utils;
+using iText.Signatures.Exceptions;
+
 namespace iText.Signatures.Validation.Lotl {
     /// <summary>
     /// This class implements the
-    /// <see cref="IOnCountryFetchFailureStrategy"/>
+    /// <see cref="IOnFailingCountryLotlData"/>
     /// interface and provides a strategy
-    /// for handling failures when fetching country-specific Lotl (List of Trusted Lists) files.
+    /// for handling failures when fetching country-specific trusted list .
     /// </summary>
     /// <remarks>
     /// This class implements the
-    /// <see cref="IOnCountryFetchFailureStrategy"/>
+    /// <see cref="IOnFailingCountryLotlData"/>
     /// interface and provides a strategy
-    /// for handling failures when fetching country-specific Lotl (List of Trusted Lists) files.
-    /// It ignores the failure of the specific country, and converts all report items to INFO status.
-    /// This way the country-specific Lotl is not used, the validation report is not invalid, but the items are still
-    /// preserved.
+    /// for handling failures when fetching country-specific trusted list .
+    /// <para />
+    /// It throws an
+    /// <see cref="InvalidLotlDataException"/>
+    /// if the specific country fetch or the trusted lists validation fails.
     /// </remarks>
-    public class IgnoreCountrySpecificCertificates : IOnCountryFetchFailureStrategy {
+    public class ThrowExceptionOnFailingCountryData : IOnFailingCountryLotlData {
         /// <summary>
-        /// Constructs an instance of
-        /// <see cref="IgnoreCountrySpecificCertificates"/>.
+        /// Creates an instance of
+        /// <see cref="ThrowExceptionOnFailingCountryData"/>.
         /// </summary>
-        public IgnoreCountrySpecificCertificates() {
+        public ThrowExceptionOnFailingCountryData() {
         }
 
-        //Empty constructor
+        // Default constructor
         /// <summary><inheritDoc/></summary>
-        public virtual void OnCountryFetchFailure(CountrySpecificLotlFetcher.Result fetchResult) {
+        public virtual void OnCountryFailure(CountrySpecificLotlFetcher.Result fetchResult) {
+            CountrySpecificLotl country = fetchResult.GetCountrySpecificLotl();
+            throw new InvalidLotlDataException(MessageFormatUtil.Format(SignExceptionMessageConstant.FAILED_TO_FETCH_LOTL_FOR_COUNTRY
+                , country.GetSchemeTerritory(), country.GetTslLocation(), fetchResult.GetLocalReport()), fetchResult.GetLocalReport
+                ());
         }
-        // we do nothing here, as we ignore the failure of the specific country
     }
 }

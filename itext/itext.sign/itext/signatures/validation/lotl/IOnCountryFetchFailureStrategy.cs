@@ -28,11 +28,11 @@ namespace iText.Signatures.Validation.Lotl {
     /// <para />
     /// We provide 2 default implementations out of the box:
     /// -
-    /// <see cref="IgnoreCountrySpecificCertificates"/>
+    /// <see cref="RemoveOnFailingCountryData"/>
     /// - which does nothing and won't
     /// throw an exception, but will not add any country-specific certificates to the trust store.
     /// -
-    /// <see cref="ThrowExceptionIOnFailureStrategy"/>
+    /// <see cref="ThrowExceptionOnFailingCountryData"/>
     /// - which will throw an exception
     /// if the fetching of a country-specific Lotl fails so that the validation process can be halted.
     /// </remarks>

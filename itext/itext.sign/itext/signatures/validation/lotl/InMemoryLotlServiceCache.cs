@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
-using iText.Kernel.Exceptions;
 using iText.Signatures.Exceptions;
 
 namespace iText.Signatures.Validation.Lotl {
@@ -39,6 +38,8 @@ namespace iText.Signatures.Validation.Lotl {
 
         private readonly Dictionary<String, long?> staleTracker = new Dictionary<String, long?>();
 
+        private readonly IOnFailingCountryLotlData strategy;
+
         private EuropeanLotlFetcher.Result lotlCache = null;
 
         private PivotFetcher.Result pivotCache = null;
@@ -48,8 +49,9 @@ namespace iText.Signatures.Validation.Lotl {
         private IDictionary<String, CountrySpecificLotlFetcher.Result> countrySpecificLotlCache = null;
 
 //\cond DO_NOT_DOCUMENT
-        internal InMemoryLotlServiceCache(long maxAllowedStalenessInMillis) {
+        internal InMemoryLotlServiceCache(long maxAllowedStalenessInMillis, IOnFailingCountryLotlData strategy) {
             this.maxAllowedStalenessInMillis = maxAllowedStalenessInMillis;
+            this.strategy = strategy;
         }
 //\endcond
 
@@ -72,7 +74,7 @@ namespace iText.Signatures.Validation.Lotl {
         public PivotFetcher.Result GetPivotResult() {
             lock (Lock) {
                 if (IsObjectStale(pivotCache.GenerateUniqueIdentifier())) {
-                    throw new PdfException("Pivot cache is stale.");
+                    throw new InvalidLotlDataException(SignExceptionMessageConstant.STALE_DATA_IS_USED);
                 }
                 return pivotCache;
             }
@@ -114,7 +116,7 @@ namespace iText.Signatures.Validation.Lotl {
         public EuropeanLotlFetcher.Result GetLotlResult() {
             lock (Lock) {
                 if (IsObjectStale(CACHE_KEY_LOTL)) {
-                    throw new PdfException(SignExceptionMessageConstant.STALE_DATA_IS_USED);
+                    throw new InvalidLotlDataException(SignExceptionMessageConstant.STALE_DATA_IS_USED);
                 }
                 return lotlCache;
             }
@@ -140,7 +142,7 @@ namespace iText.Signatures.Validation.Lotl {
         public EuropeanResourceFetcher.Result GetEUJournalCertificates() {
             lock (Lock) {
                 if (IsObjectStale(CACHE_KEY_EU_JOURNAL_CERTIFICATES)) {
-                    throw new PdfException(SignExceptionMessageConstant.STALE_DATA_IS_USED);
+                    throw new InvalidLotlDataException(SignExceptionMessageConstant.STALE_DATA_IS_USED);
                 }
                 return europeanResourceFetcherCache;
             }
@@ -164,7 +166,7 @@ namespace iText.Signatures.Validation.Lotl {
         private CountrySpecificLotlFetcher.Result GetCountrySpecificLotl(String country) {
             CountrySpecificLotlFetcher.Result result = this.countrySpecificLotlCache.Get(country);
             if (IsObjectStale(result.CreateUniqueIdentifier())) {
-                throw new PdfException(SignExceptionMessageConstant.STALE_DATA_IS_USED);
+                strategy.OnCountryFailure(result);
             }
             return result;
         }

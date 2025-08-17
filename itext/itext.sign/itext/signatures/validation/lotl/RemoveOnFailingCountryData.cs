@@ -21,38 +21,34 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using iText.Commons.Utils;
-using iText.Kernel.Exceptions;
-using iText.Signatures.Exceptions;
 
 namespace iText.Signatures.Validation.Lotl {
     /// <summary>
     /// This class implements the
-    /// <see cref="IOnCountryFetchFailureStrategy"/>
+    /// <see cref="IOnFailingCountryLotlData"/>
     /// interface and provides a strategy
     /// for handling failures when fetching country-specific Lotl (List of Trusted Lists) files.
     /// </summary>
     /// <remarks>
     /// This class implements the
-    /// <see cref="IOnCountryFetchFailureStrategy"/>
+    /// <see cref="IOnFailingCountryLotlData"/>
     /// interface and provides a strategy
     /// for handling failures when fetching country-specific Lotl (List of Trusted Lists) files.
-    /// <para />
-    /// It throws an exception if the specific country fetch or Lotl validation fails.
+    /// It ignores the failure of the specific country, and converts all report items to INFO status.
+    /// This way the country-specific Lotl is not used and the validation report is not invalid but can be indeterminate.
     /// </remarks>
-    public class ThrowExceptionIOnFailureStrategy : IOnCountryFetchFailureStrategy {
+    public class RemoveOnFailingCountryData : IOnFailingCountryLotlData {
         /// <summary>
-        /// Creates an instance of
-        /// <see cref="ThrowExceptionIOnFailureStrategy"/>.
+        /// Constructs an instance of
+        /// <see cref="RemoveOnFailingCountryData"/>.
         /// </summary>
-        public ThrowExceptionIOnFailureStrategy() {
+        public RemoveOnFailingCountryData() {
         }
 
-        // Default constructor
+        //Empty constructor
         /// <summary><inheritDoc/></summary>
-        public virtual void OnCountryFetchFailure(CountrySpecificLotlFetcher.Result fetchResult) {
-            CountrySpecificLotl country = fetchResult.GetCountrySpecificLotl();
-            throw new PdfException(MessageFormatUtil.Format(SignExceptionMessageConstant.FAILED_TO_FETCH_LOTL_FOR_COUNTRY
-                , country.GetSchemeTerritory(), country.GetTslLocation()), fetchResult.GetLocalReport());
+        public virtual void OnCountryFailure(CountrySpecificLotlFetcher.Result fetchResult) {
+            fetchResult.SetContexts(JavaCollectionsUtil.EmptyList<IServiceContext>());
         }
     }
 }

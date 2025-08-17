@@ -46,44 +46,26 @@ namespace iText.Signatures.Validation.Lotl {
 
         /// <summary>Fetches and validates country-specific Lotls from the provided Lotl XML.</summary>
         /// <param name="lotlXml">the byte array of the Lotl XML</param>
-        /// <param name="builder">
+        /// <param name="lotlService">
         /// the
-        /// <see cref="iText.Signatures.Validation.ValidatorChainBuilder"/>
-        /// used to build the validation chain
+        /// <see cref="LotlService"/>
+        /// used to build this fetcher
         /// </param>
         /// <returns>a map of results containing validated country-specific Lotls and their contexts</returns>
         public virtual IDictionary<String, CountrySpecificLotlFetcher.Result> GetAndValidateCountrySpecificLotlFiles
-            (byte[] lotlXml, ValidatorChainBuilder builder) {
+            (byte[] lotlXml, LotlService lotlService) {
             XmlCertificateRetriever certificateRetriever = new XmlCertificateRetriever(new XmlDefaultCertificateHandler
                 ());
             IList<IX509Certificate> lotlTrustedCertificates = certificateRetriever.GetCertificates(new MemoryStream(lotlXml
                 ));
             XmlCountryRetriever countryRetriever = new XmlCountryRetriever();
             IList<CountrySpecificLotl> countrySpecificLotl = countryRetriever.GetAllCountriesLotlFilesLocation(new MemoryStream
-                (lotlXml), builder.GetLotlFetchingProperties());
+                (lotlXml), lotlService.GetLotlFetchingProperties());
             TrustedCertificatesStore certificatesStore = new TrustedCertificatesStore();
             certificatesStore.AddGenerallyTrustedCertificates(lotlTrustedCertificates);
-            XmlSignatureValidator validator = builder.BuildXmlSignatureValidator(certificatesStore);
-            IList<Func<CountrySpecificLotlFetcher.Result>> tasks = new List<Func<CountrySpecificLotlFetcher.Result>>(countrySpecificLotl
-                .Count);
-            foreach (CountrySpecificLotl f in countrySpecificLotl) {
-                Func<CountrySpecificLotlFetcher.Result> resultCallable = () => {
-                    try {
-                        return new CountrySpecificLotlFetcher.CountryFetcher(service.GetResourceRetriever(), validator, f, builder
-                            .GetLotlFetchingProperties()).GetCountrySpecificLotl();
-                    }
-                    catch (Exception e) {
-                        CountrySpecificLotlFetcher.Result r = new CountrySpecificLotlFetcher.Result();
-                        r.GetLocalReport().AddReportItem(new ReportItem(LotlValidator.LOTL_VALIDATION, MessageFormatUtil.Format(SignExceptionMessageConstant
-                            .FAILED_TO_FETCH_LOTL_FOR_COUNTRY, f.GetSchemeTerritory(), f.GetTslLocation(), e.Message), e, ReportItem.ReportItemStatus
-                            .INVALID));
-                        r.SetCountrySpecificLotl(f);
-                        return r;
-                    }
-                }
-                ;
-                tasks.Add(resultCallable);
-            }
+            XmlSignatureValidator validator = lotlService.GetXmlSignatureValidator(certificatesStore);
+            IList<Func<CountrySpecificLotlFetcher.Result>> tasks = GetTasks(lotlService, countrySpecificLotl, validator
+                );
             Dictionary<String, CountrySpecificLotlFetcher.Result> countrySpecificCacheEntries = new Dictionary<String, 
                 CountrySpecificLotlFetcher.Result>();
             foreach (CountrySpecificLotlFetcher.Result result in ExecuteTasks(tasks)) {
@@ -104,6 +86,27 @@ namespace iText.Signatures.Validation.Lotl {
         protected internal virtual IList<CountrySpecificLotlFetcher.Result> ExecuteTasks(IList<Func<CountrySpecificLotlFetcher.Result
             >> tasks) {
             return MultiThreadingUtil.RunActionsParallel<CountrySpecificLotlFetcher.Result>(tasks, tasks.Count);
+        }
+
+        private IList<Func<CountrySpecificLotlFetcher.Result>> GetTasks(LotlService lotlService, IList<CountrySpecificLotl
+            > countrySpecificLotl, XmlSignatureValidator validator) {
+            IList<Func<CountrySpecificLotlFetcher.Result>> tasks = new List<Func<CountrySpecificLotlFetcher.Result>>(countrySpecificLotl
+                .Count);
+            foreach (CountrySpecificLotl f in countrySpecificLotl) {
+                Func<CountrySpecificLotlFetcher.Result> resultCallable = () => {
+                    ValidationReport report = new ValidationReport();
+                    CountrySpecificLotlFetcher.Result result = SafeCalling.OnExceptionLog(() => new CountrySpecificLotlFetcher.CountryFetcher
+                        (service.GetResourceRetriever(), validator, f, lotlService.GetLotlFetchingProperties()).GetCountrySpecificLotl
+                        (), new CountrySpecificLotlFetcher.Result().SetCountrySpecificLotl(f), report, (e) => new ReportItem(LotlValidator
+                        .LOTL_VALIDATION, MessageFormatUtil.Format(SignExceptionMessageConstant.FAILED_TO_FETCH_LOTL_FOR_COUNTRY
+                        , f.GetSchemeTerritory(), f.GetTslLocation(), e.Message), e, ReportItem.ReportItemStatus.INVALID));
+                    result.GetLocalReport().Merge(report);
+                    return result;
+                }
+                ;
+                tasks.Add(resultCallable);
+            }
+            return tasks;
         }
 
         /// <summary>Represents the result of fetching and validating country-specific Lotls.</summary>
@@ -156,8 +159,11 @@ namespace iText.Signatures.Validation.Lotl {
 
             /// <summary>Sets the country-specific Lotl that was fetched and validated.</summary>
             /// <param name="countrySpecificLotl">the CountrySpecificLotl object to set</param>
-            public virtual void SetCountrySpecificLotl(CountrySpecificLotl countrySpecificLotl) {
+            /// <returns>same result instance.</returns>
+            public virtual CountrySpecificLotlFetcher.Result SetCountrySpecificLotl(CountrySpecificLotl countrySpecificLotl
+                ) {
                 this.countrySpecificLotl = countrySpecificLotl;
+                return this;
             }
 
             /// <summary>Creates a unique identifier for the country-specific Lotl based on its scheme territory and TSL location.
@@ -200,14 +206,11 @@ namespace iText.Signatures.Validation.Lotl {
                 CountrySpecificLotlFetcher.Result countryResult = new CountrySpecificLotlFetcher.Result();
                 countryResult.SetCountrySpecificLotl(countrySpecificLotl);
                 byte[] countryLotlBytes;
-                try {
-                    countryLotlBytes = resourceRetriever.GetByteArrayByUrl(new Uri(countrySpecificLotl.GetTslLocation()));
-                }
-                catch (Exception e) {
-                    countryResult.SetLocalReport(new ValidationReport());
-                    countryResult.GetLocalReport().AddReportItem(new ReportItem(LotlValidator.LOTL_VALIDATION, MessageFormatUtil
-                        .Format(COULD_NOT_RESOLVE_URL, countrySpecificLotl.GetTslLocation()), e, ReportItem.ReportItemStatus.INVALID
-                        ));
+                countryLotlBytes = SafeCalling.OnExceptionLog(() => resourceRetriever.GetByteArrayByUrl(new Uri(countrySpecificLotl
+                    .GetTslLocation())), null, countryResult.GetLocalReport(), (e) => new ReportItem(LotlValidator.LOTL_VALIDATION
+                    , MessageFormatUtil.Format(COULD_NOT_RESOLVE_URL, countrySpecificLotl.GetTslLocation()), e, ReportItem.ReportItemStatus
+                    .INVALID));
+                if (countryLotlBytes == null) {
                     return countryResult;
                 }
                 ValidationReport localReport = xmlSignatureValidator.Validate(new MemoryStream(countryLotlBytes));

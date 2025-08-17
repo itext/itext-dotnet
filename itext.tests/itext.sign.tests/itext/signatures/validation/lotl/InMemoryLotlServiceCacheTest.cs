@@ -34,7 +34,8 @@ namespace iText.Signatures.Validation.Lotl {
     public class InMemoryLotlServiceCacheTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void SetByteDataWorks() {
-            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(1000);
+            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(1000, new ThrowExceptionOnFailingCountryData
+                ());
             byte[] data = "test data".GetBytes(System.Text.Encoding.UTF8);
             EuropeanLotlFetcher.Result result = new EuropeanLotlFetcher.Result(data);
             cache.SetLotlResult(result);
@@ -44,7 +45,8 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void SetNullByteDataWorks() {
-            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(1000);
+            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(1000, new ThrowExceptionOnFailingCountryData
+                ());
             cache.SetLotlResult(null);
             NUnit.Framework.Assert.IsNull(cache.GetLotlResult(), "The byte data should be null after setting it to null."
                 );
@@ -52,12 +54,13 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void SetByteDataStaleDataThrowsException() {
-            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(20);
+            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(200, new ThrowExceptionOnFailingCountryData(
+                ));
             byte[] data = "test data".GetBytes(System.Text.Encoding.UTF8);
             EuropeanLotlFetcher.Result result = new EuropeanLotlFetcher.Result(data);
             cache.SetLotlResult(result);
             // Simulate staleness by waiting longer than the max allowed staleness
-            Thread.Sleep(100);
+            Thread.Sleep(500);
             NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
                 cache.GetLotlResult();
             }
@@ -66,11 +69,12 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void CacheInvalidationWorks() {
-            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(20);
+            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(200, new ThrowExceptionOnFailingCountryData(
+                ));
             byte[] data = "test data".GetBytes(System.Text.Encoding.UTF8);
             EuropeanLotlFetcher.Result result = new EuropeanLotlFetcher.Result(data);
             // Simulate staleness by waiting longer than the max allowed staleness
-            Thread.Sleep(250);
+            Thread.Sleep(500);
             cache.SetLotlResult(result);
             NUnit.Framework.Assert.AreEqual(data, cache.GetLotlResult().GetLotlXml(), "The byte data should match the set data."
                 );
@@ -78,7 +82,8 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void SetCountrySpecificLotlCacheWorks() {
-            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(1000);
+            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(1000, new ThrowExceptionOnFailingCountryData
+                ());
             CountrySpecificLotlFetcher.Result result = new CountrySpecificLotlFetcher.Result();
             result.SetContexts(new List<IServiceContext>());
             CountrySpecificLotl f = new CountrySpecificLotl("BE", "https://example.be/lotl.xml", "application/xml");
@@ -93,7 +98,8 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void GetCountrySpecificLotlReturnsEmptyMapWhenNoEntries() {
-            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(1000);
+            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(1000, new ThrowExceptionOnFailingCountryData
+                ());
             IDictionary<String, CountrySpecificLotlFetcher.Result> countrySpecificLotlCache = cache.GetCountrySpecificLotls
                 ();
             NUnit.Framework.Assert.IsTrue(countrySpecificLotlCache.IsEmpty(), "The cache should be empty when no country-specific Lotl entries are set."
@@ -102,14 +108,15 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void GetCountrySpecificCacheWithStaleDataThrowsException() {
-            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(20);
+            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(200, new ThrowExceptionOnFailingCountryData(
+                ));
             CountrySpecificLotlFetcher.Result result = new CountrySpecificLotlFetcher.Result();
             result.SetContexts(new List<IServiceContext>());
             CountrySpecificLotl f = new CountrySpecificLotl("BE", "https://example.be/lotl.xml", "application/xml");
             result.SetCountrySpecificLotl(f);
             cache.SetCountrySpecificLotlResult(result);
             // Simulate staleness by waiting longer than the max allowed staleness
-            Thread.Sleep(50);
+            Thread.Sleep(500);
             NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
                 cache.GetCountrySpecificLotls();
             }
@@ -118,14 +125,15 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void EuropeanResultUpdatedDoesNotThrowException() {
-            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(20);
+            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(200, new ThrowExceptionOnFailingCountryData(
+                ));
             CountrySpecificLotlFetcher.Result result = new CountrySpecificLotlFetcher.Result();
             result.SetContexts(new List<IServiceContext>());
             CountrySpecificLotl f = new CountrySpecificLotl("BE", "https://example.be/lotl.xml", "application/xml");
             result.SetCountrySpecificLotl(f);
             cache.SetCountrySpecificLotlResult(result);
             // Simulate staleness by waiting longer than the max allowed staleness
-            Thread.Sleep(50);
+            Thread.Sleep(500);
             cache.SetCountrySpecificLotlResult(result);
             NUnit.Framework.Assert.DoesNotThrow(() => {
                 cache.GetCountrySpecificLotls();
@@ -135,7 +143,8 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void PivotFilesCacheWorks() {
-            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(1000);
+            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(1000, new ThrowExceptionOnFailingCountryData
+                ());
             PivotFetcher.Result result = new PivotFetcher.Result();
             result.SetPivotUrls(JavaUtil.ArraysAsList("https://example.com/pivot1.xml", "https://example.com/pivot2.xml"
                 ));
@@ -146,13 +155,14 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void PivotFilesStaleThrowsException() {
-            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(20);
+            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(200, new ThrowExceptionOnFailingCountryData(
+                ));
             PivotFetcher.Result result = new PivotFetcher.Result();
             result.SetPivotUrls(JavaUtil.ArraysAsList("https://example.com/pivot1.xml", "https://example.com/pivot2.xml"
                 ));
             cache.SetPivotResult(result);
             // Simulate staleness by waiting longer than the max allowed staleness
-            Thread.Sleep(50);
+            Thread.Sleep(500);
             NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
                 cache.GetPivotResult();
             }
@@ -161,7 +171,8 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void EuropeanResultCacheWorks() {
-            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(1000);
+            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(1000, new ThrowExceptionOnFailingCountryData
+                ());
             EuropeanResourceFetcher.Result result = new EuropeanResourceFetcher.Result();
             result.SetCertificates(new List<IX509Certificate>());
             cache.SetEuropeanResourceFetcherResult(result);
@@ -171,12 +182,13 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void EuropeanResultCacheStaleDataThrowsException() {
-            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(20);
+            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(200, new ThrowExceptionOnFailingCountryData(
+                ));
             EuropeanResourceFetcher.Result result = new EuropeanResourceFetcher.Result();
             result.SetCertificates(new List<IX509Certificate>());
             cache.SetEuropeanResourceFetcherResult(result);
             // Simulate staleness by waiting longer than the max allowed staleness
-            Thread.Sleep(50);
+            Thread.Sleep(500);
             NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
                 cache.GetEUJournalCertificates();
             }
@@ -185,12 +197,13 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void EuropeanResultCacheStaleDataDoesNotThrowExceptionAfterUpdate() {
-            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(20);
+            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(200, new ThrowExceptionOnFailingCountryData(
+                ));
             EuropeanResourceFetcher.Result result = new EuropeanResourceFetcher.Result();
             result.SetCertificates(new List<IX509Certificate>());
             cache.SetEuropeanResourceFetcherResult(result);
             // Simulate staleness by waiting longer than the max allowed staleness
-            Thread.Sleep(50);
+            Thread.Sleep(500);
             cache.SetEuropeanResourceFetcherResult(result);
             NUnit.Framework.Assert.DoesNotThrow(() => {
                 cache.GetEUJournalCertificates();
@@ -200,7 +213,8 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void SetAllData() {
-            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(1000);
+            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(1000, new ThrowExceptionOnFailingCountryData
+                ());
             byte[] lotlData = "lotl data".GetBytes(System.Text.Encoding.UTF8);
             EuropeanLotlFetcher.Result lotlResult = new EuropeanLotlFetcher.Result(lotlData);
             CountrySpecificLotlFetcher.Result countryResult = new CountrySpecificLotlFetcher.Result();
@@ -227,7 +241,8 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void SetAllDataAfterStaleNessThrowsException() {
-            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(20);
+            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(200, new ThrowExceptionOnFailingCountryData(
+                ));
             byte[] lotlData = "lotl data".GetBytes(System.Text.Encoding.UTF8);
             EuropeanLotlFetcher.Result lotlResult = new EuropeanLotlFetcher.Result(lotlData);
             CountrySpecificLotlFetcher.Result countryResult = new CountrySpecificLotlFetcher.Result();
@@ -244,7 +259,7 @@ namespace iText.Signatures.Validation.Lotl {
             countrySpecificLotlCache.Put(countryResult.CreateUniqueIdentifier(), countryResult);
             cache.SetAllValues(lotlResult, europeanResult, pivotResult, countrySpecificLotlCache);
             // Simulate staleness by waiting longer than the max allowed staleness
-            Thread.Sleep(50);
+            Thread.Sleep(500);
             NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
                 cache.GetLotlResult();
             }
@@ -265,7 +280,8 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void SetAllDataResetAfterStalenessWorks() {
-            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(20);
+            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(200, new ThrowExceptionOnFailingCountryData(
+                ));
             byte[] lotlData = "lotl data".GetBytes(System.Text.Encoding.UTF8);
             EuropeanLotlFetcher.Result lotlResult = new EuropeanLotlFetcher.Result(lotlData);
             CountrySpecificLotlFetcher.Result countryResult = new CountrySpecificLotlFetcher.Result();
@@ -282,7 +298,7 @@ namespace iText.Signatures.Validation.Lotl {
             countrySpecificLotlCache.Put(countryResult.CreateUniqueIdentifier(), countryResult);
             cache.SetAllValues(lotlResult, europeanResult, pivotResult, countrySpecificLotlCache);
             // Simulate staleness by waiting longer than the max allowed staleness
-            Thread.Sleep(50);
+            Thread.Sleep(500);
             cache.SetAllValues(lotlResult, europeanResult, pivotResult, countrySpecificLotlCache);
             NUnit.Framework.Assert.DoesNotThrow(() => {
                 cache.GetLotlResult();
