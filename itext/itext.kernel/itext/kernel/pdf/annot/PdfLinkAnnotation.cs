@@ -20,12 +20,14 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Navigation;
+using iText.Kernel.Pdf.Tagging;
 
 namespace iText.Kernel.Pdf.Annot {
     /// <summary>
@@ -507,6 +509,105 @@ namespace iText.Kernel.Pdf.Annot {
         /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation SetDashPattern(PdfArray dashPattern) {
             return SetBorderStyle(BorderStyleUtil.SetDashPattern(GetBorderStyle(), dashPattern));
+        }
+
+        /// <summary>Gets link annotation tag role based on link destination.</summary>
+        /// <remarks>
+        /// Gets link annotation tag role based on link destination.
+        /// <para />
+        /// The Link structure type should be used for external links and
+        /// the Reference structure type should be used for intra-document targets.
+        /// </remarks>
+        /// <param name="document">to check conformance, e.g. for PDF/UA-1, only Link role is allowed.</param>
+        /// <returns>link annotation tag role</returns>
+        public virtual String GetRoleBasedOnDestination(PdfDocument document) {
+            if (document != null && PdfUAConformance.PDF_UA_1 == document.GetConformance().GetUAConformance()) {
+                return StandardRoles.LINK;
+            }
+            PdfObject dest = null;
+            PdfDictionary action = this.GetAction();
+            if (action != null) {
+                PdfName actionType = action.GetAsName(PdfName.S);
+                if (PdfName.GoTo.Equals(actionType)) {
+                    dest = action.Get(PdfName.SD);
+                    if (dest == null) {
+                        dest = action.Get(PdfName.D);
+                    }
+                }
+                else {
+                    return StandardRoles.LINK;
+                }
+            }
+            else {
+                dest = this.GetDestinationObject();
+            }
+            return IsNonIntraDocumentDestination(dest, document, 0) ? StandardRoles.LINK : StandardRoles.REFERENCE;
+        }
+
+        private static bool IsNonIntraDocumentDestination(PdfObject destination, PdfDocument document, int counter
+            ) {
+            if (counter > 50) {
+                // If we reached this method more than 50 times. Something is definitely wrong and destination isn't valid.
+                // This can, for example, happen with named or string destinations pointing towards one another.
+                return false;
+            }
+            counter++;
+            if (destination == null) {
+                return false;
+            }
+            if (destination.GetObjectType() == PdfObject.ARRAY) {
+                PdfArray destArray = (PdfArray)destination;
+                if (destArray.IsEmpty()) {
+                    return false;
+                }
+                PdfObject firstObj = destArray.Get(0);
+                return firstObj.IsNumber();
+            }
+            if (document == null) {
+                return false;
+            }
+            if (destination.GetObjectType() == PdfObject.NAME) {
+                return IsNonIntraDocumentDestination((PdfName)destination, document, counter);
+            }
+            if (destination.GetObjectType() == PdfObject.STRING) {
+                return IsNonIntraDocumentDestination((PdfString)destination, document, counter);
+            }
+            return true;
+        }
+
+        private static bool IsNonIntraDocumentDestination(PdfName namedDestination, PdfDocument document, int counter
+            ) {
+            PdfCatalog catalog = document.GetCatalog();
+            PdfDictionary dests = catalog.GetPdfObject().GetAsDictionary(PdfName.Dests);
+            if (dests != null) {
+                PdfObject actualDestinationObject = dests.Get(namedDestination);
+                if (actualDestinationObject is PdfDictionary) {
+                    return IsNonIntraDocumentDestination((PdfDictionary)actualDestinationObject, document, counter);
+                }
+                return IsNonIntraDocumentDestination(actualDestinationObject, document, counter);
+            }
+            return true;
+        }
+
+        private static bool IsNonIntraDocumentDestination(PdfString stringDestination, PdfDocument document, int counter
+            ) {
+            PdfCatalog catalog = document.GetCatalog();
+            PdfNameTree dests = catalog.GetNameTree(PdfName.Dests);
+            PdfObject actualDestinationObject = dests.GetEntry(stringDestination);
+            if (actualDestinationObject is PdfDictionary) {
+                return IsNonIntraDocumentDestination((PdfDictionary)actualDestinationObject, document, counter);
+            }
+            return IsNonIntraDocumentDestination(actualDestinationObject, document, counter);
+        }
+
+        private static bool IsNonIntraDocumentDestination(PdfDictionary destDictionary, PdfDocument document, int 
+            counter) {
+            bool isSdPresent = destDictionary.Get(PdfName.SD) != null;
+            if (isSdPresent && !IsNonIntraDocumentDestination(destDictionary.Get(PdfName.SD), document, counter)) {
+                return false;
+            }
+            // We only check D entry if SD is not present.
+            return isSdPresent || IsNonIntraDocumentDestination(destDictionary.Get(PdfName.D), document, counter);
         }
     }
 }

@@ -259,7 +259,7 @@ namespace iText.Kernel.Utils {
         [NUnit.Framework.Test]
         public virtual void ConvertDocInfoToStringsTest() {
             String inPdf = sourceFolder + "test.pdf";
-            CompareTool compareTool = new _T128640660(this);
+            CompareTool compareTool = new _T1503941261(this);
             using (PdfReader reader = new PdfReader(inPdf, compareTool.GetOutReaderProperties())) {
                 using (PdfDocument doc = new PdfDocument(reader)) {
                     String[] docInfo = compareTool.ConvertDocInfoToStrings(doc.GetDocumentInfo());
@@ -273,12 +273,12 @@ namespace iText.Kernel.Utils {
         }
 
 //\cond DO_NOT_DOCUMENT
-        internal class _T128640660 : CompareTool {
+        internal class _T1503941261 : CompareTool {
             protected internal override String[] ConvertDocInfoToStrings(PdfDocumentInfo info) {
                 return base.ConvertDocInfoToStrings(info);
             }
 
-            internal _T128640660(CompareToolTest _enclosing) {
+            internal _T1503941261(CompareToolTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -352,6 +352,25 @@ namespace iText.Kernel.Utils {
             NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => CompareTool.Cleanup(null));
             CompareTool.Cleanup(destinationFolder + "cleanupTest");
             NUnit.Framework.Assert.IsNull(MemoryFirstPdfWriter.Get(destinationFolder + "cleanupTest/cleanupTest.pdf"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BaseFontAbsenceInOutPdfTest() {
+            CompareTool compareTool = new CompareTool();
+            compareTool.SetCompareByContentErrorsLimit(10);
+            compareTool.SetGenerateCompareByContentXmlReport(true);
+            // basefont_absence doesn't have BaseFont in 1 0 R font
+            String outPdf = sourceFolder + "basefont_absence.pdf";
+            // cmp_basefont_absence has BaseFont in 1 0 R
+            String cmpPdf = sourceFolder + "cmp_basefont_absence.pdf";
+            String result = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder);
+            System.Console.Out.WriteLine("\nRESULT:\n" + result);
+            NUnit.Framework.Assert.IsNotNull("CompareTool must return differences found between the files", result);
+            NUnit.Framework.Assert.IsTrue(result.Contains("differs on page [1, 2]."));
+            String xmlReport = iText.Commons.Utils.JavaUtil.GetStringForBytes(File.ReadAllBytes(System.IO.Path.Combine
+                (destinationFolder + "basefont_absence.report.xml")));
+            NUnit.Framework.Assert.IsTrue(xmlReport.Contains("PdfDictionary /BaseFont entry: Expected: /Helvetica-Bold+ASAFAS. Found: null"
+                ));
         }
     }
 }

@@ -32,47 +32,51 @@ using iText.Test;
 namespace iText.Forms.Fields {
     [NUnit.Framework.Category("UnitTest")]
     public class SignatureFormFieldBuilderTest : ExtendedITextTest {
-        private static readonly PdfDocument DUMMY_DOCUMENT = new PdfDocument(new PdfWriter(new MemoryStream()));
-
         private const String DUMMY_NAME = "dummy name";
 
         private static readonly Rectangle DUMMY_RECTANGLE = new Rectangle(7, 11, 13, 17);
 
         [NUnit.Framework.Test]
         public virtual void ConstructorTest() {
-            SignatureFormFieldBuilder builder = new SignatureFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
-            NUnit.Framework.Assert.AreSame(DUMMY_DOCUMENT, builder.GetDocument());
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            SignatureFormFieldBuilder builder = new SignatureFormFieldBuilder(pdfDoc, DUMMY_NAME);
+            NUnit.Framework.Assert.AreSame(pdfDoc, builder.GetDocument());
             NUnit.Framework.Assert.AreSame(DUMMY_NAME, builder.GetFormFieldName());
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateSignatureWithWidgetTest() {
-            PdfSignatureFormField signatureFormField = new SignatureFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfSignatureFormField signatureFormField = new SignatureFormFieldBuilder(pdfDoc, DUMMY_NAME).SetWidgetRectangle
                 (DUMMY_RECTANGLE).CreateSignature();
-            CompareSignatures(signatureFormField, true);
+            CompareSignatures(signatureFormField, pdfDoc, true);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateSignatureWithoutWidgetTest() {
-            PdfSignatureFormField signatureFormField = new SignatureFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).CreateSignature
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfSignatureFormField signatureFormField = new SignatureFormFieldBuilder(pdfDoc, DUMMY_NAME).CreateSignature
                 ();
-            CompareSignatures(signatureFormField, false);
+            CompareSignatures(signatureFormField, pdfDoc, false);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateSignatureWithIncorrectNameTest() {
-            NUnit.Framework.Assert.DoesNotThrow(() => new SignatureFormFieldBuilder(DUMMY_DOCUMENT, "incorrect.name").
-                SetWidgetRectangle(DUMMY_RECTANGLE).CreateSignature());
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            NUnit.Framework.Assert.DoesNotThrow(() => new SignatureFormFieldBuilder(pdfDoc, "incorrect.name").SetWidgetRectangle
+                (DUMMY_RECTANGLE).CreateSignature());
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateSignatureWithConformanceLevelTest() {
-            PdfSignatureFormField signatureFormField = new SignatureFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfSignatureFormField signatureFormField = new SignatureFormFieldBuilder(pdfDoc, DUMMY_NAME).SetWidgetRectangle
                 (DUMMY_RECTANGLE).SetConformance(PdfConformance.PDF_A_1A).CreateSignature();
-            CompareSignatures(signatureFormField, true);
+            CompareSignatures(signatureFormField, pdfDoc, true);
         }
 
-        private static void CompareSignatures(PdfSignatureFormField signatureFormField, bool widgetExpected) {
+        private static void CompareSignatures(PdfSignatureFormField signatureFormField, PdfDocument pdfDoc, bool widgetExpected
+            ) {
             PdfDictionary expectedDictionary = new PdfDictionary();
             IList<PdfWidgetAnnotation> widgets = signatureFormField.GetWidgets();
             if (widgetExpected) {
@@ -88,8 +92,8 @@ namespace iText.Forms.Fields {
             }
             PutIfAbsent(expectedDictionary, PdfName.FT, PdfName.Sig);
             PutIfAbsent(expectedDictionary, PdfName.T, new PdfString(DUMMY_NAME));
-            expectedDictionary.MakeIndirect(DUMMY_DOCUMENT);
-            signatureFormField.MakeIndirect(DUMMY_DOCUMENT);
+            expectedDictionary.MakeIndirect(pdfDoc);
+            signatureFormField.MakeIndirect(pdfDoc);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareDictionariesStructure(expectedDictionary, signatureFormField
                 .GetPdfObject()));
         }

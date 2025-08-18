@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Datastructures;
 using iText.Commons.Utils;
@@ -878,11 +879,13 @@ namespace iText.Layout {
                 PdfAction action11 = PdfAction.CreateGoTo("header1.1");
                 header11Outline.AddAction(action11);
                 Paragraph header1 = new Paragraph("header1 text");
-                header1.SetProperty(Property.DESTINATION, new Tuple2<String, PdfDictionary>("header1", action1.GetPdfObject
-                    ()));
+                ICollection<Object> destinations1 = new HashSet<Object>();
+                destinations1.Add(new Tuple2<String, PdfDictionary>("header1", action1.GetPdfObject()));
+                header1.SetProperty(Property.DESTINATION, destinations1);
                 Paragraph header11 = new Paragraph("header1.1 text");
-                header11.SetProperty(Property.DESTINATION, new Tuple2<String, PdfDictionary>("header1.1", action11.GetPdfObject
-                    ()));
+                ICollection<Object> destinations2 = new HashSet<Object>();
+                destinations2.Add(new Tuple2<String, PdfDictionary>("header1.1", action11.GetPdfObject()));
+                header11.SetProperty(Property.DESTINATION, destinations2);
                 document.Add(header1);
                 document.Add(header11);
             }

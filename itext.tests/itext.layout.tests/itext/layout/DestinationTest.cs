@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -48,7 +49,9 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Text text = new Text(MessageFormatUtil.Format("Page {0}", 10));
-            text.SetProperty(Property.DESTINATION, "p10");
+            ICollection<Object> destinations = new HashSet<Object>();
+            destinations.Add("p10");
+            text.SetProperty(Property.DESTINATION, destinations);
             doc.Add(new Paragraph(text).SetFixedPosition(1, 549, 742, 40).SetMargin(0));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

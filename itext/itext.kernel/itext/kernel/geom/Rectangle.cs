@@ -104,54 +104,70 @@ namespace iText.Kernel.Geom {
         }
 
         /// <summary>
-        /// Gets the rectangle as it looks on the rotated page
-        /// and returns the rectangle in coordinates relevant to the true page origin.
+        /// Transforms a rectangle defined in the space of unrotated origin (bottom-left)
+        /// into coordinates as it would appear on a passed as parameter rotated page.
         /// </summary>
         /// <remarks>
-        /// Gets the rectangle as it looks on the rotated page
-        /// and returns the rectangle in coordinates relevant to the true page origin.
-        /// This rectangle can be used to add annotations, fields, and other objects
-        /// to the rotated page.
+        /// Transforms a rectangle defined in the space of unrotated origin (bottom-left)
+        /// into coordinates as it would appear on a passed as parameter rotated page.
+        /// <para />
+        /// This method is useful when adding annotations, form fields, or other elements
+        /// to a PDF page that has a rotation. The iText coordinate system always
+        /// uses the bottom-left corner as origin, regardless of page rotation.
+        /// This method compensates for that rotation, returning a rectangle positioned
+        /// correctly in the true page coordinate space.
         /// </remarks>
-        /// <param name="rect">the rectangle as it looks on the rotated page.</param>
-        /// <param name="page">the page on which one want to process the rectangle.</param>
-        /// <returns>the newly created rectangle with translated coordinates.</returns>
+        /// <param name="rect">the rectangle defined in page-space coordinates relative to the unrotated origin.</param>
+        /// <param name="page">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfPage"/>
+        /// to which the rectangle will be added.
+        /// The rotation of this page is used to transform the coordinates.
+        /// </param>
+        /// <returns>
+        /// a new
+        /// <see cref="Rectangle"/>
+        /// with corrected coordinates suitable for placement
+        /// in the rotated coordinate space of the page.
+        /// </returns>
         public static iText.Kernel.Geom.Rectangle GetRectangleOnRotatedPage(iText.Kernel.Geom.Rectangle rect, PdfPage
              page) {
-            iText.Kernel.Geom.Rectangle resultRect = rect;
+            iText.Kernel.Geom.Rectangle rectangleOnRotatedPage = rect;
             int rotation = page.GetRotation();
-            if (0 != rotation) {
+            if (rotation != 0) {
                 iText.Kernel.Geom.Rectangle pageSize = page.GetPageSize();
+                float x = rect.GetLeft();
+                float y = rect.GetBottom();
+                float width = rect.GetWidth();
+                float height = rect.GetHeight();
                 switch ((rotation / 90) % 4) {
                     case 1: {
                         // 90 degrees
-                        resultRect = new iText.Kernel.Geom.Rectangle(pageSize.GetWidth() - resultRect.GetTop(), resultRect.GetLeft
-                            (), resultRect.GetHeight(), resultRect.GetWidth());
+                        rectangleOnRotatedPage = new iText.Kernel.Geom.Rectangle(pageSize.GetWidth() - y - height, x, height, width
+                            );
                         break;
                     }
 
                     case 2: {
                         // 180 degrees
-                        resultRect = new iText.Kernel.Geom.Rectangle(pageSize.GetWidth() - resultRect.GetRight(), pageSize.GetHeight
-                            () - resultRect.GetTop(), resultRect.GetWidth(), resultRect.GetHeight());
+                        rectangleOnRotatedPage = new iText.Kernel.Geom.Rectangle(pageSize.GetWidth() - x - width, pageSize.GetHeight
+                            () - y - height, width, height);
                         break;
                     }
 
                     case 3: {
                         // 270 degrees
-                        resultRect = new iText.Kernel.Geom.Rectangle(resultRect.GetLeft(), pageSize.GetHeight() - resultRect.GetRight
-                            (), resultRect.GetHeight(), resultRect.GetWidth());
+                        rectangleOnRotatedPage = new iText.Kernel.Geom.Rectangle(y, pageSize.GetHeight() - x - width, height, width
+                            );
                         break;
                     }
 
-                    case 4:
                     default: {
-                        // 0 degrees
                         break;
                     }
                 }
             }
-            return resultRect;
+            return rectangleOnRotatedPage;
         }
 
         /// <summary>Calculates the bounding box of passed points.</summary>

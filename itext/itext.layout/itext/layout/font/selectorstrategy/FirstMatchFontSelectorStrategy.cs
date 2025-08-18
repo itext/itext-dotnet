@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Layout.Font;
 
 namespace iText.Layout.Font.Selectorstrategy {
@@ -48,7 +49,21 @@ namespace iText.Layout.Font.Selectorstrategy {
         /// The factory for
         /// <see cref="FirstMatchFontSelectorStrategy"/>.
         /// </summary>
+        [System.ObsoleteAttribute(@"in favour of FirstMatchFontSelectorStrategyFactory (typo fix in word ""Match"")"
+            )]
         public sealed class FirstMathFontSelectorStrategyFactory : IFontSelectorStrategyFactory {
+            /// <summary><inheritDoc/></summary>
+            public IFontSelectorStrategy CreateFontSelectorStrategy(FontProvider fontProvider, FontSelector fontSelector
+                , FontSet additionalFonts) {
+                return new FirstMatchFontSelectorStrategy(fontProvider, fontSelector, additionalFonts);
+            }
+        }
+
+        /// <summary>
+        /// The factory for
+        /// <see cref="FirstMatchFontSelectorStrategy"/>.
+        /// </summary>
+        public sealed class FirstMatchFontSelectorStrategyFactory : IFontSelectorStrategyFactory {
             /// <summary><inheritDoc/></summary>
             public IFontSelectorStrategy CreateFontSelectorStrategy(FontProvider fontProvider, FontSelector fontSelector
                 , FontSet additionalFonts) {

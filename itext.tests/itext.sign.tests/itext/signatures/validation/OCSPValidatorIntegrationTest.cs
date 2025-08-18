@@ -56,14 +56,8 @@ namespace iText.Signatures.Validation {
 
         private static IPrivateKey ocspRespPrivateKey;
 
-        private IssuingCertificateRetriever certificateRetriever;
-
-        private SignatureValidationProperties parameters;
-
         private readonly ValidationContext baseContext = new ValidationContext(ValidatorContext.REVOCATION_DATA_VALIDATOR
             , CertificateSource.SIGNER_CERT, TimeBasedContext.PRESENT);
-
-        private ValidatorChainBuilder validatorChainBuilder;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
@@ -77,18 +71,14 @@ namespace iText.Signatures.Validation {
             ocspRespPrivateKey = PemFileHelper.ReadFirstKey(ocspResponderCertFileName, PASSWORD);
         }
 
-        [NUnit.Framework.SetUp]
-        public virtual void SetUp() {
-            certificateRetriever = new IssuingCertificateRetriever();
-            parameters = new SignatureValidationProperties();
-            validatorChainBuilder = new ValidatorChainBuilder().WithSignatureValidationProperties(parameters).WithIssuingCertificateRetrieverFactory
-                (() => certificateRetriever);
-        }
-
         [NUnit.Framework.Test]
         public virtual void ValidateResponderOcspNoCheckTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            ValidatorChainBuilder validatorChainBuilder = new ValidatorChainBuilder().WithSignatureValidationProperties
+                (parameters).WithIssuingCertificateRetrieverFactory(() => certificateRetriever);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
-            ValidationReport report = ValidateTest(checkDate);
+            ValidationReport report = ValidateTest(checkDate, certificateRetriever, validatorChainBuilder, parameters);
             AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(0).HasNumberOfLogs(2).HasLogItem((al
                 ) => al.WithCheckName(RevocationDataValidator.REVOCATION_DATA_CHECK).WithMessage(RevocationDataValidator
                 .TRUSTED_OCSP_RESPONDER)).HasLogItem((al) => al.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK
@@ -98,7 +88,12 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void ValidateAuthorizedOCSPResponderWithOcspTest() {
-            ValidationReport report = VerifyResponderWithOcsp(false);
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            ValidatorChainBuilder validatorChainBuilder = new ValidatorChainBuilder().WithSignatureValidationProperties
+                (parameters).WithIssuingCertificateRetrieverFactory(() => certificateRetriever);
+            ValidationReport report = VerifyResponderWithOcsp(false, certificateRetriever, validatorChainBuilder, parameters
+                );
             AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(0).HasNumberOfLogs(2).HasLogItem((al
                 ) => al.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (l) => ((CertificateReportItem)l).GetCertificate().GetSubjectDN())).HasLogItem((
@@ -108,11 +103,16 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void ValidateAuthorizedOCSPResponderWithOcspRevokedTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            ValidatorChainBuilder validatorChainBuilder = new ValidatorChainBuilder().WithSignatureValidationProperties
+                (parameters).WithIssuingCertificateRetrieverFactory(() => certificateRetriever);
             String ocspResponderCertFileName = SOURCE_FOLDER + "ocspResponderCertForOcspTest.pem";
             IX509Certificate responderCert = (IX509Certificate)PemFileHelper.ReadFirstChain(ocspResponderCertFileName)
                 [0];
             certificateRetriever.AddKnownCertificates(JavaCollectionsUtil.Singleton(responderCert));
-            ValidationReport report = VerifyResponderWithOcsp(true);
+            ValidationReport report = VerifyResponderWithOcsp(true, certificateRetriever, validatorChainBuilder, parameters
+                );
             AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(1).HasNumberOfLogs(1).HasLogItem((al
                 ) => al.WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator.CERT_IS_REVOKED).WithStatus(
                 ReportItem.ReportItemStatus.INDETERMINATE)));
@@ -120,13 +120,21 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void ValidateAuthorizedOCSPResponderFromTheTrustedStoreTest() {
-            ValidationReport report = ValidateOcspWithoutCertsTest();
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            ValidatorChainBuilder validatorChainBuilder = new ValidatorChainBuilder().WithSignatureValidationProperties
+                (parameters).WithIssuingCertificateRetrieverFactory(() => certificateRetriever);
+            ValidationReport report = ValidateOcspWithoutCertsTest(certificateRetriever, validatorChainBuilder);
             NUnit.Framework.Assert.AreEqual(0, report.GetFailures().Count);
             NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
         }
 
         [NUnit.Framework.Test]
         public virtual void TrustedOcspResponderDoesNotHaveOcspSigningExtensionTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            ValidatorChainBuilder validatorChainBuilder = new ValidatorChainBuilder().WithSignatureValidationProperties
+                (parameters).WithIssuingCertificateRetrieverFactory(() => certificateRetriever);
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(caCert, caPrivateKey);
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
             IBasicOcspResponse caBasicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspClient
@@ -146,6 +154,10 @@ namespace iText.Signatures.Validation {
             String ocspResponderCertFileName = SOURCE_FOLDER + "ocspResponderCertWithoutOcspSigning.pem";
             IX509Certificate responderCert = (IX509Certificate)PemFileHelper.ReadFirstChain(ocspResponderCertFileName)
                 [0];
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            ValidatorChainBuilder validatorChainBuilder = new ValidatorChainBuilder().WithSignatureValidationProperties
+                (parameters).WithIssuingCertificateRetrieverFactory(() => certificateRetriever);
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             builder.SetThisUpdate(DateTimeUtil.GetCalendar(TimeTestUtil.TEST_DATE_TIME.AddDays(1)));
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
@@ -163,6 +175,10 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void OcspResponseWithoutHashAlgoParametersTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            ValidatorChainBuilder validatorChainBuilder = new ValidatorChainBuilder().WithSignatureValidationProperties
+                (parameters).WithIssuingCertificateRetrieverFactory(() => certificateRetriever);
             TestOcspClient ocspClient = new TestOcspClient();
             IBasicOcspResponse caBasicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspClient
                 .GetEncoded(checkCert, caCert, SOURCE_FOLDER + "ocspResponseWithoutHashAlgoParameters.dat")));
@@ -176,7 +192,8 @@ namespace iText.Signatures.Validation {
                 .VALID));
         }
 
-        private ValidationReport ValidateTest(DateTime checkDate) {
+        private ValidationReport ValidateTest(DateTime checkDate, IssuingCertificateRetriever certificateRetriever
+            , ValidatorChainBuilder validatorChainBuilder, SignatureValidationProperties parameters) {
             DateTime thisUpdate = checkDate.AddDays(1);
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             builder.SetThisUpdate(DateTimeUtil.GetCalendar(thisUpdate));
@@ -193,7 +210,8 @@ namespace iText.Signatures.Validation {
             return report;
         }
 
-        private ValidationReport ValidateOcspWithoutCertsTest() {
+        private ValidationReport ValidateOcspWithoutCertsTest(IssuingCertificateRetriever certificateRetriever, ValidatorChainBuilder
+             validatorChainBuilder) {
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             builder.SetOcspCertsChain(new IX509Certificate[0]);
             TestOcspClient ocspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, builder);
@@ -207,7 +225,8 @@ namespace iText.Signatures.Validation {
             return report;
         }
 
-        private ValidationReport VerifyResponderWithOcsp(bool revokedOcsp) {
+        private ValidationReport VerifyResponderWithOcsp(bool revokedOcsp, IssuingCertificateRetriever certificateRetriever
+            , ValidatorChainBuilder validatorChainBuilder, SignatureValidationProperties parameters) {
             String rootCertFileName = SOURCE_FOLDER + "rootCertForOcspTest.pem";
             String checkCertFileName = SOURCE_FOLDER + "signCertForOcspTest.pem";
             String ocspResponderCertFileName = SOURCE_FOLDER + "ocspResponderCertForOcspTest.pem";

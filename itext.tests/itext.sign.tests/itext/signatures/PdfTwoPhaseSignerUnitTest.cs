@@ -34,19 +34,7 @@ namespace iText.Signatures {
     public class PdfTwoPhaseSignerUnitTest : ExtendedITextTest {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
-        private static readonly byte[] OWNER = "owner".GetBytes(System.Text.Encoding.UTF8);
-
-        private static readonly byte[] USER = "user".GetBytes(System.Text.Encoding.UTF8);
-
-        private static readonly String PDFA_RESOURCES = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/pdfa/";
-
         private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/signatures/Pdf2PhaseSignerUnitTest/";
-
-        private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
-
-        private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {

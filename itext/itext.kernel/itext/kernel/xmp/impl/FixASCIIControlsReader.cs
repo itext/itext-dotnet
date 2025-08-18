@@ -32,7 +32,7 @@ using iText.Commons.Utils;
 
 namespace iText.Kernel.XMP.Impl {
     /// <since>22.08.2006</since>
-    public class FixASCIIControlsReader : PushbackReader {
+    public class FixASCIIControlsReader : TextReader {
         private const int STATE_START = 0;
 
         private const int STATE_AMP = 1;
@@ -45,8 +45,6 @@ namespace iText.Kernel.XMP.Impl {
 
         private const int STATE_ERROR = 5;
 
-        private const int BUFFER_SIZE = 8;
-
         /// <summary>the state of the automaton</summary>
         private int state = STATE_START;
 
@@ -56,54 +54,46 @@ namespace iText.Kernel.XMP.Impl {
         /// <summary>count the digits of the sequence</summary>
         private int digits = 0;
 
-        /// <summary>The look-ahead size is 6 at maximum (&amp;#xAB;)</summary>
-        /// <seealso cref="iText.Commons.Utils.PushbackReader.PushbackReader(System.IO.TextReader, int)"/>
+        private TextReader @in;
+
+        /// <summary>A wrapper xmp reader to handle control characters (&amp;#xAB;)</summary>
         /// <param name="input">a Reader</param>
-        public FixASCIIControlsReader(TextReader input)
-            : base(input, BUFFER_SIZE) {
+        public FixASCIIControlsReader(TextReader input) {
+            @in = input;
         }
 
         /// <seealso cref="System.IO.TextReader.Read(char[], int, int)"/>
         public override int Read(char[] cbuf, int off, int len) {
-            int readAhead = 0;
             int read = 0;
             int pos = off;
-            char[] readAheadBuffer = new char[BUFFER_SIZE];
+            char[] readAheadBuffer = new char[1];
             bool available = true;
             while (available && read < len) {
-                available = base.Read(readAheadBuffer, readAhead, 1) == 1;
+                available = @in.Read(readAheadBuffer, 0, 1) == 1;
                 if (available) {
-                    char c = ProcessChar(readAheadBuffer[readAhead]);
+                    char c = ProcessChar(readAheadBuffer[0]);
                     if (state == STATE_START) {
                         // replace control chars with space
-                        if (iText.Kernel.XMP.Impl.Utils.IsControlChar(c)) {
+                        if (Utils.IsControlChar(c)) {
                             c = ' ';
                         }
                         cbuf[pos++] = c;
-                        readAhead = 0;
                         read++;
                     }
                     else {
                         if (state == STATE_ERROR) {
-                            Unread(readAheadBuffer, 0, readAhead + 1);
-                            readAhead = 0;
                         }
-                        else {
-                            readAhead++;
-                        }
-                    }
-                }
-                else {
-                    if (readAhead > 0) {
-                        // handles case when file ends within excaped sequence
-                        Unread(readAheadBuffer, 0, readAhead);
-                        state = STATE_ERROR;
-                        readAhead = 0;
-                        available = true;
                     }
                 }
             }
-            return read > 0 || available ? read : -1;
+            // It's broken ASCII character sequence, let's just skip them
+            // If we try to preserve them, SAX parser will throw later on anyway
+            return read > 0 || available ? read : XMPUtilsImpl.EofReadBytesValue();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override void Close() {
+            @in.Close();
         }
 
         /// <summary>Processes numeric escaped chars to find out if they are a control character.</summary>

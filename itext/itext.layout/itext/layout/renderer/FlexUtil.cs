@@ -69,6 +69,9 @@ namespace iText.Layout.Renderer {
             // We need to have crossSize only if its value is definite.
             float?[] crossSizes = GetCrossSizes(flexContainerRenderer, layoutBox);
             float? crossSize = crossSizes[0];
+            if (crossSize == null && IsColumnDirection(flexContainerRenderer)) {
+                crossSize = layoutBox.GetWidth();
+            }
             float? minCrossSize = crossSizes[1];
             float? maxCrossSize = crossSizes[2];
             float layoutBoxCrossSize = IsColumnDirection(flexContainerRenderer) ? layoutBox.GetWidth() : layoutBox.GetHeight
@@ -154,59 +157,78 @@ namespace iText.Layout.Renderer {
              renderer, float? crossSize, Rectangle layoutBox) {
             AlignContentPropertyValue alignContent = (AlignContentPropertyValue)renderer.GetProperty<AlignContentPropertyValue?
                 >(Property.ALIGN_CONTENT, AlignContentPropertyValue.NORMAL);
+            bool isFirstFlexStart = (bool)renderer.GetProperty<bool?>(Property.FLEX_FORCE_START_ON_TOP, false);
             if (crossSize != null) {
                 if (renderer.IsWrapReverse()) {
                     JavaCollectionsUtil.Reverse(lines);
                 }
-                float lineCrossSize = 0;
-                foreach (IList<FlexUtil.FlexItemCalculationInfo> line in lines) {
-                    float maxItemSize = GetItemMaxCrossSize(line);
-                    lineCrossSize += maxItemSize;
-                }
+                float boxSize;
                 float freeSpace;
                 if (IsColumnDirection(renderer)) {
-                    freeSpace = Math.Min(layoutBox.GetWidth(), (float)crossSize) - lineCrossSize;
+                    boxSize = Math.Min(layoutBox.GetWidth(), (float)crossSize);
                 }
                 else {
-                    freeSpace = Math.Min(layoutBox.GetHeight(), (float)crossSize) - lineCrossSize;
+                    boxSize = Math.Min(layoutBox.GetHeight(), (float)crossSize);
                 }
-                ApplyAlignContent(lines, alignContent, freeSpace, IsColumnDirection(renderer));
+                float lineCrossSize = 0;
+                int columnsOnPage = 0;
+                foreach (IList<FlexUtil.FlexItemCalculationInfo> line in lines) {
+                    float maxItemSize = GetItemMaxCrossSize(line);
+                    if (IsColumnDirection(renderer)) {
+                        if (lineCrossSize + maxItemSize <= boxSize) {
+                            lineCrossSize += maxItemSize;
+                            columnsOnPage++;
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                    else {
+                        lineCrossSize += maxItemSize;
+                    }
+                }
+                freeSpace = boxSize - lineCrossSize;
+                ApplyAlignContent(lines, IsColumnDirection(renderer) ? columnsOnPage : lines.Count, alignContent, freeSpace
+                     < 0 ? 0 : freeSpace, IsColumnDirection(renderer), isFirstFlexStart);
                 if (renderer.IsWrapReverse()) {
                     JavaCollectionsUtil.Reverse(lines);
                 }
             }
         }
 
-        private static void ApplyAlignContent(IList<IList<FlexUtil.FlexItemCalculationInfo>> lines, AlignContentPropertyValue
-             alignContent, float freeSpace, bool isColumnDirection) {
+        private static void ApplyAlignContent(IList<IList<FlexUtil.FlexItemCalculationInfo>> lines, int linesOnPage
+            , AlignContentPropertyValue alignContent, float freeSpace, bool isColumnDirection, bool isFirstFlexStart
+            ) {
             if (!lines.IsEmpty()) {
                 switch (alignContent) {
                     case AlignContentPropertyValue.CENTER: {
-                        ApplyCentralAlignment(lines, freeSpace, isColumnDirection);
+                        ApplyCenterAlignment(lines, freeSpace, isColumnDirection, isFirstFlexStart);
                         break;
                     }
 
-                    case AlignContentPropertyValue.FLEX_END: {
-                        ApplyFlexEndAlignment(lines, freeSpace, isColumnDirection);
+                    case AlignContentPropertyValue.FLEX_END:
+                    case AlignContentPropertyValue.END: {
+                        ApplyFlexEndAlignment(lines, freeSpace, isColumnDirection, isFirstFlexStart);
                         break;
                     }
 
                     case AlignContentPropertyValue.SPACE_BETWEEN: {
-                        ApplySpaceBetweenAlignment(lines, freeSpace, isColumnDirection);
+                        ApplySpaceBetweenAlignment(lines, linesOnPage, freeSpace, isColumnDirection);
                         break;
                     }
 
                     case AlignContentPropertyValue.SPACE_AROUND: {
-                        ApplySpaceAroundAlignment(lines, freeSpace, isColumnDirection);
+                        ApplySpaceAroundAlignment(lines, linesOnPage, freeSpace, isColumnDirection, isFirstFlexStart);
                         break;
                     }
 
                     case AlignContentPropertyValue.SPACE_EVENLY: {
-                        ApplySpaceEvenlyAlignment(lines, freeSpace, isColumnDirection);
+                        ApplySpaceEvenlyAlignment(lines, linesOnPage, freeSpace, isColumnDirection, isFirstFlexStart);
                         break;
                     }
 
                     case AlignContentPropertyValue.FLEX_START:
+                    case AlignContentPropertyValue.START:
                     default: {
                         break;
                     }
@@ -216,8 +238,13 @@ namespace iText.Layout.Renderer {
 
         // We don't need to do anything in these cases
         private static void ApplyFlexEndAlignment(IList<IList<FlexUtil.FlexItemCalculationInfo>> lines, float freeSpace
-            , bool isColumnDirection) {
-            foreach (FlexUtil.FlexItemCalculationInfo item in lines[0]) {
+            , bool isColumnDirection, bool isFirstFlexStart) {
+            if (isFirstFlexStart && lines.Count < 2) {
+                return;
+            }
+            IList<FlexUtil.FlexItemCalculationInfo> targetLine = isFirstFlexStart && lines.Count > 1 ? lines[1] : lines
+                [0];
+            foreach (FlexUtil.FlexItemCalculationInfo item in targetLine) {
                 if (isColumnDirection) {
                     item.xShift = freeSpace;
                 }
@@ -227,11 +254,11 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private static void ApplySpaceBetweenAlignment(IList<IList<FlexUtil.FlexItemCalculationInfo>> lines, float
-             freeSpace, bool isColumnDirection) {
-            if (lines.Count != 1) {
-                float indentation = freeSpace / (lines.Count - 1);
-                for (int i = 1; i < lines.Count; i++) {
+        private static void ApplySpaceBetweenAlignment(IList<IList<FlexUtil.FlexItemCalculationInfo>> lines, int linesOnPage
+            , float freeSpace, bool isColumnDirection) {
+            if (linesOnPage > 1) {
+                float indentation = freeSpace / (linesOnPage - 1);
+                for (int i = 1; i < linesOnPage; i++) {
                     foreach (FlexUtil.FlexItemCalculationInfo item in lines[i]) {
                         if (isColumnDirection) {
                             item.xShift = indentation;
@@ -244,11 +271,12 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private static void ApplySpaceEvenlyAlignment(IList<IList<FlexUtil.FlexItemCalculationInfo>> lines, float 
-            freeSpace, bool isColumnDirection) {
-            float indentation = freeSpace / (lines.Count + 1);
-            foreach (IList<FlexUtil.FlexItemCalculationInfo> line in lines) {
-                foreach (FlexUtil.FlexItemCalculationInfo item in line) {
+        private static void ApplySpaceEvenlyAlignment(IList<IList<FlexUtil.FlexItemCalculationInfo>> lines, int linesOnPage
+            , float freeSpace, bool isColumnDirection, bool isFirstFlexStart) {
+            float indentation = freeSpace / (linesOnPage + 1);
+            int startIndex = isFirstFlexStart ? 1 : 0;
+            for (int i = startIndex; i < linesOnPage; i++) {
+                foreach (FlexUtil.FlexItemCalculationInfo item in lines[i]) {
                     if (isColumnDirection) {
                         item.xShift = indentation;
                     }
@@ -259,39 +287,36 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private static void ApplySpaceAroundAlignment(IList<IList<FlexUtil.FlexItemCalculationInfo>> lines, float 
-            freeSpace, bool isColumnDirection) {
-            float indentation = freeSpace / lines.Count;
-            foreach (FlexUtil.FlexItemCalculationInfo item in lines[0]) {
-                if (isColumnDirection) {
-                    item.xShift = indentation / 2;
-                }
-                else {
-                    item.yShift = indentation / 2;
-                }
-            }
-            if (lines.Count != 1) {
-                for (int i = 1; i < lines.Count; i++) {
-                    foreach (FlexUtil.FlexItemCalculationInfo item in lines[i]) {
-                        if (isColumnDirection) {
-                            item.xShift = indentation;
-                        }
-                        else {
-                            item.yShift = indentation;
-                        }
+        private static void ApplySpaceAroundAlignment(IList<IList<FlexUtil.FlexItemCalculationInfo>> lines, int linesOnPage
+            , float freeSpace, bool isColumnDirection, bool isFirstFlexStart) {
+            int startIndex = isFirstFlexStart ? 1 : 0;
+            float indentation = freeSpace / linesOnPage;
+            for (int i = startIndex; i < linesOnPage; i++) {
+                float shift = (i == 0) ? (indentation / 2) : indentation;
+                foreach (FlexUtil.FlexItemCalculationInfo item in lines[i]) {
+                    if (isColumnDirection) {
+                        item.xShift = shift;
+                    }
+                    else {
+                        item.yShift = shift;
                     }
                 }
             }
         }
 
-        private static void ApplyCentralAlignment(IList<IList<FlexUtil.FlexItemCalculationInfo>> lines, float freeSpace
-            , bool isColumnDirection) {
-            foreach (FlexUtil.FlexItemCalculationInfo item in lines[0]) {
+        private static void ApplyCenterAlignment(IList<IList<FlexUtil.FlexItemCalculationInfo>> lines, float freeSpace
+            , bool isColumnDirection, bool isFirstFlexStart) {
+            if (isFirstFlexStart && lines.Count < 2) {
+                return;
+            }
+            float indentation = freeSpace / 2;
+            int targetIndex = isFirstFlexStart && lines.Count > 1 ? 1 : 0;
+            foreach (FlexUtil.FlexItemCalculationInfo item in lines[targetIndex]) {
                 if (isColumnDirection) {
-                    item.xShift = freeSpace / 2;
+                    item.xShift = indentation;
                 }
                 else {
-                    item.yShift = freeSpace / 2;
+                    item.yShift = indentation;
                 }
             }
         }

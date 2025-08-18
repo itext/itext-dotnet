@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -138,6 +139,79 @@ namespace iText.Kernel.Pdf.Xobject {
             float width = bBoxMaxByMatrix.Get(Vector.I1) - bBoxMinByMatrix.Get(Vector.I1);
             float height = bBoxMaxByMatrix.Get(Vector.I2) - bBoxMinByMatrix.Get(Vector.I2);
             return new Rectangle(bBoxMinByMatrix.Get(Vector.I1), bBoxMinByMatrix.Get(Vector.I2), width, height);
+        }
+
+        /// <summary>
+        /// Calculates an
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// that maps the coordinate system of a given
+        /// <see cref="PdfFormXObject"/>
+        /// to fit within a specified annotation bounding box.
+        /// </summary>
+        /// <remarks>
+        /// Calculates an
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// that maps the coordinate system of a given
+        /// <see cref="PdfFormXObject"/>
+        /// to fit within a specified annotation bounding box.
+        /// <para />
+        /// This transformation includes translation and scaling so that the xObject's transformed bounding box
+        /// aligns with the specified annotation rectangle.
+        /// </remarks>
+        /// <param name="xObject">
+        /// the
+        /// <see cref="PdfFormXObject"/>
+        /// whose appearance is to be transformed.
+        /// </param>
+        /// <param name="annotBBox">
+        /// the
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// representing the target annotation's bounding box to which the
+        /// appearance should be fitted.
+        /// </param>
+        /// <returns>
+        /// an
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// that, when applied to the appearance stream's graphics, maps it
+        /// to the target annotation rectangle.
+        /// </returns>
+        public static AffineTransform CalcAppearanceTransformToAnnotRect(iText.Kernel.Pdf.Xobject.PdfFormXObject xObject
+            , Rectangle annotBBox) {
+            PdfArray bBox = xObject.GetBBox();
+            if (bBox.Size() != 4) {
+                bBox = new PdfArray(new Rectangle(0, 0));
+                xObject.SetBBox(bBox);
+            }
+            float[] xObjBBox = bBox.ToFloatArray();
+            PdfArray xObjMatrix = xObject.GetPdfObject().GetAsArray(PdfName.Matrix);
+            Rectangle transformedRect;
+            if (xObjMatrix != null && xObjMatrix.Size() == 6) {
+                Point[] xObjRectPoints = new Point[] { new Point(xObjBBox[0], xObjBBox[1]), new Point(xObjBBox[0], xObjBBox
+                    [3]), new Point(xObjBBox[2], xObjBBox[1]), new Point(xObjBBox[2], xObjBBox[3]) };
+                Point[] transformedAppBoxPoints = new Point[xObjRectPoints.Length];
+                new AffineTransform(xObjMatrix.ToDoubleArray()).Transform(xObjRectPoints, 0, transformedAppBoxPoints, 0, xObjRectPoints
+                    .Length);
+                float[] transformedRectArr = new float[] { float.MaxValue, float.MaxValue, -float.MaxValue, -float.MaxValue
+                     };
+                foreach (Point p in transformedAppBoxPoints) {
+                    transformedRectArr[0] = (float)Math.Min(transformedRectArr[0], p.GetX());
+                    transformedRectArr[1] = (float)Math.Min(transformedRectArr[1], p.GetY());
+                    transformedRectArr[2] = (float)Math.Max(transformedRectArr[2], p.GetX());
+                    transformedRectArr[3] = (float)Math.Max(transformedRectArr[3], p.GetY());
+                }
+                transformedRect = new Rectangle(transformedRectArr[0], transformedRectArr[1], transformedRectArr[2] - transformedRectArr
+                    [0], transformedRectArr[3] - transformedRectArr[1]);
+            }
+            else {
+                transformedRect = new Rectangle(0, 0).SetBbox(xObjBBox[0], xObjBBox[1], xObjBBox[2], xObjBBox[3]);
+            }
+            AffineTransform at = AffineTransform.GetTranslateInstance(-transformedRect.GetX(), -transformedRect.GetY()
+                );
+            float scaleX = transformedRect.GetWidth() == 0 ? 1 : annotBBox.GetWidth() / transformedRect.GetWidth();
+            float scaleY = transformedRect.GetHeight() == 0 ? 1 : annotBBox.GetHeight() / transformedRect.GetHeight();
+            at.PreConcatenate(AffineTransform.GetScaleInstance(scaleX, scaleY));
+            at.PreConcatenate(AffineTransform.GetTranslateInstance(annotBBox.GetX(), annotBBox.GetY()));
+            return at;
         }
 
         /// <summary>

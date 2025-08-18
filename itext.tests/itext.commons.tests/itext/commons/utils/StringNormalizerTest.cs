@@ -20,9 +20,11 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Test;
+
 namespace iText.Commons.Utils {
     [NUnit.Framework.Category("UnitTest")]
-    public class StringNormalizerTest {
+    public class StringNormalizerTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void ToLowerCaseTest() {
             NUnit.Framework.Assert.IsNull(StringNormalizer.ToLowerCase(null));

@@ -183,12 +183,13 @@ namespace iText.Svg.Converter {
 
         [NUnit.Framework.Test]
         public virtual void TwoArgTest() {
-            String name = "hello_world";
-            Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + name + ".svg");
-            Stream fos = FileUtil.GetFileOutputStream(destinationFolder + name + ".pdf");
+            String svgName = "hello_world";
+            String pdfName = "twoArg";
+            Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + svgName + ".svg");
+            Stream fos = FileUtil.GetFileOutputStream(destinationFolder + pdfName + ".pdf");
             SvgConverter.CreatePdf(fis, fos);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + name + ".pdf", sourceFolder
-                 + "cmp_" + name + ".pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + pdfName + ".pdf", sourceFolder
+                 + "cmp_" + pdfName + ".pdf", destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]

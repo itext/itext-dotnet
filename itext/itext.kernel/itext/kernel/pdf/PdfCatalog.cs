@@ -607,11 +607,12 @@ namespace iText.Kernel.Pdf {
             outlineMode = true;
             PdfNameTree destsTree = GetNameTree(PdfName.Dests);
             PdfDictionary outlineRoot = GetPdfObject().GetAsDictionary(PdfName.Outlines);
+            PdfDocument document = GetDocument();
             if (outlineRoot == null) {
-                if (null == GetDocument().GetWriter()) {
+                if (null == document.GetWriter()) {
                     return null;
                 }
-                outlines = new PdfOutline(GetDocument());
+                outlines = new PdfOutline(document);
             }
             else {
                 ConstructOutlines(outlineRoot, destsTree);

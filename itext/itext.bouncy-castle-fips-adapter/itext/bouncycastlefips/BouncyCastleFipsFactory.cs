@@ -1273,8 +1273,34 @@ namespace iText.Bouncycastlefips {
             return keyWrapper.Unwrap(key, 0, key.Length).Collect();
         }
 
+        /// <summary><inheritDoc/></summary>
         public IGCMBlockCipher CreateGCMBlockCipher() {
             return new GCMBlockCipherBCFips();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public RSAParameters? GetRsaParametersFromCertificate(IX509Certificate certificate)
+        {
+            IAsymmetricPublicKey asymmetricKeyParameter;
+            try {
+                asymmetricKeyParameter = ((PublicKeyBCFips)certificate.GetPublicKey()).GetPublicKey();
+            }
+            catch (Exception e) {
+                asymmetricKeyParameter = new AsymmetricRsaPublicKey(FipsRsa.Alg,
+                    ((X509CertificateBCFips)certificate).GetCertificate().CertificateStructure.SubjectPublicKeyInfo);
+            }
+            if (asymmetricKeyParameter is AsymmetricRsaPublicKey) {
+                RSAParameters rsaParams = ToRsaParameters((AsymmetricRsaPublicKey)asymmetricKeyParameter);
+                return rsaParams;
+            }
+            return null;
+        }
+        
+        private static RSAParameters ToRsaParameters(AsymmetricRsaPublicKey rsaKey) {
+            RSAParameters rp = new RSAParameters();
+            rp.Modulus = rsaKey.Modulus.ToByteArrayUnsigned();
+            rp.Exponent = rsaKey.PublicExponent.ToByteArrayUnsigned();
+            return rp;
         }
 
         private IX509Certificate ReadPemCertificate(PushbackStream pushbackStream) {

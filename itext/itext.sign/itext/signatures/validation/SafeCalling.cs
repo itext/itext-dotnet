@@ -24,8 +24,8 @@ using System;
 using iText.Signatures.Validation.Report;
 
 namespace iText.Signatures.Validation {
-//\cond DO_NOT_DOCUMENT
-    internal sealed class SafeCalling {
+    /// <summary>Utility class to handle exceptions and generate validation report items instead.</summary>
+    public sealed class SafeCalling {
         private SafeCalling() {
         }
 
@@ -38,6 +38,9 @@ namespace iText.Signatures.Validation {
             try {
                 action();
             }
+            catch (SafeCallingAvoidantException e) {
+                throw;
+            }
             catch (Exception e) {
                 report.AddReportItem(reportItemCreator.Invoke(e));
             }
@@ -48,12 +51,15 @@ namespace iText.Signatures.Validation {
         /// <param name="defaultValue">The value to return when an exception is thrown</param>
         /// <param name="report">The report to add the ReportItem to</param>
         /// <param name="reportItemCreator">A callback to generate a ReportItem</param>
-        /// <typeparam name="T"/>
+        /// <typeparam name="T">type of return value</typeparam>
         /// <returns>The returned value from the action</returns>
         public static T OnExceptionLog<T>(Func<T> action, T defaultValue, ValidationReport report, Func<Exception, 
             ReportItem> reportItemCreator) {
             try {
                 return action();
+            }
+            catch (SafeCallingAvoidantException e) {
+                throw;
             }
             catch (Exception e) {
                 report.AddReportItem(reportItemCreator.Invoke(e));
@@ -70,6 +76,9 @@ namespace iText.Signatures.Validation {
             try {
                 action();
             }
+            catch (SafeCallingAvoidantException e) {
+                throw;
+            }
             catch (Exception e) {
                 report.AddReportItem(reportItemCreator.Invoke(e));
             }
@@ -80,12 +89,15 @@ namespace iText.Signatures.Validation {
         /// <param name="defaultValue">The value to return when an exception is thrown</param>
         /// <param name="report">The report to add the ReportItem to</param>
         /// <param name="reportItemCreator">A callback to generate a ReportItem</param>
-        /// <typeparam name="T"/>
+        /// <typeparam name="T">type of return value</typeparam>
         /// <returns>The returned value from the action</returns>
         public static T OnRuntimeExceptionLog<T>(Func<T> action, T defaultValue, ValidationReport report, Func<Exception
             , ReportItem> reportItemCreator) {
             try {
                 return action();
+            }
+            catch (SafeCallingAvoidantException e) {
+                throw;
             }
             catch (Exception e) {
                 report.AddReportItem(reportItemCreator.Invoke(e));
@@ -93,5 +105,4 @@ namespace iText.Signatures.Validation {
             return defaultValue;
         }
     }
-//\endcond
 }

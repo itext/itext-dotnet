@@ -46,6 +46,8 @@ namespace iText.Signatures {
         /// <summary>The URLs of the CRLs.</summary>
         protected internal IList<Uri> urls = new List<Uri>();
 
+        private int connectionTimeout = -1;
+
         /// <summary>
         /// Creates a CrlClientOnline instance that will try to find
         /// a single CRL by walking through the certificate chain.
@@ -145,6 +147,12 @@ namespace iText.Signatures {
             return ar;
         }
 
+        /// <summary>Sets the connection timeout for the http client</summary>
+        /// <param name="i">the timeout in milliseconds, a negative number means using the system connection timeout</param>
+        public virtual void SetConnectionTimeout(int i) {
+            connectionTimeout = i;
+        }
+
         /// <summary>
         /// Get CRL response represented as
         /// <see cref="System.IO.Stream"/>.
@@ -164,7 +172,7 @@ namespace iText.Signatures {
         /// <see cref="System.IO.Stream"/>
         /// </returns>
         protected internal virtual Stream GetCrlResponse(IX509Certificate cert, Uri urlt) {
-            return SignUtils.GetHttpResponse(urlt);
+            return SignUtils.GetHttpResponse(urlt, connectionTimeout);
         }
 
         /// <summary>Adds an URL to the list of CRL URLs</summary>

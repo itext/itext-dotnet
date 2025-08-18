@@ -41,7 +41,7 @@ namespace iText.Forms.Xfa
 		{
 			order = new List<String>();
 			name2Node = new Dictionary<String, XNode>();
-			stack = new Stack<String>();
+			somParts = new List<String>();
 			anform = 0;
 			inverseSearch = new Dictionary<String, InverseStore>();
 			ProcessDatasetsInternal(n);
@@ -53,16 +53,16 @@ namespace iText.Forms.Xfa
 		/// <returns>the new <CODE>Node</CODE> of the inserted name</returns>
 		public virtual XNode InsertNode(XNode n, String shortName)
 		{
-			Stack<String> localStack = SplitParts(shortName);
+			List<String> somNameParts = SplitParts(shortName);
 			XDocument doc = n.Document;
 			XNode n2 = null;
 		    n = ((XElement) n).FirstNode;
 			while (n is XElement) {
 			    n = ((XElement) n).NextNode;
 			}
-			for (int k = 0; k < localStack.Count; ++k)
+			for (int k = 0; k < somNameParts.Count; ++k)
 			{
-				String part = localStack.ElementAt(k);
+				String part = somNameParts.ElementAt(k);
 				int idx = part.LastIndexOf('[');
 				String name = part.JSubstring(0, idx);
 				idx = System.Convert.ToInt32(part.JSubstring(idx + 1, part.Length - 1));
@@ -89,7 +89,7 @@ namespace iText.Forms.Xfa
 				}
 				n = n2;
 			}
-			InverseSearchAdd(inverseSearch, localStack, shortName);
+			InverseSearchAdd(inverseSearch, somNameParts, shortName);
 			name2Node[shortName] = n2;
 			order.Add(shortName);
 			return n2;
@@ -145,16 +145,16 @@ namespace iText.Forms.Xfa
                         else
                             i = i + 1;
                         ss[s] = i;
-                        stack.Push(string.Format("{0}[{1}]", s, i));
+                        somParts.Add(string.Format("{0}[{1}]", s, i));
                         if (HasChildren(n2))
                         {
                             ProcessDatasetsInternal(n2);
                         }
-                        String unstack = PrintStack();
-                        order.Add(unstack);
-                        InverseSearchAdd(unstack);
-                        name2Node[unstack] = n2;
-                        stack.Pop();
+                        String somName = PrintStack();
+                        order.Add(somName);
+                        InverseSearchAdd(somName);
+                        name2Node[somName] = n2;
+                        somParts.RemoveAt(somParts.Count - 1);
 
 					}
 				    n2 = n2 is XElement ? ((XElement) n2).NextNode : (n2 is XText ? ((XText)n2).NextNode : null);

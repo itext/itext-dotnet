@@ -1673,6 +1673,12 @@ namespace iText.Kernel.Pdf {
                 .NO_VIEW) && !PdfCheckersUtil.CheckFlag(flags, PdfAnnotation.TOGGLE_NO_VIEW));
         }
 
+        private static bool IsReferenceAllowed(String role) {
+            // For these roles, Link is an allowed child, but Reference is not.
+            return !StandardRoles.DOCUMENT.Equals(role) && !StandardRoles.DOCUMENTFRAGMENT.Equals(role) && !StandardRoles
+                .ART.Equals(role) && !StandardRoles.SECT.Equals(role);
+        }
+
         private void TagAnnotation(PdfAnnotation annotation) {
             bool tagAdded = false;
             bool presentInTagStructure = true;
@@ -1734,12 +1740,24 @@ namespace iText.Kernel.Pdf {
 
         private bool AddAnnotationTag(TagTreePointer tagPointer, PdfAnnotation annotation) {
             if (annotation is PdfLinkAnnotation) {
-                // "Link" tag was added starting from PDF 1.4
+                // "Link" and "Reference" tags were added starting from PDF 1.4
                 if (PdfVersion.PDF_1_3.CompareTo(GetDocument().GetPdfVersion()) < 0) {
-                    if (!StandardRoles.LINK.Equals(tagPointer.GetRole())) {
-                        tagPointer.AddTag(StandardRoles.LINK);
+                    if (StandardRoles.REFERENCE.Equals(tagPointer.GetRole()) || StandardRoles.LINK.Equals(tagPointer.GetRole()
+                        )) {
+                        return false;
+                    }
+                    String linkRole = ((PdfLinkAnnotation)annotation).GetRoleBasedOnDestination(GetDocument());
+                    if (StandardRoles.REFERENCE.Equals(linkRole) && IsReferenceAllowed(tagPointer.GetRole())) {
+                        PdfNamespace currentNamespace = tagPointer.GetNamespaceForNewTags();
+                        if (PdfVersion.PDF_2_0.CompareTo(GetDocument().GetPdfVersion()) <= 0) {
+                            tagPointer.SetNamespaceForNewTags(PdfNamespace.GetDefault(GetDocument()));
+                        }
+                        tagPointer.AddTag(StandardRoles.REFERENCE);
+                        tagPointer.SetNamespaceForNewTags(currentNamespace);
                         return true;
                     }
+                    tagPointer.AddTag(StandardRoles.LINK);
+                    return true;
                 }
             }
             else {

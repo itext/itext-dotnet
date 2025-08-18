@@ -46,19 +46,13 @@ namespace iText.Pdfua.Checkers {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
-        private UaValidationTestFramework framework;
-
-        [NUnit.Framework.SetUp]
-        public virtual void InitializeFramework() {
-            framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-        }
-
         public static IList<PdfUAConformance> Data() {
             return UaValidationTestFramework.GetConformanceList();
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TableWithoutHeaders01(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(4);
             for (int i = 0; i < 16; i++) {
                 tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
@@ -69,6 +63,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TableWithoutHeaders02(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(4);
             for (int i = 0; i < 4; i++) {
                 tableBuilder.AddHeaderCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
@@ -85,6 +80,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TableWithHeaderScopeColumn01(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(4);
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Column"));
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 2", 1, 1, "Column"));
@@ -99,6 +95,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TableWithHeaderScopeColumn02(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(4);
             tableBuilder.AddHeaderCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Column"));
             tableBuilder.AddHeaderCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 2", 1, 1, "Column"));
@@ -113,6 +110,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TableWithHeaderScopeColumn03(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(4);
             tableBuilder.AddFooterCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Column"));
             tableBuilder.AddFooterCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 2", 1, 1, "Column"));
@@ -128,6 +126,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 2)]
         public virtual void TableWithHeaderScopeColumn04(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(4);
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Column"));
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 2", 1, 1, "Column"));
@@ -144,6 +143,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 8)]
         public virtual void NotRegularRowGroupingsInTableTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(4);
             tableBuilder.AddHeaderCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 2, 1, "Column"));
             tableBuilder.AddHeaderCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 2", 1, 2, "Column"));
@@ -160,6 +160,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TableWithHeaderScopeColumn05(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(4);
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Column"));
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 2", 1, 1, "Column"));
@@ -174,6 +175,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TableWithHeaderScopeColumn06(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(4);
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 2, 1, "Column"));
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 2", 1, 1, "Column"));
@@ -188,6 +190,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TableWithHeaderScopeColumn07(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(4);
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 4, 1, "Column"));
             for (int i = 0; i < 12; i++) {
@@ -199,6 +202,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TableWithHeaderScopeColumn08(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(4);
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Column"));
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 2", 1, 1, "Column"));
@@ -216,6 +220,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TableWithHeaderScopeColumn09(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(4);
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Column"));
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 2", 1, 1, "Column"));
@@ -232,6 +237,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TableWithHeaderScopeColumn10(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(4);
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Column"));
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 2", 1, 1, "Column"));
@@ -247,6 +253,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TableWithHeaderScopeColumn11(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(4);
             tableBuilder.AddFooterCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Column"));
             tableBuilder.AddFooterCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 2", 1, 1, "Column"));
@@ -262,6 +269,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TableWithHeaderScopeColumn12(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(5);
             for (int i = 0; i < 10; i++) {
                 tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
@@ -280,10 +288,11 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TableWithHeaderScopeColumn13(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(3);
             tableBuilder.AddHeaderCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Column"));
             tableBuilder.AddHeaderCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 2", 1, 1, "Column"));
-            tableBuilder.AddHeaderCell(new _Generator_346());
+            tableBuilder.AddHeaderCell(new _Generator_355());
             for (int i = 0; i < 9; i++) {
                 tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
                 tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
@@ -292,8 +301,8 @@ namespace iText.Pdfua.Checkers {
             framework.AssertBothFail("tableWithHeaderScopeColumn13", pdfUAConformance);
         }
 
-        private sealed class _Generator_346 : UaValidationTestFramework.Generator<Cell> {
-            public _Generator_346() {
+        private sealed class _Generator_355 : UaValidationTestFramework.Generator<Cell> {
+            public _Generator_355() {
             }
 
             public Cell Generate() {
@@ -305,6 +314,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TableWithHeaderScopeColumn14(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(4);
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Column"));
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 2", 1, 1, "None"));
@@ -325,6 +335,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TableWithHeaderScopeColumn15(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(4);
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Column"));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
@@ -339,6 +350,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TableWithHeaderScopeColumn16(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(4);
             for (int i = 0; i < 4; i++) {
                 tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
@@ -353,6 +365,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TableWithHeaderRowScope01(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(4);
             tableBuilder.AddHeaderCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Row"));
             tableBuilder.AddHeaderCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
@@ -372,6 +385,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TableWithHeaderRowScope02(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(4);
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Row"));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 3, 1, null));
@@ -381,6 +395,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void TableWithHeaderRowScope03(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(4);
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 3, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Row"));
@@ -398,6 +413,7 @@ namespace iText.Pdfua.Checkers {
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Row"));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("tableWithHeaderRowScope04", pdfUAConformance);
         }
@@ -414,6 +430,7 @@ namespace iText.Pdfua.Checkers {
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("tableWithHeaderRowScope05", pdfUAConformance);
         }
@@ -452,6 +469,7 @@ namespace iText.Pdfua.Checkers {
             tableBuilder2.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
             tableBuilder2.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
             tableBuilder2.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder, tableBuilder1, tableBuilder2);
             framework.AssertBothValid("tableWithHeaderRowScope06", pdfUAConformance);
         }
@@ -461,16 +479,17 @@ namespace iText.Pdfua.Checkers {
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(3);
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Row"));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
-            tableBuilder.AddBodyCell(new _Generator_555());
+            tableBuilder.AddBodyCell(new _Generator_573());
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Row"));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothFail("tableWithHeaderRowScope07", pdfUAConformance);
         }
 
-        private sealed class _Generator_555 : UaValidationTestFramework.Generator<Cell> {
-            public _Generator_555() {
+        private sealed class _Generator_573 : UaValidationTestFramework.Generator<Cell> {
+            public _Generator_573() {
             }
 
             public Cell Generate() {
@@ -488,6 +507,7 @@ namespace iText.Pdfua.Checkers {
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("tableWithHeaderRowScope08", pdfUAConformance);
         }
@@ -501,6 +521,7 @@ namespace iText.Pdfua.Checkers {
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "None"));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             if (PdfUAConformance.PDF_UA_1 == pdfUAConformance) {
                 framework.AssertBothFail("tableWithHeaderRowScope09", pdfUAConformance);
@@ -521,6 +542,7 @@ namespace iText.Pdfua.Checkers {
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, null));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("tableWithHeaderBothScope01", pdfUAConformance);
         }
@@ -537,6 +559,7 @@ namespace iText.Pdfua.Checkers {
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, null));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("tableWithHeaderBothScope02", pdfUAConformance);
         }
@@ -548,6 +571,7 @@ namespace iText.Pdfua.Checkers {
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, null));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("tableWithHeaderBothScope03", pdfUAConformance);
         }
@@ -561,6 +585,7 @@ namespace iText.Pdfua.Checkers {
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, null));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             if (PdfUAConformance.PDF_UA_1 == pdfUAConformance) {
                 framework.AssertBothFail("tableWithId01", pdfUAConformance);
@@ -580,6 +605,7 @@ namespace iText.Pdfua.Checkers {
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, null));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             if (PdfUAConformance.PDF_UA_1 == pdfUAConformance) {
                 framework.AssertBothFail("tableWithId02", pdfUAConformance);
@@ -602,6 +628,7 @@ namespace iText.Pdfua.Checkers {
                 ("id2")));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, JavaCollectionsUtil.SingletonList
                 ("id3")));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("tableWithId03", pdfUAConformance);
         }
@@ -618,6 +645,7 @@ namespace iText.Pdfua.Checkers {
                 ("id2")));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, JavaCollectionsUtil.SingletonList
                 ("id3")));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("tableWithId04", pdfUAConformance);
         }
@@ -634,6 +662,7 @@ namespace iText.Pdfua.Checkers {
                 ("id2")));
             tableBuilder.AddHeaderCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, JavaCollectionsUtil.SingletonList
                 ("id3")));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("tableWithId05", pdfUAConformance);
         }
@@ -656,6 +685,7 @@ namespace iText.Pdfua.Checkers {
                 ("id2")));
             tableBuilder.AddFooterCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, JavaCollectionsUtil.SingletonList
                 ("id3")));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("tableWithId06", pdfUAConformance);
         }
@@ -678,6 +708,7 @@ namespace iText.Pdfua.Checkers {
                 ("id2")));
             tableBuilder.AddFooterCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, JavaCollectionsUtil.SingletonList
                 ("id3")));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("tableWithId07", pdfUAConformance);
         }
@@ -694,6 +725,7 @@ namespace iText.Pdfua.Checkers {
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier("id1", "Header", 1, 1, "None"));
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier("id2", "Header", 1, 1, "None"));
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier("id3", "Header", 1, 1, "None"));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("tableWithId08", pdfUAConformance);
         }
@@ -708,6 +740,7 @@ namespace iText.Pdfua.Checkers {
                 ("id1")));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, JavaCollectionsUtil.SingletonList
                 ("id1")));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("tableWithId09", pdfUAConformance);
         }
@@ -722,6 +755,7 @@ namespace iText.Pdfua.Checkers {
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, JavaCollectionsUtil.SingletonList
                 ("id1")));
             tableBuilder.AddFooterCell(new PdfUATableTest.HeaderCellSupplier("id1", "Header", 3, 1, "None"));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("tableWithId10", pdfUAConformance);
         }
@@ -742,6 +776,7 @@ namespace iText.Pdfua.Checkers {
                 ("id1")));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, JavaCollectionsUtil.SingletonList
                 ("id1")));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("tableWithId11", pdfUAConformance);
         }
@@ -758,6 +793,7 @@ namespace iText.Pdfua.Checkers {
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier("id1", "Header", 1, 1, "None"));
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier("notexisting", "Header", 1, 1, "None"));
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier("id3", "Header", 1, 1, "None"));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothFail("tableWithId12", pdfUAConformance);
         }
@@ -774,6 +810,7 @@ namespace iText.Pdfua.Checkers {
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier("id1", "Header", 1, 1, "None"));
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header", 1, 1, "None"));
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier("id3", "Header", 1, 1, "None"));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("tableWithId13", pdfUAConformance);
         }
@@ -790,6 +827,7 @@ namespace iText.Pdfua.Checkers {
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier("id1", "Header", 1, 1, "None"));
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier("id2", "Header", 1, 1, "None"));
             tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier("id3", "Header", 1, 1, "None"));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("tableWithId14", pdfUAConformance);
         }
@@ -806,6 +844,7 @@ namespace iText.Pdfua.Checkers {
                 ("id2")));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data1", 1, 1, JavaCollectionsUtil.SingletonList
                 ("id3")));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             if (PdfUAConformance.PDF_UA_1 == pdfUAConformance) {
                 framework.AssertBothFail("tableWithId15", pdfUAConformance);
@@ -825,6 +864,7 @@ namespace iText.Pdfua.Checkers {
                 )));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data2", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data3", 1, 1, null));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothFail("combination01", pdfUAConformance);
         }
@@ -836,6 +876,7 @@ namespace iText.Pdfua.Checkers {
             for (int i = 0; i < 201; i++) {
                 tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier("id" + i, "Header1", 1, 1, "None"));
             }
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("combination02", pdfUAConformance);
         }
@@ -859,6 +900,7 @@ namespace iText.Pdfua.Checkers {
                 tableBuilder.AddFooterCell(new PdfUATableTest.DataCellSupplier("Data1F", 1, 1, JavaCollectionsUtil.SingletonList
                     ("id" + i)));
             }
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("combination04", pdfUAConformance);
         }
@@ -873,6 +915,7 @@ namespace iText.Pdfua.Checkers {
                 )));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data2", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data3", 1, 1, null));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothFail("combination05", pdfUAConformance);
         }
@@ -887,6 +930,7 @@ namespace iText.Pdfua.Checkers {
                 )));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data2", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data3", 1, 1, null));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothFail("combination06", pdfUAConformance);
         }
@@ -901,6 +945,7 @@ namespace iText.Pdfua.Checkers {
                 )));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data2", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data3", 1, 1, null));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothFail("combination07", pdfUAConformance);
         }
@@ -915,6 +960,7 @@ namespace iText.Pdfua.Checkers {
                 "id2")));
             tableBuilder.AddFooterCell(new PdfUATableTest.DataCellSupplier("Data2", 1, 1, null));
             tableBuilder.AddFooterCell(new PdfUATableTest.DataCellSupplier("Data3", 1, 1, null));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothFail("combination08", pdfUAConformance);
         }
@@ -929,12 +975,14 @@ namespace iText.Pdfua.Checkers {
                 ("id2")));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data2", 1, 1, null));
             tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data3", 1, 1, null));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("combination09", pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void RoleMapping01(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(2);
             framework.AddBeforeGenerationHook(((pdfDocument) => {
                 PdfStructTreeRoot root = pdfDocument.GetStructTreeRoot();
@@ -948,14 +996,14 @@ namespace iText.Pdfua.Checkers {
                 }
             }
             ));
-            tableBuilder.AddBodyCell(new _Generator_1086());
-            tableBuilder.AddBodyCell(new _Generator_1096());
+            tableBuilder.AddBodyCell(new _Generator_1134());
+            tableBuilder.AddBodyCell(new _Generator_1144());
             framework.AddSuppliers(tableBuilder);
             framework.AssertBothValid("tableCustomRoles", pdfUAConformance);
         }
 
-        private sealed class _Generator_1086 : UaValidationTestFramework.Generator<Cell> {
-            public _Generator_1086() {
+        private sealed class _Generator_1134 : UaValidationTestFramework.Generator<Cell> {
+            public _Generator_1134() {
             }
 
             public Cell Generate() {
@@ -966,8 +1014,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_1096 : UaValidationTestFramework.Generator<Cell> {
-            public _Generator_1096() {
+        private sealed class _Generator_1144 : UaValidationTestFramework.Generator<Cell> {
+            public _Generator_1144() {
             }
 
             public Cell Generate() {

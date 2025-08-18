@@ -1058,6 +1058,28 @@ namespace iText.Kernel.Pdf {
                 );
         }
 
+        [NUnit.Framework.Test]
+        public virtual void DefaultNamespaceTest() {
+            using (PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)))) {
+                document.SetTagged();
+                document.GetStructTreeRoot().AddNamespace(new PdfNamespace(StandardNamespaces.PDF_2_0));
+                TagTreePointer pointer = new TagTreePointer(document);
+                AccessibilityProperties properties = pointer.AddTag(StandardRoles.DIV).GetProperties();
+                PdfNamespace defaultNoDoc = PdfNamespace.GetDefault(null);
+                properties.SetNamespace(defaultNoDoc);
+                NUnit.Framework.Assert.AreEqual(StandardNamespaces.PDF_1_7, defaultNoDoc.GetNamespaceName());
+                PdfNamespace defaultNew = PdfNamespace.GetDefault(document);
+                properties.SetNamespace(defaultNew);
+                NUnit.Framework.Assert.AreEqual(StandardNamespaces.PDF_1_7, defaultNew.GetNamespaceName());
+                NUnit.Framework.Assert.AreNotEqual(defaultNoDoc.GetPdfObject(), defaultNew.GetPdfObject());
+                PdfNamespace defaultSame = PdfNamespace.GetDefault(document);
+                properties.SetNamespace(defaultSame);
+                NUnit.Framework.Assert.AreEqual(StandardNamespaces.PDF_1_7, defaultSame.GetNamespaceName());
+                NUnit.Framework.Assert.AreEqual(defaultNew.GetPdfObject(), defaultSame.GetPdfObject());
+            }
+        }
+
         private void CompareResult(String outFileName, String cmpFileName, String diffNamePrefix) {
             CompareTool compareTool = new CompareTool();
             String outPdf = destinationFolder + outFileName;

@@ -27,6 +27,8 @@ namespace iText.Kernel.Exceptions {
     public sealed class KernelExceptionMessageConstant {
         public const String ALGORITHM_IS_NOT_SUPPORTED = "Algorithm {0} is not supported.";
 
+        public const String ALREADY_CLOSED = "Already closed";
+
         public const String AMOUNT_OF_BYTES_LESS_THAN_ZERO = "Amount of bytes in the PDF document cannot be less than zero";
 
         public const String ANNOTATION_SHALL_HAVE_REFERENCE_TO_PAGE = "Annotation shall have reference to page.";
@@ -460,6 +462,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String PAGE_IS_NOT_SET_FOR_THE_PDF_TAG_STRUCTURE = "Page is not set for the pdf tag structure.";
 
+        public const String PASSED_BYTE_BUFFER_CAN_NOT_BE_NULL = "Passed byte buffer can not be null.";
+
         public const String PDF_DECRYPTION = "Exception occurred with PDF document decryption. One of the possible "
              + "reasons is wrong password or wrong public key certificate and private key.";
 
@@ -662,6 +666,8 @@ namespace iText.Kernel.Exceptions {
              "direct number object.";
 
         public const String XREF_STREAM_HAS_CYCLED_REFERENCES = "Xref stream has cycled references. Prev pointer indicates an already visited xref stream.";
+
+        public const String XREF_STREAM_HAS_SELF_REFERENCED_OBJECT = "Xref stream has self referenced object. Objet {0} refers to itself.";
 
         public const String XREF_STRUCTURE_SIZE_EXCEEDED_THE_LIMIT = "Xref structure contains too many elements " 
             + "and may cause OOM exception. You can increase number of elements by setting custom " + "MemoryLimitsAwareHandler.";

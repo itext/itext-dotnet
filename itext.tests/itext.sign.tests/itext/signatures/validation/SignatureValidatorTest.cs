@@ -52,28 +52,15 @@ namespace iText.Signatures.Validation {
 
         private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
 
-        private SignatureValidationProperties parameters;
-
-        private MockIssuingCertificateRetriever mockCertificateRetriever;
-
-        private ValidatorChainBuilder builder;
-
-        private MockChainValidator mockCertificateChainValidator;
-
-        private MockDocumentRevisionsValidator mockDocumentRevisionsValidator;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
         }
 
-        [NUnit.Framework.SetUp]
-        public virtual void SetUp() {
-            mockCertificateChainValidator = new MockChainValidator();
-            parameters = new SignatureValidationProperties();
-            mockCertificateRetriever = new MockIssuingCertificateRetriever();
-            mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
-            builder = new ValidatorChainBuilder().WithIssuingCertificateRetrieverFactory(() => mockCertificateRetriever
-                ).WithSignatureValidationProperties(parameters).WithCertificateChainValidatorFactory(() => mockCertificateChainValidator
+        private ValidatorChainBuilder CreateValidatorChainBuilder(MockIssuingCertificateRetriever mockCertificateRetriever
+            , SignatureValidationProperties parameters, MockChainValidator mockCertificateChainValidator, MockDocumentRevisionsValidator
+             mockDocumentRevisionsValidator) {
+            return new ValidatorChainBuilder().WithIssuingCertificateRetrieverFactory(() => mockCertificateRetriever).
+                WithSignatureValidationProperties(parameters).WithCertificateChainValidatorFactory(() => mockCertificateChainValidator
                 ).WithRevocationDataValidatorFactory(() => new MockRevocationDataValidator()).WithDocumentRevisionsValidatorFactory
                 (() => mockDocumentRevisionsValidator);
         }
@@ -82,6 +69,12 @@ namespace iText.Signatures.Validation {
         public virtual void LatestSignatureIsTimestampTest() {
             String chainName = CERTS_SRC + "validCertsChain.pem";
             String privateKeyName = CERTS_SRC + "rootCertKey.pem";
+            MockChainValidator mockCertificateChainValidator = new MockChainValidator();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+            MockDocumentRevisionsValidator mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
+            ValidatorChainBuilder builder = CreateValidatorChainBuilder(mockCertificateRetriever, parameters, mockCertificateChainValidator
+                , mockDocumentRevisionsValidator);
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             IPrivateKey rootPrivateKey = PemFileHelper.ReadFirstKey(privateKeyName, PASSWORD);
@@ -119,6 +112,12 @@ namespace iText.Signatures.Validation {
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             IPrivateKey rootPrivateKey = PemFileHelper.ReadFirstKey(privateKeyName, PASSWORD);
+            MockChainValidator mockCertificateChainValidator = new MockChainValidator();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+            MockDocumentRevisionsValidator mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
+            ValidatorChainBuilder builder = CreateValidatorChainBuilder(mockCertificateRetriever, parameters, mockCertificateChainValidator
+                , mockDocumentRevisionsValidator);
             ValidationReport report;
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "modifiedDocTimestampDate.pdf"
                 ))) {
@@ -150,6 +149,12 @@ namespace iText.Signatures.Validation {
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             IPrivateKey rootPrivateKey = PemFileHelper.ReadFirstKey(privateKeyName, PASSWORD);
+            MockChainValidator mockCertificateChainValidator = new MockChainValidator();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+            MockDocumentRevisionsValidator mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
+            ValidatorChainBuilder builder = CreateValidatorChainBuilder(mockCertificateRetriever, parameters, mockCertificateChainValidator
+                , mockDocumentRevisionsValidator);
             ValidationReport report;
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signatureWithModifiedTimestampDate.pdf"
                 ))) {
@@ -180,6 +185,12 @@ namespace iText.Signatures.Validation {
             String chainName = CERTS_SRC + "validCertsChain.pem";
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
+            MockChainValidator mockCertificateChainValidator = new MockChainValidator();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+            MockDocumentRevisionsValidator mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
+            ValidatorChainBuilder builder = CreateValidatorChainBuilder(mockCertificateRetriever, parameters, mockCertificateChainValidator
+                , mockDocumentRevisionsValidator);
             ValidationReport report;
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "docWithBrokenTimestamp.pdf"))
                 ) {
@@ -197,6 +208,12 @@ namespace iText.Signatures.Validation {
             String chainName = CERTS_SRC + "validCertsChain.pem";
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
+            MockChainValidator mockCertificateChainValidator = new MockChainValidator();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+            MockDocumentRevisionsValidator mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
+            ValidatorChainBuilder builder = CreateValidatorChainBuilder(mockCertificateRetriever, parameters, mockCertificateChainValidator
+                , mockDocumentRevisionsValidator);
             ValidationReport report;
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "modifiedDoc.pdf"))) {
                 mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
@@ -214,6 +231,12 @@ namespace iText.Signatures.Validation {
             String chainName = CERTS_SRC + "validCertsChain.pem";
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
+            MockChainValidator mockCertificateChainValidator = new MockChainValidator();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+            MockDocumentRevisionsValidator mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
+            ValidatorChainBuilder builder = CreateValidatorChainBuilder(mockCertificateRetriever, parameters, mockCertificateChainValidator
+                , mockDocumentRevisionsValidator);
             ValidationReport report;
             parameters.SetContinueAfterFailure(ValidatorContexts.All(), CertificateSources.All(), false);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "modifiedDoc.pdf"))) {
@@ -237,6 +260,12 @@ namespace iText.Signatures.Validation {
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
             IX509Certificate signCert = (IX509Certificate)certificateChain[0];
+            MockChainValidator mockCertificateChainValidator = new MockChainValidator();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+            MockDocumentRevisionsValidator mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
+            ValidatorChainBuilder builder = CreateValidatorChainBuilder(mockCertificateRetriever, parameters, mockCertificateChainValidator
+                , mockDocumentRevisionsValidator);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "docWithDss.pdf"))) {
                 mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
                 SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
@@ -256,6 +285,12 @@ namespace iText.Signatures.Validation {
             String chainName = CERTS_SRC + "validCertsChain.pem";
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
+            MockChainValidator mockCertificateChainValidator = new MockChainValidator();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+            MockDocumentRevisionsValidator mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
+            ValidatorChainBuilder builder = CreateValidatorChainBuilder(mockCertificateRetriever, parameters, mockCertificateChainValidator
+                , mockDocumentRevisionsValidator);
             ValidationReport report;
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "docWithBrokenDss.pdf"))) {
                 mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
@@ -269,6 +304,12 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void IndeterminateChainValidationLeadsToIndeterminateResultTest() {
+            MockChainValidator mockCertificateChainValidator = new MockChainValidator();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+            MockDocumentRevisionsValidator mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
+            ValidatorChainBuilder builder = CreateValidatorChainBuilder(mockCertificateRetriever, parameters, mockCertificateChainValidator
+                , mockDocumentRevisionsValidator);
             mockCertificateChainValidator.OnCallDo((c) => c.report.AddReportItem(new ReportItem("test", "test", ReportItem.ReportItemStatus
                 .INDETERMINATE)));
             ValidationReport report;
@@ -282,6 +323,12 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void InvalidChainValidationLeadsToInvalidResultTest() {
+            MockChainValidator mockCertificateChainValidator = new MockChainValidator();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+            MockDocumentRevisionsValidator mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
+            ValidatorChainBuilder builder = CreateValidatorChainBuilder(mockCertificateRetriever, parameters, mockCertificateChainValidator
+                , mockDocumentRevisionsValidator);
             mockCertificateChainValidator.OnCallDo((c) => c.report.AddReportItem(new ReportItem("test", "test", ReportItem.ReportItemStatus
                 .INVALID)));
             ValidationReport report;
@@ -295,6 +342,12 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void InvalidRevisionsValidationLeadsToInvalidResultTest() {
+            MockChainValidator mockCertificateChainValidator = new MockChainValidator();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+            MockDocumentRevisionsValidator mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
+            ValidatorChainBuilder builder = CreateValidatorChainBuilder(mockCertificateRetriever, parameters, mockCertificateChainValidator
+                , mockDocumentRevisionsValidator);
             mockDocumentRevisionsValidator.SetReportItemStatus(ReportItem.ReportItemStatus.INVALID);
             ValidationReport report;
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDoc.pdf"))) {
@@ -309,6 +362,12 @@ namespace iText.Signatures.Validation {
         public virtual void ValidateMultipleSignatures() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "docWithMultipleSignaturesAndTimeStamp.pdf"
                 ))) {
+                MockChainValidator mockCertificateChainValidator = new MockChainValidator();
+                SignatureValidationProperties parameters = new SignatureValidationProperties();
+                MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+                MockDocumentRevisionsValidator mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
+                ValidatorChainBuilder builder = CreateValidatorChainBuilder(mockCertificateRetriever, parameters, mockCertificateChainValidator
+                    , mockDocumentRevisionsValidator);
                 SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
                 ValidationReport report = signatureValidator.ValidateSignatures();
                 AssertValidationReport.AssertThat(report, (r) => r.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfLogs
@@ -352,6 +411,12 @@ namespace iText.Signatures.Validation {
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDoc.pdf"))) {
+                MockChainValidator mockCertificateChainValidator = new MockChainValidator();
+                SignatureValidationProperties parameters = new SignatureValidationProperties();
+                MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+                MockDocumentRevisionsValidator mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
+                ValidatorChainBuilder builder = CreateValidatorChainBuilder(mockCertificateRetriever, parameters, mockCertificateChainValidator
+                    , mockDocumentRevisionsValidator);
                 mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
                 mockCertificateChainValidator.OnCallDo((c) => {
                     throw new Exception("Test chain validation failure");
@@ -370,6 +435,12 @@ namespace iText.Signatures.Validation {
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "timestampSignatureDoc.pdf"))) {
+                MockChainValidator mockCertificateChainValidator = new MockChainValidator();
+                SignatureValidationProperties parameters = new SignatureValidationProperties();
+                MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+                MockDocumentRevisionsValidator mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
+                ValidatorChainBuilder builder = CreateValidatorChainBuilder(mockCertificateRetriever, parameters, mockCertificateChainValidator
+                    , mockDocumentRevisionsValidator);
                 mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
                 mockCertificateChainValidator.OnCallDo((c) => {
                     throw new Exception("Test chain validation failure");
@@ -388,6 +459,12 @@ namespace iText.Signatures.Validation {
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "docWithDss.pdf"))) {
+                MockChainValidator mockCertificateChainValidator = new MockChainValidator();
+                SignatureValidationProperties parameters = new SignatureValidationProperties();
+                MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+                MockDocumentRevisionsValidator mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
+                ValidatorChainBuilder builder = CreateValidatorChainBuilder(mockCertificateRetriever, parameters, mockCertificateChainValidator
+                    , mockDocumentRevisionsValidator);
                 mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
                 mockCertificateRetriever.OnAddKnownCertificatesDo((c) => {
                     throw new Exception("Test add know certificates failure");
@@ -406,6 +483,12 @@ namespace iText.Signatures.Validation {
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDoc.pdf"))) {
+                MockChainValidator mockCertificateChainValidator = new MockChainValidator();
+                SignatureValidationProperties parameters = new SignatureValidationProperties();
+                MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+                MockDocumentRevisionsValidator mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
+                ValidatorChainBuilder builder = CreateValidatorChainBuilder(mockCertificateRetriever, parameters, mockCertificateChainValidator
+                    , mockDocumentRevisionsValidator);
                 mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
                 mockCertificateRetriever.OnAddKnownCertificatesDo((c) => {
                     throw new Exception("Test add know certificates failure");
@@ -424,6 +507,12 @@ namespace iText.Signatures.Validation {
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "timestampSignatureDoc.pdf"))) {
+                MockChainValidator mockCertificateChainValidator = new MockChainValidator();
+                SignatureValidationProperties parameters = new SignatureValidationProperties();
+                MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+                MockDocumentRevisionsValidator mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
+                ValidatorChainBuilder builder = CreateValidatorChainBuilder(mockCertificateRetriever, parameters, mockCertificateChainValidator
+                    , mockDocumentRevisionsValidator);
                 mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
                 mockCertificateRetriever.OnAddKnownCertificatesDo((c) => {
                     throw new Exception("Test add know certificates failure");
@@ -442,6 +531,12 @@ namespace iText.Signatures.Validation {
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validDoc.pdf"))) {
+                MockChainValidator mockCertificateChainValidator = new MockChainValidator();
+                SignatureValidationProperties parameters = new SignatureValidationProperties();
+                MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+                MockDocumentRevisionsValidator mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
+                ValidatorChainBuilder builder = CreateValidatorChainBuilder(mockCertificateRetriever, parameters, mockCertificateChainValidator
+                    , mockDocumentRevisionsValidator);
                 mockCertificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
                 mockDocumentRevisionsValidator.OnCallDo((c) => {
                     throw new Exception("Test add know certificates failure");
@@ -457,6 +552,12 @@ namespace iText.Signatures.Validation {
         [NUnit.Framework.Test]
         public virtual void ThrowExceptionOnTheSecondValidationAttempt() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "timestampSignatureDoc.pdf"))) {
+                MockChainValidator mockCertificateChainValidator = new MockChainValidator();
+                SignatureValidationProperties parameters = new SignatureValidationProperties();
+                MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+                MockDocumentRevisionsValidator mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
+                ValidatorChainBuilder builder = CreateValidatorChainBuilder(mockCertificateRetriever, parameters, mockCertificateChainValidator
+                    , mockDocumentRevisionsValidator);
                 SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
                 signatureValidator.ValidateSignatures();
                 Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => signatureValidator.ValidateSignatures
@@ -472,6 +573,12 @@ namespace iText.Signatures.Validation {
         public virtual void SignatureWithSpecifiedNameNotFound() {
             ValidationReport report;
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "timestampSignatureDoc.pdf"))) {
+                MockChainValidator mockCertificateChainValidator = new MockChainValidator();
+                SignatureValidationProperties parameters = new SignatureValidationProperties();
+                MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+                MockDocumentRevisionsValidator mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
+                ValidatorChainBuilder builder = CreateValidatorChainBuilder(mockCertificateRetriever, parameters, mockCertificateChainValidator
+                    , mockDocumentRevisionsValidator);
                 SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
                 report = signatureValidator.ValidateSignature("Invalid signature name");
             }

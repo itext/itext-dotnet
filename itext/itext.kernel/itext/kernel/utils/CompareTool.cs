@@ -1647,22 +1647,29 @@ namespace iText.Kernel.Utils {
                     PdfObject cmpObj = cmpDict.Get(key);
                     if (cmpObj != null && cmpObj.IsName() && cmpObj.ToString().IndexOf('+') > 0) {
                         PdfObject outObj = outDict.Get(key);
-                        if (!outObj.IsName() || outObj.ToString().IndexOf('+') == -1) {
-                            if (compareResult != null && currentPath != null) {
-                                compareResult.AddError(currentPath, MessageFormatUtil.Format("PdfDictionary {0} entry: Expected: {1}. Found: {2}"
-                                    , key.ToString(), cmpObj.ToString(), outObj.ToString()));
-                            }
+                        if (outObj == null) {
+                            compareResult.AddError(currentPath, MessageFormatUtil.Format("PdfDictionary {0} entry: Expected: {1}. Found: {2}"
+                                , key.ToString(), cmpObj.ToString(), "null"));
                             dictsAreSame = false;
                         }
                         else {
-                            String cmpName = cmpObj.ToString().Substring(cmpObj.ToString().IndexOf('+'));
-                            String outName = outObj.ToString().Substring(outObj.ToString().IndexOf('+'));
-                            if (!cmpName.Equals(outName)) {
+                            if (!outObj.IsName() || outObj.ToString().IndexOf('+') == -1) {
                                 if (compareResult != null && currentPath != null) {
                                     compareResult.AddError(currentPath, MessageFormatUtil.Format("PdfDictionary {0} entry: Expected: {1}. Found: {2}"
                                         , key.ToString(), cmpObj.ToString(), outObj.ToString()));
                                 }
                                 dictsAreSame = false;
+                            }
+                            else {
+                                String cmpName = cmpObj.ToString().Substring(cmpObj.ToString().IndexOf('+'));
+                                String outName = outObj.ToString().Substring(outObj.ToString().IndexOf('+'));
+                                if (!cmpName.Equals(outName)) {
+                                    if (compareResult != null && currentPath != null) {
+                                        compareResult.AddError(currentPath, MessageFormatUtil.Format("PdfDictionary {0} entry: Expected: {1}. Found: {2}"
+                                            , key.ToString(), cmpObj.ToString(), outObj.ToString()));
+                                    }
+                                    dictsAreSame = false;
+                                }
                             }
                         }
                         continue;

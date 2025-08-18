@@ -28,7 +28,9 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Navigation;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Utils;
 using iText.Test;
 using iText.Test.Attributes;
@@ -55,6 +57,7 @@ namespace iText.Kernel.Pdf.Annot {
         public virtual void AddLinkAnnotation01() {
             PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "linkAnnotation01.pdf"
                 ));
+            document.SetTagged();
             PdfPage page1 = document.AddNewPage();
             PdfPage page2 = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
@@ -94,12 +97,125 @@ namespace iText.Kernel.Pdf.Annot {
             canvas.ShowText("Click here to go to itextpdf site.");
             canvas.EndText();
             canvas.Release();
-            page.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 590, 300, 25)).SetAction(PdfAction.CreateURI("http://itextpdf.com"
-                )).SetBorder(new PdfArray(new float[] { 0, 0, 1 })).SetColor(new PdfArray(new float[] { 1, 0, 0 })));
+            page.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 590, 300, 25)).SetDestination(PdfExplicitDestination
+                .CreateFit(page)).SetBorder(new PdfArray(new float[] { 0, 0, 1 })).SetColor(new PdfArray(new float[] { 
+                1, 0, 0 })));
             page.Flush();
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "linkAnnotation02.pdf"
                 , sourceFolder + "cmp_linkAnnotation02.pdf", destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinkAnnotationReferenceTest() {
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "linkAnnotationReference.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
+            document.SetTagged();
+            document.GetTagStructureContext().GetAutoTaggingPointer().AddTag("P");
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.BeginText();
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER_BOLD), 14);
+            canvas.MoveText(100, 600);
+            canvas.ShowText("Click here to go to itextpdf site.");
+            canvas.EndText();
+            canvas.Release();
+            page.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 590, 300, 25)).SetDestination(PdfExplicitDestination
+                .CreateFit(page)).SetBorder(new PdfArray(new float[] { 0, 0, 1 })).SetColor(new PdfArray(new float[] { 
+                1, 0, 0 })));
+            page.Flush();
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "linkAnnotationReference.pdf"
+                , sourceFolder + "cmp_linkAnnotationReference.pdf", destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinkAnnotationReference2Test() {
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "linkAnnotationReference2.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
+            document.SetTagged();
+            document.GetTagStructureContext().GetAutoTaggingPointer().AddTag("P").SetNamespaceForNewTags(PdfNamespace.
+                GetDefault(document)).AddTag("Reference");
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.BeginText();
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.COURIER_BOLD), 14);
+            canvas.MoveText(100, 600);
+            canvas.ShowText("Click here to go to itextpdf site.");
+            canvas.EndText();
+            canvas.Release();
+            page.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 590, 300, 25)).SetAction(PdfAction.CreateGoTo(
+                PdfExplicitDestination.CreateFit(page))).SetBorder(new PdfArray(new float[] { 0, 0, 1 })).SetColor(new 
+                PdfArray(new float[] { 1, 0, 0 })));
+            page.Flush();
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "linkAnnotationReference2.pdf"
+                , sourceFolder + "cmp_linkAnnotationReference2.pdf", destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SeveralLinkAnnotationsTest() {
+            using (PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "severalLinkAnnotations.pdf"
+                ))) {
+                document.SetTagged();
+                document.GetTagStructureContext().GetAutoTaggingPointer();
+                PdfPage page = document.AddNewPage();
+                page.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 590, 300, 25)).SetAction(PdfAction.CreateGoTo(
+                    PdfExplicitDestination.CreateFit(page))));
+                page.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 590, 300, 25)).SetAction(PdfAction.CreateGoToR
+                    (new PdfStringFS("Some fake destination"), new PdfExplicitDestination(new PdfArray(new PdfNumber(2))))
+                    ));
+                PdfDictionary destinationDictionary = new PdfDictionary();
+                destinationDictionary.Put(PdfName.D, PdfExplicitDestination.CreateFit(page).GetPdfObject());
+                PdfDictionary destinationDictionary2 = new PdfDictionary();
+                destinationDictionary2.Put(PdfName.SD, PdfExplicitDestination.CreateFit(page).GetPdfObject());
+                PdfDictionary dests = new PdfDictionary();
+                dests.Put(new PdfName("destination_name"), destinationDictionary);
+                dests.Put(new PdfName("destination_name_2"), destinationDictionary2);
+                document.GetCatalog().Put(PdfName.Dests, dests);
+                page.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 590, 300, 25)).SetDestination(new PdfNamedDestination
+                    ("destination_name")));
+                document.GetCatalog().GetNameTree(PdfName.Dests).AddEntry("destination_name2", new PdfExplicitRemoteGoToDestination
+                    (new PdfArray(new PdfNumber(1))).GetPdfObject());
+                page.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 590, 300, 25)).SetDestination(new PdfStringDestination
+                    ("destination_name2")));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "severalLinkAnnotations.pdf"
+                , sourceFolder + "cmp_severalLinkAnnotations.pdf", destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinkAnnotationWithDictionaryStringDestinationTest() {
+            using (PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "linkAnnotationWithDictionaryStringDestination.pdf"
+                ))) {
+                document.SetTagged();
+                document.GetTagStructureContext().GetAutoTaggingPointer();
+                PdfPage page = document.AddNewPage();
+                PdfDictionary destinationDictionary = new PdfDictionary();
+                destinationDictionary.Put(PdfName.D, PdfExplicitDestination.CreateFit(page).GetPdfObject());
+                document.GetCatalog().GetNameTree(PdfName.Dests).AddEntry("destination_name", destinationDictionary);
+                page.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 590, 300, 25)).SetDestination(new PdfStringDestination
+                    ("destination_name")));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "linkAnnotationWithDictionaryStringDestination.pdf"
+                , sourceFolder + "cmp_linkAnnotationWithDictionaryStringDestination.pdf", destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinkAnnotationWithCyclicReferencesTest() {
+            using (PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "linkAnnotationWithCyclicReferences.pdf"
+                ))) {
+                document.SetTagged();
+                document.GetTagStructureContext().GetAutoTaggingPointer();
+                PdfPage page = document.AddNewPage();
+                PdfDictionary dests = new PdfDictionary();
+                dests.Put(new PdfName("destination_name"), new PdfName("destination_name"));
+                document.GetCatalog().Put(PdfName.Dests, dests);
+                page.AddAnnotation(new PdfLinkAnnotation(new Rectangle(100, 590, 300, 25)).SetAction(PdfAction.CreateGoTo(
+                    new PdfNamedDestination("destination_name"))));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "linkAnnotationWithCyclicReferences.pdf"
+                , sourceFolder + "cmp_linkAnnotationWithCyclicReferences.pdf", destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]

@@ -124,6 +124,17 @@ namespace iText.Forms.Xfa {
         }
         
         [NUnit.Framework.Test]
+        public virtual void ExtractXfaDataFromDatasetTest()
+        {
+            String inFileName = sourceFolder + "xfaFormWithDataset2.pdf";
+            PdfDocument doc = new PdfDocument(new PdfReader(inFileName));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, false);
+            XfaForm xfa = form.GetXfaForm();
+            String actualfieldValue = xfa.GetXfaFieldValue("Subform_Order.TextField_CompanyName");
+            NUnit.Framework.Assert.AreEqual("Giedi Prime", actualfieldValue);
+        }
+        
+        [NUnit.Framework.Test]
         public virtual void ExtractNodeTextByPathText() {
              String inFileName = sourceFolder + "TextField1.pdf";
              using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName)))

@@ -42,16 +42,9 @@ namespace iText.Pdfua.Checkers {
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/FreeSans.ttf";
 
-        private UaValidationTestFramework framework;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
-        }
-
-        [NUnit.Framework.SetUp]
-        public virtual void InitializeFramework() {
-            framework = new UaValidationTestFramework(DESTINATION_FOLDER);
         }
 
         public static IList<PdfUAConformance> TestSources() {
@@ -62,6 +55,7 @@ namespace iText.Pdfua.Checkers {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Ignore = true
             )]
         public virtual void CheckTableOfContentsTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 Document document = new Document(pdfDocument);
                 PdfFont font = GetFont();
@@ -95,6 +89,7 @@ namespace iText.Pdfua.Checkers {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Ignore = true
             )]
         public virtual void CheckTableOfContentsWithReferenceChildTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 AddTableOfContentsWithRefInChild(pdfDocument, StandardRoles.REFERENCE);
             }
@@ -106,6 +101,7 @@ namespace iText.Pdfua.Checkers {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Ignore = true
             )]
         public virtual void CheckTableOfContentsWithRefOnDivChildTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 AddTableOfContentsWithRefInChild(pdfDocument, StandardRoles.DIV);
             }
@@ -117,6 +113,7 @@ namespace iText.Pdfua.Checkers {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Ignore = true
             )]
         public virtual void CheckTableOfContentsWithRefOnArtifactChildTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 AddTableOfContentsWithRefInChild(pdfDocument, StandardRoles.ARTIFACT);
             }
@@ -136,6 +133,7 @@ namespace iText.Pdfua.Checkers {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Ignore = true
             )]
         public virtual void CheckTableOfContentsWithRefOnGrandchildTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 AddTableOfContentsWithRefInGrandchild(pdfDocument, StandardRoles.REFERENCE);
             }
@@ -147,6 +145,7 @@ namespace iText.Pdfua.Checkers {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Ignore = true
             )]
         public virtual void CheckTableOfContentsWithRefOnGrandchildTest2(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 AddTableOfContentsWithRefInGrandchild(pdfDocument, StandardRoles.P);
             }
@@ -158,6 +157,7 @@ namespace iText.Pdfua.Checkers {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Ignore = true
             )]
         public virtual void CheckTableOfContentsNoRefTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 Document document = new Document(pdfDocument);
                 PdfFont font = GetFont();
@@ -191,6 +191,7 @@ namespace iText.Pdfua.Checkers {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Ignore = true
             )]
         public virtual void CheckInvalidStructureTableOfContentsTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 Document document = new Document(pdfDocument);
                 PdfFont font = GetFont();

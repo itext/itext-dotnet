@@ -29,6 +29,7 @@ using iText.IO.Font.Cmap;
 using iText.IO.Source;
 
 namespace iText.IO.Font {
+    /// <summary>Class representing CMap encoding in pdf document.</summary>
     public class CMapEncoding {
         private static readonly IList<byte[]> IDENTITY_H_V_CODESPACE_RANGES = JavaUtil.ArraysAsList(new byte[] { 0
             , 0 }, new byte[] { (byte)0xff, (byte)0xff });
@@ -46,7 +47,8 @@ namespace iText.IO.Font {
 
         private IList<byte[]> codeSpaceRanges;
 
-        /// <param name="cmap">CMap name.</param>
+        /// <summary>Creates a new CMap encoding.</summary>
+        /// <param name="cmap">CMap name</param>
         public CMapEncoding(String cmap) {
             this.cmap = cmap;
             if (cmap.Equals(PdfEncodings.IDENTITY_H) || cmap.Equals(PdfEncodings.IDENTITY_V)) {
@@ -57,8 +59,9 @@ namespace iText.IO.Font {
             this.codeSpaceRanges = IDENTITY_H_V_CODESPACE_RANGES;
         }
 
-        /// <param name="cmap">CMap name.</param>
-        /// <param name="uniMap">CMap to convert Unicode value to CID.</param>
+        /// <summary>Creates a new CMap encoding.</summary>
+        /// <param name="cmap">CMap name</param>
+        /// <param name="uniMap">CMap to convert Unicode value to CID</param>
         public CMapEncoding(String cmap, String uniMap) {
             this.cmap = cmap;
             this.uniMap = uniMap;
@@ -73,6 +76,9 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>Creates a new CMap encoding.</summary>
+        /// <param name="cmap">CMap name</param>
+        /// <param name="cmapBytes">CMap binary data</param>
         public CMapEncoding(String cmap, byte[] cmapBytes) {
             this.cmap = cmap;
             cid2Code = new CMapCidToCodepoint();
@@ -87,14 +93,32 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>Checks if CMap is direct or indirect pdf object</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if direct,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public virtual bool IsDirect() {
             return isDirect;
         }
 
+        /// <summary>Checks if CMap to convert Unicode value to CID is present.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if present,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public virtual bool HasUniMap() {
             return uniMap != null && uniMap.Length > 0;
         }
 
+        /// <summary>Gets string identifying the issuer of the character collection.</summary>
+        /// <returns>name of the issuer</returns>
         public virtual String GetRegistry() {
             if (IsDirect()) {
                 return "Adobe";
@@ -104,6 +128,8 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>Gets string that uniquely names the character collection within the specified registry.</summary>
+        /// <returns>character collection name</returns>
         public virtual String GetOrdering() {
             if (IsDirect()) {
                 return "Identity";
@@ -113,6 +139,8 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>Gets the supplement number of the character collection</summary>
+        /// <returns>supplement number</returns>
         public virtual int GetSupplement() {
             if (IsDirect()) {
                 return 0;
@@ -122,10 +150,14 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>Gets CMap name which converts Unicode value to CID.</summary>
+        /// <returns>CMap name</returns>
         public virtual String GetUniMapName() {
             return uniMap;
         }
 
+        /// <summary>Gets CMap name.</summary>
+        /// <returns>CMap name</returns>
         public virtual String GetCmapName() {
             return cmap;
         }
@@ -136,11 +168,20 @@ namespace iText.IO.Font {
         /// was built with corresponding cmap name.
         /// </summary>
         /// <param name="cmap">a CMAP</param>
-        /// <returns>true, if the CMapEncoding was built with the cmap. Otherwise false.</returns>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// , if the CMapEncoding was built with the cmap,
+        /// <see langword="false"/>
+        /// otherwise.
+        /// </returns>
         public virtual bool IsBuiltWith(String cmap) {
             return Object.Equals(cmap, this.cmap);
         }
 
+        /// <summary>Gets CMap bytes by CID.</summary>
+        /// <param name="cid">id of the CMap</param>
+        /// <returns>cmap as byte array</returns>
         public virtual byte[] GetCmapBytes(int cid) {
             int length = GetCmapBytesLength(cid);
             byte[] result = new byte[length];

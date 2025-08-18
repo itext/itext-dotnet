@@ -61,16 +61,9 @@ namespace iText.Pdfua.Checkers {
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/FreeSans.ttf";
 
-        private UaValidationTestFramework framework;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
-        }
-
-        [NUnit.Framework.SetUp]
-        public virtual void InitializeFramework() {
-            framework = new UaValidationTestFramework(DESTINATION_FOLDER);
         }
 
         public static IList<PdfUAConformance> Data() {
@@ -189,6 +182,7 @@ namespace iText.Pdfua.Checkers {
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ManuallyAddToCanvasCorrectFontAndUnTaggedContent(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 try {
                     MemoryStream os = new MemoryStream();
@@ -230,6 +224,7 @@ namespace iText.Pdfua.Checkers {
         public virtual void ManuallyAddToCanvasAndCorrectFontAndArtifactUnTaggedContent(PdfUAConformance pdfUAConformance
             ) {
             //Now we are again adding untagged content with some artifacts and embedded font's so we should also be fine
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 MemoryStream os = new MemoryStream();
                 PdfDocument dummyDoc = new PdfDocument(new PdfWriter(os));
@@ -305,6 +300,7 @@ namespace iText.Pdfua.Checkers {
              pdfUAConformance) {
             // We are adding tagged content to an artifact. Looks like Verapdf doesn't check xobject stream at all because
             // page content is marked as artifact. We think it's wrong though.
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 try {
                     MemoryStream os = new MemoryStream();
@@ -334,6 +330,7 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void ManuallyAddToCanvasAndCorrectFontAndArtifactTaggedContentInsideUntaggedPageContent(PdfUAConformance
              pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             MemoryStream os = new MemoryStream();
             PdfDocument dummyDoc = new PdfDocument(new PdfWriter(os));
             dummyDoc.SetTagged();
@@ -365,6 +362,7 @@ namespace iText.Pdfua.Checkers {
         public virtual void ManuallyAddToCanvasAtLocationAndCorrectFontAndArtifactTaggedContentInsideUntaggedPageContent
             (PdfUAConformance pdfUAConformance) {
             // We are adding untagged content, so we should throw an exception.
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             MemoryStream os = new MemoryStream();
             PdfDocument dummyDoc = new PdfDocument(new PdfWriter(os));
             dummyDoc.SetTagged();
@@ -427,6 +425,7 @@ namespace iText.Pdfua.Checkers {
         public virtual void ManuallyAddToCanvasAtLocationAndCorrectFontAndArtifactTaggedContentInsideUntaggedPageContentab
             (PdfUAConformance pdfUAConformance) {
             // We are adding untagged content, so we should throw an exception.
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             MemoryStream os = new MemoryStream();
             PdfDocument dummyDoc = new PdfDocument(new PdfWriter(os));
             Document document = new Document(dummyDoc);
@@ -455,6 +454,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void AddImageObjectNotInline(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             // We are adding untagged content, so we should throw an exception.
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
@@ -474,6 +474,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void AddImageObjectInline(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             // We are adding untagged content, so we should throw an exception.
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
@@ -493,6 +494,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void AddImageTranformationMatrix(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             // We are adding untagged content, so we should throw an exception.
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
@@ -512,6 +514,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void AddImageFittedIntoRectangle(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             // We are adding untagged content, so we should throw an exception.
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());

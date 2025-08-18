@@ -33,6 +33,11 @@ using iText.Kernel.Pdf.Event;
 using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
+    /// <summary>Writes the PDF to the specified output.</summary>
+    /// <remarks>
+    /// Writes the PDF to the specified output. Writing can be customized using
+    /// <see cref="WriterProperties"/>.
+    /// </remarks>
     public class PdfWriter : PdfOutputStream {
         private static readonly byte[] OBJ = ByteUtils.GetIsoBytes(" obj\n");
 

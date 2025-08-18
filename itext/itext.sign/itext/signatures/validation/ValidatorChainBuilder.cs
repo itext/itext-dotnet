@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Kernel.Pdf;
 using iText.Signatures;
+using iText.Signatures.Validation.Lotl;
 using iText.Signatures.Validation.Report.Xml;
 using iText.StyledXmlParser.Resolver.Resource;
 
@@ -55,14 +56,21 @@ namespace iText.Signatures.Validation {
 
         private Func<ICrlClient> crlClientFactory;
 
+        private Func<LotlTrustedStore> lotlTrustedStoreFactory;
+
+        private Func<LotlService> lotlServiceFactory;
+
         private ICollection<IX509Certificate> trustedCertificates;
 
         private ICollection<IX509Certificate> knownCertificates;
 
         private AdESReportAggregator adESReportAggregator = new NullAdESReportAggregator();
 
+        private bool trustEuropeanLotl = false;
+
         /// <summary>Creates a ValidatorChainBuilder using default implementations</summary>
         public ValidatorChainBuilder() {
+            lotlTrustedStoreFactory = () => BuildLotlTrustedStore();
             certificateRetrieverFactory = () => BuildIssuingCertificateRetriever();
             certificateChainValidatorFactory = () => BuildCertificateChainValidator();
             revocationDataValidatorFactory = () => BuildRevocationDataValidator();
@@ -72,6 +80,59 @@ namespace iText.Signatures.Validation {
             documentRevisionsValidatorFactory = () => BuildDocumentRevisionsValidator();
             ocspClientFactory = () => new OcspClientBouncyCastle();
             crlClientFactory = () => new CrlClientOnline();
+            lotlServiceFactory = () => BuildLotlService();
+        }
+
+        /// <summary>Establishes trust in European Union List of Trusted Lists.</summary>
+        /// <remarks>
+        /// Establishes trust in European Union List of Trusted Lists.
+        /// <para />
+        /// This feature by default relies on remote resource fetching and third-party EU trusted lists posted online.
+        /// iText has no influence over these resources maintained by third-party authorities.
+        /// <para />
+        /// If this feature is enabled,
+        /// <see cref="iText.Signatures.Validation.Lotl.LotlService"/>
+        /// is created and used to retrieve,
+        /// validate and establish trust in EU List of Trusted Lists.
+        /// <para />
+        /// In order to properly work, apart from enabling it, user needs to call
+        /// <see cref="iText.Signatures.Validation.Lotl.LotlService.InitializeGlobalCache(iText.Signatures.Validation.Lotl.LotlFetchingProperties)
+        ///     "/>
+        /// method, which performs initial initialization.
+        /// <para />
+        /// Additionally, in order to successfully use this feature, a user needs to provide a source for trusted
+        /// certificates which will be used for LOTL files validation.
+        /// One can either add an explicit dependency to "eu-trusted-lists-resources" iText module or configure own source of
+        /// trusted certificates. When iText dependency is used it is required to make sure that the newest version of the
+        /// dependency is selected, otherwise LOTL validation will fail.
+        /// <para />
+        /// The required certificates for LOTL files validations are published in the Official Journal of the European Union.
+        /// Your own source of trusted certificates can be configured by using
+        /// <see cref="EuropeanTrustedListConfigurationFactory.SetFactory(System.Func{T})"/>.
+        /// </remarks>
+        /// <param name="trustEuropeanLotl">
+        /// 
+        /// <see langword="true"/>
+        /// if European Union LOTLs are expected to be trusted,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </param>
+        /// <returns>current ValidatorChainBuilder.</returns>
+        public virtual iText.Signatures.Validation.ValidatorChainBuilder TrustEuropeanLotl(bool trustEuropeanLotl) {
+            this.trustEuropeanLotl = trustEuropeanLotl;
+            return this;
+        }
+
+        /// <summary>Checks if European Union List of Trusted Lists is supposed to be trusted.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if European Union LOTLs are expected to be trusted,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        public virtual bool IsEuropeanLotlTrusted() {
+            return this.trustEuropeanLotl;
         }
 
         /// <summary>
@@ -391,6 +452,20 @@ namespace iText.Signatures.Validation {
             return adESReportAggregator;
         }
 
+        /// <summary>
+        /// Retrieves the explicitly added or automatically created
+        /// <see cref="iText.StyledXmlParser.Resolver.Resource.IResourceRetriever"/>
+        /// instance.
+        /// </summary>
+        /// <returns>
+        /// the explicitly added or automatically created
+        /// <see cref="iText.StyledXmlParser.Resolver.Resource.IResourceRetriever"/>
+        /// instance.
+        /// </returns>
+        public virtual IResourceRetriever GetResourceRetriever() {
+            return resourceRetrieverFactory();
+        }
+
 //\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Retrieves the explicitly added or automatically created
@@ -471,20 +546,6 @@ namespace iText.Signatures.Validation {
         }
 //\endcond
 
-        /// <summary>
-        /// Retrieves the explicitly added or automatically created
-        /// <see cref="iText.StyledXmlParser.Resolver.Resource.IResourceRetriever"/>
-        /// instance.
-        /// </summary>
-        /// <returns>
-        /// the explicitly added or automatically created
-        /// <see cref="iText.StyledXmlParser.Resolver.Resource.IResourceRetriever"/>
-        /// instance.
-        /// </returns>
-        public virtual IResourceRetriever GetResourceRetriever() {
-            return resourceRetrieverFactory();
-        }
-
 //\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Retrieves the explicitly added or automatically created
@@ -517,6 +578,78 @@ namespace iText.Signatures.Validation {
         }
 //\endcond
 
+        /// <summary>
+        /// Sets up factory which is responsible for
+        /// <see cref="iText.Signatures.Validation.Lotl.LotlTrustedStore"/>
+        /// creation.
+        /// </summary>
+        /// <param name="lotlTrustedStoreFactory">
+        /// factory responsible for
+        /// <see cref="iText.Signatures.Validation.Lotl.LotlTrustedStore"/>
+        /// creation
+        /// </param>
+        /// <returns>
+        /// this same instance of
+        /// <see cref="ValidatorChainBuilder"/>
+        /// </returns>
+        public virtual iText.Signatures.Validation.ValidatorChainBuilder WithLotlTrustedStoreFactory(Func<LotlTrustedStore
+            > lotlTrustedStoreFactory) {
+            this.lotlTrustedStoreFactory = lotlTrustedStoreFactory;
+            return this;
+        }
+
+        /// <summary>
+        /// Retrieves explicitly added or automatically created
+        /// <see cref="iText.Signatures.Validation.Lotl.LotlTrustedStore"/>
+        /// instance.
+        /// </summary>
+        /// <returns>
+        /// explicitly added or automatically created
+        /// <see cref="iText.Signatures.Validation.Lotl.LotlTrustedStore"/>
+        /// instance
+        /// </returns>
+        public virtual LotlTrustedStore GetLotlTrustedStore() {
+            return this.lotlTrustedStoreFactory();
+        }
+
+        /// <summary>
+        /// Sets up factory which is responsible for
+        /// <see cref="iText.Signatures.Validation.Lotl.LotlService"/>
+        /// creation.
+        /// </summary>
+        /// <param name="lotlServiceFactory">
+        /// factory responsible for
+        /// <see cref="iText.Signatures.Validation.Lotl.LotlService"/>
+        /// creation
+        /// </param>
+        /// <returns>
+        /// this same instance of
+        /// <see cref="ValidatorChainBuilder"/>
+        /// </returns>
+        public virtual iText.Signatures.Validation.ValidatorChainBuilder WithLotlService(Func<LotlService> lotlServiceFactory
+            ) {
+            this.lotlServiceFactory = lotlServiceFactory;
+            return this;
+        }
+
+        /// <summary>
+        /// Retrieves explicitly added or automatically created
+        /// <see cref="iText.Signatures.Validation.Lotl.LotlService"/>
+        /// instance.
+        /// </summary>
+        /// <returns>
+        /// explicitly added or automatically created
+        /// <see cref="iText.Signatures.Validation.Lotl.LotlService"/>
+        /// instance
+        /// </returns>
+        public virtual LotlService GetLotlService() {
+            return this.lotlServiceFactory();
+        }
+
+        private static LotlService BuildLotlService() {
+            return LotlService.GetGlobalService();
+        }
+
         private IssuingCertificateRetriever BuildIssuingCertificateRetriever() {
             IssuingCertificateRetriever result = new IssuingCertificateRetriever(this.resourceRetrieverFactory());
             if (trustedCertificates != null) {
@@ -525,7 +658,12 @@ namespace iText.Signatures.Validation {
             if (knownCertificates != null) {
                 result.AddKnownCertificates(knownCertificates);
             }
+            result.AddKnownCertificates(lotlTrustedStoreFactory().GetCertificates());
             return result;
+        }
+
+        private LotlTrustedStore BuildLotlTrustedStore() {
+            return new LotlTrustedStore(this);
         }
     }
 }

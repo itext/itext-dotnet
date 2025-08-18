@@ -27,6 +27,7 @@ using iText.IO.Exceptions;
 using iText.IO.Source;
 
 namespace iText.IO.Font {
+    /// <summary>Class containing base Compact Font Format functionality</summary>
     public class CFFFont {
 //\cond DO_NOT_DOCUMENT
         internal static readonly String[] operatorNames = new String[] { "version", "Notice", "FullName", "FamilyName"
@@ -93,7 +94,9 @@ namespace iText.IO.Font {
             , "Semibold" };
 //\endcond
 
-        //private String[] strings;
+        /// <summary>Gets string from INDEX structure which corresponds to provided SID.</summary>
+        /// <param name="sid">2-byte string identifier</param>
+        /// <returns>string value</returns>
         public virtual String GetString(char sid) {
             if (sid < standardStrings.Length) {
                 return standardStrings[sid];
@@ -364,6 +367,7 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>An offset item, representing a data object.</summary>
         protected internal abstract class OffsetItem : CFFFont.Item {
             private int offset;
 
@@ -373,10 +377,10 @@ namespace iText.IO.Font {
                 return offset;
             }
 
-            /// <summary>Set the value of an offset item that was initially unknown.</summary>
+            /// <summary>Sets the value of an offset item that was initially unknown.</summary>
             /// <remarks>
-            /// Set the value of an offset item that was initially unknown.
-            /// It will be fixed up latex by a call to xref on some marker.
+            /// Sets the value of an offset item that was initially unknown.
+            /// It will be fixed up later by a call to xref on some marker.
             /// </remarks>
             /// <param name="offset">offset to set</param>
             public virtual void SetOffset(int offset) {
@@ -392,6 +396,10 @@ namespace iText.IO.Font {
 
             private readonly RandomAccessFileOrArray buf;
 
+            /// <summary>Creates a new range item represented by offset and length</summary>
+            /// <param name="buf">buffer containing font data</param>
+            /// <param name="offset">an offset relative to start of the CFF data</param>
+            /// <param name="length">length of the data</param>
             public RangeItem(RandomAccessFileOrArray buf, int offset, int length) {
                 this.offset = offset;
                 this.length = length;
@@ -429,11 +437,16 @@ namespace iText.IO.Font {
         protected internal sealed class IndexOffsetItem : CFFFont.OffsetItem {
             private readonly int size;
 
+            /// <summary>Creates a new index-offset item</summary>
+            /// <param name="size">required size in the CFF</param>
+            /// <param name="value">offset value</param>
             public IndexOffsetItem(int size, int value) {
                 this.size = size;
                 this.SetOffset(value);
             }
 
+            /// <summary>Creates a new index-offset item</summary>
+            /// <param name="size">required size in the CFF</param>
             public IndexOffsetItem(int size) {
                 this.size = size;
             }
@@ -489,14 +502,15 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <summary>an unknown offset in a dictionary for the list.</summary>
+        /// <summary>An unknown offset in a dictionary for the list.</summary>
         /// <remarks>
-        /// an unknown offset in a dictionary for the list.
+        /// An unknown offset in a dictionary for the list.
         /// We will fix up the offset later; for now, assume it's large.
         /// </remarks>
         protected internal sealed class DictOffsetItem : CFFFont.OffsetItem {
             public readonly int size;
 
+            /// <summary>Creates a new unknown offset item</summary>
             public DictOffsetItem() {
                 this.size = 5;
             }
@@ -522,6 +536,8 @@ namespace iText.IO.Font {
         protected internal sealed class UInt24Item : CFFFont.Item {
             private readonly int value;
 
+            /// <summary>Creates a new Card24 item.</summary>
+            /// <param name="value">0 - 2097151 unsigned number</param>
             public UInt24Item(int value) {
                 this.value = value;
             }
@@ -539,7 +555,7 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <summary>Card32 item.</summary>
+        /// <summary>A Card32 item.</summary>
         protected internal sealed class UInt32Item : CFFFont.Item {
             private readonly int value;
 
@@ -565,6 +581,8 @@ namespace iText.IO.Font {
         protected internal sealed class UInt16Item : CFFFont.Item {
             private readonly char value;
 
+            /// <summary>Creates a new Card16 item</summary>
+            /// <param name="value">0 - 65535 unsigned number</param>
             public UInt16Item(char value) {
                 this.value = value;
             }
@@ -588,6 +606,8 @@ namespace iText.IO.Font {
         protected internal sealed class UInt8Item : CFFFont.Item {
             private readonly char value;
 
+            /// <summary>Creates a new card8 item</summary>
+            /// <param name="value">0 - 255 unsigned number</param>
             public UInt8Item(char value) {
                 this.value = value;
             }
@@ -604,9 +624,12 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>A String item</summary>
         protected internal sealed class StringItem : CFFFont.Item {
             private readonly String s;
 
+            /// <summary>Creates a new string item.</summary>
+            /// <param name="s">string to be represented</param>
             public StringItem(String s) {
                 this.s = s;
             }
@@ -686,7 +709,7 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <summary>a utility that creates a range item for an entire index</summary>
+        /// <summary>A utility that creates a range item for an entire index</summary>
         /// <param name="indexOffset">where the index is</param>
         /// <returns>a range item representing the entire index</returns>
         protected internal virtual CFFFont.RangeItem GetEntireIndexRange(int indexOffset) {
@@ -703,9 +726,9 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <summary>get a single CID font.</summary>
+        /// <summary>Gets a single CID font.</summary>
         /// <remarks>
-        /// get a single CID font. The PDF architecture (1.4)
+        /// Gets a single CID font. The PDF architecture (1.4)
         /// supports 16-bit strings only with CID CFF fonts, not
         /// in Type-1 CFF fonts, so we convert the font to CID if
         /// it is in the Type-1 format.
@@ -951,10 +974,27 @@ namespace iText.IO.Font {
             return b;
         }
 
+        /// <summary>Determines whether the first font in FontSet is CID font.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if font is CID,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public virtual bool IsCID() {
             return IsCID(GetNames()[0]);
         }
 
+        /// <summary>Determines whether specified font is CID font.</summary>
+        /// <param name="fontName">font name to check in fonts table</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if specified font is CID,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public virtual bool IsCID(String fontName) {
             int j;
             for (j = 0; j < fonts.Length; j++) {
@@ -965,6 +1005,15 @@ namespace iText.IO.Font {
             return false;
         }
 
+        /// <summary>Checks for font existence in FontSet.</summary>
+        /// <param name="fontName">font name to search for</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if font exists in FontSet,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public virtual bool Exists(String fontName) {
             int j;
             for (j = 0; j < fonts.Length; j++) {
@@ -975,6 +1024,8 @@ namespace iText.IO.Font {
             return false;
         }
 
+        /// <summary>Gets all font names from FontSet table.</summary>
+        /// <returns>font names contained by this CFF font</returns>
         public virtual String[] GetNames() {
             String[] names = new String[fonts.Length];
             for (int i = 0; i < fonts.Length; i++) {
@@ -1004,6 +1055,7 @@ namespace iText.IO.Font {
 
         protected internal int[] gsubrOffsets;
 
+        /// <summary>Represents font contained by the CFF font in a FontSet.</summary>
         protected internal sealed class Font {
             private String name;
 
@@ -1095,13 +1147,25 @@ namespace iText.IO.Font {
             }
 
             /// <summary>Retrieves whether the font is a CID font.</summary>
-            /// <returns>true if font is CID font, false otherwise</returns>
+            /// <returns>
+            /// 
+            /// <see langword="true"/>
+            /// if font is CID font,
+            /// <see langword="false"/>
+            /// otherwise
+            /// </returns>
             public bool IsCID() {
                 return this.isCID;
             }
 
             /// <summary>Sets if font is CID font.</summary>
-            /// <param name="CID">true if font is CID font, false otherwise</param>
+            /// <param name="CID">
+            /// 
+            /// <see langword="true"/>
+            /// if font is CID font,
+            /// <see langword="false"/>
+            /// otherwise
+            /// </param>
             public void SetCID(bool CID) {
                 this.isCID = CID;
             }
@@ -1179,72 +1243,72 @@ namespace iText.IO.Font {
             }
 
             /// <summary>Retrieves the font dictionary array offset of the object.</summary>
-            /// <returns>FD array offset</returns>
+            /// <returns>font dictionary array offset</returns>
             public int GetFdarrayOffset() {
                 return this.fdarrayOffset;
             }
 
             /// <summary>Sets the font dictionary array offset of the object.</summary>
-            /// <param name="fdarrayOffset">FD array offset</param>
+            /// <param name="fdarrayOffset">font dictionary array offset</param>
             public void SetFdarrayOffset(int fdarrayOffset) {
                 this.fdarrayOffset = fdarrayOffset;
             }
 
             /// <summary>Retrieves the font dictionary select offset of the object.</summary>
-            /// <returns>FD select offset</returns>
+            /// <returns>font dictionary select offset</returns>
             public int GetFdselectOffset() {
                 return this.fdselectOffset;
             }
 
             /// <summary>Sets the font dictionary select offset of the object.</summary>
-            /// <param name="fdselectOffset">FD select offset</param>
+            /// <param name="fdselectOffset">font dictionary select offset</param>
             public void SetFdselectOffset(int fdselectOffset) {
                 this.fdselectOffset = fdselectOffset;
             }
 
             /// <summary>Retrieves the font dictionary private offsets of the object.</summary>
-            /// <returns>FD private offsets</returns>
+            /// <returns>font dictionary private offsets</returns>
             public int[] GetFdprivateOffsets() {
                 return this.fdprivateOffsets;
             }
 
             /// <summary>Sets the font dictionary private offsets of the object.</summary>
-            /// <param name="fdprivateOffsets">FD private offsets</param>
+            /// <param name="fdprivateOffsets">font dictionary private offsets</param>
             public void SetFdprivateOffsets(int[] fdprivateOffsets) {
                 this.fdprivateOffsets = fdprivateOffsets;
             }
 
             /// <summary>Retrieves the font dictionary private lengths of the object.</summary>
-            /// <returns>FD private lengths</returns>
+            /// <returns>font dictionary private lengths</returns>
             public int[] GetFdprivateLengths() {
                 return this.fdprivateLengths;
             }
 
             /// <summary>Sets the font dictionary private lengths of the object.</summary>
-            /// <param name="fdprivateLengths">FD private lengths</param>
+            /// <param name="fdprivateLengths">font dictionary private lengths</param>
             public void SetFdprivateLengths(int[] fdprivateLengths) {
                 this.fdprivateLengths = fdprivateLengths;
             }
 
             /// <summary>Retrieves the font dictionary private subrs of the object.</summary>
-            /// <returns>FD private subrs</returns>
+            /// <returns>font dictionary private subrs</returns>
             public int[] GetFdprivateSubrs() {
                 return this.fdprivateSubrs;
             }
 
             /// <summary>Sets the font dictionary private subrs of the object.</summary>
-            /// <param name="fdprivateSubrs">FD private subrs</param>
+            /// <param name="fdprivateSubrs">font dictionary private subrs</param>
             public void SetFdprivateSubrs(int[] fdprivateSubrs) {
                 this.fdprivateSubrs = fdprivateSubrs;
             }
 
-            /// <summary>Retrieves the number of glyphs of the font.</summary>
+            /// <summary>Retrieves the number of glyphs in the font.</summary>
             /// <returns>number of glyphs</returns>
             public int GetNglyphs() {
                 return this.nglyphs;
             }
 
-            /// <summary>Sets the number of glyphs of the font.</summary>
+            /// <summary>Sets the number of glyphs in the font.</summary>
             /// <param name="nglyphs">number of glyphs</param>
             public void SetNglyphs(int nglyphs) {
                 this.nglyphs = nglyphs;
@@ -1305,31 +1369,31 @@ namespace iText.IO.Font {
             }
 
             /// <summary>Sets the font dictionary select of the object.</summary>
-            /// <param name="FDSelect">FD select</param>
+            /// <param name="FDSelect">font dictionary select</param>
             public void SetFDSelect(int[] FDSelect) {
                 this.FDSelect = FDSelect;
             }
 
             /// <summary>Retrieves the font dictionary select length of the object.</summary>
-            /// <returns>FD select length</returns>
+            /// <returns>font dictionary select length</returns>
             public int GetFDSelectLength() {
                 return this.FDSelectLength;
             }
 
             /// <summary>Sets the font dictionary select length of the object.</summary>
-            /// <param name="FDSelectLength">FD select length</param>
+            /// <param name="FDSelectLength">font dictionary select length</param>
             public void SetFDSelectLength(int FDSelectLength) {
                 this.FDSelectLength = FDSelectLength;
             }
 
             /// <summary>Retrieves the font dictionary select format of the object.</summary>
-            /// <returns>FD select format</returns>
+            /// <returns>font dictionary select format</returns>
             public int GetFDSelectFormat() {
                 return this.FDSelectFormat;
             }
 
             /// <summary>Sets the font dictionary select format of the object.</summary>
-            /// <param name="FDSelectFormat">FD select format</param>
+            /// <param name="FDSelectFormat">font dictionary select format</param>
             public void SetFDSelectFormat(int FDSelectFormat) {
                 this.FDSelectFormat = FDSelectFormat;
             }
@@ -1347,37 +1411,37 @@ namespace iText.IO.Font {
             }
 
             /// <summary>Retrieves the font dictionary array count of the object.</summary>
-            /// <returns>FD array count</returns>
+            /// <returns>font dictionary array count</returns>
             public int GetFDArrayCount() {
                 return this.FDArrayCount;
             }
 
             /// <summary>Sets the font dictionary array count of the object.</summary>
-            /// <param name="FDArrayCount">FD array count</param>
+            /// <param name="FDArrayCount">font dictionary array count</param>
             public void SetFDArrayCount(int FDArrayCount) {
                 this.FDArrayCount = FDArrayCount;
             }
 
             /// <summary>Retrieves the font dictionary array offsize of the object.</summary>
-            /// <returns>FD array offsize</returns>
+            /// <returns>font dictionary array offsize</returns>
             public int GetFDArrayOffsize() {
                 return this.FDArrayOffsize;
             }
 
             /// <summary>Sets the font dictionary array offsize of the object.</summary>
-            /// <param name="FDArrayOffsize">FD array offsize</param>
+            /// <param name="FDArrayOffsize">font dictionary array offsize</param>
             public void SetFDArrayOffsize(int FDArrayOffsize) {
                 this.FDArrayOffsize = FDArrayOffsize;
             }
 
             /// <summary>Retrieves the font dictionary array offsets of the object.</summary>
-            /// <returns>FD array offsets</returns>
+            /// <returns>font dictionary array offsets</returns>
             public int[] GetFDArrayOffsets() {
                 return this.FDArrayOffsets;
             }
 
             /// <summary>Sets the font dictionary array offsets of the object.</summary>
-            /// <param name="FDArrayOffsets">FD array offsets</param>
+            /// <param name="FDArrayOffsets">font dictionary array offsets</param>
             public void SetFDArrayOffsets(int[] FDArrayOffsets) {
                 this.FDArrayOffsets = FDArrayOffsets;
             }
@@ -1388,7 +1452,7 @@ namespace iText.IO.Font {
                 return this.privateSubrsOffset;
             }
 
-            /// <summary>Set the private subrs offset of the font</summary>
+            /// <summary>Sets the private subrs offset of the font</summary>
             /// <param name="privateSubrsOffset">private subrs offset</param>
             public void SetPrivateSubrsOffset(int[] privateSubrsOffset) {
                 this.privateSubrsOffset = privateSubrsOffset;
@@ -1444,6 +1508,8 @@ namespace iText.IO.Font {
         internal RandomAccessSourceFactory rasFactory = new RandomAccessSourceFactory();
 //\endcond
 
+        /// <summary>Creates a new CFF font instance from CFF font data.</summary>
+        /// <param name="cff">cff font binary data</param>
         public CFFFont(byte[] cff) {
             //System.err.println("CFF: nStdString = "+standardStrings.length);
             buf = new RandomAccessFileOrArray(rasFactory.CreateSource(cff));

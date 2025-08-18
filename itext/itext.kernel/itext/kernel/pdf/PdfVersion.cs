@@ -64,6 +64,13 @@ namespace iText.Kernel.Pdf {
             return MessageFormatUtil.Format("PDF-{0}.{1}", major, minor);
         }
 
+        /// <summary>Gets the PDF version in "X.Y" format.</summary>
+        /// <remarks>
+        /// Gets the PDF version in "X.Y" format. Use
+        /// <see cref="ToString()"/>
+        /// to get the version in "PDF-X.Y" format.
+        /// </remarks>
+        /// <returns>the string representation of the PDF version</returns>
         public virtual PdfName ToPdfName() {
             return new PdfName(MessageFormatUtil.Format("{0}.{1}", major, minor));
         }

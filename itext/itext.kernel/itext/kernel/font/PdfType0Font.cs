@@ -136,8 +136,7 @@ namespace iText.Kernel.Font {
                 toUnicodeCMap = FontUtil.ProcessToUnicode(toUnicode);
                 embeddedToUnicode = toUnicodeCMap;
             }
-            if (cmap.IsName() && ((toUnicodeCMap != null) || PdfEncodings.IDENTITY_H.Equals(((PdfName)cmap).GetValue()
-                ) || PdfEncodings.IDENTITY_V.Equals(((PdfName)cmap).GetValue()))) {
+            if (cmap.IsName() && (toUnicodeCMap != null || IsCmapIdentical(cmap))) {
                 if (toUnicodeCMap == null) {
                     String uniMap = GetUniMapFromOrdering(ordering, PdfEncodings.IDENTITY_H.Equals(((PdfName)cmap).GetValue())
                         );
@@ -954,58 +953,12 @@ namespace iText.Kernel.Font {
         /// <summary>Creates a ToUnicode CMap to allow copy and paste from Acrobat.</summary>
         /// <returns>the stream representing this CMap or <c>null</c></returns>
         public virtual PdfStream GetToUnicode() {
-            HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream
-                >(new ByteArrayOutputStream());
-            stream.WriteString("/CIDInit /ProcSet findresource begin\n" + "12 dict begin\n" + "begincmap\n" + "/CIDSystemInfo\n"
-                 + "<< /Registry (Adobe)\n" + "/Ordering (UCS)\n" + "/Supplement 0\n" + ">> def\n" + "/CMapName /Adobe-Identity-UCS def\n"
-                 + "/CMapType 2 def\n" + "1 begincodespacerange\n" + "<0000><FFFF>\n" + "endcodespacerange\n");
-            //accumulate long tag into a subset and write it.
-            List<Glyph> glyphGroup = new List<Glyph>(100);
-            int bfranges = 0;
+            ICollection<Glyph> toUnicodeGlyphs = new LinkedHashSet<Glyph>();
             foreach (int? glyphId in usedGlyphs) {
                 Glyph glyph = fontProgram.GetGlyphByCode((int)glyphId);
-                if (glyph.GetChars() != null) {
-                    glyphGroup.Add(glyph);
-                    if (glyphGroup.Count == 100) {
-                        bfranges += WriteBfrange(stream, glyphGroup);
-                    }
-                }
+                toUnicodeGlyphs.Add(glyph);
             }
-            //flush leftovers
-            bfranges += WriteBfrange(stream, glyphGroup);
-            if (bfranges == 0) {
-                return null;
-            }
-            stream.WriteString("endcmap\n" + "CMapName currentdict /CMap defineresource pop\n" + "end end\n");
-            return new PdfStream(((ByteArrayOutputStream)stream.GetOutputStream()).ToArray());
-        }
-
-        private static int WriteBfrange(HighPrecisionOutputStream<ByteArrayOutputStream> stream, IList<Glyph> range
-            ) {
-            if (range.IsEmpty()) {
-                return 0;
-            }
-            stream.WriteInteger(range.Count);
-            stream.WriteString(" beginbfrange\n");
-            foreach (Glyph glyph in range) {
-                String fromTo = CMapContentParser.ToHex(glyph.GetCode());
-                stream.WriteString(fromTo);
-                stream.WriteString(fromTo);
-                stream.WriteByte('<');
-                foreach (char ch in glyph.GetChars()) {
-                    stream.WriteString(ToHex4(ch));
-                }
-                stream.WriteByte('>');
-                stream.WriteByte('\n');
-            }
-            stream.WriteString("endbfrange\n");
-            range.Clear();
-            return 1;
-        }
-
-        private static String ToHex4(char ch) {
-            String s = "0000" + JavaUtil.IntegerToHexString(ch);
-            return s.Substring(s.Length - 4);
+            return FontUtil.GetToUnicodeStream(toUnicodeGlyphs);
         }
 
         private String GetCompatibleUniMap(String registry) {
@@ -1043,6 +996,14 @@ namespace iText.Kernel.Font {
 
         private static String NormalizeEncoding(String encoding) {
             return null == encoding || DEFAULT_ENCODING.Equals(encoding) ? PdfEncodings.IDENTITY_H : encoding;
+        }
+
+        private static bool IsCmapIdentical(PdfObject cmap) {
+            if (cmap == null || !cmap.IsName()) {
+                return false;
+            }
+            String cmapStr = ((PdfName)cmap).GetValue();
+            return PdfEncodings.IDENTITY_H.Equals(cmapStr) || PdfEncodings.IDENTITY_V.Equals(cmapStr);
         }
     }
 }

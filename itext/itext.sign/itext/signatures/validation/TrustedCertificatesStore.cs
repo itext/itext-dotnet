@@ -25,6 +25,8 @@ using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 using iText.Commons.Utils.Collections;
+using iText.Signatures.Validation.Context;
+using iText.Signatures.Validation.Report;
 
 namespace iText.Signatures.Validation {
     /// <summary>Trusted certificates storage class to be used to configure trusted certificates in a particular way.
@@ -393,6 +395,82 @@ namespace iText.Signatures.Validation {
             }
             return certificates;
         }
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual bool CheckIfCertIsTrusted(ValidationReport result, ValidationContext context, IX509Certificate
+             certificate) {
+            if (CertificateSource.TRUSTED == context.GetCertificateSource()) {
+                result.AddReportItem(new CertificateReportItem(certificate, CertificateChainValidator.CERTIFICATE_CHECK, MessageFormatUtil
+                    .Format(CertificateChainValidator.CERTIFICATE_TRUSTED, certificate.GetSubjectDN()), ReportItem.ReportItemStatus
+                    .INFO));
+                return true;
+            }
+            if (this.IsCertificateGenerallyTrusted(certificate)) {
+                // Certificate is trusted for everything.
+                result.AddReportItem(new CertificateReportItem(certificate, CertificateChainValidator.CERTIFICATE_CHECK, MessageFormatUtil
+                    .Format(CertificateChainValidator.CERTIFICATE_TRUSTED, certificate.GetSubjectDN()), ReportItem.ReportItemStatus
+                    .INFO));
+                return true;
+            }
+            if (this.IsCertificateTrustedForCA(certificate)) {
+                // Certificate is trusted to be CA, we need to make sure it wasn't used to directly sign anything else.
+                if (CertificateSource.CERT_ISSUER == context.GetCertificateSource()) {
+                    result.AddReportItem(new CertificateReportItem(certificate, CertificateChainValidator.CERTIFICATE_CHECK, MessageFormatUtil
+                        .Format(CertificateChainValidator.CERTIFICATE_TRUSTED, certificate.GetSubjectDN()), ReportItem.ReportItemStatus
+                        .INFO));
+                    return true;
+                }
+                // Certificate is trusted to be CA, but is not used in CA context.
+                result.AddReportItem(new CertificateReportItem(certificate, CertificateChainValidator.CERTIFICATE_CHECK, MessageFormatUtil
+                    .Format(CertificateChainValidator.CERTIFICATE_TRUSTED_FOR_DIFFERENT_CONTEXT, certificate.GetSubjectDN(
+                    ), "certificates generation"), ReportItem.ReportItemStatus.INFO));
+            }
+            if (this.IsCertificateTrustedForTimestamp(certificate)) {
+                // Certificate is trusted for timestamp signing,
+                // we need to make sure this chain is responsible for timestamping.
+                if (ValidationContext.CheckIfContextChainContainsCertificateSource(context, CertificateSource.TIMESTAMP)) {
+                    result.AddReportItem(new CertificateReportItem(certificate, CertificateChainValidator.CERTIFICATE_CHECK, MessageFormatUtil
+                        .Format(CertificateChainValidator.CERTIFICATE_TRUSTED, certificate.GetSubjectDN()), ReportItem.ReportItemStatus
+                        .INFO));
+                    return true;
+                }
+                // Certificate is trusted for timestamps generation, but is not used in timestamp generation context.
+                result.AddReportItem(new CertificateReportItem(certificate, CertificateChainValidator.CERTIFICATE_CHECK, MessageFormatUtil
+                    .Format(CertificateChainValidator.CERTIFICATE_TRUSTED_FOR_DIFFERENT_CONTEXT, certificate.GetSubjectDN(
+                    ), "timestamp generation"), ReportItem.ReportItemStatus.INFO));
+            }
+            if (this.IsCertificateTrustedForOcsp(certificate)) {
+                // Certificate is trusted for OCSP response signing,
+                // we need to make sure this chain is responsible for OCSP response generation.
+                if (ValidationContext.CheckIfContextChainContainsCertificateSource(context, CertificateSource.OCSP_ISSUER)
+                    ) {
+                    result.AddReportItem(new CertificateReportItem(certificate, CertificateChainValidator.CERTIFICATE_CHECK, MessageFormatUtil
+                        .Format(CertificateChainValidator.CERTIFICATE_TRUSTED, certificate.GetSubjectDN()), ReportItem.ReportItemStatus
+                        .INFO));
+                    return true;
+                }
+                // Certificate is trusted for OCSP response generation, but is not used in OCSP response generation context.
+                result.AddReportItem(new CertificateReportItem(certificate, CertificateChainValidator.CERTIFICATE_CHECK, MessageFormatUtil
+                    .Format(CertificateChainValidator.CERTIFICATE_TRUSTED_FOR_DIFFERENT_CONTEXT, certificate.GetSubjectDN(
+                    ), "OCSP response generation"), ReportItem.ReportItemStatus.INFO));
+            }
+            if (this.IsCertificateTrustedForCrl(certificate)) {
+                // Certificate is trusted for CRL signing,
+                // we need to make sure this chain is responsible for CRL generation.
+                if (ValidationContext.CheckIfContextChainContainsCertificateSource(context, CertificateSource.CRL_ISSUER)) {
+                    result.AddReportItem(new CertificateReportItem(certificate, CertificateChainValidator.CERTIFICATE_CHECK, MessageFormatUtil
+                        .Format(CertificateChainValidator.CERTIFICATE_TRUSTED, certificate.GetSubjectDN()), ReportItem.ReportItemStatus
+                        .INFO));
+                    return true;
+                }
+                // Certificate is trusted for CRL generation, but is not used in CRL generation context.
+                result.AddReportItem(new CertificateReportItem(certificate, CertificateChainValidator.CERTIFICATE_CHECK, MessageFormatUtil
+                    .Format(CertificateChainValidator.CERTIFICATE_TRUSTED_FOR_DIFFERENT_CONTEXT, certificate.GetSubjectDN(
+                    ), "CRL generation"), ReportItem.ReportItemStatus.INFO));
+            }
+            return false;
+        }
+//\endcond
 
         private static void AddCertificateToMap(IX509Certificate certificate, IDictionary<String, ICollection<IX509Certificate
             >> map) {

@@ -155,7 +155,43 @@ namespace iText.Commons.Utils {
         public static String DateToString(DateTime signDate) {
             return signDate.ToLocalTime().ToString("yyyy.MM.dd HH:mm:ss zzz");
         }
-
+       
+        /// <summary>
+        /// Creates a DateTime object with the specified year, month, day, hour, minute, and second. 
+        /// </summary>
+        /// <param name="year">The year</param>
+        /// <param name="month">The month</param>
+        /// <param name="day">The day</param>
+        /// <param name="hour">The hour</param>
+        /// <param name="minute">The minute</param>
+        /// <param name="second">The second</param>
+        /// <returns></returns>
+        public static DateTime CreateDateTime(int year, int month, int day, int hour, int minute, int second) {
+            return new DateTime(year, month, day, hour, minute, second);
+        }
+        
+        /// <summary>
+        /// Creates a DateTime object with the specified year, month, day, hour, minute, and second. 
+        /// </summary>
+        /// <param name="year">The year</param>
+        /// <param name="month">The month</param>
+        /// <param name="day">The day</param>
+        /// <param name="hour">The hour</param>
+        /// <param name="minute">The minute</param>
+        /// <param name="second">The second</param>
+        /// <returns></returns>
+        public static DateTime CreateDateTime(int year, int month, int day, int hour, int minute) {
+            return new DateTime(year, month, day, hour, minute,0);
+        }
+        ///<summary>
+        /// Gets the DateTime from milliseconds.
+        /// </summary>
+        /// <param name="milliseconds"> the UTC milliseconds from the epoch</param>
+        /// <returns> DateTime converted from milliseconds</returns>
+        public static DateTime GetTimeFromMillis(long milliseconds)
+        {
+            return GetInitial().AddMilliseconds(milliseconds);
+        }
         private static DateTime GetInitial() {
             return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         }

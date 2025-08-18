@@ -31,6 +31,16 @@ namespace iText.Kernel.Geom {
     /// which is a combination of linear transformations such as translation,
     /// scaling, rotation, and shearing which allows preservation of the straightness of lines.
     /// </summary>
+    /// <remarks>
+    /// The
+    /// <see cref="AffineTransform"/>
+    /// class represents an affine transformation,
+    /// which is a combination of linear transformations such as translation,
+    /// scaling, rotation, and shearing which allows preservation of the straightness of lines.
+    /// <para />
+    /// Note: this class is a special case of a 3 by 3
+    /// <see cref="Matrix"/>.
+    /// </remarks>
     public class AffineTransform {
         /// <summary>The type of affine transformation.</summary>
         /// <remarks>
@@ -190,6 +200,9 @@ namespace iText.Kernel.Geom {
         /// instance with the values provided.
         /// The default type is for the transformation is
         /// <c>TYPE_UNKNOWN</c>
+        /// Detailed explanation of parameters can be found in
+        /// <see cref="Matrix"/>
+        /// documentation.
         /// </remarks>
         /// <param name="m00">The value of the first row and first column of the matrix.</param>
         /// <param name="m10">The value of the second row and first column of the matrix.</param>
@@ -218,6 +231,9 @@ namespace iText.Kernel.Geom {
         /// instance with the values provided.
         /// The default type is for the transformation is
         /// <c>TYPE_UNKNOWN</c>
+        /// Detailed explanation of parameters can be found in
+        /// <see cref="Matrix"/>
+        /// documentation.
         /// </remarks>
         /// <param name="matrix">The array of values to be used for the transformation matrix.</param>
         public AffineTransform(float[] matrix) {
@@ -243,6 +259,9 @@ namespace iText.Kernel.Geom {
         /// instance with the values provided.
         /// The default type is for the transformation is
         /// <c>TYPE_UNKNOWN</c>
+        /// Detailed explanation of parameters can be found in
+        /// <see cref="Matrix"/>
+        /// documentation.
         /// </remarks>
         /// <param name="matrix">The array of values to be used for the transformation matrix.</param>
         public AffineTransform(double[] matrix) {

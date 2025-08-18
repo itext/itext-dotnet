@@ -61,20 +61,8 @@ namespace iText.Signatures.Validation {
 
         private static IX509Certificate trustedOcspResponderCert;
 
-        private IssuingCertificateRetriever certificateRetriever;
-
-        private SignatureValidationProperties parameters;
-
         private readonly ValidationContext baseContext = new ValidationContext(ValidatorContext.SIGNATURE_VALIDATOR
             , CertificateSource.SIGNER_CERT, TimeBasedContext.PRESENT);
-
-        private ValidatorChainBuilder validatorChainBuilder;
-
-        private MockCrlValidator mockCrlValidator;
-
-        private MockOCSPValidator mockOCSPValidator;
-
-        private MockSignatureValidationProperties mockParameters;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
@@ -89,20 +77,23 @@ namespace iText.Signatures.Validation {
             trustedOcspResponderCert = (IX509Certificate)PemFileHelper.ReadFirstChain(ocspResponderCertFileName)[0];
         }
 
-        [NUnit.Framework.SetUp]
-        public virtual void SetUp() {
-            certificateRetriever = new IssuingCertificateRetriever();
-            parameters = new SignatureValidationProperties();
-            mockCrlValidator = new MockCrlValidator();
-            mockOCSPValidator = new MockOCSPValidator();
-            mockParameters = new MockSignatureValidationProperties(parameters);
-            validatorChainBuilder = new ValidatorChainBuilder().WithIssuingCertificateRetrieverFactory(() => certificateRetriever
-                ).WithSignatureValidationProperties(mockParameters).WithCRLValidatorFactory(() => mockCrlValidator).WithOCSPValidatorFactory
-                (() => mockOCSPValidator);
+        private ValidatorChainBuilder CreateValidatorChainBuilder(IssuingCertificateRetriever certificateRetriever
+            , MockSignatureValidationProperties mockParameters, MockCrlValidator mockCrlValidator, MockOCSPValidator
+             mockOCSPValidator) {
+            return new ValidatorChainBuilder().WithIssuingCertificateRetrieverFactory(() => certificateRetriever).WithSignatureValidationProperties
+                (mockParameters).WithCRLValidatorFactory(() => mockCrlValidator).WithOCSPValidatorFactory(() => mockOCSPValidator
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void BasicOCSPValidatorUsageTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             builder.SetProducedAt(checkDate.AddDays(5));
@@ -139,6 +130,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void BasicCrlValidatorUsageTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             DateTime revocationDate = checkDate.AddDays(-1);
             TestCrlBuilder builder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
@@ -174,6 +172,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void CrlResponseOrderingTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             DateTime thisUpdate1 = checkDate.AddDays(-2);
             TestCrlBuilder builder1 = new TestCrlBuilder(caCert, caPrivateKey, thisUpdate1);
@@ -202,6 +207,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void OcspResponseOrderingTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             TestOcspResponseBuilder builder1 = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             builder1.SetProducedAt(checkDate);
@@ -239,6 +251,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void ValidityAssuredTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             String checkCertFileName = SOURCE_FOLDER + "validityAssuredSigningCert.pem";
             IX509Certificate certificate = (IX509Certificate)PemFileHelper.ReadFirstChain(checkCertFileName)[0];
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
@@ -252,6 +271,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void NoRevAvailTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             String checkCertFileName = SOURCE_FOLDER + "noRevAvailCertWithoutCA.pem";
             IX509Certificate certificate = (IX509Certificate)PemFileHelper.ReadFirstChain(checkCertFileName)[0];
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
@@ -265,6 +291,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void NoRevAvailWithCATest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             String checkCertFileName = SOURCE_FOLDER + "noRevAvailCert.pem";
             IX509Certificate certificate = (IX509Certificate)PemFileHelper.ReadFirstChain(checkCertFileName)[0];
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
@@ -278,6 +311,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void SelfSignedCertificateIsNotValidatedTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             ValidationReport report = new ValidationReport();
             RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator();
@@ -289,6 +329,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void NocheckExtensionShouldNotFurtherValidateTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             ValidationReport report = new ValidationReport();
             parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts
                 .All(), SignatureValidationProperties.OnlineFetching.NEVER_FETCH);
@@ -302,6 +349,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void NoRevocationDataTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             ValidationReport report = new ValidationReport();
             parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts
                 .All(), SignatureValidationProperties.OnlineFetching.NEVER_FETCH).SetFreshness(ValidatorContexts.All()
@@ -315,6 +369,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void DoNotFetchOcspOnlineIfCrlAvailableTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             DateTime thisUpdate = checkDate.AddDays(-2);
             TestCrlBuilder builder = new TestCrlBuilder(caCert, caPrivateKey, thisUpdate);
@@ -337,6 +398,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void DoNotFetchCrlOnlineIfOcspAvailableTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             builder.SetProducedAt(checkDate);
@@ -363,6 +431,13 @@ namespace iText.Signatures.Validation {
             .INFO)]
         [LogMessage("Skipped CRL url: Passed url can not be null.", LogLevel = LogLevelConstants.INFO)]
         public virtual void TryToFetchCrlOnlineIfOnlyIndeterminateOcspAvailableTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             builder.SetProducedAt(checkDate);
@@ -389,6 +464,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void TryFetchRevocationDataOnlineTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             ValidationReport report = new ValidationReport();
             parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts
                 .All(), SignatureValidationProperties.OnlineFetching.ALWAYS_FETCH).SetFreshness(ValidatorContexts.All(
@@ -402,6 +484,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void CrlEncodingErrorTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             byte[] crl = new TestCrlBuilder(caCert, caPrivateKey).MakeCrl();
             crl[5] = 0;
             ValidationReport report = new ValidationReport();
@@ -411,7 +500,7 @@ namespace iText.Signatures.Validation {
             parameters.SetFreshness(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays
                 (2));
             RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator();
-            validator.AddCrlClient(new _ICrlClient_561(crl)).Validate(report, baseContext, checkCert, TimeTestUtil.TEST_DATE_TIME
+            validator.AddCrlClient(new _ICrlClient_674(crl)).Validate(report, baseContext, checkCert, TimeTestUtil.TEST_DATE_TIME
                 );
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
                 ).HasLogItem((la) => la.WithCheckName(RevocationDataValidator.REVOCATION_DATA_CHECK).WithMessage(MessageFormatUtil
@@ -420,8 +509,8 @@ namespace iText.Signatures.Validation {
                 )));
         }
 
-        private sealed class _ICrlClient_561 : ICrlClient {
-            public _ICrlClient_561(byte[] crl) {
+        private sealed class _ICrlClient_674 : ICrlClient {
+            public _ICrlClient_674(byte[] crl) {
                 this.crl = crl;
             }
 
@@ -438,6 +527,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void SortResponsesTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             // The oldest one, but the only one valid.
             TestOcspResponseBuilder ocspBuilder1 = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
@@ -509,6 +605,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void ResponsesFromValidationClientArePassedTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             DateTime ocspGeneration = checkDate.AddDays(2);
             // Here we check that proper generation time was set.
@@ -519,7 +622,7 @@ namespace iText.Signatures.Validation {
             mockCrlValidator.OnCallDo((c) => NUnit.Framework.Assert.AreEqual(crlGeneration, c.responseGenerationDate));
             ValidationReport report = new ValidationReport();
             RevocationDataValidator validator = validatorChainBuilder.GetRevocationDataValidator();
-            ValidationOcspClient ocspClient = new _ValidationOcspClient_680();
+            ValidationOcspClient ocspClient = new _ValidationOcspClient_809();
             TestOcspResponseBuilder ocspBuilder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             byte[] ocspResponseBytes = new TestOcspClient().AddBuilderForCertIssuer(caCert, ocspBuilder).GetEncoded(checkCert
                 , caCert, null);
@@ -527,7 +630,7 @@ namespace iText.Signatures.Validation {
                 ));
             ocspClient.AddResponse(basicOCSPResp, ocspGeneration, TimeBasedContext.HISTORICAL);
             validator.AddOcspClient(ocspClient);
-            ValidationCrlClient crlClient = new _ValidationCrlClient_695();
+            ValidationCrlClient crlClient = new _ValidationCrlClient_824();
             TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
             byte[] crlResponseBytes = new List<byte[]>(new TestCrlClient().AddBuilderForCertIssuer(crlBuilder).GetEncoded
                 (checkCert, null))[0];
@@ -537,8 +640,8 @@ namespace iText.Signatures.Validation {
             validator.Validate(report, baseContext, checkCert, checkDate);
         }
 
-        private sealed class _ValidationOcspClient_680 : ValidationOcspClient {
-            public _ValidationOcspClient_680() {
+        private sealed class _ValidationOcspClient_809 : ValidationOcspClient {
+            public _ValidationOcspClient_809() {
             }
 
             public override byte[] GetEncoded(IX509Certificate checkCert, IX509Certificate issuerCert, String url) {
@@ -547,8 +650,8 @@ namespace iText.Signatures.Validation {
             }
         }
 
-        private sealed class _ValidationCrlClient_695 : ValidationCrlClient {
-            public _ValidationCrlClient_695() {
+        private sealed class _ValidationCrlClient_824 : ValidationCrlClient {
+            public _ValidationCrlClient_824() {
             }
 
             public override ICollection<byte[]> GetEncoded(IX509Certificate checkCert, String url) {
@@ -559,6 +662,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void TimeBasedContextProperlySetValidationClientsTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             mockOCSPValidator.OnCallDo((c) => NUnit.Framework.Assert.AreEqual(TimeBasedContext.HISTORICAL, c.context.GetTimeBasedContext
                 ()));
@@ -586,6 +696,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void TimeBasedContextProperlySetRandomClientsTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
             mockOCSPValidator.OnCallDo((c) => NUnit.Framework.Assert.AreEqual(TimeBasedContext.PRESENT, c.context.GetTimeBasedContext
@@ -604,6 +721,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void TimeBasedContextProperlySetOnlineClientsTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
             mockOCSPValidator.OnCallDo((c) => NUnit.Framework.Assert.AreEqual(TimeBasedContext.PRESENT, c.context.GetTimeBasedContext
@@ -614,18 +738,18 @@ namespace iText.Signatures.Validation {
             RevocationDataValidator validator = validatorChainBuilder.GetRevocationDataValidator();
             TestOcspResponseBuilder ocspBuilder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, ocspBuilder);
-            OcspClientBouncyCastle ocspClient = new _OcspClientBouncyCastle_774(testOcspClient);
+            OcspClientBouncyCastle ocspClient = new _OcspClientBouncyCastle_927(testOcspClient);
             validator.AddOcspClient(ocspClient);
             TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
             TestCrlClient testCrlClient = new TestCrlClient().AddBuilderForCertIssuer(crlBuilder);
-            CrlClientOnline crlClient = new _CrlClientOnline_784(testCrlClient);
+            CrlClientOnline crlClient = new _CrlClientOnline_937(testCrlClient);
             validator.AddCrlClient(crlClient);
             validator.Validate(report, baseContext.SetTimeBasedContext(TimeBasedContext.HISTORICAL), checkCert, checkDate
                 );
         }
 
-        private sealed class _OcspClientBouncyCastle_774 : OcspClientBouncyCastle {
-            public _OcspClientBouncyCastle_774(TestOcspClient testOcspClient) {
+        private sealed class _OcspClientBouncyCastle_927 : OcspClientBouncyCastle {
+            public _OcspClientBouncyCastle_927(TestOcspClient testOcspClient) {
                 this.testOcspClient = testOcspClient;
             }
 
@@ -636,8 +760,8 @@ namespace iText.Signatures.Validation {
             private readonly TestOcspClient testOcspClient;
         }
 
-        private sealed class _CrlClientOnline_784 : CrlClientOnline {
-            public _CrlClientOnline_784(TestCrlClient testCrlClient) {
+        private sealed class _CrlClientOnline_937 : CrlClientOnline {
+            public _CrlClientOnline_937(TestCrlClient testCrlClient) {
                 this.testCrlClient = testCrlClient;
             }
 
@@ -650,6 +774,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void BasicOCSPValidatorFailureTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             builder.SetProducedAt(checkDate.AddDays(5));
@@ -678,6 +809,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void OCSPValidatorFailureTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             DateTime revocationDate = checkDate.AddDays(-1);
             TestCrlBuilder builder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
@@ -707,6 +845,13 @@ namespace iText.Signatures.Validation {
         //certificateRetriever.retrieveIssuerCertificate
         [NUnit.Framework.Test]
         public virtual void CertificateRetrieverRetrieveIssuerCertificateFailureTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             builder.SetProducedAt(checkDate.AddDays(5));
@@ -738,6 +883,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void OcspClientGetEncodedFailureTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             builder.SetProducedAt(checkDate.AddDays(5));
@@ -771,6 +923,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void CrlClientGetEncodedFailureTest() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             DateTime revocationDate = checkDate.AddDays(-1);
             TestCrlBuilder builder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
@@ -805,6 +964,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void TestCrlClientInjection() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             TestCrlClient testCrlClient = new TestCrlClient();
             TestCrlClientWrapper mockCrlClient = new TestCrlClientWrapper(testCrlClient);
             validatorChainBuilder.WithCrlClient(() => mockCrlClient);
@@ -819,6 +985,13 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void TestOcspClientInjection() {
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties parameters = new SignatureValidationProperties();
+            MockCrlValidator mockCrlValidator = new MockCrlValidator();
+            MockOCSPValidator mockOCSPValidator = new MockOCSPValidator();
+            MockSignatureValidationProperties mockParameters = new MockSignatureValidationProperties(parameters);
+            ValidatorChainBuilder validatorChainBuilder = CreateValidatorChainBuilder(certificateRetriever, mockParameters
+                , mockCrlValidator, mockOCSPValidator);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             TestOcspResponseBuilder builder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             builder.SetProducedAt(checkDate.AddDays(5));

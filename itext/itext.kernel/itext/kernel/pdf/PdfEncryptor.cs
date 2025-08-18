@@ -46,6 +46,7 @@ namespace iText.Kernel.Pdf {
 
         private EncryptionProperties properties;
 
+        /// <summary>Default constructor, use provided setters for encryption options.</summary>
         public PdfEncryptor() {
         }
 

@@ -28,112 +28,133 @@ using iText.Test;
 namespace iText.Kernel.Utils.Objectpathitems {
     [NUnit.Framework.Category("IntegrationTest")]
     public class ObjectPathTest : ExtendedITextTest {
-        private PdfDocument testCmp;
-
-        private PdfDocument testOut;
-
-        [NUnit.Framework.SetUp]
-        public virtual void SetUpPdfDocuments() {
-            testCmp = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-            testCmp.AddNewPage();
-            testCmp.AddNewPage();
-            testOut = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-            testOut.AddNewPage();
-            testOut.AddNewPage();
-        }
-
-        [NUnit.Framework.TearDown]
-        public virtual void ClosePdfDocuments() {
-            testCmp.Close();
-            testOut.Close();
+        private void Init(PdfDocument pdfDocument) {
+            pdfDocument.AddNewPage();
+            pdfDocument.AddNewPage();
         }
 
         [NUnit.Framework.Test]
         public virtual void GetIndirectObjectsTest() {
-            PdfIndirectReference cmpIndirect = testCmp.GetFirstPage().GetPdfObject().GetIndirectReference();
-            PdfIndirectReference outIndirect = testOut.GetFirstPage().GetPdfObject().GetIndirectReference();
-            Stack<LocalPathItem> localPath = new Stack<LocalPathItem>();
-            localPath.Push(new ArrayPathItem(1));
-            Stack<IndirectPathItem> indirectPathItems = new Stack<IndirectPathItem>();
-            indirectPathItems.Push(new IndirectPathItem(cmpIndirect, outIndirect));
-            ObjectPath objectPath = new ObjectPath(cmpIndirect, outIndirect, localPath, indirectPathItems);
-            NUnit.Framework.Assert.AreEqual(cmpIndirect, objectPath.GetBaseCmpObject());
-            NUnit.Framework.Assert.AreEqual(outIndirect, objectPath.GetBaseOutObject());
-            NUnit.Framework.Assert.AreEqual(localPath, objectPath.GetLocalPath());
-            NUnit.Framework.Assert.AreEqual(indirectPathItems, objectPath.GetIndirectPath());
+            using (PdfDocument testCmp = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                using (PdfDocument testOut = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                    Init(testCmp);
+                    Init(testOut);
+                    PdfIndirectReference cmpIndirect = testCmp.GetFirstPage().GetPdfObject().GetIndirectReference();
+                    PdfIndirectReference outIndirect = testOut.GetFirstPage().GetPdfObject().GetIndirectReference();
+                    Stack<LocalPathItem> localPath = new Stack<LocalPathItem>();
+                    localPath.Push(new ArrayPathItem(1));
+                    Stack<IndirectPathItem> indirectPathItems = new Stack<IndirectPathItem>();
+                    indirectPathItems.Push(new IndirectPathItem(cmpIndirect, outIndirect));
+                    ObjectPath objectPath = new ObjectPath(cmpIndirect, outIndirect, localPath, indirectPathItems);
+                    NUnit.Framework.Assert.AreEqual(cmpIndirect, objectPath.GetBaseCmpObject());
+                    NUnit.Framework.Assert.AreEqual(outIndirect, objectPath.GetBaseOutObject());
+                    NUnit.Framework.Assert.AreEqual(localPath, objectPath.GetLocalPath());
+                    NUnit.Framework.Assert.AreEqual(indirectPathItems, objectPath.GetIndirectPath());
+                }
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void HashCodeWithoutNullParametersTest() {
-            PdfIndirectReference cmpIndirect = testCmp.GetFirstPage().GetPdfObject().GetIndirectReference();
-            PdfIndirectReference outIndirect = testOut.GetFirstPage().GetPdfObject().GetIndirectReference();
-            Stack<LocalPathItem> localPath = new Stack<LocalPathItem>();
-            localPath.Push(new ArrayPathItem(1));
-            Stack<IndirectPathItem> indirectPathItems = new Stack<IndirectPathItem>();
-            indirectPathItems.Push(new IndirectPathItem(cmpIndirect, outIndirect));
-            ObjectPath objectPath1 = new ObjectPath(cmpIndirect, outIndirect, localPath, indirectPathItems);
-            ObjectPath objectPath2 = new ObjectPath(cmpIndirect, outIndirect, localPath, indirectPathItems);
-            NUnit.Framework.Assert.AreNotEqual(0, objectPath1.GetHashCode());
-            NUnit.Framework.Assert.AreEqual(objectPath1.GetHashCode(), objectPath2.GetHashCode());
+            using (PdfDocument testCmp = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                using (PdfDocument testOut = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                    Init(testCmp);
+                    Init(testOut);
+                    PdfIndirectReference cmpIndirect = testCmp.GetFirstPage().GetPdfObject().GetIndirectReference();
+                    PdfIndirectReference outIndirect = testOut.GetFirstPage().GetPdfObject().GetIndirectReference();
+                    Stack<LocalPathItem> localPath = new Stack<LocalPathItem>();
+                    localPath.Push(new ArrayPathItem(1));
+                    Stack<IndirectPathItem> indirectPathItems = new Stack<IndirectPathItem>();
+                    indirectPathItems.Push(new IndirectPathItem(cmpIndirect, outIndirect));
+                    ObjectPath objectPath1 = new ObjectPath(cmpIndirect, outIndirect, localPath, indirectPathItems);
+                    ObjectPath objectPath2 = new ObjectPath(cmpIndirect, outIndirect, localPath, indirectPathItems);
+                    NUnit.Framework.Assert.AreNotEqual(0, objectPath1.GetHashCode());
+                    NUnit.Framework.Assert.AreEqual(objectPath1.GetHashCode(), objectPath2.GetHashCode());
+                }
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void HashCodeWithNullParametersTest() {
-            Stack<LocalPathItem> localPath = new Stack<LocalPathItem>();
-            Stack<IndirectPathItem> indirectPathItems = new Stack<IndirectPathItem>();
-            ObjectPath objectPath1 = new ObjectPath(null, null, localPath, indirectPathItems);
-            ObjectPath objectPath2 = new ObjectPath(null, null, localPath, indirectPathItems);
-            NUnit.Framework.Assert.AreEqual(0, objectPath1.GetHashCode());
-            NUnit.Framework.Assert.AreEqual(objectPath1.GetHashCode(), objectPath2.GetHashCode());
+            using (PdfDocument testCmp = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                using (PdfDocument testOut = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                    Init(testCmp);
+                    Init(testOut);
+                    Stack<LocalPathItem> localPath = new Stack<LocalPathItem>();
+                    Stack<IndirectPathItem> indirectPathItems = new Stack<IndirectPathItem>();
+                    ObjectPath objectPath1 = new ObjectPath(null, null, localPath, indirectPathItems);
+                    ObjectPath objectPath2 = new ObjectPath(null, null, localPath, indirectPathItems);
+                    NUnit.Framework.Assert.AreEqual(0, objectPath1.GetHashCode());
+                    NUnit.Framework.Assert.AreEqual(objectPath1.GetHashCode(), objectPath2.GetHashCode());
+                }
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void EqualsAndHashCodeTest() {
-            PdfIndirectReference cmpIndirect = testCmp.GetFirstPage().GetPdfObject().GetIndirectReference();
-            PdfIndirectReference outIndirect = testOut.GetFirstPage().GetPdfObject().GetIndirectReference();
-            Stack<LocalPathItem> localPath = new Stack<LocalPathItem>();
-            localPath.Push(new ArrayPathItem(1));
-            localPath.Push(new ArrayPathItem(2));
-            localPath.Push(new ArrayPathItem(3));
-            Stack<IndirectPathItem> indirectPathItems = new Stack<IndirectPathItem>();
-            indirectPathItems.Push(new IndirectPathItem(cmpIndirect, outIndirect));
-            ObjectPath objectPath1 = new ObjectPath(cmpIndirect, outIndirect, localPath, indirectPathItems);
-            ObjectPath objectPath2 = new ObjectPath(cmpIndirect, outIndirect, localPath, indirectPathItems);
-            bool result = objectPath1.Equals(objectPath2);
-            NUnit.Framework.Assert.IsTrue(result);
-            NUnit.Framework.Assert.AreEqual(objectPath1.GetHashCode(), objectPath2.GetHashCode());
+            using (PdfDocument testCmp = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                using (PdfDocument testOut = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                    Init(testCmp);
+                    Init(testOut);
+                    PdfIndirectReference cmpIndirect = testCmp.GetFirstPage().GetPdfObject().GetIndirectReference();
+                    PdfIndirectReference outIndirect = testOut.GetFirstPage().GetPdfObject().GetIndirectReference();
+                    Stack<LocalPathItem> localPath = new Stack<LocalPathItem>();
+                    localPath.Push(new ArrayPathItem(1));
+                    localPath.Push(new ArrayPathItem(2));
+                    localPath.Push(new ArrayPathItem(3));
+                    Stack<IndirectPathItem> indirectPathItems = new Stack<IndirectPathItem>();
+                    indirectPathItems.Push(new IndirectPathItem(cmpIndirect, outIndirect));
+                    ObjectPath objectPath1 = new ObjectPath(cmpIndirect, outIndirect, localPath, indirectPathItems);
+                    ObjectPath objectPath2 = new ObjectPath(cmpIndirect, outIndirect, localPath, indirectPathItems);
+                    bool result = objectPath1.Equals(objectPath2);
+                    NUnit.Framework.Assert.IsTrue(result);
+                    NUnit.Framework.Assert.AreEqual(objectPath1.GetHashCode(), objectPath2.GetHashCode());
+                }
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void NotEqualsAndHashCodeTest() {
-            PdfIndirectReference cmpIndirect = testCmp.GetFirstPage().GetPdfObject().GetIndirectReference();
-            PdfIndirectReference outIndirect = testOut.GetFirstPage().GetPdfObject().GetIndirectReference();
-            Stack<LocalPathItem> localPath = new Stack<LocalPathItem>();
-            localPath.Push(new ArrayPathItem(1));
-            Stack<IndirectPathItem> indirectPathItems = new Stack<IndirectPathItem>();
-            indirectPathItems.Push(new IndirectPathItem(cmpIndirect, outIndirect));
-            ObjectPath objectPath1 = new ObjectPath(cmpIndirect, outIndirect, localPath, indirectPathItems);
-            localPath = new Stack<LocalPathItem>();
-            indirectPathItems = new Stack<IndirectPathItem>();
-            ObjectPath objectPath2 = new ObjectPath(cmpIndirect, outIndirect, localPath, indirectPathItems);
-            bool result = objectPath1.Equals(objectPath2);
-            NUnit.Framework.Assert.IsFalse(result);
-            NUnit.Framework.Assert.AreNotEqual(objectPath1.GetHashCode(), objectPath2.GetHashCode());
+            using (PdfDocument testCmp = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                using (PdfDocument testOut = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                    Init(testCmp);
+                    Init(testOut);
+                    PdfIndirectReference cmpIndirect = testCmp.GetFirstPage().GetPdfObject().GetIndirectReference();
+                    PdfIndirectReference outIndirect = testOut.GetFirstPage().GetPdfObject().GetIndirectReference();
+                    Stack<LocalPathItem> localPath = new Stack<LocalPathItem>();
+                    localPath.Push(new ArrayPathItem(1));
+                    Stack<IndirectPathItem> indirectPathItems = new Stack<IndirectPathItem>();
+                    indirectPathItems.Push(new IndirectPathItem(cmpIndirect, outIndirect));
+                    ObjectPath objectPath1 = new ObjectPath(cmpIndirect, outIndirect, localPath, indirectPathItems);
+                    localPath = new Stack<LocalPathItem>();
+                    indirectPathItems = new Stack<IndirectPathItem>();
+                    ObjectPath objectPath2 = new ObjectPath(cmpIndirect, outIndirect, localPath, indirectPathItems);
+                    bool result = objectPath1.Equals(objectPath2);
+                    NUnit.Framework.Assert.IsFalse(result);
+                    NUnit.Framework.Assert.AreNotEqual(objectPath1.GetHashCode(), objectPath2.GetHashCode());
+                }
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void CloneConstructorTest() {
-            PdfIndirectReference cmpIndirect = testCmp.GetFirstPage().GetPdfObject().GetIndirectReference();
-            PdfIndirectReference outIndirect = testOut.GetFirstPage().GetPdfObject().GetIndirectReference();
-            Stack<LocalPathItem> localPath = new Stack<LocalPathItem>();
-            localPath.Push(new ArrayPathItem(1));
-            Stack<IndirectPathItem> indirectPathItems = new Stack<IndirectPathItem>();
-            indirectPathItems.Push(new IndirectPathItem(cmpIndirect, outIndirect));
-            ObjectPath objectPath1 = new ObjectPath(cmpIndirect, outIndirect, localPath, indirectPathItems);
-            ObjectPath objectPath2 = new ObjectPath(objectPath1);
-            bool result = objectPath1.Equals(objectPath2);
-            NUnit.Framework.Assert.IsTrue(result);
-            NUnit.Framework.Assert.AreEqual(objectPath1.GetHashCode(), objectPath2.GetHashCode());
+            using (PdfDocument testCmp = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                using (PdfDocument testOut = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                    Init(testCmp);
+                    Init(testOut);
+                    PdfIndirectReference cmpIndirect = testCmp.GetFirstPage().GetPdfObject().GetIndirectReference();
+                    PdfIndirectReference outIndirect = testOut.GetFirstPage().GetPdfObject().GetIndirectReference();
+                    Stack<LocalPathItem> localPath = new Stack<LocalPathItem>();
+                    localPath.Push(new ArrayPathItem(1));
+                    Stack<IndirectPathItem> indirectPathItems = new Stack<IndirectPathItem>();
+                    indirectPathItems.Push(new IndirectPathItem(cmpIndirect, outIndirect));
+                    ObjectPath objectPath1 = new ObjectPath(cmpIndirect, outIndirect, localPath, indirectPathItems);
+                    ObjectPath objectPath2 = new ObjectPath(objectPath1);
+                    bool result = objectPath1.Equals(objectPath2);
+                    NUnit.Framework.Assert.IsTrue(result);
+                    NUnit.Framework.Assert.AreEqual(objectPath1.GetHashCode(), objectPath2.GetHashCode());
+                }
+            }
         }
     }
 }

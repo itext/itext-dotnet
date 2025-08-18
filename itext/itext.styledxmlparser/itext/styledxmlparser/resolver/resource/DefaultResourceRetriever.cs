@@ -35,19 +35,12 @@ namespace iText.StyledXmlParser.Resolver.Resource {
     /// interface, which can set a limit
     /// on the size of retrieved resources using input stream with a limit on the number of bytes read.
     /// </summary>
+    [System.ObsoleteAttribute(@"In favor of iText.IO.Resolver.Resource.DefaultResourceRetriever")]
     public class DefaultResourceRetriever : IResourceRetriever {
         private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Resolver.Resource.DefaultResourceRetriever
             ));
 
-        private long resourceSizeByteLimit;
-
-        private int connectTimeout;
-
-        private int readTimeout;
-
-        private const int DEFAULT_CONNECT_TIMEOUT = 300000;
-
-        private const int DEFAULT_READ_TIMEOUT = 300000;
+        private iText.IO.Resolver.Resource.DefaultResourceRetriever proxy;
 
         /// <summary>
         /// Creates a new
@@ -63,9 +56,8 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// bytes.
         /// </remarks>
         public DefaultResourceRetriever() {
-            resourceSizeByteLimit = long.MaxValue;
-            connectTimeout = DEFAULT_CONNECT_TIMEOUT;
-            readTimeout = DEFAULT_READ_TIMEOUT;
+            // empty constructor
+            this.proxy = new iText.IO.Resolver.Resource.DefaultResourceRetriever();
         }
 
         /// <summary>Gets the resource size byte limit.</summary>
@@ -75,7 +67,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// </remarks>
         /// <returns>the resource size byte limit</returns>
         public virtual long GetResourceSizeByteLimit() {
-            return resourceSizeByteLimit;
+            return proxy.GetResourceSizeByteLimit();
         }
 
         /// <summary>Sets the resource size byte limit.</summary>
@@ -90,7 +82,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// instance
         /// </returns>
         public virtual IResourceRetriever SetResourceSizeByteLimit(long resourceSizeByteLimit) {
-            this.resourceSizeByteLimit = resourceSizeByteLimit;
+            proxy.SetResourceSizeByteLimit(resourceSizeByteLimit);
             return this;
         }
 
@@ -101,7 +93,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// </remarks>
         /// <returns>the connect timeout in milliseconds</returns>
         public virtual int GetConnectTimeout() {
-            return connectTimeout;
+            return proxy.GetConnectTimeout();
         }
 
         /// <summary>Sets the connect timeout.</summary>
@@ -116,7 +108,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// instance
         /// </returns>
         public virtual IResourceRetriever SetConnectTimeout(int connectTimeout) {
-            this.connectTimeout = connectTimeout;
+            proxy.SetConnectTimeout(connectTimeout);
             return this;
         }
 
@@ -127,7 +119,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// </remarks>
         /// <returns>the read timeout in milliseconds</returns>
         public virtual int GetReadTimeout() {
-            return readTimeout;
+            return proxy.GetReadTimeout();
         }
 
         /// <summary>Sets the read timeout.</summary>
@@ -142,7 +134,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// instance
         /// </returns>
         public virtual IResourceRetriever SetReadTimeout(int readTimeout) {
-            this.readTimeout = readTimeout;
+            proxy.SetReadTimeout(readTimeout);
             return this;
         }
 
@@ -158,8 +150,8 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                     , url));
                 return null;
             }
-            return new LimitedInputStream(UrlUtil.GetInputStreamOfFinalConnection(url, connectTimeout, readTimeout), resourceSizeByteLimit
-                );
+            return new LimitedInputStream(UrlUtil.GetInputStreamOfFinalConnection(url, proxy.GetConnectTimeout(), proxy
+                .GetReadTimeout()), proxy.GetResourceSizeByteLimit());
         }
 
         /// <summary>Gets the byte array that are retrieved from the source URL.</summary>
@@ -179,7 +171,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             }
             catch (ReadingByteLimitException) {
                 logger.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_RESOURCE_WITH_GIVEN_RESOURCE_SIZE_BYTE_LIMIT
-                    , url, resourceSizeByteLimit));
+                    , url, proxy.GetResourceSizeByteLimit()));
             }
             return null;
         }

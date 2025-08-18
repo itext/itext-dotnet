@@ -110,9 +110,9 @@ namespace iText.Forms {
                 (destinationFolder + filename));
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H);
             font.SetSubset(false);
-            PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, false);
-            form.GetField("description").SetFont(font);
-            form.GetField("description").SetValue(TEXT);
+            PdfFormField formField = PdfFormCreator.GetAcroForm(pdfDoc, false).GetField("description");
+            formField.SetFont(font);
+            formField.SetValue(TEXT);
             pdfDoc.Close();
             PdfDocument document = new PdfDocument(new PdfReader(destinationFolder + filename));
             // Note that we know the structure of the expected pdf file

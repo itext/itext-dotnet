@@ -28,6 +28,11 @@ using iText.IO.Util;
 using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
+    /// <summary>
+    /// A
+    /// <c>PdfName</c>
+    /// -class is the PDF-equivalent of a string constant.
+    /// </summary>
     public class PdfName : PdfPrimitiveObject, IComparable<iText.Kernel.Pdf.PdfName> {
         //  ' '
         private static readonly byte[] space = ByteUtils.GetIsoBytes("#20");
@@ -332,6 +337,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Ch = CreateDirectName("Ch");
 
+        public static readonly iText.Kernel.Pdf.PdfName CharSet = new iText.Kernel.Pdf.PdfName("CharSet");
+
         public static readonly iText.Kernel.Pdf.PdfName CI = CreateDirectName("CI");
 
         public static readonly iText.Kernel.Pdf.PdfName CIDFontType0 = CreateDirectName("CIDFontType0");
@@ -415,6 +422,9 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName CropBox = CreateDirectName("CropBox");
 
         public static readonly iText.Kernel.Pdf.PdfName Crypt = CreateDirectName("Crypt");
+
+        public static readonly iText.Kernel.Pdf.PdfName CryptFilterDecodeParms = CreateDirectName("CryptFilterDecodeParms"
+            );
 
         public static readonly iText.Kernel.Pdf.PdfName CS = CreateDirectName("CS");
 
@@ -1885,6 +1895,15 @@ namespace iText.Kernel.Pdf {
             return PdfObject.NAME;
         }
 
+        /// <summary>
+        /// Gets the string which represent
+        /// <c>PdfName</c>.
+        /// </summary>
+        /// <returns>
+        /// the string value of
+        /// <c>PdfName</c>
+        /// instance
+        /// </returns>
         public virtual String GetValue() {
             if (value == null) {
                 GenerateValue();
@@ -1915,6 +1934,11 @@ namespace iText.Kernel.Pdf {
             return GetValue().GetHashCode();
         }
 
+        /// <summary>
+        /// Generates the string value of the
+        /// <c>PdfName</c>
+        /// instance based on stored byte content.
+        /// </summary>
         protected internal virtual void GenerateValue() {
             value = PdfNameUtil.DecodeName(content);
         }

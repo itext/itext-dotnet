@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.IO.Font;
 
 namespace iText.IO.Font.Cmap {
+    /// <summary>Class containing base CMap functionality</summary>
     public abstract class AbstractCMap {
         private String cmapName;
 
@@ -34,6 +35,8 @@ namespace iText.IO.Font.Cmap {
 
         private int supplement;
 
+        /// <summary>Gets cmap table name.</summary>
+        /// <returns>table name</returns>
         public virtual String GetName() {
             return cmapName;
         }
@@ -44,6 +47,8 @@ namespace iText.IO.Font.Cmap {
         }
 //\endcond
 
+        /// <summary>Gets string that uniquely names the character collection within the specified registry.</summary>
+        /// <returns>character collection name</returns>
         public virtual String GetOrdering() {
             return ordering;
         }
@@ -54,6 +59,8 @@ namespace iText.IO.Font.Cmap {
         }
 //\endcond
 
+        /// <summary>Gets string identifying the issuer of the character collection.</summary>
+        /// <returns>name of the issuer</returns>
         public virtual String GetRegistry() {
             return registry;
         }
@@ -64,6 +71,8 @@ namespace iText.IO.Font.Cmap {
         }
 //\endcond
 
+        /// <summary>Gets the supplement number of the character collection.</summary>
+        /// <returns>supplement number</returns>
         public virtual int GetSupplement() {
             return supplement;
         }
@@ -128,6 +137,9 @@ namespace iText.IO.Font.Cmap {
         //            return PdfEncodings.convertToBytes(value, null);
         //        }
         //    }
+        /// <summary>Converts given string to a byte array.</summary>
+        /// <param name="range">string to convert</param>
+        /// <returns>byte array representation of the provided string</returns>
         public static byte[] DecodeStringToByte(String range) {
             byte[] bytes = new byte[range.Length];
             for (int i = 0; i < range.Length; i++) {
@@ -136,6 +148,18 @@ namespace iText.IO.Font.Cmap {
             return bytes;
         }
 
+        /// <summary>Converts string in pdf encoding to string in unicode encoding.</summary>
+        /// <param name="value">
+        /// string in pdf encoding (Either
+        /// <see cref="iText.IO.Font.PdfEncodings.UNICODE_BIG_UNMARKED"/>
+        /// ,
+        /// <see cref="iText.IO.Font.PdfEncodings.UNICODE_BIG"/>
+        /// ,
+        /// <see cref="iText.IO.Font.PdfEncodings.PDF_DOC_ENCODING"/>
+        /// )
+        /// </param>
+        /// <param name="isHexWriting">marker if string is hex encoded</param>
+        /// <returns>string in unicode encoding</returns>
         protected internal virtual String ToUnicodeString(String value, bool isHexWriting) {
             byte[] bytes = DecodeStringToByte(value);
             if (isHexWriting) {

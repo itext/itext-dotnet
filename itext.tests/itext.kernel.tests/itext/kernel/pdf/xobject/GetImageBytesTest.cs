@@ -23,10 +23,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 using iText.IO.Codec;
 using iText.IO.Exceptions;
 using iText.IO.Source;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Data;
@@ -127,6 +129,7 @@ namespace iText.Kernel.Pdf.Xobject {
 
         [NUnit.Framework.Test]
         public virtual void TestSeparationCSWithDeviceCMYKAsAlternative() {
+            // TODO: DEVSIX-6757 (update test after fix)
             // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
             NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => {
                 TestFile("separationCSWithDeviceCMYKAsAlternative.pdf", "Im1", "png");
@@ -141,12 +144,14 @@ namespace iText.Kernel.Pdf.Xobject {
 
         [NUnit.Framework.Test]
         public virtual void TestSeparationCSWithDeviceRGBAsAlternative() {
+            // TODO: DEVSIX-6757 (update test after fix)
             // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
             TestFile("separationCSWithDeviceRgbAsAlternative.pdf", "Im1", "png");
         }
 
         [NUnit.Framework.Test]
         public virtual void TestSeparationCSWithDeviceRGBAsAlternative2() {
+            // TODO: DEVSIX-6757 (update test after fix)
             // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
             TestFile("spotColorImagesSmall.pdf", "Im1", "png");
         }
@@ -198,16 +203,16 @@ namespace iText.Kernel.Pdf.Xobject {
             String outImageFileName = DESTINATION_FOLDER + "extractedByteAlignedImage.png";
             String cmpImageFileName = SOURCE_FOLDER + "cmp_extractByteAlignedG4TiffImage.png";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
-            GetImageBytesTest.ImageExtractor listener = new GetImageBytesTest.ImageExtractor(this);
+            GetImageBytesTest.ImageAndTypeExtractor listener = new GetImageBytesTest.ImageAndTypeExtractor();
             PdfCanvasProcessor processor = new PdfCanvasProcessor(listener);
             processor.ProcessPageContent(pdfDocument.GetPage(1));
-            IList<byte[]> images = listener.GetImages();
+            IList<Tuple2<String, byte[]>> images = listener.GetImages();
             NUnit.Framework.Assert.AreEqual(1, images.Count);
             using (Stream fos = FileUtil.GetFileOutputStream(outImageFileName)) {
-                fos.Write(images[0], 0, images.Count);
+                fos.Write(images[0].GetSecond(), 0, images.Count);
             }
             // expected and actual are swapped here for simplicity
-            int expectedLen = images[0].Length;
+            int expectedLen = images[0].GetSecond().Length;
             byte[] buf = new byte[expectedLen];
             using (Stream @is = FileUtil.GetInputStreamForFile(cmpImageFileName)) {
                 int read = @is.JRead(buf, 0, buf.Length);
@@ -215,7 +220,7 @@ namespace iText.Kernel.Pdf.Xobject {
                 read = @is.JRead(buf, 0, buf.Length);
                 NUnit.Framework.Assert.IsTrue(read <= 0);
             }
-            NUnit.Framework.Assert.AreEqual(images[0], buf);
+            NUnit.Framework.Assert.AreEqual(images[0].GetSecond(), buf);
         }
 
         [NUnit.Framework.Test]
@@ -223,12 +228,619 @@ namespace iText.Kernel.Pdf.Xobject {
             //Byte-aligned image is expected in pdf file, but in fact it's not
             String inFileName = SOURCE_FOLDER + "expectedByteAlignedTiffImageExtraction.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
-            GetImageBytesTest.ImageExtractor listener = new GetImageBytesTest.ImageExtractor(this);
+            GetImageBytesTest.ImageAndTypeExtractor listener = new GetImageBytesTest.ImageAndTypeExtractor();
             PdfCanvasProcessor processor = new PdfCanvasProcessor(listener);
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => processor.ProcessPageContent
                 (pdfDocument.GetPage(1)));
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.EXPECTED_TRAILING_ZERO_BITS_FOR_BYTE_ALIGNED_LINES
                 ), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InlineImageColorDepth1Test() {
+            //Byte-aligned image is expected in pdf file, but in fact it's not
+            String inFileName = SOURCE_FOLDER + "inline_image_with_cs_object.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName));
+            GetImageBytesTest.ImageAndTypeExtractor listener = new GetImageBytesTest.ImageAndTypeExtractor();
+            PdfCanvasProcessor processor = new PdfCanvasProcessor(listener);
+            processor.ProcessPageContent(pdfDocument.GetPage(1));
+            System.IO.File.WriteAllBytes(System.IO.Path.Combine(DESTINATION_FOLDER, "inline_image_with_cs_object.new."
+                 + listener.images[0].GetFirst()), listener.images[0].GetSecond());
+            NUnit.Framework.Assert.AreEqual(1, listener.images.Count);
+            NUnit.Framework.Assert.AreEqual("png", listener.images[0].GetFirst());
+            byte[] cmpBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER, "inline_image_with_cs_object.png"
+                ));
+            NUnit.Framework.Assert.AreEqual(cmpBytes, listener.images[0].GetSecond());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceGray8bitTest() {
+            TestFile("deviceGray8bit.pdf", "fzImg0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceGray8bitFlateDecodeTest() {
+            TestFile("deviceGray8bitFlateDecode.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceGray1bitFlateDecodeInvertedTest() {
+            TestFile("deviceGray1bitFlateDecodeInverted.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceGray4bitFlateDecodeInvertedTest() {
+            //TODO DEVSIX-7015 Support decoding images with Decode array and BitsPerComponent more than 1
+            TestFile("deviceGray4bitFlateDecodeInverted.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceGray8bitFlateDecodeWithMaskTest() {
+            TestFile("deviceGray8bitFlateDecodeWithMask.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceGray8bitDctDecodeTest() {
+            TestFile("deviceGray8bitDctDecode.pdf", "fzImg0", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceGray8bitJPXDecodeTest() {
+            TestFile("deviceGray8bitJPXDecode.pdf", "fzImg0", "jp2");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceGray1bitCCITTFaxDecodeTest() {
+            TestFile("deviceGray1bitCCITTFaxDecode.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceGray8bitFlateDecodeMaskRotatedTest() {
+            TestFile("deviceGray8bitFlateDecodeMaskRotated.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceGray8bitFlateDecodeScaledTest() {
+            TestFile("deviceGray8bitFlateDecodeScaled.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceGray8bitFlateCombinedTransformationTest() {
+            TestFile("deviceGray8bitFlateCombinedTransformation.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgb1BitDecodeInvertTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("dRgb1BitDecodeInvert.pdf"
+                , "Im1", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
+                , 1), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgb1BitDecodeTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("dRgb1BitDecode.pdf"
+                , "Im1", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
+                , 1), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgb1BitTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("dRgb1Bit.pdf"
+                , "Im1", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
+                , 1), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgb4BitDecodeInvertTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("dRgb4BitDecodeInvert.pdf"
+                , "Im1", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
+                , 4), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgb4BitDecodeTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("dRgb4BitDecode.pdf"
+                , "Im1", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
+                , 4), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgb4BitTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("dRgb4Bit.pdf"
+                , "Im1", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
+                , 4), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbDctDecodeInvertTest() {
+            TestFile("dRgbDctDecodeInvert.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbDctDecodeTest() {
+            TestFile("dRgbDctDecode.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbDctMaskedTest() {
+            TestFile("dRgbDctMasked.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbDCTMaskedDecodeTest() {
+            TestFile("dRgbDCTMaskedDecode.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbDCTMaskedInvertTest() {
+            TestFile("dRgbDCTMaskedInvert.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbDCTtransformationsDecodeInvertTest() {
+            TestFile("dRgbDCTtransformationsDecodeInvert.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbDCTtransformationsDecodeTest() {
+            TestFile("dRgbDCTtransformationsDecode.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbDCTtransformationsMaskedDecodeInvertTest() {
+            TestFile("dRgbDCTtransformationsMaskedDecodeInvert.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbDCTtransformationsMaskedDecodeTest() {
+            TestFile("dRgbDCTtransformationsMaskedDecode.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbDCTtransformationsTest() {
+            TestFile("dRgbDCTtransformations.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbDCTTransparancyDecodeInvertTest() {
+            TestFile("dRgbDCTTransparancyDecodeInvert.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbDCTTransparancyDecodeTest() {
+            TestFile("dRgbDCTTransparancyDecode.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbDCTTransparancyMaskDecodeInvertTest() {
+            TestFile("dRgbDCTTransparancyMaskDecodeInvert.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbDCTTransparancyMaskDecodeTest() {
+            TestFile("dRgbDCTTransparancyMaskDecode.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbDCTTransparancyMaskTest() {
+            TestFile("dRgbDCTTransparancyMask.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbDCTTransparancyTest() {
+            TestFile("dRgbDCTTransparancy.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbDCTTransparancyTransformDecodeInvertTest() {
+            TestFile("dRgbDCTTransparancyTransformDecodeInvert.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbDCTTransparancyTransformDecodeTest() {
+            TestFile("dRgbDCTTransparancyTransformDecode.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbDCTTransparancyTransformMaskDecodeInvertTest() {
+            TestFile("dRgbDCTTransparancyTransformMaskDecodeInvert.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbDCTTransparancyTransformMaskDecodeTest() {
+            TestFile("dRgbDCTTransparancyTransformMaskDecode.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbDCTTransparancyTransformMaskTest() {
+            TestFile("dRgbDCTTransparancyTransformMask.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbDCTTransparancyTransformTest() {
+            TestFile("dRgbDCTTransparancyTransform.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbFlateTest() {
+            TestFile("dRgbFlate.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbFlateTransparencyTest() {
+            TestFile("dRgbFlateTransparency.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbFlateInvertedTest() {
+            TestFile("dRgbFlateInverted.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbFlateRotatedTest() {
+            TestFile("dRgbFlateRotated.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbFlateRotatedInvertedTest() {
+            TestFile("dRgbFlateRotatedInverted.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbFlate1bitTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("dRgbFlate1bit.pdf"
+                , "Im0", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
+                , 1), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRgbFlate4bitTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("dRgbFlate4bit.pdf"
+                , "Im0", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
+                , 4), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ICCBasedDctMaskedInvertedTest() {
+            TestFile("ICCBasedDctMaskedInverted.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ICCBasedDCTTransformMaskedDecodeTest() {
+            TestFile("ICCBasedDCTTransformMaskedDecode.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ICCBasedDCTTransformMaskedDecodeInvertTest() {
+            TestFile("ICCBasedDCTTransformMaskedDecodeInvert.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ICCBasedFlateTransformMaskedDecodeTest() {
+            TestFile("ICCBasedFlateTransformMaskedDecode.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ICCBasedFlateTransformMaskedDecodeInvertTest() {
+            TestFile("ICCBasedFlateTransformMaskedDecodeInvert.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceCMYKTest() {
+            TestFile("deviceCMYK.pdf", "Im1", "tif");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceCMYKFlateDecodeInvertedTest() {
+            TestFile("deviceCMYKFlateDecodeInverted.pdf", "Im1", "tif");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalGray8bitTest() {
+            TestFile("calGray8bit.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalGray8bitGamma22Test() {
+            TestFile("calGray8bitGamma22.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalGray8bitGamma18InvertedTest() {
+            TestFile("calGray8bitGamma18Inverted.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalGray1bitTest() {
+            TestFile("calGray1bit.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalGray1bitInvertedTest() {
+            TestFile("calGray1bitInverted.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalGray4bitGamma22Test() {
+            TestFile("calGray4bitGamma22.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalGray4bitGamma10InvertedTest() {
+            TestFile("calGray4bitGamma10Inverted.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalGray8bitExtGStateTest() {
+            TestFile("calGray8bitExtGStateTest.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalRGB8bitTest() {
+            TestFile("calRGB8bit.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalRGB8bitCustomGammaTest() {
+            TestFile("calRGB8bitCustomGamma.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalRGB8bitInvertedTest() {
+            TestFile("calRGB8bitInverted.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalRGB4bitTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("calRGB4bit.pdf"
+                , "Im1", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
+                , "4"), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalRGB8bitNoFilterTest() {
+            TestFile("calRGB8bitNoFilter.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalRGB8bitSMaskTest() {
+            TestFile("calRGB8bitSMask.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalRGB8bitExtGStateTest() {
+            TestFile("calRGB8bitExtGState.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalRGB8bitCustomWhitePointTest() {
+            TestFile("calRGB8bitCustomWhitePoint.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalRGB1bitTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("calRGB1bit.pdf"
+                , "Im1", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
+                , "1"), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalRGB2bitTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("calRGB2bit.pdf"
+                , "Im1", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
+                , "2"), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Lab8bitTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("lab8bit.pdf"
+                , "Im1", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
+                , "/Lab"), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LabDctMaskedTest() {
+            TestFile("labDctMasked.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LabDctTransformTest() {
+            TestFile("labDctTransform.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LabDctTransparancyTest() {
+            TestFile("labDctTransparancy.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LabDctTransparancyMaskTest() {
+            TestFile("labDctTransparancyMask.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LabDctTransparancyTransformTest() {
+            TestFile("labDctTransparancyTransform.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LabDctTransparancyTransformMaskTest() {
+            TestFile("labDctTransparancyTransformMask.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Indexed1bitTest() {
+            TestFile("indexed1bit.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Indexed2bitTest() {
+            TestFile("indexed2bit.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Indexed4bitTest() {
+            TestFile("indexed4bit.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Indexed8bitTest() {
+            TestFile("indexed8bit.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Indexed8bitGradientTest() {
+            TestFile("indexed8bitGradient.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Indexed8bitSMaskTest() {
+            TestFile("indexed8bitSMask.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Separation1bitDeviceCMYKTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => TestFile("separation1bitDeviceCMYK.pdf"
+                , "Im0", "png"));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.GET_IMAGEBYTES_FOR_SEPARATION_COLOR_ONLY_SUPPORTS_RGB
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Separation8bitDeviceCMYKTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => TestFile("separation8bitDeviceCMYK.pdf"
+                , "Im0", "png"));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.GET_IMAGEBYTES_FOR_SEPARATION_COLOR_ONLY_SUPPORTS_RGB
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Separation8bitDeviceRGBTest() {
+            TestFile("separation8bitDeviceRGB.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Separation8bitLabTest() {
+            TestFile("separation8bitLab.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Separation8bitDeviceCMYKExtGStateTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => TestFile("separation8bitDeviceCMYKExtGState.pdf"
+                , "Im0", "png"));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.GET_IMAGEBYTES_FOR_SEPARATION_COLOR_ONLY_SUPPORTS_RGB
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Separation8bitDeviceRGBTransparencyTest() {
+            TestFile("separation8bitDeviceRGBTransparency.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Separation8bitDeviceRGBDctDecodeTest() {
+            TestFile("separation8bitDeviceRGBDctDecode.pdf", "Im0", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Separation8bitDeviceRGBCustomDecodeRangeTest() {
+            TestFile("separation8bitDeviceRGBCustomDecodeRange.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Separation1bitDeviceRGBTest() {
+            TestFile("separation1bitDeviceRGB.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Separation2bitDeviceRGBTest() {
+            TestFile("separation2bitDeviceRGB.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Separation4bitDeviceRGBTest() {
+            TestFile("separation4bitDeviceRGB.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceN8bitDeviceCMYKTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("deviceN8bitDeviceCMYK.pdf"
+                , "Im0", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
+                , "/DeviceN"), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceN8bitDeviceRGBTransparencyTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("deviceN8bitDeviceRGBTransparency.pdf"
+                , "Im0", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
+                , "/DeviceN"), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceN8bitDeviceRGBSpotASpotBTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("deviceN8bitDeviceRGBSpotASpotB.pdf"
+                , "Im0", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
+                , "/DeviceN"), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceN4bitDeviceCMYKTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("deviceN4bitDeviceCMYKTest.pdf"
+                , "Im0", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
+                , "4"), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceN8bitDeviceCMYKTransparencyDCTDecodeTest() {
+            TestFile("deviceN8bitDeviceCMYKTransparencyDCTDecode.pdf", "Im0", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceN8bit5ChannelsTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("deviceN8bit5Channels.pdf"
+                , "Im0", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
+                , "/DeviceN"), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceN8bitDeviceRGBCustomDecodeTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("deviceN8bitDeviceRGBCustomDecode.pdf"
+                , "Im0", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
+                , "/DeviceN"), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceN8bitDeviceCMYKFunctionType0Test() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("deviceN8bitDeviceCMYKFunctionType0.pdf"
+                , "Im0", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
+                , "/DeviceN"), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceN8bitDeviceRGBRotatedTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("deviceN8bitDeviceRGBRotated.pdf"
+                , "Im0", "tif"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
+                , "/DeviceN"), e.Message);
         }
 
         private void TestFile(String filename, String objectid, String expectedImageFormat) {
@@ -240,12 +852,11 @@ namespace iText.Kernel.Pdf.Xobject {
                 using (PdfDocument pdfDocument = new PdfDocument(reader)) {
                     PdfResources resources = pdfDocument.GetPage(1).GetResources();
                     PdfDictionary xobjects = resources.GetResource(PdfName.XObject);
-                    PdfObject obj = xobjects.Get(new PdfName(objectid));
-                    if (obj == null) {
-                        throw new ArgumentException("Reference " + objectid + " not found - Available keys are " + xobjects.KeySet
-                            ());
+                    PdfImageXObject img = FindImageXObjectByName(xobjects, new PdfName(objectid));
+                    if (img == null) {
+                        throw new ArgumentException("Image reference " + objectid + " not found - Available keys are " + xobjects.
+                            KeySet());
                     }
-                    PdfImageXObject img = new PdfImageXObject((PdfStream)obj);
                     NUnit.Framework.Assert.AreEqual(expectedImageFormat, img.IdentifyImageFileExtension());
                     byte[] result = img.GetImageBytes(true);
                     if (saveResult) {
@@ -262,6 +873,40 @@ namespace iText.Kernel.Pdf.Xobject {
                     }
                 }
             }
+        }
+
+        private PdfImageXObject FindImageXObjectByName(PdfDictionary xobjects, PdfName targetName) {
+            if (xobjects == null) {
+                return null;
+            }
+            foreach (PdfName name in xobjects.KeySet()) {
+                PdfObject obj = xobjects.Get(name);
+                if (obj == null) {
+                    continue;
+                }
+                if (obj.IsIndirectReference()) {
+                    obj = ((PdfIndirectReference)obj).GetRefersTo();
+                }
+                if (!(obj is PdfStream)) {
+                    continue;
+                }
+                PdfStream stream = (PdfStream)obj;
+                PdfName subtype = stream.GetAsName(PdfName.Subtype);
+                if (PdfName.Image.Equals(subtype) && name.Equals(targetName)) {
+                    return new PdfImageXObject(stream);
+                }
+                if (PdfName.Form.Equals(subtype)) {
+                    PdfDictionary innerResources = stream.GetAsDictionary(PdfName.Resources);
+                    if (innerResources != null) {
+                        PdfDictionary innerXObjects = innerResources.GetAsDictionary(PdfName.XObject);
+                        PdfImageXObject result = FindImageXObjectByName(innerXObjects, targetName);
+                        if (result != null) {
+                            return result;
+                        }
+                    }
+                }
+            }
+            return null;
         }
 
         private void CompareTiffImages(byte[] cmpBytes, byte[] resultBytes) {
@@ -381,15 +1026,15 @@ namespace iText.Kernel.Pdf.Xobject {
             return JavaUtil.ArraysCopyOfRange(array, beg, end + 1);
         }
 
-        private class ImageExtractor : IEventListener {
-            private readonly IList<byte[]> images = new List<byte[]>();
+        private class ImageAndTypeExtractor : IEventListener {
+            public readonly IList<Tuple2<String, byte[]>> images = new List<Tuple2<String, byte[]>>();
 
             public virtual void EventOccurred(IEventData data, EventType type) {
                 switch (type) {
                     case EventType.RENDER_IMAGE: {
                         ImageRenderInfo renderInfo = (ImageRenderInfo)data;
                         byte[] bytes = renderInfo.GetImage().GetImageBytes();
-                        this.images.Add(bytes);
+                        images.Add(new Tuple2<String, byte[]>(renderInfo.GetImage().IdentifyImageFileExtension(), bytes));
                         break;
                     }
 
@@ -403,15 +1048,9 @@ namespace iText.Kernel.Pdf.Xobject {
                 return null;
             }
 
-            public virtual IList<byte[]> GetImages() {
-                return this.images;
+            public virtual IList<Tuple2<String, byte[]>> GetImages() {
+                return images;
             }
-
-            internal ImageExtractor(GetImageBytesTest _enclosing) {
-                this._enclosing = _enclosing;
-            }
-
-            private readonly GetImageBytesTest _enclosing;
         }
     }
 }

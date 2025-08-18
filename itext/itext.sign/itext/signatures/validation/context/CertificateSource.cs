@@ -35,6 +35,8 @@ namespace iText.Signatures.Validation.Context {
         /// <summary>A certificate that is on a trusted list.</summary>
         TRUSTED,
         /// <summary>The context while validating a timestamp issuer certificate.</summary>
-        TIMESTAMP
+        TIMESTAMP,
+        /// <summary>A certificate, which is used to sign List of Trusted Lists.</summary>
+        LOTL_CERT
     }
 }

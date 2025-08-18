@@ -20,12 +20,17 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
+using System.IO;
 using iText.IO.Font.Constants;
 using iText.Test;
 
 namespace iText.IO.Font {
-    [NUnit.Framework.Category("UnitTest")]
+    [NUnit.Framework.Category("IntegrationTest")]
     public class FontProgramFactoryTest : ExtendedITextTest {
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/FontProgramFactoryTest/";
+
         [NUnit.Framework.Test]
         public virtual void CreateRegisteredFontTest() {
             NUnit.Framework.Assert.IsNull(FontProgramFactory.CreateRegisteredFont(null, FontStyles.NORMAL));
@@ -41,6 +46,22 @@ namespace iText.IO.Font {
             NUnit.Framework.Assert.IsNull(FontProgramFactory.CreateRegisteredFont("somefont", FontStyles.UNDEFINED));
             FontProgramFactory.RegisterFontFamily("somefont", "somefont regular", null);
             NUnit.Framework.Assert.IsNull(FontProgramFactory.CreateRegisteredFont("somefont", FontStyles.UNDEFINED));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CreateTrueTypeWoffFontTest() {
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "SourceSerif4-Black.woff"));
+            TrueTypeFont woffFont = FontProgramFactory.CreateTrueTypeFont(fontBytes, false);
+            NUnit.Framework.Assert.IsNotNull(woffFont);
+            NUnit.Framework.Assert.AreEqual(1463, woffFont.bBoxes.Length);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TryToCreateTrueTypeWoff2FontTest() {
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "valid.woff2"));
+            TrueTypeFont woff2Font = FontProgramFactory.CreateTrueTypeFont(fontBytes, false);
+            NUnit.Framework.Assert.IsNotNull(woff2Font);
+            NUnit.Framework.Assert.AreEqual(4, woff2Font.CountOfGlyphs());
         }
     }
 }

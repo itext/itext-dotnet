@@ -137,8 +137,36 @@ namespace iText.Signatures.Validation.Report {
         /// </returns>
         public virtual iText.Signatures.Validation.Report.ValidationReport Merge(iText.Signatures.Validation.Report.ValidationReport
              subReport) {
-            foreach (ReportItem item in subReport.GetLogs()) {
-                AddReportItem(item);
+            if (subReport != null) {
+                foreach (ReportItem item in subReport.GetLogs()) {
+                    AddReportItem(item);
+                }
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// Merge all
+        /// <see cref="ReportItem"/>
+        /// objects from sub report into this one with different status.
+        /// </summary>
+        /// <param name="subReport">report from which items will be merged</param>
+        /// <param name="newStatus">
+        /// 
+        /// <see cref="ReportItemStatus"/>
+        /// which will be used instead of provided ones
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="ValidationReport"/>
+        /// the same updated validation report instance.
+        /// </returns>
+        public virtual iText.Signatures.Validation.Report.ValidationReport MergeWithDifferentStatus(iText.Signatures.Validation.Report.ValidationReport
+             subReport, ReportItem.ReportItemStatus newStatus) {
+            if (subReport != null) {
+                foreach (ReportItem item in subReport.GetLogs()) {
+                    AddReportItem(new ReportItem(item).SetStatus(newStatus));
+                }
             }
             return this;
         }

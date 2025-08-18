@@ -24,50 +24,109 @@ using System;
 using iText.Commons.Utils;
 
 namespace iText.Kernel.Geom {
-    /// <summary>
-    /// Keeps all the values of a 3 by 3 matrix and allows you to
-    /// do some math with matrices.
-    /// </summary>
+    /// <summary>Keeps all the values of a 3 by 3 matrix and allows you to do some math with matrices.</summary>
+    /// <remarks>
+    /// Keeps all the values of a 3 by 3 matrix and allows you to do some math with matrices.
+    /// <para />
+    /// Transformation matrix in PDF is a special case of a 3 by 3 matrix
+    /// <br />
+    /// <c>[a b 0]</c>
+    /// <br />
+    /// <c>[c d 0]</c>
+    /// <br />
+    /// <c>[e f 1]</c>
+    /// <para />
+    /// In its most general form, this matrix is specified by six numbers, usually in the form of an array containing six
+    /// elements
+    /// <c>[a b c d e f]</c>
+    /// . It can represent any linear transformation from one coordinate system to
+    /// another. Here the most common transformations:
+    /// <list type="bullet">
+    /// <item><description>Translations shall be specified as
+    /// <c>[1 0 0 1 Tx Ty]</c>
+    /// , where
+    /// <c>Tx</c>
+    /// and
+    /// <c>Ty</c>
+    /// shall be the
+    /// distances to translate the origin of the coordinate system in the horizontal and vertical dimensions, respectively.
+    /// </description></item>
+    /// <item><description>Scaling shall be obtained by
+    /// <c>[Sx 0 0 Sy 0 0]</c>
+    /// . This scales the coordinates so that 1 unit in the
+    /// horizontal and vertical dimensions of the new coordinate system is the same size as
+    /// <c>Sx</c>
+    /// and
+    /// <c>Sy</c>
+    /// units,
+    /// respectively, in the previous coordinate system.
+    /// </description></item>
+    /// <item><description>Rotations shall be produced by
+    /// <c>[Rc Rs -Rs Rc 0 0]</c>
+    /// , where
+    /// <c>Rc = cos(q)</c>
+    /// and
+    /// <c>Rs = sin(q)</c>
+    /// which has the effect of rotating the coordinate system axes by an angle
+    /// <c>q</c>
+    /// counterclockwise.
+    /// </description></item>
+    /// <item><description>Skew shall be specified by
+    /// <c>[1 Wx Wy 1 0 0]</c>
+    /// , where
+    /// <c>Wx = tan(a)</c>
+    /// and
+    /// <c>Wy = tan(b)</c>
+    /// which
+    /// skews the x-axis by an angle
+    /// <c>a</c>
+    /// and the y-axis by an angle
+    /// <c>b</c>.
+    /// </description></item>
+    /// </list>
+    /// <para />
+    /// For more information see PDF Specification ISO 32000-1 section 8.3.
+    /// </remarks>
     public class Matrix {
-        /// <summary>the row=1, col=1 position ('a') in the matrix.</summary>
+        /// <summary>The row=1, col=1 position ('a') in the matrix.</summary>
         public const int I11 = 0;
 
-        /// <summary>the row=1, col=2 position ('b') in the matrix.</summary>
+        /// <summary>The row=1, col=2 position ('b') in the matrix.</summary>
         public const int I12 = 1;
 
-        /// <summary>the row=1, col=3 position (always 0 for 2-D) in the matrix.</summary>
+        /// <summary>The row=1, col=3 position (always 0 for 2D) in the matrix.</summary>
         public const int I13 = 2;
 
-        /// <summary>the row=2, col=1 position ('c') in the matrix.</summary>
+        /// <summary>The row=2, col=1 position ('c') in the matrix.</summary>
         public const int I21 = 3;
 
-        /// <summary>the row=2, col=2 position ('d') in the matrix.</summary>
+        /// <summary>The row=2, col=2 position ('d') in the matrix.</summary>
         public const int I22 = 4;
 
-        /// <summary>the row=2, col=3 position (always 0 for 2-D) in the matrix.</summary>
+        /// <summary>The row=2, col=3 position (always 0 for 2D) in the matrix.</summary>
         public const int I23 = 5;
 
-        /// <summary>the row=3, col=1 ('e', or X translation) position in the matrix.</summary>
+        /// <summary>The row=3, col=1 ('e', or X translation) position in the matrix.</summary>
         public const int I31 = 6;
 
-        /// <summary>the row=3, col=2 ('f', or Y translation) position in the matrix.</summary>
+        /// <summary>The row=3, col=2 ('f', or Y translation) position in the matrix.</summary>
         public const int I32 = 7;
 
-        /// <summary>the row=3, col=3 position (always 1 for 2-D) in the matrix.</summary>
+        /// <summary>The row=3, col=3 position (always 1 for 2D) in the matrix.</summary>
         public const int I33 = 8;
 
         /// <summary>The values inside the matrix (the identity matrix by default).</summary>
         /// <remarks>
         /// The values inside the matrix (the identity matrix by default).
         /// <para />
-        /// For reference, the indeces are as follows:
+        /// For reference, the indexes are as follows:
         /// <br />I11 I12 I13
         /// <br />I21 I22 I23
         /// <br />I31 I32 I33
         /// </remarks>
         private readonly float[] vals = new float[] { 1, 0, 0, 0, 1, 0, 0, 0, 1 };
 
-        /// <summary>constructs a new Matrix with identity.</summary>
+        /// <summary>Constructs a new Matrix with identity.</summary>
         public Matrix() {
         }
 
@@ -144,7 +203,7 @@ namespace iText.Kernel.Geom {
         /// <summary>multiplies this matrix by 'b' and returns the result.</summary>
         /// <remarks>
         /// multiplies this matrix by 'b' and returns the result.
-        /// See http://en.wikipedia.org/wiki/Matrix_multiplication
+        /// See <a href="http://en.wikipedia.org/wiki/matrix_multiplication">Matrix_multiplication</a>
         /// </remarks>
         /// <param name="by">The matrix to multiply by</param>
         /// <returns>the resulting matrix</returns>

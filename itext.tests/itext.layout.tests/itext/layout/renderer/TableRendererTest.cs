@@ -20,10 +20,15 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
+using iText.IO.Image;
 using iText.IO.Source;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
 using iText.Layout;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
@@ -33,6 +38,16 @@ using iText.Test.Attributes;
 namespace iText.Layout.Renderer {
     [NUnit.Framework.Category("IntegrationTest")]
     public class TableRendererTest : ExtendedITextTest {
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/TableRendererTest/";
+
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/TableRendererTest/";
+
+        [NUnit.Framework.OneTimeSetUp]
+        public static void BeforeClass() {
+            CreateDestinationFolder(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Count = 6)]
         public virtual void CalculateColumnWidthsNotPointValue() {
@@ -72,6 +87,37 @@ namespace iText.Layout.Renderer {
             TableRenderer[] children = original.Split(1);
             TableRenderer[] grandChildren = children[1].Split(1);
             NUnit.Framework.Assert.IsFalse(grandChildren[0].isOriginalNonSplitRenderer);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
+        public virtual void NestedTableWithSpecifiedWidthTest() {
+            String outFileName = DESTINATION_FOLDER + "nestedTableWithSpecifiedWidth.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_nestedTableWithSpecifiedWidth.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(2);
+            Cell cell1 = new Cell(1, 1);
+            cell1.SetBorder(new SolidBorder(ColorConstants.GRAY, 1.5f));
+            Table nestedTable = new Table(1);
+            nestedTable.SetWidth(422.25f);
+            nestedTable.SetHeight(52.5f);
+            Paragraph paragraph = new Paragraph("Hello");
+            paragraph.SetBorder(new SolidBorder(ColorConstants.GREEN, 1.5f));
+            nestedTable.AddCell(paragraph);
+            cell1.Add(nestedTable);
+            table.AddCell(cell1);
+            Cell cell2 = new Cell(2, 1);
+            cell2.SetBorder(new SolidBorder(ColorConstants.YELLOW, 1.5f));
+            iText.Layout.Element.Image image = new Image(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
+            image.SetWidth(406.5f);
+            image.SetHeight(7.5f);
+            cell2.Add(image);
+            table.AddCell(cell2);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
         }
     }
 }

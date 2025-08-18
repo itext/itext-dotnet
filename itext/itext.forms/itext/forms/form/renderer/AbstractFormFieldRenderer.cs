@@ -280,8 +280,9 @@ namespace iText.Forms.Form.Renderer {
                 IList<String> kidsRoles = formParentPointer.GetKidsRoles();
                 int lastFormIndex = kidsRoles.LastIndexOf(StandardRoles.FORM);
                 TagTreePointer formPointer = formParentPointer.MoveToKid(lastFormIndex);
-                if (GetLang() != null) {
-                    formPointer.GetProperties().SetLanguage(GetLang());
+                String lang = GetLang();
+                if (lang != null) {
+                    formPointer.GetProperties().SetLanguage(lang);
                 }
                 formParentPointer.MoveToParent();
             }

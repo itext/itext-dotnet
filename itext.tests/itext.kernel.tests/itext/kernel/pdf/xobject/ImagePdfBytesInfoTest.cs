@@ -87,7 +87,9 @@ namespace iText.Kernel.Pdf.Xobject {
         public virtual void NegativeNTest() {
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "negativeN.pdf"))) {
                 PdfImageXObject img = GetPdfImageCObject(pdfDoc, 1, "Im1");
-                ImagePdfBytesInfo imagePdfBytesInfo = new ImagePdfBytesInfo(img);
+                ImagePdfBytesInfo imagePdfBytesInfo = new ImagePdfBytesInfo((int)img.GetWidth(), (int)img.GetHeight(), img
+                    .GetPdfObject().GetAsNumber(PdfName.BitsPerComponent).IntValue(), img.GetPdfObject().Get(PdfName.ColorSpace
+                    ), img.GetPdfObject().GetAsArray(PdfName.Decode));
                 int pngColorType = imagePdfBytesInfo.GetPngColorType();
                 NUnit.Framework.Assert.AreEqual(-1, pngColorType);
                 Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => imagePdfBytesInfo
@@ -100,7 +102,9 @@ namespace iText.Kernel.Pdf.Xobject {
         public virtual void UndefinedCSArrayTest() {
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "undefinedInCSArray.pdf"))) {
                 PdfImageXObject img = GetPdfImageCObject(pdfDoc, 1, "Im1");
-                ImagePdfBytesInfo imagePdfBytesInfo = new ImagePdfBytesInfo(img);
+                ImagePdfBytesInfo imagePdfBytesInfo = new ImagePdfBytesInfo((int)img.GetWidth(), (int)img.GetHeight(), img
+                    .GetPdfObject().GetAsNumber(PdfName.BitsPerComponent).IntValue(), img.GetPdfObject().Get(PdfName.ColorSpace
+                    ), img.GetPdfObject().GetAsArray(PdfName.Decode));
                 int pngColorType = imagePdfBytesInfo.GetPngColorType();
                 NUnit.Framework.Assert.AreEqual(-1, pngColorType);
                 Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => imagePdfBytesInfo
@@ -110,8 +114,10 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         private int GetPngColorTypeFromObject(PdfDocument pdfDocument, int pageNum, String objectId) {
-            ImagePdfBytesInfo imagePdfBytesInfo = new ImagePdfBytesInfo(GetPdfImageCObject(pdfDocument, pageNum, objectId
-                ));
+            PdfImageXObject img = GetPdfImageCObject(pdfDocument, pageNum, objectId);
+            ImagePdfBytesInfo imagePdfBytesInfo = new ImagePdfBytesInfo((int)img.GetWidth(), (int)img.GetHeight(), img
+                .GetPdfObject().GetAsNumber(PdfName.BitsPerComponent).IntValue(), img.GetPdfObject().Get(PdfName.ColorSpace
+                ), img.GetPdfObject().GetAsArray(PdfName.Decode));
             return imagePdfBytesInfo.GetPngColorType();
         }
 

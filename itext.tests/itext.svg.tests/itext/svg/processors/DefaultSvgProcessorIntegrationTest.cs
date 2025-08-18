@@ -28,15 +28,12 @@ using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
-using iText.Test;
 
 namespace iText.Svg.Processors {
     [NUnit.Framework.Category("IntegrationTest")]
     public class DefaultSvgProcessorIntegrationTest : SvgIntegrationTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/processors/impl/DefaultSvgProcessorIntegrationTest/";
-
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/processors/impl/DefaultSvgProcessorIntegrationTest/";
 
         [NUnit.Framework.Test]
         public virtual void DefaultBehaviourTest() {

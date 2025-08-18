@@ -35,136 +35,154 @@ using iText.Test;
 namespace iText.Svg.Renderers {
     [NUnit.Framework.Category("UnitTest")]
     public class SvgDrawContextTest : ExtendedITextTest {
-        private PdfDocument tokenDoc;
-
-        private PdfCanvas page1;
-
-        private PdfCanvas page2;
-
-        private SvgDrawContext context;
-
-        [NUnit.Framework.SetUp]
-        public virtual void SetUp() {
-            tokenDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
-            page1 = new PdfCanvas(tokenDoc.AddNewPage());
-            page2 = new PdfCanvas(tokenDoc.AddNewPage());
-            context = new SvgDrawContext(null, null);
-        }
-
-        [NUnit.Framework.TearDown]
-        public virtual void TearDown() {
-            // release all resources
-            tokenDoc.Close();
-        }
-
         [NUnit.Framework.Test]
         public virtual void DrawContextEmptyDequeGetFirstTest() {
+            SvgDrawContext context = new SvgDrawContext(null, null);
             NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => context.GetCurrentCanvas());
         }
 
         [NUnit.Framework.Test]
         public virtual void DrawContextEmptyDequePopTest() {
+            SvgDrawContext context = new SvgDrawContext(null, null);
             NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => context.PopCanvas());
         }
 
         [NUnit.Framework.Test]
         public virtual void DrawContextEmptyStackCountTest() {
+            SvgDrawContext context = new SvgDrawContext(null, null);
             NUnit.Framework.Assert.AreEqual(0, context.Size());
         }
 
         [NUnit.Framework.Test]
         public virtual void DrawContextPushCountTest() {
-            context.PushCanvas(page1);
-            NUnit.Framework.Assert.AreEqual(1, context.Size());
+            using (PdfDocument tokenDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                PdfCanvas page1 = new PdfCanvas(tokenDoc.AddNewPage());
+                SvgDrawContext context = new SvgDrawContext(null, null);
+                context.PushCanvas(page1);
+                NUnit.Framework.Assert.AreEqual(1, context.Size());
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void DrawContextPushPeekTest() {
-            context.PushCanvas(page1);
-            NUnit.Framework.Assert.AreEqual(page1, context.GetCurrentCanvas());
+            using (PdfDocument tokenDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                PdfCanvas page1 = new PdfCanvas(tokenDoc.AddNewPage());
+                SvgDrawContext context = new SvgDrawContext(null, null);
+                context.PushCanvas(page1);
+                NUnit.Framework.Assert.AreEqual(page1, context.GetCurrentCanvas());
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void DrawContextPushPopCountTest() {
-            context.PushCanvas(page1);
-            context.PopCanvas();
-            NUnit.Framework.Assert.AreEqual(0, context.Size());
+            using (PdfDocument tokenDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                PdfCanvas page1 = new PdfCanvas(tokenDoc.AddNewPage());
+                SvgDrawContext context = new SvgDrawContext(null, null);
+                context.PushCanvas(page1);
+                context.PopCanvas();
+                NUnit.Framework.Assert.AreEqual(0, context.Size());
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void DrawContextPushPopTest() {
-            context.PushCanvas(page1);
-            NUnit.Framework.Assert.AreEqual(page1, context.PopCanvas());
+            using (PdfDocument tokenDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                PdfCanvas page1 = new PdfCanvas(tokenDoc.AddNewPage());
+                SvgDrawContext context = new SvgDrawContext(null, null);
+                context.PushCanvas(page1);
+                NUnit.Framework.Assert.AreEqual(page1, context.PopCanvas());
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void DrawContextPushTwiceCountTest() {
-            context.PushCanvas(page1);
-            context.PushCanvas(page2);
-            NUnit.Framework.Assert.AreEqual(2, context.Size());
+            using (PdfDocument tokenDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                PdfCanvas page1 = new PdfCanvas(tokenDoc.AddNewPage());
+                PdfCanvas page2 = new PdfCanvas(tokenDoc.AddNewPage());
+                SvgDrawContext context = new SvgDrawContext(null, null);
+                context.PushCanvas(page1);
+                context.PushCanvas(page2);
+                NUnit.Framework.Assert.AreEqual(2, context.Size());
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void DrawContextPushTwicePeekTest() {
-            context.PushCanvas(page1);
-            context.PushCanvas(page2);
-            NUnit.Framework.Assert.AreEqual(page2, context.GetCurrentCanvas());
-            NUnit.Framework.Assert.AreEqual(2, context.Size());
+            using (PdfDocument tokenDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                PdfCanvas page1 = new PdfCanvas(tokenDoc.AddNewPage());
+                PdfCanvas page2 = new PdfCanvas(tokenDoc.AddNewPage());
+                SvgDrawContext context = new SvgDrawContext(null, null);
+                context.PushCanvas(page1);
+                context.PushCanvas(page2);
+                NUnit.Framework.Assert.AreEqual(page2, context.GetCurrentCanvas());
+                NUnit.Framework.Assert.AreEqual(2, context.Size());
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void DrawContextPushTwicePopTest() {
-            context.PushCanvas(page1);
-            context.PushCanvas(page2);
-            NUnit.Framework.Assert.AreEqual(page2, context.PopCanvas());
-            NUnit.Framework.Assert.AreEqual(1, context.Size());
-            NUnit.Framework.Assert.AreEqual(page1, context.PopCanvas());
+            using (PdfDocument tokenDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                PdfCanvas page1 = new PdfCanvas(tokenDoc.AddNewPage());
+                PdfCanvas page2 = new PdfCanvas(tokenDoc.AddNewPage());
+                SvgDrawContext context = new SvgDrawContext(null, null);
+                context.PushCanvas(page1);
+                context.PushCanvas(page2);
+                NUnit.Framework.Assert.AreEqual(page2, context.PopCanvas());
+                NUnit.Framework.Assert.AreEqual(1, context.Size());
+                NUnit.Framework.Assert.AreEqual(page1, context.PopCanvas());
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void AddISvgNodeRender() {
+            SvgDrawContext context = new SvgDrawContext(null, null);
             String name = "expected";
             ISvgNodeRenderer expected = new GroupSvgNodeRenderer();
-            this.context.AddNamedObject(name, expected);
-            Object actual = this.context.GetNamedObject(name);
+            context.AddNamedObject(name, expected);
+            Object actual = context.GetNamedObject(name);
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
 
         [NUnit.Framework.Test]
         public virtual void AddNullToNamedObjects() {
+            SvgDrawContext context = new SvgDrawContext(null, null);
             String name = "expected";
-            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => this.context.AddNamedObject
-                (name, null));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => context.AddNamedObject(name
+                , null));
             NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.NAMED_OBJECT_NULL, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void AddNamedObjectWithNullName() {
+            SvgDrawContext context = new SvgDrawContext(null, null);
             ISvgNodeRenderer expected = new DummySvgNodeRenderer();
-            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => this.context.AddNamedObject
-                (null, expected));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => context.AddNamedObject(null
+                , expected));
             NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.NAMED_OBJECT_NAME_NULL_OR_EMPTY, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void AddNamedObjectWithEmptyName() {
+            SvgDrawContext context = new SvgDrawContext(null, null);
             ISvgNodeRenderer expected = new DummySvgNodeRenderer();
-            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => this.context.AddNamedObject
-                ("", expected));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => context.AddNamedObject(""
+                , expected));
             NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.NAMED_OBJECT_NAME_NULL_OR_EMPTY, e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void AddNamedRenderer() {
+            SvgDrawContext context = new SvgDrawContext(null, null);
             ISvgNodeRenderer expected = new DummySvgNodeRenderer();
             String dummyName = "dummy";
-            this.context.AddNamedObject(dummyName, expected);
-            Object actual = this.context.GetNamedObject(dummyName);
+            context.AddNamedObject(dummyName, expected);
+            Object actual = context.GetNamedObject(dummyName);
             NUnit.Framework.Assert.AreEqual(expected, actual);
         }
 
         [NUnit.Framework.Test]
         public virtual void AddNamedObjects() {
+            SvgDrawContext context = new SvgDrawContext(null, null);
             ISvgNodeRenderer expectedOne = new DummySvgNodeRenderer();
             ISvgNodeRenderer expectedTwo = new DummySvgNodeRenderer();
             ISvgNodeRenderer expectedThree = new DummySvgNodeRenderer();
@@ -175,10 +193,10 @@ namespace iText.Svg.Renderers {
             toAdd.Put(dummyNameOne, expectedOne);
             toAdd.Put(dummyNameTwo, expectedTwo);
             toAdd.Put(dummyNameThree, expectedThree);
-            this.context.AddNamedObjects(toAdd);
-            Object actualThree = this.context.GetNamedObject(dummyNameThree);
-            Object actualTwo = this.context.GetNamedObject(dummyNameTwo);
-            Object actualOne = this.context.GetNamedObject(dummyNameOne);
+            context.AddNamedObjects(toAdd);
+            Object actualThree = context.GetNamedObject(dummyNameThree);
+            Object actualTwo = context.GetNamedObject(dummyNameTwo);
+            Object actualOne = context.GetNamedObject(dummyNameOne);
             NUnit.Framework.Assert.AreEqual(expectedOne, actualOne);
             NUnit.Framework.Assert.AreEqual(expectedTwo, actualTwo);
             NUnit.Framework.Assert.AreEqual(expectedThree, actualThree);
@@ -186,6 +204,7 @@ namespace iText.Svg.Renderers {
 
         [NUnit.Framework.Test]
         public virtual void AddNamedObjectAndTryToAddDuplicate() {
+            SvgDrawContext context = new SvgDrawContext(null, null);
             ISvgNodeRenderer expectedOne = new DummySvgNodeRenderer();
             ISvgNodeRenderer expectedTwo = new DummySvgNodeRenderer();
             String dummyName = "Ed";
@@ -197,6 +216,7 @@ namespace iText.Svg.Renderers {
 
         [NUnit.Framework.Test]
         public virtual void RootTransformText() {
+            SvgDrawContext context = new SvgDrawContext(null, null);
             AffineTransform at = new AffineTransform();
             NUnit.Framework.Assert.AreEqual(at, context.GetRootTransform());
             at.SetToRotation(MathUtil.ToRadians(45));

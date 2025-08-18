@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using NUnit.Framework;
 
 [assembly: AssemblyTitle("iText.Svg.Tests")]
 [assembly: AssemblyDescription("")]
@@ -15,9 +16,11 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("ae4e5743-0665-4705-9a33-07ea57cdd269")]
 
-[assembly: AssemblyVersion("9.2.0.0")]
-[assembly: AssemblyFileVersion("9.2.0.0")]
-[assembly: AssemblyInformationalVersion("9.2.0")]
+[assembly: AssemblyVersion("9.3.0.0")]
+[assembly: AssemblyFileVersion("9.3.0.0")]
+[assembly: AssemblyInformationalVersion("9.3.0")]
+
+[assembly: Parallelizable(ParallelScope.ContextMask)]
 
 #if !NETSTANDARD2_0
 [assembly: NUnit.Framework.Timeout(300000)]

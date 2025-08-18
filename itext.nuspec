@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>itext</id>
-    <version>9.2.0</version>
+    <version>9.3.0</version>
     <title>iText Community</title>
     <authors>Apryse Software</authors>
     <owners>Apryse Software</owners>
@@ -19,11 +19,12 @@
 	<repository type="git" url="https://github.com/itext/itext7-dotnet.git" />
     <dependencies>
       <group targetFramework="net461">
-        <dependency id="itext.commons" version="9.2.0" />
+        <dependency id="itext.commons" version="9.3.0" />
         <dependency id="Microsoft.Extensions.Logging" version="5.0.0" />
+		<dependency id="System.Security.Cryptography.Xml" version="6.0.2" />
       </group>
       <group targetFramework="netstandard2.0">
-        <dependency id="itext.commons" version="9.2.0" />
+        <dependency id="itext.commons" version="9.3.0" />
         <dependency id="Microsoft.Extensions.Logging" version="5.0.0" />
         <dependency id="System.Diagnostics.Process" version="4.3.0" />
         <dependency id="System.Globalization.Extensions" version="4.3.0" />
@@ -35,6 +36,7 @@
         <dependency id="System.Threading.Thread" version="4.3.0" />
         <dependency id="System.Threading.ThreadPool" version="4.3.0" />
         <dependency id="System.Xml.XmlDocument" version="4.3.0" />
+		<dependency id="System.Security.Cryptography.Xml" version="6.0.2" />
         <dependency id="System.Security.Cryptography.Csp" version="4.3.0" />
 		<dependency id="Microsoft.DotNet.PlatformAbstractions" version="1.1.0" />
 		<dependency id="System.Text.RegularExpressions" version="4.3.1" />
@@ -89,9 +91,10 @@
     <file src="gnu-agpl-v3.0.md" target="" />
     <file src="LICENSE.md" target="" />
     <file src="ITSC-avatar.png" target="" />
+	<file src="itext\itext.barcodes\NOTICE.txt" target="NOTICE_barcodes.txt" />
+	<file src="itext\itext.io\NOTICE.txt" target="NOTICE_io.txt" />
 	<file src="itext\itext.kernel\NOTICE.txt" target="NOTICE_kernel.txt" />
 	<file src="itext\itext.layout\NOTICE.txt" target="NOTICE_layout.txt" />
 	<file src="itext\itext.styledxmlparser\NOTICE.txt" target="NOTICE_styledxmlparser.txt" />
-	<file src="itext\itext.io\NOTICE.txt" target="NOTICE_io.txt" />
   </files>
 </package>

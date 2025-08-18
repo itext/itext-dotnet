@@ -43,8 +43,6 @@ namespace iText.Pdfua.Checkers {
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/FreeSans.ttf";
 
-        private UaValidationTestFramework framework;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
@@ -61,13 +59,9 @@ namespace iText.Pdfua.Checkers {
                 .P, false }, new Object[] { StandardRoles.DIV, StandardRoles.P, false } };
         }
 
-        [NUnit.Framework.SetUp]
-        public virtual void InitializeFramework() {
-            framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-        }
-
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void SimpleParagraphTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font = LoadFont();
                 Document doc = new Document(pdfDoc);
@@ -79,6 +73,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void SimpleParagraphWithUnderlineTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font = LoadFont();
                 Document doc = new Document(pdfDoc);
@@ -92,7 +87,8 @@ namespace iText.Pdfua.Checkers {
         public virtual void TestOfIllegalRelations(String parentRole, String childRole, bool expectException) {
             //expectException should take into account repair mechanism
             // in example P:P will be replaced as P:Span so no exceptions should be thrown
-            framework.AddSuppliers(new _Generator_116(parentRole, childRole));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            framework.AddSuppliers(new _Generator_112(parentRole, childRole));
             if (expectException) {
                 framework.AssertBothFail("testOfIllegalRelation_" + parentRole + "_" + childRole, false, PdfUAConformance.
                     PDF_UA_2);
@@ -103,8 +99,8 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-        private sealed class _Generator_116 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_116(String parentRole, String childRole) {
+        private sealed class _Generator_112 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_112(String parentRole, String childRole) {
                 this.parentRole = parentRole;
                 this.childRole = childRole;
             }
@@ -125,6 +121,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void SimpleBorderTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfPage page = pdfDocument.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
@@ -138,6 +135,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void SimpleTableTest(PdfUAConformance pdfUAConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 Document doc = new Document(pdfDocument);
                 PdfFont font = LoadFont();

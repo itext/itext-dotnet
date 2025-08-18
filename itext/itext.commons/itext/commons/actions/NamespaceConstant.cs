@@ -47,6 +47,7 @@ namespace iText.Commons.Actions {
         public const String PDF_SWEEP = ITEXT + ".PdfCleanup";
         public const String PDF_OCR = ITEXT + ".Pdfocr";
         public const String PDF_OCR_TESSERACT4 = PDF_OCR + ".Tesseract4";
+        public const String PDF_OCR_ONNXTR = PDF_OCR + ".Onnxtr";
 
         public static readonly IList<String> ITEXT_CORE_NAMESPACES = JavaCollectionsUtil.UnmodifiableList(JavaUtil.ArraysAsList(
             NamespaceConstant.CORE_EVENTS,

@@ -25,6 +25,7 @@ using System.IO;
 
 namespace iText.StyledXmlParser.Resolver.Resource {
     /// <summary>Interface for classes that can retrieve data from resources by URL.</summary>
+    [System.ObsoleteAttribute(@"In favor of iText.IO.Resolver.Resource.IResourceRetriever")]
     public interface IResourceRetriever {
         /// <summary>
         /// Gets the

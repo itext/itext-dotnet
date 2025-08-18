@@ -44,23 +44,7 @@ namespace iText.Svg.Converter {
     [NUnit.Framework.Category("UnitTest")]
     public class SvgConverterUnitTest : ExtendedITextTest {
         // we cannot easily mock the PdfDocument, so we make do with as close to unit testing as we can
-        private PdfDocument doc;
-
         private readonly String content = "<svg width=\"10\" height=\"10\"/>";
-
-        private Stream @is;
-
-        [NUnit.Framework.SetUp]
-        public virtual void Setup() {
-            doc = new PdfDocument(new PdfWriter(new MemoryStream()));
-            doc.AddNewPage();
-            @is = new MemoryStream(content.GetBytes(System.Text.Encoding.UTF8));
-        }
-
-        [NUnit.Framework.TearDown]
-        public virtual void Teardown() {
-            doc.Close();
-        }
 
         private void TestResourceCreated(PdfDocument doc, int pageNo) {
             PdfResources res = doc.GetPage(pageNo).GetResources();
@@ -73,118 +57,174 @@ namespace iText.Svg.Converter {
 
         [NUnit.Framework.Test]
         public virtual void DrawStringOnDocumentCreatesResourceTest() {
-            SvgConverter.DrawOnDocument(content, doc, 1);
-            TestResourceCreated(doc, 1);
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                doc.AddNewPage();
+                SvgConverter.DrawOnDocument(content, doc, 1);
+                TestResourceCreated(doc, 1);
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void DrawStringOnDocumentWithPropsCreatesResourceTest() {
-            SvgConverter.DrawOnDocument(content, doc, 1, new DummySvgConverterProperties());
-            TestResourceCreated(doc, 1);
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                doc.AddNewPage();
+                SvgConverter.DrawOnDocument(content, doc, 1, new DummySvgConverterProperties());
+                TestResourceCreated(doc, 1);
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void DrawStreamOnDocumentCreatesResourceTest() {
-            SvgConverter.DrawOnDocument(@is, doc, 1);
-            TestResourceCreated(doc, 1);
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                doc.AddNewPage();
+                Stream @is = new MemoryStream(content.GetBytes(System.Text.Encoding.UTF8));
+                SvgConverter.DrawOnDocument(@is, doc, 1);
+                TestResourceCreated(doc, 1);
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void DrawStreamOnDocumentWithPropsCreatesResourceTest() {
-            SvgConverter.DrawOnDocument(@is, doc, 1, new DummySvgConverterProperties());
-            TestResourceCreated(doc, 1);
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                doc.AddNewPage();
+                Stream @is = new MemoryStream(content.GetBytes(System.Text.Encoding.UTF8));
+                SvgConverter.DrawOnDocument(@is, doc, 1, new DummySvgConverterProperties());
+                TestResourceCreated(doc, 1);
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void DrawStringOnPageCreatesResourceTest() {
-            PdfPage page = doc.AddNewPage();
-            SvgConverter.DrawOnPage(content, page);
-            NUnit.Framework.Assert.AreEqual(0, doc.GetFirstPage().GetResources().GetPdfObject().Size());
-            TestResourceCreated(doc, 2);
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                doc.AddNewPage();
+                PdfPage page = doc.AddNewPage();
+                SvgConverter.DrawOnPage(content, page);
+                NUnit.Framework.Assert.AreEqual(0, doc.GetFirstPage().GetResources().GetPdfObject().Size());
+                TestResourceCreated(doc, 2);
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void DrawStringOnPageWithPropsCreatesResourceTest() {
-            PdfPage page = doc.AddNewPage();
-            SvgConverter.DrawOnPage(content, page, new DummySvgConverterProperties());
-            NUnit.Framework.Assert.AreEqual(0, doc.GetFirstPage().GetResources().GetPdfObject().Size());
-            TestResourceCreated(doc, 2);
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                doc.AddNewPage();
+                PdfPage page = doc.AddNewPage();
+                SvgConverter.DrawOnPage(content, page, new DummySvgConverterProperties());
+                NUnit.Framework.Assert.AreEqual(0, doc.GetFirstPage().GetResources().GetPdfObject().Size());
+                TestResourceCreated(doc, 2);
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void DrawStreamOnPageCreatesResourceTest() {
-            PdfPage page = doc.AddNewPage();
-            SvgConverter.DrawOnPage(@is, page);
-            NUnit.Framework.Assert.AreEqual(0, doc.GetFirstPage().GetResources().GetPdfObject().Size());
-            TestResourceCreated(doc, 2);
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                doc.AddNewPage();
+                PdfPage page = doc.AddNewPage();
+                Stream @is = new MemoryStream(content.GetBytes(System.Text.Encoding.UTF8));
+                SvgConverter.DrawOnPage(@is, page);
+                NUnit.Framework.Assert.AreEqual(0, doc.GetFirstPage().GetResources().GetPdfObject().Size());
+                TestResourceCreated(doc, 2);
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void DrawStreamOnPageWithPropsCreatesResourceTest() {
-            PdfPage page = doc.AddNewPage();
-            SvgConverter.DrawOnPage(@is, page, new DummySvgConverterProperties());
-            NUnit.Framework.Assert.AreEqual(0, doc.GetFirstPage().GetResources().GetPdfObject().Size());
-            TestResourceCreated(doc, 2);
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                doc.AddNewPage();
+                PdfPage page = doc.AddNewPage();
+                Stream @is = new MemoryStream(content.GetBytes(System.Text.Encoding.UTF8));
+                SvgConverter.DrawOnPage(@is, page, new DummySvgConverterProperties());
+                NUnit.Framework.Assert.AreEqual(0, doc.GetFirstPage().GetResources().GetPdfObject().Size());
+                TestResourceCreated(doc, 2);
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void DrawStringOnCanvasCreatesResourceTest() {
-            PdfPage page = doc.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page);
-            SvgConverter.DrawOnCanvas(content, canvas);
-            NUnit.Framework.Assert.AreEqual(0, doc.GetFirstPage().GetResources().GetPdfObject().Size());
-            TestResourceCreated(doc, 2);
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                doc.AddNewPage();
+                PdfPage page = doc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page);
+                SvgConverter.DrawOnCanvas(content, canvas);
+                NUnit.Framework.Assert.AreEqual(0, doc.GetFirstPage().GetResources().GetPdfObject().Size());
+                TestResourceCreated(doc, 2);
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void DrawStringOnCanvasWithPropsCreatesResourceTest() {
-            PdfPage page = doc.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page);
-            SvgConverter.DrawOnCanvas(content, canvas, new DummySvgConverterProperties());
-            NUnit.Framework.Assert.AreEqual(0, doc.GetFirstPage().GetResources().GetPdfObject().Size());
-            TestResourceCreated(doc, 2);
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                doc.AddNewPage();
+                PdfPage page = doc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page);
+                SvgConverter.DrawOnCanvas(content, canvas, new DummySvgConverterProperties());
+                NUnit.Framework.Assert.AreEqual(0, doc.GetFirstPage().GetResources().GetPdfObject().Size());
+                TestResourceCreated(doc, 2);
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void DrawStreamOnCanvasCreatesResourceTest() {
-            PdfPage page = doc.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page);
-            SvgConverter.DrawOnCanvas(@is, canvas);
-            NUnit.Framework.Assert.AreEqual(0, doc.GetFirstPage().GetResources().GetPdfObject().Size());
-            TestResourceCreated(doc, 2);
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                doc.AddNewPage();
+                PdfPage page = doc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page);
+                Stream @is = new MemoryStream(content.GetBytes(System.Text.Encoding.UTF8));
+                SvgConverter.DrawOnCanvas(@is, canvas);
+                NUnit.Framework.Assert.AreEqual(0, doc.GetFirstPage().GetResources().GetPdfObject().Size());
+                TestResourceCreated(doc, 2);
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void DrawStreamOnCanvasWithPropsCreatesResourceTest() {
-            PdfPage page = doc.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page);
-            SvgConverter.DrawOnCanvas(@is, canvas, new DummySvgConverterProperties());
-            NUnit.Framework.Assert.AreEqual(0, doc.GetFirstPage().GetResources().GetPdfObject().Size());
-            TestResourceCreated(doc, 2);
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                doc.AddNewPage();
+                PdfPage page = doc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page);
+                Stream @is = new MemoryStream(content.GetBytes(System.Text.Encoding.UTF8));
+                SvgConverter.DrawOnCanvas(@is, canvas, new DummySvgConverterProperties());
+                NUnit.Framework.Assert.AreEqual(0, doc.GetFirstPage().GetResources().GetPdfObject().Size());
+                TestResourceCreated(doc, 2);
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void ConvertStringToXObjectCreatesNoResourceTest() {
-            SvgConverter.ConvertToXObject(content, doc);
-            NUnit.Framework.Assert.AreEqual(0, doc.GetLastPage().GetResources().GetPdfObject().Size());
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                doc.AddNewPage();
+                SvgConverter.ConvertToXObject(content, doc);
+                NUnit.Framework.Assert.AreEqual(0, doc.GetLastPage().GetResources().GetPdfObject().Size());
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void ConvertStringToXObjectWithPropsCreatesNoResourceTest() {
-            SvgConverter.ConvertToXObject(content, doc, new DummySvgConverterProperties());
-            NUnit.Framework.Assert.AreEqual(0, doc.GetLastPage().GetResources().GetPdfObject().Size());
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                doc.AddNewPage();
+                SvgConverter.ConvertToXObject(content, doc, new DummySvgConverterProperties());
+                NUnit.Framework.Assert.AreEqual(0, doc.GetLastPage().GetResources().GetPdfObject().Size());
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void ConvertStreamToXObjectCreatesNoResourceTest() {
-            SvgConverter.ConvertToXObject(@is, doc);
-            NUnit.Framework.Assert.AreEqual(0, doc.GetLastPage().GetResources().GetPdfObject().Size());
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                doc.AddNewPage();
+                Stream @is = new MemoryStream(content.GetBytes(System.Text.Encoding.UTF8));
+                SvgConverter.ConvertToXObject(@is, doc);
+                NUnit.Framework.Assert.AreEqual(0, doc.GetLastPage().GetResources().GetPdfObject().Size());
+            }
         }
 
         [NUnit.Framework.Test]
         public virtual void ConvertStreamToXObjectWithPropsCreatesNoResourceTest() {
-            SvgConverter.ConvertToXObject(@is, doc, new DummySvgConverterProperties());
-            NUnit.Framework.Assert.AreEqual(0, doc.GetLastPage().GetResources().GetPdfObject().Size());
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                doc.AddNewPage();
+                Stream @is = new MemoryStream(content.GetBytes(System.Text.Encoding.UTF8));
+                SvgConverter.ConvertToXObject(@is, doc, new DummySvgConverterProperties());
+                NUnit.Framework.Assert.AreEqual(0, doc.GetLastPage().GetResources().GetPdfObject().Size());
+            }
         }
 
         [NUnit.Framework.Test]
@@ -219,6 +259,7 @@ namespace iText.Svg.Converter {
 
         [NUnit.Framework.Test]
         public virtual void ParseStream() {
+            Stream @is = new MemoryStream(content.GetBytes(System.Text.Encoding.UTF8));
             INode actual = SvgConverter.Parse(@is);
             NUnit.Framework.Assert.AreEqual(1, actual.ChildNodes().Count);
             JsoupElementNode node = (JsoupElementNode)actual.ChildNodes()[0];
@@ -228,6 +269,7 @@ namespace iText.Svg.Converter {
 
         [NUnit.Framework.Test]
         public virtual void ParseStreamWithProps() {
+            Stream @is = new MemoryStream(content.GetBytes(System.Text.Encoding.UTF8));
             INode actual = SvgConverter.Parse(@is, new DummySvgConverterProperties());
             NUnit.Framework.Assert.AreEqual(1, actual.ChildNodes().Count);
             JsoupElementNode node = (JsoupElementNode)actual.ChildNodes()[0];
@@ -237,7 +279,7 @@ namespace iText.Svg.Converter {
 
         [NUnit.Framework.Test]
         public virtual void ParseStreamErrorEncodingTooBig() {
-            @is = new MemoryStream(content.GetBytes(System.Text.Encoding.Unicode));
+            Stream @is = new MemoryStream(content.GetBytes(System.Text.Encoding.Unicode));
             INode actual = SvgConverter.Parse(@is, new DummySvgConverterProperties());
             // defaults to UTF-8
             NUnit.Framework.Assert.AreEqual(1, actual.ChildNodes().Count);
@@ -253,7 +295,7 @@ namespace iText.Svg.Converter {
 
         [NUnit.Framework.Test]
         public virtual void ParseStreamWithOtherEncoding() {
-            @is = new MemoryStream(content.GetBytes(System.Text.Encoding.Unicode));
+            Stream @is = new MemoryStream(content.GetBytes(System.Text.Encoding.Unicode));
             INode actual = SvgConverter.Parse(@is, new SvgConverterUnitTest.OtherCharsetDummySvgConverterProperties());
             NUnit.Framework.Assert.AreEqual(1, actual.ChildNodes().Count);
             JsoupElementNode node = (JsoupElementNode)actual.ChildNodes()[0];
@@ -263,6 +305,7 @@ namespace iText.Svg.Converter {
 
         [NUnit.Framework.Test]
         public virtual void ParseStreamErrorOtherCharset() {
+            Stream @is = new MemoryStream(content.GetBytes(System.Text.Encoding.UTF8));
             INode actual = SvgConverter.Parse(@is, new SvgConverterUnitTest.OtherCharsetDummySvgConverterProperties());
             NUnit.Framework.Assert.AreEqual(1, actual.ChildNodes().Count);
             // Does not throw an exception, but produces gibberish output that gets fed into a Text element, which is not a JsoupElementNode
@@ -312,12 +355,15 @@ namespace iText.Svg.Converter {
 
         [NUnit.Framework.Test]
         public virtual void NullBBoxInDrawTest() {
-            NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
-                PdfFormXObject @object = SvgConverter.ConvertToXObject(content, doc);
-                ((PdfDictionary)@object.GetPdfObject()).Remove(PdfName.BBox);
-                SvgConverter.Draw(@object, new PdfCanvas(doc, 1), 0, 0);
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                doc.AddNewPage();
+                NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
+                    PdfFormXObject @object = SvgConverter.ConvertToXObject(content, doc);
+                    ((PdfDictionary)@object.GetPdfObject()).Remove(PdfName.BBox);
+                    SvgConverter.Draw(@object, new PdfCanvas(doc, 1), 0, 0);
+                }
+                );
             }
-            );
         }
 
         private class TestSvgProcessorResult : ISvgProcessorResult {

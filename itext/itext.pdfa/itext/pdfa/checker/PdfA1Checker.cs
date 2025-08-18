@@ -195,7 +195,7 @@ namespace iText.Pdfa.Checker {
         /// <summary><inheritDoc/></summary>
         protected internal override void CheckPageColorsUsages(PdfDictionary pageDict, PdfDictionary pageResources
             ) {
-            if ((!rgbUsedObjects.IsEmpty() || !cmykUsedObjects.IsEmpty() || grayUsedObjects.IsEmpty()) && pdfAOutputIntentColorSpace
+            if ((!rgbUsedObjects.IsEmpty() || !cmykUsedObjects.IsEmpty() || !grayUsedObjects.IsEmpty()) && pdfAOutputIntentColorSpace
                  == null) {
                 throw new PdfAConformanceException(PdfaExceptionMessageConstant.IF_DEVICE_RGB_CMYK_GRAY_USED_IN_FILE_THAT_FILE_SHALL_CONTAIN_PDFA_OUTPUTINTENT
                     );

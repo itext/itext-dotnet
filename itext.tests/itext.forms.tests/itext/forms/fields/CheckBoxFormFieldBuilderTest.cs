@@ -33,54 +33,58 @@ using iText.Test;
 namespace iText.Forms.Fields {
     [NUnit.Framework.Category("UnitTest")]
     public class CheckBoxFormFieldBuilderTest : ExtendedITextTest {
-        private static readonly PdfDocument DUMMY_DOCUMENT = new PdfDocument(new PdfWriter(new MemoryStream()));
-
         private const String DUMMY_NAME = "dummy name";
 
         private static readonly Rectangle DUMMY_RECTANGLE = new Rectangle(7, 11, 13, 17);
 
         [NUnit.Framework.Test]
         public virtual void ConstructorTest() {
-            CheckBoxFormFieldBuilder builder = new CheckBoxFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
-            NUnit.Framework.Assert.AreSame(DUMMY_DOCUMENT, builder.GetDocument());
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            CheckBoxFormFieldBuilder builder = new CheckBoxFormFieldBuilder(pdfDoc, DUMMY_NAME);
+            NUnit.Framework.Assert.AreSame(pdfDoc, builder.GetDocument());
             NUnit.Framework.Assert.AreSame(DUMMY_NAME, builder.GetFormFieldName());
         }
 
         [NUnit.Framework.Test]
         public virtual void SetGetCheckType() {
-            CheckBoxFormFieldBuilder builder = new CheckBoxFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            CheckBoxFormFieldBuilder builder = new CheckBoxFormFieldBuilder(pdfDoc, DUMMY_NAME);
             builder.SetCheckType(CheckBoxType.DIAMOND);
             NUnit.Framework.Assert.AreEqual(CheckBoxType.DIAMOND, builder.GetCheckType());
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateCheckBoxWithWidgetTest() {
-            PdfButtonFormField checkBoxFormField = new CheckBoxFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfButtonFormField checkBoxFormField = new CheckBoxFormFieldBuilder(pdfDoc, DUMMY_NAME).SetWidgetRectangle
                 (DUMMY_RECTANGLE).CreateCheckBox();
-            CompareCheckBoxes(checkBoxFormField, true);
+            CompareCheckBoxes(checkBoxFormField, pdfDoc, true);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateCheckBoxWithIncorrectNameTest() {
-            NUnit.Framework.Assert.DoesNotThrow(() => new CheckBoxFormFieldBuilder(DUMMY_DOCUMENT, "incorrect.name").SetWidgetRectangle
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            NUnit.Framework.Assert.DoesNotThrow(() => new CheckBoxFormFieldBuilder(pdfDoc, "incorrect.name").SetWidgetRectangle
                 (DUMMY_RECTANGLE).CreateCheckBox());
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateCheckBoxWithoutWidgetTest() {
-            PdfButtonFormField checkBoxFormField = new CheckBoxFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).CreateCheckBox
-                ();
-            CompareCheckBoxes(checkBoxFormField, false);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfButtonFormField checkBoxFormField = new CheckBoxFormFieldBuilder(pdfDoc, DUMMY_NAME).CreateCheckBox();
+            CompareCheckBoxes(checkBoxFormField, pdfDoc, false);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateCheckBoxWithConformanceLevelTest() {
-            PdfButtonFormField checkBoxFormField = new CheckBoxFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfButtonFormField checkBoxFormField = new CheckBoxFormFieldBuilder(pdfDoc, DUMMY_NAME).SetWidgetRectangle
                 (DUMMY_RECTANGLE).SetConformance(PdfConformance.PDF_A_1A).CreateCheckBox();
-            CompareCheckBoxes(checkBoxFormField, true);
+            CompareCheckBoxes(checkBoxFormField, pdfDoc, true);
         }
 
-        private static void CompareCheckBoxes(PdfButtonFormField checkBoxFormField, bool widgetExpected) {
+        private static void CompareCheckBoxes(PdfButtonFormField checkBoxFormField, PdfDocument pdfDoc, bool widgetExpected
+            ) {
             PdfDictionary expectedDictionary = new PdfDictionary();
             IList<PdfWidgetAnnotation> widgets = checkBoxFormField.GetWidgets();
             if (widgetExpected) {
@@ -97,8 +101,8 @@ namespace iText.Forms.Fields {
             PutIfAbsent(expectedDictionary, PdfName.FT, PdfName.Btn);
             PutIfAbsent(expectedDictionary, PdfName.T, new PdfString(DUMMY_NAME));
             PutIfAbsent(expectedDictionary, PdfName.V, new PdfName(PdfFormAnnotation.OFF_STATE_VALUE));
-            expectedDictionary.MakeIndirect(DUMMY_DOCUMENT);
-            checkBoxFormField.MakeIndirect(DUMMY_DOCUMENT);
+            expectedDictionary.MakeIndirect(pdfDoc);
+            checkBoxFormField.MakeIndirect(pdfDoc);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareDictionariesStructure(expectedDictionary, checkBoxFormField
                 .GetPdfObject()));
         }

@@ -34,8 +34,6 @@ using iText.Test;
 namespace iText.Forms.Fields {
     [NUnit.Framework.Category("UnitTest")]
     public class RadioFormFieldBuilderTest : ExtendedITextTest {
-        private static readonly PdfDocument DUMMY_DOCUMENT = new PdfDocument(new PdfWriter(new MemoryStream()));
-
         private const String DUMMY_NAME = "dummy name";
 
         private static readonly Rectangle DUMMY_RECTANGLE = new Rectangle(7, 11, 13, 17);
@@ -46,44 +44,50 @@ namespace iText.Forms.Fields {
 
         [NUnit.Framework.Test]
         public virtual void TwoParametersConstructorTest() {
-            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
-            NUnit.Framework.Assert.AreSame(DUMMY_DOCUMENT, builder.GetDocument());
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, DUMMY_NAME);
+            NUnit.Framework.Assert.AreSame(pdfDoc, builder.GetDocument());
             NUnit.Framework.Assert.AreSame(DUMMY_NAME, builder.GetFormFieldName());
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateRadioGroupTest() {
-            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, DUMMY_NAME);
             PdfButtonFormField radioGroup = builder.CreateRadioGroup();
-            CompareRadioGroups(radioGroup);
+            CompareRadioGroups(radioGroup, pdfDoc);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateRadioButtonWithWidgetTest() {
-            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, DUMMY_NAME);
             PdfButtonFormField radioGroup = builder.CreateRadioGroup();
             PdfFormAnnotation radioAnnotation = builder.CreateRadioButton(DUMMY_APPEARANCE_NAME, DUMMY_RECTANGLE);
-            CompareRadioButtons(radioAnnotation, radioGroup, false);
+            CompareRadioButtons(radioAnnotation, radioGroup, pdfDoc, false);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateRadioButtonWithIncorrectNameTest() {
-            NUnit.Framework.Assert.DoesNotThrow(() => new RadioFormFieldBuilder(DUMMY_DOCUMENT, "incorrect.name").SetWidgetRectangle
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            NUnit.Framework.Assert.DoesNotThrow(() => new RadioFormFieldBuilder(pdfDoc, "incorrect.name").SetWidgetRectangle
                 (DUMMY_RECTANGLE).CreateRadioGroup());
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateRadioButtonWithWidgetUseSetWidgetRectangleTest() {
-            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, DUMMY_NAME);
             PdfButtonFormField radioGroup = builder.CreateRadioGroup();
             PdfFormAnnotation radioAnnotation = builder.SetWidgetRectangle(DUMMY_RECTANGLE).CreateRadioButton(DUMMY_APPEARANCE_NAME
                 , null);
-            CompareRadioButtons(radioAnnotation, radioGroup, false);
+            CompareRadioButtons(radioAnnotation, radioGroup, pdfDoc, false);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateRadioButtonWithEmptyAppearanceNameThrowsExceptionTest() {
-            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, DUMMY_NAME);
             NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
                 builder.CreateRadioButton(null, DUMMY_RECTANGLE);
             }
@@ -96,29 +100,32 @@ namespace iText.Forms.Fields {
 
         [NUnit.Framework.Test]
         public virtual void CreateRadioButtonWithWidgetAddedToRadioGroupTest() {
-            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, DUMMY_NAME);
             PdfButtonFormField radioGroup = builder.CreateRadioGroup();
             PdfFormAnnotation radioAnnotation = builder.CreateRadioButton(DUMMY_APPEARANCE_NAME, DUMMY_RECTANGLE);
             radioGroup.AddKid(radioAnnotation);
-            CompareRadioButtons(radioAnnotation, radioGroup, true);
+            CompareRadioButtons(radioAnnotation, radioGroup, pdfDoc, true);
         }
 
         [NUnit.Framework.Test]
         public virtual void Create2RadioButtonWithWidgetAddedToRadioGroupTest() {
-            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, DUMMY_NAME);
             PdfButtonFormField radioGroup = builder.CreateRadioGroup();
             PdfFormAnnotation radioAnnotation = builder.CreateRadioButton(DUMMY_APPEARANCE_NAME, DUMMY_RECTANGLE);
             PdfFormAnnotation radioAnnotation2 = builder.CreateRadioButton(DUMMY_APPEARANCE_NAME, DUMMY_RECTANGLE);
             radioGroup.AddKid(radioAnnotation);
             radioGroup.AddKid(radioAnnotation2);
-            CompareRadioButtons(radioAnnotation, radioGroup, true);
-            CompareRadioButtons(radioAnnotation2, radioGroup, true);
+            CompareRadioButtons(radioAnnotation, radioGroup, pdfDoc, true);
+            CompareRadioButtons(radioAnnotation2, radioGroup, pdfDoc, true);
             NUnit.Framework.Assert.AreEqual(2, radioGroup.GetWidgets().Count);
         }
 
         [NUnit.Framework.Test]
         public virtual void Create2RadioButtonWithWidgetAddedToRadioGroupOneSelectedTest() {
-            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, DUMMY_NAME);
             PdfButtonFormField radioGroup = builder.CreateRadioGroup();
             PdfFormAnnotation radioAnnotation = builder.CreateRadioButton(DUMMY_APPEARANCE_NAME, DUMMY_RECTANGLE);
             PdfFormAnnotation radioAnnotation2 = builder.CreateRadioButton(DUMMY_APPEARANCE_NAME2, DUMMY_RECTANGLE);
@@ -129,22 +136,24 @@ namespace iText.Forms.Fields {
                 0]);
             NUnit.Framework.Assert.AreEqual(DUMMY_APPEARANCE_NAME, radioAnnotation.GetPdfObject().GetAsName(PdfName.AS
                 ).GetValue());
-            CompareRadioButtons(radioAnnotation, radioGroup, true);
-            CompareRadioButtons(radioAnnotation2, radioGroup, true);
+            CompareRadioButtons(radioAnnotation, radioGroup, pdfDoc, true);
+            CompareRadioButtons(radioAnnotation2, radioGroup, pdfDoc, true);
             NUnit.Framework.Assert.AreEqual(2, radioGroup.GetWidgets().Count);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateRadioButtonWithoutWidgetTest() {
-            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, DUMMY_NAME);
             PdfButtonFormField radioGroup = builder.CreateRadioGroup();
             PdfFormAnnotation radioAnnotation = builder.CreateRadioButton(DUMMY_APPEARANCE_NAME, DUMMY_RECTANGLE);
-            CompareRadioButtons(radioAnnotation, radioGroup, false);
+            CompareRadioButtons(radioAnnotation, radioGroup, pdfDoc, false);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateRadioButtonWithoutWidgetThrowsExceptionTest() {
-            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, DUMMY_NAME);
             NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
                 PdfFormAnnotation radioAnnotation = builder.CreateRadioButton(DUMMY_APPEARANCE_NAME, null);
             }
@@ -153,30 +162,32 @@ namespace iText.Forms.Fields {
 
         [NUnit.Framework.Test]
         public virtual void CreateRadioButtonWithConformanceLevelTest() {
-            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, DUMMY_NAME);
             PdfButtonFormField radioGroup = builder.CreateRadioGroup();
             PdfFormAnnotation radioAnnotation = builder.SetConformance(PdfConformance.PDF_A_1A).CreateRadioButton(DUMMY_APPEARANCE_NAME
                 , DUMMY_RECTANGLE);
-            CompareRadioButtons(radioAnnotation, radioGroup, false);
+            CompareRadioButtons(radioAnnotation, radioGroup, pdfDoc, false);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateRadioButtonWithConformanceLevelAddedToGroupTest() {
-            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, DUMMY_NAME);
             PdfButtonFormField radioGroup = builder.CreateRadioGroup();
             PdfFormAnnotation radioAnnotation = builder.SetConformance(PdfConformance.PDF_A_1A).CreateRadioButton(DUMMY_APPEARANCE_NAME
                 , DUMMY_RECTANGLE);
             radioGroup.AddKid(radioAnnotation);
-            CompareRadioButtons(radioAnnotation, radioGroup, true);
+            CompareRadioButtons(radioAnnotation, radioGroup, pdfDoc, true);
         }
 
-        private static void CompareRadioGroups(PdfButtonFormField radioGroupFormField) {
+        private static void CompareRadioGroups(PdfButtonFormField radioGroupFormField, PdfDocument pdfDoc) {
             PdfDictionary expectedDictionary = new PdfDictionary();
             PutIfAbsent(expectedDictionary, PdfName.FT, PdfName.Btn);
             PutIfAbsent(expectedDictionary, PdfName.Ff, new PdfNumber(PdfButtonFormField.FF_RADIO));
             PutIfAbsent(expectedDictionary, PdfName.T, new PdfString(DUMMY_NAME));
-            expectedDictionary.MakeIndirect(DUMMY_DOCUMENT);
-            radioGroupFormField.MakeIndirect(DUMMY_DOCUMENT);
+            expectedDictionary.MakeIndirect(pdfDoc);
+            radioGroupFormField.MakeIndirect(pdfDoc);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareDictionariesStructure(expectedDictionary, radioGroupFormField
                 .GetPdfObject()));
         }
@@ -222,23 +233,24 @@ namespace iText.Forms.Fields {
         }
 
         private static void CompareRadioButtons(PdfFormAnnotation radioButtonFormField, PdfButtonFormField radioGroup
-            , bool isAddedToRadioGroup) {
+            , PdfDocument pdfDoc, bool isAddedToRadioGroup) {
             PdfDictionary expectedDictionary = new PdfDictionary();
             IList<PdfWidgetAnnotation> widgets = new List<PdfWidgetAnnotation>();
-            if (radioButtonFormField.GetWidget() != null) {
-                widgets.Add(radioButtonFormField.GetWidget());
-            }
-            // if a rectangle is assigned in the builder than we should check it
-            if (radioButtonFormField.GetWidget().GetRectangle() != null && radioButtonFormField.GetWidget().GetRectangle
-                ().ToRectangle() != null) {
-                NUnit.Framework.Assert.AreEqual(1, widgets.Count);
-                PdfWidgetAnnotation annotation = widgets[0];
-                NUnit.Framework.Assert.IsTrue(DUMMY_RECTANGLE.EqualsWithEpsilon(annotation.GetRectangle().ToRectangle()));
-                PutIfAbsent(expectedDictionary, PdfName.Rect, new PdfArray(DUMMY_RECTANGLE));
-                // if the radiobutton has been added to the radiogroup we expect the AP to be generated
-                if (isAddedToRadioGroup) {
-                    PutIfAbsent(expectedDictionary, PdfName.AP, radioButtonFormField.GetPdfObject().GetAsDictionary(PdfName.AP
-                        ));
+            PdfWidgetAnnotation buttonWidget = radioButtonFormField.GetWidget();
+            if (buttonWidget != null) {
+                widgets.Add(buttonWidget);
+                // if a rectangle is assigned in the builder than we should check it
+                PdfArray buttonWidgetRectangle = buttonWidget.GetRectangle();
+                if (buttonWidgetRectangle != null && buttonWidgetRectangle.ToRectangle() != null) {
+                    NUnit.Framework.Assert.AreEqual(1, widgets.Count);
+                    PdfWidgetAnnotation annotation = widgets[0];
+                    NUnit.Framework.Assert.IsTrue(DUMMY_RECTANGLE.EqualsWithEpsilon(annotation.GetRectangle().ToRectangle()));
+                    PutIfAbsent(expectedDictionary, PdfName.Rect, new PdfArray(DUMMY_RECTANGLE));
+                    // if the radiobutton has been added to the radiogroup we expect the AP to be generated
+                    if (isAddedToRadioGroup) {
+                        PutIfAbsent(expectedDictionary, PdfName.AP, radioButtonFormField.GetPdfObject().GetAsDictionary(PdfName.AP
+                            ));
+                    }
                 }
             }
             if (radioButtonFormField.pdfConformance != null && radioButtonFormField.pdfConformance.IsPdfAOrUa()) {
@@ -260,8 +272,8 @@ namespace iText.Forms.Fields {
                 PutIfAbsent(expectedDictionary, PdfName.AS, new PdfName(DUMMY_APPEARANCE_NAME));
             }
             PutIfAbsent(expectedDictionary, PdfName.Subtype, PdfName.Widget);
-            expectedDictionary.MakeIndirect(DUMMY_DOCUMENT);
-            radioButtonFormField.MakeIndirect(DUMMY_DOCUMENT);
+            expectedDictionary.MakeIndirect(pdfDoc);
+            radioButtonFormField.MakeIndirect(pdfDoc);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareDictionariesStructure(expectedDictionary, radioButtonFormField
                 .GetPdfObject()));
         }

@@ -937,7 +937,7 @@ namespace iText.Forms {
                                 TagReference tagRef = tagPointer.GetTagReference();
                                 canvas.OpenTag(tagRef);
                             }
-                            AffineTransform at = CalcFieldAppTransformToAnnotRect(xObject, annotBBox);
+                            AffineTransform at = PdfFormXObject.CalcAppearanceTransformToAnnotRect(xObject, annotBBox);
                             float[] m = new float[6];
                             at.GetMatrix(m);
                             canvas.AddXObjectWithTransformationMatrix(xObject, m[0], m[1], m[2], m[3], m[4], m[5]);
@@ -1362,44 +1362,6 @@ namespace iText.Forms {
                 preparedFields.AddAll(PrepareFieldsForFlattening(child));
             }
             return preparedFields;
-        }
-
-        private AffineTransform CalcFieldAppTransformToAnnotRect(PdfFormXObject xObject, Rectangle annotBBox) {
-            PdfArray bBox = xObject.GetBBox();
-            if (bBox.Size() != 4) {
-                bBox = new PdfArray(new Rectangle(0, 0));
-                xObject.SetBBox(bBox);
-            }
-            float[] xObjBBox = bBox.ToFloatArray();
-            PdfArray xObjMatrix = xObject.GetPdfObject().GetAsArray(PdfName.Matrix);
-            Rectangle transformedRect;
-            if (xObjMatrix != null && xObjMatrix.Size() == 6) {
-                Point[] xObjRectPoints = new Point[] { new Point(xObjBBox[0], xObjBBox[1]), new Point(xObjBBox[0], xObjBBox
-                    [3]), new Point(xObjBBox[2], xObjBBox[1]), new Point(xObjBBox[2], xObjBBox[3]) };
-                Point[] transformedAppBoxPoints = new Point[xObjRectPoints.Length];
-                new AffineTransform(xObjMatrix.ToDoubleArray()).Transform(xObjRectPoints, 0, transformedAppBoxPoints, 0, xObjRectPoints
-                    .Length);
-                float[] transformedRectArr = new float[] { float.MaxValue, float.MaxValue, -float.MaxValue, -float.MaxValue
-                     };
-                foreach (Point p in transformedAppBoxPoints) {
-                    transformedRectArr[0] = (float)Math.Min(transformedRectArr[0], p.GetX());
-                    transformedRectArr[1] = (float)Math.Min(transformedRectArr[1], p.GetY());
-                    transformedRectArr[2] = (float)Math.Max(transformedRectArr[2], p.GetX());
-                    transformedRectArr[3] = (float)Math.Max(transformedRectArr[3], p.GetY());
-                }
-                transformedRect = new Rectangle(transformedRectArr[0], transformedRectArr[1], transformedRectArr[2] - transformedRectArr
-                    [0], transformedRectArr[3] - transformedRectArr[1]);
-            }
-            else {
-                transformedRect = new Rectangle(0, 0).SetBbox(xObjBBox[0], xObjBBox[1], xObjBBox[2], xObjBBox[3]);
-            }
-            AffineTransform at = AffineTransform.GetTranslateInstance(-transformedRect.GetX(), -transformedRect.GetY()
-                );
-            float scaleX = transformedRect.GetWidth() == 0 ? 1 : annotBBox.GetWidth() / transformedRect.GetWidth();
-            float scaleY = transformedRect.GetHeight() == 0 ? 1 : annotBBox.GetHeight() / transformedRect.GetHeight();
-            at.PreConcatenate(AffineTransform.GetScaleInstance(scaleX, scaleY));
-            at.PreConcatenate(AffineTransform.GetTranslateInstance(annotBBox.GetX(), annotBBox.GetY()));
-            return at;
         }
 
         private ICollection<PdfFormField> GetAllFormFieldsWithoutNames() {

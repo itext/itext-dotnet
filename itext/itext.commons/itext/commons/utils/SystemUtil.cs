@@ -41,6 +41,11 @@ namespace iText.Commons.Utils {
             return DateTime.Now.Ticks + Environment.TickCount;
         }
 
+        public static long CurrentTimeMillis() {
+            long epochTime = (DateTime.UtcNow.Ticks - 621355968000000000) / 10000;
+            return epochTime;
+        }
+
         public static int GetTimeBasedIntSeed() {
             return unchecked((int) DateTime.Now.Ticks) + Environment.TickCount;
         }

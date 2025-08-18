@@ -42,19 +42,16 @@ namespace iText.Signatures {
 
         private const String SIG_FIELD_NAME = "Signature1";
 
-        private const String CRL_DISTRIBUTION_POINT = "https://example.com";
+        private const String CRL_DISTRIBUTION_POINT = "https://itextpdf.com/blog/itext-news-technical-notes/get-excited-itext-8-here";
 
         private static readonly String CERT_FOLDER_PATH = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
         private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
 
-        private static LtvVerification TEST_VERIFICATION;
-
-        [NUnit.Framework.OneTimeSetUp]
-        public static void Before() {
+        public static LtvVerification Setup() {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(SRC_PDF));
-            TEST_VERIFICATION = new LtvVerification(pdfDoc);
+            return new LtvVerification(pdfDoc);
         }
 
         [NUnit.Framework.Test]
@@ -117,7 +114,8 @@ namespace iText.Signatures {
             ocsps.Add(new byte[0]);
             IList<byte[]> certs = new List<byte[]>();
             certs.Add(new byte[0]);
-            NUnit.Framework.Assert.IsTrue(TEST_VERIFICATION.AddVerification(SIG_FIELD_NAME, ocsps, crls, certs));
+            LtvVerification testVerification = Setup();
+            NUnit.Framework.Assert.IsTrue(testVerification.AddVerification(SIG_FIELD_NAME, ocsps, crls, certs));
         }
 
         [NUnit.Framework.Test]
@@ -148,20 +146,23 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
         public virtual void ValidateSigNameWithNullCrlOcspCertTest() {
-            NUnit.Framework.Assert.IsTrue(TEST_VERIFICATION.AddVerification(SIG_FIELD_NAME, null, null, null));
+            LtvVerification testVerification = Setup();
+            NUnit.Framework.Assert.IsTrue(testVerification.AddVerification(SIG_FIELD_NAME, null, null, null));
         }
 
         [NUnit.Framework.Test]
         public virtual void ExceptionWhenValidateNonExistentSigNameTest() {
             //TODO DEVSIX-5696 Sign: NPE is thrown because no such a signature
-            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => TEST_VERIFICATION.AddVerification("nonExistentSigName"
+            LtvVerification testVerification = Setup();
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => testVerification.AddVerification("nonExistentSigName"
                 , null, null, null));
         }
 
         [NUnit.Framework.Test]
         public virtual void ExceptionWhenValidateParticularNonExistentSigNameTest() {
             //TODO DEVSIX-5696 Sign: NPE is thrown because no such a signature
-            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => TEST_VERIFICATION.AddVerification("nonExistentSigName"
+            LtvVerification testVerification = Setup();
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => testVerification.AddVerification("nonExistentSigName"
                 , null, null, LtvVerification.CertificateOption.SIGNING_CERTIFICATE, LtvVerification.Level.OCSP_CRL, LtvVerification.CertificateInclusion
                 .YES));
         }
@@ -311,136 +312,136 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage("Added CRL url: https://example.com", LogLevel = LogLevelConstants.INFO)]
-        [LogMessage("Checking CRL: https://example.com", LogLevel = LogLevelConstants.INFO)]
-        [LogMessage("Added CRL found at: https://example.com", LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Added CRL url: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Checking CRL: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Added CRL found at: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
         public virtual void ValidateSigNameSigningOcspCrlYesTest() {
             ValidateOptionLevelInclusion(CRL_DISTRIBUTION_POINT, LtvVerification.CertificateOption.SIGNING_CERTIFICATE
                 , LtvVerification.Level.OCSP_CRL, LtvVerification.CertificateInclusion.YES, true);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage("Added CRL url: https://example.com", LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Added CRL url: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
         public virtual void ValidateSigNameSigningOcspYesTest() {
             ValidateOptionLevelInclusion(CRL_DISTRIBUTION_POINT, LtvVerification.CertificateOption.SIGNING_CERTIFICATE
                 , LtvVerification.Level.OCSP, LtvVerification.CertificateInclusion.YES, false);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage("Added CRL url: https://example.com", LogLevel = LogLevelConstants.INFO)]
-        [LogMessage("Checking CRL: https://example.com", LogLevel = LogLevelConstants.INFO)]
-        [LogMessage("Added CRL found at: https://example.com", LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Added CRL url: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Checking CRL: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Added CRL found at: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
         public virtual void ValidateSigNameSigningCrlYesTest() {
             ValidateOptionLevelInclusion(CRL_DISTRIBUTION_POINT, LtvVerification.CertificateOption.SIGNING_CERTIFICATE
                 , LtvVerification.Level.CRL, LtvVerification.CertificateInclusion.YES, true);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage("Added CRL url: https://example.com", LogLevel = LogLevelConstants.INFO)]
-        [LogMessage("Checking CRL: https://example.com", LogLevel = LogLevelConstants.INFO)]
-        [LogMessage("Added CRL found at: https://example.com", LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Added CRL url: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Checking CRL: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Added CRL found at: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
         public virtual void ValidateSigNameSigningOcspOptionalCrlYesTest() {
             ValidateOptionLevelInclusion(CRL_DISTRIBUTION_POINT, LtvVerification.CertificateOption.SIGNING_CERTIFICATE
                 , LtvVerification.Level.OCSP_OPTIONAL_CRL, LtvVerification.CertificateInclusion.YES, true);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage("Added CRL url: https://example.com", LogLevel = LogLevelConstants.INFO)]
-        [LogMessage("Checking CRL: https://example.com", LogLevel = LogLevelConstants.INFO)]
-        [LogMessage("Added CRL found at: https://example.com", LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Added CRL url: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Checking CRL: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Added CRL found at: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
         public virtual void ValidateSigNameSigningOcspCrlNoTest() {
             ValidateOptionLevelInclusion(CRL_DISTRIBUTION_POINT, LtvVerification.CertificateOption.SIGNING_CERTIFICATE
                 , LtvVerification.Level.OCSP_CRL, LtvVerification.CertificateInclusion.NO, true);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage("Added CRL url: https://example.com", LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Added CRL url: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
         public virtual void ValidateSigNameSigningOcspNoTest() {
             ValidateOptionLevelInclusion(CRL_DISTRIBUTION_POINT, LtvVerification.CertificateOption.SIGNING_CERTIFICATE
                 , LtvVerification.Level.OCSP, LtvVerification.CertificateInclusion.NO, false);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage("Added CRL url: https://example.com", LogLevel = LogLevelConstants.INFO)]
-        [LogMessage("Checking CRL: https://example.com", LogLevel = LogLevelConstants.INFO)]
-        [LogMessage("Added CRL found at: https://example.com", LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Added CRL url: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Checking CRL: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Added CRL found at: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
         public virtual void ValidateSigNameSigningCrlNoTest() {
             ValidateOptionLevelInclusion(CRL_DISTRIBUTION_POINT, LtvVerification.CertificateOption.SIGNING_CERTIFICATE
                 , LtvVerification.Level.CRL, LtvVerification.CertificateInclusion.NO, true);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage("Added CRL url: https://example.com", LogLevel = LogLevelConstants.INFO)]
-        [LogMessage("Checking CRL: https://example.com", LogLevel = LogLevelConstants.INFO)]
-        [LogMessage("Added CRL found at: https://example.com", LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Added CRL url: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Checking CRL: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Added CRL found at: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
         public virtual void ValidateSigNameSigningOcspOptionalCrlNoTest() {
             ValidateOptionLevelInclusion(CRL_DISTRIBUTION_POINT, LtvVerification.CertificateOption.SIGNING_CERTIFICATE
                 , LtvVerification.Level.OCSP_OPTIONAL_CRL, LtvVerification.CertificateInclusion.NO, true);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage("Added CRL url: https://example.com", LogLevel = LogLevelConstants.INFO)]
-        [LogMessage("Checking CRL: https://example.com", LogLevel = LogLevelConstants.INFO, Count = 2)]
-        [LogMessage("Added CRL found at: https://example.com", LogLevel = LogLevelConstants.INFO, Count = 2)]
+        [LogMessage("Added CRL url: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Checking CRL: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO, Count = 2)]
+        [LogMessage("Added CRL found at: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO, Count = 2)]
         public virtual void ValidateSigNameWholeChainOcspCrlYesTest() {
             ValidateOptionLevelInclusion(CRL_DISTRIBUTION_POINT, LtvVerification.CertificateOption.WHOLE_CHAIN, LtvVerification.Level
                 .OCSP_CRL, LtvVerification.CertificateInclusion.YES, true);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage("Added CRL url: https://example.com", LogLevel = LogLevelConstants.INFO)]
-        [LogMessage("Checking CRL: https://example.com", LogLevel = LogLevelConstants.INFO, Count = 2)]
-        [LogMessage("Added CRL found at: https://example.com", LogLevel = LogLevelConstants.INFO, Count = 2)]
+        [LogMessage("Added CRL url: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Checking CRL: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO, Count = 2)]
+        [LogMessage("Added CRL found at: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO, Count = 2)]
         public virtual void ValidateSigNameWholeChainOcspOptionalCrlYesTest() {
             ValidateOptionLevelInclusion(CRL_DISTRIBUTION_POINT, LtvVerification.CertificateOption.WHOLE_CHAIN, LtvVerification.Level
                 .OCSP_OPTIONAL_CRL, LtvVerification.CertificateInclusion.YES, true);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage("Added CRL url: https://example.com", LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Added CRL url: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
         public virtual void ValidateSigNameWholeChainOcspYesTest() {
             ValidateOptionLevelInclusion(CRL_DISTRIBUTION_POINT, LtvVerification.CertificateOption.WHOLE_CHAIN, LtvVerification.Level
                 .OCSP, LtvVerification.CertificateInclusion.YES, false);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage("Added CRL url: https://example.com", LogLevel = LogLevelConstants.INFO)]
-        [LogMessage("Checking CRL: https://example.com", LogLevel = LogLevelConstants.INFO, Count = 2)]
-        [LogMessage("Added CRL found at: https://example.com", LogLevel = LogLevelConstants.INFO, Count = 2)]
+        [LogMessage("Added CRL url: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Checking CRL: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO, Count = 2)]
+        [LogMessage("Added CRL found at: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO, Count = 2)]
         public virtual void ValidateSigNameWholeChainCrlYesTest() {
             ValidateOptionLevelInclusion(CRL_DISTRIBUTION_POINT, LtvVerification.CertificateOption.WHOLE_CHAIN, LtvVerification.Level
                 .CRL, LtvVerification.CertificateInclusion.YES, true);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage("Added CRL url: https://example.com", LogLevel = LogLevelConstants.INFO)]
-        [LogMessage("Checking CRL: https://example.com", LogLevel = LogLevelConstants.INFO, Count = 2)]
-        [LogMessage("Added CRL found at: https://example.com", LogLevel = LogLevelConstants.INFO, Count = 2)]
+        [LogMessage("Added CRL url: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Checking CRL: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO, Count = 2)]
+        [LogMessage("Added CRL found at: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO, Count = 2)]
         public virtual void ValidateSigNameWholeChainOcspCrlNoTest() {
             ValidateOptionLevelInclusion(CRL_DISTRIBUTION_POINT, LtvVerification.CertificateOption.WHOLE_CHAIN, LtvVerification.Level
                 .OCSP_CRL, LtvVerification.CertificateInclusion.NO, true);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage("Added CRL url: https://example.com", LogLevel = LogLevelConstants.INFO)]
-        [LogMessage("Checking CRL: https://example.com", LogLevel = LogLevelConstants.INFO, Count = 2)]
-        [LogMessage("Added CRL found at: https://example.com", LogLevel = LogLevelConstants.INFO, Count = 2)]
+        [LogMessage("Added CRL url: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Checking CRL: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO, Count = 2)]
+        [LogMessage("Added CRL found at: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO, Count = 2)]
         public virtual void ValidateSigNameWholeChainOcspOptionalCrlNoTest() {
             ValidateOptionLevelInclusion(CRL_DISTRIBUTION_POINT, LtvVerification.CertificateOption.WHOLE_CHAIN, LtvVerification.Level
                 .OCSP_OPTIONAL_CRL, LtvVerification.CertificateInclusion.NO, true);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage("Added CRL url: https://example.com", LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Added CRL url: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
         public virtual void ValidateSigNameWholeChainOcspNoTest() {
             ValidateOptionLevelInclusion(CRL_DISTRIBUTION_POINT, LtvVerification.CertificateOption.WHOLE_CHAIN, LtvVerification.Level
                 .OCSP, LtvVerification.CertificateInclusion.NO, false);
         }
 
         [NUnit.Framework.Test]
-        [LogMessage("Added CRL url: https://example.com", LogLevel = LogLevelConstants.INFO)]
-        [LogMessage("Checking CRL: https://example.com", LogLevel = LogLevelConstants.INFO, Count = 2)]
-        [LogMessage("Added CRL found at: https://example.com", LogLevel = LogLevelConstants.INFO, Count = 2)]
+        [LogMessage("Added CRL url: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO)]
+        [LogMessage("Checking CRL: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO, Count = 2)]
+        [LogMessage("Added CRL found at: " + CRL_DISTRIBUTION_POINT, LogLevel = LogLevelConstants.INFO, Count = 2)]
         public virtual void ValidateSigNameWholeChainCrlNoTest() {
             ValidateOptionLevelInclusion(CRL_DISTRIBUTION_POINT, LtvVerification.CertificateOption.WHOLE_CHAIN, LtvVerification.Level
                 .CRL, LtvVerification.CertificateInclusion.NO, true);
@@ -464,7 +465,8 @@ namespace iText.Signatures {
             else {
                 crl = new CrlClientOnline(crlUrl);
             }
-            NUnit.Framework.Assert.AreEqual(expectedResult, TEST_VERIFICATION.AddVerification(SIG_FIELD_NAME, ocsp, crl
+            LtvVerification testVerification = Setup();
+            NUnit.Framework.Assert.AreEqual(expectedResult, testVerification.AddVerification(SIG_FIELD_NAME, ocsp, crl
                 , certificateOption, level, inclusion));
         }
     }

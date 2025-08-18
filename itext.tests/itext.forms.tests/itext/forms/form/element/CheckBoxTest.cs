@@ -50,16 +50,9 @@ namespace iText.Forms.Form.Element {
 
         public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/forms/form/element/CheckBoxTest/";
 
-        private int counter = 0;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
-        }
-
-        [NUnit.Framework.SetUp]
-        public virtual void Before() {
-            counter = 0;
         }
 
         [NUnit.Framework.Test]
@@ -232,13 +225,14 @@ namespace iText.Forms.Form.Element {
 
         [NUnit.Framework.Test]
         public virtual void BasicCheckBoxSetSize() {
+            int counter = 0;
             String outPdf = DESTINATION_FOLDER + "checkBoxSetSize.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_checkBoxSetSize.pdf";
             int scaleFactor = 5;
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
                 for (int i = 1; i < 5; i++) {
                     int size = i * i * scaleFactor;
-                    GenerateCheckBoxesForAllRenderingModes(document, (checkBox) => {
+                    counter = GenerateCheckBoxesForAllRenderingModes(document, counter, (checkBox) => {
                         checkBox.SetSize(size);
                     }
                     );
@@ -250,14 +244,15 @@ namespace iText.Forms.Form.Element {
         [NUnit.Framework.Test]
         [LogMessage(FormsLogMessageConstants.INVALID_VALUE_FALLBACK_TO_DEFAULT, Count = 8)]
         public virtual void BasicCheckBoxSetSizeNegativeValueFallsBackToDefaultValue() {
+            int counter = 0;
             String outPdf = DESTINATION_FOLDER + "checkBoxSetSizeBadSize.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_checkBoxSetSizeBadSize.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
-                GenerateCheckBoxes(document, (checkBox) => {
+                counter = GenerateCheckBoxes(document, counter, (checkBox) => {
                     checkBox.SetSize(0);
                 }
                 );
-                GenerateCheckBoxes(document, (checkBox) => {
+                GenerateCheckBoxes(document, counter, (checkBox) => {
                     checkBox.SetSize(-1);
                 }
                 );
@@ -267,18 +262,19 @@ namespace iText.Forms.Form.Element {
 
         [NUnit.Framework.Test]
         public virtual void BasicCheckBoxSetBorderTest() {
+            int counter = 0;
             String outPdf = DESTINATION_FOLDER + "checkBox_setBorder.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_setBorder.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
-                GenerateCheckBoxesForAllRenderingModes(document, (checkBox) => {
+                counter = GenerateCheckBoxesForAllRenderingModes(document, counter, (checkBox) => {
                     checkBox.SetBorder(new SolidBorder(ColorConstants.GREEN, .5f));
                 }
                 );
-                GenerateCheckBoxesForAllRenderingModes(document, (checkBox) => {
+                counter = GenerateCheckBoxesForAllRenderingModes(document, counter, (checkBox) => {
                     checkBox.SetBorder(new SolidBorder(ColorConstants.YELLOW, 1));
                 }
                 );
-                GenerateCheckBoxesForAllRenderingModes(document, (checkBox) => {
+                GenerateCheckBoxesForAllRenderingModes(document, counter, (checkBox) => {
                     checkBox.SetBorder(new SolidBorder(ColorConstants.BLUE, 3));
                 }
                 );
@@ -288,10 +284,11 @@ namespace iText.Forms.Form.Element {
 
         [NUnit.Framework.Test]
         public virtual void BasicCheckBoxSetBackgroundTest() {
+            int counter = 0;
             String outPdf = DESTINATION_FOLDER + "checkBox_setBackground.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_checkBox_setBackground.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
-                GenerateCheckBoxesForAllRenderingModes(document, (checkBox) => {
+                GenerateCheckBoxesForAllRenderingModes(document, counter, (checkBox) => {
                     checkBox.SetBackgroundColor(ColorConstants.MAGENTA);
                 }
                 );
@@ -327,15 +324,16 @@ namespace iText.Forms.Form.Element {
 
         [NUnit.Framework.Test]
         public virtual void CheckBoxSetCheckTypes() {
+            int counter = 0;
             String outPdf = DESTINATION_FOLDER + "checkBox_setCheckType.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_checkBox_setCheckType.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
                 foreach (CheckBoxType enumConstant in EnumUtil.GetAllValuesOfEnum<CheckBoxType>()) {
-                    GenerateCheckBoxes(document, (checkBox) => {
+                    counter = GenerateCheckBoxes(document, counter, (checkBox) => {
                         checkBox.SetCheckBoxType(enumConstant);
                     }
                     );
-                    GenerateCheckBoxes(document, (checkBox) => {
+                    counter = GenerateCheckBoxes(document, counter, (checkBox) => {
                         checkBox.SetPdfConformance(PdfConformance.PDF_A_1B);
                         checkBox.SetCheckBoxType(enumConstant);
                     }
@@ -347,11 +345,12 @@ namespace iText.Forms.Form.Element {
 
         [NUnit.Framework.Test]
         public virtual void SetPdfAConformanceLevel() {
+            int counter = 0;
             String outPdf = DESTINATION_FOLDER + "checkBox_setConformanceLevel.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_checkBox_setConformanceLevel.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
                 foreach (CheckBoxType enumConstant in EnumUtil.GetAllValuesOfEnum<CheckBoxType>()) {
-                    GenerateCheckBoxes(document, (checkBox) => {
+                    counter = GenerateCheckBoxes(document, counter, (checkBox) => {
                         checkBox.SetSize(20);
                         checkBox.SetPdfConformance(PdfConformance.PDF_A_3B);
                         checkBox.SetCheckBoxType(enumConstant);
@@ -364,11 +363,12 @@ namespace iText.Forms.Form.Element {
 
         [NUnit.Framework.Test]
         public virtual void RemovingFormFieldsLeavesNoVisualTrace() {
+            int counter = 0;
             String outPdf = DESTINATION_FOLDER + "checkBox_removeFormField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_checkBox_removeFormField.pdf";
             MemoryStream baos = new MemoryStream();
             using (Document document = new Document(new PdfDocument(new PdfWriter(baos)))) {
-                GenerateCheckBoxesForAllRenderingModes(document, (checkBox) => {
+                GenerateCheckBoxesForAllRenderingModes(document, counter, (checkBox) => {
                     checkBox.SetBorder(new SolidBorder(ColorConstants.GREEN, 1f));
                     checkBox.SetBackgroundColor(ColorConstants.CYAN);
                 }
@@ -489,38 +489,41 @@ namespace iText.Forms.Form.Element {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
 
-        private void GenerateCheckBoxesForAllRenderingModes(Document document, Action<CheckBox> alterFunction) {
+        private int GenerateCheckBoxesForAllRenderingModes(Document document, int counter, Action<CheckBox> alterFunction
+            ) {
             document.Add(new Paragraph("Normal rendering mode"));
-            GenerateCheckBoxes(document, (checkBox) => {
+            counter = GenerateCheckBoxes(document, counter, (checkBox) => {
                 checkBox.SetProperty(Property.RENDERING_MODE, RenderingMode.DEFAULT_LAYOUT_MODE);
                 alterFunction(checkBox);
             }
             );
             document.Add(new Paragraph("Pdfa rendering mode"));
-            GenerateCheckBoxes(document, (checkBox) => {
+            counter = GenerateCheckBoxes(document, counter, (checkBox) => {
                 checkBox.SetProperty(Property.RENDERING_MODE, RenderingMode.DEFAULT_LAYOUT_MODE);
                 checkBox.SetPdfConformance(PdfConformance.PDF_A_1B);
                 alterFunction(checkBox);
             }
             );
             document.Add(new Paragraph("Html rendering mode"));
-            GenerateCheckBoxes(document, (checkBox) => {
+            counter = GenerateCheckBoxes(document, counter, (checkBox) => {
                 checkBox.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                 alterFunction(checkBox);
             }
             );
+            return counter;
         }
 
         [NUnit.Framework.Test]
         public virtual void BasicCheckBoxTagged() {
+            int counter = 0;
             String outPdf = DESTINATION_FOLDER + "basicCheckboxTagged.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_basicCheckboxTagged.pdf";
             using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
                 document.GetPdfDocument().SetTagged();
-                GenerateCheckBoxes(document, (checkBox) => {
+                counter = GenerateCheckBoxes(document, counter, (checkBox) => {
                 }
                 );
-                GenerateCheckBoxes(document, (checkBox) => {
+                GenerateCheckBoxes(document, counter, (checkBox) => {
                 }
                 );
             }
@@ -560,29 +563,29 @@ namespace iText.Forms.Form.Element {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
 
-        private IList<CheckBox> GenerateCheckBoxes(Document document, Action<CheckBox> alterFunction) {
+        private int GenerateCheckBoxes(Document document, int counter, Action<CheckBox> alterFunction) {
             IList<CheckBox> checkBoxList = new List<CheckBox>();
-            CheckBox formCheckbox = new CheckBox("checkbox_interactive_off_" + this.counter);
+            CheckBox formCheckbox = new CheckBox("checkbox_interactive_off_" + counter);
             formCheckbox.SetInteractive(true);
             checkBoxList.Add(formCheckbox);
-            this.counter++;
-            CheckBox flattenCheckbox = new CheckBox("checkbox_flatten_off_" + this.counter);
+            counter++;
+            CheckBox flattenCheckbox = new CheckBox("checkbox_flatten_off_" + counter);
             checkBoxList.Add(flattenCheckbox);
-            this.counter++;
-            CheckBox formCheckboxChecked = new CheckBox("checkbox_interactive_checked_" + this.counter);
+            counter++;
+            CheckBox formCheckboxChecked = new CheckBox("checkbox_interactive_checked_" + counter);
             formCheckboxChecked.SetInteractive(true);
             formCheckboxChecked.SetChecked(true);
             checkBoxList.Add(formCheckboxChecked);
-            this.counter++;
-            CheckBox flattenCheckboxChecked = new CheckBox("checkbox_flatten_checked_" + this.counter);
+            counter++;
+            CheckBox flattenCheckboxChecked = new CheckBox("checkbox_flatten_checked_" + counter);
             flattenCheckboxChecked.SetChecked(true);
             checkBoxList.Add(flattenCheckboxChecked);
-            this.counter++;
+            counter++;
             foreach (CheckBox checkBox in checkBoxList) {
                 alterFunction(checkBox);
                 document.Add(checkBox);
             }
-            return checkBoxList;
+            return counter;
         }
     }
 }

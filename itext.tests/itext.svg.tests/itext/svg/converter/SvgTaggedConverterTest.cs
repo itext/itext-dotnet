@@ -207,7 +207,7 @@ namespace iText.Svg.Converter {
         [NUnit.Framework.Test]
         public virtual void DrawOnPageWithUaCompliant() {
             String source = SOURCE_FOLDER + "simple.svg";
-            String destination = DEST_FOLDER + "drawOnPage01.pdf";
+            String destination = DEST_FOLDER + "drawOnPageUa.pdf";
             WriterProperties writerProperties = new WriterProperties();
             writerProperties.SetPdfVersion(PdfVersion.PDF_2_0);
             PdfUADocument pdfDocument = new PdfUADocument(new PdfWriter(destination, writerProperties), new PdfUAConfig

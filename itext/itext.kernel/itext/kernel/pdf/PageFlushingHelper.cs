@@ -135,6 +135,13 @@ namespace iText.Kernel.Pdf {
 
         private ICollection<PdfIndirectReference> layersRefs = new HashSet<PdfIndirectReference>();
 
+        /// <summary>
+        /// Instantiates a new instance of
+        /// <see cref="PageFlushingHelper"/>
+        /// based on passed
+        /// <see cref="PdfDocument"/>.
+        /// </summary>
+        /// <param name="pdfDoc">the PDF document to flush</param>
         public PageFlushingHelper(PdfDocument pdfDoc) {
             this.pdfDoc = pdfDoc;
         }

@@ -24,10 +24,11 @@ using System.Collections.Generic;
 using System.IO;
 using iText.IO.Source;
 using iText.Kernel.Pdf;
+using iText.Test;
 
 namespace iText.Kernel.Pdf.Layer {
     [NUnit.Framework.Category("UnitTest")]
-    public class PdfOCPropertiesUnitTest {
+    public class PdfOCPropertiesUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void OrderArrayOcgWithTwoParentsTest() {
             byte[] docBytes;

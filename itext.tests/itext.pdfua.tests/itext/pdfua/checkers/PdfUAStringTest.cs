@@ -38,16 +38,9 @@ namespace iText.Pdfua.Checkers {
 
         private static readonly Rectangle RECTANGLE = new Rectangle(100, 100, 100, 100);
 
-        private UaValidationTestFramework framework;
-
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
-        }
-
-        [NUnit.Framework.SetUp]
-        public virtual void SetUp() {
-            framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
         }
 
         public static IList<int> PrivateUseAreaSymbols() {
@@ -56,6 +49,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void ValidValueWithDocEncodingTest() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
                 PdfString pdfString = new PdfString("value", PdfEncodings.PDF_DOC_ENCODING);
@@ -67,6 +61,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("PrivateUseAreaSymbols")]
         public virtual void PuaValueWithDocEncodingTest(int? puaSymbol) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             String filename = "puaValueWithDocEncoding_" + GetPuaValueName(puaSymbol);
             framework.AddBeforeGenerationHook((document) => {
                 PdfString pdfString = new PdfString("hello_" + new String(iText.IO.Util.TextUtil.ToChars((int)puaSymbol)), 
@@ -85,6 +80,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("PrivateUseAreaSymbols")]
         public virtual void PuaValueWithUTF8Test(int? puaSymbol) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             String filename = "puaValueWithUTF8_" + GetPuaValueName(puaSymbol);
             framework.AddBeforeGenerationHook((document) => {
                 PdfString pdfString = new PdfString("hello_" + new String(iText.IO.Util.TextUtil.ToChars((int)puaSymbol)), 
@@ -101,6 +97,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("PrivateUseAreaSymbols")]
         public virtual void PuaValueWithUTF16Test(int? puaSymbol) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             String filename = "puaValueWithUTF16_" + GetPuaValueName(puaSymbol);
             framework.AddBeforeGenerationHook((document) => {
                 PdfString pdfString = new PdfString("hello_" + new String(iText.IO.Util.TextUtil.ToChars((int)puaSymbol)), 
@@ -117,6 +114,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("PrivateUseAreaSymbols")]
         public virtual void PuaValueWithUTF16UnmarkedTest(int? puaSymbol) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             String filename = "puaValueWithUTF16Unmarked_" + GetPuaValueName(puaSymbol);
             framework.AddBeforeGenerationHook((document) => {
                 PdfString pdfString = new PdfString("hello_" + new String(iText.IO.Util.TextUtil.ToChars((int)puaSymbol)), 
@@ -131,6 +129,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.TestCaseSource("PrivateUseAreaSymbols")]
         public virtual void PuaValueInLangTest(int? puaSymbol) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
             String filename = "puaValueInLang_" + GetPuaValueName(puaSymbol);
             framework.AddBeforeGenerationHook((document) => {
                 PdfString pdfString = new PdfString("hello_" + new String(iText.IO.Util.TextUtil.ToChars((int)puaSymbol)), 
@@ -148,6 +147,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void PuaValueWithTest() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
                 PdfString pdfString = new PdfString(new String(iText.IO.Util.TextUtil.ToChars(0xE005)), PdfEncodings.WINANSI

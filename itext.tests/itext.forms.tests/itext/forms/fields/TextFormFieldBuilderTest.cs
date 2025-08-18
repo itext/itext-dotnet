@@ -32,86 +32,92 @@ using iText.Test;
 namespace iText.Forms.Fields {
     [NUnit.Framework.Category("UnitTest")]
     public class TextFormFieldBuilderTest : ExtendedITextTest {
-        private static readonly PdfDocument DUMMY_DOCUMENT = new PdfDocument(new PdfWriter(new MemoryStream()));
-
         private const String DUMMY_NAME = "dummy name";
 
         private static readonly Rectangle DUMMY_RECTANGLE = new Rectangle(7, 11, 13, 17);
 
         [NUnit.Framework.Test]
         public virtual void ConstructorTest() {
-            TextFormFieldBuilder builder = new TextFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME);
-            NUnit.Framework.Assert.AreSame(DUMMY_DOCUMENT, builder.GetDocument());
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            TextFormFieldBuilder builder = new TextFormFieldBuilder(pdfDoc, DUMMY_NAME);
+            NUnit.Framework.Assert.AreSame(pdfDoc, builder.GetDocument());
             NUnit.Framework.Assert.AreSame(DUMMY_NAME, builder.GetFormFieldName());
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateTextWithWidgetTest() {
-            PdfTextFormField textFormField = new TextFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle(DUMMY_RECTANGLE
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfTextFormField textFormField = new TextFormFieldBuilder(pdfDoc, DUMMY_NAME).SetWidgetRectangle(DUMMY_RECTANGLE
                 ).CreateText();
             PdfDictionary expectedDictionary = new PdfDictionary();
             expectedDictionary.Put(PdfName.Ff, new PdfNumber(0));
-            CompareTexts(expectedDictionary, textFormField, true);
+            CompareTexts(expectedDictionary, textFormField, pdfDoc, true);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateTextWithoutWidgetTest() {
-            PdfTextFormField textFormField = new TextFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).CreateText();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfTextFormField textFormField = new TextFormFieldBuilder(pdfDoc, DUMMY_NAME).CreateText();
             PdfDictionary expectedDictionary = new PdfDictionary();
             expectedDictionary.Put(PdfName.Ff, new PdfNumber(0));
-            CompareTexts(expectedDictionary, textFormField, false);
+            CompareTexts(expectedDictionary, textFormField, pdfDoc, false);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateTextWithIncorrectNameTest() {
-            NUnit.Framework.Assert.DoesNotThrow(() => new TextFormFieldBuilder(DUMMY_DOCUMENT, "incorrect.name").SetWidgetRectangle
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            NUnit.Framework.Assert.DoesNotThrow(() => new TextFormFieldBuilder(pdfDoc, "incorrect.name").SetWidgetRectangle
                 (DUMMY_RECTANGLE).CreateText());
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateTextWithConformanceLevelTest() {
-            PdfTextFormField textFormField = new TextFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle(DUMMY_RECTANGLE
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfTextFormField textFormField = new TextFormFieldBuilder(pdfDoc, DUMMY_NAME).SetWidgetRectangle(DUMMY_RECTANGLE
                 ).SetConformance(PdfConformance.PDF_A_1A).CreateText();
             PdfDictionary expectedDictionary = new PdfDictionary();
             expectedDictionary.Put(PdfName.Ff, new PdfNumber(0));
-            CompareTexts(expectedDictionary, textFormField, true);
+            CompareTexts(expectedDictionary, textFormField, pdfDoc, true);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateMultilineTextWithWidgetTest() {
-            PdfTextFormField textFormField = new TextFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle(DUMMY_RECTANGLE
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfTextFormField textFormField = new TextFormFieldBuilder(pdfDoc, DUMMY_NAME).SetWidgetRectangle(DUMMY_RECTANGLE
                 ).CreateMultilineText();
             PdfDictionary expectedDictionary = new PdfDictionary();
             expectedDictionary.Put(PdfName.Ff, new PdfNumber(PdfTextFormField.FF_MULTILINE));
-            CompareTexts(expectedDictionary, textFormField, true);
+            CompareTexts(expectedDictionary, textFormField, pdfDoc, true);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateMultilineTextWithoutWidgetTest() {
-            PdfTextFormField textFormField = new TextFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).CreateMultilineText(
-                );
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfTextFormField textFormField = new TextFormFieldBuilder(pdfDoc, DUMMY_NAME).CreateMultilineText();
             PdfDictionary expectedDictionary = new PdfDictionary();
             expectedDictionary.Put(PdfName.Ff, new PdfNumber(PdfTextFormField.FF_MULTILINE));
-            CompareTexts(expectedDictionary, textFormField, false);
+            CompareTexts(expectedDictionary, textFormField, pdfDoc, false);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateMultilineTextWithIncorrectNameTest() {
-            NUnit.Framework.Assert.DoesNotThrow(() => new TextFormFieldBuilder(DUMMY_DOCUMENT, "incorrect.name").SetWidgetRectangle
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            NUnit.Framework.Assert.DoesNotThrow(() => new TextFormFieldBuilder(pdfDoc, "incorrect.name").SetWidgetRectangle
                 (DUMMY_RECTANGLE).CreateMultilineText());
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateMultilineTextWithConformanceLevelTest() {
-            PdfTextFormField textFormField = new TextFormFieldBuilder(DUMMY_DOCUMENT, DUMMY_NAME).SetWidgetRectangle(DUMMY_RECTANGLE
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfTextFormField textFormField = new TextFormFieldBuilder(pdfDoc, DUMMY_NAME).SetWidgetRectangle(DUMMY_RECTANGLE
                 ).SetConformance(PdfConformance.PDF_A_1A).CreateMultilineText();
             PdfDictionary expectedDictionary = new PdfDictionary();
             expectedDictionary.Put(PdfName.Ff, new PdfNumber(PdfTextFormField.FF_MULTILINE));
-            CompareTexts(expectedDictionary, textFormField, true);
+            CompareTexts(expectedDictionary, textFormField, pdfDoc, true);
         }
 
-        private static void CompareTexts(PdfDictionary expectedDictionary, PdfTextFormField textFormField, bool widgetExpected
-            ) {
+        private static void CompareTexts(PdfDictionary expectedDictionary, PdfTextFormField textFormField, PdfDocument
+             pdfDoc, bool widgetExpected) {
             IList<PdfWidgetAnnotation> widgets = textFormField.GetWidgets();
             if (widgetExpected) {
                 NUnit.Framework.Assert.AreEqual(1, widgets.Count);
@@ -128,8 +134,8 @@ namespace iText.Forms.Fields {
             PutIfAbsent(expectedDictionary, PdfName.T, new PdfString(DUMMY_NAME));
             PutIfAbsent(expectedDictionary, PdfName.V, new PdfString(""));
             PutIfAbsent(expectedDictionary, PdfName.DA, new PdfString("/F1 12 Tf"));
-            expectedDictionary.MakeIndirect(DUMMY_DOCUMENT);
-            textFormField.MakeIndirect(DUMMY_DOCUMENT);
+            expectedDictionary.MakeIndirect(pdfDoc);
+            textFormField.MakeIndirect(pdfDoc);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareDictionariesStructure(expectedDictionary, textFormField
                 .GetPdfObject()));
         }
