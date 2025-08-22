@@ -396,7 +396,6 @@ namespace iText.Kernel.Pdf {
                 parentContent.Put(PdfName.Last, children[children.Count - 1].content);
             }
             else {
-                parent.RemoveOutline();
                 return;
             }
             PdfDictionary next = content.GetAsDictionary(PdfName.Next);
