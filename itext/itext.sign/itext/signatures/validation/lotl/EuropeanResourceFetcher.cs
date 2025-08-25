@@ -62,12 +62,14 @@ namespace iText.Signatures.Validation.Lotl {
 
             private IList<IX509Certificate> certificates;
 
-//\cond DO_NOT_DOCUMENT
-            internal Result() {
+            /// <summary>
+            /// Create a new Instance of
+            /// <see cref="Result"/>.
+            /// </summary>
+            public Result() {
                 this.localReport = new ValidationReport();
                 certificates = new List<IX509Certificate>();
             }
-//\endcond
 
             /// <summary>Gets the list of report items.</summary>
             /// <returns>a ValidationReport object containing report items</returns>
