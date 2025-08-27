@@ -238,7 +238,8 @@ namespace iText.Forms.Fields {
                 if (extractedBorderColor != null) {
                     borderColor = extractedBorderColor;
                 }
-                if (parent != null) {
+                // We take into account CA only for buttons according to specification
+                if (parent != null && PdfName.Btn.Equals(parent.GetFormType())) {
                     parent.text = AppearancePropToCaption(appearanceCharacteristics);
                 }
             }

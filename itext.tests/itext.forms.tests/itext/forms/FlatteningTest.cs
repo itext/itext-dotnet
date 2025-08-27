@@ -21,8 +21,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using iText.Forms.Fields;
 using iText.Forms.Logs;
+using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Utils;
@@ -50,6 +52,54 @@ namespace iText.Forms {
             PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
             PdfFormCreator.GetAcroForm(doc, false).FlattenFields();
             doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FlatteningPdfWithButtons() {
+            String src = sourceFolder + "flatteningPdfWithButtons.pdf";
+            String dest = destinationFolder + "flatteningPdfWithButtonsOutput.pdf";
+            String cmp = sourceFolder + "cmp_flatteningPdfWithButtons.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(src), new PdfWriter(dest))) {
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                PdfFont font = PdfFontFactory.CreateFont();
+                PdfFormField field = form.GetField("myPushButton");
+                field.SetValue("push button", font, 12);
+                field.RegenerateField();
+                PdfFormField field2 = form.GetField("myCheckBox");
+                field2.SetValue("check box", font, 12);
+                field2.RegenerateField();
+                RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, "answer");
+                PdfButtonFormField radioGroup = builder.CreateRadioGroup();
+                radioGroup.SetValue("answer 1");
+                form.AddField(radioGroup);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FlatteningPdfWithFields() {
+            String src = sourceFolder + "flatteningPdfWithFields.pdf";
+            String dest = destinationFolder + "flatteningPdfWithFields.pdf";
+            String cmp = sourceFolder + "cmp_flatteningPdfWithFields.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(src), new PdfWriter(dest))) {
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                PdfFont font = PdfFontFactory.CreateFont();
+                IDictionary<PdfName, PdfObject> appearance = new Dictionary<PdfName, PdfObject>();
+                appearance.Put(PdfName.CA, new PdfString("wrong text"));
+                PdfFormField inputField = form.GetField("inputField");
+                inputField.GetPdfObject().Put(PdfName.MK, new PdfDictionary(appearance));
+                inputField.SetValue("input field regenerated", font, 12);
+                inputField.RegenerateField();
+                PdfFormField comboBoxField = form.GetField("comboBoxField");
+                inputField.GetPdfObject().Put(PdfName.MK, new PdfDictionary(appearance));
+                comboBoxField.SetValue("Red", font, 12);
+                comboBoxField.RegenerateField();
+                PdfFormField textAreaField = form.GetField("textAreaField");
+                textAreaField.GetPdfObject().Put(PdfName.MK, new PdfDictionary(appearance));
+                textAreaField.SetValue("text area field regenerated", font, 12);
+                textAreaField.RegenerateField();
+            }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
         }
 
