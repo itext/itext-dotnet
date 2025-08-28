@@ -63,10 +63,10 @@ namespace iText.Forms.Fields.Merging {
             PdfObject secondFieldValue = secondField.GetValue();
             PdfObject firstFieldDefaultValue = firstField.GetDefaultValue();
             PdfObject secondFieldDefaultValue = secondField.GetDefaultValue();
-            if ((firstFieldFormType == null || firstFieldFormType.Equals(secondField.GetFormType())) && (firstFieldValue
-                 == null || secondFieldValue == null || firstFieldValue.Equals(secondFieldValue)) && (firstFieldDefaultValue
-                 == null || secondFieldDefaultValue == null || firstFieldDefaultValue.Equals(secondFieldDefaultValue))
-                ) {
+            bool isValueEqualsOrNull = IsValueEqualsOrNull(firstFieldValue, secondFieldValue);
+            bool isDefaultValueEqualsOrNull = IsValueEqualsOrNull(firstFieldDefaultValue, secondFieldDefaultValue);
+            if ((firstFieldFormType == null || firstFieldFormType.Equals(secondField.GetFormType())) && isValueEqualsOrNull
+                 && isDefaultValueEqualsOrNull) {
                 PdfFormFieldMergeUtil.MergeFormFields(firstField, secondField, throwExceptionOnError);
             }
             else {
@@ -82,6 +82,16 @@ namespace iText.Forms.Fields.Merging {
                 }
             }
             return true;
+        }
+
+        private static bool IsValueEqualsOrNull(PdfObject obj1, PdfObject obj2) {
+            if (obj1 == null || obj2 == null) {
+                return true;
+            }
+            if (obj1 is PdfString && obj2 is PdfString) {
+                return ((PdfString)obj1).ToUnicodeString().Equals(((PdfString)obj2).ToUnicodeString());
+            }
+            return obj1.Equals(obj2);
         }
     }
 }
