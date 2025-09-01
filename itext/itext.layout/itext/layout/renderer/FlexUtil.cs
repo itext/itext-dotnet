@@ -692,7 +692,7 @@ namespace iText.Layout.Renderer {
                 float largestCrossSize = 0;
                 foreach (FlexItemInfo info in line) {
                     // TODO DEVSIX-5002 Flex items whose cross-axis margins are both auto shouldn't be collected
-                    // TODO DEVSIX-5038 Support BASELINE as align-self
+                    // TODO DEVSIX-5167 Support BASELINE as align-self
                     largestCrossSize = Math.Max(largestCrossSize, info.GetRectangle().GetWidth());
                     flexLinesCrossSize = Math.Max(0, largestCrossSize);
                 }
@@ -721,7 +721,7 @@ namespace iText.Layout.Renderer {
                         // its hypothetical outer cross-start edge, and the largest of the distances
                         // between each item’s baseline and its hypothetical outer cross-end edge, and sum these two values.
                         // TODO DEVSIX-5002 margin: auto is not supported => "cross-axis margins are both non-auto" is true
-                        // TODO DEVSIX-5038 Support BASELINE as align-self
+                        // TODO DEVSIX-5167 Support BASELINE as align-self
                         // 2. Among all the items not collected by the previous step,
                         // find the largest outer hypothetical cross size.
                         if (largestHypotheticalCrossSize < info.GetOuterCrossSize(info.hypotheticalCrossSize)) {
