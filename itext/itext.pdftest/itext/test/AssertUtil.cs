@@ -24,15 +24,17 @@ using System;
 using System.Threading;
 using NUnit.Framework;
 
-namespace iText.Test {
+namespace iText.Test 
+{
 
-    public class AssertUtil {
+    public class AssertUtil 
+    {
 
         public static void AssertThrows(Type expectedThrowable, TestDelegate runnable)
         {
             Assert.That(runnable, Throws.InstanceOf(expectedThrowable));
         }
-        
+
         public static void AssertThrows(string message, Type expectedThrowable, TestDelegate runnable)
         {
             Assert.That(runnable, Throws.InstanceOf(expectedThrowable).With.Message.EqualTo(message));
@@ -43,10 +45,10 @@ namespace iText.Test {
         /// </summary>
         /// <param name="assertion">Callback to the actuals asserts to be safeguarded.</param>
         /// <param name="timeout">The maximum tilme it can take before passing the assertions.</param>
-        public static void AssertPassedWithinTimeout(Action assertion, TimeSpan timeout) 
+        public static void AssertPassedWithinTimeout(Action assertion, TimeSpan timeout)
         {
             // Pass 1 millis sleepTime to force thread yield
-            AssertPassedWithinTimeout(assertion, timeout, TimeSpan.FromMilliseconds(1)); 
+            AssertPassedWithinTimeout(assertion, timeout, TimeSpan.FromMilliseconds(1));
         }
 
         /// <summary>
@@ -56,13 +58,14 @@ namespace iText.Test {
         /// <param name="timeout">The maximum tilme it can take before passing the assertions.</param>
         /// <param name="sleepTime">The time to sleep between polls.</param>
         public static void AssertPassedWithinTimeout(Action assertion, TimeSpan timeout, TimeSpan sleepTime)
-        {               
-            int  sleepTimeInMillies = (int) sleepTime.TotalMilliseconds;
-            var watch = System.Diagnostics.Stopwatch.StartNew();            
-            
+        {
+            int sleepTimeInMillies = (int)sleepTime.TotalMilliseconds;
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
             var elapsedMs = watch.ElapsedMilliseconds;
-            bool passed = false;            
-             while (!passed) {
+            bool passed = false;
+            while (!passed)
+            {
                 try
                 {
                     assertion.Invoke();
@@ -77,9 +80,29 @@ namespace iText.Test {
                     Thread.Sleep(sleepTimeInMillies);
                     //ignore assertion failure if timeout not spent.                                                                                       
                 }
-                
+
             }
             watch.Stop();
+        }
+
+        public static void AreEqual(long expected, long actual, Func<string> messageGenerator)
+        {
+            Assert.AreEqual(expected, actual, 0, messageGenerator());
+        }
+
+        public static void AreEqual(int expected, int actual, Func<string> messageGenerator)
+        {
+            Assert.AreEqual(expected, actual, 0, messageGenerator());
+        }
+
+        public static void AreEqual(double expected, double actual, Func<string> messageGenerator)
+        {
+            Assert.AreEqual(expected, actual, 0, messageGenerator());
+        }
+        
+        public static void AreEqual(object expected, object actual, Func<string> messageGenerator)
+        {
+            Assert.AreEqual(expected, actual, messageGenerator());
         }
     }
 }
