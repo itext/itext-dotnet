@@ -86,7 +86,7 @@ namespace iText.Signatures.Validation.Lotl {
             EuropeanResourceFetcher.Result europeanResult = service.GetEUJournalCertificates();
             report.Merge(europeanResult.GetLocalReport());
             PivotFetcher.Result result = service.GetAndValidatePivotFiles(lotl.GetLotlXml(), europeanResult.GetCertificates
-                ());
+                (), europeanResult.GetCurrentlySupportedPublication());
             report.Merge(result.GetLocalReport());
             if (result.GetLocalReport().GetValidationResult() != ValidationReport.ValidationResult.VALID) {
                 return report;

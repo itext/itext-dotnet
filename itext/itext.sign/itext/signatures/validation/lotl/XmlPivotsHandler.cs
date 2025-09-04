@@ -55,8 +55,11 @@ namespace iText.Signatures.Validation.Lotl {
                 schemeInformationContext = false;
             }
             else {
-                if (XmlTagConstants.URI.Equals(localName) && IsPivot(uriLink.ToString())) {
-                    pivots.Add(uriLink.ToString());
+                if (XmlTagConstants.URI.Equals(localName)) {
+                    String uriLinkString = uriLink.ToString();
+                    if (IsPivot(uriLinkString) || IsOfficialJournal(uriLinkString)) {
+                        pivots.Add(uriLinkString);
+                    }
                 }
             }
         }
@@ -70,6 +73,12 @@ namespace iText.Signatures.Validation.Lotl {
         public virtual IList<String> GetPivots() {
             return new List<String>(pivots);
         }
+
+//\cond DO_NOT_DOCUMENT
+        internal static bool IsOfficialJournal(String uriLink) {
+            return uriLink.Contains("eur-lex.europa.eu");
+        }
+//\endcond
 
         private static bool IsPivot(String uriLink) {
             return uriLink.Contains("eu-lotl-pivot");

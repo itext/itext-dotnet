@@ -50,6 +50,10 @@ namespace iText.Signatures.Logs {
 
         public const String FAILED_TO_FETCH_EU_JOURNAL_CERTIFICATES = "Problem occurred while fetching " + "EU Journal certificates.\n{0}";
 
+        public const String OJ_TRANSITION_PERIOD = "Main LOTL file contains two Official Journal of European Union links. "
+             + "This usually indicates that transition period for Official Journal has started. " + "Newest version of Official Journal should be used from now on "
+             + "to retrieve trusted certificates and LOTL location.";
+
         private SignLogMessageConstant() {
         }
         // Private constructor will prevent the instantiation of this class directly

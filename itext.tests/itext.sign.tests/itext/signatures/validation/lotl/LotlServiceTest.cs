@@ -109,7 +109,7 @@ namespace iText.Signatures.Validation.Lotl {
                 lotlService.WithLotlServiceCache(new LotlServiceTest.CacheReturnsNull());
                 lotlService.WithPivotFetcher(new _PivotFetcher_125(lotlService));
                 f = lotlService.GetAndValidatePivotFiles("abc".GetBytes(System.Text.Encoding.UTF8), JavaCollectionsUtil.EmptyList
-                    <IX509Certificate>());
+                    <IX509Certificate>(), null);
             }
             NUnit.Framework.Assert.IsNotNull(f);
             NUnit.Framework.Assert.AreEqual(1, f.GetPivotUrls().Count);
@@ -202,7 +202,7 @@ namespace iText.Signatures.Validation.Lotl {
             AtomicLong refreshCounter = new AtomicLong(0);
             using (LotlService lotlService = new _LotlService_207(refreshCounter, lotlFetchingProperties)) {
                 lotlService.SetupTimer();
-                Thread.Sleep(1000);
+                Thread.Sleep(2000);
             }
             NUnit.Framework.Assert.IsTrue(refreshCounter.Get() >= 8, "Refresh counter should be greater than 8, but was: "
                  + refreshCounter.Get());

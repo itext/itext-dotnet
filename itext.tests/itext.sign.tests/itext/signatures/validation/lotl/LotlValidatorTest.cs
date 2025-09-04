@@ -73,15 +73,15 @@ namespace iText.Signatures.Validation.Lotl {
             Exception e;
             using (LotlService lotlService = new LotlService(new LotlFetchingProperties(new ThrowExceptionOnFailingCountryData
                 ()))) {
-                lotlService.WithCustomResourceRetriever(new _IResourceRetriever_95());
+                lotlService.WithCustomResourceRetriever(new _IResourceRetriever_92());
                 e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => lotlService.InitializeCache());
             }
             NUnit.Framework.Assert.IsTrue(e.Message.Contains("Failed to "), "Expected exception message to contain 'Failed to ', but got: "
                  + e.Message);
         }
 
-        private sealed class _IResourceRetriever_95 : IResourceRetriever {
-            public _IResourceRetriever_95() {
+        private sealed class _IResourceRetriever_92 : IResourceRetriever {
+            public _IResourceRetriever_92() {
             }
 
             public Stream GetInputStreamByUrl(Uri url) {
@@ -191,15 +191,15 @@ namespace iText.Signatures.Validation.Lotl {
                 ));
             lotlFetchingProperties.SetCountryNames("NL");
             Exception e;
-            using (LotlService lotlService = new LotlService(lotlFetchingProperties).WithEuropeanLotlFetcher(new _EuropeanLotlFetcher_215
+            using (LotlService lotlService = new LotlService(lotlFetchingProperties).WithEuropeanLotlFetcher(new _EuropeanLotlFetcher_212
                 (null))) {
                 e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => lotlService.InitializeCache());
             }
             NUnit.Framework.Assert.AreEqual(LotlValidator.UNABLE_TO_RETRIEVE_LOTL, e.Message);
         }
 
-        private sealed class _EuropeanLotlFetcher_215 : EuropeanLotlFetcher {
-            public _EuropeanLotlFetcher_215(LotlService baseArg1)
+        private sealed class _EuropeanLotlFetcher_212 : EuropeanLotlFetcher {
+            public _EuropeanLotlFetcher_212(LotlService baseArg1)
                 : base(baseArg1) {
             }
 
@@ -212,15 +212,38 @@ namespace iText.Signatures.Validation.Lotl {
         public virtual void EuJournalCertificatesEmptyTest() {
             Exception e;
             using (LotlService service = new LotlService(new LotlFetchingProperties(new RemoveOnFailingCountryData()))
-                .WithEuropeanResourceFetcher(new _EuropeanResourceFetcher_233())) {
+                .WithEuropeanResourceFetcher(new _EuropeanResourceFetcher_230())) {
                 service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
                 e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => service.InitializeCache());
             }
             NUnit.Framework.Assert.AreEqual(LotlValidator.LOTL_VALIDATION_UNSUCCESSFUL, e.Message);
         }
 
-        private sealed class _EuropeanResourceFetcher_233 : EuropeanResourceFetcher {
-            public _EuropeanResourceFetcher_233() {
+        private sealed class _EuropeanResourceFetcher_230 : EuropeanResourceFetcher {
+            public _EuropeanResourceFetcher_230() {
+            }
+
+            public override EuropeanResourceFetcher.Result GetEUJournalCertificates() {
+                EuropeanResourceFetcher.Result result = base.GetEUJournalCertificates();
+                result.SetCertificates(JavaCollectionsUtil.EmptyList<IX509Certificate>());
+                return result;
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EuJournalEmptyResultTest() {
+            Exception e;
+            using (LotlService service = new LotlService(new LotlFetchingProperties(new RemoveOnFailingCountryData()))
+                .WithEuropeanResourceFetcher(new _EuropeanResourceFetcher_249())) {
+                service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
+                e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => service.InitializeCache());
+            }
+            NUnit.Framework.Assert.AreEqual(SignExceptionMessageConstant.OFFICIAL_JOURNAL_CERTIFICATES_OUTDATED, e.Message
+                );
+        }
+
+        private sealed class _EuropeanResourceFetcher_249 : EuropeanResourceFetcher {
+            public _EuropeanResourceFetcher_249() {
             }
 
             public override EuropeanResourceFetcher.Result GetEUJournalCertificates() {
@@ -231,13 +254,89 @@ namespace iText.Signatures.Validation.Lotl {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(SignLogMessageConstant.OJ_TRANSITION_PERIOD)]
+        public virtual void MainLotlFileContainsTwoJournalsTest() {
+            LotlFetchingProperties lotlFetchingProperties = new LotlFetchingProperties(new RemoveOnFailingCountryData(
+                ));
+            lotlFetchingProperties.SetCountryNames("DE");
+            using (LotlService lotlService = new LotlService(lotlFetchingProperties)) {
+                PivotFetcher customPivotFetcher = new _PivotFetcher_271(lotlService);
+                lotlService.WithPivotFetcher(customPivotFetcher);
+                lotlService.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
+                lotlService.InitializeCache();
+                LotlValidator validator = lotlService.GetLotlValidator();
+                ValidationReport report = validator.Validate();
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
+                    (0));
+            }
+        }
+
+        private sealed class _PivotFetcher_271 : PivotFetcher {
+            public _PivotFetcher_271(LotlService baseArg1)
+                : base(baseArg1) {
+            }
+
+            protected internal override IList<String> GetPivotsUrlList(byte[] lotlXml) {
+                return JavaUtil.ArraysAsList(new String[] { "https://ec.europa.eu/tools/lotl/eu-lotl-pivot-341.xml", "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=uriserv:OJ.C_.9999.999.99.9999.99.ENG.test"
+                    , "https://ec.europa.eu/tools/lotl/eu-lotl-pivot-335.xml", "https://ec.europa.eu/tools/lotl/eu-lotl-pivot-300.xml"
+                    , "https://ec.europa.eu/tools/lotl/eu-lotl-pivot-282.xml", "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=uriserv:OJ.C_.2019.276.01.0001.01.ENG"
+                     });
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SignLogMessageConstant.OJ_TRANSITION_PERIOD)]
+        public virtual void MainLotlFileContainsTwoJournalsAndNewOneIsUsedTest() {
+            LotlFetchingProperties lotlFetchingProperties = new LotlFetchingProperties(new RemoveOnFailingCountryData(
+                ));
+            lotlFetchingProperties.SetCountryNames("DE");
+            using (LotlService lotlService = new LotlService(lotlFetchingProperties)) {
+                PivotFetcher customPivotFetcher = new _PivotFetcher_302(lotlService);
+                EuropeanResourceFetcher customEuropeanResourceFetcher = new _EuropeanResourceFetcher_315();
+                lotlService.WithEuropeanResourceFetcher(customEuropeanResourceFetcher);
+                lotlService.WithPivotFetcher(customPivotFetcher);
+                lotlService.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
+                NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
+                    // This should throw an exception because only one pivot was fetched and used for validation.
+                    lotlService.InitializeCache();
+                }
+                );
+            }
+        }
+
+        private sealed class _PivotFetcher_302 : PivotFetcher {
+            public _PivotFetcher_302(LotlService baseArg1)
+                : base(baseArg1) {
+            }
+
+            protected internal override IList<String> GetPivotsUrlList(byte[] lotlXml) {
+                return JavaUtil.ArraysAsList(new String[] { "https://ec.europa.eu/tools/lotl/eu-lotl-pivot-341.xml", "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=uriserv:OJ.C_.9999.999.99.9999.99.ENG.test"
+                    , "https://ec.europa.eu/tools/lotl/eu-lotl-pivot-335.xml", "https://ec.europa.eu/tools/lotl/eu-lotl-pivot-300.xml"
+                    , "https://ec.europa.eu/tools/lotl/eu-lotl-pivot-282.xml", "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=uriserv:OJ.C_.2019.276.01.0001.01.ENG"
+                     });
+            }
+        }
+
+        private sealed class _EuropeanResourceFetcher_315 : EuropeanResourceFetcher {
+            public _EuropeanResourceFetcher_315() {
+            }
+
+            public override EuropeanResourceFetcher.Result GetEUJournalCertificates() {
+                EuropeanResourceFetcher.Result result = base.GetEUJournalCertificates();
+                result.SetCurrentlySupportedPublication("https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=uriserv:OJ.C_.9999.999.99.9999.99.ENG.test"
+                    );
+                return result;
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void LotlWithBrokenPivotsTest() {
             LotlFetchingProperties lotlFetchingProperties = new LotlFetchingProperties(new RemoveOnFailingCountryData(
                 ));
             lotlFetchingProperties.SetCountryNames("DE");
-            IResourceRetriever resourceRetriever = new _FromDiskResourceRetriever_254(SOURCE_FOLDER_LOTL_FILES);
+            IResourceRetriever resourceRetriever = new _FromDiskResourceRetriever_339(SOURCE_FOLDER_LOTL_FILES);
             using (LotlService lotlService = new LotlService(lotlFetchingProperties).WithCustomResourceRetriever(resourceRetriever
-                ).WithEuropeanLotlFetcher(new _EuropeanLotlFetcher_263(null))) {
+                ).WithEuropeanLotlFetcher(new _EuropeanLotlFetcher_348(null))) {
                 lotlService.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
                 NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
                     // This should throw an exception because the cache is not initialized
@@ -247,8 +346,8 @@ namespace iText.Signatures.Validation.Lotl {
             }
         }
 
-        private sealed class _FromDiskResourceRetriever_254 : FromDiskResourceRetriever {
-            public _FromDiskResourceRetriever_254(String baseArg1)
+        private sealed class _FromDiskResourceRetriever_339 : FromDiskResourceRetriever {
+            public _FromDiskResourceRetriever_339(String baseArg1)
                 : base(baseArg1) {
             }
 
@@ -257,8 +356,8 @@ namespace iText.Signatures.Validation.Lotl {
             }
         }
 
-        private sealed class _EuropeanLotlFetcher_263 : EuropeanLotlFetcher {
-            public _EuropeanLotlFetcher_263(LotlService baseArg1)
+        private sealed class _EuropeanLotlFetcher_348 : EuropeanLotlFetcher {
+            public _EuropeanLotlFetcher_348(LotlService baseArg1)
                 : base(baseArg1) {
             }
 
@@ -277,7 +376,7 @@ namespace iText.Signatures.Validation.Lotl {
         public virtual void WithCustomEuropeanFetcher() {
             LotlFetchingProperties lotlFetchingProperties = new LotlFetchingProperties(new RemoveOnFailingCountryData(
                 ));
-            using (LotlService service = new LotlService(lotlFetchingProperties).WithEuropeanResourceFetcher(new _EuropeanResourceFetcher_286
+            using (LotlService service = new LotlService(lotlFetchingProperties).WithEuropeanResourceFetcher(new _EuropeanResourceFetcher_371
                 ())) {
                 service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
                 NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
@@ -288,8 +387,8 @@ namespace iText.Signatures.Validation.Lotl {
             }
         }
 
-        private sealed class _EuropeanResourceFetcher_286 : EuropeanResourceFetcher {
-            public _EuropeanResourceFetcher_286() {
+        private sealed class _EuropeanResourceFetcher_371 : EuropeanResourceFetcher {
+            public _EuropeanResourceFetcher_371() {
             }
 
             public override EuropeanResourceFetcher.Result GetEUJournalCertificates() {
@@ -322,13 +421,13 @@ namespace iText.Signatures.Validation.Lotl {
                 service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
                 service.InitializeCache();
                 // Simulate a failure in the cache refresh
-                service.WithEuropeanLotlFetcher(new _EuropeanLotlFetcher_334(service));
+                service.WithEuropeanLotlFetcher(new _EuropeanLotlFetcher_419(service));
                 NUnit.Framework.Assert.DoesNotThrow(() => service.TryAndRefreshCache());
             }
         }
 
-        private sealed class _EuropeanLotlFetcher_334 : EuropeanLotlFetcher {
-            public _EuropeanLotlFetcher_334(LotlService baseArg1)
+        private sealed class _EuropeanLotlFetcher_419 : EuropeanLotlFetcher {
+            public _EuropeanLotlFetcher_419(LotlService baseArg1)
                 : base(baseArg1) {
             }
 
@@ -369,13 +468,13 @@ namespace iText.Signatures.Validation.Lotl {
                 service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
                 service.InitializeCache();
                 // Simulate a failure in the cache refresh
-                service.WithEuropeanLotlFetcher(new _EuropeanLotlFetcher_387(service));
+                service.WithEuropeanLotlFetcher(new _EuropeanLotlFetcher_472(service));
                 NUnit.Framework.Assert.DoesNotThrow(() => service.TryAndRefreshCache());
             }
         }
 
-        private sealed class _EuropeanLotlFetcher_387 : EuropeanLotlFetcher {
-            public _EuropeanLotlFetcher_387(LotlService baseArg1)
+        private sealed class _EuropeanLotlFetcher_472 : EuropeanLotlFetcher {
+            public _EuropeanLotlFetcher_472(LotlService baseArg1)
                 : base(baseArg1) {
             }
 
@@ -397,13 +496,13 @@ namespace iText.Signatures.Validation.Lotl {
                 service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
                 service.InitializeCache();
                 // Simulate a failure in the cache refresh
-                service.WithPivotFetcher(new _PivotFetcher_413(service));
+                service.WithPivotFetcher(new _PivotFetcher_498(service));
                 NUnit.Framework.Assert.DoesNotThrow(() => service.TryAndRefreshCache());
             }
         }
 
-        private sealed class _PivotFetcher_413 : PivotFetcher {
-            public _PivotFetcher_413(LotlService baseArg1)
+        private sealed class _PivotFetcher_498 : PivotFetcher {
+            public _PivotFetcher_498(LotlService baseArg1)
                 : base(baseArg1) {
             }
 
@@ -426,13 +525,13 @@ namespace iText.Signatures.Validation.Lotl {
                 service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
                 service.InitializeCache();
                 // Simulate a failure in the cache refresh
-                service.WithPivotFetcher(new _PivotFetcher_440(service));
+                service.WithPivotFetcher(new _PivotFetcher_525(service));
                 NUnit.Framework.Assert.DoesNotThrow(() => service.TryAndRefreshCache());
             }
         }
 
-        private sealed class _PivotFetcher_440 : PivotFetcher {
-            public _PivotFetcher_440(LotlService baseArg1)
+        private sealed class _PivotFetcher_525 : PivotFetcher {
+            public _PivotFetcher_525(LotlService baseArg1)
                 : base(baseArg1) {
             }
 
@@ -452,13 +551,13 @@ namespace iText.Signatures.Validation.Lotl {
                 service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
                 service.InitializeCache();
                 // Simulate a failure in the cache refresh
-                service.WithCountrySpecificLotlFetcher(new _CountrySpecificLotlFetcher_463(service));
+                service.WithCountrySpecificLotlFetcher(new _CountrySpecificLotlFetcher_548(service));
                 NUnit.Framework.Assert.DoesNotThrow(() => service.TryAndRefreshCache());
             }
         }
 
-        private sealed class _CountrySpecificLotlFetcher_463 : CountrySpecificLotlFetcher {
-            public _CountrySpecificLotlFetcher_463(LotlService baseArg1)
+        private sealed class _CountrySpecificLotlFetcher_548 : CountrySpecificLotlFetcher {
+            public _CountrySpecificLotlFetcher_548(LotlService baseArg1)
                 : base(baseArg1) {
             }
 
@@ -477,13 +576,13 @@ namespace iText.Signatures.Validation.Lotl {
                 service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
                 service.InitializeCache();
                 // Simulate a failure in the cache refresh
-                service.WithCountrySpecificLotlFetcher(new _CountrySpecificLotlFetcher_486(service));
+                service.WithCountrySpecificLotlFetcher(new _CountrySpecificLotlFetcher_571(service));
                 NUnit.Framework.Assert.DoesNotThrow(() => service.TryAndRefreshCache());
             }
         }
 
-        private sealed class _CountrySpecificLotlFetcher_486 : CountrySpecificLotlFetcher {
-            public _CountrySpecificLotlFetcher_486(LotlService baseArg1)
+        private sealed class _CountrySpecificLotlFetcher_571 : CountrySpecificLotlFetcher {
+            public _CountrySpecificLotlFetcher_571(LotlService baseArg1)
                 : base(baseArg1) {
             }
 
@@ -505,7 +604,7 @@ namespace iText.Signatures.Validation.Lotl {
                 service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
                 service.InitializeCache();
                 // Simulate a failure in the cache refresh
-                service.WithCountrySpecificLotlFetcher(new _CountrySpecificLotlFetcher_512(service));
+                service.WithCountrySpecificLotlFetcher(new _CountrySpecificLotlFetcher_597(service));
                 service.TryAndRefreshCache();
                 Thread.Sleep(1000);
                 // Wait for the cache refresh to complete
@@ -514,8 +613,8 @@ namespace iText.Signatures.Validation.Lotl {
             }
         }
 
-        private sealed class _CountrySpecificLotlFetcher_512 : CountrySpecificLotlFetcher {
-            public _CountrySpecificLotlFetcher_512(LotlService baseArg1)
+        private sealed class _CountrySpecificLotlFetcher_597 : CountrySpecificLotlFetcher {
+            public _CountrySpecificLotlFetcher_597(LotlService baseArg1)
                 : base(baseArg1) {
             }
 
@@ -545,15 +644,15 @@ namespace iText.Signatures.Validation.Lotl {
                 service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
                 service.InitializeCache();
                 // Simulate a failure in the cache refresh
-                service.WithCountrySpecificLotlFetcher(new _CountrySpecificLotlFetcher_547(service));
+                service.WithCountrySpecificLotlFetcher(new _CountrySpecificLotlFetcher_632(service));
                 Thread.Sleep(2100);
                 service.TryAndRefreshCache();
                 NUnit.Framework.Assert.DoesNotThrow(() => service.GetLotlValidator().Validate());
             }
         }
 
-        private sealed class _CountrySpecificLotlFetcher_547 : CountrySpecificLotlFetcher {
-            public _CountrySpecificLotlFetcher_547(LotlService baseArg1)
+        private sealed class _CountrySpecificLotlFetcher_632 : CountrySpecificLotlFetcher {
+            public _CountrySpecificLotlFetcher_632(LotlService baseArg1)
                 : base(baseArg1) {
             }
 
@@ -583,7 +682,7 @@ namespace iText.Signatures.Validation.Lotl {
             using (LotlService service = new LotlService(properties)) {
                 service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
                 // Simulate a failure in the cache refresh
-                service.WithCountrySpecificLotlFetcher(new _CountrySpecificLotlFetcher_589(service));
+                service.WithCountrySpecificLotlFetcher(new _CountrySpecificLotlFetcher_674(service));
                 service.InitializeCache();
                 LotlValidator validator = service.GetLotlValidator();
                 validator.Validate();
@@ -600,8 +699,8 @@ namespace iText.Signatures.Validation.Lotl {
                  + newAmountOfCertificates);
         }
 
-        private sealed class _CountrySpecificLotlFetcher_589 : CountrySpecificLotlFetcher {
-            public _CountrySpecificLotlFetcher_589(LotlService baseArg1)
+        private sealed class _CountrySpecificLotlFetcher_674 : CountrySpecificLotlFetcher {
+            public _CountrySpecificLotlFetcher_674(LotlService baseArg1)
                 : base(baseArg1) {
                 this.firstTime = true;
             }
@@ -640,7 +739,7 @@ namespace iText.Signatures.Validation.Lotl {
             using (LotlService service = new LotlService(properties)) {
                 service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
                 // Simulate a failure in the cache refresh
-                service.WithCountrySpecificLotlFetcher(new _CountrySpecificLotlFetcher_651(service));
+                service.WithCountrySpecificLotlFetcher(new _CountrySpecificLotlFetcher_736(service));
                 service.InitializeCache();
                 LotlValidator validator = service.GetLotlValidator();
                 validator.Validate();
@@ -655,8 +754,8 @@ namespace iText.Signatures.Validation.Lotl {
                  + originalAmountOfCertificates + " and " + newAmountOfCertificates);
         }
 
-        private sealed class _CountrySpecificLotlFetcher_651 : CountrySpecificLotlFetcher {
-            public _CountrySpecificLotlFetcher_651(LotlService baseArg1)
+        private sealed class _CountrySpecificLotlFetcher_736 : CountrySpecificLotlFetcher {
+            public _CountrySpecificLotlFetcher_736(LotlService baseArg1)
                 : base(baseArg1) {
                 this.firstTime = true;
             }
@@ -688,15 +787,15 @@ namespace iText.Signatures.Validation.Lotl {
             using (LotlService service = new LotlService(new LotlFetchingProperties(new RemoveOnFailingCountryData()))
                 ) {
                 service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
-                CountrySpecificLotlFetcher lotlFetcher = new _CountrySpecificLotlFetcher_694(service);
+                CountrySpecificLotlFetcher lotlFetcher = new _CountrySpecificLotlFetcher_779(service);
                 service.WithCountrySpecificLotlFetcher(lotlFetcher);
                 service.InitializeCache();
                 NUnit.Framework.Assert.DoesNotThrow(() => service.GetLotlValidator().Validate());
             }
         }
 
-        private sealed class _CountrySpecificLotlFetcher_694 : CountrySpecificLotlFetcher {
-            public _CountrySpecificLotlFetcher_694(LotlService baseArg1)
+        private sealed class _CountrySpecificLotlFetcher_779 : CountrySpecificLotlFetcher {
+            public _CountrySpecificLotlFetcher_779(LotlService baseArg1)
                 : base(baseArg1) {
             }
 
@@ -712,15 +811,15 @@ namespace iText.Signatures.Validation.Lotl {
             p.SetCountryNames("NL");
             Exception e;
             using (LotlService service = new LotlService(p)) {
-                EuropeanLotlFetcher lotlByteFetcher = new _EuropeanLotlFetcher_713(service);
+                EuropeanLotlFetcher lotlByteFetcher = new _EuropeanLotlFetcher_798(service);
                 service.WithEuropeanLotlFetcher(lotlByteFetcher);
                 e = NUnit.Framework.Assert.Catch(typeof(Exception), () => service.InitializeCache());
             }
             NUnit.Framework.Assert.AreEqual("Test exception", e.Message);
         }
 
-        private sealed class _EuropeanLotlFetcher_713 : EuropeanLotlFetcher {
-            public _EuropeanLotlFetcher_713(LotlService baseArg1)
+        private sealed class _EuropeanLotlFetcher_798 : EuropeanLotlFetcher {
+            public _EuropeanLotlFetcher_798(LotlService baseArg1)
                 : base(baseArg1) {
             }
 

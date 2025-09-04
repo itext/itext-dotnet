@@ -23,9 +23,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
+using iText.Signatures.Exceptions;
+using iText.Signatures.Logs;
 using iText.Signatures.Validation;
 using iText.Signatures.Validation.Lotl.Xml;
 using iText.Signatures.Validation.Report;
@@ -33,12 +38,31 @@ using iText.Signatures.Validation.Report;
 namespace iText.Signatures.Validation.Lotl {
     /// <summary>This class fetches and validates pivot files from a List of Trusted Lists (Lotl) XML.</summary>
     public class PivotFetcher {
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.Validation.Lotl.PivotFetcher
+            ));
+
         private readonly LotlService service;
+
+        private String currentJournalUri;
 
         /// <summary>Constructs a PivotFetcher with the specified LotlService and ValidatorChainBuilder.</summary>
         /// <param name="service">the LotlService used to retrieve resources</param>
         public PivotFetcher(LotlService service) {
             this.service = service;
+        }
+
+        /// <summary>
+        /// Sets
+        /// <see cref="System.String"/>
+        /// constant representing currently used Official Journal publication.
+        /// </summary>
+        /// <param name="currentJournalUri">
+        /// 
+        /// <see cref="System.String"/>
+        /// constant representing currently used Official Journal publication
+        /// </param>
+        public virtual void SetCurrentJournalUri(String currentJournalUri) {
+            this.currentJournalUri = currentJournalUri;
         }
 
         /// <summary>Fetches and validates pivot files from the provided Lotl XML.</summary>
@@ -50,20 +74,31 @@ namespace iText.Signatures.Validation.Lotl {
             if (lotlXml == null) {
                 throw new PdfException(LotlValidator.UNABLE_TO_RETRIEVE_LOTL);
             }
-            XmlPivotsHandler pivotsHandler = new XmlPivotsHandler();
-            new XmlSaxProcessor().Process(new MemoryStream(lotlXml), pivotsHandler);
             PivotFetcher.Result result = new PivotFetcher.Result();
-            IList<String> pivotsUrlList = pivotsHandler.GetPivots();
+            IList<String> pivotsUrlList = GetPivotsUrlList(lotlXml);
+            IList<String> ojUris = pivotsUrlList.Where((url) => XmlPivotsHandler.IsOfficialJournal(url)).ToList();
+            if (ojUris.Count > 1) {
+                LOGGER.LogWarning(SignLogMessageConstant.OJ_TRANSITION_PERIOD);
+            }
             result.SetPivotUrls(pivotsUrlList);
             IList<byte[]> pivotFiles = new List<byte[]>();
+            // If we weren't able to find any OJ links, or current OJ uri is null, we process all the pivots.
+            bool startProcessing = ojUris.IsEmpty() || currentJournalUri == null;
             // We need to process pivots backwards.
             for (int i = pivotsUrlList.Count - 1; i >= 0; i--) {
                 String pivotUrl = pivotsUrlList[i];
-                SafeCalling.OnExceptionLog(() => pivotFiles.Add(service.GetResourceRetriever().GetByteArrayByUrl(new Uri(pivotUrl
-                    ))), result.GetLocalReport(), (e) => new ReportItem(LotlValidator.LOTL_VALIDATION, MessageFormatUtil.Format
-                    (LotlValidator.UNABLE_TO_RETRIEVE_PIVOT, pivotUrl), e, ReportItem.ReportItemStatus.INVALID));
-                if (result.GetLocalReport().GetValidationResult() != ValidationReport.ValidationResult.VALID) {
-                    return result;
+                if (pivotUrl.Equals(currentJournalUri)) {
+                    // We only need to process pivots which, were created after OJ entry was added.
+                    startProcessing = true;
+                    continue;
+                }
+                if (startProcessing && !XmlPivotsHandler.IsOfficialJournal(pivotUrl)) {
+                    SafeCalling.OnExceptionLog(() => pivotFiles.Add(service.GetResourceRetriever().GetByteArrayByUrl(new Uri(pivotUrl
+                        ))), result.GetLocalReport(), (e) => new ReportItem(LotlValidator.LOTL_VALIDATION, MessageFormatUtil.Format
+                        (LotlValidator.UNABLE_TO_RETRIEVE_PIVOT, pivotUrl), e, ReportItem.ReportItemStatus.INVALID));
+                    if (result.GetLocalReport().GetValidationResult() != ValidationReport.ValidationResult.VALID) {
+                        return result;
+                    }
                 }
             }
             IList<IX509Certificate> trustedCertificates = certificates;
@@ -82,6 +117,9 @@ namespace iText.Signatures.Validation.Lotl {
                     result.GetLocalReport().AddReportItem(new ReportItem(LotlValidator.LOTL_VALIDATION, LotlValidator.LOTL_VALIDATION_UNSUCCESSFUL
                         , ReportItem.ReportItemStatus.INVALID));
                     result.GetLocalReport().Merge(localReport);
+                    if (!ojUris.Any((ojUri) => ojUri.Equals(currentJournalUri))) {
+                        throw new PdfException(SignExceptionMessageConstant.OFFICIAL_JOURNAL_CERTIFICATES_OUTDATED);
+                    }
                     return result;
                 }
                 XmlCertificateRetriever certificateRetriever = new XmlCertificateRetriever(new XmlDefaultCertificateHandler
@@ -89,6 +127,19 @@ namespace iText.Signatures.Validation.Lotl {
                 trustedCertificates = certificateRetriever.GetCertificates(new MemoryStream(pivotFile));
             }
             return result;
+        }
+
+        /// <summary>Gets list of pivots xml files, including OJ entries.</summary>
+        /// <param name="lotlXml">
+        /// 
+        /// <c>byte</c>
+        /// array representing main LOTL file
+        /// </param>
+        /// <returns>list of pivots xml files, including OJ entries</returns>
+        protected internal virtual IList<String> GetPivotsUrlList(byte[] lotlXml) {
+            XmlPivotsHandler pivotsHandler = new XmlPivotsHandler();
+            new XmlSaxProcessor().Process(new MemoryStream(lotlXml), pivotsHandler);
+            return pivotsHandler.GetPivots();
         }
 
         /// <summary>Result class encapsulates the result of the pivot fetching and validation process.</summary>

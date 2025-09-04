@@ -178,12 +178,14 @@ namespace iText.Signatures.Validation.Lotl {
             SetupTimer();
             EuropeanLotlFetcher.Result mainLotlResult = lotlByteFetcher.Fetch();
             if (!mainLotlResult.GetLocalReport().GetFailures().IsEmpty()) {
-                //We throw on main Lotl fetch failure, so we don't proceed to pivot and country specific LOTL fetches
+                // We throw on main LOTL fetch failure, so we don't proceed to pivot and country specific LOTL fetches
                 ReportItem reportItem = mainLotlResult.GetLocalReport().GetFailures()[0];
                 throw new PdfException(reportItem.GetMessage(), reportItem.GetExceptionCause());
             }
             EuropeanResourceFetcher.Result europeanResourceFetcherEUJournalCertificates = europeanResourceFetcher.GetEUJournalCertificates
                 ();
+            pivotFetcher.SetCurrentJournalUri(europeanResourceFetcherEUJournalCertificates.GetCurrentlySupportedPublication
+                ());
             PivotFetcher.Result pivotsResult = pivotFetcher.DownloadAndValidatePivotFiles(mainLotlResult.GetLotlXml(), 
                 europeanResourceFetcherEUJournalCertificates.GetCertificates());
             if (!pivotsResult.GetLocalReport().GetFailures().IsEmpty()) {
@@ -359,9 +361,11 @@ namespace iText.Signatures.Validation.Lotl {
             EuropeanLotlFetcher.Result mainLotlResult = null;
             bool mainLotlFetchSuccessful = false;
             Exception mainLotlFetchException = null;
+            String currentJournalUri;
             try {
                 EuropeanResourceFetcher.Result europeanResourceFetcherEUJournalCertificates = europeanResourceFetcher.GetEUJournalCertificates
                     ();
+                currentJournalUri = europeanResourceFetcherEUJournalCertificates.GetCurrentlySupportedPublication();
                 if (europeanResourceFetcherEUJournalCertificates.GetLocalReport().GetValidationResult() != ValidationReport.ValidationResult
                     .VALID) {
                     throw new PdfException(MessageFormatUtil.Format(SignExceptionMessageConstant.FAILED_TO_FETCH_EU_JOURNAL_CERTIFICATES
@@ -388,6 +392,7 @@ namespace iText.Signatures.Validation.Lotl {
             if (mainLotlFetchSuccessful) {
                 //Only if the main Lotl was fetched successfully, we proceed to re-fetch the new pivot files.
                 try {
+                    pivotFetcher.SetCurrentJournalUri(currentJournalUri);
                     pivotResult = pivotFetcher.DownloadAndValidatePivotFiles(mainLotlResult.GetLotlXml(), europeanResourceFetcher
                         .GetEUJournalCertificates().GetCertificates());
                     fetchPivotFilesSuccessful = pivotResult.GetLocalReport().GetValidationResult() == ValidationReport.ValidationResult
@@ -440,11 +445,12 @@ namespace iText.Signatures.Validation.Lotl {
 
 //\cond DO_NOT_DOCUMENT
         internal virtual PivotFetcher.Result GetAndValidatePivotFiles(byte[] lotlXml, IList<IX509Certificate> certificates
-            ) {
+            , String currentJournalUri) {
             PivotFetcher.Result result = cache.GetPivotResult();
             if (result != null) {
                 return result;
             }
+            pivotFetcher.SetCurrentJournalUri(currentJournalUri);
             PivotFetcher.Result newResult = pivotFetcher.DownloadAndValidatePivotFiles(lotlXml, certificates);
             cache.SetPivotResult(newResult);
             return newResult;
