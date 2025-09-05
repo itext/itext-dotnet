@@ -22,25 +22,30 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using iText.Kernel.Geom;
 
-namespace iText.Layout.Renderer {
-//\cond DO_NOT_DOCUMENT
-    internal class FlexItemInfo {
-        private AbstractRenderer renderer;
+namespace iText.Layout.Renderer
+{
+    //\cond DO_NOT_DOCUMENT
+    internal class FlexItemInfo
+    {
+        private IRenderer renderer;
 
         private Rectangle rectangle;
 
-        public FlexItemInfo(AbstractRenderer renderer, Rectangle rectangle) {
+        public FlexItemInfo(IRenderer renderer, Rectangle rectangle)
+        {
             this.renderer = renderer;
             this.rectangle = rectangle;
         }
 
-        public virtual AbstractRenderer GetRenderer() {
+        public virtual IRenderer GetRenderer()
+        {
             return renderer;
         }
 
-        public virtual Rectangle GetRectangle() {
+        public virtual Rectangle GetRectangle()
+        {
             return rectangle;
         }
     }
-//\endcond
+    //\endcond
 }
