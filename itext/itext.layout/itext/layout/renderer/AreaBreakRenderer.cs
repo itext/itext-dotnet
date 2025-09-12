@@ -22,9 +22,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Logs;
 
 namespace iText.Layout.Renderer {
     /// <summary>
@@ -40,6 +43,9 @@ namespace iText.Layout.Renderer {
     /// </remarks>
     public class AreaBreakRenderer : IRenderer {
         protected internal AreaBreak areaBreak;
+
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AreaBreakRenderer
+            ));
 
         /// <summary>Creates an AreaBreakRenderer.</summary>
         /// <param name="areaBreak">
@@ -60,7 +66,7 @@ namespace iText.Layout.Renderer {
         /// <inheritDoc/>
         /// </param>
         public virtual void AddChild(IRenderer renderer) {
-            throw new NotSupportedException();
+            LOGGER.LogWarning(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED);
         }
 
         public virtual LayoutResult Layout(LayoutContext layoutContext) {
@@ -76,7 +82,7 @@ namespace iText.Layout.Renderer {
         /// <inheritDoc/>
         /// </param>
         public virtual void Draw(DrawContext drawContext) {
-            throw new NotSupportedException();
+            LOGGER.LogWarning(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED);
         }
 
         /// <summary>
@@ -148,7 +154,7 @@ namespace iText.Layout.Renderer {
         /// <inheritDoc/>
         /// </param>
         public virtual void SetProperty(int property, Object value) {
-            throw new NotSupportedException();
+            LOGGER.LogWarning(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED);
         }
 
         public virtual void DeleteOwnProperty(int property) {
@@ -187,7 +193,7 @@ namespace iText.Layout.Renderer {
         /// <inheritDoc/>
         /// </param>
         public virtual void Move(float dx, float dy) {
-            throw new NotSupportedException();
+            LOGGER.LogWarning(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED);
         }
 
         public virtual IRenderer GetNextRenderer() {

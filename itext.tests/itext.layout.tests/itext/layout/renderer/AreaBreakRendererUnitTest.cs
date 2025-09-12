@@ -25,25 +25,36 @@ using iText.IO.Source;
 using iText.Kernel.Pdf;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Logs;
 using iText.Layout.Properties;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout.Renderer {
     [NUnit.Framework.Category("UnitTest")]
     public class AreaBreakRendererUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED)]
         public virtual void AddChildTestUnsupported() {
             AreaBreakRenderer areaBreakRenderer = new AreaBreakRenderer(new AreaBreak());
             NUnit.Framework.Assert.IsNull(areaBreakRenderer.GetChildRenderers());
-            NUnit.Framework.Assert.Catch(typeof(Exception), () => areaBreakRenderer.AddChild(new TextRenderer(new Text
-                ("Test"))));
+            NUnit.Framework.Assert.DoesNotThrow(() => areaBreakRenderer.AddChild(new TextRenderer(new Text("Test"))));
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED)]
         public virtual void DrawTestUnsupported() {
             AreaBreakRenderer areaBreakRenderer = new AreaBreakRenderer(new AreaBreak());
-            NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => areaBreakRenderer.Draw(new DrawContext(new 
-                PdfDocument(new PdfWriter(new ByteArrayOutputStream())), null)));
+            NUnit.Framework.Assert.DoesNotThrow(() => areaBreakRenderer.Draw(new DrawContext(new PdfDocument(new PdfWriter
+                (new ByteArrayOutputStream())), null)));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED)]
+        public virtual void AddChild() {
+            AreaBreakRenderer areaBreakRenderer = new AreaBreakRenderer(new AreaBreak());
+            NUnit.Framework.Assert.DoesNotThrow(() => areaBreakRenderer.AddChild(new AreaBreakRenderer(new AreaBreak()
+                )));
         }
 
         [NUnit.Framework.Test]
@@ -101,10 +112,11 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED)]
         public virtual void SetPropertyTestUnsupported() {
             //The BORDER_BOTTOM_LEFT_RADIUS property is chosen without any specific intention. It could be replaced with any other property.
             AreaBreakRenderer areaBreakRenderer = new AreaBreakRenderer(new AreaBreak());
-            NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => areaBreakRenderer.SetProperty(Property.BORDER_BOTTOM_LEFT_RADIUS
+            NUnit.Framework.Assert.DoesNotThrow(() => areaBreakRenderer.SetProperty(Property.BORDER_BOTTOM_LEFT_RADIUS
                 , 5));
         }
 
@@ -143,9 +155,10 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED)]
         public virtual void MoveTestUnsupported() {
             AreaBreakRenderer areaBreakRenderer = new AreaBreakRenderer(new AreaBreak());
-            NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => areaBreakRenderer.Move(2.0f, 2.0f));
+            NUnit.Framework.Assert.DoesNotThrow(() => areaBreakRenderer.Move(2.0f, 2.0f));
         }
 
         [NUnit.Framework.Test]

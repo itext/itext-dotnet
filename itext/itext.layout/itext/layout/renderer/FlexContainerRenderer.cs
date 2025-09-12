@@ -482,8 +482,10 @@ namespace iText.Layout.Renderer {
             // TODO DEVSIX-5087 Since overflow-fit is an internal iText overflow value, we do not need to support if
             // for html/css objects, such as flex. As for now we will set VISIBLE by default, however, while working
             // on the ticket one may come to some more satifactory approach
-            renderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
-            base.AddChild(renderer);
+            if (!(renderer is AreaBreakRenderer)) {
+                renderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+                base.AddChild(renderer);
+            }
         }
 
         private static void AddSimulateDiv(AbstractRenderer overflowRenderer, float width) {

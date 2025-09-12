@@ -59,6 +59,20 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        public virtual void AreaBreakInsideFlexContainerTest() {
+            String outFileName = destinationFolder + "areaBreakInsideFlexContainer.pdf";
+            String cmpFileName = sourceFolder + "cmp_areaBreakInsideFlexContainer.pdf";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            Div div = new Div().Add(new Div().Add(new Paragraph("test1"))).Add(new AreaBreak()).Add(new Div().Add(new 
+                Paragraph("test2")));
+            div.SetNextRenderer(new FlexContainerRenderer(div));
+            document.Add(div);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void PageBreakTest2() {
             String outFileName = destinationFolder + "pageBreak2.pdf";
             String cmpFileName = sourceFolder + "cmp_pageBreak2.pdf";
