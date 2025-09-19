@@ -74,6 +74,11 @@ namespace iText.Kernel.Pdf.Colorspace {
                 return MakeColorSpace(((PdfArray)GetPdfObject()).Get(1));
             }
 
+            /// <summary><inheritDoc/></summary>
+            public override PdfName GetName() {
+                return ((PdfArray)GetPdfObject()).GetAsName(0);
+            }
+
             private static PdfArray GetIndexedCsArray(PdfObject @base, int hival, PdfString lookup) {
                 PdfArray indexed = new PdfArray();
                 indexed.Add(PdfName.Indexed);
@@ -113,10 +118,6 @@ namespace iText.Kernel.Pdf.Colorspace {
 
             public virtual PdfColorSpace GetBaseCs() {
                 return MakeColorSpace(((PdfArray)GetPdfObject()).Get(2));
-            }
-
-            public virtual PdfName GetName() {
-                return ((PdfArray)GetPdfObject()).GetAsName(1);
             }
 
             /// <summary>Gets the function to calulate a separation color value to an alternative colorspace.</summary>

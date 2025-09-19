@@ -688,6 +688,26 @@ namespace iText.Kernel.Exceptions {
         public const String PARENT_CHILD_ROLE_RELATION_IS_NOT_ALLOWED = "Parent-child ({0}:{1}) relation is not " 
             + "allowed.";
 
+        public const String INVALID_DATA_LENGTH = "Invalid data length, expected length = {0}, actual length = {1}";
+
+        public const String PIXEL_OUT_OF_BORDERS = "Pixel ({0}, {1}) is out of borders of the image with parameter {2} x {3}";
+
+        public const String LENGTH_OF_ARRAY_SHOULD_MATCH_NUMBER_OF_COMPONENTS = "Length of pixel array ({0}) should match number of components ({1})";
+
+        public const String COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_COLORSPACE = "The color depth {0} is not supported for color space {1}.";
+
+        public const String COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_SEPARATION_ALTERNATE_COLORSPACE = "The color depth {0} is not supported for separation target color space {1}.";
+
+        public const String N_VALUE_IS_NOT_SUPPORTED = "N value {0} is not supported.";
+
+        public const String COLOR_DEPTH_IS_NOT_SUPPORTED = "The color depth {0} is not supported.";
+
+        public const String COLOR_SPACE_IS_NOT_SUPPORTED = "The color space {0} is not supported.";
+
+        public const String PNG_CHANNEL_ERROR = "PngGeneration does not support {0} color components.";
+
+        public const String PALLET_CONTENT_ERROR = "Indexed color spaces require four array entries.";
+
         private KernelExceptionMessageConstant() {
         }
     }
