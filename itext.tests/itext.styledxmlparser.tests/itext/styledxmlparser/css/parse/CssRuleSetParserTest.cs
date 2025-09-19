@@ -71,7 +71,7 @@ namespace iText.StyledXmlParser.Css.Parse {
         public virtual void DoubleQuotesPseudoClassTest() {
             String src = "p > :not(strong) \"asd\"";
             String properties = "color: darkmagenta;";
-            String[] expected = new String[] { "p > :not(strong) asd {\n" + "    color: darkmagenta\n" + "}" };
+            String[] expected = new String[] { "p > :not(strong) \"asd\" {\n" + "    color: darkmagenta\n" + "}" };
             IList<CssRuleSet> cssRuleSets = CssRuleSetParser.ParseRuleSet(src, properties);
             NUnit.Framework.Assert.AreEqual(expected.Length, cssRuleSets.Count);
             for (int i = 0; i < expected.Length; i++) {
@@ -83,7 +83,7 @@ namespace iText.StyledXmlParser.Css.Parse {
         public virtual void SingleQuotesPseudoClassTest() {
             String src = "p > :not(strong) 'a'";
             String properties = "color: darkmagenta;";
-            String[] expected = new String[] { "p > :not(strong) a {\n" + "    color: darkmagenta\n" + "}" };
+            String[] expected = new String[] { "p > :not(strong) 'a' {\n" + "    color: darkmagenta\n" + "}" };
             IList<CssRuleSet> cssRuleSets = CssRuleSetParser.ParseRuleSet(src, properties);
             NUnit.Framework.Assert.AreEqual(expected.Length, cssRuleSets.Count);
             for (int i = 0; i < expected.Length; i++) {
@@ -137,7 +137,7 @@ namespace iText.StyledXmlParser.Css.Parse {
         public virtual void PseudoClassWithSumTest() {
             String src = " article:not(.archived) section.highlight + aside:not(.hidden, [data-disabled=\"true\"])";
             String properties = "background-color: lightyellow;";
-            String[] expected = new String[] { "article:not(.archived) section.highlight + aside:not(.hidden [data-disabled=\"true\"]) {\n"
+            String[] expected = new String[] { "article:not(.archived) section.highlight + aside:not(.hidden , [data-disabled=\"true\"]) {\n"
                  + "    background-color: lightyellow\n" + "}" };
             IList<CssRuleSet> cssRuleSets = CssRuleSetParser.ParseRuleSet(src, properties);
             NUnit.Framework.Assert.AreEqual(expected.Length, cssRuleSets.Count);
@@ -150,7 +150,7 @@ namespace iText.StyledXmlParser.Css.Parse {
         public virtual void ComplexPseudoClassTest() {
             String src = "div:not([data-role=\"admin\"], :nth-of-type(2n)):not(:empty)::before";
             String properties = "color: darkmagenta;";
-            String[] expected = new String[] { "div:not([data-role=\"admin\"] :nth-of-type(2n)):not(:empty)::before {\n"
+            String[] expected = new String[] { "div:not([data-role=\"admin\"] , :nth-of-type(2n)):not(:empty)::before {\n"
                  + "    color: darkmagenta\n" + "}" };
             IList<CssRuleSet> cssRuleSets = CssRuleSetParser.ParseRuleSet(src, properties);
             NUnit.Framework.Assert.AreEqual(expected.Length, cssRuleSets.Count);
@@ -175,7 +175,7 @@ namespace iText.StyledXmlParser.Css.Parse {
         public virtual void DisappearedCommasTest() {
             String src = "strong:not([data-time=\"37\"], :empty, b.warning)";
             String properties = "color: darkmagenta;";
-            String[] expected = new String[] { "strong:not([data-time=\"37\"] :empty b.warning) {\n" + "    color: darkmagenta\n"
+            String[] expected = new String[] { "strong:not([data-time=\"37\"] , :empty , b.warning) {\n" + "    color: darkmagenta\n"
                  + "}" };
             IList<CssRuleSet> cssRuleSets = CssRuleSetParser.ParseRuleSet(src, properties);
             NUnit.Framework.Assert.AreEqual(expected.Length, cssRuleSets.Count);

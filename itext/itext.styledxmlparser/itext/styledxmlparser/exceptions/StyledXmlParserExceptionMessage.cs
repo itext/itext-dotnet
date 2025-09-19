@@ -25,6 +25,9 @@ using System;
 namespace iText.StyledXmlParser.Exceptions {
     /// <summary>Class containing constants to be used in exceptions in the SXP module.</summary>
     public sealed class StyledXmlParserExceptionMessage {
+        public const String INVALID_SELECTOR_STRING = "Invalid token encountered in the selector string: \"{0}\"";
+
+        [Obsolete]
         public const String INVALID_TOKEN_AT_THE_BEGINNING_OF_SELECTOR = "Invalid token detected at the beginning of the selector string: \"{0}\"";
 
         [Obsolete]
