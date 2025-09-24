@@ -928,6 +928,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+            // TODO DEVSIX-5167 Support baseline value for align-items and align-self
             // We don't need to do anything in these cases
             // Reverse back
             if (renderer.IsWrapReverse()) {
