@@ -270,6 +270,20 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             NUnit.Framework.Assert.AreEqual(8, imagesValidated);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void ParseInlineImageMaskTest() {
+            InlineImageExtractionTest.InlineImageEventListener listener = new InlineImageExtractionTest.InlineImageEventListener
+                ();
+            using (PdfDocument pdf = new PdfDocument(new PdfReader(sourceFolder + "inlineMask.pdf"))) {
+                PdfCanvasProcessor pdfCanvasProcessor = new PdfCanvasProcessor(listener);
+                pdfCanvasProcessor.ProcessPageContent(pdf.GetPage(1));
+                PdfImageXObject img = new PdfImageXObject(listener.GetInlineImages()[0]);
+                byte[] bytes = img.GetImageBytes(PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly());
+                byte[] compareBytes = File.ReadAllBytes(System.IO.Path.Combine(sourceFolder, "inlineMask.png"));
+                NUnit.Framework.Assert.AreEqual(compareBytes, bytes);
+            }
+        }
+
         private class InlineImageEventListener : IEventListener {
             private readonly IList<PdfStream> inlineImages = new List<PdfStream>();
 
