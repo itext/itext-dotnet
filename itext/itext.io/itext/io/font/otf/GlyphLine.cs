@@ -278,7 +278,7 @@ namespace iText.IO.Font.Otf {
             }
             char[] newChars = new char[chars.Length];
             chars.GetChars(0, chars.Length, newChars, 0);
-            Glyph newGlyph = tableReader.GetGlyph(substitutionGlyphIndex);
+            Glyph newGlyph = new Glyph(tableReader.GetGlyph(substitutionGlyphIndex));
             newGlyph.SetChars(newChars);
             glyphs[idx] = newGlyph;
             end -= rightPartLen;
@@ -286,7 +286,7 @@ namespace iText.IO.Font.Otf {
 
         public virtual void SubstituteOneToOne(OpenTypeFontTableReader tableReader, int substitutionGlyphIndex) {
             Glyph oldGlyph = glyphs[idx];
-            Glyph newGlyph = tableReader.GetGlyph(substitutionGlyphIndex);
+            Glyph newGlyph = new Glyph(tableReader.GetGlyph(substitutionGlyphIndex));
             if (oldGlyph.GetChars() != null) {
                 newGlyph.SetChars(oldGlyph.GetChars());
             }
@@ -307,14 +307,16 @@ namespace iText.IO.Font.Otf {
             //sequence length shall be at least 1
             int substCode = substGlyphIds[0];
             Glyph oldGlyph = glyphs[idx];
-            Glyph glyph = tableReader.GetGlyph(substCode);
-            glyphs[idx] = glyph;
+            // Here we don't use old chars for new glyphs like in other substitutions. It may be fixed as part of
+            // TODO: DEVSIX-9434 - Use CIDToGIDMap for Type 2 CID fonts
+            Glyph newGlyph = new Glyph(tableReader.GetGlyph(substCode));
+            glyphs[idx] = newGlyph;
             if (substGlyphIds.Length > 1) {
                 IList<Glyph> additionalGlyphs = new List<Glyph>(substGlyphIds.Length - 1);
                 for (int i = 1; i < substGlyphIds.Length; ++i) {
                     substCode = substGlyphIds[i];
-                    glyph = tableReader.GetGlyph(substCode);
-                    additionalGlyphs.Add(glyph);
+                    newGlyph = new Glyph(tableReader.GetGlyph(substCode));
+                    additionalGlyphs.Add(newGlyph);
                 }
                 AddAllGlyphs(idx + 1, additionalGlyphs);
                 if (null != actualText) {

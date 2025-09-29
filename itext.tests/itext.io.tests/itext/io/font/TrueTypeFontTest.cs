@@ -110,6 +110,45 @@ namespace iText.IO.Font {
             NUnit.Framework.Assert.IsFalse(fontProgram.IsCmapPresent(1, 0));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void UpdateUsedGlyphsSetTest() {
+            TrueTypeFont trueTypeFontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(SOURCE_FOLDER + "NotoSansSC-Regular.otf"
+                );
+            SortedSet<int> usedGlyphs = new SortedSet<int>();
+            trueTypeFontProgram.UpdateUsedGlyphs(usedGlyphs, true, null);
+            NUnit.Framework.Assert.IsTrue(usedGlyphs.IsEmpty());
+            trueTypeFontProgram.UpdateUsedGlyphs(usedGlyphs, false, null);
+            NUnit.Framework.Assert.AreEqual(40644, usedGlyphs.Count);
+            usedGlyphs.Clear();
+            IList<int[]> subsetRanges = new List<int[]>();
+            subsetRanges.Add(new int[] { 0, 100 });
+            trueTypeFontProgram.UpdateUsedGlyphs(usedGlyphs, false, subsetRanges);
+            NUnit.Framework.Assert.AreEqual(101, usedGlyphs.Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UpdateUsedGlyphsMapTest() {
+            TrueTypeFont trueTypeFontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(SOURCE_FOLDER + "NotoSansSC-Regular.otf"
+                );
+            IDictionary<int, Glyph> usedGlyphs = new Dictionary<int, Glyph>();
+            trueTypeFontProgram.UpdateUsedGlyphs(usedGlyphs, true, null);
+            NUnit.Framework.Assert.IsTrue(usedGlyphs.IsEmpty());
+            trueTypeFontProgram.UpdateUsedGlyphs(usedGlyphs, false, null);
+            NUnit.Framework.Assert.AreEqual(40644, usedGlyphs.Count);
+            usedGlyphs.Clear();
+            IList<int[]> subsetRanges = new List<int[]>();
+            subsetRanges.Add(new int[] { 0, 100 });
+            trueTypeFontProgram.UpdateUsedGlyphs(usedGlyphs, false, subsetRanges);
+            NUnit.Framework.Assert.AreEqual(101, usedGlyphs.Count);
+            usedGlyphs.Clear();
+            usedGlyphs.Put(1, trueTypeFontProgram.GetGlyphByCode(10));
+            subsetRanges = new List<int[]>();
+            subsetRanges.Add(new int[] { 1, 1 });
+            trueTypeFontProgram.UpdateUsedGlyphs(usedGlyphs, false, subsetRanges);
+            NUnit.Framework.Assert.AreEqual(1, usedGlyphs.Count);
+            NUnit.Framework.Assert.AreSame(trueTypeFontProgram.GetGlyphByCode(10), usedGlyphs.Get(1));
+        }
+
         private void CheckCmapTableEntry(FontProgram fontProgram, char uniChar, int expectedGlyphId) {
             Glyph glyph = fontProgram.GetGlyph(uniChar);
             NUnit.Framework.Assert.AreEqual(expectedGlyphId, glyph.GetCode());
