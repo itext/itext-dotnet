@@ -57,13 +57,13 @@ namespace iText.Signatures.Validation.Lotl {
                 Uri url = UrlUtil.ToURL(factory.GetTrustedListUri());
                 result.SetLotlXml(service.GetResourceRetriever().GetByteArrayByUrl(url));
                 if (result.GetLotlXml() == null || result.GetLotlXml().Length == 0) {
-                    ReportItem reportItem = new ReportItem(LotlValidator.LOTL_VALIDATION, SignExceptionMessageConstant.FAILED_TO_GET_EU_LOTL
-                        , ReportItem.ReportItemStatus.INVALID);
+                    ReportItem reportItem = new ReportItem(LotlValidator.LOTL_VALIDATION, MessageFormatUtil.Format(SignExceptionMessageConstant
+                        .FAILED_TO_GET_EU_LOTL, factory.GetTrustedListUri()), ReportItem.ReportItemStatus.INVALID);
                     result.GetLocalReport().AddReportItem(reportItem);
                 }
             }
-            , result.GetLocalReport(), (e) => new ReportItem(LotlValidator.LOTL_VALIDATION, SignExceptionMessageConstant
-                .FAILED_TO_GET_EU_LOTL, e, ReportItem.ReportItemStatus.INVALID));
+            , result.GetLocalReport(), (e) => new ReportItem(LotlValidator.LOTL_VALIDATION, MessageFormatUtil.Format(SignExceptionMessageConstant
+                .FAILED_TO_GET_EU_LOTL, factory.GetTrustedListUri()), e, ReportItem.ReportItemStatus.INVALID));
             return result;
         }
 

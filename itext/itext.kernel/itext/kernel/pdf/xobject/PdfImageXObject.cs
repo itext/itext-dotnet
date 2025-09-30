@@ -135,7 +135,7 @@ namespace iText.Kernel.Pdf.Xobject {
                 return mask;
             }
             PdfObject val = GetPdfObject().Get(PdfName.ImageMask);
-            return (val != null && (val.IsBoolean() && (((PdfBoolean)val).GetValue())));
+            return val != null && val.IsBoolean() && ((PdfBoolean)val).GetValue();
         }
 
         /// <summary>Returns whether this image is a soft mask that can be used for other images.</summary>
@@ -150,7 +150,7 @@ namespace iText.Kernel.Pdf.Xobject {
                 return softMask;
             }
             PdfObject val = GetPdfObject().Get(PdfName.SMask);
-            return (val != null && (val.IsBoolean() && (((PdfBoolean)val).GetValue())));
+            return val != null && val.IsBoolean() && ((PdfBoolean)val).GetValue();
         }
 
         /// <summary>
