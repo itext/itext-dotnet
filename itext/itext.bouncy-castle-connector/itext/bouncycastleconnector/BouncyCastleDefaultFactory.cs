@@ -160,11 +160,11 @@ namespace iText.Bouncycastleconnector {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IDerOutputStream CreateASN1OutputStream(Stream stream) {
+        public IAsn1OutputStream CreateASN1OutputStream(Stream stream) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
-        public IDerOutputStream CreateASN1OutputStream(Stream outputStream, string asn1Encoding) {
+        public IAsn1OutputStream CreateASN1OutputStream(Stream outputStream, string asn1Encoding) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 

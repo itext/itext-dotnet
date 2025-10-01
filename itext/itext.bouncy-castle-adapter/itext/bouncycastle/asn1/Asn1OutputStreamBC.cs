@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-    Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2025 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -31,7 +31,7 @@ namespace iText.Bouncycastle.Asn1 {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.Asn1OutputStream"/>.
     /// </summary>
-    public class DerOutputStreamBC : IDerOutputStream {
+    public class Asn1OutputStreamBC : IAsn1OutputStream {
         private readonly Asn1OutputStream stream;
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace iText.Bouncycastle.Asn1 {
         /// <see cref="Org.BouncyCastle.Asn1.Asn1OutputStream"/>
         /// to be wrapped
         /// </param>
-        public DerOutputStreamBC(Stream stream) {
+        public Asn1OutputStreamBC(Stream stream) {
             this.stream = Asn1OutputStream.Create(stream);
         }
 
@@ -56,7 +56,7 @@ namespace iText.Bouncycastle.Asn1 {
         /// <see cref="Org.BouncyCastle.Asn1.Asn1OutputStream"/>
         /// to be wrapped
         /// </param>
-        public DerOutputStreamBC(Asn1OutputStream stream) {
+        public Asn1OutputStreamBC(Asn1OutputStream stream) {
             this.stream = stream;
         }
 
@@ -65,7 +65,7 @@ namespace iText.Bouncycastle.Asn1 {
         /// wrapped
         /// <see cref="Org.BouncyCastle.Asn1.Asn1OutputStream"/>.
         /// </returns>
-        public virtual Asn1OutputStream GetDerOutputStream() {
+        public virtual Asn1OutputStream GetAsn1OutputStream() {
             return stream;
         }
 
@@ -93,7 +93,7 @@ namespace iText.Bouncycastle.Asn1 {
             if (o == null || GetType() != o.GetType()) {
                 return false;
             }
-            DerOutputStreamBC that = (DerOutputStreamBC)o;
+            Asn1OutputStreamBC that = (Asn1OutputStreamBC)o;
             return Object.Equals(stream, that.stream);
         }
 

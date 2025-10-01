@@ -303,16 +303,16 @@ namespace iText.Bouncycastlefips {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IDerOutputStream CreateASN1OutputStream(Stream stream) {
-            return new DerOutputStreamBCFips(stream);
+        public virtual IAsn1OutputStream CreateASN1OutputStream(Stream stream) {
+            return new Asn1OutputStreamBCFips(stream);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IDerOutputStream CreateASN1OutputStream(Stream outputStream, String asn1Encoding) {
+        public virtual IAsn1OutputStream CreateASN1OutputStream(Stream outputStream, String asn1Encoding) {
             if (Asn1Encodable.Ber.Equals(asn1Encoding)) {
-                return new DerOutputStreamBCFips(new BerOutputStream(outputStream));
+                return new Asn1OutputStreamBCFips(new BerOutputStream(outputStream));
             }
-            return new DerOutputStreamBCFips(new DerOutputStream(outputStream));
+            return new Asn1OutputStreamBCFips(new DerOutputStream(outputStream));
         }
 
         /// <summary><inheritDoc/></summary>

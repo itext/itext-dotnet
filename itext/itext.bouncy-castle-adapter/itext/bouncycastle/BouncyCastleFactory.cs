@@ -303,13 +303,13 @@ namespace iText.Bouncycastle {
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IDerOutputStream CreateASN1OutputStream(Stream stream) {
-            return new DerOutputStreamBC(stream);
+        public virtual IAsn1OutputStream CreateASN1OutputStream(Stream stream) {
+            return new Asn1OutputStreamBC(stream);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IDerOutputStream CreateASN1OutputStream(Stream outputStream, String asn1Encoding) {
-            return new DerOutputStreamBC(Asn1OutputStream.Create(outputStream));
+        public virtual IAsn1OutputStream CreateASN1OutputStream(Stream outputStream, String asn1Encoding) {
+            return new Asn1OutputStreamBC(Asn1OutputStream.Create(outputStream));
         }
 
         /// <summary><inheritDoc/></summary>

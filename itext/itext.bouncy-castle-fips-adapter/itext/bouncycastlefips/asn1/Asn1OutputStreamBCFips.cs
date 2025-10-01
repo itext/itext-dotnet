@@ -31,7 +31,7 @@ namespace iText.Bouncycastlefips.Asn1 {
     /// Wrapper class for
     /// <see cref="Org.BouncyCastle.Asn1.Asn1OutputStream"/>.
     /// </summary>
-    public class DerOutputStreamBCFips : IDerOutputStream {
+    public class Asn1OutputStreamBCFips : IAsn1OutputStream {
         private readonly Asn1OutputStream stream;
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace iText.Bouncycastlefips.Asn1 {
         /// <see cref="Org.BouncyCastle.Asn1.Asn1OutputStream"/>
         /// to be wrapped
         /// </param>
-        public DerOutputStreamBCFips(Stream stream) {
+        public Asn1OutputStreamBCFips(Stream stream) {
             this.stream = new Asn1OutputStream(stream);
         }
 
@@ -56,7 +56,7 @@ namespace iText.Bouncycastlefips.Asn1 {
         /// <see cref="Org.BouncyCastle.Asn1.Asn1OutputStream"/>
         /// to be wrapped
         /// </param>
-        public DerOutputStreamBCFips(Asn1OutputStream stream) {
+        public Asn1OutputStreamBCFips(Asn1OutputStream stream) {
             this.stream = stream;
         }
 
@@ -65,7 +65,7 @@ namespace iText.Bouncycastlefips.Asn1 {
         /// wrapped
         /// <see cref="Org.BouncyCastle.Asn1.Asn1OutputStream"/>.
         /// </returns>
-        public virtual Asn1OutputStream GetDerOutputStream() {
+        public virtual Asn1OutputStream GetAsn1OutputStream() {
             return stream;
         }
 
@@ -93,7 +93,7 @@ namespace iText.Bouncycastlefips.Asn1 {
             if (o == null || GetType() != o.GetType()) {
                 return false;
             }
-            DerOutputStreamBCFips that = (DerOutputStreamBCFips)o;
+            Asn1OutputStreamBCFips that = (Asn1OutputStreamBCFips)o;
             return Object.Equals(stream, that.stream);
         }
 

@@ -27,7 +27,7 @@ namespace iText.Commons.Bouncycastle.Asn1 {
     /// This interface represents the wrapper for ASN1OutputStream that provides the ability
     /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
-    public interface IDerOutputStream : IDisposable {
+    public interface IAsn1OutputStream : IDisposable {
         /// <summary>
         /// Calls actual
         /// <c>writeObject</c>

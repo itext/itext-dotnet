@@ -311,7 +311,7 @@ namespace iText.Commons.Bouncycastle {
         /// to create ASN1 Output stream wrapper from
         /// </param>
         /// <returns>created ASN1 Output stream wrapper</returns>
-        IDerOutputStream CreateASN1OutputStream(Stream stream);
+        IAsn1OutputStream CreateASN1OutputStream(Stream stream);
 
         /// <summary>
         /// Create ASN1 Output stream wrapper from
@@ -325,7 +325,7 @@ namespace iText.Commons.Bouncycastle {
         /// </param>
         /// <param name="asn1Encoding">ASN1 Encoding to be used</param>
         /// <returns>created ASN1 Output stream wrapper</returns>
-        IDerOutputStream CreateASN1OutputStream(Stream outputStream, String asn1Encoding);
+        IAsn1OutputStream CreateASN1OutputStream(Stream outputStream, String asn1Encoding);
 
         /// <summary>
         /// Create DER Octet string wrapper from
