@@ -36,6 +36,9 @@ namespace iText.Layout.Properties {
         LEFT,
         RIGHT,
         NORMAL,
-        STRETCH
+        STRETCH,
+        SPACE_BETWEEN,
+        SPACE_AROUND,
+        SPACE_EVENLY
     }
 }

@@ -57,7 +57,11 @@ namespace iText.Layout.Element {
                 { AlignmentPropertyValue.CENTER, JustifyContent.CENTER, FlexWrapPropertyValue.WRAP, FlexDirectionPropertyValue
                 .COLUMN, 5 }, new Object[] { AlignmentPropertyValue.FLEX_END, JustifyContent.FLEX_END, FlexWrapPropertyValue
                 .WRAP_REVERSE, FlexDirectionPropertyValue.COLUMN, 6 }, new Object[] { AlignmentPropertyValue.CENTER, JustifyContent
-                .CENTER, FlexWrapPropertyValue.WRAP_REVERSE, FlexDirectionPropertyValue.COLUMN_REVERSE, 7 } });
+                .CENTER, FlexWrapPropertyValue.WRAP_REVERSE, FlexDirectionPropertyValue.COLUMN_REVERSE, 7 }, new Object
+                [] { AlignmentPropertyValue.FLEX_START, JustifyContent.SPACE_AROUND, FlexWrapPropertyValue.NOWRAP, FlexDirectionPropertyValue
+                .COLUMN, 8 }, new Object[] { AlignmentPropertyValue.CENTER, JustifyContent.SPACE_BETWEEN, FlexWrapPropertyValue
+                .WRAP, FlexDirectionPropertyValue.COLUMN, 9 }, new Object[] { AlignmentPropertyValue.FLEX_END, JustifyContent
+                .SPACE_EVENLY, FlexWrapPropertyValue.WRAP_REVERSE, FlexDirectionPropertyValue.COLUMN_REVERSE, 10 } });
         }
 
         [NUnit.Framework.TestCaseSource("AlignItemsAndJustifyContentProperties")]

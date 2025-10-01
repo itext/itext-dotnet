@@ -404,9 +404,7 @@ namespace iText.Layout.Renderer {
             if (childRenderer is AbstractRenderer) {
                 FlexItemInfo childFlexItemInfo = FindFlexItemInfo((AbstractRenderer)childRenderer);
                 if (childFlexItemInfo != null) {
-                    layoutBoxCopy.DecreaseWidth(childFlexItemInfo.GetRectangle().GetX());
-                    layoutBoxCopy.MoveRight(childFlexItemInfo.GetRectangle().GetX());
-                    layoutBoxCopy.DecreaseHeight(childFlexItemInfo.GetRectangle().GetY());
+                    AdjustLayoutBoxBeforeChildLayout(layoutBoxCopy, childFlexItemInfo, false);
                 }
             }
             return layoutBoxCopy;
@@ -532,6 +530,7 @@ namespace iText.Layout.Renderer {
                         // height - allowed height for the item
                         Rectangle neighbourBbox = new Rectangle(GetOccupiedAreaBBox().GetX() + occupiedSpace, GetOccupiedAreaBBox(
                             ).GetY(), itemInfo.GetRectangle().GetWidth(), maxHeightInLine - itemInfo.GetRectangle().GetY());
+                        AdjustLayoutBoxBeforeChildLayout(neighbourBbox, itemInfo, true);
                         LayoutResult neighbourLayoutResult = itemInfo.GetRenderer().Layout(new LayoutContext(new LayoutArea(childResult
                             .GetOccupiedArea().GetPageNumber(), neighbourBbox)));
                         RestoreHeightForOverflowRenderer(itemInfo.GetRenderer(), neighbourLayoutResult.GetOverflowRenderer());
@@ -739,6 +738,17 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+        }
+
+        private static void AdjustLayoutBoxBeforeChildLayout(Rectangle layoutBox, FlexItemInfo childFlexItemInfo, 
+            bool adjustOnlyHorizontal) {
+            layoutBox.DecreaseWidth(childFlexItemInfo.GetRectangle().GetX());
+            layoutBox.MoveRight(childFlexItemInfo.GetRectangle().GetX());
+            if (adjustOnlyHorizontal) {
+                // skip vertical adjustments
+                return;
+            }
+            layoutBox.DecreaseHeight(childFlexItemInfo.GetRectangle().GetY());
         }
     }
 }
