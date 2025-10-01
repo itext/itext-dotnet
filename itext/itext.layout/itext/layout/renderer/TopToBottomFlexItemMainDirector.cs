@@ -41,7 +41,6 @@ namespace iText.Layout.Renderer {
             , float freeSpace) {
             switch (justifyContent) {
                 case JustifyContent.END:
-                case JustifyContent.SELF_END:
                 case JustifyContent.FLEX_END: {
                     line[0].yShift = freeSpace;
                     break;
@@ -58,7 +57,6 @@ namespace iText.Layout.Renderer {
                 case JustifyContent.START:
                 case JustifyContent.LEFT:
                 case JustifyContent.RIGHT:
-                case JustifyContent.SELF_START:
                 default: {
                     break;
                 }

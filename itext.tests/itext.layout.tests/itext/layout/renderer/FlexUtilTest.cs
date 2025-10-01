@@ -1291,7 +1291,7 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         public virtual void LtWidthGrow0Shrink1Item2MBP30JustifyContentFlexStartTest() {
             JustifyContent[] justifyContentValues = new JustifyContent[] { JustifyContent.NORMAL, JustifyContent.START
-                , JustifyContent.STRETCH, JustifyContent.LEFT, JustifyContent.SELF_START, JustifyContent.FLEX_START };
+                , JustifyContent.STRETCH, JustifyContent.LEFT, JustifyContent.FLEX_START };
             AlignmentPropertyValue[] alignItemsValues = new AlignmentPropertyValue[] { AlignmentPropertyValue.START, AlignmentPropertyValue
                 .SELF_START, AlignmentPropertyValue.BASELINE, AlignmentPropertyValue.SELF_START, AlignmentPropertyValue
                 .FLEX_START, AlignmentPropertyValue.FLEX_START };
@@ -1341,7 +1341,7 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         public virtual void LtWidthGrow0Shrink1Item2MBP30JustifyContentFlexEndTest() {
             JustifyContent[] justifyContentValues = new JustifyContent[] { JustifyContent.END, JustifyContent.RIGHT, JustifyContent
-                .SELF_END, JustifyContent.FLEX_END };
+                .FLEX_END };
             AlignmentPropertyValue[] alignItemsValues = new AlignmentPropertyValue[] { AlignmentPropertyValue.END, AlignmentPropertyValue
                 .SELF_END, AlignmentPropertyValue.FLEX_END, AlignmentPropertyValue.FLEX_END };
             for (int j = 0; j < justifyContentValues.Length; ++j) {
