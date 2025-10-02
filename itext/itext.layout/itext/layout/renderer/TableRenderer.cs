@@ -1322,7 +1322,7 @@ namespace iText.Layout.Renderer {
                 float totalColumnWidthInPercent = 0;
                 for (int col = 0; col < tableModel.GetNumberOfColumns(); col++) {
                     UnitValue columnWidth = tableModel.GetColumnWidth(col);
-                    if (columnWidth.IsPercentValue()) {
+                    if (columnWidth != null && columnWidth.IsPercentValue()) {
                         totalColumnWidthInPercent += columnWidth.GetValue();
                     }
                 }

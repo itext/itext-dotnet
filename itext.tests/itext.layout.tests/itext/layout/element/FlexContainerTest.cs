@@ -892,6 +892,42 @@ namespace iText.Layout.Element {
                 , "diff"));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void NestedFlexContainersTest() {
+            String outFileName = DESTINATION_FOLDER + "nestedFlexContainersTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_nestedFlexContainersTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Div innerFlex = new FlexContainer();
+            Div outerFlex = new FlexContainer();
+            Table table = new Table(2);
+            table.SetWidth(400);
+            innerFlex.Add(table);
+            outerFlex.Add(innerFlex);
+            document.Add(outerFlex);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NestedFlexContainersPercentValueTest() {
+            String outFileName = DESTINATION_FOLDER + "nestedFlexContainersPercentValueTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_nestedFlexContainersPercentValueTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Div innerFlex = new FlexContainer();
+            Div outerFlex = new FlexContainer();
+            Table table = new Table(2);
+            table.SetWidth(new UnitValue(UnitValue.PERCENT, 20));
+            innerFlex.Add(table);
+            outerFlex.Add(innerFlex);
+            document.Add(outerFlex);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
         [NUnit.Framework.TestCaseSource("AlignItemsAndJustifyContentProperties")]
         public virtual void FlexContainerBoxSizingTest(AlignmentPropertyValue alignItemsValue, JustifyContent justifyContentValue
             , FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue, int? comparisonPdfId) {
