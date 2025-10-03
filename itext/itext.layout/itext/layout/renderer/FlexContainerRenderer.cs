@@ -89,7 +89,12 @@ namespace iText.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             Rectangle layoutContextRectangle = layoutContext.GetArea().GetBBox();
             SetThisAsParent(GetChildRenderers());
+            // Disable collapsing margins for container before calculating item's rectangles to avoid margin collapsing
+            // between parent and child (flex-container – flex-item) and two children (flex-item – flex-item)
+            this.SetProperty(Property.COLLAPSING_MARGINS, false);
             lines = FlexUtil.CalculateChildrenRectangles(layoutContextRectangle, this);
+            // Return collapsing margins for container to inherited value from ancestors
+            this.DeleteProperty(Property.COLLAPSING_MARGINS);
             ApplyWrapReverse();
             IList<IRenderer> renderers = GetFlexItemMainDirector().ApplyDirection(lines);
             RemoveAllChildRenderers(GetChildRenderers());
