@@ -627,7 +627,10 @@ namespace iText.Layout.Renderer {
             , IList<IRenderer> childRenderers) {
             float maxWidth = initialMaxWidth;
             float minWidth = initialMinWidth;
-            foreach (IRenderer childRenderer in childRenderers) {
+            float? columnGapProp = this.GetProperty<float?>(Property.COLUMN_GAP);
+            float columnGap = columnGapProp == null ? 0f : (float)columnGapProp;
+            for (int i = 0; i < childRenderers.Count; ++i) {
+                IRenderer childRenderer = childRenderers[i];
                 MinMaxWidth childMinMaxWidth;
                 childRenderer.SetParent(this);
                 if (childRenderer is AbstractRenderer) {
@@ -641,8 +644,8 @@ namespace iText.Layout.Renderer {
                     minWidth = Math.Max(minWidth, childMinMaxWidth.GetMinWidth());
                 }
                 else {
-                    maxWidth += childMinMaxWidth.GetMaxWidth();
-                    minWidth += childMinMaxWidth.GetMinWidth();
+                    maxWidth += childMinMaxWidth.GetMaxWidth() + (i == 0 ? 0 : columnGap);
+                    minWidth += childMinMaxWidth.GetMinWidth() + (i == 0 ? 0 : columnGap);
                 }
             }
             minMaxWidthHandler.UpdateMaxChildWidth(maxWidth);
