@@ -134,7 +134,7 @@ namespace iText.Barcodes {
         /// <param name="text">the extended text</param>
         /// <returns>the escaped text</returns>
         public static String GetCode39Ex(String text) {
-            StringBuilder @out = new StringBuilder("");
+            StringBuilder @out = new StringBuilder();
             for (int k = 0; k < text.Length; ++k) {
                 char c = text[k];
                 if (c > 127) {

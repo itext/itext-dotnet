@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Text;
 using iText.Barcodes.Exceptions;
 using iText.Commons.Utils;
+using iText.Commons.Utils.Collections;
 using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
@@ -216,7 +217,7 @@ namespace iText.Barcodes {
                         break;
                     }
                     int subcode = Convert.ToInt32(code.JSubstring(0, k), System.Globalization.CultureInfo.InvariantCulture);
-                    n = ais.ContainsKey(subcode) ? (int)ais.Get(subcode) : 0;
+                    n = (int)ais.GetOrDefault(subcode, 0);
                     if (n != 0) {
                         idlen = k;
                         break;
@@ -668,7 +669,7 @@ namespace iText.Barcodes {
         public override void SetCode(String code) {
             if (GetCodeType() == Barcode128.CODE128_UCC && code.StartsWith("(")) {
                 int idx = 0;
-                StringBuilder ret = new StringBuilder("");
+                StringBuilder ret = new StringBuilder();
                 while (idx >= 0) {
                     int end = code.IndexOf(')', idx);
                     if (end < 0) {
@@ -683,7 +684,7 @@ namespace iText.Barcodes {
                     if (len == 0) {
                         throw new ArgumentException("AI not found");
                     }
-                    sai = JavaUtil.IntegerToString(Convert.ToInt32(ai));
+                    sai = JavaUtil.IntegerToString(ai);
                     if (sai.Length == 1) {
                         sai = "0" + sai;
                     }
@@ -837,7 +838,7 @@ namespace iText.Barcodes {
         /// <param name="numDigits">the number of digits to pack. It is always an even number</param>
         /// <returns>the packed digits, two digits per character</returns>
         internal static String GetPackedRawDigits(String text, int textIndex, int numDigits) {
-            StringBuilder @out = new StringBuilder("");
+            StringBuilder @out = new StringBuilder();
             int start = textIndex;
             while (numDigits > 0) {
                 if (text[textIndex] == FNC1) {
@@ -850,7 +851,8 @@ namespace iText.Barcodes {
                 int c2 = text[textIndex++] - '0';
                 @out.Append((char)(c1 * 10 + c2));
             }
-            return (char)(textIndex - start) + @out.ToString();
+            @out.Insert(0, (char)(textIndex - start));
+            return @out.ToString();
         }
 //\endcond
     }

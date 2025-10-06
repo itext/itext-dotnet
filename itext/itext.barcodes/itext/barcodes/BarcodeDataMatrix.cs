@@ -253,8 +253,8 @@ namespace iText.Barcodes {
             try {
                 t = text.GetBytes(encoding);
             }
-            catch (ArgumentException) {
-                throw new ArgumentException("text has to be encoded in iso-8859-1");
+            catch (ArgumentException exc) {
+                throw new ArgumentException("text has to be encoded in iso-8859-1", exc);
             }
             return SetCode(t, 0, t.Length);
         }
@@ -1126,17 +1126,12 @@ namespace iText.Barcodes {
                                 requiredCapacityForC40orText += 2;
                             }
                             requiredCapacityForC40orText += basic.IndexOf((char)c) >= 0 ? 1 : 2;
-                            if (c > 127) {
-                                requiredCapacityForASCII += 2;
+                            if (j > 0 && IsDigit(c) && IsDigit(text[textOffset - j + 1] & 0xff)) {
+                                requiredCapacityForC40orText += basic.IndexOf((char)text[textOffset - j + 1]) >= 0 ? 1 : 2;
+                                j--;
+                                dataOffsetNew = requiredCapacityForASCII + 1;
                             }
-                            else {
-                                if (j > 0 && IsDigit(c) && IsDigit(text[textOffset - j + 1] & 0xff)) {
-                                    requiredCapacityForC40orText += basic.IndexOf((char)text[textOffset - j + 1]) >= 0 ? 1 : 2;
-                                    j--;
-                                    dataOffsetNew = requiredCapacityForASCII + 1;
-                                }
-                                requiredCapacityForASCII++;
-                            }
+                            requiredCapacityForASCII++;
                             if (j == 1) {
                                 dataOffsetNew = requiredCapacityForASCII;
                             }

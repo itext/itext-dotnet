@@ -40,7 +40,7 @@ namespace iText.Barcodes.Qrcode {
         /// </param>
         /// <param name="coefficients">
         /// coefficients as ints representing elements of GF(256), arranged
-        /// from most significant (highest-power term) coefficient to least significant
+        /// from the most significant (highest-power term) coefficient to the least significant
         /// </param>
         internal GF256Poly(GF256 field, int[] coefficients) {
             if (coefficients == null || coefficients.Length == 0) {

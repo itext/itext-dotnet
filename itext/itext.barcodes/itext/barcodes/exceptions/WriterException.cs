@@ -29,6 +29,8 @@ namespace iText.Barcodes.Exceptions {
     /// the Writer framework.
     /// </summary>
     public sealed class WriterException : ITextException {
+        private const long serialVersionUID = -9185997341735096449L;
+
         /// <summary>Creates a WriterException.</summary>
         public WriterException()
             : base() {
@@ -38,6 +40,13 @@ namespace iText.Barcodes.Exceptions {
         /// <param name="message">message of the exception</param>
         public WriterException(String message)
             : base(message) {
+        }
+
+        /// <summary>Creates a WriterException with a specified detail message and a cause.</summary>
+        /// <param name="message">the detail message, which provides additional information about the exception</param>
+        /// <param name="cause">the cause of the exception</param>
+        public WriterException(String message, Exception cause)
+            : base(message, cause) {
         }
     }
 }
