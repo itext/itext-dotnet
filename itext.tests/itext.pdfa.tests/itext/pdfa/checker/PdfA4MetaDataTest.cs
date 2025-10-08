@@ -534,7 +534,7 @@ namespace iText.Pdfa.Checker {
         [NUnit.Framework.Test]
         public virtual void PdfA4DocumentPageMetaDataIsNotUTF8Encoded() {
             byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "encodedXmp.xmp"));
-            String outPdf = DESTINATION_FOLDER + "metadataNotUTF8.pdf";
+            String outPdf = DESTINATION_FOLDER + "pageMetadataNotUTF8.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm"))

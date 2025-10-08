@@ -548,9 +548,21 @@ namespace iText.IO.Font {
             int start = locaTable[gid];
             int len = locaTable[gid + 1] - start;
             byte[] data = new byte[len];
-            raf.Seek(glyfOffset + start);
-            raf.ReadFully(data, 0, len);
-            return data;
+            // OpenTypeParser may be shared between different threads.
+            // raf.createView() returns thread safe RandomAccessFileOrArray
+            RandomAccessFileOrArray tmpRaf = raf.CreateView();
+            try {
+                tmpRaf.Seek(glyfOffset + start);
+                tmpRaf.ReadFully(data, 0, len);
+                return data;
+            }
+            finally {
+                try {
+                    tmpRaf.Close();
+                }
+                catch (Exception) {
+                }
+            }
         }
 
         /// <summary>Gets horizontal metric data from `hmtx` table for passed GID (glyph ID).</summary>
@@ -660,41 +672,53 @@ namespace iText.IO.Font {
             if (start == locaTable[glyph + 1]) {
                 return;
             }
-            raf.Seek(glyfOffset + start);
-            int numContours = raf.ReadShort();
-            if (numContours >= 0) {
-                return;
-            }
-            raf.SkipBytes(8);
-            for (; ; ) {
-                int flags = raf.ReadUnsignedShort();
-                int cGlyph = raf.ReadUnsignedShort();
-                if (!glyphsUsed.Contains(cGlyph)) {
-                    glyphsUsed.Add(cGlyph);
-                    glyphsInList.Add(cGlyph);
-                }
-                if ((flags & MORE_COMPONENTS) == 0) {
+            // OpenTypeParser may be shared between different threads.
+            // raf.createView() returns thread safe RandomAccessFileOrArray
+            RandomAccessFileOrArray tmpRaf = raf.CreateView();
+            try {
+                tmpRaf.Seek(glyfOffset + start);
+                int numContours = tmpRaf.ReadShort();
+                if (numContours >= 0) {
                     return;
                 }
-                int skip;
-                if ((flags & ARG_1_AND_2_ARE_WORDS) != 0) {
-                    skip = 4;
-                }
-                else {
-                    skip = 2;
-                }
-                if ((flags & WE_HAVE_A_SCALE) != 0) {
-                    skip += 2;
-                }
-                else {
-                    if ((flags & WE_HAVE_AN_X_AND_Y_SCALE) != 0) {
-                        skip += 4;
+                tmpRaf.SkipBytes(8);
+                for (; ; ) {
+                    int flags = tmpRaf.ReadUnsignedShort();
+                    int cGlyph = tmpRaf.ReadUnsignedShort();
+                    if (!glyphsUsed.Contains(cGlyph)) {
+                        glyphsUsed.Add(cGlyph);
+                        glyphsInList.Add(cGlyph);
                     }
+                    if ((flags & MORE_COMPONENTS) == 0) {
+                        return;
+                    }
+                    int skip;
+                    if ((flags & ARG_1_AND_2_ARE_WORDS) != 0) {
+                        skip = 4;
+                    }
+                    else {
+                        skip = 2;
+                    }
+                    if ((flags & WE_HAVE_A_SCALE) != 0) {
+                        skip += 2;
+                    }
+                    else {
+                        if ((flags & WE_HAVE_AN_X_AND_Y_SCALE) != 0) {
+                            skip += 4;
+                        }
+                    }
+                    if ((flags & WE_HAVE_A_TWO_BY_TWO) != 0) {
+                        skip += 8;
+                    }
+                    tmpRaf.SkipBytes(skip);
                 }
-                if ((flags & WE_HAVE_A_TWO_BY_TWO) != 0) {
-                    skip += 8;
+            }
+            finally {
+                try {
+                    tmpRaf.Close();
                 }
-                raf.SkipBytes(skip);
+                catch (Exception) {
+                }
             }
         }
 

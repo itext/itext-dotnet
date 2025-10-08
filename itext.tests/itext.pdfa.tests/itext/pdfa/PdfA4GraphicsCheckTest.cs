@@ -573,7 +573,7 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void DefaultStrokeColorCheckTest() {
-            String outPdf = DESTINATION_FOLDER + "defaultColorCheck.pdf";
+            String outPdf = DESTINATION_FOLDER + "defaultStrokeColorCheck.pdf";
             PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
                 .PDF_2_0)), PdfAConformance.PDF_A_4, null);
             PdfPage page = pdfDocument.AddNewPage();
@@ -1056,7 +1056,7 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void DestOutputIntentColorSpaceNotAllowedTest() {
-            String outPdf = DESTINATION_FOLDER + "pdfA4DestOutputIntentProfileNotAllowed.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA4DestOutputIntentCSNotAllowed.pdf";
             String isoFilePath = SOURCE_FOLDER + "ISOcoated_v2_300_bas.icc";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_4, null);
@@ -1074,7 +1074,7 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void DestOutputIntentColorSpaceNotAllowedInPageTest() {
-            String outPdf = DESTINATION_FOLDER + "pdfA4DestOutputIntentProfileNotAllowedInPage.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA4DestOutputIntentCSNotAllowedInPage.pdf";
             String isoFilePath = SOURCE_FOLDER + "ISOcoated_v2_300_bas.icc";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_4, null);

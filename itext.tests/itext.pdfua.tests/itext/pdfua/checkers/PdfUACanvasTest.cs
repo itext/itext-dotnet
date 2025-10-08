@@ -109,7 +109,7 @@ namespace iText.Pdfua.Checkers {
                 canvas.ShowText("Hello World!");
             }
             );
-            framework.AssertBothFail("01_005_TextArtifactIsNotInTagTree", PdfUAExceptionMessageConstants.CONTENT_IS_NOT_REAL_CONTENT_AND_NOT_ARTIFACT
+            framework.AssertBothFail("01_005_TextContentIsNotInTagTree", PdfUAExceptionMessageConstants.CONTENT_IS_NOT_REAL_CONTENT_AND_NOT_ARTIFACT
                 , false, pdfUAConformance);
         }
 
@@ -747,7 +747,7 @@ namespace iText.Pdfua.Checkers {
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothFail("invalidNoteTag02", PdfUAExceptionMessageConstants.DOCUMENT_USES_NOTE_TAG, pdfUAConformance
+                    framework.AssertBothFail("validNoteTagPresent", PdfUAExceptionMessageConstants.DOCUMENT_USES_NOTE_TAG, pdfUAConformance
                         );
                 }
             }

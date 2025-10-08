@@ -33,10 +33,14 @@ namespace iText.IO.Font {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/font/OpenTypeParserTest/";
 
+        private static readonly String FREESANS_FONT_PATH = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf";
+
         [NUnit.Framework.Test]
         public virtual void TryToReadFontSubsetWithoutGlyfTableTest() {
             byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subsetWithoutGlyfTable.ttf"));
             OpenTypeParser parser = new OpenTypeParser(fontBytes);
+            parser.LoadTables(true);
             ICollection<int> usedGlyphs = new HashSet<int>();
             // these GIDs correspond to ABC
             usedGlyphs.Add(36);
@@ -46,6 +50,22 @@ namespace iText.IO.Font {
                 (usedGlyphs, true));
             String exp = MessageFormatUtil.Format(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN, "glyf", null);
             NUnit.Framework.Assert.AreEqual(exp, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetFlatGlyphsCompositeTest() {
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FREESANS_FONT_PATH));
+            OpenTypeParser parser = new OpenTypeParser(fontBytes);
+            parser.LoadTables(true);
+            ICollection<int> usedGlyphs = new HashSet<int>();
+            // Å
+            usedGlyphs.Add(137);
+            IList<int> glyphs = parser.GetFlatGlyphs(usedGlyphs);
+            NUnit.Framework.Assert.AreEqual(4, glyphs.Count);
+            NUnit.Framework.Assert.AreEqual(137, glyphs[0]);
+            NUnit.Framework.Assert.AreEqual(0, glyphs[1]);
+            NUnit.Framework.Assert.AreEqual(586, glyphs[2]);
+            NUnit.Framework.Assert.AreEqual(38, glyphs[3]);
         }
     }
 }
