@@ -118,6 +118,7 @@ namespace iText.StyledXmlParser.Css.Resolve {
             defaultValues.Put(CommonCssConstants.ALIGN_CONTENT, CommonCssConstants.STRETCH);
             defaultValues.Put(CommonCssConstants.ROW_GAP, CommonCssConstants.NORMAL);
             defaultValues.Put(CommonCssConstants.COLUMN_GAP, CommonCssConstants.NORMAL);
+            defaultValues.Put(CommonCssConstants.ORDER, "0");
         }
 
         // Other css properties default values will be added as needed

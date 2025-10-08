@@ -869,6 +869,12 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant REPEAT_Y.</summary>
         public const String REPEAT_Y = "repeat-y";
 
+        /// <summary>The Constant REVERT.</summary>
+        public const String REVERT = "revert";
+
+        /// <summary>The Constant REVERT.</summary>
+        public const String REVERT_LAYER = "revert-layer";
+
         /// <summary>The Constant RIDGE.</summary>
         public const String RIDGE = "ridge";
 

@@ -89,6 +89,7 @@ namespace iText.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             Rectangle layoutContextRectangle = layoutContext.GetArea().GetBBox();
             SetThisAsParent(GetChildRenderers());
+            OrderChildRenderers(GetChildRenderers());
             // Disable collapsing margins for container before calculating item's rectangles to avoid margin collapsing
             // between parent and child (flex-container – flex-item) and two children (flex-item – flex-item)
             this.SetProperty(Property.COLLAPSING_MARGINS, false);
@@ -488,6 +489,21 @@ namespace iText.Layout.Renderer {
             if (!(renderer is AreaBreakRenderer)) {
                 renderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
                 base.AddChild(renderer);
+            }
+        }
+
+        private static void OrderChildRenderers(IList<IRenderer> renderers) {
+            JavaCollectionsUtil.Sort(renderers, new _IComparer_519());
+        }
+
+        private sealed class _IComparer_519 : IComparer<IRenderer> {
+            public _IComparer_519() {
+            }
+
+            public int Compare(IRenderer a, IRenderer b) {
+                int? orderA = a.GetProperty<int?>(Property.ORDER, 0);
+                int? orderB = b.GetProperty<int?>(Property.ORDER, 0);
+                return JavaUtil.IntegerCompare((int)orderA, (int)orderB);
             }
         }
 
