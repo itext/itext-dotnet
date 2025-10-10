@@ -55,6 +55,10 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         private readonly PageSize size;
 
+        private PageResizer.VerticalAnchorPoint verticalAnchorPoint = PageResizer.VerticalAnchorPoint.CENTER;
+
+        private PageResizer.HorizontalAnchorPoint horizontalAnchorPoint = PageResizer.HorizontalAnchorPoint.CENTER;
+
         /// <summary>Represents the type of resize operation to be applied to a page.</summary>
         /// <remarks>
         /// Represents the type of resize operation to be applied to a page.
@@ -72,6 +76,22 @@ namespace iText.Kernel.Pdf {
         }
 //\endcond
 
+        public virtual PageResizer.HorizontalAnchorPoint GetHorizontalAnchorPoint() {
+            return horizontalAnchorPoint;
+        }
+
+        public virtual void SetHorizontalAnchorPoint(PageResizer.HorizontalAnchorPoint anchorPoint) {
+            this.horizontalAnchorPoint = anchorPoint;
+        }
+
+        public virtual PageResizer.VerticalAnchorPoint GetVerticalAnchorPoint() {
+            return verticalAnchorPoint;
+        }
+
+        public virtual void SetVerticalAnchorPoint(PageResizer.VerticalAnchorPoint anchorPoint) {
+            this.verticalAnchorPoint = anchorPoint;
+        }
+
         /// <summary>Resizes a given PDF page based on the specified dimensions and resize type.</summary>
         /// <remarks>
         /// Resizes a given PDF page based on the specified dimensions and resize type.
@@ -83,14 +103,18 @@ namespace iText.Kernel.Pdf {
             Rectangle originalPageSize = page.GetMediaBox();
             double horizontalScale = size.GetWidth() / originalPageSize.GetWidth();
             double verticalScale = size.GetHeight() / originalPageSize.GetHeight();
+            double horizontalFreeSpace = 0;
+            double verticalFreeSpace = 0;
             if (PageResizer.ResizeType.MAINTAIN_ASPECT_RATIO == type) {
                 double scale = Math.Min(horizontalScale, verticalScale);
                 horizontalScale = scale;
                 verticalScale = scale;
+                horizontalFreeSpace = size.GetWidth() - originalPageSize.GetWidth() * scale;
+                verticalFreeSpace = size.GetHeight() - originalPageSize.GetHeight() * scale;
             }
             UpdateBoxes(page, originalPageSize);
-            AffineTransform scalingMatrix = new AffineTransform();
-            scalingMatrix.Scale(horizontalScale, verticalScale);
+            AffineTransform scalingMatrix = CalculateAffineTransform(horizontalScale, verticalScale, horizontalFreeSpace
+                , verticalFreeSpace);
             PdfCanvas pdfCanvas = new PdfCanvas(page.NewContentStreamBefore(), page.GetResources(), page.GetDocument()
                 );
             pdfCanvas.ConcatMatrix(scalingMatrix);
@@ -108,6 +132,50 @@ namespace iText.Kernel.Pdf {
             foreach (PdfAnnotation annot in page.GetAnnotations()) {
                 ResizeAnnotation(annot, scalingMatrix);
             }
+        }
+
+        private AffineTransform CalculateAffineTransform(double horizontalScale, double verticalScale, double horizontalFreeSpace
+            , double verticalFreeSpace) {
+            AffineTransform scalingMatrix = new AffineTransform();
+            scalingMatrix.Scale(horizontalScale, verticalScale);
+            AffineTransform transformMatrix = new AffineTransform();
+            switch (horizontalAnchorPoint) {
+                case PageResizer.HorizontalAnchorPoint.CENTER: {
+                    transformMatrix.Translate(horizontalFreeSpace / 2, 0);
+                    break;
+                }
+
+                case PageResizer.HorizontalAnchorPoint.RIGHT: {
+                    transformMatrix.Translate(horizontalFreeSpace, 0);
+                    break;
+                }
+
+                case PageResizer.HorizontalAnchorPoint.LEFT:
+                default: {
+                    // PDF default nothing to do here
+                    break;
+                }
+            }
+            switch (verticalAnchorPoint) {
+                case PageResizer.VerticalAnchorPoint.CENTER: {
+                    transformMatrix.Translate(0, verticalFreeSpace / 2);
+                    break;
+                }
+
+                case PageResizer.VerticalAnchorPoint.TOP: {
+                    transformMatrix.Translate(0, verticalFreeSpace);
+                    break;
+                }
+
+                case PageResizer.VerticalAnchorPoint.BOTTOM:
+                default: {
+                    // PDF default nothing to do here
+                    break;
+                }
+            }
+            transformMatrix.Concatenate(scalingMatrix);
+            scalingMatrix = transformMatrix;
+            return scalingMatrix;
         }
 
         /// <summary>Scales the transformation matrix of the provided PDF pattern using the given scaling matrix.</summary>
@@ -228,6 +296,18 @@ namespace iText.Kernel.Pdf {
         internal enum ResizeType {
             MAINTAIN_ASPECT_RATIO,
             DEFAULT
+        }
+
+        internal enum VerticalAnchorPoint {
+            TOP,
+            CENTER,
+            BOTTOM
+        }
+
+        internal enum HorizontalAnchorPoint {
+            LEFT,
+            CENTER,
+            RIGHT
         }
     }
 //\endcond

@@ -137,6 +137,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestGradientsType0Function() {
+            //TODO Update when fixing DEVSIX-9448
             String inFileName = "gradientFct0.pdf";
             String outFileName = "gradientFct0.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
@@ -190,6 +191,93 @@ namespace iText.Kernel.Pdf {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
                 DESTINATION_FOLDER + outFileName))) {
                 new PageResizer(PageSize.A6, PageResizer.ResizeType.MAINTAIN_ASPECT_RATIO).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestHorizontalAnchoringLeft() {
+            String inFileName = "squareSource.pdf";
+            String outFileName = "haLeft.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                PageResizer resizer = new PageResizer(new PageSize(PageSize.A5.GetHeight(), PageSize.A5.GetWidth()), PageResizer.ResizeType
+                    .MAINTAIN_ASPECT_RATIO);
+                resizer.SetHorizontalAnchorPoint(PageResizer.HorizontalAnchorPoint.LEFT);
+                resizer.Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestHorizontalAnchoringCenter() {
+            String inFileName = "squareSource.pdf";
+            String outFileName = "haCenter.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                PageResizer resizer = new PageResizer(new PageSize(PageSize.A5.GetHeight(), PageSize.A5.GetWidth()), PageResizer.ResizeType
+                    .MAINTAIN_ASPECT_RATIO);
+                resizer.SetHorizontalAnchorPoint(PageResizer.HorizontalAnchorPoint.CENTER);
+                resizer.Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestHorizontalAnchoringRight() {
+            String inFileName = "squareSource.pdf";
+            String outFileName = "haRight.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                PageResizer resizer = new PageResizer(new PageSize(PageSize.A5.GetHeight(), PageSize.A5.GetWidth()), PageResizer.ResizeType
+                    .MAINTAIN_ASPECT_RATIO);
+                resizer.SetHorizontalAnchorPoint(PageResizer.HorizontalAnchorPoint.RIGHT);
+                resizer.Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestVerticalAnchoringTop() {
+            String inFileName = "squareSource.pdf";
+            String outFileName = "vaTop.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                PageResizer resizer = new PageResizer(PageSize.A4, PageResizer.ResizeType.MAINTAIN_ASPECT_RATIO);
+                resizer.SetVerticalAnchorPoint(PageResizer.VerticalAnchorPoint.TOP);
+                resizer.Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestVerticalAnchoringCenter() {
+            String inFileName = "squareSource.pdf";
+            String outFileName = "vaCenter.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                PageResizer resizer = new PageResizer(PageSize.A4, PageResizer.ResizeType.MAINTAIN_ASPECT_RATIO);
+                resizer.SetVerticalAnchorPoint(PageResizer.VerticalAnchorPoint.CENTER);
+                resizer.Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestVerticalAnchoringBottom() {
+            String inFileName = "squareSource.pdf";
+            String outFileName = "vaBottom.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                PageResizer resizer = new PageResizer(PageSize.A4, PageResizer.ResizeType.MAINTAIN_ASPECT_RATIO);
+                resizer.SetVerticalAnchorPoint(PageResizer.VerticalAnchorPoint.BOTTOM);
+                resizer.Resize(pdfDocument.GetPage(1));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
                  + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
