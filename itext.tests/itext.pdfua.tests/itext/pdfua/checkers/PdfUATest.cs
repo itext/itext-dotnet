@@ -304,7 +304,7 @@ namespace iText.Pdfua.Checkers {
 
         [NUnit.Framework.Test]
         public virtual void DocumentWithInvalidViewerPreferencesUA2Test() {
-            String outPdf = DESTINATION_FOLDER + "documentWithEmptyViewerPreferencesUA2Test.pdf";
+            String outPdf = DESTINATION_FOLDER + "documentWithInvalidViewerPreferencesUA2Test.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf, new WriterProperties().AddPdfUaXmpMetadata(PdfUAConformance
                 .PDF_UA_2).SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDoc.SetTagged();

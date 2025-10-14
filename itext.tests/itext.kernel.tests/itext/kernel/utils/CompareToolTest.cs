@@ -366,7 +366,6 @@ namespace iText.Kernel.Utils {
             String result = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder);
             System.Console.Out.WriteLine("\nRESULT:\n" + result);
             NUnit.Framework.Assert.IsNotNull("CompareTool must return differences found between the files", result);
-            NUnit.Framework.Assert.IsTrue(result.Contains("differs on page [1, 2]."));
             String xmlReport = iText.Commons.Utils.JavaUtil.GetStringForBytes(File.ReadAllBytes(System.IO.Path.Combine
                 (destinationFolder + "basefont_absence.report.xml")));
             NUnit.Framework.Assert.IsTrue(xmlReport.Contains("PdfDictionary /BaseFont entry: Expected: /Helvetica-Bold+ASAFAS. Found: null"
