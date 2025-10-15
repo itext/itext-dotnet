@@ -580,7 +580,7 @@ namespace iText.Pdfua.Checkers {
             UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(new _Generator_529());
             framework.AddSuppliers(new _Generator_541());
-            framework.AssertBothValid("radioBtnCustomAppCheckedInteractive", pdfUAConformance);
+            framework.AssertBothValid("radioBtnCustomAppGrCheckedInteractive", pdfUAConformance);
         }
 
         private sealed class _Generator_529 : UaValidationTestFramework.Generator<IBlockElement> {
