@@ -521,6 +521,10 @@ namespace iText.Layout.Renderer {
             if (toDisableKeepTogether == null) {
                 return false;
             }
+            if (result.GetOverflowRenderer() != null && !IsItemInSubtree(result.GetOverflowRenderer(), toDisableKeepTogether
+                )) {
+                return false;
+            }
             toDisableKeepTogether.SetProperty(Property.KEEP_TOGETHER, false);
             if (LOGGER.IsEnabled(LogLevel.Warning)) {
                 LOGGER.LogWarning(MessageFormatUtil.Format(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property will be ignored."
@@ -530,6 +534,28 @@ namespace iText.Layout.Renderer {
                 rootRendererStateHandler.AttemptGoBackToStoredPreviousStateAndStoreNextState(this);
             }
             return true;
+        }
+
+        private static bool IsItemInSubtree(IRenderer ancestor, IRenderer item) {
+            if (ancestor == item) {
+                return true;
+            }
+            foreach (IRenderer renderer in ancestor.GetChildRenderers()) {
+                if (IsItemInSubtree(renderer, item)) {
+                    return true;
+                }
+            }
+            if (ancestor is TableRenderer) {
+                TableRenderer tableRenderer = (TableRenderer)ancestor;
+                foreach (CellRenderer[] row in tableRenderer.rows) {
+                    foreach (CellRenderer cellRenderer in row) {
+                        if (IsItemInSubtree(cellRenderer, item)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
     }
 }
