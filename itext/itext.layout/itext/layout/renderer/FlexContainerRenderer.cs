@@ -254,6 +254,13 @@ namespace iText.Layout.Renderer {
                 }
             }
             overflowRenderer.DeleteOwnProperty(Property.FORCED_PLACEMENT);
+            // childResult.overflowRenderer must have overflowRenderer as a parent, f.e. to disable keep together correctly.
+            // See BlockRenderer.createSplitAndOverflowRenderers.
+            // But we can't add it as a child of overflowRenderer, because flex is layouted by lines, not items.
+            // So even if childResult is PARTIAL, we must move whole child to overflowRenderer.
+            if (childResult.GetOverflowRenderer() != null) {
+                childResult.GetOverflowRenderer().SetParent(overflowRenderer);
+            }
             return new AbstractRenderer[] { splitRenderer, overflowRenderer };
         }
 //\endcond
@@ -493,11 +500,11 @@ namespace iText.Layout.Renderer {
         }
 
         private static void OrderChildRenderers(IList<IRenderer> renderers) {
-            JavaCollectionsUtil.Sort(renderers, new _IComparer_519());
+            JavaCollectionsUtil.Sort(renderers, new _IComparer_526());
         }
 
-        private sealed class _IComparer_519 : IComparer<IRenderer> {
-            public _IComparer_519() {
+        private sealed class _IComparer_526 : IComparer<IRenderer> {
+            public _IComparer_526() {
             }
 
             public int Compare(IRenderer a, IRenderer b) {

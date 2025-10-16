@@ -928,6 +928,32 @@ namespace iText.Layout.Element {
                 , "diff"));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void ForcedPlacementInSmallAreaTest() {
+            String outFileName = DESTINATION_FOLDER + "forcedPlacementInSmallArea.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_forcedPlacementInSmallArea.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Div flexContainer = new FlexContainer();
+            flexContainer.SetProperty(Property.FORCED_PLACEMENT, true);
+            Div child1 = new Div();
+            child1.SetBorder(new SolidBorder(1));
+            child1.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(50));
+            child1.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(1000));
+            child1.Add(new Paragraph("First"));
+            Div child2 = new Div();
+            child2.SetBorder(new SolidBorder(1));
+            child2.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(100));
+            child2.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(1000));
+            child2.Add(new Paragraph("Second"));
+            flexContainer.Add(child1);
+            flexContainer.Add(child2);
+            document.Add(flexContainer);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
         [NUnit.Framework.TestCaseSource("AlignItemsAndJustifyContentProperties")]
         public virtual void FlexContainerBoxSizingTest(AlignmentPropertyValue alignItemsValue, JustifyContent justifyContentValue
             , FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue, int? comparisonPdfId) {
