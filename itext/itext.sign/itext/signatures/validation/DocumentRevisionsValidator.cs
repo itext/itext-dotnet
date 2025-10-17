@@ -521,8 +521,8 @@ namespace iText.Signatures.Validation {
                     // since it is not possible to introduce new reference and remove it at the same revision.
                     bool referenceWasInPrevDocument = documentWithoutRevision.GetPdfObject(indirectReference.GetObjNumber()) !=
                          null;
-                    if (!IsMaxGenerationObject(indirectReference) && referenceWasInPrevDocument && !referenceAllowedToBeRemoved
-                        ) {
+                    if (!DocumentRevisionPdfObjectComparator.IsMaxGenerationObject(indirectReference) && referenceWasInPrevDocument
+                         && !referenceAllowedToBeRemoved) {
                         validationReport.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(OBJECT_REMOVED, indirectReference
                             .GetObjNumber()), unexpectedXrefChangesStatus));
                     }
@@ -792,7 +792,8 @@ namespace iText.Signatures.Validation {
             PdfDictionary currentCatalogCopy = CopyCatalogEntriesToCompare(currentCatalog);
             removedTaggedObjects = new HashSet<PdfDictionary>();
             addedTaggedObjects = new HashSet<PdfDictionary>();
-            if (!ComparePdfObjects(previousCatalogCopy, currentCatalogCopy, usuallyModifiedObjects)) {
+            if (!DocumentRevisionPdfObjectComparator.ComparePdfObjects(previousCatalogCopy, currentCatalogCopy, usuallyModifiedObjects
+                )) {
                 report.AddReportItem(new ReportItem(DOC_MDP_CHECK, NOT_ALLOWED_CATALOG_CHANGES, ReportItem.ReportItemStatus
                     .INVALID));
                 return false;
@@ -858,7 +859,8 @@ namespace iText.Signatures.Validation {
                 }
             }
             if (!(previousStructTreeRoot is PdfDictionary)) {
-                if (ComparePdfObjects(previousStructTreeRoot, currentStructTreeRoot, usuallyModifiedObjects)) {
+                if (DocumentRevisionPdfObjectComparator.ComparePdfObjects(previousStructTreeRoot, currentStructTreeRoot, usuallyModifiedObjects
+                    )) {
                     return true;
                 }
                 else {
@@ -880,7 +882,8 @@ namespace iText.Signatures.Validation {
             previousStructTreeRootDict.Remove(PdfName.K);
             currentStructTreeRootDict.Remove(PdfName.K);
             // Everything else is expected to remain unmodified and compared directly.
-            if (!ComparePdfObjects(previousStructTreeRootDict, currentStructTreeRootDict, usuallyModifiedObjects)) {
+            if (!DocumentRevisionPdfObjectComparator.ComparePdfObjects(previousStructTreeRootDict, currentStructTreeRootDict
+                , usuallyModifiedObjects)) {
                 report.AddReportItem(new ReportItem(DOC_MDP_CHECK, STRUCT_TREE_ROOT_MODIFIED, ReportItem.ReportItemStatus.
                     INVALID));
                 return false;
@@ -999,7 +1002,8 @@ namespace iText.Signatures.Validation {
             currentStructElementCopy.Remove(PdfName.P);
             currentStructElementCopy.Remove(PdfName.Ref);
             currentStructElementCopy.Remove(PdfName.Pg);
-            if (!ComparePdfObjects(previousStructElementCopy, currentStructElementCopy, usuallyModifiedObjects)) {
+            if (!DocumentRevisionPdfObjectComparator.ComparePdfObjects(previousStructElementCopy, currentStructElementCopy
+                , usuallyModifiedObjects)) {
                 report.AddReportItem(new ReportItem(DOC_MDP_CHECK, STRUCT_TREE_ELEMENT_MODIFIED, ReportItem.ReportItemStatus
                     .INVALID));
                 return false;
@@ -1022,8 +1026,8 @@ namespace iText.Signatures.Validation {
                 PdfDictionary currentContentDictionaryCopy = new PdfDictionary(currentContentDictionary);
                 currentContentDictionaryCopy.Remove(PdfName.Pg);
                 currentContentDictionaryCopy.Remove(PdfName.Obj);
-                if (!ComparePdfObjects(previousContentDictionaryCopy, currentContentDictionaryCopy, usuallyModifiedObjects
-                    )) {
+                if (!DocumentRevisionPdfObjectComparator.ComparePdfObjects(previousContentDictionaryCopy, currentContentDictionaryCopy
+                    , usuallyModifiedObjects)) {
                     report.AddReportItem(new ReportItem(DOC_MDP_CHECK, STRUCT_TREE_CONTENT_MODIFIED, ReportItem.ReportItemStatus
                         .INVALID));
                     return false;
@@ -1034,14 +1038,15 @@ namespace iText.Signatures.Validation {
                     );
             }
             else {
-                return ComparePdfObjects(previousStructTreeContent, currentStructTreeContent, usuallyModifiedObjects);
+                return DocumentRevisionPdfObjectComparator.ComparePdfObjects(previousStructTreeContent, currentStructTreeContent
+                    , usuallyModifiedObjects);
             }
         }
 
         private bool CompareExtensions(PdfObject previousExtensions, PdfObject currentExtensions, ValidationReport
              report) {
-            if (previousExtensions == null || ComparePdfObjects(previousExtensions, currentExtensions, usuallyModifiedObjects
-                )) {
+            if (previousExtensions == null || DocumentRevisionPdfObjectComparator.ComparePdfObjects(previousExtensions
+                , currentExtensions, usuallyModifiedObjects)) {
                 return true;
             }
             if (currentExtensions == null) {
@@ -1071,7 +1076,8 @@ namespace iText.Signatures.Validation {
                     previousExtensionCopy.Remove(PdfName.ExtensionLevel);
                     previousExtensionCopy.Remove(PdfName.BaseVersion);
                     // Apart from extension level and base version dictionaries are expected to be equal.
-                    if (!ComparePdfObjects(previousExtensionCopy, currentExtensionCopy, usuallyModifiedObjects)) {
+                    if (!DocumentRevisionPdfObjectComparator.ComparePdfObjects(previousExtensionCopy, currentExtensionCopy, usuallyModifiedObjects
+                        )) {
                         report.AddReportItem(new ReportItem(DOC_MDP_CHECK, MessageFormatUtil.Format(DEVELOPER_EXTENSION_REMOVED, previousExtension
                             .Key), ReportItem.ReportItemStatus.INVALID));
                         result = false;
@@ -1110,7 +1116,8 @@ namespace iText.Signatures.Validation {
         }
 
         private bool ComparePermissions(PdfObject previousPerms, PdfObject currentPerms, ValidationReport report) {
-            if (previousPerms == null || ComparePdfObjects(previousPerms, currentPerms, usuallyModifiedObjects)) {
+            if (previousPerms == null || DocumentRevisionPdfObjectComparator.ComparePdfObjects(previousPerms, currentPerms
+                , usuallyModifiedObjects)) {
                 return true;
             }
             if (currentPerms == null) {
@@ -1200,7 +1207,8 @@ namespace iText.Signatures.Validation {
             currentFieldCopy.Remove(PdfName.P);
             currentFieldCopy.Remove(PdfName.Parent);
             currentFieldCopy.Remove(PdfName.V);
-            if (!ComparePdfObjects(previousFieldCopy, currentFieldCopy, usuallyModifiedObjects)) {
+            if (!DocumentRevisionPdfObjectComparator.ComparePdfObjects(previousFieldCopy, currentFieldCopy, usuallyModifiedObjects
+                )) {
                 report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, MessageFormatUtil.Format(LOCKED_FIELD_MODIFIED, fieldName
                     ), ReportItem.ReportItemStatus.INVALID));
                 return false;
@@ -1215,7 +1223,7 @@ namespace iText.Signatures.Validation {
                 }
             }
             else {
-                if (!ComparePdfObjects(prevValue, currValue, usuallyModifiedObjects)) {
+                if (!DocumentRevisionPdfObjectComparator.ComparePdfObjects(prevValue, currValue, usuallyModifiedObjects)) {
                     report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, MessageFormatUtil.Format(LOCKED_FIELD_MODIFIED, fieldName
                         ), ReportItem.ReportItemStatus.INVALID));
                     return false;
@@ -1296,8 +1304,8 @@ namespace iText.Signatures.Validation {
             PdfDictionary currentAcroFormCopy = CopyAcroformDictionary(currAcroForm);
             PdfArray prevFields = prevAcroForm.GetAsArray(PdfName.Fields);
             PdfArray currFields = currAcroForm.GetAsArray(PdfName.Fields);
-            if (!ComparePdfObjects(previousAcroFormCopy, currentAcroFormCopy, usuallyModifiedObjects) || (prevFields.Size
-                () > currFields.Size()) || !CompareFormFields(prevFields, currFields, report)) {
+            if (!DocumentRevisionPdfObjectComparator.ComparePdfObjects(previousAcroFormCopy, currentAcroFormCopy, usuallyModifiedObjects
+                ) || (prevFields.Size() > currFields.Size()) || !CompareFormFields(prevFields, currFields, report)) {
                 report.AddReportItem(new ReportItem(DOC_MDP_CHECK, NOT_ALLOWED_ACROFORM_CHANGES, ReportItem.ReportItemStatus
                     .INVALID));
                 return false;
@@ -1337,10 +1345,11 @@ namespace iText.Signatures.Validation {
             foreach (PdfDictionary currentField in currFields) {
                 PdfDictionary prevFormDict = CopyFieldDictionary(previousField);
                 PdfDictionary currFormDict = CopyFieldDictionary(currentField);
-                if (ComparePdfObjects(prevFormDict, currFormDict, usuallyModifiedObjects) && CompareIndirectReferencesObjNums
-                    (prevFormDict.Get(PdfName.Parent), currFormDict.Get(PdfName.Parent), new ValidationReport(), "Form field parent"
-                    ) && CompareIndirectReferencesObjNums(prevFormDict.Get(PdfName.P), currFormDict.Get(PdfName.P), new ValidationReport
-                    (), "Page object with which field annotation is associated")) {
+                if (DocumentRevisionPdfObjectComparator.ComparePdfObjects(prevFormDict, currFormDict, usuallyModifiedObjects
+                    ) && CompareIndirectReferencesObjNums(prevFormDict.Get(PdfName.Parent), currFormDict.Get(PdfName.Parent
+                    ), new ValidationReport(), "Form field parent") && CompareIndirectReferencesObjNums(prevFormDict.Get(PdfName
+                    .P), currFormDict.Get(PdfName.P), new ValidationReport(), "Page object with which field annotation is associated"
+                    )) {
                     return currentField;
                 }
             }
@@ -1382,8 +1391,8 @@ namespace iText.Signatures.Validation {
                 }
             }
             else {
-                if (GetAccessPermissions() == AccessPermissions.NO_CHANGES_PERMITTED && !ComparePdfObjects(prevValue, currValue
-                    , usuallyModifiedObjects)) {
+                if (GetAccessPermissions() == AccessPermissions.NO_CHANGES_PERMITTED && !DocumentRevisionPdfObjectComparator.ComparePdfObjects
+                    (prevValue, currValue, usuallyModifiedObjects)) {
                     return false;
                 }
             }
@@ -1407,7 +1416,8 @@ namespace iText.Signatures.Validation {
             PdfDictionary previousSigDictCopy = new PdfDictionary((PdfDictionary)prevSigDict);
             previousSigDictCopy.Remove(PdfName.Reference);
             // Apart from the reference, dictionaries are expected to be equal.
-            if (!ComparePdfObjects(previousSigDictCopy, currentSigDictCopy, usuallyModifiedObjects)) {
+            if (!DocumentRevisionPdfObjectComparator.ComparePdfObjects(previousSigDictCopy, currentSigDictCopy, usuallyModifiedObjects
+                )) {
                 return false;
             }
             PdfArray previousReference = ((PdfDictionary)prevSigDict).GetAsArray(PdfName.Reference);
@@ -1417,8 +1427,8 @@ namespace iText.Signatures.Validation {
 
         private bool CompareSignatureReferenceDictionaries(PdfArray previousReferences, PdfArray currentReferences
             , ValidationReport report) {
-            if (previousReferences == null || ComparePdfObjects(previousReferences, currentReferences, usuallyModifiedObjects
-                )) {
+            if (previousReferences == null || DocumentRevisionPdfObjectComparator.ComparePdfObjects(previousReferences
+                , currentReferences, usuallyModifiedObjects)) {
                 return true;
             }
             if (currentReferences == null || previousReferences.Size() != currentReferences.Size()) {
@@ -1434,9 +1444,9 @@ namespace iText.Signatures.Validation {
                     previousReferenceCopy.Remove(PdfName.Data);
                     // Apart from the data, dictionaries are expected to be equal. Data is an indirect reference
                     // to the object in the document upon which the object modification analysis should be performed.
-                    if (!ComparePdfObjects(previousReferenceCopy, currentReferenceCopy, usuallyModifiedObjects) || !CompareIndirectReferencesObjNums
-                        (previousReferences.GetAsDictionary(i).Get(PdfName.Data), currentReferences.GetAsDictionary(i).Get(PdfName
-                        .Data), report, "Data entry in the signature reference dictionary")) {
+                    if (!DocumentRevisionPdfObjectComparator.ComparePdfObjects(previousReferenceCopy, currentReferenceCopy, usuallyModifiedObjects
+                        ) || !CompareIndirectReferencesObjNums(previousReferences.GetAsDictionary(i).Get(PdfName.Data), currentReferences
+                        .GetAsDictionary(i).Get(PdfName.Data), report, "Data entry in the signature reference dictionary")) {
                         report.AddReportItem(new ReportItem(DOC_MDP_CHECK, REFERENCE_REMOVED, ReportItem.ReportItemStatus.INVALID)
                             );
                         return false;
@@ -1462,10 +1472,10 @@ namespace iText.Signatures.Validation {
                 RemoveAppearanceRelatedProperties(prevAnnot);
                 PdfDictionary currAnnot = new PdfDictionary(currAnnots[i]);
                 RemoveAppearanceRelatedProperties(currAnnot);
-                if (!ComparePdfObjects(prevAnnot, currAnnot, usuallyModifiedObjects) || !CompareIndirectReferencesObjNums(
-                    prevAnnots[i].Get(PdfName.P), currAnnots[i].Get(PdfName.P), report, "Page object with which annotation is associated"
-                    ) || !CompareIndirectReferencesObjNums(prevAnnots[i].Get(PdfName.Parent), currAnnots[i].Get(PdfName.Parent
-                    ), report, "Annotation parent")) {
+                if (!DocumentRevisionPdfObjectComparator.ComparePdfObjects(prevAnnot, currAnnot, usuallyModifiedObjects) ||
+                     !CompareIndirectReferencesObjNums(prevAnnots[i].Get(PdfName.P), currAnnots[i].Get(PdfName.P), report, 
+                    "Page object with which annotation is associated") || !CompareIndirectReferencesObjNums(prevAnnots[i].
+                    Get(PdfName.Parent), currAnnots[i].Get(PdfName.Parent), report, "Annotation parent")) {
                     report.AddReportItem(new ReportItem(DOC_MDP_CHECK, ANNOTATIONS_MODIFIED, ReportItem.ReportItemStatus.INVALID
                         ));
                     return false;
@@ -1490,8 +1500,9 @@ namespace iText.Signatures.Validation {
             PdfDictionary currentPagesCopy = new PdfDictionary(currPages);
             currentPagesCopy.Remove(PdfName.Kids);
             currentPagesCopy.Remove(PdfName.Parent);
-            if (!ComparePdfObjects(previousPagesCopy, currentPagesCopy, usuallyModifiedObjects) || !CompareIndirectReferencesObjNums
-                (prevPages.Get(PdfName.Parent), currPages.Get(PdfName.Parent), report, "Page tree node parent")) {
+            if (!DocumentRevisionPdfObjectComparator.ComparePdfObjects(previousPagesCopy, currentPagesCopy, usuallyModifiedObjects
+                ) || !CompareIndirectReferencesObjNums(prevPages.Get(PdfName.Parent), currPages.Get(PdfName.Parent), report
+                , "Page tree node parent")) {
                 report.AddReportItem(new ReportItem(DOC_MDP_CHECK, PAGES_MODIFIED, ReportItem.ReportItemStatus.INVALID));
                 return false;
             }
@@ -1522,8 +1533,9 @@ namespace iText.Signatures.Validation {
                     currentPageCopy.Remove(PdfName.Parent);
                     currentPageCopy.Remove(PdfName.StructParents);
                     currentPageCopy.Remove(PdfName.Tabs);
-                    if (!ComparePdfObjects(previousPageCopy, currentPageCopy, usuallyModifiedObjects) || !CompareIndirectReferencesObjNums
-                        (previousKid.Get(PdfName.Parent), currentKid.Get(PdfName.Parent), report, "Page parent")) {
+                    if (!DocumentRevisionPdfObjectComparator.ComparePdfObjects(previousPageCopy, currentPageCopy, usuallyModifiedObjects
+                        ) || !CompareIndirectReferencesObjNums(previousKid.Get(PdfName.Parent), currentKid.Get(PdfName.Parent)
+                        , report, "Page parent")) {
                         report.AddReportItem(new ReportItem(DOC_MDP_CHECK, PAGE_MODIFIED, ReportItem.ReportItemStatus.INVALID));
                         return false;
                     }
@@ -1613,8 +1625,8 @@ namespace iText.Signatures.Validation {
                     currAnnotCopy.Remove(PdfName.V);
                 }
             }
-            return ComparePdfObjects(prevAnnotCopy, currAnnotCopy, usuallyModifiedObjects) && CompareIndirectReferencesObjNums
-                (prevAnnot.Get(PdfName.P), currAnnot.Get(PdfName.P), report, "Page object with which annotation is associated"
+            return DocumentRevisionPdfObjectComparator.ComparePdfObjects(prevAnnotCopy, currAnnotCopy, usuallyModifiedObjects
+                ) && CompareIndirectReferencesObjNums(prevAnnot.Get(PdfName.P), currAnnot.Get(PdfName.P), report, "Page object with which annotation is associated"
                 ) && CompareIndirectReferencesObjNums(prevAnnot.Get(PdfName.Parent), currAnnot.Get(PdfName.Parent), report
                 , "Annotation parent");
         }
@@ -1637,7 +1649,7 @@ namespace iText.Signatures.Validation {
                 }
                 return false;
             }
-            return IsSameReference(prevObjRef, currObjRef);
+            return DocumentRevisionPdfObjectComparator.IsSameReference(prevObjRef, currObjRef);
         }
 
         /// <summary>
@@ -1764,137 +1776,6 @@ namespace iText.Signatures.Validation {
 
         //
         //
-        // Compare PDF objects util section:
-        //
-        //
-        private static bool ComparePdfObjects(PdfObject pdfObject1, PdfObject pdfObject2, Tuple2<ICollection<PdfIndirectReference
-            >, ICollection<PdfIndirectReference>> usuallyModifiedObjects) {
-            return ComparePdfObjects(pdfObject1, pdfObject2, new List<Tuple2<PdfObject, PdfObject>>(), usuallyModifiedObjects
-                );
-        }
-
-        private static bool ComparePdfObjects(PdfObject pdfObject1, PdfObject pdfObject2, IList<Tuple2<PdfObject, 
-            PdfObject>> visitedObjects, Tuple2<ICollection<PdfIndirectReference>, ICollection<PdfIndirectReference
-            >> usuallyModifiedObjects) {
-            foreach (Tuple2<PdfObject, PdfObject> pair in visitedObjects) {
-                if (pair.GetFirst() == pdfObject1) {
-                    return pair.GetSecond() == pdfObject2;
-                }
-            }
-            visitedObjects.Add(new Tuple2<PdfObject, PdfObject>(pdfObject1, pdfObject2));
-            if (Object.Equals(pdfObject1, pdfObject2)) {
-                return true;
-            }
-            if (pdfObject1 == null || pdfObject2 == null) {
-                return false;
-            }
-            if (pdfObject1.GetType() != pdfObject2.GetType()) {
-                return false;
-            }
-            if (pdfObject1.GetIndirectReference() != null && usuallyModifiedObjects.GetFirst().Any((reference) => IsSameReference
-                (reference, pdfObject1.GetIndirectReference())) && pdfObject2.GetIndirectReference() != null && usuallyModifiedObjects
-                .GetSecond().Any((reference) => IsSameReference(reference, pdfObject2.GetIndirectReference()))) {
-                // These two objects are expected to not be completely equal, we check them independently.
-                // However, we still need to make sure those are same instances.
-                return IsSameReference(pdfObject1.GetIndirectReference(), pdfObject2.GetIndirectReference());
-            }
-            // We don't allow objects to change from being direct to indirect and vice versa.
-            // Acrobat allows it, but such change can invalidate the document.
-            if (pdfObject1.GetIndirectReference() == null ^ pdfObject2.GetIndirectReference() == null) {
-                return false;
-            }
-            switch (pdfObject1.GetObjectType()) {
-                case PdfObject.BOOLEAN:
-                case PdfObject.NAME:
-                case PdfObject.NULL:
-                case PdfObject.LITERAL:
-                case PdfObject.NUMBER:
-                case PdfObject.STRING: {
-                    return pdfObject1.Equals(pdfObject2);
-                }
-
-                case PdfObject.INDIRECT_REFERENCE: {
-                    return ComparePdfObjects(((PdfIndirectReference)pdfObject1).GetRefersTo(), ((PdfIndirectReference)pdfObject2
-                        ).GetRefersTo(), visitedObjects, usuallyModifiedObjects);
-                }
-
-                case PdfObject.ARRAY: {
-                    return ComparePdfArrays((PdfArray)pdfObject1, (PdfArray)pdfObject2, visitedObjects, usuallyModifiedObjects
-                        );
-                }
-
-                case PdfObject.DICTIONARY: {
-                    return ComparePdfDictionaries((PdfDictionary)pdfObject1, (PdfDictionary)pdfObject2, visitedObjects, usuallyModifiedObjects
-                        );
-                }
-
-                case PdfObject.STREAM: {
-                    return ComparePdfStreams((PdfStream)pdfObject1, (PdfStream)pdfObject2, visitedObjects, usuallyModifiedObjects
-                        );
-                }
-
-                default: {
-                    return false;
-                }
-            }
-        }
-
-        private static bool ComparePdfArrays(PdfArray array1, PdfArray array2, IList<Tuple2<PdfObject, PdfObject>>
-             visitedObjects, Tuple2<ICollection<PdfIndirectReference>, ICollection<PdfIndirectReference>> usuallyModifiedObjects
-            ) {
-            if (array1.Size() != array2.Size()) {
-                return false;
-            }
-            for (int i = 0; i < array1.Size(); i++) {
-                if (!ComparePdfObjects(array1.Get(i), array2.Get(i), visitedObjects, usuallyModifiedObjects)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        private static bool ComparePdfDictionaries(PdfDictionary dictionary1, PdfDictionary dictionary2, IList<Tuple2
-            <PdfObject, PdfObject>> visitedObjects, Tuple2<ICollection<PdfIndirectReference>, ICollection<PdfIndirectReference
-            >> usuallyModifiedObjects) {
-            ICollection<KeyValuePair<PdfName, PdfObject>> entrySet1 = dictionary1.EntrySet();
-            ICollection<KeyValuePair<PdfName, PdfObject>> entrySet2 = dictionary2.EntrySet();
-            if (entrySet1.Count != entrySet2.Count) {
-                return false;
-            }
-            foreach (KeyValuePair<PdfName, PdfObject> entry1 in entrySet1) {
-                if (!entrySet2.Any((entry2) => entry2.Key.Equals(entry1.Key) && ComparePdfObjects(entry2.Value, entry1.Value
-                    , visitedObjects, usuallyModifiedObjects))) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        private static bool ComparePdfStreams(PdfStream stream1, PdfStream stream2, IList<Tuple2<PdfObject, PdfObject
-            >> visitedObjects, Tuple2<ICollection<PdfIndirectReference>, ICollection<PdfIndirectReference>> usuallyModifiedObjects
-            ) {
-            return JavaUtil.ArraysEquals(stream1.GetBytes(), stream2.GetBytes()) && ComparePdfDictionaries(stream1, stream2
-                , visitedObjects, usuallyModifiedObjects);
-        }
-
-        private static bool IsSameReference(PdfIndirectReference indirectReference1, PdfIndirectReference indirectReference2
-            ) {
-            if (indirectReference1 == indirectReference2) {
-                return true;
-            }
-            if (indirectReference1 == null || indirectReference2 == null) {
-                return false;
-            }
-            return indirectReference1.GetObjNumber() == indirectReference2.GetObjNumber() && indirectReference1.GetGenNumber
-                () == indirectReference2.GetGenNumber();
-        }
-
-        private static bool IsMaxGenerationObject(PdfIndirectReference indirectReference) {
-            return indirectReference.GetObjNumber() == 0 && indirectReference.GetGenNumber() == 65535;
-        }
-
-        //
-        //
         // Allowed references section:
         //
         //
@@ -2005,9 +1886,9 @@ namespace iText.Signatures.Validation {
             <PdfIndirectReference> previousAllowedReferences, PdfIndirectReference indirectReference, PdfDocument 
             documentWithoutRevision) {
             foreach (PdfIndirectReference currentAllowedReference in currentAllowedReferences) {
-                if (IsSameReference(currentAllowedReference, indirectReference)) {
+                if (DocumentRevisionPdfObjectComparator.IsSameReference(currentAllowedReference, indirectReference)) {
                     return documentWithoutRevision.GetPdfObject(indirectReference.GetObjNumber()) == null || previousAllowedReferences
-                        .Any((reference) => IsSameReference(reference, indirectReference));
+                        .Any((reference) => DocumentRevisionPdfObjectComparator.IsSameReference(reference, indirectReference));
                 }
             }
             return false;
@@ -2263,8 +2144,8 @@ namespace iText.Signatures.Validation {
              dictionary) {
             foreach (KeyValuePair<PdfName, PdfObject> entry in dictionary.EntrySet()) {
                 PdfObject value = entry.Value;
-                if (value.GetIndirectReference() != null && allowedReferences.Any((reference) => IsSameReference(reference
-                    , value.GetIndirectReference()))) {
+                if (value.GetIndirectReference() != null && allowedReferences.Any((reference) => DocumentRevisionPdfObjectComparator.IsSameReference
+                    (reference, value.GetIndirectReference()))) {
                     // Required to not end up in an infinite loop.
                     continue;
                 }
@@ -2282,8 +2163,8 @@ namespace iText.Signatures.Validation {
             ) {
             for (int i = 0; i < pdfArray.Size(); ++i) {
                 PdfObject arrayEntry = pdfArray.Get(i);
-                if (arrayEntry.GetIndirectReference() != null && allowedReferences.Any((reference) => IsSameReference(reference
-                    , arrayEntry.GetIndirectReference()))) {
+                if (arrayEntry.GetIndirectReference() != null && allowedReferences.Any((reference) => DocumentRevisionPdfObjectComparator.IsSameReference
+                    (reference, arrayEntry.GetIndirectReference()))) {
                     // Required to not end up in an infinite loop.
                     continue;
                 }

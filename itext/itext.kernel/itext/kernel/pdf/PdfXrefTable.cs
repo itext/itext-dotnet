@@ -35,9 +35,9 @@ using iText.Kernel.Validation.Context;
 namespace iText.Kernel.Pdf {
     /// <summary>A representation of a cross-referenced table of a PDF document.</summary>
     public class PdfXrefTable {
-        private const int INITIAL_CAPACITY = 32;
+        public const int MAX_GENERATION = 65535;
 
-        private const int MAX_GENERATION = 65535;
+        private const int INITIAL_CAPACITY = 32;
 
         /// <summary>The maximum offset in a cross-reference stream.</summary>
         /// <remarks>
