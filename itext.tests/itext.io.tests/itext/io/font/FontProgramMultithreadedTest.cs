@@ -57,7 +57,7 @@ namespace iText.IO.Font
             foreach (Test test in tests)
             {
                 NUnit.Framework.Assert.False(test.exceptionCaught, "Exception during font subsetting");
-                NUnit.Framework.Assert.AreEqual(17848, test.subsetSize);
+                NUnit.Framework.Assert.AreEqual(2956, test.subsetSize);
             }
         }
 
@@ -81,7 +81,7 @@ namespace iText.IO.Font
                     byte[] bytes = null;
                     try
                     {
-                        bytes = fp.GetSubset(new HashSet<int>(), true);
+                        bytes = fp.Subset(new HashSet<int>(), true).GetSecond();
                     }
                     catch (Exception e)
                     {
