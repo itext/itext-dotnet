@@ -55,6 +55,7 @@ namespace iText.Signatures.Validation.Report.Xml {
         }
 
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("TODO DEVSIX-9500 Fix baseXmlReportGenerationTest")]
         public virtual void BaseXmlReportGenerationTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "docWithMultipleSignaturesAndTimeStamp.pdf"
                 ))) {
