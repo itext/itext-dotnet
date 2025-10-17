@@ -31,20 +31,24 @@ namespace iText.IO.Font {
         internal TrueTypeFontSubsetter(String fontName, OpenTypeParser parser, ICollection<int> glyphs, bool subsetTables
             )
             : base(fontName, subsetTables) {
+            horizontalMetricMap = new Dictionary<int, byte[]>(glyphs.Count);
             glyphDataMap = new Dictionary<int, byte[]>(glyphs.Count);
             IList<int> usedGlyphs = parser.GetFlatGlyphs(glyphs);
             foreach (int? glyph in usedGlyphs) {
                 byte[] glyphData = parser.GetGlyphDataForGid((int)glyph);
                 glyphDataMap.Put((int)glyph, glyphData);
+                byte[] glyphMetric = parser.GetHorizontalMetricForGid((int)glyph);
+                horizontalMetricMap.Put((int)glyph, glyphMetric);
             }
             this.raf = parser.raf.CreateView();
             this.directoryOffset = parser.directoryOffset;
+            this.numberOfHMetrics = parser.hhea.numberOfHMetrics;
         }
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal override void MergeTables() {
-            base.CreateNewGlyfAndLocaTables();
+        internal override int MergeTables() {
+            return base.CreateModifiedTables();
         }
 //\endcond
         // cmap table subsetting isn't supported yet

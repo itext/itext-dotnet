@@ -24,21 +24,16 @@ using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.IO.Exceptions;
-using iText.IO.Source;
 
 namespace iText.IO.Font {
 //\cond DO_NOT_DOCUMENT
     /// <summary>Merges TrueType fonts and subset merged font by leaving only needed glyphs in the font.</summary>
     internal class TrueTypeFontMerger : AbstractTrueTypeFontModifier {
-        private readonly IDictionary<int, byte[]> horizontalMetricMap;
-
-        private readonly int numberOfHMetrics;
-
 //\cond DO_NOT_DOCUMENT
         internal TrueTypeFontMerger(String fontName, IDictionary<OpenTypeParser, ICollection<int>> fontsToMerge)
             : base(fontName, true) {
-            horizontalMetricMap = new Dictionary<int, byte[]>(fontsToMerge.Count);
-            glyphDataMap = new Dictionary<int, byte[]>(fontsToMerge.Count);
+            horizontalMetricMap = new Dictionary<int, byte[]>();
+            glyphDataMap = new Dictionary<int, byte[]>();
             OpenTypeParser parserExample = null;
             foreach (KeyValuePair<OpenTypeParser, ICollection<int>> entry in fontsToMerge) {
                 OpenTypeParser parser = entry.Key;
@@ -75,32 +70,11 @@ namespace iText.IO.Font {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal override void MergeTables() {
-            base.CreateNewGlyfAndLocaTables();
-            // cmap table merging isn't supported yet
-            // merging vertical fonts aren't supported yet, it's why vmtx and vhea tables ignored
-            CreateNewHorizontalMetricsTable();
+        internal override int MergeTables() {
+            return base.CreateModifiedTables();
         }
 //\endcond
-
-        private void CreateNewHorizontalMetricsTable() {
-            int[] tableLocation = tableDirectory.Get("hmtx");
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            raf.Seek(tableLocation[1]);
-            for (int k = 0; k < numberOfHMetrics; ++k) {
-                if (horizontalMetricMap.ContainsKey(k)) {
-                    raf.SkipBytes(4);
-                    baos.Write(horizontalMetricMap.Get(k));
-                }
-                else {
-                    baos.Write(raf.ReadByte());
-                    baos.Write(raf.ReadByte());
-                    baos.Write(raf.ReadByte());
-                    baos.Write(raf.ReadByte());
-                }
-            }
-            modifiedTables.Put("hmtx", baos.ToArray());
-        }
+        // cmap table merging isn't supported yet
     }
 //\endcond
 }

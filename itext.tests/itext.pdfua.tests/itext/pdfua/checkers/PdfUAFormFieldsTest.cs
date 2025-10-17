@@ -463,7 +463,7 @@ namespace iText.Pdfua.Checkers {
         public virtual void TestRadioButtonCustomAppearanceInteractive(PdfUAConformance pdfUAConformance) {
             UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(new _Generator_431());
-            framework.AssertBothValid("testRadioButtonCustomAppearance", pdfUAConformance);
+            framework.AssertBothValid("testRadioButtonCustomAppearanceInteractive", pdfUAConformance);
         }
 
         private sealed class _Generator_431 : UaValidationTestFramework.Generator<IBlockElement> {

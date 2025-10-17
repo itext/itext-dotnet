@@ -26,6 +26,7 @@ using System.IO;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Datastructures;
 using iText.Commons.Exceptions;
 using iText.Commons.Utils;
 using iText.IO.Font;
@@ -67,7 +68,7 @@ namespace iText.Kernel.Font {
         private readonly CMapToUnicode embeddedToUnicode;
 
         // A map glyph code -> glyph
-        private readonly IDictionary<int, Glyph> utilizedGlyphs;
+        private readonly SortedDictionary<int, Glyph> utilizedGlyphs;
 
 //\cond DO_NOT_DOCUMENT
         internal PdfType0Font(TrueTypeFont ttf, String cmap)
@@ -797,6 +798,7 @@ namespace iText.Kernel.Font {
             else {
                 if (cidFontType == CID_FONT_TYPE_2) {
                     TrueTypeFont ttf = (TrueTypeFont)GetFontProgram();
+                    int numOfGlyphs = ttf.GetFontMetrics().GetNumberOfGlyphs();
                     String fontName = UpdateSubsetPrefix(ttf.GetFontNames().GetFontName(), subset, embedded);
                     PdfDictionary fontDescriptor = GetFontDescriptor(fontName);
                     PdfStream fontStream;
@@ -823,7 +825,9 @@ namespace iText.Kernel.Font {
                         //getDirectoryOffset() > 0 means ttc, which shall be subsetted anyway.
                         if (subset || ttf.GetDirectoryOffset() > 0) {
                             try {
-                                ttfBytes = ttf.GetSubset(utilizedGlyphs.Keys, subset);
+                                Tuple2<int, byte[]> subsetData = ttf.Subset(utilizedGlyphs.Keys, subset);
+                                numOfGlyphs = subsetData.GetFirst();
+                                ttfBytes = subsetData.GetSecond();
                             }
                             catch (iText.IO.Exceptions.IOException) {
                                 ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
@@ -840,8 +844,7 @@ namespace iText.Kernel.Font {
                     }
                     // CIDSet shall be based on font.numberOfGlyphs property of the font, it is maxp.numGlyphs for ttf,
                     // because technically we convert all unused glyphs to space, e.g. just remove outlines.
-                    int numOfGlyphs = ttf.GetFontMetrics().GetNumberOfGlyphs();
-                    byte[] cidSetBytes = new byte[ttf.GetFontMetrics().GetNumberOfGlyphs() / 8 + 1];
+                    byte[] cidSetBytes = new byte[numOfGlyphs / 8 + 1];
                     for (int i = 0; i < numOfGlyphs / 8; i++) {
                         cidSetBytes[i] |= 0xff;
                     }

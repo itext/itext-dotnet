@@ -575,11 +575,32 @@ namespace iText.IO.Font {
                     ("hmtx", fileName);
             }
             int hmtxOffset = tableLocation[0];
-            // 4 bytes per each glyph, 2 bytes for width, 2 bytes for left side bearing
-            raf.Seek(hmtxOffset + gid * 4);
-            byte[] metric = new byte[4];
-            raf.Read(metric, 0, 4);
-            return metric;
+            // OpenTypeParser may be shared between different threads.
+            // raf.createView() returns thread safe RandomAccessFileOrArray
+            RandomAccessFileOrArray tmpRaf = raf.CreateView();
+            try {
+                // For first hhea.numberOfHMetrics - 4 bytes per each glyph, 2 bytes for width, 2 bytes for left side bearing
+                if (gid < hhea.numberOfHMetrics) {
+                    tmpRaf.Seek(hmtxOffset + gid * 4);
+                    byte[] metric = new byte[4];
+                    tmpRaf.Read(metric, 0, 4);
+                    return metric;
+                }
+                else {
+                    // For the rest - only 2 bytes for left side bearing for the rest
+                    tmpRaf.Seek(hmtxOffset + hhea.numberOfHMetrics * 4 + (gid - hhea.numberOfHMetrics) * 2);
+                    byte[] metric = new byte[2];
+                    tmpRaf.Read(metric, 0, 2);
+                    return metric;
+                }
+            }
+            finally {
+                try {
+                    tmpRaf.Close();
+                }
+                catch (Exception) {
+                }
+            }
         }
 
         /// <summary>
@@ -616,15 +637,21 @@ namespace iText.IO.Font {
         }
 
 //\cond DO_NOT_DOCUMENT
-        /// <summary>Gets raw bytes of subset of parsed font.</summary>
+        /// <summary>Gets raw bytes of subset of parsed font and a number of glyphs in a subset.</summary>
+        /// <remarks>
+        /// Gets raw bytes of subset of parsed font and a number of glyphs in a subset.
+        /// <para />
+        /// The number of glyphs in a subset is not just glyphs.size() here. It's the biggest glyph id + 1 (for glyph 0).
+        /// It also may include possible composite glyphs.
+        /// </remarks>
         /// <param name="glyphs">the glyphs to subset the font</param>
         /// <param name="subsetTables">
         /// whether subset tables (remove `name` and `post` tables) or not. It's used in case of ttc
         /// (true type collection) font where single "full" font is needed. Despite the value of that
         /// flag, only used glyphs will be left in the font
         /// </param>
-        /// <returns>the raw data of subset font</returns>
-        internal virtual byte[] GetSubset(ICollection<int> glyphs, bool subsetTables) {
+        /// <returns>a tuple of the number of glyphs and the raw data of subset font</returns>
+        internal virtual Tuple2<int, byte[]> GetSubset(ICollection<int> glyphs, bool subsetTables) {
             TrueTypeFontSubsetter sb = new TrueTypeFontSubsetter(fileName, this, glyphs, subsetTables);
             return sb.Process();
         }

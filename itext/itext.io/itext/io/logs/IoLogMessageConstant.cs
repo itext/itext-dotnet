@@ -157,6 +157,7 @@ namespace iText.IO.Logs {
         public const String FONT_DICTIONARY_WITH_NO_WIDTHS = "Font dictionary does not contain required /Widths " 
             + "entry.";
 
+        [Obsolete]
         public const String FONT_HAS_INVALID_GLYPH = "Font {0} has invalid glyph: {1}";
 
         public const String FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT = "The \"Property.FONT\" property must be a PdfFont object in this context.";

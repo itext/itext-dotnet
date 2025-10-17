@@ -23,8 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 using iText.IO.Exceptions;
@@ -192,7 +190,7 @@ namespace iText.IO.Font {
             return gdefTable;
         }
 
-        /// <summary>Gets subset of the current TrueType font based on the passed glyphs.</summary>
+        /// <summary>Gets subset based on the passed glyphs.</summary>
         /// <param name="glyphs">the glyphs to subset the font</param>
         /// <param name="subsetTables">
         /// whether subset tables (remove `name` and `post` tables) or not. It's used in case of ttc
@@ -201,6 +199,24 @@ namespace iText.IO.Font {
         /// </param>
         /// <returns>the subset font</returns>
         public virtual byte[] GetSubset(ICollection<int> glyphs, bool subsetTables) {
+            return Subset(glyphs, subsetTables).GetSecond();
+        }
+
+        /// <summary>Gets subset and a number of glyphs in it based on the passed glyphs.</summary>
+        /// <remarks>
+        /// Gets subset and a number of glyphs in it based on the passed glyphs.
+        /// <para />
+        /// The number of glyphs in a subset is not just glyphs.size() here. It's the biggest glyph id + 1 (for glyph 0).
+        /// It also may include possible composite glyphs.
+        /// </remarks>
+        /// <param name="glyphs">the glyphs to subset the font</param>
+        /// <param name="subsetTables">
+        /// whether subset tables (remove `name` and `post` tables) or not. It's used in case of ttc
+        /// (true type collection) font where single "full" font is needed. Despite the value of that
+        /// flag, only used glyphs will be left in the font
+        /// </param>
+        /// <returns>the subset of the font and the number of glyphs in it</returns>
+        public virtual Tuple2<int, byte[]> Subset(ICollection<int> glyphs, bool subsetTables) {
             try {
                 return fontParser.GetSubset(glyphs, subsetTables);
             }
@@ -224,7 +240,7 @@ namespace iText.IO.Font {
                     toMergeWithParsers.Put(entry.Key.fontParser, entry.Value);
                 }
                 TrueTypeFontMerger trueTypeFontMerger = new TrueTypeFontMerger(fontName, toMergeWithParsers);
-                return trueTypeFontMerger.Process();
+                return trueTypeFontMerger.Process().GetSecond();
             }
             catch (System.IO.IOException e) {
                 throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.IO_EXCEPTION, e);
@@ -383,9 +399,7 @@ namespace iText.IO.Font {
             foreach (int charCode in cmap.Keys) {
                 int index = cmap.Get(charCode)[0];
                 if (index >= numOfGlyphs) {
-                    ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.IO.Font.TrueTypeFont));
-                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.FONT_HAS_INVALID_GLYPH, GetFontNames
-                        ().GetFontName(), index));
+                    // It seems to be a valid case. If the font is subsetted but cmap table is not, it's a valid case
                     continue;
                 }
                 int cid;

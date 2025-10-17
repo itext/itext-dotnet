@@ -31,15 +31,10 @@ using iText.Test;
 namespace iText.Pdfa.Checker {
     [NUnit.Framework.Category("UnitTest")]
     public class PdfA1CheckerTest : ExtendedITextTest {
-        private PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
-
-        [NUnit.Framework.SetUp]
-        public virtual void Before() {
-            pdfA1Checker.SetFullCheckMode(true);
-        }
-
         [NUnit.Framework.Test]
         public virtual void CheckCatalogDictionaryWithoutAAEntry() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             PdfDictionary catalog = new PdfDictionary();
             catalog.Put(PdfName.AA, new PdfDictionary());
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckCatalogValidEntries
@@ -50,6 +45,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckCatalogDictionaryWithoutOCPropertiesEntry() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             PdfDictionary catalog = new PdfDictionary();
             catalog.Put(PdfName.OCProperties, new PdfDictionary());
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckCatalogValidEntries
@@ -60,6 +57,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckCatalogDictionaryWithoutEmbeddedFiles() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             PdfDictionary names = new PdfDictionary();
             names.Put(PdfName.EmbeddedFiles, new PdfDictionary());
             PdfDictionary catalog = new PdfDictionary();
@@ -72,6 +71,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckValidCatalog() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             pdfA1Checker.CheckCatalogValidEntries(new PdfDictionary());
         }
 
@@ -81,6 +82,8 @@ namespace iText.Pdfa.Checker {
         // no assertion is provided
         [NUnit.Framework.Test]
         public virtual void DeprecatedCheckColorShadingTest() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             PdfDictionary patternDict = new PdfDictionary();
             patternDict.Put(PdfName.ExtGState, new PdfDictionary());
             PdfPattern.Shading pattern = new PdfPattern.Shading(patternDict);
@@ -96,6 +99,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckSignatureTest() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             PdfDictionary dict = new PdfDictionary();
             pdfA1Checker.CheckSignature(dict);
             NUnit.Framework.Assert.IsTrue(pdfA1Checker.IsPdfObjectReadyToFlush(dict));
@@ -103,12 +108,16 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckSignatureTypeTest() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             pdfA1Checker.CheckSignatureType(true);
         }
 
         //nothing to check, only for coverage
         [NUnit.Framework.Test]
         public virtual void CheckLZWDecodeInInlineImage() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             PdfStream stream = new PdfStream();
             stream.Put(PdfName.Filter, PdfName.LZWDecode);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckInlineImage
@@ -118,6 +127,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckLZWDecodeArrayInInlineImage() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             PdfStream stream = new PdfStream();
             PdfArray array = new PdfArray();
             array.Add(PdfName.LZWDecode);
@@ -129,6 +140,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckEmptyImageTwiceTest() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             PdfStream image = new PdfStream();
             pdfA1Checker.CheckImage(image, null);
             pdfA1Checker.CheckImage(image, null);
@@ -137,6 +150,8 @@ namespace iText.Pdfa.Checker {
         //nothing to check, expecting that no error is thrown
         [NUnit.Framework.Test]
         public virtual void CheckImageWithAlternateTest() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             PdfStream image = new PdfStream();
             image.Put(PdfName.Alternates, PdfName.Identity);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckImage
@@ -147,6 +162,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckImageWithOPITest() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             PdfStream image = new PdfStream();
             image.Put(PdfName.OPI, PdfName.Identity);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckImage
@@ -157,6 +174,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckImageWithInterpolateTest() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             PdfStream image = new PdfStream();
             image.Put(PdfName.Interpolate, new PdfBoolean(true));
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckImage
@@ -167,6 +186,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckImageWithSMaskTest() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             PdfStream image = new PdfStream();
             image.Put(PdfName.SMask, PdfName.Identity);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckImage
@@ -177,6 +198,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckFormXObjectWithOPITest() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             PdfStream form = new PdfStream();
             form.Put(PdfName.OPI, PdfName.Identity);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckFormXObject
@@ -187,6 +210,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckFormXObjectWithPSTest() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             PdfStream form = new PdfStream();
             form.Put(PdfName.PS, PdfName.Identity);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckFormXObject
@@ -197,6 +222,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckFormXObjectWithSubtype2PSTest() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             PdfStream form = new PdfStream();
             form.Put(PdfName.Subtype2, PdfName.PS);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckFormXObject
@@ -207,6 +234,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckFormXObjectWithSMaskTest() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             PdfStream form = new PdfStream();
             form.Put(PdfName.SMask, PdfName.Identity);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckFormXObject
@@ -217,6 +246,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckCatalogContainsMetadataTest() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             PdfDictionary catalog = new PdfDictionary();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckMetaData
                 (catalog));
@@ -226,6 +257,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckOutputIntentsTest() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             PdfDictionary catalog = new PdfDictionary();
             PdfArray array = new PdfArray();
             PdfDictionary dictionary = new PdfDictionary();
@@ -244,6 +277,8 @@ namespace iText.Pdfa.Checker {
         //nothing to check, expecting that no error is thrown
         [NUnit.Framework.Test]
         public virtual void CheckLZWDecodeInPdfStreamTest() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             PdfStream stream = new PdfStream();
             stream.Put(PdfName.Filter, PdfName.LZWDecode);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckPdfStream
@@ -253,6 +288,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckLZWDecodeInPdfStreamArrayTest() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             PdfStream stream = new PdfStream();
             PdfArray array = new PdfArray();
             array.Add(PdfName.LZWDecode);
@@ -264,12 +301,16 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckFileSpecTest() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             pdfA1Checker.CheckFileSpec(new PdfDictionary());
         }
 
         //nothing to check, only for coverage
         [NUnit.Framework.Test]
         public virtual void CheckEmptyAnnotationTest() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             PdfDictionary annotation = new PdfDictionary();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckAnnotation
                 (annotation));
@@ -279,6 +320,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckAnnotationWithoutFKeyTest() {
+            PdfA1Checker pdfA1Checker = new PdfA1Checker(PdfAConformance.PDF_A_1B);
+            pdfA1Checker.SetFullCheckMode(true);
             PdfDictionary annotation = new PdfDictionary();
             annotation.Put(PdfName.Subtype, PdfName.Identity);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfA1Checker.CheckAnnotation
