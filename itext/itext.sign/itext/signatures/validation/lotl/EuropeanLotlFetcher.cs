@@ -69,7 +69,7 @@ namespace iText.Signatures.Validation.Lotl {
 
         /// <summary>Represents the result of fetching the List of Trusted Lists (Lotl).</summary>
         public class Result {
-            private readonly ValidationReport validationReport = new ValidationReport();
+            private readonly ValidationReport localReport = new ValidationReport();
 
             private byte[] lotlXml;
 
@@ -83,15 +83,13 @@ namespace iText.Signatures.Validation.Lotl {
                 SetLotlXml(lotlXml);
             }
 
-//\cond DO_NOT_DOCUMENT
             /// <summary>
             /// Creates a new instance of
             /// <see cref="Result"/>
             /// with an empty report items list.
             /// </summary>
-            internal Result() {
+            public Result() {
             }
-//\endcond
 
             //empty constructor
             /// <summary>Returns the Lotl XML data.</summary>
@@ -120,7 +118,7 @@ namespace iText.Signatures.Validation.Lotl {
             /// objects containing information about the fetching process
             /// </returns>
             public virtual ValidationReport GetLocalReport() {
-                return validationReport;
+                return localReport;
             }
 
 //\cond DO_NOT_DOCUMENT

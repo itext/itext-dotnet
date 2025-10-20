@@ -40,9 +40,10 @@ namespace iText.Signatures.Validation.Lotl {
         }
 
         public virtual byte[] GetByteArrayByUrl(Uri url) {
-            System.Console.Out.WriteLine(url);
             //escape url so it can be used as a complete filename
-            String fileName = iText.Commons.Utils.StringUtil.ReplaceAll(url.ToString(), "[^a-zA-Z0-9]", "_");
+            String urlString = url.ToString();
+            urlString = iText.Commons.Utils.StringUtil.ReplaceAll(urlString, " ", "%20");
+            String fileName = iText.Commons.Utils.StringUtil.ReplaceAll(urlString.ToString(), "[^a-zA-Z0-9]", "_");
             String filePath = resourcePath + fileName;
             String path = System.IO.Path.Combine(filePath);
             if (File.Exists(path)) {

@@ -85,6 +85,8 @@ namespace iText.Signatures.Validation.Lotl {
             }
             EuropeanResourceFetcher.Result europeanResult = service.GetEUJournalCertificates();
             report.Merge(europeanResult.GetLocalReport());
+            // get all the data from cache, if it is stale, exception will be thrown
+            // locked and pass to methods
             PivotFetcher.Result result = service.GetAndValidatePivotFiles(lotl.GetLotlXml(), europeanResult.GetCertificates
                 (), europeanResult.GetCurrentlySupportedPublication());
             report.Merge(result.GetLocalReport());

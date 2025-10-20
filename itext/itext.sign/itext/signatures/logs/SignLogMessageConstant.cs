@@ -54,6 +54,8 @@ namespace iText.Signatures.Logs {
              + "This usually indicates that transition period for Official Journal has started. " + "Newest version of Official Journal should be used from now on "
              + "to retrieve trusted certificates and LOTL location.";
 
+        public const String COUNTRY_NOT_REQUIRED_BY_CONFIGURATION = "Country \"{0}\" is not required by " + "lotlFetchingProperties, and not be used when validating.";
+
         private SignLogMessageConstant() {
         }
         // Private constructor will prevent the instantiation of this class directly

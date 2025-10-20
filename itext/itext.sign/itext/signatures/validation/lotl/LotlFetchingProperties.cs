@@ -271,5 +271,11 @@ namespace iText.Signatures.Validation.Lotl {
             return schemaNames.Contains(countryName);
         }
 //\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual IList<String> GetSchemaNames() {
+            return JavaCollectionsUtil.UnmodifiableList(JavaUtil.ArraysAsList(schemaNames.ToArray(new String[0])));
+        }
+//\endcond
     }
 }

@@ -52,11 +52,13 @@ namespace iText.Signatures.Validation.Lotl {
             certificates.Add(certificate);
         }
 
-//\cond DO_NOT_DOCUMENT
-        internal virtual String GetServiceType() {
+        public virtual IList<ServiceChronologicalInfo> GetServiceChronologicalInfos() {
+            return serviceChronologicalInfos;
+        }
+
+        public virtual String GetServiceType() {
             return serviceType;
         }
-//\endcond
 
 //\cond DO_NOT_DOCUMENT
         internal virtual void SetServiceType(String serviceType) {
