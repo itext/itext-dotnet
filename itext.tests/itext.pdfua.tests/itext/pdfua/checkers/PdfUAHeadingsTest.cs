@@ -745,13 +745,13 @@ namespace iText.Pdfua.Checkers {
             framework.AddSuppliers(new _Generator_690());
             framework.AddSuppliers(new _Generator_714());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothValid("hnInheritedSequenceTest", pdfUAConformance);
+                framework.AssertBothValid("hnCompareWithLastFromAnotherBranchTest", pdfUAConformance);
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     String message = MessageFormatUtil.Format(KernelExceptionMessageConstant.PARENT_CHILD_ROLE_RELATION_IS_NOT_ALLOWED
                         , "H1", "H2");
-                    framework.AssertBothFail("hnInheritedSequenceTest", message, pdfUAConformance);
+                    framework.AssertBothFail("hnCompareWithLastFromAnotherBranchTest", message, pdfUAConformance);
                 }
             }
         }

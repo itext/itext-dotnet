@@ -1187,7 +1187,7 @@ namespace iText.Pdfua.Checkers {
         public virtual void TestTextAreaWithCustomAppearanceAndPlaceHolder(PdfUAConformance pdfUAConformance) {
             UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(new _Generator_993(this));
-            framework.AssertBothValid("testTextAreaWithCustomAppearanceAndValue", pdfUAConformance);
+            framework.AssertBothValid("testTextAreaWithCustomAppearanceAndPlaceHolder", pdfUAConformance);
         }
 
         private sealed class _Generator_993 : UaValidationTestFramework.Generator<IBlockElement> {
