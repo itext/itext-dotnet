@@ -90,10 +90,29 @@ namespace iText.Layout.Renderer {
             Rectangle layoutContextRectangle = layoutContext.GetArea().GetBBox();
             SetThisAsParent(GetChildRenderers());
             OrderChildRenderers(GetChildRenderers());
+            Rectangle layoutBox = layoutContextRectangle.Clone();
+            UnitValue marginTop = this.GetProperty<UnitValue>(Property.MARGIN_TOP);
+            UnitValue marginBottom = this.GetProperty<UnitValue>(Property.MARGIN_BOTTOM);
+            bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
+            if (marginsCollapsingEnabled) {
+                MarginsCollapseInfo marginsCollapseInfo = layoutContext.GetMarginsCollapseInfo();
+                MarginsCollapseInfo deepCopy = marginsCollapseInfo == null ? null : MarginsCollapseInfo.CreateDeepCopy(marginsCollapseInfo
+                    );
+                MarginsCollapseHandler marginsCollapseHandler = new MarginsCollapseHandler(this, deepCopy);
+                marginsCollapseHandler.StartMarginsCollapse(layoutBox);
+            }
             // Disable collapsing margins for container before calculating item's rectangles to avoid margin collapsing
             // between parent and child (flex-container – flex-item) and two children (flex-item – flex-item)
             this.SetProperty(Property.COLLAPSING_MARGINS, false);
-            lines = FlexUtil.CalculateChildrenRectangles(layoutContextRectangle, this);
+            lines = FlexUtil.CalculateChildrenRectangles(layoutBox, this);
+            if (marginsCollapsingEnabled) {
+                if (marginTop != null) {
+                    this.SetProperty(Property.MARGIN_TOP, marginTop);
+                }
+                if (marginBottom != null) {
+                    this.SetProperty(Property.MARGIN_BOTTOM, marginBottom);
+                }
+            }
             // Return collapsing margins for container to inherited value from ancestors
             this.DeleteProperty(Property.COLLAPSING_MARGINS);
             ApplyWrapReverse();
@@ -500,11 +519,11 @@ namespace iText.Layout.Renderer {
         }
 
         private static void OrderChildRenderers(IList<IRenderer> renderers) {
-            JavaCollectionsUtil.Sort(renderers, new _IComparer_526());
+            JavaCollectionsUtil.Sort(renderers, new _IComparer_546());
         }
 
-        private sealed class _IComparer_526 : IComparer<IRenderer> {
-            public _IComparer_526() {
+        private sealed class _IComparer_546 : IComparer<IRenderer> {
+            public _IComparer_546() {
             }
 
             public int Compare(IRenderer a, IRenderer b) {

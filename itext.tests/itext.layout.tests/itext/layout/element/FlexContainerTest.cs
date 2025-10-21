@@ -31,6 +31,7 @@ using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Logs;
 using iText.Layout.Properties;
+using iText.Layout.Renderer;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -118,6 +119,42 @@ namespace iText.Layout.Element {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ZeroMarginTopAndBottomTest() {
+            String outFileName = DESTINATION_FOLDER + "zeroMarginTopAndBottomTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_zeroMarginTopAndBottomTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Div flexContainer = new Div().SetBorder(new SolidBorder(ColorConstants.BLUE, 1)).SetBackgroundColor(ColorConstants
+                    .BLUE, 0.3f);
+                flexContainer.SetNextRenderer(new FlexContainerRenderer(flexContainer));
+                flexContainer.SetProperty(Property.MARGIN_TOP, new UnitValue(UnitValue.POINT, 0f));
+                flexContainer.SetProperty(Property.MARGIN_BOTTOM, new UnitValue(UnitValue.POINT, 0f));
+                flexContainer.SetProperty(Property.COLLAPSING_MARGINS, true);
+                flexContainer.Add(new Paragraph("flex container"));
+                document.Add(flexContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff01_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NullMarginTopAndBottomTest() {
+            String outFileName = DESTINATION_FOLDER + "nullMarginTopAndBottomTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_nullMarginTopAndBottomTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Div flexContainer = new Div().SetBorder(new SolidBorder(ColorConstants.BLUE, 1)).SetBackgroundColor(ColorConstants
+                    .BLUE, 0.3f);
+                flexContainer.SetNextRenderer(new FlexContainerRenderer(flexContainer));
+                flexContainer.SetProperty(Property.MARGIN_TOP, null);
+                flexContainer.SetProperty(Property.MARGIN_BOTTOM, null);
+                flexContainer.SetProperty(Property.COLLAPSING_MARGINS, true);
+                flexContainer.Add(new Paragraph("flex container"));
+                document.Add(flexContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff01_"));
         }
 
         [NUnit.Framework.TestCaseSource("AlignItemsAndJustifyContentProperties")]
