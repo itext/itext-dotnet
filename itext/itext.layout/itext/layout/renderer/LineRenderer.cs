@@ -534,8 +534,9 @@ namespace iText.Layout.Renderer {
                     }
                     else {
                         bool forcePlacement = true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT));
-                        bool isInlineBlockAndFirstOnRootArea = isInlineBlockChild && IsFirstOnRootArea();
-                        if ((childResult.GetStatus() == LayoutResult.PARTIAL && (!isInlineBlockChild || forcePlacement || isInlineBlockAndFirstOnRootArea
+                        bool isInlineBlockAndFirstOnRootAreaOrFlexItem = isInlineBlockChild && (IsFirstOnRootArea() || IsInsideFlexContainer
+                            ());
+                        if ((childResult.GetStatus() == LayoutResult.PARTIAL && (!isInlineBlockChild || forcePlacement || isInlineBlockAndFirstOnRootAreaOrFlexItem
                             )) || childResult.GetStatus() == LayoutResult.FULL) {
                             IRenderer splitRenderer = childResult.GetSplitRenderer();
                             split[0].AddChild(splitRenderer);
@@ -547,7 +548,7 @@ namespace iText.Layout.Renderer {
                             anythingPlaced = true;
                         }
                         if (null != childResult.GetOverflowRenderer()) {
-                            if (isInlineBlockChild && !forcePlacement && !isInlineBlockAndFirstOnRootArea) {
+                            if (isInlineBlockChild && !forcePlacement && !isInlineBlockAndFirstOnRootAreaOrFlexItem) {
                                 split[1].AddChildRenderer(childRenderer);
                             }
                             else {
@@ -1714,6 +1715,20 @@ namespace iText.Layout.Renderer {
                     return 0;
                 }
             }
+        }
+
+        // TODO DEVSIX-9509 Move whole flex container to the next page if inline-block flex item is not fit
+        private bool IsInsideFlexContainer() {
+            bool isInsideFlexContainer = false;
+            IRenderer ancestor = this;
+            while (!isInsideFlexContainer && ancestor.GetParent() != null) {
+                IRenderer parent = ancestor.GetParent();
+                if (parent is FlexContainerRenderer) {
+                    isInsideFlexContainer = true;
+                }
+                ancestor = parent;
+            }
+            return isInsideFlexContainer;
         }
 
         public class RendererGlyph {

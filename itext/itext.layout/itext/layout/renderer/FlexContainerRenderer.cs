@@ -605,7 +605,7 @@ namespace iText.Layout.Renderer {
                         }
                     }
                     else {
-                        // Process all preceeding renderers in the current line
+                        // Process all preceding renderers in the current line
                         // They all were layouted as FULL so add them into split renderer
                         splitRenderer.AddChildRenderer(itemInfo.GetRenderer());
                         // But we also need to occupy the space on overflow renderer
