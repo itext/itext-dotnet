@@ -69,7 +69,6 @@ namespace iText.Kernel.Pdf.Xobject {
         [NUnit.Framework.Test]
         public virtual void TestFlateDecodeFilters() {
             // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
-            // TODO DEVSIX-2941: extracted indexed devicegray RunLengthDecode gets color inverted
             TestFile("flatedecode_runlengthdecode.pdf", "Im9", "png");
         }
 
