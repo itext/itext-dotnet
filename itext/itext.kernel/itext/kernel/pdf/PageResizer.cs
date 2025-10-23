@@ -412,8 +412,26 @@ namespace iText.Kernel.Pdf {
             if (annotDict.GetAsNumber(PdfName.LLO) != null) {
                 annotDict.Put(PdfName.LLO, new PdfNumber(annotDict.GetAsNumber(PdfName.LLO).DoubleValue() * lengthScale));
             }
+            // Scale font size in the Default Appearance string
+            String da = null;
             if (annotDict.GetAsString(PdfName.DA) != null) {
-                String da = annotDict.GetAsString(PdfName.DA).ToUnicodeString();
+                da = annotDict.GetAsString(PdfName.DA).ToUnicodeString();
+            }
+            else {
+                if (PdfName.Widget.Equals(annotDict.GetAsName(PdfName.Subtype))) {
+                    // For widget annotation we should also check parents
+                    da = GetDaFromParent(annotDict);
+                    if (da == null) {
+                        // Nothing in parents - check Acroform
+                        PdfDictionary acroFormDictionary = annot.GetPage().GetDocument().GetCatalog().GetPdfObject().GetAsDictionary
+                            (PdfName.AcroForm);
+                        if (acroFormDictionary != null && acroFormDictionary.GetAsString(PdfName.DA) != null) {
+                            da = acroFormDictionary.GetAsString(PdfName.DA).ToUnicodeString();
+                        }
+                    }
+                }
+            }
+            if (da != null) {
                 annotDict.Put(PdfName.DA, new PdfString(ScaleDaString(da, lengthScale)));
             }
         }
@@ -475,6 +493,22 @@ namespace iText.Kernel.Pdf {
             double[] newMatrixArray = new double[6];
             newMatrix.GetMatrix(newMatrixArray);
             appearanceStream.Put(PdfName.Matrix, new PdfArray(newMatrixArray));
+        }
+
+        private static String GetDaFromParent(PdfDictionary dict) {
+            PdfDictionary parentDict = dict.GetAsDictionary(PdfName.Parent);
+            if (parentDict == null) {
+                return null;
+            }
+            else {
+                PdfString da = parentDict.GetAsString(PdfName.DA);
+                if (da != null) {
+                    return da.ToUnicodeString();
+                }
+                else {
+                    return GetDaFromParent(parentDict);
+                }
+            }
         }
 
         /// <summary>

@@ -35,7 +35,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Setup() {
-            CreateDestinationFolder(DESTINATION_FOLDER);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.OneTimeTearDown]
@@ -375,6 +375,42 @@ namespace iText.Kernel.Pdf {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
                  + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestFormFieldsDA() {
+            String inFileName = "formFieldsDA.pdf";
+            String outFileName = "formFieldsDA.pdf";
+            String outFileNameReverted = "formFieldsDAReverted.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                PageResizer resizer = new PageResizer(new PageSize(1200, 1200), PageResizer.ResizeType.DEFAULT);
+                resizer.SetVerticalAnchorPoint(PageResizer.VerticalAnchorPoint.BOTTOM);
+                resizer.Resize(pdfDocument.GetPage(1));
+                resizer = new PageResizer(new PageSize(1200, 1200), PageResizer.ResizeType.MAINTAIN_ASPECT_RATIO);
+                resizer.SetVerticalAnchorPoint(PageResizer.VerticalAnchorPoint.BOTTOM);
+                resizer.Resize(pdfDocument.GetPage(2));
+                resizer = new PageResizer(new PageSize(400, 400), PageResizer.ResizeType.DEFAULT);
+                resizer.SetVerticalAnchorPoint(PageResizer.VerticalAnchorPoint.BOTTOM);
+                resizer.Resize(pdfDocument.GetPage(3));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+            // Reverting
+            using (PdfDocument pdfDocument_1 = new PdfDocument(new PdfReader(SOURCE_FOLDER + outFileName), new PdfWriter
+                (DESTINATION_FOLDER + outFileNameReverted))) {
+                PageResizer resizer = new PageResizer(new PageSize(PageSize.A4), PageResizer.ResizeType.DEFAULT);
+                resizer.SetVerticalAnchorPoint(PageResizer.VerticalAnchorPoint.BOTTOM);
+                resizer.Resize(pdfDocument_1.GetPage(1));
+                resizer = new PageResizer(new PageSize(PageSize.A4), PageResizer.ResizeType.MAINTAIN_ASPECT_RATIO);
+                resizer.SetVerticalAnchorPoint(PageResizer.VerticalAnchorPoint.BOTTOM);
+                resizer.Resize(pdfDocument_1.GetPage(2));
+                resizer = new PageResizer(new PageSize(PageSize.A4), PageResizer.ResizeType.DEFAULT);
+                resizer.SetVerticalAnchorPoint(PageResizer.VerticalAnchorPoint.BOTTOM);
+                resizer.Resize(pdfDocument_1.GetPage(3));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileNameReverted, 
+                SOURCE_FOLDER + "cmp_" + outFileNameReverted, DESTINATION_FOLDER, "diff"));
         }
     }
 }
