@@ -21,11 +21,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
+using System.Text;
+using iText.Commons.Utils;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
-using iText.Kernel.Pdf.Xobject;
 
 namespace iText.Kernel.Pdf {
 //\cond DO_NOT_DOCUMENT
@@ -40,30 +43,14 @@ namespace iText.Kernel.Pdf {
     /// options for maintaining the aspect ratio during the resize operation.
     /// </remarks>
     internal class PageResizer {
-        /// <summary>
-        /// Represents the target page size for the
-        /// <c>PageResizer</c>
-        /// functionality.
-        /// </summary>
-        /// <remarks>
-        /// Represents the target page size for the
-        /// <c>PageResizer</c>
-        /// functionality.
-        /// This variable dictates the dimensions to which a page needs to be resized.
-        /// The value is immutable and initialised during the construction of the
-        /// <c>PageResizer</c>.
-        /// </remarks>
+        private const float EPSILON = 1e-6f;
+
         private readonly PageSize size;
 
         private PageResizer.VerticalAnchorPoint verticalAnchorPoint = PageResizer.VerticalAnchorPoint.CENTER;
 
         private PageResizer.HorizontalAnchorPoint horizontalAnchorPoint = PageResizer.HorizontalAnchorPoint.CENTER;
 
-        /// <summary>Represents the type of resize operation to be applied to a page.</summary>
-        /// <remarks>
-        /// Represents the type of resize operation to be applied to a page.
-        /// This variable specifies the method by which the page resize is performed.
-        /// </remarks>
         private readonly PageResizer.ResizeType type;
 
 //\cond DO_NOT_DOCUMENT
@@ -76,18 +63,39 @@ namespace iText.Kernel.Pdf {
         }
 //\endcond
 
+        /// <summary>Retrieves the horizontal anchor point of the PageResizer.</summary>
+        /// <returns>the horizontal anchor point, which determines the horizontal alignment (e.g., LEFT, CENTER, RIGHT).
+        ///     </returns>
         public virtual PageResizer.HorizontalAnchorPoint GetHorizontalAnchorPoint() {
             return horizontalAnchorPoint;
         }
 
+        /// <summary>
+        /// Sets the horizontal anchor point, which determines how the horizontal alignment is handled
+        /// (e.g., LEFT, CENTER, RIGHT).
+        /// </summary>
+        /// <param name="anchorPoint">
+        /// the horizontal anchor point to set; it specifies the horizontal alignment type
+        /// for resizing operations
+        /// </param>
         public virtual void SetHorizontalAnchorPoint(PageResizer.HorizontalAnchorPoint anchorPoint) {
             this.horizontalAnchorPoint = anchorPoint;
         }
 
+        /// <summary>Retrieves the vertical anchor point of the PageResizer.</summary>
+        /// <returns>the vertical anchor point, which determines the vertical alignment (e.g., TOP, CENTER, BOTTOM).</returns>
         public virtual PageResizer.VerticalAnchorPoint GetVerticalAnchorPoint() {
             return verticalAnchorPoint;
         }
 
+        /// <summary>
+        /// Sets the vertical anchor point, which determines how the vertical alignment is handled
+        /// (e.g., TOP, CENTER, BOTTOM).
+        /// </summary>
+        /// <param name="anchorPoint">
+        /// the vertical anchor point to set; it specifies the vertical alignment type
+        /// for resizing operations
+        /// </param>
         public virtual void SetVerticalAnchorPoint(PageResizer.VerticalAnchorPoint anchorPoint) {
             this.verticalAnchorPoint = anchorPoint;
         }
@@ -100,6 +108,13 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         /// <param name="page">the PDF page to be resized</param>
         public virtual void Resize(PdfPage page) {
+            if (size == null || size.GetWidth() < EPSILON || size.GetHeight() < EPSILON) {
+                throw new ArgumentException(MessageFormatUtil.Format(KernelExceptionMessageConstant.CANNOT_RESIZE_PAGE_WITH_NEGATIVE_OR_INFINITE_SCALE
+                    , size));
+            }
+            if (page == null) {
+                return;
+            }
             Rectangle originalPageSize = page.GetMediaBox();
             double horizontalScale = size.GetWidth() / originalPageSize.GetWidth();
             double verticalScale = size.GetHeight() / originalPageSize.GetHeight();
@@ -115,22 +130,381 @@ namespace iText.Kernel.Pdf {
             UpdateBoxes(page, originalPageSize);
             AffineTransform scalingMatrix = CalculateAffineTransform(horizontalScale, verticalScale, horizontalFreeSpace
                 , verticalFreeSpace);
+            // Ensure resources exist to avoid NPEs when creating PdfCanvas or iterating resources
+            PdfResources resources = page.GetResources();
+            if (resources == null) {
+                resources = new PdfResources();
+                page.GetPdfObject().Put(PdfName.Resources, resources.GetPdfObject());
+            }
             PdfCanvas pdfCanvas = new PdfCanvas(page.NewContentStreamBefore(), page.GetResources(), page.GetDocument()
                 );
             pdfCanvas.ConcatMatrix(scalingMatrix);
-            pdfCanvas.SaveState();
             foreach (PdfName resName in page.GetResources().GetResourceNames()) {
                 PdfPattern pattern = page.GetResources().GetPattern(resName);
                 if (pattern != null) {
-                    ResizePattern(pattern, scalingMatrix);
-                }
-                PdfFormXObject form = page.GetResources().GetForm(resName);
-                if (form != null) {
-                    ResizeForm(form, scalingMatrix);
+                    ResizePattern(page.GetResources(), resName, scalingMatrix);
                 }
             }
             foreach (PdfAnnotation annot in page.GetAnnotations()) {
                 ResizeAnnotation(annot, scalingMatrix);
+            }
+        }
+
+//\cond DO_NOT_DOCUMENT
+        internal static String ScaleDaString(String daString, double scale) {
+            if (daString == null || String.IsNullOrEmpty(daString.Trim())) {
+                return daString;
+            }
+            // Optimization for identity scaling. Use an epsilon for robust float comparison.
+            if (Math.Abs(scale - 1.0) < 1e-9) {
+                return daString;
+            }
+            IList<String> tokens = new List<String>(JavaUtil.ArraysAsList(iText.Commons.Utils.StringUtil.Split(daString
+                .Trim(), "\\s+")));
+            // Operators we care about in DA:
+            //   Tf  => operands: /FontName <fontSize>  (scale the <fontSize> only)
+            //   TL  => operand: <leading>              (scale)
+            //   Tc  => operand: <charSpacing>          (scale)
+            //   Tw  => operand: <wordSpacing>          (scale)
+            //   Ts  => operand: <textRise>             (scale)
+            //
+            // Operators we intentionally do NOT scale:
+            //   Tz (horizontal scaling, percentage), Tr (rendering mode),
+            //   color ops (g/rg/k/G/RG/K), etc.
+            ICollection<String> scalableOperators = new HashSet<String>(JavaUtil.ArraysAsList("Tf", "TL", "Tc", "Tw", 
+                "Ts"));
+            for (int i = 0; i < tokens.Count; i++) {
+                if (scalableOperators.Contains(tokens[i])) {
+                    int operandIdx = i - 1;
+                    while (operandIdx >= 0) {
+                        String token = tokens[operandIdx];
+                        if (token.StartsWith("/")) {
+                            // Skip resource names, e.g., /Helv
+                            operandIdx--;
+                            continue;
+                        }
+                        try {
+                            double value = Double.Parse(token, System.Globalization.CultureInfo.InvariantCulture);
+                            tokens[operandIdx] = FormatNumber(value * scale);
+                            break;
+                        }
+                        catch (FormatException) {
+                            // Not a number, continue searching backwards.
+                            operandIdx--;
+                        }
+                    }
+                }
+            }
+            return String.Join(" ", tokens);
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Scales the given page box dimensions from the original page size to the new page size.</summary>
+        /// <param name="originalPageSize">the size of the original page</param>
+        /// <param name="newPageSize">the size of the new page to scale to</param>
+        /// <param name="box">the rectangular box representing the dimensions to be scaled</param>
+        /// <returns>a new Rectangle representing the scaled dimensions of the page box</returns>
+        internal static Rectangle ScalePageBox(Rectangle originalPageSize, PageSize newPageSize, Rectangle box) {
+            if (originalPageSize == null || newPageSize == null || box == null) {
+                return box;
+            }
+            float origW = originalPageSize.GetWidth();
+            float origH = originalPageSize.GetHeight();
+            float newW = newPageSize.GetWidth();
+            float newH = newPageSize.GetHeight();
+            if (origW < EPSILON || origH < EPSILON) {
+                return box;
+            }
+            float left = box.GetLeft() * newW / origW;
+            float bottom = box.GetBottom() * newH / origH;
+            float width = box.GetWidth() * newW / origW;
+            float height = box.GetHeight() * newH / origH;
+            return new Rectangle(left, bottom, width, height);
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Resizes the appearance streams of a given PDF annotation by applying the specified affine transformation matrix.
+        ///     </summary>
+        /// <remarks>
+        /// Resizes the appearance streams of a given PDF annotation by applying the specified affine transformation matrix.
+        /// This involves scaling the content of the appearance streams in the annotation's
+        /// appearance dictionary and adjusting their transformation matrices to reflect the scaling.
+        /// </remarks>
+        /// <param name="annot">the PDF annotation whose appearance streams are to be resized</param>
+        /// <param name="scalingMatrix">the affine transformation matrix used to scale the appearance streams</param>
+        internal static void ResizeAppearanceStreams(PdfAnnotation annot, AffineTransform scalingMatrix) {
+            PdfDictionary ap = annot.GetAppearanceDictionary();
+            if (ap == null) {
+                return;
+            }
+            foreach (PdfName key in ap.KeySet()) {
+                PdfObject apState = ap.Get(key);
+                if (apState.IsStream()) {
+                    ResizeAppearanceStream((PdfStream)apState, scalingMatrix);
+                }
+                else {
+                    if (apState.IsDictionary()) {
+                        PdfDictionary apStateDict = (PdfDictionary)apState;
+                        foreach (PdfName subKeyState in apStateDict.KeySet()) {
+                            PdfObject subApState = apStateDict.Get(subKeyState);
+                            if (subApState.IsStream()) {
+                                ResizeAppearanceStream((PdfStream)subApState, scalingMatrix);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+//\endcond
+
+        /// <summary>
+        /// Scales the transformation matrix of the provided pattern using the given scaling matrix,
+        /// without mutating the original pattern.
+        /// </summary>
+        /// <remarks>
+        /// Scales the transformation matrix of the provided pattern using the given scaling matrix,
+        /// without mutating the original pattern.
+        /// The method:
+        /// - Locates the pattern object in the provided resources by name.
+        /// - Deep-copies the pattern object into the same document.
+        /// - Updates the /Matrix of the copied pattern.
+        /// - Replaces the entry in the page's /Pattern resources with the copied (resized) pattern,
+        /// so other pages that reference the original pattern remain unaffected.
+        /// </remarks>
+        /// <param name="resources">the resource dictionary that holds the pattern</param>
+        /// <param name="resName">the name of the pattern resource to resize</param>
+        /// <param name="scalingMatrix">the affine transformation matrix to be applied for scaling</param>
+        private static void ResizePattern(PdfResources resources, PdfName resName, AffineTransform scalingMatrix) {
+            if (resources == null || resName == null || scalingMatrix == null) {
+                return;
+            }
+            PdfDictionary patternDictContainer = resources.GetResource(PdfName.Pattern);
+            if (patternDictContainer == null) {
+                return;
+            }
+            PdfObject patternObj = resources.GetResourceObject(PdfName.Pattern, resName);
+            if (patternObj == null) {
+                return;
+            }
+            PdfObject clonedObj = (PdfObject)patternObj.Clone();
+            PdfDictionary clonedPatternDict = (PdfDictionary)clonedObj;
+            PdfArray existingMatrix = clonedPatternDict.GetAsArray(PdfName.Matrix);
+            AffineTransform newTransform;
+            if (existingMatrix == null) {
+                newTransform = new AffineTransform(scalingMatrix);
+            }
+            else {
+                newTransform = new AffineTransform(existingMatrix.ToDoubleArray());
+                newTransform.PreConcatenate(scalingMatrix);
+            }
+            double[] newMatrixArray = new double[6];
+            newTransform.GetMatrix(newMatrixArray);
+            clonedPatternDict.Put(PdfName.Matrix, new PdfArray(newMatrixArray));
+            patternDictContainer.Put(resName, clonedPatternDict);
+        }
+
+        /// <summary>Resizes the given PDF annotation by applying the specified affine transformation.</summary>
+        /// <remarks>
+        /// Resizes the given PDF annotation by applying the specified affine transformation.
+        /// This method adjusts the annotation's properties, such as its bounding box,
+        /// to reflect the transformation based on the scaling and translation defined
+        /// in the affine transformation matrix.
+        /// </remarks>
+        /// <param name="annot">the PDF annotation to be resized</param>
+        /// <param name="scalingMatrix">
+        /// the affine transformation matrix representing the scaling
+        /// and translation to be applied
+        /// </param>
+        private static void ResizeAnnotation(PdfAnnotation annot, AffineTransform scalingMatrix) {
+            // Transform all geometric coordinate-based properties of the annotation.
+            PdfArray rectArray = annot.GetRectangle();
+            if (rectArray != null) {
+                double[] rectPoints = new double[] { rectArray.GetAsNumber(0).DoubleValue(), rectArray.GetAsNumber(1).DoubleValue
+                    (), rectArray.GetAsNumber(2).DoubleValue(), rectArray.GetAsNumber(3).DoubleValue() };
+                // Transform ll
+                scalingMatrix.Transform(rectPoints, 0, rectPoints, 0, 1);
+                // Transform ur
+                scalingMatrix.Transform(rectPoints, 2, rectPoints, 2, 1);
+                annot.SetRectangle(new PdfArray(rectPoints));
+            }
+            PdfDictionary annotDict = annot.GetPdfObject();
+            TransformCoordinateArray(annotDict.GetAsArray(PdfName.L), scalingMatrix);
+            TransformCoordinateArray(annotDict.GetAsArray(PdfName.Vertices), scalingMatrix);
+            TransformCoordinateArray(annotDict.GetAsArray(PdfName.QuadPoints), scalingMatrix);
+            TransformCoordinateArray(annotDict.GetAsArray(PdfName.CL), scalingMatrix);
+            PdfArray inkList = annotDict.GetAsArray(PdfName.InkList);
+            if (inkList != null) {
+                for (int i = 0; i < inkList.Size(); i++) {
+                    TransformCoordinateArray(inkList.GetAsArray(i), scalingMatrix);
+                }
+            }
+            // Scale all scalar properties of the annotation, such as border widths and font sizes.
+            ScaleAnnotationScalarProperties(annot, scalingMatrix.GetScaleX(), scalingMatrix.GetScaleY());
+            // Resize the appearance streams, which define the annotation's visual representation.
+            ResizeAppearanceStreams(annot, scalingMatrix);
+        }
+
+        /// <summary>Scales an array of coordinates (x1, y1, x2, y2, ...) by applying horizontal and vertical scale factors.
+        ///     </summary>
+        /// <param name="coordinateArray">the array of coordinates to scale</param>
+        /// <param name="transform">the transformation to be applied</param>
+        private static void TransformCoordinateArray(PdfArray coordinateArray, AffineTransform transform) {
+            if (coordinateArray == null) {
+                return;
+            }
+            // Only transform complete pairs.
+            if (coordinateArray.Size() % 2 != 0) {
+                return;
+            }
+            double[] points = new double[coordinateArray.Size()];
+            for (int i = 0; i < coordinateArray.Size(); i++) {
+                points[i] = coordinateArray.GetAsNumber(i).DoubleValue();
+            }
+            transform.Transform(points, 0, points, 0, points.Length / 2);
+            for (int i = 0; i < coordinateArray.Size(); i++) {
+                coordinateArray.Set(i, new PdfNumber(points[i]));
+            }
+        }
+
+        /// <summary>Scales the scalar properties of an annotation based on the provided horizontal and vertical scaling factors.
+        ///     </summary>
+        /// <param name="annot">the annotation whose scalar properties are to be scaled</param>
+        /// <param name="horizontalScale">the factor by which the horizontal dimensions should be scaled</param>
+        /// <param name="verticalScale">the factor by which the vertical dimensions should be scaled</param>
+        private static void ScaleAnnotationScalarProperties(PdfAnnotation annot, double horizontalScale, double verticalScale
+            ) {
+            PdfDictionary annotDict = annot.GetPdfObject();
+            // Scale border width in a Border array [horizontal_radius vertical_radius width ...]
+            PdfArray border = annotDict.GetAsArray(PdfName.Border);
+            if (border != null && border.Size() >= 3) {
+                border.Set(0, new PdfNumber(border.GetAsNumber(0).DoubleValue() * horizontalScale));
+                border.Set(1, new PdfNumber(border.GetAsNumber(1).DoubleValue() * verticalScale));
+                border.Set(2, new PdfNumber(border.GetAsNumber(2).DoubleValue() * Math.Min(horizontalScale, verticalScale)
+                    ));
+            }
+            // Scale border width in a BS (Border Style) dictionary
+            PdfDictionary bs = annotDict.GetAsDictionary(PdfName.BS);
+            if (bs != null) {
+                PdfNumber width = bs.GetAsNumber(PdfName.W);
+                if (width != null) {
+                    bs.Put(PdfName.W, new PdfNumber(width.DoubleValue() * Math.Min(horizontalScale, verticalScale)));
+                }
+            }
+            // Scale RD (Rectangle Differences) - defines differences between Rect and actual drawing area
+            // These are lengths/insets, so they should be scaled, not transformed.
+            PdfArray rd = annotDict.GetAsArray(PdfName.RD);
+            if (rd != null && rd.Size() == 4) {
+                rd.Set(0, new PdfNumber(rd.GetAsNumber(0).DoubleValue() * horizontalScale));
+                rd.Set(1, new PdfNumber(rd.GetAsNumber(1).DoubleValue() * verticalScale));
+                rd.Set(2, new PdfNumber(rd.GetAsNumber(2).DoubleValue() * horizontalScale));
+                rd.Set(3, new PdfNumber(rd.GetAsNumber(3).DoubleValue() * verticalScale));
+            }
+            // Scale LeaderLine-related lengths for Line annotations
+            double lengthScale = Math.Min(horizontalScale, verticalScale);
+            if (annotDict.GetAsNumber(PdfName.LL) != null) {
+                annotDict.Put(PdfName.LL, new PdfNumber(annotDict.GetAsNumber(PdfName.LL).DoubleValue() * lengthScale));
+            }
+            if (annotDict.GetAsNumber(PdfName.LLE) != null) {
+                annotDict.Put(PdfName.LLE, new PdfNumber(annotDict.GetAsNumber(PdfName.LLE).DoubleValue() * lengthScale));
+            }
+            if (annotDict.GetAsNumber(PdfName.LLO) != null) {
+                annotDict.Put(PdfName.LLO, new PdfNumber(annotDict.GetAsNumber(PdfName.LLO).DoubleValue() * lengthScale));
+            }
+            if (annotDict.GetAsString(PdfName.DA) != null) {
+                String da = annotDict.GetAsString(PdfName.DA).ToUnicodeString();
+                annotDict.Put(PdfName.DA, new PdfString(ScaleDaString(da, lengthScale)));
+            }
+        }
+
+        /// <summary>Formats a given double value to a string representation with reasonable precision</summary>
+        /// <param name="v">the double value to be formatted</param>
+        /// <returns>string representation of the formatted number</returns>
+        private static String FormatNumber(double v) {
+            if (double.IsNaN(v)) {
+                return Convert.ToString(v, System.Globalization.CultureInfo.InvariantCulture);
+            }
+            // Round to 4 decimal places.
+            long scaled = (long)MathematicUtil.Round(v * 10000.0);
+            if (scaled == 0) {
+                return "0";
+            }
+            StringBuilder sb = new StringBuilder();
+            if (scaled < 0) {
+                sb.Append('-');
+                scaled = -scaled;
+            }
+            long wholePart = scaled / 10000;
+            long fractionalPart = scaled % 10000;
+            sb.Append(wholePart);
+            if (fractionalPart > 0) {
+                sb.Append('.');
+                String fractionalStr = (10000 + fractionalPart).ToString().Substring(1);
+                sb.Append(fractionalStr);
+                while (sb.Length > 0 && sb[sb.Length - 1] == '0') {
+                    sb.Length = sb.Length - 1;
+                }
+            }
+            return sb.ToString();
+        }
+
+        /// <summary>Resizes a single appearance stream by scaling its bounding box and adjusting its transformation matrix.
+        ///     </summary>
+        /// <remarks>
+        /// Resizes a single appearance stream by scaling its bounding box and adjusting its transformation matrix.
+        /// The method takes into consideration the existing matrix if present, and applies the scaling transformation.
+        /// </remarks>
+        /// <param name="appearanceStream">the appearance stream to be resized</param>
+        /// <param name="scalingMatrix">the affine transformation matrix representing the scaling to be applied</param>
+        private static void ResizeAppearanceStream(PdfStream appearanceStream, AffineTransform scalingMatrix) {
+            // The appearance stream's transformation matrix should only handle scaling.
+            // Page-level translations are handled by the annotation's /Rect entry.
+            // We create a new AffineTransform containing only the scaling components.
+            AffineTransform scaleOnlyMatrix = new AffineTransform();
+            scaleOnlyMatrix.Scale(scalingMatrix.GetScaleX(), scalingMatrix.GetScaleY());
+            PdfArray existingMatrix = appearanceStream.GetAsArray(PdfName.Matrix);
+            AffineTransform newMatrix;
+            if (existingMatrix == null) {
+                newMatrix = scaleOnlyMatrix;
+            }
+            else {
+                newMatrix = new AffineTransform(existingMatrix.ToDoubleArray());
+                newMatrix.PreConcatenate(scaleOnlyMatrix);
+            }
+            double[] newMatrixArray = new double[6];
+            newMatrix.GetMatrix(newMatrixArray);
+            appearanceStream.Put(PdfName.Matrix, new PdfArray(newMatrixArray));
+        }
+
+        /// <summary>
+        /// Updates the page boxes (MediaBox, CropBox, TrimBox, BleedBox, ArtBox) of the given PDF page
+        /// based on the specified original page size and the size associated with the current instance.
+        /// </summary>
+        /// <remarks>
+        /// Updates the page boxes (MediaBox, CropBox, TrimBox, BleedBox, ArtBox) of the given PDF page
+        /// based on the specified original page size and the size associated with the current instance.
+        /// The page boxes are scaled proportionally to fit the new page size.
+        /// </remarks>
+        /// <param name="page">the PDF page whose boxes are to be updated</param>
+        /// <param name="originalPageSize">the dimensions of the original page size</param>
+        private void UpdateBoxes(PdfPage page, Rectangle originalPageSize) {
+            Rectangle newCP = ScalePageBox(originalPageSize, size, page.GetCropBox());
+            Rectangle newTB = ScalePageBox(originalPageSize, size, page.GetTrimBox());
+            Rectangle newBB = ScalePageBox(originalPageSize, size, page.GetBleedBox());
+            Rectangle newAB = ScalePageBox(originalPageSize, size, page.GetArtBox());
+            page.SetMediaBox(size);
+            if (page.GetPdfObject().GetAsArray(PdfName.CropBox) != null) {
+                page.SetCropBox(newCP);
+            }
+            if (page.GetPdfObject().GetAsArray(PdfName.TrimBox) != null) {
+                page.SetTrimBox(newTB);
+            }
+            if (page.GetPdfObject().GetAsArray(PdfName.BleedBox) != null) {
+                page.SetBleedBox(newBB);
+            }
+            if (page.GetPdfObject().GetAsArray(PdfName.ArtBox) != null) {
+                page.SetArtBox(newAB);
             }
         }
 
@@ -176,113 +550,6 @@ namespace iText.Kernel.Pdf {
             transformMatrix.Concatenate(scalingMatrix);
             scalingMatrix = transformMatrix;
             return scalingMatrix;
-        }
-
-        /// <summary>Scales the transformation matrix of the provided PDF pattern using the given scaling matrix.</summary>
-        /// <param name="pattern">the PDF pattern whose transformation matrix is to be scaled</param>
-        /// <param name="scalingMatrix">the affine transformation matrix to be applied for scaling</param>
-        private static void ResizePattern(PdfPattern pattern, AffineTransform scalingMatrix) {
-            AffineTransform origTrans;
-            if (pattern.GetMatrix() == null) {
-                origTrans = new AffineTransform(scalingMatrix);
-            }
-            else {
-                origTrans = new AffineTransform(pattern.GetMatrix().ToDoubleArray());
-                AffineTransform newMatrix = new AffineTransform(scalingMatrix);
-                newMatrix.Concatenate(origTrans);
-                origTrans = newMatrix;
-            }
-            double[] newMatrixArray = new double[6];
-            origTrans.GetMatrix(newMatrixArray);
-            pattern.SetMatrix(new PdfArray(newMatrixArray));
-        }
-
-        /// <summary>Resizes the given PDF form XObject by applying the specified affine transformation matrix.</summary>
-        /// <remarks>
-        /// Resizes the given PDF form XObject by applying the specified affine transformation matrix.
-        /// This method adjusts the content of the form XObject based on the scaling matrix to fit
-        /// the desired dimensions or proportions.
-        /// </remarks>
-        /// <param name="form">the PDF form XObject to be resized</param>
-        /// <param name="scalingMatrix">the affine transformation matrix representing the scaling to be applied</param>
-        private static void ResizeForm(PdfFormXObject form, AffineTransform scalingMatrix) {
-        }
-
-        //TODO DEVSIX-9439 implement this method
-        /// <summary>Resizes the given PDF annotation by applying the specified affine transformation.</summary>
-        /// <remarks>
-        /// Resizes the given PDF annotation by applying the specified affine transformation.
-        /// This method adjusts the annotation's properties, such as its bounding box,
-        /// to reflect the transformation based on the scaling and translation defined
-        /// in the affine transformation matrix.
-        /// </remarks>
-        /// <param name="annot">the PDF annotation to be resized</param>
-        /// <param name="scalingMatrix">
-        /// the affine transformation matrix representing the scaling
-        /// and translation to be applied
-        /// </param>
-        private static void ResizeAnnotation(PdfAnnotation annot, AffineTransform scalingMatrix) {
-            annot.SetRectangle(ScalePdfRect(annot.GetRectangle(), scalingMatrix.GetScaleY(), scalingMatrix.GetScaleX()
-                ));
-        }
-
-        /// <summary>Scales the given page box dimensions from the original page size to the new page size.</summary>
-        /// <param name="originalPageSize">the size of the original page</param>
-        /// <param name="newPageSize">the size of the new page to scale to</param>
-        /// <param name="box">the rectangular box representing the dimensions to be scaled</param>
-        /// <returns>a new Rectangle representing the scaled dimensions of the page box</returns>
-        private static Rectangle ScalePageBox(Rectangle originalPageSize, PageSize newPageSize, Rectangle box) {
-            float lfr = originalPageSize.GetWidth() / box.GetLeft();
-            float wfr = originalPageSize.GetWidth() / box.GetWidth();
-            float tfr = originalPageSize.GetHeight() / box.GetBottom();
-            float hfr = originalPageSize.GetHeight() / box.GetHeight();
-            return new Rectangle(newPageSize.GetWidth() / lfr, newPageSize.GetHeight() / tfr, newPageSize.GetWidth() /
-                 wfr, newPageSize.GetHeight() / hfr);
-        }
-
-        /// <summary>Scales the dimensions of the given PDF rectangle by applying the specified vertical and horizontal scale factors.
-        ///     </summary>
-        /// <param name="rect">the PDF array representing the rectangular dimensions to be scaled</param>
-        /// <param name="verticalScale">the factor by which the vertical dimensions should be scaled</param>
-        /// <param name="horizontalScale">the factor by which the horizontal dimensions should be scaled</param>
-        /// <returns>the updated PDF array with the scaled dimensions</returns>
-        private static PdfArray ScalePdfRect(PdfArray rect, double verticalScale, double horizontalScale) {
-            rect.Set(0, new PdfNumber(((PdfNumber)rect.Get(0)).DoubleValue() * horizontalScale));
-            rect.Set(1, new PdfNumber(((PdfNumber)rect.Get(1)).DoubleValue() * verticalScale));
-            rect.Set(2, new PdfNumber(((PdfNumber)rect.Get(2)).DoubleValue() * horizontalScale));
-            rect.Set(3, new PdfNumber(((PdfNumber)rect.Get(3)).DoubleValue() * verticalScale));
-            return rect;
-        }
-
-        /// <summary>
-        /// Updates the page boxes (MediaBox, CropBox, TrimBox, BleedBox, ArtBox) of the given PDF page
-        /// based on the specified original page size and the size associated with the current instance.
-        /// </summary>
-        /// <remarks>
-        /// Updates the page boxes (MediaBox, CropBox, TrimBox, BleedBox, ArtBox) of the given PDF page
-        /// based on the specified original page size and the size associated with the current instance.
-        /// The page boxes are scaled proportionally to fit the new page size.
-        /// </remarks>
-        /// <param name="page">the PDF page whose boxes are to be updated</param>
-        /// <param name="originalPageSize">the dimensions of the original page size</param>
-        private void UpdateBoxes(PdfPage page, Rectangle originalPageSize) {
-            Rectangle newCP = ScalePageBox(originalPageSize, size, page.GetCropBox());
-            Rectangle newTB = ScalePageBox(originalPageSize, size, page.GetTrimBox());
-            Rectangle newBB = ScalePageBox(originalPageSize, size, page.GetBleedBox());
-            Rectangle newAB = ScalePageBox(originalPageSize, size, page.GetArtBox());
-            page.SetMediaBox(size);
-            if (page.GetPdfObject().GetAsArray(PdfName.CropBox) != null) {
-                page.SetCropBox(newCP);
-            }
-            if (page.GetPdfObject().GetAsArray(PdfName.TrimBox) != null) {
-                page.SetTrimBox(newTB);
-            }
-            if (page.GetPdfObject().GetAsArray(PdfName.BleedBox) != null) {
-                page.SetBleedBox(newBB);
-            }
-            if (page.GetPdfObject().GetAsArray(PdfName.ArtBox) != null) {
-                page.SetArtBox(newAB);
-            }
         }
 
         /// <summary>

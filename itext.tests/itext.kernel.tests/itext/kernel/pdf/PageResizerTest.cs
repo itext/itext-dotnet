@@ -111,6 +111,97 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TestAnnotationBorder() {
+            String inFileName = "annotationBorderTest.pdf";
+            String outFileName = "annotationBorderTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    MAINTAIN_ASPECT_RATIO).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestAnnotationCalloutLine() {
+            String inFileName = "annotationCalloutLineTest.pdf";
+            String outFileName = "annotationCalloutLineTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    MAINTAIN_ASPECT_RATIO).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestAnnotationInkList() {
+            String inFileName = "annotationInkListTest.pdf";
+            String outFileName = "annotationInkListTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    MAINTAIN_ASPECT_RATIO).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestAnnotationLineEndpoint() {
+            String inFileName = "annotationLineEndpointTest.pdf";
+            String outFileName = "annotationLineEndpointTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    MAINTAIN_ASPECT_RATIO).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestAnnotationQuadpoints() {
+            String inFileName = "annotationQuadpointsTest.pdf";
+            String outFileName = "annotationQuadpointsTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    MAINTAIN_ASPECT_RATIO).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestAnnotationRd() {
+            String inFileName = "annotationRdTest.pdf";
+            String outFileName = "annotationRdTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    MAINTAIN_ASPECT_RATIO).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestAnnotationVertices() {
+            String inFileName = "annotationVerticesTest.pdf";
+            String outFileName = "annotationVerticesTest.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    MAINTAIN_ASPECT_RATIO).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TestGradientsWithAspectRatio() {
             String inFileName = "gradientTest.pdf";
             String outFileName = "gradientAspectTest.pdf";
@@ -205,6 +296,8 @@ namespace iText.Kernel.Pdf {
                 PageResizer resizer = new PageResizer(new PageSize(PageSize.A5.GetHeight(), PageSize.A5.GetWidth()), PageResizer.ResizeType
                     .MAINTAIN_ASPECT_RATIO);
                 resizer.SetHorizontalAnchorPoint(PageResizer.HorizontalAnchorPoint.LEFT);
+                NUnit.Framework.Assert.AreEqual(PageResizer.HorizontalAnchorPoint.LEFT, resizer.GetHorizontalAnchorPoint()
+                    );
                 resizer.Resize(pdfDocument.GetPage(1));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
@@ -249,6 +342,7 @@ namespace iText.Kernel.Pdf {
                 DESTINATION_FOLDER + outFileName))) {
                 PageResizer resizer = new PageResizer(PageSize.A4, PageResizer.ResizeType.MAINTAIN_ASPECT_RATIO);
                 resizer.SetVerticalAnchorPoint(PageResizer.VerticalAnchorPoint.TOP);
+                NUnit.Framework.Assert.AreEqual(PageResizer.VerticalAnchorPoint.TOP, resizer.GetVerticalAnchorPoint());
                 resizer.Resize(pdfDocument.GetPage(1));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
