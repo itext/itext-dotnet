@@ -103,6 +103,18 @@ namespace iText.Signatures.Validation {
         internal const String VALIDITY_PERIOD_CHECK_FAILED = "Unexpected exception occurred while validating certificate validity period.";
 //\endcond
 
+//\cond DO_NOT_DOCUMENT
+        internal const String CERTIFICATE_RETRIEVER_ORIGIN = "Trusted Certificate is taken from manually configured Trust List.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String CERTIFICATE_LOTL_ORIGIN = "Trusted Certificate is taken from European Union List of Trusted Certificates.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String CERTIFICATE_CUSTOM_ORIGIN = "Trusted Certificate is taken from {0}.";
+//\endcond
+
         /// <summary>
         /// Create new instance of
         /// <see cref="CertificateChainValidator"/>.
@@ -198,12 +210,25 @@ namespace iText.Signatures.Validation {
         private bool CheckIfCertIsTrusted(ValidationReport result, ValidationContext context, IX509Certificate certificate
             , DateTime validationDate) {
             if (certificateRetriever.GetTrustedCertificatesStore().CheckIfCertIsTrusted(result, context, certificate)) {
+                result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, CERTIFICATE_RETRIEVER_ORIGIN
+                    , ReportItem.ReportItemStatus.INFO));
                 return true;
             }
             if (lotlTrustedStore == null) {
                 return false;
             }
-            return lotlTrustedStore.CheckIfCertIsTrusted(result, context, certificate, validationDate);
+            if (lotlTrustedStore.CheckIfCertIsTrusted(result, context, certificate, validationDate)) {
+                if (lotlTrustedStore.GetType() == typeof(LotlTrustedStore)) {
+                    result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, CERTIFICATE_LOTL_ORIGIN, ReportItem.ReportItemStatus
+                        .INFO));
+                }
+                else {
+                    result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format(CERTIFICATE_CUSTOM_ORIGIN
+                        , lotlTrustedStore.GetType().FullName), ReportItem.ReportItemStatus.INFO));
+                }
+                return true;
+            }
+            return false;
         }
 
         private bool StopValidation(ValidationReport result, ValidationContext context) {

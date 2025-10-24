@@ -217,7 +217,6 @@ namespace iText.Signatures.Validation.Lotl {
         public virtual bool CheckIfCertIsTrusted(ValidationReport result, ValidationContext context, IX509Certificate
              certificate, DateTime validationDate) {
             ICollection<CountryServiceContext> currentContextSet = GetCertificateContext(certificate);
-            result.MergeWithDifferentStatus(report, ReportItem.ReportItemStatus.INFO);
             IList<ReportItem> validationReportItems = new List<ReportItem>();
             foreach (CountryServiceContext currentContext in currentContextSet) {
                 ServiceChronologicalInfo chronologicalInfo = GetCertificateChronologicalInfoByTime(validationReportItems, 
@@ -252,6 +251,12 @@ namespace iText.Signatures.Validation.Lotl {
                 result.AddReportItem(reportItem);
             }
             return false;
+        }
+
+        /// <summary>Gets lotl validation report.</summary>
+        /// <returns>validation report regarding trusted lists accessibility.</returns>
+        public virtual ValidationReport GetLotlValidationReport() {
+            return new ValidationReport(report);
         }
 
         /// <summary>

@@ -70,7 +70,7 @@ namespace iText.Signatures.Validation {
             ValidationReport report = validator.ValidateCertificate(baseContext, signingCert, TimeTestUtil.TEST_DATE_TIME
                 );
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                (0).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK
+                (0).HasNumberOfLogs(2).HasLogItem((la) => la.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK
                 ).WithMessage("Certificate {0} is trusted, revocation data checks are not required.", (l) => rootCert.
                 GetSubjectDN()).WithCertificate(rootCert)));
         }
@@ -94,7 +94,7 @@ namespace iText.Signatures.Validation {
             ValidationReport report = validator.ValidateCertificate(baseContext, signingCert, TimeTestUtil.TEST_DATE_TIME
                 );
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                (0).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK
+                (0).HasNumberOfLogs(2).HasLogItem((la) => la.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK
                 ).WithMessage("Certificate {0} is trusted, revocation data checks are not required.", (l) => rootCert.
                 GetSubjectDN()).WithCertificate(rootCert)));
         }
@@ -118,7 +118,7 @@ namespace iText.Signatures.Validation {
             ValidationReport report = validator.ValidateCertificate(baseContext, signingCert, TimeTestUtil.TEST_DATE_TIME
                 );
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
-                (2).HasNumberOfLogs(3).HasLogItem((la) => la.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK
+                (2).HasNumberOfLogs(4).HasLogItem((la) => la.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK
                 ).WithMessage("Certificate {0} is trusted, revocation data checks are not required.", (l) => rootCert.
                 GetSubjectDN()).WithCertificate(rootCert)).HasLogItem((la) => la.WithCheckName(CertificateChainValidator
                 .EXTENSIONS_CHECK).WithMessage(CertificateChainValidator.EXTENSION_MISSING, (l) => MessageFormatUtil.Format
@@ -249,7 +249,7 @@ namespace iText.Signatures.Validation {
                 ());
             NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INVALID, report.GetValidationResult());
             NUnit.Framework.Assert.AreEqual(2, report.GetFailures().Count);
-            NUnit.Framework.Assert.AreEqual(3, report.GetLogs().Count);
+            NUnit.Framework.Assert.AreEqual(4, report.GetLogs().Count);
             NUnit.Framework.Assert.AreEqual(report.GetFailures()[0], report.GetLogs()[0]);
             NUnit.Framework.Assert.AreEqual(report.GetFailures()[1], report.GetLogs()[1]);
             CertificateReportItem failure1 = report.GetCertificateFailures()[0];
@@ -317,7 +317,7 @@ namespace iText.Signatures.Validation {
             ValidationReport report = validator.ValidateCertificate(baseContext, signingCert, DateTimeUtil.GetCurrentUtcTime
                 ());
             NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
-            NUnit.Framework.Assert.AreEqual(1, report.GetLogs().Count);
+            NUnit.Framework.Assert.AreEqual(2, report.GetLogs().Count);
         }
 
         [NUnit.Framework.Test]
@@ -335,7 +335,7 @@ namespace iText.Signatures.Validation {
             certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(intermediateCert));
             ValidationReport report = validator.ValidateCertificate(baseContext, signingCert, DateTimeUtil.GetCurrentUtcTime
                 ());
-            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(0).HasNumberOfLogs(1).HasLogItem((la
+            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(0).HasNumberOfLogs(2).HasLogItem((la
                 ) => la.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (l) => intermediateCert.GetSubjectDN())));
         }
@@ -358,7 +358,7 @@ namespace iText.Signatures.Validation {
             ValidationReport report = validator.ValidateCertificate(baseContext, signingCert, DateTimeUtil.GetCurrentUtcTime
                 ());
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                (0).HasNumberOfLogs(1).HasLogItem((la) => la.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK
+                (0).HasNumberOfLogs(2).HasLogItem((la) => la.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK
                 ).WithMessage(CertificateChainValidator.CERTIFICATE_TRUSTED, (l) => rootCert.GetSubjectDN()).WithCertificate
                 (rootCert)));
         }
@@ -380,7 +380,7 @@ namespace iText.Signatures.Validation {
             certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
             ValidationReport report = validator.ValidateCertificate(baseContext.SetCertificateSource(CertificateSource
                 .CERT_ISSUER), signingCert, DateTimeUtil.GetCurrentUtcTime());
-            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(1).HasNumberOfLogs(2).HasLogItem((la
+            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(1).HasNumberOfLogs(3).HasLogItem((la
                 ) => la.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (l) => rootCert.GetSubjectDN()).WithCertificate(rootCert)).HasLogItem((la) => la
                 .WithCheckName(CertificateChainValidator.EXTENSIONS_CHECK).WithMessageContains(BuildKeyUsageWrongMessagePart
@@ -427,7 +427,7 @@ namespace iText.Signatures.Validation {
             certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList(rootCert));
             ValidationReport report = validator.ValidateCertificate(baseContext, signingCert, TimeTestUtil.TEST_DATE_TIME
                 );
-            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(1).HasNumberOfLogs(2).HasLogItem((la
+            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(1).HasNumberOfLogs(3).HasLogItem((la
                 ) => la.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (l) => rootCert.GetSubjectDN()).WithCertificate(rootCert)).HasLogItem((la) => la
                 .WithCheckName(CertificateChainValidator.VALIDITY_CHECK).WithMessage(CertificateChainValidator.NOT_YET_VALID_CERTIFICATE
@@ -455,7 +455,7 @@ namespace iText.Signatures.Validation {
             ValidationReport report = validator.ValidateCertificate(baseContext, signingCert, DateTimeUtil.GetCurrentUtcTime
                 ());
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
-                (1).HasNumberOfLogs(2).HasLogItem((la) => la.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK
+                (1).HasNumberOfLogs(3).HasLogItem((la) => la.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK
                 ).WithMessage(CertificateChainValidator.CERTIFICATE_TRUSTED, (l) => rootCert.GetSubjectDN()).WithCertificate
                 (rootCert)).HasLogItem((la) => la.WithCheckName(CertificateChainValidator.VALIDITY_CHECK).WithMessage(
                 CertificateChainValidator.EXPIRED_CERTIFICATE, (l) => intermediateCert.GetSubjectDN()).WithCertificate
@@ -484,17 +484,17 @@ namespace iText.Signatures.Validation {
             ValidationReport report1 = validator.ValidateCertificate(baseContext, signingCert, DateTimeUtil.GetCurrentUtcTime
                 ());
             AssertValidationReport.AssertThat(report1, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                (0).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
+                (0).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
             ValidationReport report2 = validator.ValidateCertificate(baseContext.SetCertificateSource(CertificateSource
                 .OCSP_ISSUER), signingCert, DateTimeUtil.GetCurrentUtcTime());
             AssertValidationReport.AssertThat(report2, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                (0).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
+                (0).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
             ValidationReport report3 = validator.ValidateCertificate(baseContext.SetCertificateSource(CertificateSource
                 .TIMESTAMP), signingCert, DateTimeUtil.GetCurrentUtcTime());
             AssertValidationReport.AssertThat(report3, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                (0).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
+                (0).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
         }
 
@@ -520,17 +520,17 @@ namespace iText.Signatures.Validation {
             ValidationReport report1 = validator.ValidateCertificate(baseContext, signingCert, DateTimeUtil.GetCurrentUtcTime
                 ());
             AssertValidationReport.AssertThat(report1, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                (0).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
+                (0).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
             ValidationReport report2 = validator.ValidateCertificate(baseContext.SetCertificateSource(CertificateSource
                 .OCSP_ISSUER), signingCert, DateTimeUtil.GetCurrentUtcTime());
             AssertValidationReport.AssertThat(report2, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                (0).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
+                (0).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
             ValidationReport report3 = validator.ValidateCertificate(baseContext.SetCertificateSource(CertificateSource
                 .TIMESTAMP), signingCert, DateTimeUtil.GetCurrentUtcTime());
             AssertValidationReport.AssertThat(report3, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                (0).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
+                (0).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
         }
 
@@ -556,7 +556,7 @@ namespace iText.Signatures.Validation {
                 .CERT_ISSUER), signingCert, DateTimeUtil.GetCurrentUtcTime());
             // This works fine because certificate in question has CertificateSource.CERT_ISSUER context.
             AssertValidationReport.AssertThat(report1, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                (0).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
+                (0).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (i) => signingCert.GetSubjectDN()).WithCertificate(signingCert)));
             ValidationReport report2 = validator.ValidateCertificate(baseContext.SetCertificateSource(CertificateSource
                 .TIMESTAMP), signingCert, DateTimeUtil.GetCurrentUtcTime());
@@ -592,7 +592,7 @@ namespace iText.Signatures.Validation {
             // This works fine because even though root certificate has CertificateSource.CERT_ISSUER context,
             // the chain contains initial certificate with CertificateSource.OCSP_ISSUER context.
             AssertValidationReport.AssertThat(report1, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                (0).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
+                (0).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
             ValidationReport report2 = validator.ValidateCertificate(baseContext.SetCertificateSource(CertificateSource
                 .TIMESTAMP), signingCert, DateTimeUtil.GetCurrentUtcTime());
@@ -629,7 +629,7 @@ namespace iText.Signatures.Validation {
             // This works fine because even though root certificate has CertificateSource.CERT_ISSUER context,
             // the chain contains initial certificate with CertificateSource.CRL_ISSUER context.
             AssertValidationReport.AssertThat(report1, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                (0).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
+                (0).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
             ValidationReport report2 = validator.ValidateCertificate(baseContext.SetCertificateSource(CertificateSource
                 .OCSP_ISSUER), signingCert, DateTimeUtil.GetCurrentUtcTime());
@@ -665,7 +665,7 @@ namespace iText.Signatures.Validation {
             // This works fine because even though root certificate has CertificateSource.CERT_ISSUER context,
             // the chain contains initial certificate with CertificateSource.TIMESTAMP context.
             AssertValidationReport.AssertThat(report1, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                (0).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
+                (0).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
             ValidationReport report2 = validator.ValidateCertificate(baseContext.SetCertificateSource(CertificateSource
                 .CRL_ISSUER), signingCert, DateTimeUtil.GetCurrentUtcTime());
@@ -818,8 +818,26 @@ namespace iText.Signatures.Validation {
             DateTime validationDate = new DateTime(13750537642000L);
             ValidationReport report = validator.ValidateCertificate(baseContext, rootCert, validationDate);
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                (0).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
+                (0).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName("Certificate check.").WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (i) => rootCert.GetSubjectDN()).WithCertificate(rootCert)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CertificateRetrieverOriginTest() {
+            MockRevocationDataValidator mockRevocationDataValidator = new MockRevocationDataValidator();
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties properties = new SignatureValidationProperties();
+            String chainName = CERTS_SRC + "chain.pem";
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(chainName)[0];
+            ValidatorChainBuilder validatorChainBuilder = SetUpValidatorChain(certificateRetriever, properties, mockRevocationDataValidator
+                );
+            CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
+            certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList<IX509Certificate>(rootCert));
+            ValidationReport report = validator.ValidateCertificate(baseContext, rootCert, TimeTestUtil.TEST_DATE_TIME
+                );
+            AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
+                (0).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).
+                WithMessage(CertificateChainValidator.CERTIFICATE_RETRIEVER_ORIGIN).WithCertificate(rootCert)));
         }
     }
 }

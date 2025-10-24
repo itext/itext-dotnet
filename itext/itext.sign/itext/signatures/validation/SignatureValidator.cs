@@ -189,6 +189,10 @@ namespace iText.Signatures.Validation {
             }
             validationPerformed = true;
             ValidationReport report = new ValidationReport();
+            if (builder.GetLotlTrustedStore() != null) {
+                report.MergeWithDifferentStatus(builder.GetLotlTrustedStore().GetLotlValidationReport(), ReportItem.ReportItemStatus
+                    .INFO);
+            }
             SafeCalling.OnRuntimeExceptionLog(() => {
                 documentRevisionsValidator.SetEventCountingMetaInfo(metaInfo);
                 ValidationReport revisionsValidationReport = documentRevisionsValidator.ValidateAllDocumentRevisions(validationContext
@@ -216,6 +220,10 @@ namespace iText.Signatures.Validation {
             }
             validationPerformed = true;
             ValidationReport report = new ValidationReport();
+            if (builder.GetLotlTrustedStore() != null) {
+                report.MergeWithDifferentStatus(builder.GetLotlTrustedStore().GetLotlValidationReport(), ReportItem.ReportItemStatus
+                    .INFO);
+            }
             SafeCalling.OnRuntimeExceptionLog(() => {
                 documentRevisionsValidator.SetEventCountingMetaInfo(metaInfo);
                 ValidationReport revisionsValidationReport = documentRevisionsValidator.ValidateAllDocumentRevisions(validationContext

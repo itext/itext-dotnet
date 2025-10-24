@@ -79,7 +79,7 @@ namespace iText.Signatures.Validation {
                 (parameters).WithIssuingCertificateRetrieverFactory(() => certificateRetriever);
             DateTime checkDate = TimeTestUtil.TEST_DATE_TIME;
             ValidationReport report = ValidateTest(checkDate, certificateRetriever, validatorChainBuilder, parameters);
-            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(0).HasNumberOfLogs(2).HasLogItem((al
+            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(0).HasNumberOfLogs(3).HasLogItem((al
                 ) => al.WithCheckName(RevocationDataValidator.REVOCATION_DATA_CHECK).WithMessage(RevocationDataValidator
                 .TRUSTED_OCSP_RESPONDER)).HasLogItem((al) => al.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK
                 ).WithMessage(CertificateChainValidator.CERTIFICATE_TRUSTED, (l) => ((CertificateReportItem)l).GetCertificate
@@ -94,7 +94,7 @@ namespace iText.Signatures.Validation {
                 (parameters).WithIssuingCertificateRetrieverFactory(() => certificateRetriever);
             ValidationReport report = VerifyResponderWithOcsp(false, certificateRetriever, validatorChainBuilder, parameters
                 );
-            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(0).HasNumberOfLogs(2).HasLogItem((al
+            AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(0).HasNumberOfLogs(3).HasLogItem((al
                 ) => al.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithMessage(CertificateChainValidator
                 .CERTIFICATE_TRUSTED, (l) => ((CertificateReportItem)l).GetCertificate().GetSubjectDN())).HasLogItem((
                 al) => al.WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator.OCSP_RESPONDER_IS_CA)).HasStatus
