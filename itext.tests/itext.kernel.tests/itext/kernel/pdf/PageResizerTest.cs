@@ -228,7 +228,6 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestGradientsType0Function() {
-            //TODO Update when fixing DEVSIX-9448
             String inFileName = "gradientFct0.pdf";
             String outFileName = "gradientFct0.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
