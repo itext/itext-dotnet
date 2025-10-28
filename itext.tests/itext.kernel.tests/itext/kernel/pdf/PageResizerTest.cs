@@ -24,8 +24,10 @@ using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Pdfa;
 
 namespace iText.Kernel.Pdf {
+    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PageResizerTest : ExtendedITextTest {
         public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/pdf/PageResizerTest/";
@@ -410,6 +412,225 @@ namespace iText.Kernel.Pdf {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileNameReverted, 
                 SOURCE_FOLDER + "cmp_" + outFileNameReverted, DESTINATION_FOLDER, "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestPdfASignatureFieldDefault() {
+            // TODO: DEVSIX-9518 PageResizer breaks PDF/A compliance after page resizing
+            String inFileName = "pdfASignatureFieldDefault.pdf";
+            String outFileName = "pdfASignatureFieldDefault.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    DEFAULT).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void TestPdfASignatureFieldAspect() {
+            // TODO: DEVSIX-9518 PageResizer breaks PDF/A compliance after page resizing
+            String inFileName = "pdfASignatureFieldAspect.pdf";
+            String outFileName = "pdfASignatureFieldAspect.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    MAINTAIN_ASPECT_RATIO).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void TestPdfAFormFieldsDefault() {
+            // TODO: DEVSIX-9518 PageResizer breaks PDF/A compliance after page resizing
+            String inFileName = "pdfAFormFieldsDefault.pdf";
+            String outFileName = "pdfAFormFieldsDefault.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    DEFAULT).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void TestPdfAFormFieldsAspect() {
+            // TODO: DEVSIX-9518 PageResizer breaks PDF/A compliance after page resizing
+            String inFileName = "pdfAFormFieldsAspect.pdf";
+            String outFileName = "pdfAFormFieldsAspect.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    MAINTAIN_ASPECT_RATIO).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void TestPdfUA1ButtonDefault() {
+            String inFileName = "pdfUA1ButtonDefault.pdf";
+            String outFileName = "pdfUA1ButtonDefault.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    DEFAULT).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void TestPdfUA1ButtonAspect() {
+            String inFileName = "pdfUA1ButtonAspect.pdf";
+            String outFileName = "pdfUA1ButtonAspect.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    MAINTAIN_ASPECT_RATIO).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void TestPdfUA2RadioButtonDefault() {
+            String inFileName = "pdfUA2RadioButtonDefault.pdf";
+            String outFileName = "pdfUA2RadioButtonDefault.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    DEFAULT).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void TestPdfUA2RadioButtonAspect() {
+            String inFileName = "pdfUA2RadioButtonAspect.pdf";
+            String outFileName = "pdfUA2RadioButtonAspect.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    MAINTAIN_ASPECT_RATIO).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void TestPdfUA1SignatureField() {
+            String inFileName = "pdfUA1SignatureField.pdf";
+            String outFileName = "pdfUA1SignatureField.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    DEFAULT).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void TestPdfUA2SignatureField() {
+            String inFileName = "pdfUA2SignatureField.pdf";
+            String outFileName = "pdfUA2SignatureField.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    DEFAULT).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
+        }
+
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
+        [NUnit.Framework.Test]
+        public virtual void TestNestedForms() {
+            String inFileName = "nestedForms.pdf";
+            String outFileName = "nestedForms.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    DEFAULT).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestNestedMixedXObjectsDefault() {
+            String inFileName = "nestedMixedXObjectsDefault.pdf";
+            String outFileName = "nestedMixedXObjectsDefault.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    DEFAULT).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestNestedMixedXObjectsAspect() {
+            String inFileName = "nestedMixedXObjectsAspect.pdf";
+            String outFileName = "nestedMixedXObjectsAspect.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    MAINTAIN_ASPECT_RATIO).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestImageDefault() {
+            String inFileName = "imageDefault.pdf";
+            String outFileName = "imageDefault.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    DEFAULT).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestImageAspect() {
+            String inFileName = "testImageAspect.pdf";
+            String outFileName = "testImageAspect.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    MAINTAIN_ASPECT_RATIO).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
         }
     }
 }
