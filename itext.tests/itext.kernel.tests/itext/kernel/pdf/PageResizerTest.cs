@@ -415,6 +415,44 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void AnnotationsRightAnchoringTest() {
+            String[] pdfFiles = new String[] { "annotationVerticesTest.pdf", "annotationBorderTest.pdf", "annotationQuadpointsTest.pdf"
+                , "annotationRdTest.pdf" };
+            foreach (String pdfFileName in pdfFiles) {
+                String outPdf = pdfFileName.JSubstring(0, pdfFileName.Length - 4) + "Right.pdf";
+                using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + pdfFileName), CompareTool.CreateTestPdfWriter
+                    (DESTINATION_FOLDER + outPdf))) {
+                    PageResizer pr = new PageResizer(new PageSize(PageSize.A4.GetWidth() * 2, PageSize.A4.GetHeight()), PageResizer.ResizeType
+                        .MAINTAIN_ASPECT_RATIO);
+                    pr.SetVerticalAnchorPoint(PageResizer.VerticalAnchorPoint.CENTER);
+                    pr.SetHorizontalAnchorPoint(PageResizer.HorizontalAnchorPoint.RIGHT);
+                    pr.Resize(pdfDocument.GetPage(1));
+                }
+                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outPdf, SOURCE_FOLDER
+                     + "cmp_" + outPdf, DESTINATION_FOLDER, "diff"));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AnnotationsTopAnchoringTest() {
+            String[] pdfFiles = new String[] { "annotationVerticesTest.pdf", "annotationBorderTest.pdf", "annotationQuadpointsTest.pdf"
+                , "annotationRdTest.pdf" };
+            foreach (String pdfFileName in pdfFiles) {
+                String outPdf = pdfFileName.JSubstring(0, pdfFileName.Length - 4) + "Top.pdf";
+                using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + pdfFileName), CompareTool.CreateTestPdfWriter
+                    (DESTINATION_FOLDER + outPdf))) {
+                    PageResizer pr = new PageResizer(new PageSize(PageSize.A4.GetWidth(), PageSize.A4.GetHeight() * 2), PageResizer.ResizeType
+                        .MAINTAIN_ASPECT_RATIO);
+                    pr.SetVerticalAnchorPoint(PageResizer.VerticalAnchorPoint.TOP);
+                    pr.SetHorizontalAnchorPoint(PageResizer.HorizontalAnchorPoint.CENTER);
+                    pr.Resize(pdfDocument.GetPage(1));
+                }
+                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outPdf, SOURCE_FOLDER
+                     + "cmp_" + outPdf, DESTINATION_FOLDER, "diff"));
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TestPdfASignatureFieldDefault() {
             // TODO: DEVSIX-9518 PageResizer breaks PDF/A compliance after page resizing
             String inFileName = "pdfASignatureFieldDefault.pdf";
