@@ -48,7 +48,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void TestPageResizeForTextOnlyDocumentResizer() {
             String inFileName = "simple_pdf.pdf";
-            String outFileName = "testPageResizeForTextOnlyDocument.pdf";
+            String outFileName = "pageResizeForTextOnlyDocument.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
                 DESTINATION_FOLDER + outFileName))) {
                 PageResizer firstPageResizer = new PageResizer(PageSize.A6, PageResizer.ResizeType.MAINTAIN_ASPECT_RATIO);
@@ -64,7 +64,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void TestPageResizeForRotatePage() {
             String inFileName = "singlePageDocumentWithRotation.pdf";
-            String outFileName = "testPageResizeForRotatePage.pdf";
+            String outFileName = "pageResizeForRotatePage.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
                 DESTINATION_FOLDER + outFileName))) {
                 PageResizer pageResizer = new PageResizer(PageSize.A6, PageResizer.ResizeType.MAINTAIN_ASPECT_RATIO);
@@ -77,7 +77,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void TestPageResizeAspectRatios() {
             String inFileName = "10PagesDocumentWithLeafs.pdf";
-            String outFileName = "testPageResizeAspectRatios.pdf";
+            String outFileName = "pageResizeAspectRatios.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
                 DESTINATION_FOLDER + outFileName))) {
                 new PageResizer(PageSize.A6, PageResizer.ResizeType.MAINTAIN_ASPECT_RATIO).Resize(pdfDocument.GetPage(1));
@@ -102,8 +102,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestGradients() {
-            String inFileName = "gradientTest.pdf";
-            String outFileName = "gradientTest.pdf";
+            String inFileName = "gradient.pdf";
+            String outFileName = "gradient.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
                 DESTINATION_FOLDER + outFileName))) {
                 new PageResizer(PageSize.A6, PageResizer.ResizeType.MAINTAIN_ASPECT_RATIO).Resize(pdfDocument.GetPage(1));
@@ -114,8 +114,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestAnnotationBorder() {
-            String inFileName = "annotationBorderTest.pdf";
-            String outFileName = "annotationBorderTest.pdf";
+            String inFileName = "annotationBorder.pdf";
+            String outFileName = "annotationBorder.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
                 DESTINATION_FOLDER + outFileName))) {
                 new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
@@ -127,8 +127,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestAnnotationCalloutLine() {
-            String inFileName = "annotationCalloutLineTest.pdf";
-            String outFileName = "annotationCalloutLineTest.pdf";
+            String inFileName = "annotationCalloutLine.pdf";
+            String outFileName = "annotationCalloutLine.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
                 DESTINATION_FOLDER + outFileName))) {
                 new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
@@ -140,8 +140,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestAnnotationInkList() {
-            String inFileName = "annotationInkListTest.pdf";
-            String outFileName = "annotationInkListTest.pdf";
+            String inFileName = "annotationInkList.pdf";
+            String outFileName = "annotationInkList.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
                 DESTINATION_FOLDER + outFileName))) {
                 new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
@@ -153,8 +153,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestAnnotationLineEndpoint() {
-            String inFileName = "annotationLineEndpointTest.pdf";
-            String outFileName = "annotationLineEndpointTest.pdf";
+            String inFileName = "annotationLineEndpoint.pdf";
+            String outFileName = "annotationLineEndpoint.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
                 DESTINATION_FOLDER + outFileName))) {
                 new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
@@ -166,8 +166,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestAnnotationQuadpoints() {
-            String inFileName = "annotationQuadpointsTest.pdf";
-            String outFileName = "annotationQuadpointsTest.pdf";
+            String inFileName = "annotationQuadpoints.pdf";
+            String outFileName = "annotationQuadpoints.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
                 DESTINATION_FOLDER + outFileName))) {
                 new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
@@ -179,8 +179,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestAnnotationRd() {
-            String inFileName = "annotationRdTest.pdf";
-            String outFileName = "annotationRdTest.pdf";
+            String inFileName = "annotationRd.pdf";
+            String outFileName = "annotationRd.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
                 DESTINATION_FOLDER + outFileName))) {
                 new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
@@ -192,8 +192,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestAnnotationVertices() {
-            String inFileName = "annotationVerticesTest.pdf";
-            String outFileName = "annotationVerticesTest.pdf";
+            String inFileName = "annotationVertices.pdf";
+            String outFileName = "annotationVertices.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
                 DESTINATION_FOLDER + outFileName))) {
                 new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
@@ -205,8 +205,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestGradientsWithAspectRatio() {
-            String inFileName = "gradientTest.pdf";
-            String outFileName = "gradientAspectTest.pdf";
+            String inFileName = "gradient.pdf";
+            String outFileName = "gradientAspect.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
                 DESTINATION_FOLDER + outFileName))) {
                 new PageResizer(PageSize.LEDGER, PageResizer.ResizeType.DEFAULT).Resize(pdfDocument.GetPage(1));
@@ -217,8 +217,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestGradientsWithAspect2Ratio() {
-            String inFileName = "gradientTest.pdf";
-            String outFileName = "gradientAspect2Test.pdf";
+            String inFileName = "gradient.pdf";
+            String outFileName = "gradientAspect2.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
                 DESTINATION_FOLDER + outFileName))) {
                 new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
@@ -416,8 +416,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void AnnotationsRightAnchoringTest() {
-            String[] pdfFiles = new String[] { "annotationVerticesTest.pdf", "annotationBorderTest.pdf", "annotationQuadpointsTest.pdf"
-                , "annotationRdTest.pdf" };
+            String[] pdfFiles = new String[] { "annotationVertices.pdf", "annotationBorder.pdf", "annotationQuadpoints.pdf"
+                , "annotationRd.pdf" };
             foreach (String pdfFileName in pdfFiles) {
                 String outPdf = pdfFileName.JSubstring(0, pdfFileName.Length - 4) + "Right.pdf";
                 using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + pdfFileName), CompareTool.CreateTestPdfWriter
@@ -435,8 +435,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void AnnotationsTopAnchoringTest() {
-            String[] pdfFiles = new String[] { "annotationVerticesTest.pdf", "annotationBorderTest.pdf", "annotationQuadpointsTest.pdf"
-                , "annotationRdTest.pdf" };
+            String[] pdfFiles = new String[] { "annotationVertices.pdf", "annotationBorder.pdf", "annotationQuadpoints.pdf"
+                , "annotationRd.pdf" };
             foreach (String pdfFileName in pdfFiles) {
                 String outPdf = pdfFileName.JSubstring(0, pdfFileName.Length - 4) + "Top.pdf";
                 using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + pdfFileName), CompareTool.CreateTestPdfWriter
@@ -464,7 +464,7 @@ namespace iText.Kernel.Pdf {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
                  + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
+            new VeraPdfValidator().ValidateFailure(DESTINATION_FOLDER + outFileName);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -480,7 +480,7 @@ namespace iText.Kernel.Pdf {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
                  + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
+            new VeraPdfValidator().ValidateFailure(DESTINATION_FOLDER + outFileName);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -496,7 +496,7 @@ namespace iText.Kernel.Pdf {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
                  + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
+            new VeraPdfValidator().ValidateFailure(DESTINATION_FOLDER + outFileName);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -512,7 +512,7 @@ namespace iText.Kernel.Pdf {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
                  + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
+            new VeraPdfValidator().ValidateFailure(DESTINATION_FOLDER + outFileName);
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
@@ -660,8 +660,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestImageAspect() {
-            String inFileName = "testImageAspect.pdf";
-            String outFileName = "testImageAspect.pdf";
+            String inFileName = "imageAspect.pdf";
+            String outFileName = "imageAspect.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
                 DESTINATION_FOLDER + outFileName))) {
                 new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
