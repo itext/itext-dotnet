@@ -440,8 +440,8 @@ namespace iText.Forms.Form.Element {
                 flexContainer.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP);
                 flexContainer.SetProperty(Property.FLEX_DIRECTION, FlexDirectionPropertyValue.ROW_REVERSE);
                 flexContainer.SetProperty(Property.ALIGN_ITEMS, AlignmentPropertyValue.CENTER);
-                flexContainer.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(SOURCE_FOLDER + "1.png")).Scale(0.1f
-                    , 0.3f).SetPadding(10)).Add(new List().Add(new ListItem("Flex container with").SetListSymbol(ListNumberingType
+                flexContainer.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(SOURCE_FOLDER + "1.png")).Scale(0.5f
+                    , 0.5f).SetPadding(10)).Add(new List().Add(new ListItem("Flex container with").SetListSymbol(ListNumberingType
                     .ZAPF_DINGBATS_1)).Add(new ListItem("image and list,").SetListSymbol(ListNumberingType.ZAPF_DINGBATS_2
                     )).Add(new ListItem("wrap, row-reverse,").SetListSymbol(ListNumberingType.ZAPF_DINGBATS_3)).Add(new ListItem
                     ("green dots border").SetListSymbol(ListNumberingType.ZAPF_DINGBATS_4)).SetPadding(10)).SetBorder(new 

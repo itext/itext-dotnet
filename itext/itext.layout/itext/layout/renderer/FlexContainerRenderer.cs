@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Layout.Borders;
@@ -47,9 +46,13 @@ namespace iText.Layout.Renderer {
 
         private IFlexItemMainDirector flexItemMainDirector = null;
 
-        /// <summary>Child renderers and their heights and min heights before the layout.</summary>
-        private readonly IDictionary<IRenderer, Tuple2<UnitValue, UnitValue>> heights = new Dictionary<IRenderer, 
-            Tuple2<UnitValue, UnitValue>>();
+        /// <summary>Child renderers and their heights and min/max heights before the layout.</summary>
+        private readonly IDictionary<IRenderer, IList<UnitValue>> heights = new Dictionary<IRenderer, IList<UnitValue
+            >>();
+
+        /// <summary>Child renderers and their widths and min/max widths before the layout.</summary>
+        private readonly IDictionary<IRenderer, IList<UnitValue>> widths = new Dictionary<IRenderer, IList<UnitValue
+            >>();
 
         /// <summary>Creates a FlexContainerRenderer from its corresponding layout object.</summary>
         /// <param name="modelElement">
@@ -120,7 +123,6 @@ namespace iText.Layout.Renderer {
             RemoveAllChildRenderers(GetChildRenderers());
             AddAllChildRenderers(renderers);
             IList<IRenderer> renderersToOverflow = RetrieveRenderersToOverflow(layoutContextRectangle);
-            IList<UnitValue> previousWidths = new List<UnitValue>();
             foreach (IList<FlexItemInfo> line in lines) {
                 foreach (FlexItemInfo itemInfo in line) {
                     Rectangle rectangleWithoutBordersMarginsPaddings;
@@ -132,18 +134,29 @@ namespace iText.Layout.Renderer {
                         rectangleWithoutBordersMarginsPaddings = itemInfo.GetRenderer().ApplyMarginsBordersPaddings(itemInfo.GetRectangle
                             ().Clone(), false);
                     }
-                    heights.Put(itemInfo.GetRenderer(), new Tuple2<UnitValue, UnitValue>(itemInfo.GetRenderer().GetProperty<UnitValue
-                        >(Property.HEIGHT), itemInfo.GetRenderer().GetProperty<UnitValue>(Property.MIN_HEIGHT)));
-                    previousWidths.Add(itemInfo.GetRenderer().GetProperty<UnitValue>(Property.WIDTH));
+                    heights.Put(itemInfo.GetRenderer(), JavaUtil.ArraysAsList(itemInfo.GetRenderer().GetProperty<UnitValue>(Property
+                        .HEIGHT), itemInfo.GetRenderer().GetProperty<UnitValue>(Property.MIN_HEIGHT), itemInfo.GetRenderer().GetProperty
+                        <UnitValue>(Property.MAX_HEIGHT)));
+                    widths.Put(itemInfo.GetRenderer(), JavaUtil.ArraysAsList(itemInfo.GetRenderer().GetProperty<UnitValue>(Property
+                        .WIDTH), itemInfo.GetRenderer().GetProperty<UnitValue>(Property.MIN_WIDTH), itemInfo.GetRenderer().GetProperty
+                        <UnitValue>(Property.MAX_WIDTH)));
                     itemInfo.GetRenderer().SetProperty(Property.WIDTH, UnitValue.CreatePointValue(rectangleWithoutBordersMarginsPaddings
                         .GetWidth()));
-                    itemInfo.GetRenderer().SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(rectangleWithoutBordersMarginsPaddings
-                        .GetHeight()));
+                    UnitValue height = UnitValue.CreatePointValue(rectangleWithoutBordersMarginsPaddings.GetHeight());
+                    itemInfo.GetRenderer().SetProperty(Property.HEIGHT, height);
                     // TODO DEVSIX-1895 Once the ticket is closed, there will be no need in setting min-height
                     // In case element takes less vertical space than expected, we need to make sure
                     // it is extended to the height predicted by the algo
-                    itemInfo.GetRenderer().SetProperty(Property.MIN_HEIGHT, UnitValue.CreatePointValue(rectangleWithoutBordersMarginsPaddings
-                        .GetHeight()));
+                    itemInfo.GetRenderer().SetProperty(Property.MIN_HEIGHT, height);
+                    if (FlexUtil.IsColumnDirection(this)) {
+                        // TODO DEVSIX-1895 Once the ticket is closed, uncomment this line
+                        // itemInfo.getRenderer().deleteProperty(Property.MIN_HEIGHT);
+                        itemInfo.GetRenderer().DeleteProperty(Property.MAX_HEIGHT);
+                    }
+                    else {
+                        itemInfo.GetRenderer().DeleteProperty(Property.MIN_WIDTH);
+                        itemInfo.GetRenderer().DeleteProperty(Property.MAX_WIDTH);
+                    }
                     // Property.HORIZONTAL_ALIGNMENT mustn't play, in flex container items are aligned
                     // using justify-content and align-items
                     itemInfo.GetRenderer().SetProperty(Property.HORIZONTAL_ALIGNMENT, null);
@@ -159,10 +172,14 @@ namespace iText.Layout.Renderer {
             int counter = 0;
             foreach (IList<FlexItemInfo> line in lines) {
                 foreach (FlexItemInfo itemInfo in line) {
-                    itemInfo.GetRenderer().SetProperty(Property.WIDTH, previousWidths[counter]);
-                    Tuple2<UnitValue, UnitValue> curHeights = heights.Get(itemInfo.GetRenderer());
-                    itemInfo.GetRenderer().SetProperty(Property.HEIGHT, curHeights.GetFirst());
-                    itemInfo.GetRenderer().SetProperty(Property.MIN_HEIGHT, curHeights.GetSecond());
+                    IList<UnitValue> curWidths = widths.Get(itemInfo.GetRenderer());
+                    itemInfo.GetRenderer().ReturnBackOwnProperty(Property.WIDTH, curWidths[0]);
+                    itemInfo.GetRenderer().ReturnBackOwnProperty(Property.MIN_WIDTH, curWidths[1]);
+                    itemInfo.GetRenderer().ReturnBackOwnProperty(Property.MAX_WIDTH, curWidths[2]);
+                    IList<UnitValue> curHeights = heights.Get(itemInfo.GetRenderer());
+                    itemInfo.GetRenderer().ReturnBackOwnProperty(Property.HEIGHT, curHeights[0]);
+                    itemInfo.GetRenderer().ReturnBackOwnProperty(Property.MIN_HEIGHT, curHeights[1]);
+                    itemInfo.GetRenderer().ReturnBackOwnProperty(Property.MAX_HEIGHT, curHeights[2]);
                     ++counter;
                 }
             }
@@ -519,11 +536,11 @@ namespace iText.Layout.Renderer {
         }
 
         private static void OrderChildRenderers(IList<IRenderer> renderers) {
-            JavaCollectionsUtil.Sort(renderers, new _IComparer_546());
+            JavaCollectionsUtil.Sort(renderers, new _IComparer_567());
         }
 
-        private sealed class _IComparer_546 : IComparer<IRenderer> {
-            public _IComparer_546() {
+        private sealed class _IComparer_567 : IComparer<IRenderer> {
+            public _IComparer_567() {
             }
 
             public int Compare(IRenderer a, IRenderer b) {
@@ -638,12 +655,15 @@ namespace iText.Layout.Renderer {
             }
             // childRenderer is the original renderer we set the height for before the layout
             // And we need to remove the height from the corresponding overflow renderer
-            Tuple2<UnitValue, UnitValue> curHeights = heights.Get(childRenderer);
-            if (curHeights.GetFirst() == null) {
+            IList<UnitValue> curHeights = heights.Get(childRenderer);
+            if (curHeights[0] == null) {
                 overflowRenderer.DeleteOwnProperty(Property.HEIGHT);
             }
-            if (curHeights.GetSecond() == null) {
+            if (curHeights[1] == null) {
                 overflowRenderer.DeleteOwnProperty(Property.MIN_HEIGHT);
+            }
+            if (curHeights[2] == null) {
+                overflowRenderer.DeleteOwnProperty(Property.MAX_HEIGHT);
             }
         }
 
@@ -687,7 +707,12 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     maxWidth += childMinMaxWidth.GetMaxWidth() + (i == 0 ? 0 : columnGap);
-                    minWidth += childMinMaxWidth.GetMinWidth() + (i == 0 ? 0 : columnGap);
+                    if (FlexUtil.IsSingleLine(this)) {
+                        minWidth += childMinMaxWidth.GetMinWidth() + (i == 0 ? 0 : columnGap);
+                    }
+                    else {
+                        minWidth = Math.Max(minWidth, childMinMaxWidth.GetMinWidth());
+                    }
                 }
             }
             minMaxWidthHandler.UpdateMaxChildWidth(maxWidth);
