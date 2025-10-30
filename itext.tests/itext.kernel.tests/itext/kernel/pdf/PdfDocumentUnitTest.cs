@@ -370,6 +370,19 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        [NUnit.Framework.Test]
+        public virtual void DocumentInfoHelperTest() {
+            NUnit.Framework.Assert.DoesNotThrow(() => new PdfDocumentUnitTest.CheckDocumentInfoHelperPdfDocument(new PdfWriter
+                (new ByteArrayOutputStream())));
+        }
+
+        private class CheckDocumentInfoHelperPdfDocument : PdfDocument {
+            public CheckDocumentInfoHelperPdfDocument(PdfWriter writer)
+                : base(writer) {
+                documentInfoHelper.ShouldAddDocumentInfoToTrailer();
+            }
+        }
+
         private class CustomValidationChecker : IValidationChecker {
             public bool documentValidationPerformed = false;
 

@@ -130,7 +130,7 @@ namespace iText.Kernel.Pdf {
         protected internal TagStructureContext tagStructureContext;
 
         [Obsolete]
-        protected internal DocumentInfoHelper documentInfoHelper;
+        protected internal DocumentInfoHelper documentInfoHelper = new DocumentInfoHelper();
 
         protected internal DefaultFontStrategy defaultFontStrategy;
 
