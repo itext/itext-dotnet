@@ -111,8 +111,8 @@ namespace iText.IO.Font {
 
         public virtual IDictionary<int, int[]> GetActiveCmap() {
             OpenTypeParser.CmapTable cmaps = fontParser.GetCmapTable();
-            if (cmaps.cmapExt != null) {
-                return cmaps.cmapExt;
+            if (cmaps.cmap310 != null) {
+                return cmaps.cmap310;
             }
             else {
                 if (!cmaps.fontSpecific && cmaps.cmap31 != null) {
@@ -231,15 +231,31 @@ namespace iText.IO.Font {
         /// <param name="toMerge">the fonts to merge with used glyphs per each font</param>
         /// <param name="fontName">the name of fonts to merge</param>
         /// <returns>the raw data of merged font</returns>
+        [System.ObsoleteAttribute(@"in favour of Merge(System.Collections.Generic.IDictionary{K, V}, System.String, bool)"
+            )]
         public static byte[] Merge(IDictionary<iText.IO.Font.TrueTypeFont, ICollection<int>> toMerge, String fontName
             ) {
+            return Merge(toMerge, fontName, true);
+        }
+
+        /// <summary>Merges the passed font into one.</summary>
+        /// <remarks>Merges the passed font into one. Used glyphs per each font are applied to subset the merged font.
+        ///     </remarks>
+        /// <param name="toMerge">the fonts to merge with used glyphs per each font</param>
+        /// <param name="fontName">the name of fonts to merge</param>
+        /// <param name="isCmapCheckRequired">the flag which specifies whether 'cmap' table should be checked while merging or not
+        ///     </param>
+        /// <returns>the raw data of merged font</returns>
+        public static byte[] Merge(IDictionary<iText.IO.Font.TrueTypeFont, ICollection<int>> toMerge, String fontName
+            , bool isCmapCheckRequired) {
             try {
                 IDictionary<OpenTypeParser, ICollection<int>> toMergeWithParsers = new LinkedDictionary<OpenTypeParser, ICollection
                     <int>>();
                 foreach (KeyValuePair<iText.IO.Font.TrueTypeFont, ICollection<int>> entry in toMerge) {
                     toMergeWithParsers.Put(entry.Key.fontParser, entry.Value);
                 }
-                TrueTypeFontMerger trueTypeFontMerger = new TrueTypeFontMerger(fontName, toMergeWithParsers);
+                TrueTypeFontMerger trueTypeFontMerger = new TrueTypeFontMerger(fontName, toMergeWithParsers, isCmapCheckRequired
+                    );
                 return trueTypeFontMerger.Process().GetSecond();
             }
             catch (System.IO.IOException e) {

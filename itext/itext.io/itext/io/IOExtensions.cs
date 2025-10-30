@@ -174,6 +174,15 @@ namespace iText.IO {
             col.CopyTo(r, 0);
             return r;
         }
+        
+        public static bool ContainsAll<T>(this ICollection<T> thisC, ICollection<T> otherC) {
+            foreach (T e in otherC) {
+                if (!thisC.Contains(e)) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
         public static Assembly GetAssembly(this Type type) {
 #if !NETSTANDARD2_0

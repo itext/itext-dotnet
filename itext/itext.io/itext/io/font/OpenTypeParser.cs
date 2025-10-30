@@ -285,6 +285,10 @@ namespace iText.IO.Font {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
+            internal IDictionary<int, int[]> cmap03;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
             /// <summary>The map containing the code information for the table 'cmap', encoding 1.0.</summary>
             /// <remarks>
             /// The map containing the code information for the table 'cmap', encoding 1.0.
@@ -295,6 +299,10 @@ namespace iText.IO.Font {
             /// </remarks>
             /// <seealso cref="FontProgram.UNITS_NORMALIZATION"/>
             internal IDictionary<int, int[]> cmap10;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal IDictionary<int, int[]> cmap30;
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
@@ -311,7 +319,7 @@ namespace iText.IO.Font {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-            internal IDictionary<int, int[]> cmapExt;
+            internal IDictionary<int, int[]> cmap310;
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
@@ -1229,41 +1237,62 @@ namespace iText.IO.Font {
             raf.Seek(table_location[0]);
             raf.SkipBytes(2);
             int num_tables = raf.ReadUnsignedShort();
-            int map10 = 0;
-            int map31 = 0;
-            int map30 = 0;
-            int mapExt = 0;
             int map03 = 0;
+            int map10 = 0;
+            int map30 = 0;
+            int map31 = 0;
+            int map310 = 0;
             cmaps = new OpenTypeParser.CmapTable();
             for (int k = 0; k < num_tables; ++k) {
                 int platId = raf.ReadUnsignedShort();
                 int platSpecId = raf.ReadUnsignedShort();
                 cmaps.cmapEncodings.Add(new Tuple2<int, int>(platId, platSpecId));
                 int offset = raf.ReadInt();
-                if (platId == 3 && platSpecId == 0) {
-                    cmaps.fontSpecific = true;
-                    map30 = offset;
+                if (platId == 0 && platSpecId == 3) {
+                    map03 = offset;
                 }
                 else {
-                    if (platId == 3 && platSpecId == 1) {
-                        map31 = offset;
+                    if (platId == 1 && platSpecId == 0) {
+                        map10 = offset;
                     }
                     else {
-                        if (platId == 3 && platSpecId == 10) {
-                            mapExt = offset;
+                        if (platId == 3 && platSpecId == 0) {
+                            cmaps.fontSpecific = true;
+                            map30 = offset;
                         }
                         else {
-                            if (platId == 1 && platSpecId == 0) {
-                                map10 = offset;
+                            if (platId == 3 && platSpecId == 1) {
+                                map31 = offset;
                             }
                             else {
-                                if (platId == 0 && platSpecId == 3) {
-                                    map03 = offset;
+                                if (platId == 3 && platSpecId == 10) {
+                                    map310 = offset;
                                 }
                             }
                         }
                     }
                 }
+            }
+            if (map03 > 0) {
+                // Unicode platform, Unicode >2.0 semantics, expect format 4 or 6 subtable
+                raf.Seek(table_location[0] + map03);
+                int format = raf.ReadUnsignedShort();
+                switch (format) {
+                    case 4: {
+                        cmaps.cmap03 = ReadFormat4(false);
+                        break;
+                    }
+
+                    case 6: {
+                        cmaps.cmap03 = ReadFormat6();
+                        break;
+                    }
+                }
+                // We treat this table as equivalent to (platformId = 3, encodingId = 1)
+                // for downstream processing, since both are intended to address the Unicode BMP.
+                // Note that only one of these encoding subtables is used at a time. If multiple encoding subtables
+                // are found, the ‘cmap’ parsing software determines which one to use.
+                cmaps.cmap31 = cmaps.cmap03;
             }
             if (map10 > 0) {
                 raf.Seek(table_location[0] + map10);
@@ -1285,24 +1314,15 @@ namespace iText.IO.Font {
                     }
                 }
             }
-            if (map03 > 0) {
-                // Unicode platform, Unicode >2.0 semantics, expect format 4 or 6 subtable
-                raf.Seek(table_location[0] + map03);
+            if (map30 > 0) {
+                raf.Seek(table_location[0] + map30);
                 int format = raf.ReadUnsignedShort();
-                // We treat this table as equivalent to (platformId = 3, encodingId = 1)
-                // for downstream processing, since both are intended to address the Unicode BMP.
-                // Note that only one of these encoding subtables is used at a time. If multiple encoding subtables
-                // are found, the ‘cmap’ parsing software determines which one to use.
-                switch (format) {
-                    case 4: {
-                        cmaps.cmap31 = ReadFormat4(false);
-                        break;
-                    }
-
-                    case 6: {
-                        cmaps.cmap31 = ReadFormat6();
-                        break;
-                    }
+                if (format == 4) {
+                    cmaps.cmap30 = ReadFormat4(cmaps.fontSpecific);
+                    cmaps.cmap10 = cmaps.cmap30;
+                }
+                else {
+                    cmaps.fontSpecific = false;
                 }
             }
             if (map31 > 0) {
@@ -1312,37 +1332,27 @@ namespace iText.IO.Font {
                     cmaps.cmap31 = ReadFormat4(false);
                 }
             }
-            if (map30 > 0) {
-                raf.Seek(table_location[0] + map30);
-                int format = raf.ReadUnsignedShort();
-                if (format == 4) {
-                    cmaps.cmap10 = ReadFormat4(cmaps.fontSpecific);
-                }
-                else {
-                    cmaps.fontSpecific = false;
-                }
-            }
-            if (mapExt > 0) {
-                raf.Seek(table_location[0] + mapExt);
+            if (map310 > 0) {
+                raf.Seek(table_location[0] + map310);
                 int format = raf.ReadUnsignedShort();
                 switch (format) {
                     case 0: {
-                        cmaps.cmapExt = ReadFormat0();
+                        cmaps.cmap310 = ReadFormat0();
                         break;
                     }
 
                     case 4: {
-                        cmaps.cmapExt = ReadFormat4(false);
+                        cmaps.cmap310 = ReadFormat4(false);
                         break;
                     }
 
                     case 6: {
-                        cmaps.cmapExt = ReadFormat6();
+                        cmaps.cmap310 = ReadFormat6();
                         break;
                     }
 
                     case 12: {
-                        cmaps.cmapExt = ReadFormat12();
+                        cmaps.cmap310 = ReadFormat12();
                         break;
                     }
                 }

@@ -87,12 +87,169 @@ namespace iText.IO.Font {
             // GID correspond to A
             usedGlyphs.Add(36);
             toMerge.Put(subset2, usedGlyphs);
-            byte[] mergeFontBytes = TrueTypeFont.Merge(toMerge, "NotoSans-Regular");
+            byte[] mergeFontBytes = TrueTypeFont.Merge(toMerge, "NotoSans-Regular", false);
             TrueTypeFont mergeFont = FontProgramFactory.CreateTrueTypeFont(mergeFontBytes, true);
             // C glyphs wasn't used, it's why it was cut from merge font
             NUnit.Framework.Assert.IsNotNull(subset1.bBoxes[38]);
             NUnit.Framework.Assert.IsNotNull(subset2.bBoxes[38]);
             NUnit.Framework.Assert.AreEqual(38, mergeFont.bBoxes.Length);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NoCommonCmapPdfTrueTypeMergeTest() {
+            // subsets are created using fonttools Python lib with the following command
+            // fonttools subset ./NotoSans-Regular.ttf --text="ABC" --retain-gids --layout-features='*' --notdef-glyph --output-file=subset_abc.ttf
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_abc.ttf"));
+            TrueTypeFont subsetAbc = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
+            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_def.ttf"));
+            TrueTypeFont subsetDef = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
+            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_xyz.ttf"));
+            TrueTypeFont subsetXyz = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
+            IDictionary<TrueTypeFont, ICollection<int>> toMerge = new Dictionary<TrueTypeFont, ICollection<int>>();
+            ICollection<int> usedGlyphs = new HashSet<int>();
+            // GID correspond to ABC
+            usedGlyphs.Add(36);
+            usedGlyphs.Add(37);
+            usedGlyphs.Add(38);
+            toMerge.Put(subsetAbc, usedGlyphs);
+            usedGlyphs = new HashSet<int>();
+            // GID correspond to DEF
+            usedGlyphs.Add(39);
+            usedGlyphs.Add(40);
+            usedGlyphs.Add(41);
+            toMerge.Put(subsetDef, usedGlyphs);
+            usedGlyphs = new HashSet<int>();
+            // GID correspond to XYZ
+            usedGlyphs.Add(59);
+            usedGlyphs.Add(60);
+            usedGlyphs.Add(61);
+            toMerge.Put(subsetXyz, usedGlyphs);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TrueTypeFont.Merge
+                (toMerge, "NotoSans-Regular", true));
+            NUnit.Framework.Assert.AreEqual(IoExceptionMessageConstant.CMAP_TABLE_MERGING_IS_NOT_SUPPORTED, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CommonCmapPdfTrueTypeMergeTest() {
+            // subsets are created using fonttools Python lib with the following command
+            // fonttools subset ./NotoSans-Regular.ttf --text="ABC" --retain-gids --layout-features='*' --notdef-glyph --output-file=subset_abc.ttf
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_abc.ttf"));
+            TrueTypeFont subsetAbc = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
+            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_abc_def_xyz.ttf"));
+            TrueTypeFont subsetAbcDefXyz = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
+            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_def.ttf"));
+            TrueTypeFont subsetDef = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
+            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_xyz.ttf"));
+            TrueTypeFont subsetXyz = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
+            IDictionary<TrueTypeFont, ICollection<int>> toMerge = new Dictionary<TrueTypeFont, ICollection<int>>();
+            ICollection<int> usedGlyphs = new HashSet<int>();
+            // GID correspond to ABC
+            usedGlyphs.Add(36);
+            usedGlyphs.Add(37);
+            usedGlyphs.Add(38);
+            toMerge.Put(subsetAbc, usedGlyphs);
+            usedGlyphs = new HashSet<int>();
+            // GID correspond to ADX
+            usedGlyphs.Add(36);
+            usedGlyphs.Add(39);
+            usedGlyphs.Add(59);
+            toMerge.Put(subsetAbcDefXyz, usedGlyphs);
+            usedGlyphs = new HashSet<int>();
+            // GID correspond to DEF
+            usedGlyphs.Add(39);
+            usedGlyphs.Add(40);
+            usedGlyphs.Add(41);
+            toMerge.Put(subsetDef, usedGlyphs);
+            usedGlyphs = new HashSet<int>();
+            // GID correspond to XYZ
+            usedGlyphs.Add(59);
+            usedGlyphs.Add(60);
+            usedGlyphs.Add(61);
+            toMerge.Put(subsetXyz, usedGlyphs);
+            byte[] mergeFontBytes = TrueTypeFont.Merge(toMerge, "NotoSans-Regular", true);
+            TrueTypeFont mergeFont = FontProgramFactory.CreateTrueTypeFont(mergeFontBytes, true);
+            // `cmap` table contains mapping for all used glyphs
+            NUnit.Framework.Assert.AreEqual(9, mergeFont.GetActiveCmap().Count);
+            // `glyf` table contains data for all used glyphs
+            NUnit.Framework.Assert.AreEqual(62, mergeFont.bBoxes.Length);
+            NUnit.Framework.Assert.IsNotNull(mergeFont.bBoxes[36]);
+            NUnit.Framework.Assert.IsNotNull(mergeFont.bBoxes[39]);
+            NUnit.Framework.Assert.IsNotNull(mergeFont.bBoxes[59]);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NoCommonCmapPdfType0MergeTest() {
+            // subsets are created using fonttools Python lib with the following command
+            // fonttools subset ./NotoSans-Regular.ttf --text="ABC" --retain-gids --layout-features='*' --notdef-glyph --output-file=subset_abc.ttf
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_abc.ttf"));
+            TrueTypeFont subsetAbc = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
+            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_def.ttf"));
+            TrueTypeFont subsetDef = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
+            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_xyz.ttf"));
+            TrueTypeFont subsetXyz = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
+            IDictionary<TrueTypeFont, ICollection<int>> toMerge = new Dictionary<TrueTypeFont, ICollection<int>>();
+            ICollection<int> usedGlyphs = new HashSet<int>();
+            // GID correspond to ABC
+            usedGlyphs.Add(36);
+            usedGlyphs.Add(37);
+            usedGlyphs.Add(38);
+            toMerge.Put(subsetAbc, usedGlyphs);
+            usedGlyphs = new HashSet<int>();
+            // GID correspond to DEF
+            usedGlyphs.Add(39);
+            usedGlyphs.Add(40);
+            usedGlyphs.Add(41);
+            toMerge.Put(subsetDef, usedGlyphs);
+            usedGlyphs = new HashSet<int>();
+            // GID correspond to XYZ
+            usedGlyphs.Add(59);
+            usedGlyphs.Add(60);
+            usedGlyphs.Add(61);
+            toMerge.Put(subsetXyz, usedGlyphs);
+            byte[] mergeFontBytes = TrueTypeFont.Merge(toMerge, "NotoSans-Regular", false);
+            TrueTypeFont mergeFont = FontProgramFactory.CreateTrueTypeFont(mergeFontBytes, true);
+            // `cmap` table doesn't contain mapping for all used glyphs, but for PDF
+            // Type0 CIDFontType2 it isn't required because of CIDToGIDMap presence
+            NUnit.Framework.Assert.AreEqual(3, mergeFont.GetActiveCmap().Count);
+            // `glyf` table contains data for all used glyphs
+            NUnit.Framework.Assert.AreEqual(62, mergeFont.bBoxes.Length);
+            NUnit.Framework.Assert.IsNotNull(mergeFont.bBoxes[36]);
+            NUnit.Framework.Assert.IsNotNull(mergeFont.bBoxes[39]);
+            NUnit.Framework.Assert.IsNotNull(mergeFont.bBoxes[59]);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NoCommonCmapUnknownPdfTypeMergeTest() {
+            // subsets are created using fonttools Python lib with the following command
+            // fonttools subset ./NotoSans-Regular.ttf --text="ABC" --retain-gids --layout-features='*' --notdef-glyph --output-file=subset_abc.ttf
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_abc.ttf"));
+            TrueTypeFont subsetAbc = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
+            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_def.ttf"));
+            TrueTypeFont subsetDef = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
+            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_xyz.ttf"));
+            TrueTypeFont subsetXyz = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
+            IDictionary<TrueTypeFont, ICollection<int>> toMerge = new Dictionary<TrueTypeFont, ICollection<int>>();
+            ICollection<int> usedGlyphs = new HashSet<int>();
+            // GID correspond to ABC
+            usedGlyphs.Add(36);
+            usedGlyphs.Add(37);
+            usedGlyphs.Add(38);
+            toMerge.Put(subsetAbc, usedGlyphs);
+            usedGlyphs = new HashSet<int>();
+            // GID correspond to DEF
+            usedGlyphs.Add(39);
+            usedGlyphs.Add(40);
+            usedGlyphs.Add(41);
+            toMerge.Put(subsetDef, usedGlyphs);
+            usedGlyphs = new HashSet<int>();
+            // GID correspond to XYZ
+            usedGlyphs.Add(59);
+            usedGlyphs.Add(60);
+            usedGlyphs.Add(61);
+            toMerge.Put(subsetXyz, usedGlyphs);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TrueTypeFont.Merge
+                (toMerge, "NotoSans-Regular"));
+            NUnit.Framework.Assert.AreEqual(IoExceptionMessageConstant.CMAP_TABLE_MERGING_IS_NOT_SUPPORTED, e.Message);
         }
 
         [NUnit.Framework.Test]

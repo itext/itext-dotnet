@@ -74,6 +74,8 @@ namespace iText.IO.Exceptions {
 
         public const String CHARACTER_CODE_EXCEPTION = "Character code exception.";
 
+        public const String CMAP_TABLE_MERGING_IS_NOT_SUPPORTED = "cmap table merging isn't supported.";
+
         public const String CMAP_WAS_NOT_FOUND = "The CMap {0} was not found.";
 
         [Obsolete]
