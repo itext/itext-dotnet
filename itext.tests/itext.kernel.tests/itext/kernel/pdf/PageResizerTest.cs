@@ -454,7 +454,6 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestPdfASignatureFieldDefault() {
-            // TODO: DEVSIX-9518 PageResizer breaks PDF/A compliance after page resizing
             String inFileName = "pdfASignatureFieldDefault.pdf";
             String outFileName = "pdfASignatureFieldDefault.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
@@ -464,13 +463,12 @@ namespace iText.Kernel.Pdf {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
                  + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
-            new VeraPdfValidator().ValidateFailure(DESTINATION_FOLDER + outFileName);
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void TestPdfASignatureFieldAspect() {
-            // TODO: DEVSIX-9518 PageResizer breaks PDF/A compliance after page resizing
             String inFileName = "pdfASignatureFieldAspect.pdf";
             String outFileName = "pdfASignatureFieldAspect.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
@@ -480,13 +478,12 @@ namespace iText.Kernel.Pdf {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
                  + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
-            new VeraPdfValidator().ValidateFailure(DESTINATION_FOLDER + outFileName);
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void TestPdfAFormFieldsDefault() {
-            // TODO: DEVSIX-9518 PageResizer breaks PDF/A compliance after page resizing
             String inFileName = "pdfAFormFieldsDefault.pdf";
             String outFileName = "pdfAFormFieldsDefault.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
@@ -496,13 +493,12 @@ namespace iText.Kernel.Pdf {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
                  + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
-            new VeraPdfValidator().ValidateFailure(DESTINATION_FOLDER + outFileName);
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void TestPdfAFormFieldsAspect() {
-            // TODO: DEVSIX-9518 PageResizer breaks PDF/A compliance after page resizing
             String inFileName = "pdfAFormFieldsAspect.pdf";
             String outFileName = "pdfAFormFieldsAspect.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
@@ -512,7 +508,7 @@ namespace iText.Kernel.Pdf {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
                  + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
-            new VeraPdfValidator().ValidateFailure(DESTINATION_FOLDER + outFileName);
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)

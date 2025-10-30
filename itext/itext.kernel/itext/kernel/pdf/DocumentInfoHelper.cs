@@ -20,12 +20,15 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
+
 namespace iText.Kernel.Pdf {
     /// <summary>
     /// The class is helper which used inside
     /// <see cref="PdfDocument"/>
     /// to properly configure PDF document's info dictionary.
     /// </summary>
+    [System.ObsoleteAttribute(@"functionality moved to pdfDocument.")]
     public class DocumentInfoHelper {
         /// <summary>If document info dictionary should be added to the trailer.</summary>
         /// <returns>

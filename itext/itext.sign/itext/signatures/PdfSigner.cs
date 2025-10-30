@@ -1588,7 +1588,6 @@ namespace iText.Signatures {
                     }
                     GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
                     this.pdfPageFactory = new PdfAPageFactory(pdfAChecker);
-                    this.documentInfoHelper = new PdfADocumentInfoHelper(this);
                     this.defaultFontStrategy = new PdfADefaultFontStrategy(this);
                     SetFlushUnusedObjects(true);
                 }
