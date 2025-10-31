@@ -106,6 +106,11 @@ namespace iText.Signatures.Validation {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
+        internal const String CRL_RESPONSE_IS_SIGNED_BY_CERTIFICATE_BEING_VALIDATED = "Unable to validate CRL response: "
+             + "CRL response is signed by the same certificate as being validated.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         // All reasons without unspecified.
         internal const int ALL_REASONS = 32895;
 //\endcond
@@ -333,6 +338,12 @@ namespace iText.Signatures.Validation {
                 }
                 SafeCalling.OnExceptionLog(() => crl.Verify(crlIssuer.GetPublicKey()), candidateReport, (e) => new CertificateReportItem
                     (certificate, CRL_CHECK, CRL_INVALID, e, ReportItem.ReportItemStatus.INDETERMINATE));
+                if (certificate.Equals(crlIssuer)) {
+                    // OCSP response is signed by this same certificate
+                    report.AddReportItem(new CertificateReportItem((IX509Certificate)crlIssuer, CRL_CHECK, CRL_RESPONSE_IS_SIGNED_BY_CERTIFICATE_BEING_VALIDATED
+                        , ReportItem.ReportItemStatus.INDETERMINATE));
+                    continue;
+                }
                 ValidationReport responderReport = new ValidationReport();
                 SafeCalling.OnExceptionLog(() => builder.GetCertificateChainValidator().Validate(responderReport, context.
                     SetCertificateSource(CertificateSource.CRL_ISSUER), (IX509Certificate)crlIssuer, responseGenerationDate

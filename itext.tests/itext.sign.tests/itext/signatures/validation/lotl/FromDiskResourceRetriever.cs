@@ -30,18 +30,15 @@ using iText.IO.Resolver.Resource;
 using iText.Kernel.Crypto;
 
 namespace iText.Signatures.Validation.Lotl {
-//\cond DO_NOT_DOCUMENT
-    internal class FromDiskResourceRetriever : IResourceRetriever {
+    public class FromDiskResourceRetriever : IResourceRetriever {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
 
         private readonly String resourcePath;
 
-//\cond DO_NOT_DOCUMENT
-        internal FromDiskResourceRetriever(String resourcePath) {
+        public FromDiskResourceRetriever(String resourcePath) {
             this.resourcePath = resourcePath;
         }
-//\endcond
 
         public virtual Stream GetInputStreamByUrl(Uri url) {
             throw new NotSupportedException("Not implemented yet");
@@ -79,5 +76,4 @@ namespace iText.Signatures.Validation.Lotl {
             }
         }
     }
-//\endcond
 }

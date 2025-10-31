@@ -36,6 +36,7 @@ using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
 using iText.Signatures.Testutils.Client;
 using iText.Signatures.Validation.Context;
+using iText.Signatures.Validation.Lotl;
 using iText.Signatures.Validation.Mocks;
 using iText.Signatures.Validation.Report;
 using iText.Test;
@@ -47,8 +48,14 @@ namespace iText.Signatures.Validation {
         private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/SignatureValidatorIntegrationTest/certs/";
 
+        private static readonly String COMMON_CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
+
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/SignatureValidatorIntegrationTest/";
+
+        private static readonly String SOURCE_FOLDER_LOTL_FILES = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation" + "/lotl/LotlState2025_08_08/";
 
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
@@ -478,6 +485,30 @@ namespace iText.Signatures.Validation {
                     ).HasNumberOfLogs(3).HasNumberOfFailures(2).HasLogItem((l) => l.WithCheckName(SignatureValidator.SIGNATURE_VERIFICATION
                     ).WithMessage(SignatureValidator.VALIDATING_SIGNATURE_NAME, (p) => "Signature1")).HasLogItems(2, (l) =>
                      l.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).WithStatus(ReportItem.ReportItemStatus.INDETERMINATE
+                    )));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InfiniteRecursionTest() {
+            String trustedCertsFileName = COMMON_CERTS_SRC + "tsCertRsa.pem";
+            IX509Certificate[] trustedCerts = PemFileHelper.ReadFirstChain(trustedCertsFileName);
+            LotlService service = new LotlService(new LotlFetchingProperties(new RemoveOnFailingCountryData()));
+            service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
+            service.WithLotlValidator(() => new LotlValidator(service));
+            service.InitializeCache();
+            SignatureValidationProperties param = new SignatureValidationProperties().SetFreshness(ValidatorContexts.All
+                (), CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays(1000000));
+            ValidatorChainBuilder chainBuilder = new ValidatorChainBuilder().WithSignatureValidationProperties(param).
+                WithLotlService(() => service).TrustEuropeanLotl(true)
+                        // Trust self signed certificate used for timestamping
+                        .WithTrustedCertificates(JavaUtil.ArraysAsList(trustedCerts));
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "ocspResponseSignedByCertToCheck.pdf"
+                ))) {
+                SignatureValidator signatureValidator = chainBuilder.BuildSignatureValidator(document);
+                ValidationReport report = signatureValidator.ValidateSignatures();
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
+                    (0).HasLogItem((l) => l.WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator.OCSP_RESPONSE_IS_SIGNED_BY_CERTIFICATE_BEING_VALIDATED
                     )));
             }
         }
