@@ -46,6 +46,10 @@ namespace iText.Layout.Renderer {
 
         private IFlexItemMainDirector flexItemMainDirector = null;
 
+//\cond DO_NOT_DOCUMENT
+        internal bool isWrapApplied = false;
+//\endcond
+
         /// <summary>Child renderers and their heights and min/max heights before the layout.</summary>
         private readonly IDictionary<IRenderer, IList<UnitValue>> heights = new Dictionary<IRenderer, IList<UnitValue
             >>();
@@ -94,6 +98,10 @@ namespace iText.Layout.Renderer {
             SetThisAsParent(GetChildRenderers());
             OrderChildRenderers(GetChildRenderers());
             Rectangle layoutBox = layoutContextRectangle.Clone();
+            if (isWrapApplied) {
+                ApplyWrapReverse();
+                isWrapApplied = false;
+            }
             UnitValue marginTop = this.GetProperty<UnitValue>(Property.MARGIN_TOP);
             UnitValue marginBottom = this.GetProperty<UnitValue>(Property.MARGIN_BOTTOM);
             bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
@@ -493,6 +501,7 @@ namespace iText.Layout.Renderer {
             }
             RemoveAllChildRenderers(GetChildRenderers());
             AddAllChildRenderers(reorderedRendererList);
+            isWrapApplied = true;
         }
 
         private FlexItemInfo FindFlexItemInfo(AbstractRenderer renderer) {
@@ -536,11 +545,11 @@ namespace iText.Layout.Renderer {
         }
 
         private static void OrderChildRenderers(IList<IRenderer> renderers) {
-            JavaCollectionsUtil.Sort(renderers, new _IComparer_567());
+            JavaCollectionsUtil.Sort(renderers, new _IComparer_573());
         }
 
-        private sealed class _IComparer_567 : IComparer<IRenderer> {
-            public _IComparer_567() {
+        private sealed class _IComparer_573 : IComparer<IRenderer> {
+            public _IComparer_573() {
             }
 
             public int Compare(IRenderer a, IRenderer b) {
