@@ -139,6 +139,29 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TestAnnotationRichText() {
+            String inFileName = "annotationRichText.pdf";
+            String outFileName = "annotationRichText.pdf";
+            String outFileNameReverted = "annotationRichTextReverted.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + inFileName), new PdfWriter(
+                DESTINATION_FOLDER + outFileName))) {
+                new PageResizer(new PageSize(PageSize.A4.GetWidth() / 2, PageSize.A4.GetHeight()), PageResizer.ResizeType.
+                    MAINTAIN_ASPECT_RATIO).Resize(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileName, SOURCE_FOLDER
+                 + "cmp_" + outFileName, DESTINATION_FOLDER, "diff"));
+            // Reverting
+            using (PdfDocument pdfDocument_1 = new PdfDocument(new PdfReader(SOURCE_FOLDER + outFileName), new PdfWriter
+                (DESTINATION_FOLDER + outFileNameReverted))) {
+                PageResizer resizer = new PageResizer(new PageSize(PageSize.A4), PageResizer.ResizeType.MAINTAIN_ASPECT_RATIO
+                    );
+                resizer.Resize(pdfDocument_1.GetPage(1));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outFileNameReverted, 
+                SOURCE_FOLDER + "cmp_" + outFileNameReverted, DESTINATION_FOLDER, "diff"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TestAnnotationInkList() {
             String inFileName = "annotationInkList.pdf";
             String outFileName = "annotationInkList.pdf";

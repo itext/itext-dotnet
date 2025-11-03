@@ -31,7 +31,6 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.Kernel.Pdf {
-//\cond DO_NOT_DOCUMENT
     /// <summary>
     /// The PageResizer class provides functionality to resize PDF pages to a specified
     /// target page size using various resizing methods.
@@ -42,8 +41,34 @@ namespace iText.Kernel.Pdf {
     /// content, annotations, and resources accordingly, also supports configuration
     /// options for maintaining the aspect ratio during the resize operation.
     /// </remarks>
-    internal class PageResizer {
+    public class PageResizer {
         private const float EPSILON = 1e-6f;
+
+        private const int NUMBER_FORMAT_PRECISION = 10000;
+
+        // Operators we care about in DA:
+        //   Tf  => operands: /FontName <fontSize>  (scale the <fontSize> only)
+        //   TL  => operand: <leading>              (scale)
+        //   Tc  => operand: <charSpacing>          (scale)
+        //   Tw  => operand: <wordSpacing>          (scale)
+        //   Ts  => operand: <textRise>             (scale)
+        //
+        // Operators we intentionally do NOT scale:
+        //   Tz (horizontal scaling, percentage), Tr (rendering mode),
+        //   color ops (g/rg/k/G/RG/K), etc.
+        private static readonly ICollection<String> SCALABLE_DA_OPERATORS = new HashSet<String>(JavaUtil.ArraysAsList
+            ("Tf", "TL", "Tc", "Tw", "Ts"));
+
+        // A list of single-value CSS properties with length values that should be scaled.
+        // Based on a PDF spec for Rich Text strings 12.7.3.4 (Table 255) plus other common properties from CSS 1/2.
+        // Shorthand properties like "padding" or "margin" seem to be unsupported by Acrobat.
+        private static readonly ICollection<String> SCALABLE_RC_PROPERTIES = new HashSet<String>(JavaUtil.ArraysAsList
+            ("font-size", "line-height", "text-indent", "padding-top", "padding-right", "padding-bottom", "padding-left"
+            , "margin-top", "margin-right", "margin-bottom", "margin-left", "border-top-width", "border-right-width"
+            , "border-bottom-width", "border-left-width", "width", "height", "letter-spacing", "word-spacing"));
+
+        private static readonly ICollection<String> SCALABLE_UNITS = new HashSet<String>(JavaUtil.ArraysAsList("pt"
+            , "pc", "in", "cm", "mm", "px"));
 
         private readonly PageSize size;
 
@@ -152,29 +177,13 @@ namespace iText.Kernel.Pdf {
 
 //\cond DO_NOT_DOCUMENT
         internal static String ScaleDaString(String daString, double scale) {
-            if (daString == null || String.IsNullOrEmpty(daString.Trim())) {
-                return daString;
-            }
-            // Optimization for identity scaling. Use an epsilon for robust float comparison.
-            if (Math.Abs(scale - 1.0) < 1e-9) {
+            if (daString == null || String.IsNullOrEmpty(daString.Trim()) || Math.Abs(scale - 1.0) < EPSILON) {
                 return daString;
             }
             IList<String> tokens = new List<String>(JavaUtil.ArraysAsList(iText.Commons.Utils.StringUtil.Split(daString
                 .Trim(), "\\s+")));
-            // Operators we care about in DA:
-            //   Tf  => operands: /FontName <fontSize>  (scale the <fontSize> only)
-            //   TL  => operand: <leading>              (scale)
-            //   Tc  => operand: <charSpacing>          (scale)
-            //   Tw  => operand: <wordSpacing>          (scale)
-            //   Ts  => operand: <textRise>             (scale)
-            //
-            // Operators we intentionally do NOT scale:
-            //   Tz (horizontal scaling, percentage), Tr (rendering mode),
-            //   color ops (g/rg/k/G/RG/K), etc.
-            ICollection<String> scalableOperators = new HashSet<String>(JavaUtil.ArraysAsList("Tf", "TL", "Tc", "Tw", 
-                "Ts"));
             for (int i = 0; i < tokens.Count; i++) {
-                if (scalableOperators.Contains(tokens[i])) {
+                if (SCALABLE_DA_OPERATORS.Contains(tokens[i])) {
                     int operandIdx = i - 1;
                     while (operandIdx >= 0) {
                         String token = tokens[operandIdx];
@@ -196,6 +205,43 @@ namespace iText.Kernel.Pdf {
                 }
             }
             return String.Join(" ", tokens);
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal static String ScaleRcString(String rcString, double scale) {
+            if (IsEmpty(rcString) || Math.Abs(scale - 1.0) < EPSILON) {
+                return rcString;
+            }
+            // Quick pre-check: if none of the property names appear at all, skip additional work.
+            // This is a fast substring scan; false positives are fine.
+            bool containsScalable = false;
+            foreach (String p in SCALABLE_RC_PROPERTIES) {
+                if (rcString.Contains(p)) {
+                    containsScalable = true;
+                    break;
+                }
+            }
+            if (!containsScalable) {
+                return rcString;
+            }
+            PageResizer.RcPropertyParser parser = new PageResizer.RcPropertyParser(rcString);
+            StringBuilder @out = new StringBuilder();
+            int lastWrite = 0;
+            while (parser.FindNext()) {
+                PageResizer.RcPropertyParserResult result = parser.GetResult();
+                double newValue = result.GetParsedValue() * scale;
+                String formatted = FormatNumber(newValue);
+                @out.Append(rcString.JSubstring(lastWrite, result.GetValueStart())).Append(formatted);
+                lastWrite = result.GetValueEnd();
+            }
+            if (lastWrite == 0) {
+                // No replacements
+                return rcString;
+            }
+            // Append the remainder
+            @out.Append(rcString.JSubstring(lastWrite, rcString.Length));
+            return @out.ToString();
         }
 //\endcond
 
@@ -225,15 +271,19 @@ namespace iText.Kernel.Pdf {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        /// <summary>Resizes the appearance streams of a given PDF annotation by applying the specified affine transformation matrix.
+        /// <summary>Resizes the appearance streams of the given PDF annotation by applying the specified affine transformation.
         ///     </summary>
         /// <remarks>
-        /// Resizes the appearance streams of a given PDF annotation by applying the specified affine transformation matrix.
-        /// This involves scaling the content of the appearance streams in the annotation's
-        /// appearance dictionary and adjusting their transformation matrices to reflect the scaling.
+        /// Resizes the appearance streams of the given PDF annotation by applying the specified affine transformation.
+        /// The method traverses through the annotation's appearance dictionary, locating and resizing the
+        /// streams or nested streams within, based on the scaling and transformation defined by the
+        /// affine transformation matrix.
         /// </remarks>
         /// <param name="annot">the PDF annotation whose appearance streams are to be resized</param>
-        /// <param name="scalingMatrix">the affine transformation matrix used to scale the appearance streams</param>
+        /// <param name="scalingMatrix">
+        /// the affine transformation matrix representing the scaling and translation
+        /// to be applied to the appearance streams
+        /// </param>
         internal static void ResizeAppearanceStreams(PdfAnnotation annot, AffineTransform scalingMatrix) {
             PdfDictionary ap = annot.GetAppearanceDictionary();
             if (ap == null) {
@@ -259,6 +309,21 @@ namespace iText.Kernel.Pdf {
         }
 //\endcond
 
+        /// <summary>Checks if a given string is null, empty, or contains only whitespace characters.</summary>
+        /// <param name="str">the string to check for emptiness</param>
+        /// <returns>true if the string is null, empty, or contains only whitespace; false otherwise</returns>
+        private static bool IsEmpty(String str) {
+            if (str == null) {
+                return true;
+            }
+            for (int i = 0; i < str.Length; i++) {
+                if (!iText.IO.Util.TextUtil.IsWhiteSpace(str[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         /// <summary>
         /// Scales the transformation matrix of the provided pattern using the given scaling matrix,
         /// without mutating the original pattern.
@@ -266,6 +331,7 @@ namespace iText.Kernel.Pdf {
         /// <remarks>
         /// Scales the transformation matrix of the provided pattern using the given scaling matrix,
         /// without mutating the original pattern.
+        /// <para />
         /// The method:
         /// - Locates the pattern object in the provided resources by name.
         /// - Deep-copies the pattern object into the same document.
@@ -434,6 +500,15 @@ namespace iText.Kernel.Pdf {
             if (da != null) {
                 annotDict.Put(PdfName.DA, new PdfString(ScaleDaString(da, lengthScale)));
             }
+            // Scale font size in Rich Content string
+            if (annotDict.GetAsString(PdfName.RC) != null) {
+                String rc = annotDict.GetAsString(PdfName.RC).ToUnicodeString();
+                annotDict.Put(PdfName.RC, new PdfString(ScaleRcString(rc, lengthScale)));
+            }
+            if (annotDict.GetAsString(PdfName.DS) != null) {
+                String ds = annotDict.GetAsString(PdfName.DS).ToUnicodeString();
+                annotDict.Put(PdfName.DS, new PdfString(ScaleRcString(ds, lengthScale)));
+            }
         }
 
         /// <summary>Formats a given double value to a string representation with reasonable precision</summary>
@@ -443,8 +518,11 @@ namespace iText.Kernel.Pdf {
             if (double.IsNaN(v)) {
                 return Convert.ToString(v, System.Globalization.CultureInfo.InvariantCulture);
             }
+            if (Math.Abs(v) < EPSILON) {
+                return "0";
+            }
             // Round to 4 decimal places.
-            long scaled = (long)MathematicUtil.Round(v * 10000.0);
+            long scaled = (long)MathematicUtil.Round(v * NUMBER_FORMAT_PRECISION);
             if (scaled == 0) {
                 return "0";
             }
@@ -453,12 +531,12 @@ namespace iText.Kernel.Pdf {
                 sb.Append('-');
                 scaled = -scaled;
             }
-            long wholePart = scaled / 10000;
-            long fractionalPart = scaled % 10000;
+            long wholePart = scaled / NUMBER_FORMAT_PRECISION;
+            long fractionalPart = scaled % NUMBER_FORMAT_PRECISION;
             sb.Append(wholePart);
             if (fractionalPart > 0) {
                 sb.Append('.');
-                String fractionalStr = (10000 + fractionalPart).ToString().Substring(1);
+                String fractionalStr = (NUMBER_FORMAT_PRECISION + fractionalPart).ToString().Substring(1);
                 sb.Append(fractionalStr);
                 while (sb.Length > 0 && sb[sb.Length - 1] == '0') {
                     sb.Length = sb.Length - 1;
@@ -594,22 +672,301 @@ namespace iText.Kernel.Pdf {
         /// Enum representing the available types of resizing strategies when modifying the dimensions
         /// of a PDF page. These strategies determine how the content is scaled relative to the new size.
         /// </remarks>
-        internal enum ResizeType {
+        public enum ResizeType {
             MAINTAIN_ASPECT_RATIO,
             DEFAULT
         }
 
-        internal enum VerticalAnchorPoint {
+        /// <summary>
+        /// Represents the vertical alignment points used for resizing or aligning elements,
+        /// particularly in the context of page rescaling.
+        /// </summary>
+        /// <remarks>
+        /// Represents the vertical alignment points used for resizing or aligning elements,
+        /// particularly in the context of page rescaling.
+        /// The available anchor points are:
+        /// - TOP: The top edge of the element serves as the reference point for alignment.
+        /// - CENTER: The center of the element is used as the alignment reference.
+        /// - BOTTOM: The bottom edge of the element serves as the reference point for alignment.
+        /// This enumeration is employed by the PageResizer class to determine the vertical
+        /// alignment of content during resizing operations.
+        /// </remarks>
+        public enum VerticalAnchorPoint {
             TOP,
             CENTER,
             BOTTOM
         }
 
-        internal enum HorizontalAnchorPoint {
+        /// <summary>
+        /// Enum representing the horizontal anchor point used in the resizing and alignment
+        /// of a page or content.
+        /// </summary>
+        /// <remarks>
+        /// Enum representing the horizontal anchor point used in the resizing and alignment
+        /// of a page or content.
+        /// The horizontal anchor point specifies the horizontal alignment,
+        /// determining the reference point for positioning during resizing operations.
+        /// Possible values include:
+        /// - LEFT
+        /// </remarks>
+        public enum HorizontalAnchorPoint {
             LEFT,
             CENTER,
             RIGHT
         }
-    }
+
+        /// <summary>Represents the result of parsing a property in a scalable RC string.</summary>
+        /// <remarks>
+        /// Represents the result of parsing a property in a scalable RC string. This class encapsulates
+        /// the starting and ending indices of the parsed value within the RC property string, along with
+        /// the parsed numerical value itself.
+        /// <para />
+        /// This is a utility class used internally within the PageResizer to help process scalable RC
+        /// properties by extracting and interpreting numerical values in the context of resizing operations.
+        /// </remarks>
+        private class RcPropertyParserResult {
+            private int valueStart;
+
+            private int valueEnd;
+
+            private double parsedValue;
+
+            public RcPropertyParserResult(int valueStart, int valueEnd, double parsedValue) {
+                this.valueStart = valueStart;
+                this.valueEnd = valueEnd;
+                this.parsedValue = parsedValue;
+            }
+
+            public virtual int GetValueStart() {
+                return valueStart;
+            }
+
+            public virtual int GetValueEnd() {
+                return valueEnd;
+            }
+
+            public virtual double GetParsedValue() {
+                return parsedValue;
+            }
+        }
+
+        /// <summary>
+        /// RcPropertyParser is a utility class designed to parse scalable properties
+        /// from a given CSS-like source string.
+        /// </summary>
+        /// <remarks>
+        /// RcPropertyParser is a utility class designed to parse scalable properties
+        /// from a given CSS-like source string. Its primary function is to locate a specific
+        /// property, extract its numeric value, and verify the associated unit for scaling purposes.
+        /// It iterates over the source, attempting to match and parse specific property patterns.
+        /// </remarks>
+        private class RcPropertyParser {
+            private readonly String source;
+
+            private readonly int length;
+
+            private int cursor;
+
+            private PageResizer.RcPropertyParserResult result;
+
+//\cond DO_NOT_DOCUMENT
+            internal RcPropertyParser(String source) {
+                this.source = source;
+                this.length = source.Length;
+                this.cursor = 0;
+            }
 //\endcond
+
+            /// <summary>Attempts to find the next matching property in the source string and parse its scalable value.</summary>
+            /// <remarks>
+            /// Attempts to find the next matching property in the source string and parse its scalable value.
+            /// If a match is found, the method updates the cursor position and associated parsed value details.
+            /// </remarks>
+            /// <returns>
+            /// 
+            /// <see langword="true"/>
+            /// if a matching scalable property is found and its value is successfully parsed,
+            /// <see langword="false"/>
+            /// if no more matching properties can be found in the source string.
+            /// </returns>
+            public virtual bool FindNext() {
+                while (cursor < length) {
+                    int matchedPropEnd = FindAndMatchProperty(cursor);
+                    if (matchedPropEnd != -1) {
+                        int newCursor = ParseAndSetScalableValue(matchedPropEnd);
+                        if (newCursor != -1) {
+                            cursor = newCursor;
+                            return true;
+                        }
+                    }
+                    cursor++;
+                }
+                return false;
+            }
+
+            public virtual PageResizer.RcPropertyParserResult GetResult() {
+                return result;
+            }
+
+            private int FindAndMatchProperty(int i) {
+                // Micro-optimization: quick reject by checking the first char is a letter commonly starting properties.
+                char c = source[i];
+                // Check that the character before (if exists) is not a property name character
+                // E.g., this ensures we don't match "height" in "text-height"
+                bool validLeadingBoundary = (i == 0) || !IsPropertyNameChar(source[i - 1]);
+                if (((c >= 'a' && c <= 'z') || c == '-') && validLeadingBoundary) {
+                    foreach (String p in SCALABLE_RC_PROPERTIES) {
+                        int len = p.Length;
+                        if (i + len <= length && CompareRegions(source, i, p, 0, len)) {
+                            return i + len;
+                        }
+                    }
+                }
+                return -1;
+            }
+
+            private static bool CompareRegions(String first, int firstOffset, String second, int secondOffset, int len
+                ) {
+                if (firstOffset < 0 || secondOffset < 0 || len < 0 || (firstOffset + len) > first.Length || (secondOffset 
+                    + len) > second.Length) {
+                    return false;
+                }
+                for (int i = 0; i < len; i++) {
+                    char c1 = first[firstOffset + i];
+                    char c2 = second[secondOffset + i];
+                    if (c1 == c2) {
+                        continue;
+                    }
+                    return false;
+                }
+                return true;
+            }
+
+            private int ParseAndSetScalableValue(int matchedPropEnd) {
+                int k = SkipWhitespace(source, matchedPropEnd);
+                if (k >= length || source[k] != ':') {
+                    // Not a property assignment;
+                    return -1;
+                }
+                // skip ':'
+                k++;
+                k = SkipWhitespace(source, k);
+                // Parse number
+                int numStart = k;
+                if (numStart >= length) {
+                    // no value;
+                    return -1;
+                }
+                int numEnd = ParseCssNumber(source, numStart);
+                if (numEnd <= numStart) {
+                    // Not a number here (e.g., 'inherit' or other values);
+                    return -1;
+                }
+                // Skip spaces between number and unit
+                int unitStart = SkipWhitespace(source, numEnd);
+                // Parse unit (letters)
+                int unitEnd = ParseCssUnit(source, unitStart);
+                if (unitEnd <= unitStart) {
+                    // Missing number or unit; not a match we scale.
+                    return -1;
+                }
+                String unit = source.JSubstring(unitStart, unitEnd).ToLowerInvariant();
+                if (!SCALABLE_UNITS.Contains(unit)) {
+                    // Do not scale relative or unsupported units
+                    return -1;
+                }
+                // At this point we have: property matched, colon, number [numStart..numEnd), unit [unitStart..unitEnd)
+                String numStr = source.JSubstring(numStart, numEnd);
+                double value;
+                try {
+                    value = Double.Parse(numStr, System.Globalization.CultureInfo.InvariantCulture);
+                }
+                catch (FormatException) {
+                    // Shouldn't happen given our parser, but to be safe
+                    return -1;
+                }
+                this.result = new PageResizer.RcPropertyParserResult(numStart, numEnd, value);
+                return unitEnd;
+            }
+
+            private static bool IsPropertyNameChar(char c) {
+                return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '-' || char.IsDigit(c);
+            }
+
+            private static int SkipWhitespace(String str, int index) {
+                while (index < str.Length && iText.IO.Util.TextUtil.IsWhiteSpace(str[index])) {
+                    index++;
+                }
+                return index;
+            }
+
+            private static int ParseCssNumber(String str, int startIndex) {
+                int n = str.Length;
+                if (startIndex >= n) {
+                    return startIndex;
+                }
+                int i = startIndex;
+                // optional sign
+                if (str[i] == '+' || str[i] == '-') {
+                    i++;
+                }
+                int digitsBefore = 0;
+                int digitsAfter = 0;
+                // digits before decimal
+                int d = i;
+                while (d < n && char.IsDigit(str[d])) {
+                    d++;
+                }
+                digitsBefore = d - i;
+                i = d;
+                // optional decimal part
+                if (i < n && str[i] == '.') {
+                    i++;
+                    int a = i;
+                    while (a < n && char.IsDigit(str[a])) {
+                        a++;
+                    }
+                    digitsAfter = a - i;
+                    i = a;
+                }
+                if (digitsBefore == 0 && digitsAfter == 0) {
+                    return startIndex;
+                }
+                i = ParseExponent(str, i, n);
+                return i;
+            }
+
+            private static int ParseExponent(String str, int i, int n) {
+                if (i < n && (str[i] == 'e' || str[i] == 'E')) {
+                    int expPos = i + 1;
+                    if (expPos < n && (str[expPos] == '+' || str[expPos] == '-')) {
+                        expPos++;
+                    }
+                    int expDigitsStart = expPos;
+                    while (expPos < n && char.IsDigit(str[expPos])) {
+                        expPos++;
+                    }
+                    if (expPos > expDigitsStart) {
+                        // accept exponent only if digits present
+                        return expPos;
+                    }
+                }
+                return i;
+            }
+
+            private static int ParseCssUnit(String str, int startIndex) {
+                int i = startIndex;
+                while (i < str.Length) {
+                    char ch = str[i];
+                    if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) {
+                        i++;
+                    }
+                    else {
+                        break;
+                    }
+                }
+                return i;
+            }
+        }
+    }
 }
