@@ -78,15 +78,13 @@ namespace iText.Kernel.Pdf {
 
         private readonly PageResizer.ResizeType type;
 
-//\cond DO_NOT_DOCUMENT
         /// <summary>Constructs a new PageResizer instance with the specified page size and resize type.</summary>
         /// <param name="size">the target page size to which the content should be resized</param>
         /// <param name="type">the resizing method to be applied, such as maintaining the aspect ratio</param>
-        internal PageResizer(PageSize size, PageResizer.ResizeType type) {
+        public PageResizer(PageSize size, PageResizer.ResizeType type) {
             this.size = size;
             this.type = type;
         }
-//\endcond
 
         /// <summary>Retrieves the horizontal anchor point of the PageResizer.</summary>
         /// <returns>the horizontal anchor point, which determines the horizontal alignment (e.g., LEFT, CENTER, RIGHT).
@@ -173,6 +171,60 @@ namespace iText.Kernel.Pdf {
             foreach (PdfAnnotation annot in page.GetAnnotations()) {
                 ResizeAnnotation(annot, scalingMatrix);
             }
+        }
+
+        /// <summary>
+        /// Enum representing the available types of resizing strategies when modifying the dimensions
+        /// of a PDF page.
+        /// </summary>
+        /// <remarks>
+        /// Enum representing the available types of resizing strategies when modifying the dimensions
+        /// of a PDF page. These strategies determine how the content is scaled relative to the new size.
+        /// </remarks>
+        public enum ResizeType {
+            MAINTAIN_ASPECT_RATIO,
+            DEFAULT
+        }
+
+        /// <summary>
+        /// Represents the vertical alignment points used for resizing or aligning elements,
+        /// particularly in the context of page rescaling.
+        /// </summary>
+        /// <remarks>
+        /// Represents the vertical alignment points used for resizing or aligning elements,
+        /// particularly in the context of page rescaling.
+        /// <para />
+        /// The available anchor points are:
+        /// - TOP: The top edge of the element serves as the reference point for alignment.
+        /// - CENTER: The center of the element is used as the alignment reference.
+        /// - BOTTOM: The bottom edge of the element serves as the reference point for alignment.
+        /// <para />
+        /// This enumeration is employed by the PageResizer class to determine the vertical
+        /// alignment of content during resizing operations.
+        /// </remarks>
+        public enum VerticalAnchorPoint {
+            TOP,
+            CENTER,
+            BOTTOM
+        }
+
+        /// <summary>
+        /// Enum representing the horizontal anchor point used in the resizing and alignment
+        /// of a page or content.
+        /// </summary>
+        /// <remarks>
+        /// Enum representing the horizontal anchor point used in the resizing and alignment
+        /// of a page or content.
+        /// <para />
+        /// The horizontal anchor point specifies the horizontal alignment,
+        /// determining the reference point for positioning during resizing operations.
+        /// Possible values include:
+        /// - LEFT
+        /// </remarks>
+        public enum HorizontalAnchorPoint {
+            LEFT,
+            CENTER,
+            RIGHT
         }
 
 //\cond DO_NOT_DOCUMENT
@@ -662,57 +714,6 @@ namespace iText.Kernel.Pdf {
             transformMatrix.Concatenate(scalingMatrix);
             scalingMatrix = transformMatrix;
             return scalingMatrix;
-        }
-
-        /// <summary>
-        /// Enum representing the available types of resizing strategies when modifying the dimensions
-        /// of a PDF page.
-        /// </summary>
-        /// <remarks>
-        /// Enum representing the available types of resizing strategies when modifying the dimensions
-        /// of a PDF page. These strategies determine how the content is scaled relative to the new size.
-        /// </remarks>
-        public enum ResizeType {
-            MAINTAIN_ASPECT_RATIO,
-            DEFAULT
-        }
-
-        /// <summary>
-        /// Represents the vertical alignment points used for resizing or aligning elements,
-        /// particularly in the context of page rescaling.
-        /// </summary>
-        /// <remarks>
-        /// Represents the vertical alignment points used for resizing or aligning elements,
-        /// particularly in the context of page rescaling.
-        /// The available anchor points are:
-        /// - TOP: The top edge of the element serves as the reference point for alignment.
-        /// - CENTER: The center of the element is used as the alignment reference.
-        /// - BOTTOM: The bottom edge of the element serves as the reference point for alignment.
-        /// This enumeration is employed by the PageResizer class to determine the vertical
-        /// alignment of content during resizing operations.
-        /// </remarks>
-        public enum VerticalAnchorPoint {
-            TOP,
-            CENTER,
-            BOTTOM
-        }
-
-        /// <summary>
-        /// Enum representing the horizontal anchor point used in the resizing and alignment
-        /// of a page or content.
-        /// </summary>
-        /// <remarks>
-        /// Enum representing the horizontal anchor point used in the resizing and alignment
-        /// of a page or content.
-        /// The horizontal anchor point specifies the horizontal alignment,
-        /// determining the reference point for positioning during resizing operations.
-        /// Possible values include:
-        /// - LEFT
-        /// </remarks>
-        public enum HorizontalAnchorPoint {
-            LEFT,
-            CENTER,
-            RIGHT
         }
 
         /// <summary>Represents the result of parsing a property in a scalable RC string.</summary>
