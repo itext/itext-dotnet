@@ -66,7 +66,7 @@ namespace iText.Signatures.Validation.Lotl {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal const String TSLLOCATION = "TSLLocation";
+        internal const String TSL_LOCATION = "TSLLocation";
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
@@ -79,6 +79,58 @@ namespace iText.Signatures.Validation.Lotl {
 
 //\cond DO_NOT_DOCUMENT
         internal const String URI = "URI";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String URI_ATTRIBUTE = "uri";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String QUALIFIER = "Qualifier";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String QUALIFICATION_ELEMENT = "QualificationElement";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String CRITERIA_LIST = "CriteriaList";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String ASSERT = "assert";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String CERT_SUBJECT_DN_ATTRIBUTE = "CertSubjectDNAttribute";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String POLICY_SET = "PolicySet";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String IDENTIFIER = "Identifier";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String KEY_PURPOSE_ID = "KeyPurposeId";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String EXTENDED_KEY_USAGE = "ExtendedKeyUsage";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String KEY_USAGE = "KeyUsage";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String KEY_USAGE_BIT = "KeyUsageBit";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String NAME = "name";
 //\endcond
     }
 //\endcond

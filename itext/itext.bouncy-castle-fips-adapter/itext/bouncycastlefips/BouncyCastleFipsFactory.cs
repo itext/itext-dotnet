@@ -43,6 +43,7 @@ using iText.Bouncycastlefips.Asn1.Tsp;
 using iText.Bouncycastlefips.Asn1.Util;
 using iText.Bouncycastlefips.Asn1.X500;
 using iText.Bouncycastlefips.Asn1.X509;
+using iText.Bouncycastlefips.Asn1.X509.Qualified;
 using iText.Bouncycastlefips.Cert;
 using iText.Bouncycastlefips.Cert.Ocsp;
 using iText.Bouncycastlefips.Cms;
@@ -66,6 +67,7 @@ using iText.Commons.Bouncycastle.Asn1.Tsp;
 using iText.Commons.Bouncycastle.Asn1.Util;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Asn1.X509;
+using iText.Commons.Bouncycastle.Asn1.X509.Qualified;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Cms;
@@ -82,6 +84,7 @@ using iText.Commons.Utils;
 using Org.BouncyCastle.Asn1.Pkcs;
 using Org.BouncyCastle.Asn1.Tsp;
 using Org.BouncyCastle.Asn1.X500;
+using Org.BouncyCastle.Asn1.X509.Qualified;
 using Org.BouncyCastle.Cert;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Asymmetric;
@@ -1294,6 +1297,50 @@ namespace iText.Bouncycastlefips {
                 return rsaParams;
             }
             return null;
+        }
+        
+        /// <summary><inheritDoc/></summary>
+        public List<String> GetPoliciesIds(byte[] policyExtension) {
+            using (Asn1InputStream inputStream = new Asn1InputStream(policyExtension)) {
+                Asn1OctetString octetString = (Asn1OctetString) inputStream.ReadObject();
+                using (Asn1InputStream innerInputStream = new Asn1InputStream(octetString.GetOctets())) {
+                    CertificatePolicies certificatePolicies =
+                        CertificatePolicies.GetInstance(innerInputStream.ReadObject());
+
+                    PolicyInformation[] policies = certificatePolicies.GetPolicyInformation();
+                    List<String> policyIds = new List<String>(policies.Length);
+
+                    foreach (PolicyInformation policy in policies) {
+                        policyIds.Add(policy.PolicyIdentifier.Id);
+                    }
+
+                    return policyIds;
+                }
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public List<IQCStatement> ParseQcStatement(byte[] qcStatementsExtensionValue) {
+            List<IQCStatement> qcStatements = new List<IQCStatement>();
+            if (qcStatementsExtensionValue != null) {
+                Asn1OctetString octs;
+                using (Asn1InputStream aIn = new Asn1InputStream(qcStatementsExtensionValue)) {
+                    octs = (Asn1OctetString) aIn.ReadObject();
+                }
+
+                Asn1Object primitive;
+                using (Asn1InputStream aIn = new Asn1InputStream(octs.GetOctets())) {
+                    primitive = aIn.ReadObject();
+                }
+
+                Asn1Sequence qcStatementsSequence = Asn1Sequence.GetInstance(primitive);
+                foreach (Asn1Encodable qcStatementEncodable in qcStatementsSequence) {
+                    QCStatement qcStatement = QCStatement.GetInstance(qcStatementEncodable);
+                    qcStatements.Add(new QCStatementBCFips(qcStatement));
+                }
+            }
+
+            return qcStatements;
         }
         
         private static RSAParameters ToRsaParameters(AsymmetricRsaPublicKey rsaKey) {

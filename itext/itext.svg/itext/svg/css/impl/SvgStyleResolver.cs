@@ -354,7 +354,7 @@ namespace iText.Svg.Css.Impl {
         private void CollectCssDeclarations(INode rootNode, ResourceResolver resourceResolver) {
             LinkedList<INode> q = new LinkedList<INode>();
             if (rootNode != null) {
-                q.Add(rootNode);
+                q.AddLast(rootNode);
             }
             while (!q.IsEmpty()) {
                 INode currentNode = q.JRemoveFirst();
@@ -388,7 +388,7 @@ namespace iText.Svg.Css.Impl {
                 }
                 foreach (INode child in currentNode.ChildNodes()) {
                     if (child is IElementNode || child is IXmlDeclarationNode) {
-                        q.Add(child);
+                        q.AddLast(child);
                     }
                 }
             }

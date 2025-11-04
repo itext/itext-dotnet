@@ -35,6 +35,7 @@ using iText.Commons.Bouncycastle.Asn1.Tsp;
 using iText.Commons.Bouncycastle.Asn1.Util;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Asn1.X509;
+using iText.Commons.Bouncycastle.Asn1.X509.Qualified;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Cms;
@@ -1710,5 +1711,19 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="certificate">Bouncy-castle X509 certificate wrapper</param>
         /// <returns>Asymmetric algorithm instance</returns>
         RSAParameters? GetRsaParametersFromCertificate(IX509Certificate certificate);
+        
+        /// <summary>
+        /// Gets list of policies IDs from the provided certificate policy extension.
+        /// </summary>
+        /// <param name="policyExtension">certificate policy extension as byte array</param>
+        /// <returns>list of policies IDs</returns>
+        List<String> GetPoliciesIds(byte[] policyExtension);
+        
+        /// <summary>
+        /// Parses list of IQCStatement from the provided certificate QC Statements Extension value.
+        /// </summary>
+        /// <param name="qcStatementsExtensionValue">certificate QC Statements Extension value as byte array</param>
+        /// <returns>list of IQCStatement</returns>
+        List<IQCStatement> ParseQcStatement(byte[] qcStatementsExtensionValue);
     }
 }

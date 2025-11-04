@@ -192,6 +192,21 @@ namespace iText.Commons.Utils {
         {
             return GetInitial().AddMilliseconds(milliseconds);
         }
+        
+        /// <summary>
+        /// Creates UTC Date based on provided parameters.
+        /// </summary>
+        /// <param name="year">as int to be created</param>
+        /// <param name="month">as int to be created</param>
+        /// <param name="day">as int to be created</param>
+        /// <param name="hour">as int to be created</param>
+        /// <param name="minute">as int to be created</param>
+        /// <param name="second">as int to be created</param>
+        /// <returns>UTC date</returns>
+        public static DateTime CreateUtcDateTime(int year, int month, int day, int hour, int minute, int second) {
+            return new DateTime(year, month + 1, day, hour, minute, second, DateTimeKind.Utc);
+        }
+        
         private static DateTime GetInitial() {
             return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         }

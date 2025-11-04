@@ -115,7 +115,7 @@ namespace iText.Signatures.Validation.Lotl {
             context.SetServiceType("http://uri.etsi.org/TrstSvc/Svctype/CA/QC");
             ServiceChronologicalInfo info = new ServiceChronologicalInfo(ServiceChronologicalInfo.GRANTED, iText.Commons.Utils.DateTimeUtil.CreateDateTime
                 (1900, 1, 1, 0, 0));
-            info.AddExtension(new AdditionalServiceInformationExtension("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForWebSiteAuthentication"
+            info.AddServiceExtension(new AdditionalServiceInformationExtension("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForWebSiteAuthentication"
                 ));
             context.AddServiceChronologicalInfo(info);
             ValidatorChainBuilder validatorChainBuilder = new ValidatorChainBuilder();

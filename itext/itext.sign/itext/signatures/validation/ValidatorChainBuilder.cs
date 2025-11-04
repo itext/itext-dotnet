@@ -60,6 +60,8 @@ namespace iText.Signatures.Validation {
 
         private Func<LotlService> lotlServiceFactory;
 
+        private QualifiedValidator qualifiedValidator;
+
         private ICollection<IX509Certificate> trustedCertificates;
 
         private ICollection<IX509Certificate> knownCertificates;
@@ -81,6 +83,7 @@ namespace iText.Signatures.Validation {
             ocspClientFactory = () => new OcspClientBouncyCastle();
             crlClientFactory = () => new CrlClientOnline();
             lotlServiceFactory = () => BuildLotlService();
+            qualifiedValidator = new NullQualifiedValidator();
         }
 
         /// <summary>Establishes trust in European Union List of Trusted Lists.</summary>
@@ -404,6 +407,36 @@ namespace iText.Signatures.Validation {
         }
 
         /// <summary>
+        /// Sets
+        /// <see cref="iText.Signatures.Validation.Lotl.QualifiedValidator"/>
+        /// instance to be used during signature qualification validation.
+        /// </summary>
+        /// <remarks>
+        /// Sets
+        /// <see cref="iText.Signatures.Validation.Lotl.QualifiedValidator"/>
+        /// instance to be used during signature qualification validation.
+        /// The results of this validation can be obtained from this same instance.
+        /// The feature is only executed if European LOTL is used. See
+        /// <see cref="TrustEuropeanLotl(bool)"/>.
+        /// <para />
+        /// This validator needs to be updated per each document validation, or the results need to be obtained.
+        /// Otherwise, the exception will be thrown.
+        /// <para />
+        /// If no instance is provided, the qualification validation is not executed.
+        /// </remarks>
+        /// <param name="qualifiedValidator">
+        /// 
+        /// <see cref="iText.Signatures.Validation.Lotl.QualifiedValidator"/>
+        /// instance which performs the validation.
+        /// </param>
+        /// <returns>current ValidatorChainBuilder</returns>
+        public virtual iText.Signatures.Validation.ValidatorChainBuilder WithQualifiedValidator(QualifiedValidator
+             qualifiedValidator) {
+            this.qualifiedValidator = qualifiedValidator;
+            return this;
+        }
+
+        /// <summary>
         /// Retrieves the explicitly added or automatically created
         /// <see cref="iText.Signatures.IssuingCertificateRetriever"/>
         /// instance.
@@ -464,6 +497,20 @@ namespace iText.Signatures.Validation {
         /// </returns>
         public virtual IResourceRetriever GetResourceRetriever() {
             return resourceRetrieverFactory();
+        }
+
+        /// <summary>
+        /// Gets
+        /// <see cref="iText.Signatures.Validation.Lotl.QualifiedValidator"/>
+        /// instance.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Signatures.Validation.Lotl.QualifiedValidator"/>
+        /// instance
+        /// </returns>
+        public virtual QualifiedValidator GetQualifiedValidator() {
+            return qualifiedValidator;
         }
 
 //\cond DO_NOT_DOCUMENT

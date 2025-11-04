@@ -233,7 +233,7 @@ namespace iText.Svg.Processors.Impl {
         /// <returns>IElementNode</returns>
         internal virtual IElementNode FindFirstElement(INode node, String tagName) {
             LinkedList<INode> q = new LinkedList<INode>();
-            q.Add(node);
+            q.AddLast(node);
             while (!q.IsEmpty()) {
                 INode currentNode = q.JGetFirst();
                 q.RemoveFirst();
@@ -246,7 +246,7 @@ namespace iText.Svg.Processors.Impl {
                 }
                 foreach (INode child in currentNode.ChildNodes()) {
                     if (child is IElementNode) {
-                        q.Add(child);
+                        q.AddLast(child);
                     }
                 }
             }

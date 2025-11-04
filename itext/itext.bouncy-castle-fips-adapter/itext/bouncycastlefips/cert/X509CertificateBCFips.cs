@@ -183,6 +183,16 @@ namespace iText.Bouncycastlefips.Cert {
         public int GetBasicConstraints() {
             return certificate.GetBasicConstraints();
         }
+        
+        /// <summary><inheritDoc/></summary>
+        public IDerObjectIdentifier[] GetSubjectAttributeTypes() {
+            DerObjectIdentifier[] subjectAttributeTypes = certificate.SubjectDN.GetAttributeTypes();
+            IDerObjectIdentifier[] subjectAttributeTypesWrapper = new IDerObjectIdentifier[subjectAttributeTypes.Length];
+            for (int i = 0; i < subjectAttributeTypes.Length; ++i) {
+                subjectAttributeTypesWrapper[i] = new DerObjectIdentifierBCFips(subjectAttributeTypes[i]);
+            }
+            return subjectAttributeTypesWrapper;
+        }
 
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
         public override bool Equals(Object o) {

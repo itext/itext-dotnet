@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
+using iText.Signatures.Validation.Lotl.Criteria;
 using iText.Signatures.Validation.Report;
 using iText.Test;
 
@@ -279,17 +280,47 @@ namespace iText.Signatures.Validation.Lotl {
             report.AddReportItem(ogReportItem);
             countrySpecificCache.SetCountrySpecificLotl(be);
             countrySpecificCache.SetLocalReport(report);
+            CertSubjectDNAttributeCriteria criteria1 = new CertSubjectDNAttributeCriteria();
+            criteria1.AddRequiredAttributeId("attr1");
+            criteria1.AddRequiredAttributeId("attr2");
+            ExtendedKeyUsageCriteria criteria2 = new ExtendedKeyUsageCriteria();
+            criteria2.AddRequiredExtendedKeyUsage("keyUsage1");
+            criteria2.AddRequiredExtendedKeyUsage("keyUsage2");
+            PolicySetCriteria criteria3 = new PolicySetCriteria();
+            criteria3.AddRequiredPolicyId("policyId1");
+            criteria3.AddRequiredPolicyId("policyId2");
+            KeyUsageCriteria criteria4 = new KeyUsageCriteria();
+            criteria4.AddKeyUsageBit("nonRepudiation", "true");
+            criteria4.AddKeyUsageBit("dataEncipherment", "true");
+            criteria4.AddKeyUsageBit("keyCertSign", "true");
+            criteria4.AddKeyUsageBit("encipherOnly", "false");
+            CriteriaList innerCriteriaList = new CriteriaList("atLeastOne");
+            innerCriteriaList.AddCriteria(criteria1);
+            innerCriteriaList.AddCriteria(criteria2);
+            innerCriteriaList.AddCriteria(criteria3);
+            innerCriteriaList.AddCriteria(criteria4);
+            CriteriaList criteriaList = new CriteriaList("all");
+            criteriaList.AddCriteria(innerCriteriaList);
+            criteriaList.AddCriteria(criteria1);
+            QualifierExtension qualifierExtension = new QualifierExtension();
+            qualifierExtension.AddQualifier("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/QCQSCDManagedOnBehalf"
+                );
+            qualifierExtension.AddQualifier("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/QCForLegalPerson");
+            qualifierExtension.SetCriteriaList(criteriaList);
+            ServiceChronologicalInfo chronologicalInfo = new ServiceChronologicalInfo(TEST_SERVICE_STATUS, TEST_DATE_TIME_1
+                );
+            chronologicalInfo.AddQualifierExtension(qualifierExtension);
+            chronologicalInfo.AddQualifierExtension(qualifierExtension);
             CountryServiceContext context = new CountryServiceContext();
             context.AddCertificate(null);
             context.SetServiceType(TEST_SERVICE_TYPE);
-            context.GetServiceChronologicalInfos().Add(new ServiceChronologicalInfo(TEST_SERVICE_STATUS, TEST_DATE_TIME_1
-                ));
+            context.GetServiceChronologicalInfos().Add(chronologicalInfo);
             ServiceChronologicalInfo ogChronologicalInfo = new ServiceChronologicalInfo(TEST_SERVICE_STATUS, TEST_DATE_TIME_1
                 );
             AdditionalServiceInformationExtension ogChronologicalInfoExtension = new AdditionalServiceInformationExtension
                 ();
             ogChronologicalInfoExtension.SetUri(EXTENSION_URI);
-            ogChronologicalInfo.AddExtension(ogChronologicalInfoExtension);
+            ogChronologicalInfo.AddServiceExtension(ogChronologicalInfoExtension);
             context.GetServiceChronologicalInfos().Add(ogChronologicalInfo);
             IList<IServiceContext> contexts = new List<IServiceContext>();
             contexts.Add(context);
@@ -348,8 +379,105 @@ namespace iText.Signatures.Validation.Lotl {
                 (), "ServiceStatus should match");
             NUnit.Framework.Assert.AreEqual(firstOriginalChronoInfo.GetServiceStatusStartingTime(), firstDeserializedChronoInfo
                 .GetServiceStatusStartingTime(), "ServiceStatusStartingTime should match");
-            NUnit.Framework.Assert.AreEqual(firstOriginalChronoInfo.GetExtensions().Count, firstDeserializedChronoInfo
-                .GetExtensions().Count, "Extensions size should match");
+            NUnit.Framework.Assert.AreEqual(firstOriginalChronoInfo.GetServiceExtensions().Count, firstDeserializedChronoInfo
+                .GetServiceExtensions().Count, "Extensions size should match");
+            IList<QualifierExtension> originalQualifierExtensions = firstOriginalChronoInfo.GetQualifierExtensions();
+            IList<QualifierExtension> deserializedQualifierExtensions = firstDeserializedChronoInfo.GetQualifierExtensions
+                ();
+            NUnit.Framework.Assert.AreEqual(originalQualifierExtensions.Count, deserializedQualifierExtensions.Count, 
+                "QualifierExtensions size should match");
+            QualifierExtension originalQualifierExtension = originalQualifierExtensions[0];
+            QualifierExtension deserializedQualifierExtension = deserializedQualifierExtensions[0];
+            NUnit.Framework.Assert.AreEqual(originalQualifierExtension.GetQualifiers().Count, deserializedQualifierExtension
+                .GetQualifiers().Count, "Qualifiers size should match");
+            for (int i = 0; i < originalQualifierExtension.GetQualifiers().Count; i++) {
+                NUnit.Framework.Assert.AreEqual(originalQualifierExtension.GetQualifiers()[i], deserializedQualifierExtension
+                    .GetQualifiers()[i], "Qualifier at index " + i + " should match");
+            }
+            CriteriaList originalCriteriaList = originalQualifierExtension.GetCriteriaList();
+            CriteriaList deserializedCriteriaList = deserializedQualifierExtension.GetCriteriaList();
+            NUnit.Framework.Assert.IsNotNull(deserializedCriteriaList, "Deserialized CriteriaList should not be null");
+            NUnit.Framework.Assert.AreEqual(originalCriteriaList.GetCriteriaList().Count, deserializedCriteriaList.GetCriteriaList
+                ().Count);
+            for (int i = 0; i < originalCriteriaList.GetCriteriaList().Count; i++) {
+                iText.Signatures.Validation.Lotl.Criteria.Criteria originalCriteria = originalCriteriaList.GetCriteriaList
+                    ()[i];
+                iText.Signatures.Validation.Lotl.Criteria.Criteria deserializedCriteria = deserializedCriteriaList.GetCriteriaList
+                    ()[i];
+                NUnit.Framework.Assert.AreEqual(originalCriteria.GetType(), deserializedCriteria.GetType(), "Criteria class at index "
+                     + i + " should match");
+                if (originalCriteria is CriteriaList) {
+                    CriteriaList originalInnerList = (CriteriaList)originalCriteria;
+                    CriteriaList deserializedInnerList = (CriteriaList)deserializedCriteria;
+                    NUnit.Framework.Assert.AreEqual(originalInnerList.GetCriteriaList().Count, deserializedInnerList.GetCriteriaList
+                        ().Count, "Inner CriteriaList size at index " + i + " should match");
+                    for (int i1 = 0; i1 < originalInnerList.GetCriteriaList().Count; i1++) {
+                        iText.Signatures.Validation.Lotl.Criteria.Criteria originalInnerCriteria = originalInnerList.GetCriteriaList
+                            ()[i1];
+                        iText.Signatures.Validation.Lotl.Criteria.Criteria deserializedInnerCriteria = deserializedInnerList.GetCriteriaList
+                            ()[i1];
+                        NUnit.Framework.Assert.AreEqual(originalInnerCriteria.GetType(), deserializedInnerCriteria.GetType(), "Inner Criteria class at index "
+                             + i + "," + i1 + " should match");
+                        if (originalInnerCriteria is CertSubjectDNAttributeCriteria) {
+                            CertSubjectDNAttributeCriteria originalCertCriteria = (CertSubjectDNAttributeCriteria)originalInnerCriteria;
+                            CertSubjectDNAttributeCriteria deserializedCertCriteria = (CertSubjectDNAttributeCriteria)deserializedInnerCriteria;
+                            NUnit.Framework.Assert.AreEqual(originalCertCriteria.GetRequiredAttributeIds().Count, deserializedCertCriteria
+                                .GetRequiredAttributeIds().Count, "RequiredAttributeIds size at index " + i + "," + i1 + " should match"
+                                );
+                            for (int j = 0; j < originalCertCriteria.GetRequiredAttributeIds().Count; j++) {
+                                NUnit.Framework.Assert.AreEqual(originalCertCriteria.GetRequiredAttributeIds()[j], deserializedCertCriteria
+                                    .GetRequiredAttributeIds()[j], "RequiredAttributeId at index " + i + "," + i1 + "," + j + " should match"
+                                    );
+                            }
+                        }
+                        else {
+                            if (originalInnerCriteria is ExtendedKeyUsageCriteria) {
+                                ExtendedKeyUsageCriteria originalExtKeyUsageCriteria = (ExtendedKeyUsageCriteria)originalInnerCriteria;
+                                ExtendedKeyUsageCriteria deserializedExtKeyUsageCriteria = (ExtendedKeyUsageCriteria)deserializedInnerCriteria;
+                                NUnit.Framework.Assert.AreEqual(originalExtKeyUsageCriteria.GetRequiredExtendedKeyUsages().Count, deserializedExtKeyUsageCriteria
+                                    .GetRequiredExtendedKeyUsages().Count, "RequiredExtendedKeyUsages size at index " + i + "," + i1 + " should match"
+                                    );
+                                for (int j = 0; j < originalExtKeyUsageCriteria.GetRequiredExtendedKeyUsages().Count; j++) {
+                                    NUnit.Framework.Assert.AreEqual(originalExtKeyUsageCriteria.GetRequiredExtendedKeyUsages()[j], deserializedExtKeyUsageCriteria
+                                        .GetRequiredExtendedKeyUsages()[j], "RequiredExtendedKeyUsage at index " + i + "," + i1 + "," + j + " should match"
+                                        );
+                                }
+                            }
+                            else {
+                                if (originalInnerCriteria is PolicySetCriteria) {
+                                    PolicySetCriteria originalPolicySetCriteria = (PolicySetCriteria)originalInnerCriteria;
+                                    PolicySetCriteria deserializedPolicySetCriteria = (PolicySetCriteria)deserializedInnerCriteria;
+                                    NUnit.Framework.Assert.AreEqual(originalPolicySetCriteria.GetRequiredPolicyIds().Count, deserializedPolicySetCriteria
+                                        .GetRequiredPolicyIds().Count, "RequiredPolicyIds size at index " + i + "," + i1 + " should match");
+                                    for (int j = 0; j < originalPolicySetCriteria.GetRequiredPolicyIds().Count; j++) {
+                                        NUnit.Framework.Assert.AreEqual(originalPolicySetCriteria.GetRequiredPolicyIds()[j], deserializedPolicySetCriteria
+                                            .GetRequiredPolicyIds()[j], "RequiredPolicyId at index " + i + "," + i1 + "," + j + " should match");
+                                    }
+                                }
+                                else {
+                                    if (originalInnerCriteria is KeyUsageCriteria) {
+                                        KeyUsageCriteria originalKeyUsageCriteria = (KeyUsageCriteria)originalInnerCriteria;
+                                        KeyUsageCriteria deserializedKeyUsageCriteria = (KeyUsageCriteria)deserializedInnerCriteria;
+                                        NUnit.Framework.Assert.AreEqual(originalKeyUsageCriteria.GetKeyUsageBits().Length, deserializedKeyUsageCriteria
+                                            .GetKeyUsageBits().Length, "KeyUsageBits size at index " + i + "," + i1 + " should match");
+                                        bool?[] keyUsageBits = originalKeyUsageCriteria.GetKeyUsageBits();
+                                        bool?[] deserializedKeyUsageBits = deserializedKeyUsageCriteria.GetKeyUsageBits();
+                                        for (int j = 0; j < keyUsageBits.Length; j++) {
+                                            bool? key = keyUsageBits[j];
+                                            bool? deserializedKey = deserializedKeyUsageBits[j];
+                                            NUnit.Framework.Assert.AreEqual(key, deserializedKey, "KeyUsageBit at index " + i + "," + i1 + "," + j + " should match"
+                                                );
+                                        }
+                                    }
+                                    else {
+                                        NUnit.Framework.Assert.Fail("Unexpected Criteria type: " + originalInnerCriteria.GetType().Name);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             NUnit.Framework.Assert.AreEqual(1, deserializedCountrySpecificCache.GetContexts().Count, "Contexts size should match"
                 );
             NUnit.Framework.Assert.IsNotNull(deserializedContext, "Context should not be null");
@@ -361,9 +489,10 @@ namespace iText.Signatures.Validation.Lotl {
                 (), "ServiceStatus should match");
             NUnit.Framework.Assert.AreEqual(ogChronologicalInfo.GetServiceStatusStartingTime(), deserializedChronoInfo
                 .GetServiceStatusStartingTime(), "ServiceStatusStartingTime should match");
-            NUnit.Framework.Assert.AreEqual(1, deserializedChronoInfo.GetExtensions().Count, "Extensions size should match"
+            NUnit.Framework.Assert.AreEqual(1, deserializedChronoInfo.GetServiceExtensions().Count, "Extensions size should match"
                 );
-            AdditionalServiceInformationExtension deserializedExtension = deserializedChronoInfo.GetExtensions()[0];
+            AdditionalServiceInformationExtension deserializedExtension = deserializedChronoInfo.GetServiceExtensions(
+                )[0];
             NUnit.Framework.Assert.AreEqual(ogChronologicalInfoExtension.GetUri(), deserializedExtension.GetUri(), "URI should match"
                 );
         }
@@ -385,7 +514,7 @@ namespace iText.Signatures.Validation.Lotl {
             AdditionalServiceInformationExtension ogChronologicalInfoExtension = new AdditionalServiceInformationExtension
                 ();
             ogChronologicalInfoExtension.SetUri(EXTENSION_URI);
-            ogChronologicalInfo.AddExtension(ogChronologicalInfoExtension);
+            ogChronologicalInfo.AddServiceExtension(ogChronologicalInfoExtension);
             context.GetServiceChronologicalInfos().Add(ogChronologicalInfo);
             CountrySpecificLotlFetcher.Result countrySpecificCache2 = new CountrySpecificLotlFetcher.Result();
             CountrySpecificLotl fr = new CountrySpecificLotl(FR_COUNTRY_CODE, FR_LOTL_URL, APPLICATION_XML);

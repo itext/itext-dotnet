@@ -175,5 +175,11 @@ namespace iText.Commons.Bouncycastle.Cert {
         /// </summary>
         /// <returns>int value representing basic constraints extension</returns>
         int GetBasicConstraints();
+        
+        /// <summary>
+        /// Retrieves an array of IDerObjectIdentifier representing subject attribute types.
+        /// </summary>
+        /// <returns>array of IDerObjectIdentifier representing subject attribute types</returns>
+        IDerObjectIdentifier[] GetSubjectAttributeTypes();
     }
 }

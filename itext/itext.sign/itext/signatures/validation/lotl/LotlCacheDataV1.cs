@@ -36,6 +36,7 @@ using System.Text.Encodings.Web;
 using iText.IO.Source;
 using Newtonsoft.Json;
 #endif
+using iText.Signatures.Validation.Lotl.Criteria;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Signatures.Validation.Report;
 
@@ -54,10 +55,42 @@ namespace iText.Signatures.Validation.Lotl {
         public static readonly string JSON_KEY_CERTIFICATE = "certificate";
         public static readonly string JSON_KEY_CERTIFICATES = "certificates";
         public static readonly string JSON_KEY_SERVICE_TYPE = "serviceType";
-        public static readonly string JSON_KEY_EXTENSIONS = "extensions";
+        public static readonly string JSON_KEY_SERVICE_EXTENSIONS = "serviceExtensions";
         public static readonly string JSON_KEY_SERVICE_CHRONOLOGICAL_INFOS = "serviceChronologicalInfos";
         public static readonly string JSON_KEY_SERVICE_STATUS = "serviceStatus";
         public static readonly string JSON_KEY_SERVICE_STATUS_STARTING_TIME = "serviceStatusStartingTime";
+        public static readonly string JSON_KEY_QUALIFIER_EXTENSIONS = "qualifierExtensions";
+        public static readonly string JSON_KEY_QUALIFIERS = "qualifiers";
+        public static readonly string JSON_KEY_CRITERIA_LIST = "criteriaList";
+        public static readonly string JSON_KEY_CRITERIAS = "criterias";
+        public static readonly string JSON_KEY_CRITERIA_ASSERT_VALUE = "criteriaAssertValue";
+
+        public static readonly string JSON_KEY_CRITERIA_CERT_SUBJECT_DN_ATTRIBUTE_CRITERIA =
+            "certSubjectDNAttributeCriteria";
+
+        public static readonly string JSON_KEY_CRITERIA_REQUIRED_ATTRIBUTE_IDS = "requiredAttributeIDs";
+        public static readonly string JSON_KEY_CRITERIA_EXTENDED_KEY_USAGE_CRITERIA = "extendedKeyUsageCriteria";
+        public static readonly string JSON_KEY_CRITERIA_REQUIRED_EXTENDED_KEY_USAGES = "requiredExtendedKeyUsages";
+        public static readonly string JSON_KEY_CRITERIA_POLICY_SET_CRITERIA = "policySetCriteria";
+        public static readonly string JSON_KEY_CRITERIA_REQUIRED_POLICY_IDS = "requiredPolicyIDs";
+        public static readonly string JSON_KEY_CRITERIA_KEY_USAGE_CRITERIA = "keyUsageCriteria";
+        public static readonly string JSON_KEY_CRITERIA_KEY_USAGE_BITS = "requiredKeyUsageBits";
+        public static readonly string JSON_KEY_URI = "uri";
+        public static readonly string JSON_KEY_LOCAL_REPORT = "localReport";
+        public static readonly string JSON_KEY_CURRENTLY_SUPPORTED_PUBLICATION = "currentlySupportedPublication";
+        public static readonly string JSON_KEY_LOTL_CACHE = "lotlCache";
+        public static readonly string JSON_KEY_EUROPEAN_RESOURCE_FETCHER_CACHE = "europeanResourceFetcherCache";
+        public static readonly string JSON_KEY_PIVOT_CACHE = "pivotCache";
+        public static readonly string JSON_KEY_COUNTRY_SPECIFIC_LOTL_CACHE = "countrySpecificLotlCache";
+        public static readonly string JSON_KEY_TIME_STAMPS = "timeStamps";
+        public static readonly string JSON_KEY_SCHEME_TERRITORY = "schemeTerritory";
+        public static readonly string JSON_KEY_TSL_LOCATION = "tslLocation";
+        public static readonly string JSON_KEY_MIME_TYPE = "mimeType";
+        public static readonly string JSON_KEY_COUNTRY_SPECIFIC_LOTL = "countrySpecificLotl";
+        public static readonly string JSON_KEY_CONTEXTS = "contexts";
+        public static readonly string JSON_KEY_LOTL_XML = "lotlXml";
+        public static readonly string JSON_KEY_PIVOT_URLS = "pivotUrls";
+
 
         public EuropeanLotlFetcher.Result LotlCache { get; set; }
         public EuropeanResourceFetcher.Result EuropeanResourceFetcherCache { get; set; }
@@ -192,7 +225,6 @@ namespace iText.Signatures.Validation.Lotl {
     }
 #endif
 #if NETSTANDARD2_0
-
         internal class LocalCacheDataV1JsonConverter : JsonConverter<LotlCacheDataV1> {
             public override LotlCacheDataV1 Read(ref Utf8JsonReader reader, Type typeToConvert,
                 JsonSerializerOptions options) {
@@ -213,15 +245,16 @@ namespace iText.Signatures.Validation.Lotl {
                         string propertyName = reader.GetString();
                         reader.Read();
 
-                        if (propertyName == "lotlCache" && reader.TokenType == JsonTokenType.StartObject) {
+                        if (propertyName == JSON_KEY_LOTL_CACHE && reader.TokenType == JsonTokenType.StartObject) {
                             lotlCache = JsonSerializer.Deserialize<EuropeanLotlFetcher.Result>(ref reader, options);
                         }
-                        else if (propertyName == "europeanResourceFetcherCache" &&
+                        else if (propertyName == JSON_KEY_EUROPEAN_RESOURCE_FETCHER_CACHE &&
                                  reader.TokenType == JsonTokenType.StartObject) {
                             europeanResourceFetcherCache =
                                 JsonSerializer.Deserialize<EuropeanResourceFetcher.Result>(ref reader, options);
                         }
-                        else if (propertyName == "timeStamps" && reader.TokenType == JsonTokenType.StartObject) {
+                        else if (propertyName == JSON_KEY_TIME_STAMPS &&
+                                 reader.TokenType == JsonTokenType.StartObject) {
                             while (reader.Read() && reader.TokenType != JsonTokenType.EndObject) {
                                 if (reader.TokenType == JsonTokenType.PropertyName) {
                                     string key = reader.GetString();
@@ -233,10 +266,11 @@ namespace iText.Signatures.Validation.Lotl {
                                 }
                             }
                         }
-                        else if (propertyName == "pivotCache" && reader.TokenType == JsonTokenType.StartObject) {
+                        else if (propertyName == JSON_KEY_PIVOT_CACHE &&
+                                 reader.TokenType == JsonTokenType.StartObject) {
                             pivotCache = JsonSerializer.Deserialize<PivotFetcher.Result>(ref reader, options);
                         }
-                        else if (propertyName == "countrySpecificLotlCache" &&
+                        else if (propertyName == JSON_KEY_COUNTRY_SPECIFIC_LOTL_CACHE &&
                                  reader.TokenType == JsonTokenType.StartObject) {
                             while (reader.Read() && reader.TokenType != JsonTokenType.EndObject) {
                                 if (reader.TokenType == JsonTokenType.PropertyName) {
@@ -261,16 +295,16 @@ namespace iText.Signatures.Validation.Lotl {
             public override void Write(Utf8JsonWriter writer, LotlCacheDataV1 value, JsonSerializerOptions options) {
                 writer.WriteStartObject();
 
-                writer.WritePropertyName("lotlCache");
+                writer.WritePropertyName(JSON_KEY_LOTL_CACHE);
                 JsonSerializer.Serialize(writer, value.GetLotlCache(), options);
 
-                writer.WritePropertyName("europeanResourceFetcherCache");
+                writer.WritePropertyName(JSON_KEY_EUROPEAN_RESOURCE_FETCHER_CACHE);
                 JsonSerializer.Serialize(writer, value.GetEuropeanResourceFetcherCache(), options);
 
-                writer.WritePropertyName("pivotCache");
+                writer.WritePropertyName(JSON_KEY_PIVOT_CACHE);
                 JsonSerializer.Serialize(writer, value.GetPivotCache(), options);
 
-                writer.WritePropertyName("countrySpecificLotlCache");
+                writer.WritePropertyName(JSON_KEY_COUNTRY_SPECIFIC_LOTL_CACHE);
                 if (value.GetCountrySpecificLotlCache() == null) {
                     writer.WriteNullValue();
                 }
@@ -284,7 +318,7 @@ namespace iText.Signatures.Validation.Lotl {
                     writer.WriteEndObject();
                 }
 
-                writer.WritePropertyName("timeStamps");
+                writer.WritePropertyName(JSON_KEY_TIME_STAMPS);
                 if (value.GetTimeStamps() == null) {
                     writer.WriteNullValue();
                 }
@@ -325,13 +359,13 @@ namespace iText.Signatures.Validation.Lotl {
                         string propertyName = reader.GetString();
                         reader.Read();
 
-                        if (propertyName == "schemeTerritory" && reader.TokenType == JsonTokenType.String) {
+                        if (propertyName == JSON_KEY_SCHEME_TERRITORY && reader.TokenType == JsonTokenType.String) {
                             schemeTerritory = reader.GetString();
                         }
-                        else if (propertyName == "tslLocation" && reader.TokenType == JsonTokenType.String) {
+                        else if (propertyName == JSON_KEY_TSL_LOCATION && reader.TokenType == JsonTokenType.String) {
                             tslLocation = reader.GetString();
                         }
-                        else if (propertyName == "mimeType" && reader.TokenType == JsonTokenType.String) {
+                        else if (propertyName == JSON_KEY_MIME_TYPE && reader.TokenType == JsonTokenType.String) {
                             mimeType = reader.GetString();
                         }
                     }
@@ -347,9 +381,9 @@ namespace iText.Signatures.Validation.Lotl {
                 JsonSerializerOptions options) {
                 writer.WriteStartObject();
 
-                writer.WriteString("schemeTerritory", value.GetSchemeTerritory());
-                writer.WriteString("tslLocation", value.GetTslLocation());
-                writer.WriteString("mimeType", value.GetMimeType());
+                writer.WriteString(JSON_KEY_SCHEME_TERRITORY, value.GetSchemeTerritory());
+                writer.WriteString(JSON_KEY_TSL_LOCATION, value.GetTslLocation());
+                writer.WriteString(JSON_KEY_MIME_TYPE, value.GetMimeType());
 
                 writer.WriteEndObject();
             }
@@ -372,16 +406,17 @@ namespace iText.Signatures.Validation.Lotl {
                         string propertyName = reader.GetString();
                         reader.Read();
 
-                        if (propertyName == "localReport" && reader.TokenType == JsonTokenType.StartObject) {
+                        if (propertyName == JSON_KEY_LOCAL_REPORT && reader.TokenType == JsonTokenType.StartObject) {
                             var report = JsonSerializer.Deserialize<ValidationReport>(ref reader, options);
                             localReport.Merge(report);
                         }
 
-                        if (propertyName == "countrySpecificLotl" && reader.TokenType == JsonTokenType.StartObject) {
+                        if (propertyName == JSON_KEY_COUNTRY_SPECIFIC_LOTL &&
+                            reader.TokenType == JsonTokenType.StartObject) {
                             countrySpecificLotl =
                                 JsonSerializer.Deserialize<CountrySpecificLotl>(ref reader, options);
                         }
-                        else if (propertyName == "contexts" && reader.TokenType == JsonTokenType.StartArray) {
+                        else if (propertyName == JSON_KEY_CONTEXTS && reader.TokenType == JsonTokenType.StartArray) {
                             while (reader.Read() && reader.TokenType != JsonTokenType.EndArray) {
                                 var context = JsonSerializer.Deserialize<IServiceContext>(ref reader, options);
                                 contexts.Add(context);
@@ -401,17 +436,17 @@ namespace iText.Signatures.Validation.Lotl {
                 JsonSerializerOptions options) {
                 writer.WriteStartObject();
 
-                writer.WritePropertyName("localReport");
+                writer.WritePropertyName(JSON_KEY_LOCAL_REPORT);
                 JsonSerializer.Serialize(writer, value.GetLocalReport(), options);
 
-                writer.WritePropertyName("contexts");
+                writer.WritePropertyName(JSON_KEY_CONTEXTS);
                 writer.WriteStartArray();
                 foreach (var cert in value.GetContexts()) {
                     JsonSerializer.Serialize(writer, cert, options);
                 }
 
                 writer.WriteEndArray();
-                writer.WritePropertyName("countrySpecificLotl");
+                writer.WritePropertyName(JSON_KEY_COUNTRY_SPECIFIC_LOTL);
                 JsonSerializer.Serialize(writer, value.GetCountrySpecificLotl(), options);
 
 
@@ -436,7 +471,7 @@ namespace iText.Signatures.Validation.Lotl {
                         string propertyName = reader.GetString();
                         reader.Read();
 
-                        if (propertyName == "localReport" && reader.TokenType == JsonTokenType.StartObject) {
+                        if (propertyName == JSON_KEY_LOCAL_REPORT && reader.TokenType == JsonTokenType.StartObject) {
                             var report = JsonSerializer.Deserialize<ValidationReport>(ref reader, options);
                             localReport.Merge(report);
                         }
@@ -447,7 +482,7 @@ namespace iText.Signatures.Validation.Lotl {
                                 certificates.Add(cert);
                             }
                         }
-                        else if (propertyName == "currentlySupportedPublication" &&
+                        else if (propertyName == JSON_KEY_CURRENTLY_SUPPORTED_PUBLICATION &&
                                  reader.TokenType == JsonTokenType.String) {
                             currentlySupportedPublication = reader.GetString();
                         }
@@ -465,7 +500,7 @@ namespace iText.Signatures.Validation.Lotl {
                 JsonSerializerOptions options) {
                 writer.WriteStartObject();
 
-                writer.WritePropertyName("localReport");
+                writer.WritePropertyName(JSON_KEY_LOCAL_REPORT);
                 JsonSerializer.Serialize(writer, value.GetLocalReport(), options);
 
                 writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_CERTIFICATES);
@@ -477,7 +512,7 @@ namespace iText.Signatures.Validation.Lotl {
                 writer.WriteEndArray();
 
                 if (value.GetCurrentlySupportedPublication() != null) {
-                    writer.WritePropertyName("currentlySupportedPublication");
+                    writer.WritePropertyName(JSON_KEY_CURRENTLY_SUPPORTED_PUBLICATION);
                     JsonSerializer.Serialize(writer, value.GetCurrentlySupportedPublication(), options);
                 }
 
@@ -502,11 +537,12 @@ namespace iText.Signatures.Validation.Lotl {
                         string propertyName = reader.GetString();
                         reader.Read();
 
-                        if (propertyName == "lotlXml") {
+                        if (propertyName == JSON_KEY_LOTL_XML) {
                             string base64Encoded = reader.GetString();
                             lotlXml = Convert.FromBase64String(base64Encoded);
                         }
-                        else if (propertyName == "localReport" && reader.TokenType == JsonTokenType.StartObject) {
+                        else if (propertyName == JSON_KEY_LOCAL_REPORT &&
+                                 reader.TokenType == JsonTokenType.StartObject) {
                             var report = JsonSerializer.Deserialize<ValidationReport>(ref reader, options);
                             localReport.Merge(report);
                         }
@@ -526,9 +562,9 @@ namespace iText.Signatures.Validation.Lotl {
                 JsonSerializerOptions options) {
                 byte[] lotlXml = value.GetLotlXml();
                 writer.WriteStartObject();
-                writer.WritePropertyName("localReport");
+                writer.WritePropertyName(JSON_KEY_LOCAL_REPORT);
                 JsonSerializer.Serialize(writer, value.GetLocalReport(), options);
-                writer.WritePropertyName("lotlXml");
+                writer.WritePropertyName(JSON_KEY_LOTL_XML);
                 writer.WriteBase64StringValue(lotlXml);
                 writer.WriteEndObject();
             }
@@ -589,11 +625,11 @@ namespace iText.Signatures.Validation.Lotl {
                         string propertyName = reader.GetString();
                         reader.Read();
 
-                        if (propertyName == "localReport" && reader.TokenType == JsonTokenType.StartObject) {
+                        if (propertyName == JSON_KEY_LOCAL_REPORT && reader.TokenType == JsonTokenType.StartObject) {
                             var report = JsonSerializer.Deserialize<ValidationReport>(ref reader, options);
                             localReport.Merge(report);
                         }
-                        else if (propertyName == "pivotUrls" && reader.TokenType == JsonTokenType.StartArray) {
+                        else if (propertyName == JSON_KEY_PIVOT_URLS && reader.TokenType == JsonTokenType.StartArray) {
                             while (reader.Read() && reader.TokenType != JsonTokenType.EndArray) {
                                 string url = reader.GetString();
                                 pivotUrls.Add(url);
@@ -612,10 +648,10 @@ namespace iText.Signatures.Validation.Lotl {
                 JsonSerializerOptions options) {
                 writer.WriteStartObject();
 
-                writer.WritePropertyName("localReport");
+                writer.WritePropertyName(JSON_KEY_LOCAL_REPORT);
                 JsonSerializer.Serialize(writer, value.GetLocalReport(), options);
 
-                writer.WritePropertyName("pivotUrls");
+                writer.WritePropertyName(JSON_KEY_PIVOT_URLS);
                 writer.WriteStartArray();
                 foreach (var url in value.GetPivotUrls()) {
                     writer.WriteStringValue(url);
@@ -685,7 +721,7 @@ namespace iText.Signatures.Validation.Lotl {
                         string propertyName = reader.GetString();
                         reader.Read();
 
-                        if (propertyName == "uri" && reader.TokenType == JsonTokenType.String) {
+                        if (propertyName == JSON_KEY_URI && reader.TokenType == JsonTokenType.String) {
                             uri = reader.GetString();
                         }
                     }
@@ -699,7 +735,7 @@ namespace iText.Signatures.Validation.Lotl {
             public override void Write(Utf8JsonWriter writer, AdditionalServiceInformationExtension value,
                 JsonSerializerOptions options) {
                 writer.WriteStartObject();
-                writer.WriteString("uri", value.GetUri());
+                writer.WriteString(JSON_KEY_URI, value.GetUri());
                 writer.WriteEndObject();
             }
         }
@@ -846,7 +882,6 @@ namespace iText.Signatures.Validation.Lotl {
                 writer.WriteStartObject();
 
 
-
                 writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_CERTIFICATES);
                 writer.WriteStartArray();
                 foreach (var cert in value.GetCertificates()) {
@@ -856,7 +891,6 @@ namespace iText.Signatures.Validation.Lotl {
                 writer.WriteEndArray();
 
                 if (value is CountryServiceContext countryContext) {
-
                     writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_SERVICE_CHRONOLOGICAL_INFOS);
                     writer.WriteStartArray();
 
@@ -864,18 +898,18 @@ namespace iText.Signatures.Validation.Lotl {
                     var infos = countryContext.GetServiceChronologicalInfos().ToList();
                     //sort by uri
                     infos.Sort((a, b) => {
-                        var uriA = a.GetExtensions().FirstOrDefault()?.GetUri() ?? "";
-                        var uriB = b.GetExtensions().FirstOrDefault()?.GetUri() ?? "";
+                        var uriA = a.GetServiceExtensions().FirstOrDefault()?.GetUri() ?? "";
+                        var uriB = b.GetServiceExtensions().FirstOrDefault()?.GetUri() ?? "";
                         return string.Compare(uriA, uriB, StringComparison.Ordinal);
                     });
-                    
+
                     foreach (var info in infos) {
                         JsonSerializer.Serialize(writer, info, options);
                     }
 
                     writer.WriteEndArray();
                 }
-                
+
                 if (value is CountryServiceContext countryContextTm) {
                     writer.WriteString(LotlCacheDataV1.JSON_KEY_SERVICE_TYPE, countryContextTm.GetServiceType());
                 }
@@ -902,13 +936,26 @@ namespace iText.Signatures.Validation.Lotl {
                         info.SetServiceStatusStartingTime(dateTime);
                     }
 
-                    if (root.TryGetProperty(LotlCacheDataV1.JSON_KEY_EXTENSIONS, out JsonElement extensionsElement) &&
+                    if (root.TryGetProperty(LotlCacheDataV1.JSON_KEY_SERVICE_EXTENSIONS,
+                            out JsonElement extensionsElement) &&
                         extensionsElement.ValueKind == JsonValueKind.Array) {
                         foreach (JsonElement extElement in extensionsElement.EnumerateArray()) {
                             string extJson = extElement.GetRawText();
                             var extension =
                                 JsonSerializer.Deserialize<AdditionalServiceInformationExtension>(extJson, options);
-                            info.GetExtensions().Add(extension);
+                            info.GetServiceExtensions().Add(extension);
+                        }
+                    }
+
+                    if (root.TryGetProperty(LotlCacheDataV1.JSON_KEY_QUALIFIER_EXTENSIONS,
+                            out JsonElement qualifierExtensionsElement) &&
+                        qualifierExtensionsElement.ValueKind == JsonValueKind.Array) {
+                        foreach (JsonElement qualifierExtElement in qualifierExtensionsElement.EnumerateArray()) {
+                            QualifierExtension qualifierExtension =
+                                ReadQualifierExtensionFromElement(qualifierExtElement, options);
+                            if (qualifierExtension != null) {
+                                info.AddQualifierExtension(qualifierExtension);
+                            }
                         }
                     }
 
@@ -916,17 +963,168 @@ namespace iText.Signatures.Validation.Lotl {
                 }
             }
 
+            private QualifierExtension ReadQualifierExtensionFromElement(JsonElement qualifierExtElement,
+                JsonSerializerOptions options) {
+                QualifierExtension qualifierExtension = null;
+                CriteriaList criteriaList = null;
+
+                if (qualifierExtElement.TryGetProperty(LotlCacheDataV1.JSON_KEY_QUALIFIERS,
+                        out JsonElement qualifiersElement) &&
+                    qualifiersElement.ValueKind == JsonValueKind.Array) {
+                    qualifierExtension = new QualifierExtension();
+                    foreach (JsonElement qualifierElement in qualifiersElement.EnumerateArray()) {
+                        if (qualifierElement.ValueKind == JsonValueKind.String) {
+                            qualifierExtension.AddQualifier(qualifierElement.GetString());
+                        }
+                    }
+                }
+
+                if (qualifierExtElement.TryGetProperty(LotlCacheDataV1.JSON_KEY_CRITERIA_LIST,
+                        out JsonElement criteriaListElement) &&
+                    criteriaListElement.ValueKind == JsonValueKind.Object) {
+                    criteriaList = ReadCriteriaListFromElement(criteriaListElement, options);
+                }
+
+                // Only return the qualifier extension if we have both qualifiers and a criteria list
+                if (qualifierExtension != null && criteriaList != null) {
+                    qualifierExtension.SetCriteriaList(criteriaList);
+                    return qualifierExtension;
+                }
+
+                return null;
+            }
+
+            private CriteriaList ReadCriteriaListFromElement(JsonElement criteriaListElement,
+                JsonSerializerOptions options) {
+                if (!criteriaListElement.TryGetProperty(LotlCacheDataV1.JSON_KEY_CRITERIA_ASSERT_VALUE,
+                        out JsonElement assertValueElement) ||
+                    assertValueElement.ValueKind != JsonValueKind.String) {
+                    return null;
+                }
+
+                string assertValue = assertValueElement.GetString();
+                CriteriaList criteriaList = new CriteriaList(assertValue);
+
+                if (criteriaListElement.TryGetProperty(LotlCacheDataV1.JSON_KEY_CRITERIAS,
+                        out JsonElement criteriasElement) &&
+                    criteriasElement.ValueKind == JsonValueKind.Array) {
+                    foreach (JsonElement criteriaElement in criteriasElement.EnumerateArray()) {
+                        ProcessCriteriaElement(criteriaElement, criteriaList, options);
+                    }
+                }
+
+                return criteriaList;
+            }
+
+            private void ProcessCriteriaElement(JsonElement criteriaElement, CriteriaList criteriaList,
+                JsonSerializerOptions options) {
+                // Check for nested CriteriaList
+                if (criteriaElement.TryGetProperty(LotlCacheDataV1.JSON_KEY_CRITERIA_LIST,
+                        out JsonElement nestedCriteriaListElement) &&
+                    nestedCriteriaListElement.ValueKind == JsonValueKind.Object) {
+                    CriteriaList innerCriteriaList = ReadCriteriaListFromElement(nestedCriteriaListElement, options);
+                    if (innerCriteriaList != null) {
+                        criteriaList.AddCriteria(innerCriteriaList);
+                    }
+
+                    return;
+                }
+
+                // Check for CertSubjectDNAttributeCriteria
+                if (criteriaElement.TryGetProperty(LotlCacheDataV1.JSON_KEY_CRITERIA_CERT_SUBJECT_DN_ATTRIBUTE_CRITERIA,
+                        out JsonElement certSubjectElement) &&
+                    certSubjectElement.ValueKind == JsonValueKind.Object) {
+                    CertSubjectDNAttributeCriteria criteria = new CertSubjectDNAttributeCriteria();
+                    if (certSubjectElement.TryGetProperty(LotlCacheDataV1.JSON_KEY_CRITERIA_REQUIRED_ATTRIBUTE_IDS,
+                            out JsonElement attrIdsElement) &&
+                        attrIdsElement.ValueKind == JsonValueKind.Array) {
+                        foreach (JsonElement attrIdElement in attrIdsElement.EnumerateArray()) {
+                            if (attrIdElement.ValueKind == JsonValueKind.String) {
+                                criteria.AddRequiredAttributeId(attrIdElement.GetString());
+                            }
+                        }
+                    }
+
+                    criteriaList.AddCriteria(criteria);
+                    return;
+                }
+
+                // Check for ExtendedKeyUsageCriteria
+                if (criteriaElement.TryGetProperty(LotlCacheDataV1.JSON_KEY_CRITERIA_EXTENDED_KEY_USAGE_CRITERIA,
+                        out JsonElement extKeyUsageElement) &&
+                    extKeyUsageElement.ValueKind == JsonValueKind.Object) {
+                    ExtendedKeyUsageCriteria criteria = new ExtendedKeyUsageCriteria();
+                    if (extKeyUsageElement.TryGetProperty(
+                            LotlCacheDataV1.JSON_KEY_CRITERIA_REQUIRED_EXTENDED_KEY_USAGES,
+                            out JsonElement extKeyUsagesElement) &&
+                        extKeyUsagesElement.ValueKind == JsonValueKind.Array) {
+                        foreach (JsonElement extKeyUsageElem in extKeyUsagesElement.EnumerateArray()) {
+                            if (extKeyUsageElem.ValueKind == JsonValueKind.String) {
+                                criteria.AddRequiredExtendedKeyUsage(extKeyUsageElem.GetString());
+                            }
+                        }
+                    }
+
+                    criteriaList.AddCriteria(criteria);
+                    return;
+                }
+
+                // Check for PolicySetCriteria
+                if (criteriaElement.TryGetProperty(LotlCacheDataV1.JSON_KEY_CRITERIA_POLICY_SET_CRITERIA,
+                        out JsonElement policySetElement) &&
+                    policySetElement.ValueKind == JsonValueKind.Object) {
+                    PolicySetCriteria criteria = new PolicySetCriteria();
+                    if (policySetElement.TryGetProperty(LotlCacheDataV1.JSON_KEY_CRITERIA_REQUIRED_POLICY_IDS,
+                            out JsonElement policyIdsElement) &&
+                        policyIdsElement.ValueKind == JsonValueKind.Array) {
+                        foreach (JsonElement policyIdElement in policyIdsElement.EnumerateArray()) {
+                            if (policyIdElement.ValueKind == JsonValueKind.String) {
+                                criteria.AddRequiredPolicyId(policyIdElement.GetString());
+                            }
+                        }
+                    }
+
+                    criteriaList.AddCriteria(criteria);
+                    return;
+                }
+
+                // Check for KeyUsageCriteria
+                if (criteriaElement.TryGetProperty(LotlCacheDataV1.JSON_KEY_CRITERIA_KEY_USAGE_CRITERIA,
+                        out JsonElement keyUsageElement) &&
+                    keyUsageElement.ValueKind == JsonValueKind.Object) {
+                    KeyUsageCriteria criteria = new KeyUsageCriteria();
+                    if (keyUsageElement.TryGetProperty(LotlCacheDataV1.JSON_KEY_CRITERIA_KEY_USAGE_BITS,
+                            out JsonElement keyUsageBitsElement) &&
+                        keyUsageBitsElement.ValueKind == JsonValueKind.Array) {
+                        int counter = 0;
+                        foreach (JsonElement keyUsageBitElement in keyUsageBitsElement.EnumerateArray()) {
+                            if (keyUsageBitElement.ValueKind == JsonValueKind.String) {
+                                string text = keyUsageBitElement.GetString();
+                                criteria.GetKeyUsageBits()[counter] =
+                                    "null".Equals(text) ? (bool?)null : bool.Parse(text);
+                                counter++;
+                            }
+                        }
+                    }
+
+                    criteriaList.AddCriteria(criteria);
+                    return;
+                }
+            }
+
+
             public override void Write(Utf8JsonWriter writer, ServiceChronologicalInfo value,
                 JsonSerializerOptions options) {
                 writer.WriteStartObject();
-                
-                
-                writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_EXTENSIONS);
-                if (value.GetExtensions() != null && value.GetExtensions().Count > 0) {
+
+
+                writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_SERVICE_EXTENSIONS);
+                if (value.GetServiceExtensions() != null && value.GetServiceExtensions().Count > 0) {
                     writer.WriteStartArray();
-                    foreach (var extension in value.GetExtensions()) {
+                    foreach (var extension in value.GetServiceExtensions()) {
                         JsonSerializer.Serialize(writer, extension, options);
                     }
+
                     writer.WriteEndArray();
                 }
                 else {
@@ -936,7 +1134,8 @@ namespace iText.Signatures.Validation.Lotl {
 
                 if (value.GetServiceStatus() != null) {
                     writer.WriteString(LotlCacheDataV1.JSON_KEY_SERVICE_STATUS, value.GetServiceStatus());
-                }else{
+                }
+                else {
                     writer.WriteNull(LotlCacheDataV1.JSON_KEY_SERVICE_STATUS);
                 }
 
@@ -947,6 +1146,102 @@ namespace iText.Signatures.Validation.Lotl {
                     writer.WriteString(LotlCacheDataV1.JSON_KEY_SERVICE_STATUS_STARTING_TIME, timeStr);
                 }
 
+                if (value.GetQualifierExtensions() != null && value.GetQualifierExtensions().Count > 0) {
+                    writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_QUALIFIER_EXTENSIONS);
+                    writer.WriteStartArray();
+                    foreach (var extension in value.GetQualifierExtensions()) {
+                        writer.WriteStartObject();
+                        writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_QUALIFIERS);
+                        writer.WriteStartArray();
+                        foreach (var qualifier in extension.GetQualifiers()) {
+                            writer.WriteStringValue(qualifier);
+                        }
+
+                        writer.WriteEndArray();
+                        SerializeCriteriaListForSystemTextJson(extension.GetCriteriaList(), writer);
+                        writer.WriteEndObject();
+                    }
+
+                    writer.WriteEndArray();
+                }
+                else {
+                    writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_QUALIFIER_EXTENSIONS);
+                    writer.WriteStartArray();
+                    writer.WriteEndArray();
+                }
+
+                writer.WriteEndObject();
+            }
+
+            private void SerializeCriteriaListForSystemTextJson(CriteriaList criteriaList, Utf8JsonWriter writer) {
+                if (criteriaList == null) {
+                    return;
+                }
+
+                writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_CRITERIA_LIST);
+
+                writer.WriteStartObject();
+                writer.WriteString(LotlCacheDataV1.JSON_KEY_CRITERIA_ASSERT_VALUE, criteriaList.GetAssertValue());
+
+                writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_CRITERIAS);
+                writer.WriteStartArray();
+                foreach (iText.Signatures.Validation.Lotl.Criteria.Criteria criteria in
+                         criteriaList.GetCriteriaList()) {
+                    writer.WriteStartObject();
+
+                    if (criteria is CriteriaList) {
+                        SerializeCriteriaListForSystemTextJson((CriteriaList)criteria, writer);
+                    }
+                    else if (criteria is CertSubjectDNAttributeCriteria) {
+                        WriteStringListForSystemTextJson(
+                            LotlCacheDataV1.JSON_KEY_CRITERIA_CERT_SUBJECT_DN_ATTRIBUTE_CRITERIA,
+                            LotlCacheDataV1.JSON_KEY_CRITERIA_REQUIRED_ATTRIBUTE_IDS,
+                            ((CertSubjectDNAttributeCriteria)criteria).GetRequiredAttributeIds(), writer);
+                    }
+                    else if (criteria is ExtendedKeyUsageCriteria) {
+                        WriteStringListForSystemTextJson(LotlCacheDataV1.JSON_KEY_CRITERIA_EXTENDED_KEY_USAGE_CRITERIA,
+                            LotlCacheDataV1.JSON_KEY_CRITERIA_REQUIRED_EXTENDED_KEY_USAGES,
+                            ((ExtendedKeyUsageCriteria)criteria).GetRequiredExtendedKeyUsages(), writer);
+                    }
+                    else if (criteria is KeyUsageCriteria) {
+                        List<String> keyUsages = new List<String>();
+                        foreach (bool? keyUsage in ((KeyUsageCriteria)criteria).GetKeyUsageBits()) {
+                            if (keyUsage == null) {
+                                keyUsages.Add("null");
+                            }
+                            else {
+                                keyUsages.Add(keyUsage.Value ? "true" : "false");
+                            }
+                        }
+
+                        WriteStringListForSystemTextJson(LotlCacheDataV1.JSON_KEY_CRITERIA_KEY_USAGE_CRITERIA,
+                            LotlCacheDataV1.JSON_KEY_CRITERIA_KEY_USAGE_BITS, keyUsages, writer);
+                    }
+                    else if (criteria is PolicySetCriteria) {
+                        WriteStringListForSystemTextJson(LotlCacheDataV1.JSON_KEY_CRITERIA_POLICY_SET_CRITERIA,
+                            LotlCacheDataV1.JSON_KEY_CRITERIA_REQUIRED_POLICY_IDS,
+                            ((PolicySetCriteria)criteria).GetRequiredPolicyIds(), writer);
+                    }
+
+                    writer.WriteEndObject();
+                }
+
+                writer.WriteEndArray();
+
+                writer.WriteEndObject();
+            }
+
+            private void WriteStringListForSystemTextJson(String fieldName, String arrayName, IList<String> values,
+                Utf8JsonWriter writer) {
+                writer.WritePropertyName(fieldName);
+                writer.WriteStartObject();
+                writer.WritePropertyName(arrayName);
+                writer.WriteStartArray();
+                foreach (String value in values) {
+                    writer.WriteStringValue(value);
+                }
+
+                writer.WriteEndArray();
                 writer.WriteEndObject();
             }
         }
@@ -969,7 +1264,8 @@ namespace iText.Signatures.Validation.Lotl {
                     string propertyName = (string)reader.Value;
                     reader.Read();
 
-                    if (propertyName == LotlCacheDataV1.JSON_KEY_REPORT_ITEMS && reader.TokenType == JsonToken.StartArray) {
+                    if (propertyName == LotlCacheDataV1.JSON_KEY_REPORT_ITEMS &&
+                        reader.TokenType == JsonToken.StartArray) {
                         while (reader.Read() && reader.TokenType != JsonToken.EndArray) {
                             var item = serializer.Deserialize<ReportItem>(reader);
                             report.AddReportItem(item);
@@ -1013,19 +1309,23 @@ namespace iText.Signatures.Validation.Lotl {
                     string propertyName = (string)reader.Value;
                     reader.Read();
 
-                    if (propertyName == LotlCacheDataV1.JSON_KEY_REPORT_ITEM_CHECKNAME) checkName =
- (string)reader.Value;
-                    else if (propertyName == LotlCacheDataV1.JSON_KEY_REPORT_ITEM_MESSAGE) message =
- (string)reader.Value;
+                    if (propertyName == LotlCacheDataV1.JSON_KEY_REPORT_ITEM_CHECKNAME)
+                        checkName =
+                            (string)reader.Value;
+                    else if (propertyName == LotlCacheDataV1.JSON_KEY_REPORT_ITEM_MESSAGE)
+                        message =
+                            (string)reader.Value;
                     else if (propertyName == LotlCacheDataV1.JSON_KEY_REPORT_STATUS) {
                         if (Enum.TryParse((string)reader.Value, out ReportItem.ReportItemStatus parsed))
                             status = parsed;
                     }
-                    else if (propertyName == LotlCacheDataV1.JSON_KEY_REPORT_ITEM_CAUSE && reader.TokenType == JsonToken.StartObject) {
+                    else if (propertyName == LotlCacheDataV1.JSON_KEY_REPORT_ITEM_CAUSE &&
+                             reader.TokenType == JsonToken.StartObject) {
                         string causeMessage = null;
                         while (reader.Read()) {
                             if (reader.TokenType == JsonToken.EndObject) break;
-                            if (reader.TokenType == JsonToken.PropertyName && (string)reader.Value == LotlCacheDataV1.JSON_KEY_REPORT_ITEM_MESSAGE) {
+                            if (reader.TokenType == JsonToken.PropertyName &&
+                                (string)reader.Value == LotlCacheDataV1.JSON_KEY_REPORT_ITEM_MESSAGE) {
                                 reader.Read();
                                 causeMessage = (string)reader.Value;
                             }
@@ -1033,7 +1333,8 @@ namespace iText.Signatures.Validation.Lotl {
 
                         if (causeMessage != null) cause = new Exception(causeMessage);
                     }
-                    else if (propertyName == LotlCacheDataV1.JSON_KEY_CERTIFICATE && reader.TokenType == JsonToken.StartObject) {
+                    else if (propertyName == LotlCacheDataV1.JSON_KEY_CERTIFICATE &&
+                             reader.TokenType == JsonToken.StartObject) {
                         certificate = serializer.Deserialize<IX509Certificate>(reader);
                     }
                 }
@@ -1070,14 +1371,15 @@ namespace iText.Signatures.Validation.Lotl {
                 writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_CERTIFICATE);
                 serializer.Serialize(writer, certItem.GetCertificate());
             }
-            
+
             writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_REPORT_ITEM_CAUSE);
             if (item.GetExceptionCause() != null) {
                 writer.WriteStartObject();
                 writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_REPORT_ITEM_MESSAGE);
                 writer.WriteValue(item.GetExceptionCause().Message);
                 writer.WriteEndObject();
-            }else{
+            }
+            else {
                 writer.WriteNull();
             }
 
@@ -1094,7 +1396,7 @@ namespace iText.Signatures.Validation.Lotl {
             var lotlCacheData = (LotlCacheDataV1)value;
             writer.WriteStartObject();
 
-            writer.WritePropertyName("lotlCache");
+            writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_LOTL_CACHE);
 
             if (lotlCacheData.GetLotlCache() == null) {
                 writer.WriteNull();
@@ -1104,7 +1406,7 @@ namespace iText.Signatures.Validation.Lotl {
             }
 
 
-            writer.WritePropertyName("europeanResourceFetcherCache");
+            writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_EUROPEAN_RESOURCE_FETCHER_CACHE);
             if (lotlCacheData.GetEuropeanResourceFetcherCache() == null) {
                 writer.WriteNull();
             }
@@ -1113,7 +1415,7 @@ namespace iText.Signatures.Validation.Lotl {
             }
 
 
-            writer.WritePropertyName("pivotCache");
+            writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_PIVOT_CACHE);
             if (lotlCacheData.GetPivotCache() == null) {
                 writer.WriteNull();
             }
@@ -1122,7 +1424,7 @@ namespace iText.Signatures.Validation.Lotl {
             }
 
 
-            writer.WritePropertyName("countrySpecificLotlCache");
+            writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_COUNTRY_SPECIFIC_LOTL_CACHE);
             if (lotlCacheData.GetCountrySpecificLotlCache() == null) {
                 writer.WriteNull();
             }
@@ -1132,24 +1434,28 @@ namespace iText.Signatures.Validation.Lotl {
                     writer.WritePropertyName(kvp.Key);
                     serializer.Serialize(writer, kvp.Value);
                 }
+
                 writer.WriteEndObject();
             }
-            
-            writer.WritePropertyName("timeStamps");
+
+            writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_TIME_STAMPS);
             if (lotlCacheData.GetTimeStamps() != null) {
                 writer.WriteStartObject();
                 foreach (var kvp in lotlCacheData.GetTimeStamps()) {
                     writer.WritePropertyName(kvp.Key);
                     if (kvp.Value.HasValue) {
                         writer.WriteValue(kvp.Value.Value);
-                    } else {
+                    }
+                    else {
                         writer.WriteNull();
                     }
                 }
+
                 writer.WriteEndObject();
-            } else {
+            }
+            else {
                 writer.WriteNull();
-            } 
+            }
 
             writer.WriteEndObject();
         }
@@ -1171,14 +1477,17 @@ namespace iText.Signatures.Validation.Lotl {
                     string propertyName = (string)reader.Value;
                     reader.Read();
 
-                    if (propertyName == "lotlCache" && reader.TokenType == JsonToken.StartObject) {
+                    if (propertyName == LotlCacheDataV1.JSON_KEY_LOTL_CACHE &&
+                        reader.TokenType == JsonToken.StartObject) {
                         lotlCache = serializer.Deserialize<EuropeanLotlFetcher.Result>(reader);
                     }
-                    else if (propertyName == "europeanResourceFetcherCache" &&
+                    else if (propertyName == LotlCacheDataV1.JSON_KEY_EUROPEAN_RESOURCE_FETCHER_CACHE &&
                              reader.TokenType == JsonToken.StartObject) {
                         europeanResourceFetcherCache =
                             serializer.Deserialize<EuropeanResourceFetcher.Result>(reader);
-                    } else if(propertyName == "timeStamps" && reader.TokenType == JsonToken.StartObject) {
+                    }
+                    else if (propertyName == LotlCacheDataV1.JSON_KEY_TIME_STAMPS &&
+                             reader.TokenType == JsonToken.StartObject) {
                         while (reader.Read() && reader.TokenType != JsonToken.EndObject) {
                             if (reader.TokenType == JsonToken.PropertyName) {
                                 string key = (string)reader.Value;
@@ -1186,14 +1495,16 @@ namespace iText.Signatures.Validation.Lotl {
                                 if (reader.TokenType == JsonToken.Integer) {
                                     long value = (long)reader.Value;
                                     timestamps[key] = value;
-                                }        
+                                }
                             }
                         }
                     }
-                    else if (propertyName == "pivotCache" && reader.TokenType == JsonToken.StartObject) {
+                    else if (propertyName == LotlCacheDataV1.JSON_KEY_PIVOT_CACHE &&
+                             reader.TokenType == JsonToken.StartObject) {
                         pivotCache = serializer.Deserialize<PivotFetcher.Result>(reader);
                     }
-                    else if(propertyName == "timeStamps" && reader.TokenType ==JsonToken.StartObject){
+                    else if (propertyName == LotlCacheDataV1.JSON_KEY_TIME_STAMPS &&
+                             reader.TokenType == JsonToken.StartObject) {
                         while (reader.Read() && reader.TokenType != JsonToken.EndObject) {
                             if (reader.TokenType == JsonToken.PropertyName) {
                                 string key = (string)reader.Value;
@@ -1201,13 +1512,14 @@ namespace iText.Signatures.Validation.Lotl {
                                 if (reader.TokenType == JsonToken.Integer) {
                                     long value = (long)reader.Value;
                                     timestamps[key] = value;
-                                } else if(reader.TokenType == JsonToken.Null) {
+                                }
+                                else if (reader.TokenType == JsonToken.Null) {
                                     timestamps[key] = null;
                                 }
                             }
-                        } 
+                        }
                     }
-                    else if (propertyName == "countrySpecificLotlCache" &&
+                    else if (propertyName == LotlCacheDataV1.JSON_KEY_COUNTRY_SPECIFIC_LOTL_CACHE &&
                              reader.TokenType == JsonToken.StartObject) {
                         while (reader.Read() && reader.TokenType != JsonToken.EndObject) {
                             if (reader.TokenType == JsonToken.PropertyName) {
@@ -1251,14 +1563,16 @@ namespace iText.Signatures.Validation.Lotl {
                     string propertyName = (string)reader.Value;
                     reader.Read();
 
-                    if (propertyName == LotlCacheDataV1.JSON_KEY_CERTIFICATES && reader.TokenType == JsonToken.StartArray) {
+                    if (propertyName == LotlCacheDataV1.JSON_KEY_CERTIFICATES &&
+                        reader.TokenType == JsonToken.StartArray) {
                         while (reader.Read() && reader.TokenType != JsonToken.EndArray)
                             certificates.Add(serializer.Deserialize<IX509Certificate>(reader));
                     }
                     else if (propertyName == LotlCacheDataV1.JSON_KEY_SERVICE_TYPE) {
                         serviceType = (string)reader.Value;
                     }
-                    else if (propertyName == LotlCacheDataV1.JSON_KEY_SERVICE_CHRONOLOGICAL_INFOS && reader.TokenType == JsonToken.StartArray) {
+                    else if (propertyName == LotlCacheDataV1.JSON_KEY_SERVICE_CHRONOLOGICAL_INFOS &&
+                             reader.TokenType == JsonToken.StartArray) {
                         while (reader.Read() && reader.TokenType != JsonToken.EndArray)
                             chronologicalInfos.Add(serializer.Deserialize<ServiceChronologicalInfo>(reader));
                     }
@@ -1289,14 +1603,12 @@ namespace iText.Signatures.Validation.Lotl {
             writer.WriteEndArray();
 
             if (ctx is CountryServiceContext countryCtx) {
-            
                 writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_SERVICE_CHRONOLOGICAL_INFOS);
                 writer.WriteStartArray();
                 foreach (var info in countryCtx.GetServiceChronologicalInfos()) serializer.Serialize(writer, info);
                 writer.WriteEndArray();
                 writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_SERVICE_TYPE);
                 writer.WriteValue(countryCtx.GetServiceType());
-
             }
 
             writer.WriteEndObject();
@@ -1304,7 +1616,6 @@ namespace iText.Signatures.Validation.Lotl {
     }
 
     internal class AdditionalServiceInformationExtensionJsonConverter : JsonConverter {
-        
         public override bool CanConvert(Type objectType) =>
             objectType == typeof(AdditionalServiceInformationExtension);
 
@@ -1321,7 +1632,7 @@ namespace iText.Signatures.Validation.Lotl {
                     string propertyName = (string)reader.Value;
                     reader.Read();
 
-                    if (propertyName == "uri") uri = (string)reader.Value;
+                    if (propertyName == LotlCacheDataV1.JSON_KEY_URI) uri = (string)reader.Value;
                 }
             }
 
@@ -1333,7 +1644,7 @@ namespace iText.Signatures.Validation.Lotl {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
             var ext = (AdditionalServiceInformationExtension)value;
             writer.WriteStartObject();
-            writer.WritePropertyName("uri");
+            writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_URI);
             writer.WriteValue(ext.GetUri());
             writer.WriteEndObject();
         }
@@ -1365,32 +1676,298 @@ namespace iText.Signatures.Validation.Lotl {
 
                         info.SetServiceStatusStartingTime((DateTime)reader.Value);
                     }
-                    else if (propertyName == LotlCacheDataV1.JSON_KEY_EXTENSIONS && reader.TokenType == JsonToken.StartArray) {
+                    else if (propertyName == LotlCacheDataV1.JSON_KEY_SERVICE_EXTENSIONS &&
+                             reader.TokenType == JsonToken.StartArray) {
                         while (reader.Read() && reader.TokenType != JsonToken.EndArray) {
                             var ext = serializer.Deserialize<AdditionalServiceInformationExtension>(reader);
-                            info.GetExtensions().Add(ext);
+                            info.GetServiceExtensions().Add(ext);
+                        }
+                    }
+                    else if (propertyName == LotlCacheDataV1.JSON_KEY_QUALIFIER_EXTENSIONS) {
+                        if (reader.TokenType == JsonToken.StartArray) {
+                            while (reader.Read() && reader.TokenType != JsonToken.EndArray) {
+                                if (reader.TokenType == JsonToken.StartObject) {
+                                    ReadQualifierExtension(reader, info);
+                                }
+                            }
                         }
                     }
                 }
             }
+
             return info;
         }
 
+        private void ReadQualifierExtension(JsonReader reader, ServiceChronologicalInfo info) {
+            QualifierExtension qualifierExtension = null;
+            CriteriaList criteriaList = null;
+            
+            while (reader.Read()) {
+                if (reader.TokenType == JsonToken.EndObject) {
+                    break;
+                }
+                
+                if (reader.TokenType == JsonToken.PropertyName) {
+                    string propertyName = (string)reader.Value;
+                    reader.Read();
+                    
+                    if (propertyName == LotlCacheDataV1.JSON_KEY_QUALIFIERS) {
+                        if (reader.TokenType == JsonToken.StartArray) {
+                            qualifierExtension = new QualifierExtension();
+                            while (reader.Read() && reader.TokenType != JsonToken.EndArray) {
+                                if (reader.TokenType == JsonToken.String) {
+                                    qualifierExtension.AddQualifier((string)reader.Value);
+                                }
+                            }
+                        }
+                    }
+                    else if (propertyName == LotlCacheDataV1.JSON_KEY_CRITERIA_LIST) {
+                        if (reader.TokenType == JsonToken.StartObject) {
+                            criteriaList = ReadCriteriaListNode(reader);
+                        }
+                    }
+                }
+            }
+            
+            // Only add the qualifier extension if we have both qualifiers and a criteria list
+            if (qualifierExtension != null && criteriaList != null) {
+                qualifierExtension.SetCriteriaList(criteriaList);
+                info.AddQualifierExtension(qualifierExtension);
+            }
+        }
+
+
+
+        public CriteriaList ReadCriteriaListNode(JsonReader reader) {
+            if (reader.TokenType != JsonToken.StartObject) {
+                return null;
+            }
+
+            string assertValue = null;
+            JsonToken? criteriasArrayToken = null;
+            
+            // First pass: read assert value and find criterias array
+            while (reader.Read()) {
+                if (reader.TokenType == JsonToken.EndObject) {
+                    break;
+                }
+                
+                if (reader.TokenType == JsonToken.PropertyName) {
+                    string propertyName = (string)reader.Value;
+                    reader.Read();
+                    
+                    if (propertyName == LotlCacheDataV1.JSON_KEY_CRITERIA_ASSERT_VALUE) {
+                        if (reader.TokenType == JsonToken.String) {
+                            assertValue = (string)reader.Value;
+                        }
+                    } else if (propertyName == LotlCacheDataV1.JSON_KEY_CRITERIAS) {
+                        if (reader.TokenType == JsonToken.StartArray) {
+                            criteriasArrayToken = reader.TokenType;
+                            break; // We'll process the array in the next loop
+                        }
+                    }
+                }
+            }
+            
+            if (assertValue == null || criteriasArrayToken == null) {
+                return null;
+            }
+            
+            CriteriaList criteriaList = new CriteriaList(assertValue);
+            
+            // Process criterias array
+            while (reader.Read() && reader.TokenType != JsonToken.EndArray) {
+                if (reader.TokenType != JsonToken.StartObject) {
+                    continue;
+                }
+                
+                // Read the criteria object
+                ProcessCriteriaNode(reader, criteriaList);
+            }
+            
+            return criteriaList;
+        }
+
+        private void ProcessCriteriaNode(JsonReader reader, CriteriaList criteriaList) {
+            while (reader.Read()) {
+                if (reader.TokenType == JsonToken.EndObject) {
+                    break;
+                }
+                
+                if (reader.TokenType == JsonToken.PropertyName) {
+                    string propertyName = (string)reader.Value;
+                    reader.Read();
+                    
+                    // Check for nested CriteriaList
+                    if (propertyName == LotlCacheDataV1.JSON_KEY_CRITERIA_LIST) {
+                        if (reader.TokenType == JsonToken.StartObject) {
+                            iText.Signatures.Validation.Lotl.Criteria.Criteria innerCriteriaList =
+ ReadCriteriaListNode(reader);
+                            if (innerCriteriaList != null) {
+                                criteriaList.AddCriteria(innerCriteriaList);
+                            }
+                        }
+                        return;
+                    }
+                    
+                    // Check for CertSubjectDNAttributeCriteria
+                    if (propertyName == LotlCacheDataV1.JSON_KEY_CRITERIA_CERT_SUBJECT_DN_ATTRIBUTE_CRITERIA) {
+                        if (reader.TokenType == JsonToken.StartObject) {
+                            CertSubjectDNAttributeCriteria criteria = new CertSubjectDNAttributeCriteria();
+                            ReadCertSubjectDNAttributeCriteria(reader, criteria);
+                            criteriaList.AddCriteria(criteria);
+                        }
+                        return;
+                    }
+                    
+                    // Check for ExtendedKeyUsageCriteria
+                    if (propertyName == LotlCacheDataV1.JSON_KEY_CRITERIA_EXTENDED_KEY_USAGE_CRITERIA) {
+                        if (reader.TokenType == JsonToken.StartObject) {
+                            ExtendedKeyUsageCriteria criteria = new ExtendedKeyUsageCriteria();
+                            ReadExtendedKeyUsageCriteria(reader, criteria);
+                            criteriaList.AddCriteria(criteria);
+                        }
+                        return;
+                    }
+                    
+                    // Check for PolicySetCriteria
+                    if (propertyName == LotlCacheDataV1.JSON_KEY_CRITERIA_POLICY_SET_CRITERIA) {
+                        if (reader.TokenType == JsonToken.StartObject) {
+                            PolicySetCriteria criteria = new PolicySetCriteria();
+                            ReadPolicySetCriteria(reader, criteria);
+                            criteriaList.AddCriteria(criteria);
+                        }
+                        return;
+                    }
+                    
+                    // Check for KeyUsageCriteria
+                    if (propertyName == LotlCacheDataV1.JSON_KEY_CRITERIA_KEY_USAGE_CRITERIA) {
+                        if (reader.TokenType == JsonToken.StartObject) {
+                            KeyUsageCriteria criteria = new KeyUsageCriteria();
+                            ReadKeyUsageCriteria(reader, criteria);
+                            criteriaList.AddCriteria(criteria);
+                        }
+                        return;
+                    }
+                }
+            }
+            
+            throw new JsonSerializationException("Unknown criteria type in JSON");
+        }
+
+        private void ReadCertSubjectDNAttributeCriteria(JsonReader reader, CertSubjectDNAttributeCriteria criteria) {
+            while (reader.Read()) {
+                if (reader.TokenType == JsonToken.EndObject) {
+                    break;
+                }
+                
+                if (reader.TokenType == JsonToken.PropertyName) {
+                    string propertyName = (string)reader.Value;
+                    reader.Read();
+                    
+                    if (propertyName == LotlCacheDataV1.JSON_KEY_CRITERIA_REQUIRED_ATTRIBUTE_IDS) {
+                        if (reader.TokenType == JsonToken.StartArray) {
+                            while (reader.Read() && reader.TokenType != JsonToken.EndArray) {
+                                if (reader.TokenType == JsonToken.String) {
+                                    criteria.AddRequiredAttributeId((string)reader.Value);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ReadExtendedKeyUsageCriteria(JsonReader reader, ExtendedKeyUsageCriteria criteria) {
+            while (reader.Read()) {
+                if (reader.TokenType == JsonToken.EndObject) {
+                    break;
+                }
+                
+                if (reader.TokenType == JsonToken.PropertyName) {
+                    string propertyName = (string)reader.Value;
+                    reader.Read();
+                    
+                    if (propertyName == LotlCacheDataV1.JSON_KEY_CRITERIA_REQUIRED_EXTENDED_KEY_USAGES) {
+                        if (reader.TokenType == JsonToken.StartArray) {
+                            while (reader.Read() && reader.TokenType != JsonToken.EndArray) {
+                                if (reader.TokenType == JsonToken.String) {
+                                    criteria.AddRequiredExtendedKeyUsage((string)reader.Value);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ReadPolicySetCriteria(JsonReader reader, PolicySetCriteria criteria) {
+            while (reader.Read()) {
+                if (reader.TokenType == JsonToken.EndObject) {
+                    break;
+                }
+                
+                if (reader.TokenType == JsonToken.PropertyName) {
+                    string propertyName = (string)reader.Value;
+                    reader.Read();
+                    
+                    if (propertyName == LotlCacheDataV1.JSON_KEY_CRITERIA_REQUIRED_POLICY_IDS) {
+                        if (reader.TokenType == JsonToken.StartArray) {
+                            while (reader.Read() && reader.TokenType != JsonToken.EndArray) {
+                                if (reader.TokenType == JsonToken.String) {
+                                    criteria.AddRequiredPolicyId((string)reader.Value);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ReadKeyUsageCriteria(JsonReader reader, KeyUsageCriteria criteria) {
+            while (reader.Read()) {
+                if (reader.TokenType == JsonToken.EndObject) {
+                    break;
+                }
+                
+                if (reader.TokenType == JsonToken.PropertyName) {
+                    string propertyName = (string)reader.Value;
+                    reader.Read();
+                    
+                    if (propertyName == LotlCacheDataV1.JSON_KEY_CRITERIA_KEY_USAGE_BITS) {
+                        if (reader.TokenType == JsonToken.StartArray) {
+                            int counter = 0;
+                            while (reader.Read() && reader.TokenType != JsonToken.EndArray) {
+                                if (reader.TokenType == JsonToken.String) {
+                                    string text = (string)reader.Value;
+                                    criteria.GetKeyUsageBits()[counter] = 
+                                        "null".Equals(text) ? (bool?)null : bool.Parse(text);
+                                    counter++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } 
+        
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
             var info = (ServiceChronologicalInfo)value;
             writer.WriteStartObject();
-            
-            writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_EXTENSIONS);
+
+            writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_SERVICE_EXTENSIONS);
             writer.WriteStartArray();
-            if (info.GetExtensions() != null && info.GetExtensions().Count > 0) {
-                foreach (var ext in info.GetExtensions()) serializer.Serialize(writer, ext);
+            if (info.GetServiceExtensions() != null && info.GetServiceExtensions().Count > 0) {
+                foreach (var ext in info.GetServiceExtensions()) serializer.Serialize(writer, ext);
             }
+
             writer.WriteEndArray();
 
             writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_SERVICE_STATUS);
             if (info.GetServiceStatus() != null) {
                 writer.WriteValue(info.GetServiceStatus());
-            }else{
+            }
+            else {
                 writer.WriteNull();
             }
 
@@ -1400,6 +1977,88 @@ namespace iText.Signatures.Validation.Lotl {
                     System.Globalization.CultureInfo.InvariantCulture));
             }
 
+            if (info.GetQualifierExtensions() != null) {
+                writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_QUALIFIER_EXTENSIONS);
+                writer.WriteStartArray();
+                foreach (var extension in info.GetQualifierExtensions().ToList()) {
+                    writer.WriteStartObject();
+                    writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_QUALIFIERS);
+                    writer.WriteStartArray();
+                    foreach (var qualifier in extension.GetQualifiers()) {
+                        writer.WriteValue(qualifier);
+                    }
+
+                    writer.WriteEndArray();
+                    SerializeCriteriaList(extension.GetCriteriaList(), writer);
+                    writer.WriteEndObject();
+                }
+                writer.WriteEndArray();
+            }
+
+            writer.WriteEndObject();
+        }
+
+        static void SerializeCriteriaList(CriteriaList criteriaList, JsonWriter writer) {
+            if (criteriaList == null) {
+                return;
+            }
+            writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_CRITERIA_LIST);
+            
+            writer.WriteStartObject();
+            writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_CRITERIA_ASSERT_VALUE);
+            writer.WriteValue(criteriaList.GetAssertValue());
+            
+            writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_CRITERIAS);
+            writer.WriteStartArray();
+            foreach (iText.Signatures.Validation.Lotl.Criteria.Criteria criteria in criteriaList.GetCriteriaList()) {
+                writer.WriteStartObject();
+                
+                if (criteria is CriteriaList) {
+                    SerializeCriteriaList((CriteriaList)criteria, writer);
+                } else if (criteria is CertSubjectDNAttributeCriteria) {
+                    WriteStringList(LotlCacheDataV1.JSON_KEY_CRITERIA_CERT_SUBJECT_DN_ATTRIBUTE_CRITERIA,
+                            LotlCacheDataV1.JSON_KEY_CRITERIA_REQUIRED_ATTRIBUTE_IDS,
+                            ((CertSubjectDNAttributeCriteria)criteria).GetRequiredAttributeIds(), writer);
+                } else if (criteria is ExtendedKeyUsageCriteria) {
+                    WriteStringList(LotlCacheDataV1.JSON_KEY_CRITERIA_EXTENDED_KEY_USAGE_CRITERIA,
+                            LotlCacheDataV1.JSON_KEY_CRITERIA_REQUIRED_EXTENDED_KEY_USAGES,
+                            ((ExtendedKeyUsageCriteria)criteria).GetRequiredExtendedKeyUsages(), writer);
+                } else if (criteria is KeyUsageCriteria) {
+                    List<String> keyUsages = new List<String>();
+                    foreach (bool? keyUsage in ((KeyUsageCriteria)criteria).GetKeyUsageBits()) {
+                        if (keyUsage == null) {
+                            keyUsages.Add("null");
+                        } else {
+                            keyUsages.Add(keyUsage.Value ? "true" : "false");
+                        }
+                    }
+                    
+                    WriteStringList(LotlCacheDataV1.JSON_KEY_CRITERIA_KEY_USAGE_CRITERIA,
+                            LotlCacheDataV1.JSON_KEY_CRITERIA_KEY_USAGE_BITS, keyUsages, writer);
+                    
+                } else if (criteria is PolicySetCriteria) {
+                    WriteStringList(LotlCacheDataV1.JSON_KEY_CRITERIA_POLICY_SET_CRITERIA,
+                            LotlCacheDataV1.JSON_KEY_CRITERIA_REQUIRED_POLICY_IDS,
+                            ((PolicySetCriteria)criteria).GetRequiredPolicyIds(), writer);
+                }
+                
+                writer.WriteEndObject();
+            }
+            
+            writer.WriteEndArray();
+            
+            writer.WriteEndObject();
+        }
+
+        static void WriteStringList(String fieldName, String arrayName, IList<String> values, JsonWriter writer) {
+            writer.WritePropertyName(fieldName);
+            writer.WriteStartObject();
+            writer.WritePropertyName(arrayName);
+            writer.WriteStartArray();
+            foreach (String value in values) {
+                writer.WriteValue(value);
+            }
+            writer.WriteEndArray();
             writer.WriteEndObject();
         }
     }
@@ -1420,9 +2079,10 @@ namespace iText.Signatures.Validation.Lotl {
                     string propertyName = (string)reader.Value;
                     reader.Read();
 
-                    if (propertyName == "schemeTerritory") schemeTerritory = (string)reader.Value;
-                    else if (propertyName == "tslLocation") tslLocation = (string)reader.Value;
-                    else if (propertyName == "mimeType") mimeType = (string)reader.Value;
+                    if (propertyName == LotlCacheDataV1.JSON_KEY_SCHEME_TERRITORY)
+                        schemeTerritory = (string)reader.Value;
+                    else if (propertyName == LotlCacheDataV1.JSON_KEY_TSL_LOCATION) tslLocation = (string)reader.Value;
+                    else if (propertyName == LotlCacheDataV1.JSON_KEY_MIME_TYPE) mimeType = (string)reader.Value;
                 }
             }
 
@@ -1435,11 +2095,11 @@ namespace iText.Signatures.Validation.Lotl {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
             var lotl = (CountrySpecificLotl)value;
             writer.WriteStartObject();
-            writer.WritePropertyName("schemeTerritory");
+            writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_SCHEME_TERRITORY);
             writer.WriteValue(lotl.GetSchemeTerritory());
-            writer.WritePropertyName("tslLocation");
+            writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_TSL_LOCATION);
             writer.WriteValue(lotl.GetTslLocation());
-            writer.WritePropertyName("mimeType");
+            writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_MIME_TYPE);
             writer.WriteValue(lotl.GetMimeType());
             writer.WriteEndObject();
         }
@@ -1463,14 +2123,15 @@ namespace iText.Signatures.Validation.Lotl {
                     string propertyName = (string)reader.Value;
                     reader.Read();
 
-                    if (propertyName == "localReport") {
+                    if (propertyName == LotlCacheDataV1.JSON_KEY_LOCAL_REPORT) {
                         var report = serializer.Deserialize<ValidationReport>(reader);
                         localReport.Merge(report);
                     }
-                    else if (propertyName == "countrySpecificLotl") {
+                    else if (propertyName == LotlCacheDataV1.JSON_KEY_COUNTRY_SPECIFIC_LOTL) {
                         lotl = serializer.Deserialize<CountrySpecificLotl>(reader);
                     }
-                    else if (propertyName == "contexts" && reader.TokenType == JsonToken.StartArray) {
+                    else if (propertyName == LotlCacheDataV1.JSON_KEY_CONTEXTS &&
+                             reader.TokenType == JsonToken.StartArray) {
                         while (reader.Read() && reader.TokenType != JsonToken.EndArray)
                             contexts.Add(serializer.Deserialize<IServiceContext>(reader));
                     }
@@ -1488,15 +2149,15 @@ namespace iText.Signatures.Validation.Lotl {
             var result = (CountrySpecificLotlFetcher.Result)value;
             writer.WriteStartObject();
 
-            writer.WritePropertyName("localReport");
+            writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_LOCAL_REPORT);
             serializer.Serialize(writer, result.GetLocalReport());
 
-            writer.WritePropertyName("contexts");
+            writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_CONTEXTS);
             writer.WriteStartArray();
             foreach (var ctx in result.GetContexts()) serializer.Serialize(writer, ctx);
             writer.WriteEndArray();
 
-            writer.WritePropertyName("countrySpecificLotl");
+            writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_COUNTRY_SPECIFIC_LOTL);
             serializer.Serialize(writer, result.GetCountrySpecificLotl());
 
             writer.WriteEndObject();
@@ -1525,15 +2186,16 @@ namespace iText.Signatures.Validation.Lotl {
                     string propertyName = (string)reader.Value;
                     reader.Read();
 
-                    if (propertyName == "localReport") {
+                    if (propertyName == LotlCacheDataV1.JSON_KEY_LOCAL_REPORT) {
                         var report = serializer.Deserialize<ValidationReport>(reader);
                         localReport.Merge(report);
                     }
-                    else if (propertyName == LotlCacheDataV1.JSON_KEY_CERTIFICATES && reader.TokenType == JsonToken.StartArray) {
+                    else if (propertyName == LotlCacheDataV1.JSON_KEY_CERTIFICATES &&
+                             reader.TokenType == JsonToken.StartArray) {
                         while (reader.Read() && reader.TokenType != JsonToken.EndArray)
                             certificates.Add(serializer.Deserialize<IX509Certificate>(reader));
                     }
-                    else if (propertyName == "currentlySupportedPublication") {
+                    else if (propertyName == LotlCacheDataV1.JSON_KEY_CURRENTLY_SUPPORTED_PUBLICATION) {
                         publication = (string)reader.Value;
                     }
                 }
@@ -1550,7 +2212,7 @@ namespace iText.Signatures.Validation.Lotl {
             var result = (EuropeanResourceFetcher.Result)value;
             writer.WriteStartObject();
 
-            writer.WritePropertyName("localReport");
+            writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_LOCAL_REPORT);
             serializer.Serialize(writer, result.GetLocalReport());
 
             writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_CERTIFICATES);
@@ -1559,7 +2221,7 @@ namespace iText.Signatures.Validation.Lotl {
             writer.WriteEndArray();
 
             if (result.GetCurrentlySupportedPublication() != null) {
-                writer.WritePropertyName("currentlySupportedPublication");
+                writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_CURRENTLY_SUPPORTED_PUBLICATION);
                 writer.WriteValue(result.GetCurrentlySupportedPublication());
             }
 
@@ -1590,10 +2252,10 @@ namespace iText.Signatures.Validation.Lotl {
                 if (reader.TokenType == JsonToken.PropertyName) {
                     string propertyName = (string)reader.Value;
                     reader.Read();
-                    if (propertyName == "lotlXml") {
+                    if (propertyName == LotlCacheDataV1.JSON_KEY_LOTL_XML) {
                         lotlXml = Convert.FromBase64String((string)reader.Value);
                     }
-                    else if (propertyName == "localReport") {
+                    else if (propertyName == LotlCacheDataV1.JSON_KEY_LOCAL_REPORT) {
                         var report = serializer.Deserialize<ValidationReport>(reader);
                         localReport.Merge(report);
                     }
@@ -1611,9 +2273,9 @@ namespace iText.Signatures.Validation.Lotl {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
             var result = (EuropeanLotlFetcher.Result)value;
             writer.WriteStartObject();
-            writer.WritePropertyName("localReport");
+            writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_LOCAL_REPORT);
             serializer.Serialize(writer, result.GetLocalReport());
-            writer.WritePropertyName("lotlXml");
+            writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_LOTL_XML);
             writer.WriteValue(Convert.ToBase64String(result.GetLotlXml()));
             writer.WriteEndObject();
         }
@@ -1677,11 +2339,12 @@ namespace iText.Signatures.Validation.Lotl {
                     string propertyName = (string)reader.Value;
                     reader.Read();
 
-                    if (propertyName == "localReport") {
+                    if (propertyName == LotlCacheDataV1.JSON_KEY_LOCAL_REPORT) {
                         var report = serializer.Deserialize<ValidationReport>(reader);
                         localReport.Merge(report);
                     }
-                    else if (propertyName == "pivotUrls" && reader.TokenType == JsonToken.StartArray) {
+                    else if (propertyName == LotlCacheDataV1.JSON_KEY_PIVOT_URLS &&
+                             reader.TokenType == JsonToken.StartArray) {
                         while (reader.Read() && reader.TokenType != JsonToken.EndArray)
                             pivotUrls.Add((string)reader.Value);
                     }
@@ -1697,10 +2360,10 @@ namespace iText.Signatures.Validation.Lotl {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
             var result = (PivotFetcher.Result)value;
             writer.WriteStartObject();
-            writer.WritePropertyName("localReport");
+            writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_LOCAL_REPORT);
             serializer.Serialize(writer, result.GetLocalReport());
 
-            writer.WritePropertyName("pivotUrls");
+            writer.WritePropertyName(LotlCacheDataV1.JSON_KEY_PIVOT_URLS);
             writer.WriteStartArray();
             foreach (var url in result.GetPivotUrls()) writer.WriteValue(url);
             writer.WriteEndArray();

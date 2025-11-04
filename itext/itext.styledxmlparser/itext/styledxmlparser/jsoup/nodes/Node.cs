@@ -765,7 +765,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             // Queue up nodes that need their children cloned (BFS).
             LinkedList<iText.StyledXmlParser.Jsoup.Nodes.Node> nodesToProcess = new LinkedList<iText.StyledXmlParser.Jsoup.Nodes.Node
                 >();
-            nodesToProcess.Add(thisClone);
+            nodesToProcess.AddLast(thisClone);
             while (!nodesToProcess.IsEmpty()) {
                 iText.StyledXmlParser.Jsoup.Nodes.Node currParent = nodesToProcess.JRemove();
                 int size = currParent.ChildNodeSize();
@@ -773,7 +773,7 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
                     IList<iText.StyledXmlParser.Jsoup.Nodes.Node> childNodes = currParent.EnsureChildNodes();
                     iText.StyledXmlParser.Jsoup.Nodes.Node childClone = childNodes[i].DoClone(currParent);
                     childNodes[i] = childClone;
-                    nodesToProcess.Add(childClone);
+                    nodesToProcess.AddLast(childClone);
                 }
             }
             return thisClone;

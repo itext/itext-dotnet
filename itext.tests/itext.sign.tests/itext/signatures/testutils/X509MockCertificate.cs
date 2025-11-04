@@ -140,5 +140,10 @@ namespace iText.Signatures.Testutils
         public int GetBasicConstraints() {
             throw new NotImplementedException();
         }
+
+        public IDerObjectIdentifier[] GetSubjectAttributeTypes()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
