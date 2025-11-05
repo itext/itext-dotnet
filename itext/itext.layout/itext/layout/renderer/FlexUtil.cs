@@ -652,7 +652,7 @@ namespace iText.Layout.Renderer {
                         break;
                     }
                 }
-                if (lineToRecalculate.Count > 0) {
+                if (!lineToRecalculate.IsEmpty()) {
                     IList<IList<FlexUtil.FlexItemCalculationInfo>> updatedLines = new List<IList<FlexUtil.FlexItemCalculationInfo
                         >>();
                     updatedLines.Add(lineToRecalculate);
@@ -798,7 +798,7 @@ namespace iText.Layout.Renderer {
                 }
                 IList<float> currentPageLineCrossSizes = RetrieveCurrentPageLineCrossSizes(flexContainerRenderer, lines, lineCrossSizes
                     , crossSize, layoutBox);
-                if (currentPageLineCrossSizes.Count > 0) {
+                if (!currentPageLineCrossSizes.IsEmpty()) {
                     float flexLinesCrossSizesSum = 0;
                     for (int i = 0; i < currentPageLineCrossSizes.Count; i++) {
                         float size = currentPageLineCrossSizes[i];
@@ -1132,56 +1132,6 @@ namespace iText.Layout.Renderer {
             return flexItems;
         }
 
-        private static float CalculateMaxMainSize(AbstractRenderer flexItemRenderer, float flexContainerMainSize, 
-            bool isColumnDirection, float crossSize) {
-            float? maxMainSize;
-            if (flexItemRenderer is TableRenderer) {
-                // TODO DEVSIX-5214 we can't call TableRenderer#retrieveWidth method as far as it can throw NPE
-                if (isColumnDirection) {
-                    float? itemRendererMaxHeight = flexItemRenderer.RetrieveMaxHeight();
-                    maxMainSize = itemRendererMaxHeight;
-                    if (maxMainSize == null) {
-                        maxMainSize = CalculateHeight(flexItemRenderer, crossSize);
-                    }
-                }
-                else {
-                    maxMainSize = flexItemRenderer.GetMinMaxWidth().GetMaxWidth();
-                }
-                if (isColumnDirection) {
-                    maxMainSize = flexItemRenderer.ApplyMarginsBordersPaddings(new Rectangle(0, (float)maxMainSize), false).GetHeight
-                        ();
-                }
-                else {
-                    maxMainSize = flexItemRenderer.ApplyMarginsBordersPaddings(new Rectangle((float)maxMainSize, 0), false).GetWidth
-                        ();
-                }
-            }
-            else {
-                // We need to retrieve width and max-width manually because this methods take into account box-sizing
-                maxMainSize = isColumnDirection ? flexItemRenderer.RetrieveHeight() : flexItemRenderer.RetrieveWidth(flexContainerMainSize
-                    );
-                if (maxMainSize == null) {
-                    maxMainSize = isColumnDirection ? RetrieveMaxHeightForMainDirection(flexItemRenderer) : flexItemRenderer.RetrieveMaxWidth
-                        (flexContainerMainSize);
-                }
-                if (maxMainSize == null) {
-                    if (isColumnDirection) {
-                        float? height = RetrieveMaxHeightForMainDirection(flexItemRenderer);
-                        if (height == null) {
-                            height = CalculateHeight(flexItemRenderer, crossSize);
-                        }
-                        maxMainSize = flexItemRenderer.ApplyMarginsBordersPaddings(new Rectangle(0, (float)height), false).GetHeight
-                            ();
-                    }
-                    else {
-                        maxMainSize = flexItemRenderer.ApplyMarginsBordersPaddings(new Rectangle(flexItemRenderer.GetMinMaxWidth()
-                            .GetMaxWidth(), 0), false).GetWidth();
-                    }
-                }
-            }
-            return (float)maxMainSize;
-        }
-
         private static IList<float> RetrieveCurrentPageLineCrossSizes(FlexContainerRenderer flexContainerRenderer, 
             IList<IList<FlexUtil.FlexItemCalculationInfo>> lines, IList<float> lineCrossSizes, float? crossSize, Rectangle
              layoutBox) {
@@ -1357,6 +1307,56 @@ namespace iText.Layout.Renderer {
                     renderer.ApplyMarginsBordersPaddings(new Rectangle(0, size), false).GetHeight();
             }
 //\endcond
+
+            private static float CalculateMaxMainSize(AbstractRenderer flexItemRenderer, float flexContainerMainSize, 
+                bool isColumnDirection, float crossSize) {
+                float? maxMainSize;
+                if (flexItemRenderer is TableRenderer) {
+                    // TODO DEVSIX-5214 we can't call TableRenderer#retrieveWidth method as far as it can throw NPE
+                    if (isColumnDirection) {
+                        float? itemRendererMaxHeight = flexItemRenderer.RetrieveMaxHeight();
+                        maxMainSize = itemRendererMaxHeight;
+                        if (maxMainSize == null) {
+                            maxMainSize = CalculateHeight(flexItemRenderer, crossSize);
+                        }
+                    }
+                    else {
+                        maxMainSize = flexItemRenderer.GetMinMaxWidth().GetMaxWidth();
+                    }
+                    if (isColumnDirection) {
+                        maxMainSize = flexItemRenderer.ApplyMarginsBordersPaddings(new Rectangle(0, (float)maxMainSize), false).GetHeight
+                            ();
+                    }
+                    else {
+                        maxMainSize = flexItemRenderer.ApplyMarginsBordersPaddings(new Rectangle((float)maxMainSize, 0), false).GetWidth
+                            ();
+                    }
+                }
+                else {
+                    // We need to retrieve width and max-width manually because this methods take into account box-sizing
+                    maxMainSize = isColumnDirection ? flexItemRenderer.RetrieveHeight() : flexItemRenderer.RetrieveWidth(flexContainerMainSize
+                        );
+                    if (maxMainSize == null) {
+                        maxMainSize = isColumnDirection ? RetrieveMaxHeightForMainDirection(flexItemRenderer) : flexItemRenderer.RetrieveMaxWidth
+                            (flexContainerMainSize);
+                    }
+                    if (maxMainSize == null) {
+                        if (isColumnDirection) {
+                            float? height = RetrieveMaxHeightForMainDirection(flexItemRenderer);
+                            if (height == null) {
+                                height = CalculateHeight(flexItemRenderer, crossSize);
+                            }
+                            maxMainSize = flexItemRenderer.ApplyMarginsBordersPaddings(new Rectangle(0, (float)height), false).GetHeight
+                                ();
+                        }
+                        else {
+                            maxMainSize = flexItemRenderer.ApplyMarginsBordersPaddings(new Rectangle(flexItemRenderer.GetMinMaxWidth()
+                                .GetMaxWidth(), 0), false).GetWidth();
+                        }
+                    }
+                }
+                return (float)maxMainSize;
+            }
 
             private float CalculateMinContentAuto(float flexContainerMainSize, float crossSize) {
                 // Automatic Minimum Size of Flex Items https://www.w3.org/TR/css-flexbox-1/#content-based-minimum-size

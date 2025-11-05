@@ -108,7 +108,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             base.Draw(drawContext);
-            // It will be null in case of overflow (only the "split" part will contain symbol renderer.
+            // It will be null in case of overflow (only the "split" part will contain symbol renderer).
             if (symbolRenderer != null && !symbolAddedInside) {
                 bool isRtl = BaseDirection.RIGHT_TO_LEFT == this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION);
                 symbolRenderer.SetParent(this);
@@ -146,11 +146,11 @@ namespace iText.Layout.Renderer {
                 }
                 ApplyMargins(occupiedArea.GetBBox(), false);
                 ApplyBorderBox(occupiedArea.GetBBox(), false);
-                if (childRenderers.Count > 0) {
+                if (!childRenderers.IsEmpty()) {
                     float? yLine = null;
-                    for (int i = 0; i < childRenderers.Count; i++) {
-                        if (childRenderers[i].GetOccupiedArea().GetBBox().GetHeight() > 0) {
-                            yLine = ((AbstractRenderer)childRenderers[i]).GetFirstYLineRecursively();
+                    foreach (IRenderer childRenderer in childRenderers) {
+                        if (childRenderer.GetOccupiedArea().GetBBox().GetHeight() > 0) {
+                            yLine = ((AbstractRenderer)childRenderer).GetFirstYLineRecursively();
                             if (yLine != null) {
                                 break;
                             }
@@ -260,13 +260,13 @@ namespace iText.Layout.Renderer {
             ListSymbolPosition symbolPosition = (ListSymbolPosition)ListRenderer.GetListItemOrListProperty(this, parent
                 , Property.LIST_SYMBOL_POSITION);
             if (symbolPosition == ListSymbolPosition.INSIDE) {
-                if (childRenderers.Count > 0 && childRenderers[0] is ParagraphRenderer) {
+                if (!childRenderers.IsEmpty() && childRenderers[0] is ParagraphRenderer) {
                     ParagraphRenderer paragraphRenderer = (ParagraphRenderer)childRenderers[0];
                     InjectSymbolRendererIntoParagraphRenderer(paragraphRenderer);
                     symbolAddedInside = true;
                 }
                 else {
-                    if (childRenderers.Count > 0 && childRenderers[0] is ImageRenderer) {
+                    if (!childRenderers.IsEmpty() && childRenderers[0] is ImageRenderer) {
                         IRenderer paragraphRenderer = RenderSymbolInNeutralParagraph();
                         paragraphRenderer.AddChild(childRenderers[0]);
                         childRenderers[0] = paragraphRenderer;
@@ -316,11 +316,12 @@ namespace iText.Layout.Renderer {
 
         private bool IsListSymbolEmpty(IRenderer listSymbolRenderer) {
             if (listSymbolRenderer is TextRenderer) {
-                return ((TextRenderer)listSymbolRenderer).GetText().ToString().Length == 0;
+                return String.IsNullOrEmpty(((TextRenderer)listSymbolRenderer).GetText().ToString());
             }
             else {
                 if (listSymbolRenderer is LineRenderer) {
-                    return ((TextRenderer)listSymbolRenderer.GetChildRenderers()[1]).GetText().ToString().Length == 0;
+                    return String.IsNullOrEmpty(((TextRenderer)listSymbolRenderer.GetChildRenderers()[1]).GetText().ToString()
+                        );
                 }
             }
             return false;

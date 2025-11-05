@@ -254,7 +254,7 @@ namespace iText.Forms.Form.Renderer {
                 SetProperty(Property.WIDTH, null);
                 float? width = RetrieveWidth(0);
                 if (width != null) {
-                    // the field can be shrinked if necessary so only max width is set here
+                    // the field can be shrunk if necessary so only max width is set here
                     minMaxWidth.SetChildrenMaxWidth((float)width);
                     result = true;
                 }

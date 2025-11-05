@@ -118,7 +118,7 @@ namespace iText.Layout.Renderer {
         public override void AddChild(IRenderer renderer) {
             if (renderer is CellRenderer) {
                 // In case rowspan or colspan save cell into bottom left corner.
-                // In in this case it will be easier handle row heights in case rowspan.
+                // In this case it will be easier handle row heights in case rowspan.
                 Cell cell = (Cell)renderer.GetModelElement();
                 rows[cell.GetRow() - rowRange.GetStartRow() + cell.GetRowspan() - 1][cell.GetCol()] = (CellRenderer)renderer;
             }
@@ -152,12 +152,12 @@ namespace iText.Layout.Renderer {
         }
 
         /// <summary>Applies the given spacings on the given rectangle</summary>
-        /// <param name="rect">a rectangle spacings will be applied on.</param>
+        /// <param name="rect">a rectangle spacings will be applied on</param>
         /// <param name="horizontalSpacing">the horizontal spacing to be applied on the given rectangle</param>
         /// <param name="verticalSpacing">the vertical spacing to be applied on the given rectangle</param>
         /// <param name="reverse">
-        /// indicates whether the spacings will be applied
-        /// inside (in case of false) or outside (in case of false) the rectangle.
+        /// indicates whether the spacings will be applied inside (in case of false)
+        /// or outside (in case of false) the rectangle
         /// </param>
         /// <returns>
         /// a
@@ -219,7 +219,7 @@ namespace iText.Layout.Renderer {
             }
             Table footerElement = table.GetFooter();
             // footer can be skipped, but after the table content will be layouted
-            bool footerShouldBeApplied = !(table.IsComplete() && 0 != table.GetLastRowBottomBorder().Count && table.IsSkipLastFooter
+            bool footerShouldBeApplied = !(table.IsComplete() && !table.GetLastRowBottomBorder().IsEmpty() && table.IsSkipLastFooter
                 ()) && !true.Equals(this.GetOwnProperty<bool?>(Property.IGNORE_FOOTER));
             if (footerElement != null && footerShouldBeApplied) {
                 footerRenderer = InitFooterOrHeaderRenderer(true, tableBorder);
@@ -270,7 +270,7 @@ namespace iText.Layout.Renderer {
             int numberOfColumns = ((Table)GetModelElement()).GetNumberOfColumns();
             // The last flushed row. Empty list if the table hasn't been set incomplete
             IList<Border> lastFlushedRowBottomBorder = tableModel.GetLastRowBottomBorder();
-            bool isAndWasComplete = tableModel.IsComplete() && 0 == lastFlushedRowBottomBorder.Count;
+            bool isAndWasComplete = tableModel.IsComplete() && lastFlushedRowBottomBorder.IsEmpty();
             bool isFirstOnThePage = 0 == rowRange.GetStartRow() || IsFirstOnRootArea(true);
             if (!IsFooterRenderer() && !IsHeaderRenderer()) {
                 if (isOriginalNonSplitRenderer) {
@@ -357,7 +357,7 @@ namespace iText.Layout.Renderer {
                 // apply the difference to set footer and table left/right margins identical
                 PrepareFooterOrHeaderRendererForLayout(footerRenderer, layoutBox.GetWidth());
                 // collapse with top footer border
-                if (0 != rows.Count || !isAndWasComplete) {
+                if (!rows.IsEmpty() || !isAndWasComplete) {
                     bordersHandler.CollapseTableWithFooter(footerRenderer.bordersHandler, false);
                 }
                 else {
@@ -384,14 +384,14 @@ namespace iText.Layout.Renderer {
                     layoutBox.MoveDown(maxFooterTopBorderWidth).IncreaseHeight(maxFooterTopBorderWidth);
                 }
                 // we will delete FORCED_PLACEMENT property after adding one row
-                // but the footer should be forced placed once more (since we renderer footer twice)
+                // but the footer should be forced placed once more (since we rendered footer twice)
                 if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
                     footerRenderer.SetProperty(Property.FORCED_PLACEMENT, true);
                 }
             }
             if (headerRenderer != null) {
                 PrepareFooterOrHeaderRendererForLayout(headerRenderer, layoutBox.GetWidth());
-                if (0 != rows.Count) {
+                if (!rows.IsEmpty()) {
                     bordersHandler.CollapseTableWithHeader(headerRenderer.bordersHandler, !tableModel.IsEmpty());
                 }
                 else {
@@ -423,9 +423,9 @@ namespace iText.Layout.Renderer {
             occupiedArea.GetBBox().MoveDown(verticalBorderSpacing / 2);
             topBorderMaxWidth = bordersHandler.GetMaxTopWidth();
             bordersHandler.ApplyLeftAndRightTableBorder(layoutBox, false);
-            // Table should have a row and some child elements in order to be considered non empty
-            bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, tableModel.IsEmpty() || 0 == rows.Count
-                , isAndWasComplete, false);
+            // Table should have a row and some child elements in order to be considered non-empty
+            bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, tableModel.IsEmpty() || rows.IsEmpty
+                (), isAndWasComplete, false);
             if (bordersHandler is SeparatedTableBorders) {
                 float bottomBorderWidth = bordersHandler.GetMaxBottomWidth();
                 layoutBox.MoveUp(bottomBorderWidth).DecreaseHeight(bottomBorderWidth);
@@ -455,7 +455,7 @@ namespace iText.Layout.Renderer {
                 bool hasContent = true;
                 // Indicates that we have added a cell from the future, i.e. a cell which has a big rowspan and we shouldn't have
                 // added it yet, because we add a cell with rowspan only during the processing of the very last row this cell occupied,
-                // but now we have area break and we had to force that cell addition.
+                // but now we have area break, and we had to force that cell addition.
                 bool cellWithBigRowspanAdded = false;
                 IList<CellRenderer> currChildRenderers = new List<CellRenderer>();
                 // Process in a queue, because we might need to add a cell from the future, i.e. having big rowspan in case of split.
@@ -478,7 +478,7 @@ namespace iText.Layout.Renderer {
                 float widestRowBottomBorderWidth = null == widestRowBottomBorder ? 0 : widestRowBottomBorder.GetWidth();
                 bordersHandler.SetFinishRow(rowRange.GetFinishRow());
                 // if cell is in the last row on the page, its borders shouldn't collapse with the next row borders
-                while (cellProcessingQueue.Count > 0) {
+                while (!cellProcessingQueue.IsEmpty()) {
                     TableRenderer.CellRendererInfo currentCellInfo = cellProcessingQueue.JRemoveFirst();
                     col = currentCellInfo.GetColumn();
                     CellRenderer cell = currentCellInfo.GetCellRenderer();
@@ -488,7 +488,7 @@ namespace iText.Layout.Renderer {
                         cellWithBigRowspanAdded = true;
                     }
                     targetOverflowRowIndex[col] = currentCellInfo.GetFinishRowInd();
-                    // This cell came from the future (split occurred and we need to place cell with big rowpsan into the current area)
+                    // This cell came from the future (split occurred, and we need to place cell with big rowpsan into the current area)
                     bool currentCellHasBigRowspan = (row != currentCellInfo.GetFinishRowInd());
                     if (cell.HasOwnOrModelProperty(Property.HEIGHT)) {
                         rowHasCellWithSetHeight = true;
@@ -530,7 +530,7 @@ namespace iText.Layout.Renderer {
                         // 1 represents border, 0 represents not occupied space, - represents
                         // the middle of a horizontal border, | represents vertical border
                         // (the latter could be of customized width as well, however, for the reasons
-                        // of this comment it could omitted)
+                        // of this comment it could be omitted)
                         // CCCCC|CCCCC
                         // CCCCC|11111
                         // CCCCC|11111
@@ -605,7 +605,7 @@ namespace iText.Layout.Renderer {
                             // first time split occurs
                             if (!split) {
                                 int addCol;
-                                // This is a case when last footer should be skipped and we might face an end of the table.
+                                // This is a case when last footer should be skipped, and we might face an end of the table.
                                 // We check if we can fit all the rows right now and the split occurred only because we reserved
                                 // space for footer before, and if yes we skip footer and write all the content right now.
                                 bool skipLastFooter = null != footerRenderer && tableModel.IsSkipLastFooter() && tableModel.IsComplete() &&
@@ -745,7 +745,7 @@ namespace iText.Layout.Renderer {
                 // process footer with collapsed borders
                 if ((split || row == rows.Count - 1) && null != footerRenderer) {
                     // maybe the table was incomplete and we can process the footer
-                    if (!hasContent && childRenderers.Count == 0) {
+                    if (!hasContent && childRenderers.IsEmpty()) {
                         bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, true);
                     }
                     else {
@@ -765,8 +765,8 @@ namespace iText.Layout.Renderer {
                         if (bordersHandler is CollapsedTableBorders) {
                             ((CollapsedTableBorders)bordersHandler).SetBottomBorderCollapseWith(null, null);
                         }
-                        bordersHandler.CollapseTableWithFooter(footerRenderer.bordersHandler, hasContent || 0 != childRenderers.Count
-                            );
+                        bordersHandler.CollapseTableWithFooter(footerRenderer.bordersHandler, hasContent || !childRenderers.IsEmpty
+                            ());
                         if (bordersHandler is CollapsedTableBorders) {
                             footerRenderer.SetBorders(CollapsedTableBorders.GetCollapsedBorder(footerRenderer.GetBorders()[2], GetBorders
                                 ()[2]), 2);
@@ -868,7 +868,7 @@ namespace iText.Layout.Renderer {
                         ApplySingleSpacing(occupiedArea.GetBBox(), verticalBorderSpacing, false, true);
                     }
                     // if only footer should be processed
-                    if (!isAndWasComplete && null != footerRenderer && 0 == splitResult[0].rows.Count) {
+                    if (!isAndWasComplete && null != footerRenderer && splitResult[0].rows.IsEmpty()) {
                         layoutBox.IncreaseHeight(verticalBorderSpacing);
                     }
                     // Apply borders if there is no footer
@@ -886,7 +886,7 @@ namespace iText.Layout.Renderer {
                             bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, true);
                             // process bottom border of the last added row if there is no footer
                             if (!isAndWasComplete && !isFirstOnThePage) {
-                                bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, 0 == childRenderers.Count, true, false
+                                bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, childRenderers.IsEmpty(), true, false
                                     );
                             }
                         }
@@ -895,8 +895,8 @@ namespace iText.Layout.Renderer {
                         .FILL_AVAILABLE_AREA_ON_SPLIT))) {
                         ExtendLastRow(splitResult[1].rows[0], layoutBox);
                     }
-                    AdjustFooterAndFixOccupiedArea(layoutBox, 0 != heights.Count ? verticalBorderSpacing : 0);
-                    AdjustCaptionAndFixOccupiedArea(layoutBox, 0 != heights.Count ? verticalBorderSpacing : 0);
+                    AdjustFooterAndFixOccupiedArea(layoutBox, !heights.IsEmpty() ? verticalBorderSpacing : 0);
+                    AdjustCaptionAndFixOccupiedArea(layoutBox, !heights.IsEmpty() ? verticalBorderSpacing : 0);
                     // On the next page we need to process rows without any changes except moves connected to actual cell splitting
                     foreach (KeyValuePair<int, int?> entry in rowMoves) {
                         // Move the cell back to its row if there was no actual split
@@ -909,7 +909,7 @@ namespace iText.Layout.Renderer {
                             overflowRows.SetCell(row - splitResult[0].rows.Count, entry.Key, null);
                         }
                     }
-                    if (IsKeepTogether(firstCauseOfNothing) && 0 == lastFlushedRowBottomBorder.Count && !true.Equals(GetPropertyAsBoolean
+                    if (IsKeepTogether(firstCauseOfNothing) && lastFlushedRowBottomBorder.IsEmpty() && !true.Equals(GetPropertyAsBoolean
                         (Property.FORCED_PLACEMENT))) {
                         return new LayoutResult(LayoutResult.NOTHING, null, null, this, null == firstCauseOfNothing ? this : firstCauseOfNothing
                             );
@@ -929,16 +929,16 @@ namespace iText.Layout.Renderer {
                                 LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT);
                                 // Process borders
                                 if (status == LayoutResult.NOTHING) {
-                                    bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, 0 == childRenderers.Count, true, false
+                                    bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, childRenderers.IsEmpty(), true, false
                                         );
-                                    bordersHandler.ApplyBottomTableBorder(occupiedArea.GetBBox(), layoutBox, 0 == childRenderers.Count, true, 
-                                        false);
+                                    bordersHandler.ApplyBottomTableBorder(occupiedArea.GetBBox(), layoutBox, childRenderers.IsEmpty(), true, false
+                                        );
                                 }
                                 // Notice that we extend the table only on the current page
                                 if (null != blockMinHeight && blockMinHeight > occupiedArea.GetBBox().GetHeight()) {
                                     float blockBottom = Math.Max(occupiedArea.GetBBox().GetBottom() - ((float)blockMinHeight - occupiedArea.GetBBox
                                         ().GetHeight()), layoutBox.GetBottom());
-                                    if (0 == heights.Count) {
+                                    if (heights.IsEmpty()) {
                                         heights.Add(((float)blockMinHeight) - occupiedArea.GetBBox().GetHeight() / 2);
                                     }
                                     else {
@@ -984,14 +984,14 @@ namespace iText.Layout.Renderer {
                 }
             }
             // process footer renderer with collapsed borders
-            if (!(bordersHandler is SeparatedTableBorders) && tableModel.IsComplete() && (0 != lastFlushedRowBottomBorder
-                .Count || tableModel.IsEmpty()) && null != footerRenderer) {
+            if (!(bordersHandler is SeparatedTableBorders) && tableModel.IsComplete() && (!lastFlushedRowBottomBorder.
+                IsEmpty() || tableModel.IsEmpty()) && null != footerRenderer) {
                 layoutBox.MoveDown(footerRenderer.occupiedArea.GetBBox().GetHeight()).IncreaseHeight(footerRenderer.occupiedArea
                     .GetBBox().GetHeight());
                 // apply the difference to set footer and table left/right margins identical
                 bordersHandler.ApplyLeftAndRightTableBorder(layoutBox, true);
                 PrepareFooterOrHeaderRendererForLayout(footerRenderer, layoutBox.GetWidth());
-                if (0 != rows.Count || !isAndWasComplete) {
+                if (!rows.IsEmpty() || !isAndWasComplete) {
                     bordersHandler.CollapseTableWithFooter(footerRenderer.bordersHandler, true);
                 }
                 else {
@@ -1018,7 +1018,7 @@ namespace iText.Layout.Renderer {
                 occupiedArea.GetBBox().MoveUp((float)verticalBorderSpacing / 2);
             }
             else {
-                if (isAndWasComplete || 0 != rows.Count) {
+                if (isAndWasComplete || !rows.IsEmpty()) {
                     ApplySingleSpacing(occupiedArea.GetBBox(), verticalBorderSpacing, false, true);
                 }
             }
@@ -1026,17 +1026,17 @@ namespace iText.Layout.Renderer {
             // Apply bottom and top border
             if (tableModel.IsComplete()) {
                 if (null == footerRenderer) {
-                    if (0 != childRenderers.Count) {
+                    if (!childRenderers.IsEmpty()) {
                         bordersHandler.ApplyBottomTableBorder(occupiedArea.GetBBox(), layoutBox, false);
                     }
                     else {
-                        if (0 != lastFlushedRowBottomBorder.Count) {
-                            bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, 0 == childRenderers.Count, true, false
+                        if (!lastFlushedRowBottomBorder.IsEmpty()) {
+                            bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, childRenderers.IsEmpty(), true, false
                                 );
                         }
                         else {
-                            bordersHandler.ApplyBottomTableBorder(occupiedArea.GetBBox(), layoutBox, 0 == childRenderers.Count, true, 
-                                false);
+                            bordersHandler.ApplyBottomTableBorder(occupiedArea.GetBBox(), layoutBox, childRenderers.IsEmpty(), true, false
+                                );
                         }
                     }
                 }
@@ -1051,8 +1051,8 @@ namespace iText.Layout.Renderer {
             }
             else {
                 if (null == footerRenderer) {
-                    if (0 != childRenderers.Count) {
-                        bordersHandler.ApplyBottomTableBorder(occupiedArea.GetBBox(), layoutBox, 0 == childRenderers.Count, false, 
+                    if (!childRenderers.IsEmpty()) {
+                        bordersHandler.ApplyBottomTableBorder(occupiedArea.GetBBox(), layoutBox, childRenderers.IsEmpty(), false, 
                             true);
                     }
                 }
@@ -1061,7 +1061,7 @@ namespace iText.Layout.Renderer {
                     layoutBox.IncreaseHeight(bottomTableBorderWidth);
                 }
             }
-            if (0 != rows.Count) {
+            if (!rows.IsEmpty()) {
                 if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA))) {
                     ExtendLastRow(rows[rows.Count - 1], layoutBox);
                 }
@@ -1070,7 +1070,7 @@ namespace iText.Layout.Renderer {
                 if (null != blockMinHeight && blockMinHeight > occupiedArea.GetBBox().GetHeight()) {
                     float blockBottom = Math.Max(occupiedArea.GetBBox().GetBottom() - ((float)blockMinHeight - occupiedArea.GetBBox
                         ().GetHeight()), layoutBox.GetBottom());
-                    if (0 != heights.Count) {
+                    if (!heights.IsEmpty()) {
                         heights[heights.Count - 1] = heights[heights.Count - 1] + occupiedArea.GetBBox().GetBottom() - blockBottom;
                     }
                     else {
@@ -1100,7 +1100,7 @@ namespace iText.Layout.Renderer {
             AdjustCaptionAndFixOccupiedArea(layoutBox, null != headerRenderer || !tableModel.IsEmpty() ? verticalBorderSpacing
                  : 0);
             FloatingHelper.RemoveFloatsAboveRendererBottom(siblingFloatRendererAreas, this);
-            if (!isAndWasComplete && !isFirstOnThePage && (0 != rows.Count || (null != footerRenderer && tableModel.IsComplete
+            if (!isAndWasComplete && !isFirstOnThePage && (!rows.IsEmpty() || (null != footerRenderer && tableModel.IsComplete
                 ()))) {
                 occupiedArea.GetBBox().DecreaseHeight(verticalBorderSpacing);
             }
@@ -1345,12 +1345,12 @@ namespace iText.Layout.Renderer {
                 LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.MARGIN_RIGHT));
             }
-            UnitValue marginLefttUV = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
-            if (!marginLefttUV.IsPointValue()) {
+            UnitValue marginLeftUV = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
+            if (!marginLeftUV.IsPointValue()) {
                 LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.MARGIN_LEFT));
             }
-            float additionalWidth = marginLefttUV.GetValue() + marginRightUV.GetValue() + rightMaxBorder / 2 + leftMaxBorder
+            float additionalWidth = marginLeftUV.GetValue() + marginRightUV.GetValue() + rightMaxBorder / 2 + leftMaxBorder
                  / 2;
             MinMaxWidth minMaxWidth = new MinMaxWidth(additionalWidth);
             if (!SetMinMaxWidthBasedOnFixedWidth(minMaxWidth)) {
@@ -1401,10 +1401,10 @@ namespace iText.Layout.Renderer {
 
         // Do nothing here. iText handles cell and table borders collapse and draws result borders during #drawBorders()
         protected internal virtual void DrawBorders(DrawContext drawContext) {
-            DrawBorders(drawContext, null != headerRenderer, null != footerRenderer);
+            DrawBorders(drawContext, null != footerRenderer);
         }
 
-        private void DrawBorders(DrawContext drawContext, bool hasHeader, bool hasFooter) {
+        private void DrawBorders(DrawContext drawContext, bool hasFooter) {
             float height = occupiedArea.GetBBox().GetHeight();
             if (null != footerRenderer) {
                 height -= footerRenderer.occupiedArea.GetBBox().GetHeight();
@@ -1438,16 +1438,14 @@ namespace iText.Layout.Renderer {
                     LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                         , Property.MARGIN_LEFT));
                 }
-                startX += +(null == leftMargin ? 0 : leftMargin.GetValue());
+                startX += (null == leftMargin ? 0 : leftMargin.GetValue());
             }
             // process halves of horizontal bounding borders
-            if (childRenderers.Count == 0) {
+            if (childRenderers.IsEmpty()) {
                 Border[] borders = bordersHandler.tableBoundingBorders;
                 if (null != borders[0]) {
-                    if (null != borders[2]) {
-                        if (0 == heights.Count) {
-                            heights.Add(0, borders[0].GetWidth() / 2 + borders[2].GetWidth() / 2);
-                        }
+                    if (null != borders[2] && heights.IsEmpty()) {
+                        heights.Add(0, borders[0].GetWidth() / 2 + borders[2].GetWidth() / 2);
                     }
                 }
                 else {
@@ -1455,7 +1453,7 @@ namespace iText.Layout.Renderer {
                         startY -= borders[2].GetWidth() / 2;
                     }
                 }
-                if (0 == heights.Count) {
+                if (heights.IsEmpty()) {
                     heights.Add(0f);
                 }
             }
@@ -1596,7 +1594,7 @@ namespace iText.Layout.Renderer {
             float currentBottomIndent = bordersHandler is CollapsedTableBorders ? null == currentBorder ? 0 : currentBorder
                 .GetWidth() : 0;
             float realBottomIndent = bordersHandler is CollapsedTableBorders ? bordersHandler.GetMaxBottomWidth() : 0;
-            if (0 != heights.Count) {
+            if (!heights.IsEmpty()) {
                 heights[heights.Count - 1] = heights[heights.Count - 1] + (realBottomIndent - currentBottomIndent) / 2;
                 // Correct occupied area and layoutbox
                 occupiedArea.GetBBox().IncreaseHeight((realBottomIndent - currentBottomIndent) / 2).MoveDown((realBottomIndent
@@ -1649,8 +1647,8 @@ namespace iText.Layout.Renderer {
                 if (null != blockMinHeight && blockMinHeight > occupiedArea.GetBBox().GetHeight() + realBottomIndent / 2) {
                     additionalHeight = Math.Min(layoutBox.GetHeight() - realBottomIndent / 2, (float)blockMinHeight - occupiedArea
                         .GetBBox().GetHeight() - realBottomIndent / 2);
-                    for (int k = 0; k < rowsHasCellWithSetHeight.Count; k++) {
-                        if (false.Equals(rowsHasCellWithSetHeight[k])) {
+                    foreach (bool? aBoolean in rowsHasCellWithSetHeight) {
+                        if (false.Equals(aBoolean)) {
                             numOfRowsWithFloatHeight++;
                         }
                     }
@@ -1724,7 +1722,7 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual void ExtendLastRow(CellRenderer[] lastRow, Rectangle freeBox) {
-            if (null != lastRow && 0 != heights.Count) {
+            if (null != lastRow && !heights.IsEmpty()) {
                 heights[heights.Count - 1] = heights[heights.Count - 1] + freeBox.GetHeight();
                 occupiedArea.GetBBox().MoveDown(freeBox.GetHeight()).IncreaseHeight(freeBox.GetHeight());
                 foreach (CellRenderer cell in lastRow) {
@@ -1771,7 +1769,7 @@ namespace iText.Layout.Renderer {
             }
             if (bordersHandler is SeparatedTableBorders) {
                 if (table.IsEmpty()) {
-                    // A footer and a header share the same inner border. However it should be processed only ones.
+                    // A footer and a header share the same inner border. However, it should be processed only ones.
                     if (!footer || null == headerRenderer) {
                         renderer.SetBorders(tableBorders[innerBorder], innerBorder);
                     }
@@ -1845,18 +1843,18 @@ namespace iText.Layout.Renderer {
         }
 
         private bool IsFooterRendererOfLargeTable() {
-            return IsFooterRenderer() && (!((iText.Layout.Renderer.TableRenderer)parent).GetTable().IsComplete() || 0 
-                != ((iText.Layout.Renderer.TableRenderer)parent).GetTable().GetLastRowBottomBorder().Count);
+            return IsFooterRenderer() && (!((iText.Layout.Renderer.TableRenderer)parent).GetTable().IsComplete() || !(
+                (iText.Layout.Renderer.TableRenderer)parent).GetTable().GetLastRowBottomBorder().IsEmpty());
         }
 
         private bool IsTopTablePart() {
-            return null == headerRenderer && (!IsFooterRenderer() || (0 == ((iText.Layout.Renderer.TableRenderer)parent
-                ).rows.Count && null == ((iText.Layout.Renderer.TableRenderer)parent).headerRenderer));
+            return null == headerRenderer && (!IsFooterRenderer() || (((iText.Layout.Renderer.TableRenderer)parent).rows
+                .IsEmpty() && null == ((iText.Layout.Renderer.TableRenderer)parent).headerRenderer));
         }
 
         private bool IsBottomTablePart() {
-            return null == footerRenderer && (!IsHeaderRenderer() || (0 == ((iText.Layout.Renderer.TableRenderer)parent
-                ).rows.Count && null == ((iText.Layout.Renderer.TableRenderer)parent).footerRenderer));
+            return null == footerRenderer && (!IsHeaderRenderer() || (((iText.Layout.Renderer.TableRenderer)parent).rows
+                .IsEmpty() && null == ((iText.Layout.Renderer.TableRenderer)parent).footerRenderer));
         }
 
         /// <summary>Returns minWidth</summary>
@@ -1884,7 +1882,7 @@ namespace iText.Layout.Renderer {
             return sum;
         }
 
-        /// <summary>This are a structs used for convenience in layout.</summary>
+        /// <summary>These are the structs used for convenience in layout.</summary>
         private class CellRendererInfo {
             private readonly CellRenderer cellRenderer;
 
@@ -1922,7 +1920,7 @@ namespace iText.Layout.Renderer {
         /// <summary>Utility class that copies overflow renderer rows on cell replacement so it won't affect original renderer
         ///     </summary>
         private class OverflowRowsWrapper {
-            private TableRenderer overflowRenderer;
+            private readonly TableRenderer overflowRenderer;
 
             private bool isReplaced = false;
 
@@ -1955,7 +1953,7 @@ namespace iText.Layout.Renderer {
                 rows[i][col] = rows[i + 1][col];
                 rows[i + 1][col] = null;
             }
-            // the number of cells behind is less then minRowspan-1
+            // the number of cells behind is less than minRowspan-1
             // so we should process the last cell in the column as in the case 1 == minRowspan
             if (i != row + minRowspan - 1 && null != rows[i][col]) {
                 CellRenderer overflowCell = (CellRenderer)((Cell)rows[i][col].GetModelElement()).GetRenderer().SetParent(this

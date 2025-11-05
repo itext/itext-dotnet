@@ -249,7 +249,7 @@ namespace iText.Layout.Renderer {
             bool crlf = false;
             bool containsPossibleBreak = false;
             HyphenationConfig hyphenationConfig = this.GetProperty<HyphenationConfig>(Property.HYPHENATION);
-            // For example, if a first character is a RTL mark (U+200F), and the second is a newline, we need to break anyway
+            // For example, if a first character is an RTL mark (U+200F), and the second is a newline, we need to break anyway
             int firstPrintPos = currentTextPos;
             while (firstPrintPos < text.GetEnd() && NoPrint(text.Get(firstPrintPos))) {
                 firstPrintPos++;
@@ -273,7 +273,6 @@ namespace iText.Layout.Renderer {
                 float nonBreakingHyphenRelatedChunkWidth = 0;
                 int nonBreakingHyphenRelatedChunkStart = -1;
                 float beforeNonBreakingHyphenRelatedChunkMaxAscender = 0;
-                float beforeNonBreakingHyphenRelatedChunkMaxDescender = 0;
                 for (int ind = currentTextPos; ind < text.GetEnd(); ind++) {
                     if (iText.IO.Util.TextUtil.IsNewLine(text.Get(ind))) {
                         containsPossibleBreak = true;
@@ -308,12 +307,11 @@ namespace iText.Layout.Renderer {
                             )) {
                             if (ind + 1 >= indexOfFirstCharacterToBeForcedToOverflow) {
                                 firstCharacterWhichExceedsAllowedWidth = currentTextPos;
-                                break;
                             }
                             else {
                                 nonBreakablePartEnd = ind;
-                                break;
                             }
+                            break;
                         }
                         continue;
                     }
@@ -350,7 +348,6 @@ namespace iText.Layout.Renderer {
                         if (GlyphBelongsToNonBreakingHyphenRelatedChunk(text, ind)) {
                             if (-1 == nonBreakingHyphenRelatedChunkStart) {
                                 beforeNonBreakingHyphenRelatedChunkMaxAscender = nonBreakablePartMaxAscender;
-                                beforeNonBreakingHyphenRelatedChunkMaxDescender = nonBreakablePartMaxDescender;
                                 nonBreakingHyphenRelatedChunkStart = ind;
                             }
                             nonBreakingHyphenRelatedChunkWidth += glyphWidth + xAdvance;
@@ -372,7 +369,7 @@ namespace iText.Layout.Renderer {
                     if (!noSoftWrap && symbolNotFitOnLine && (0 == nonBreakingHyphenRelatedChunkWidth || ind + 1 == text.GetEnd
                         () || !GlyphBelongsToNonBreakingHyphenRelatedChunk(text, ind + 1))) {
                         if (IsOverflowFit(overflowX)) {
-                            // we have extracted all the information we wanted and we do not want to continue.
+                            // we have extracted all the information we wanted, and we do not want to continue.
                             // we will have to split the word anyway.
                             break;
                         }
@@ -492,7 +489,6 @@ namespace iText.Layout.Renderer {
                                                 // TODO DEVSIX-7010 recalculate line properties in case of word hyphenation.
                                                 // These values are based on whole word. Recalculate properly based on hyphenated part.
                                                 currentLineAscender = Math.Max(currentLineAscender, nonBreakablePartMaxAscender);
-                                                currentLineDescender = Math.Min(currentLineDescender, nonBreakablePartMaxDescender);
                                                 currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
                                                 currentLineWidth += currentHyphenationChoicePreTextWidth;
                                                 if (OverflowWrapPropertyValue.ANYWHERE == overflowWrap) {
@@ -513,14 +509,12 @@ namespace iText.Layout.Renderer {
                             }
                             else {
                                 if (text.GetStart() == nonBreakingHyphenRelatedChunkStart) {
-                                    nonBreakingHyphenRelatedChunkWidth = 0;
                                     firstCharacterWhichExceedsAllowedWidth = previousCharPos + 1;
                                 }
                                 else {
                                     firstCharacterWhichExceedsAllowedWidth = nonBreakingHyphenRelatedChunkStart;
                                     nonBreakablePartFullWidth -= nonBreakingHyphenRelatedChunkWidth;
                                     nonBreakablePartMaxAscender = beforeNonBreakingHyphenRelatedChunkMaxAscender;
-                                    nonBreakablePartMaxDescender = beforeNonBreakingHyphenRelatedChunkMaxDescender;
                                 }
                             }
                         }
@@ -547,7 +541,6 @@ namespace iText.Layout.Renderer {
                             wordSplit = !forcePartialSplitOnFirstChar && (text.GetEnd() != currentTextPos);
                             if (wordSplit || !(forcePartialSplitOnFirstChar || IsOverflowFit(overflowX))) {
                                 currentLineAscender = Math.Max(currentLineAscender, nonBreakablePartMaxAscender);
-                                currentLineDescender = Math.Min(currentLineDescender, nonBreakablePartMaxDescender);
                                 currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
                                 currentLineWidth += nonBreakablePartWidthWhichDoesNotExceedAllowedWidth;
                                 if (OverflowWrapPropertyValue.ANYWHERE == overflowWrap) {
@@ -914,7 +907,7 @@ namespace iText.Layout.Renderer {
             }
             /*  Between two sentences separated by one or more whitespaces,
             icu allows to break right after the last whitespace.
-            Therefore we need to carefully edit specialScriptsWordBreakPoints list after trimming:
+            Therefore, we need to carefully edit specialScriptsWordBreakPoints list after trimming:
             if a break is allowed to happen right before the first glyph of an already trimmed text,
             we need to remove this point from the list
             (or replace it with -1 thus marking that text contains special scripts,
@@ -965,7 +958,7 @@ namespace iText.Layout.Renderer {
         }
 //\endcond
 
-        /// <summary>Gets the maximum offset above the base line that this Text extends to.</summary>
+        /// <summary>Gets the maximum offset above the baseline that this Text extends to.</summary>
         /// <returns>
         /// the upwards vertical offset of this
         /// <see cref="iText.Layout.Element.Text"/>
@@ -974,7 +967,7 @@ namespace iText.Layout.Renderer {
             return yLineOffset;
         }
 
-        /// <summary>Gets the maximum offset below the base line that this Text extends to.</summary>
+        /// <summary>Gets the maximum offset below the baseline that this Text extends to.</summary>
         /// <returns>
         /// the downwards vertical offset of this
         /// <see cref="iText.Layout.Element.Text"/>
@@ -1178,6 +1171,7 @@ namespace iText.Layout.Renderer {
         /// <see cref="text"/>
         /// , bounded by start and end,
         /// contains glyphs belonging to special script.
+        /// <para />
         /// Mind that the behavior of this method depends on the analyzeSpecialScriptsWordBreakPointsOnly parameter:
         /// - pass
         /// <see langword="false"/>
@@ -1186,7 +1180,7 @@ namespace iText.Layout.Renderer {
         /// by checking each of its glyphs
         /// AND to fill
         /// <see cref="specialScriptsWordBreakPoints"/>
-        /// list afterwards,
+        /// list afterward,
         /// i.e. when analyzing a sequence of TextRenderers prior to layouting;
         /// - pass
         /// <see langword="true"/>
@@ -1440,10 +1434,10 @@ namespace iText.Layout.Renderer {
                 }
                 float yLine = GetYLine();
                 float underlineYPosition = underline.GetYPosition(fontSize) + yLine;
-                float italicWidthSubstraction = .5f * fontSize * italicAngleTan;
+                float italicWidthSubtraction = .5f * fontSize * italicAngleTan;
                 Rectangle innerAreaBbox = GetInnerAreaBBox();
                 Rectangle underlineBBox = new Rectangle(innerAreaBbox.GetX(), underlineYPosition - underlineThickness / 2, 
-                    innerAreaBbox.GetWidth() - italicWidthSubstraction, underlineThickness);
+                    innerAreaBbox.GetWidth() - italicWidthSubtraction, underlineThickness);
                 canvas.Rectangle(underlineBBox);
                 if (isClippingMode) {
                     canvas.Clip().EndPath();
@@ -1625,7 +1619,7 @@ namespace iText.Layout.Renderer {
 
 //\cond DO_NOT_DOCUMENT
         // if amongPresentOnly is true,
-        // returns the index of lists's element which equals textStartBasedInitialOverflowTextPos
+        // returns the index of list element which equals textStartBasedInitialOverflowTextPos
         // or -1 if textStartBasedInitialOverflowTextPos wasn't found in the list.
         // if amongPresentOnly is false, returns the index of list's element
         // that is not greater than textStartBasedInitialOverflowTextPos
@@ -1704,15 +1698,12 @@ namespace iText.Layout.Renderer {
                 ()) && iText.IO.Util.TextUtil.IsSpaceOrWhitespace(text.Get(line.GetStart()));
             bool endsWithBreak = line.GetStart() < line.GetEnd() && splitCharacters.IsSplitCharacter(text, line.GetEnd
                 () - 1);
-            if (specialScriptsWordBreakPoints == null || specialScriptsWordBreakPoints.IsEmpty()) {
-                return new bool[] { startsWithBreak, endsWithBreak };
-            }
-            else {
+            if (specialScriptsWordBreakPoints != null && !specialScriptsWordBreakPoints.IsEmpty()) {
                 if (!endsWithBreak) {
                     endsWithBreak = specialScriptsWordBreakPoints.Contains(line.GetEnd());
                 }
-                return new bool[] { startsWithBreak, endsWithBreak };
             }
+            return new bool[] { startsWithBreak, endsWithBreak };
         }
 //\endcond
 
@@ -1972,11 +1963,11 @@ namespace iText.Layout.Renderer {
         }
 
         private class ReversedCharsIterator : IEnumerator<GlyphLine.GlyphLinePart> {
-            private IList<int> outStart;
+            private readonly IList<int> outStart;
 
-            private IList<int> outEnd;
+            private readonly IList<int> outEnd;
 
-            private IList<bool> reversed;
+            private readonly IList<bool> reversed;
 
             private int currentInd = 0;
 

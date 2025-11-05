@@ -160,7 +160,7 @@ namespace iText.Forms.Form.Renderer {
         protected internal override IRenderer CreateFlatRenderer() {
             UnitValue heightUV = GetPropertyAsUnitValue(Property.HEIGHT);
             UnitValue widthUV = GetPropertyAsUnitValue(Property.WIDTH);
-            // if it is a percentage value, we need to calculate the actual value but we
+            // if it is a percentage value, we need to calculate the actual value, but we
             // don't have the parent's width yet, so we will take the default value
             float height = DEFAULT_SIZE;
             if (heightUV != null && heightUV.IsPointValue()) {

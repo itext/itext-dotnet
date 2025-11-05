@@ -51,8 +51,6 @@ namespace iText.Layout.Renderer {
 
         private float containerWidth;
 
-        private bool isFirstLayout = true;
-
         /// <summary>Creates a DivRenderer from its corresponding layout object.</summary>
         /// <param name="modelElement">
         /// the
@@ -138,7 +136,7 @@ namespace iText.Layout.Renderer {
         /// <see cref="IRenderer"/>
         /// itself.
         /// </summary>
-        /// <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
+        /// <param name="drawContext">the context (canvas, document, etc.) of this drawing operation.</param>
         public override void DrawBorder(DrawContext drawContext) {
             base.DrawBorder(drawContext);
             Rectangle borderRect = ApplyMargins(occupiedArea.GetBBox().Clone(), GetMargins(), false);
@@ -164,7 +162,7 @@ namespace iText.Layout.Renderer {
             );
         }
 
-        /// <summary>Layouts multicol in the passed area.</summary>
+        /// <summary>Layouts multicol in the provided area.</summary>
         /// <param name="layoutContext">the layout context</param>
         /// <param name="actualBBox">the area to layout multicol on</param>
         /// <returns>
@@ -195,7 +193,6 @@ namespace iText.Layout.Renderer {
         protected internal virtual AbstractRenderer CreateOverflowRenderer(IRenderer overflowedContentRenderer) {
             iText.Layout.Renderer.MulticolRenderer overflowRenderer = (iText.Layout.Renderer.MulticolRenderer)GetNextRenderer
                 ();
-            overflowRenderer.isFirstLayout = false;
             overflowRenderer.parent = parent;
             overflowRenderer.modelElement = modelElement;
             overflowRenderer.AddAllProperties(GetOwnProperties());
@@ -420,7 +417,7 @@ namespace iText.Layout.Renderer {
         /// for which height should be increased, so it can be lauded.
         /// </summary>
         public class MulticolLayoutResult {
-            private IList<IRenderer> splitRenderers = new List<IRenderer>();
+            private readonly IList<IRenderer> splitRenderers = new List<IRenderer>();
 
             private AbstractRenderer overflowRenderer;
 

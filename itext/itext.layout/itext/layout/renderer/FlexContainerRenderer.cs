@@ -177,7 +177,6 @@ namespace iText.Layout.Renderer {
             // We must set back widths of the children because multiple layouts are possible
             // If flex-grow is less than 1, layout algorithm increases the width of the element based on the initial width
             // And if we would not set back widths, every layout flex-item width will grow.
-            int counter = 0;
             foreach (IList<FlexItemInfo> line in lines) {
                 foreach (FlexItemInfo itemInfo in line) {
                     IList<UnitValue> curWidths = widths.Get(itemInfo.GetRenderer());
@@ -188,7 +187,6 @@ namespace iText.Layout.Renderer {
                     itemInfo.GetRenderer().ReturnBackOwnProperty(Property.HEIGHT, curHeights[0]);
                     itemInfo.GetRenderer().ReturnBackOwnProperty(Property.MIN_HEIGHT, curHeights[1]);
                     itemInfo.GetRenderer().ReturnBackOwnProperty(Property.MAX_HEIGHT, curHeights[2]);
-                    ++counter;
                 }
             }
             return result;
@@ -338,7 +336,7 @@ namespace iText.Layout.Renderer {
                 splitRenderer_1 = null;
                 overflowRenderer.SetChildRenderers(GetChildRenderers());
             }
-            CorrectFixedLayout(layoutBox);
+            CorrectFixedLayout();
             ApplyAbsolutePositionIfNeeded(layoutContext);
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
@@ -528,11 +526,10 @@ namespace iText.Layout.Renderer {
 
 //\cond DO_NOT_DOCUMENT
         internal override void FixOccupiedAreaIfOverflowedX(OverflowPropertyValue? overflowX, Rectangle layoutBox) {
-            // TODO DEVSIX-5087 Support overflow visible/hidden property correctly
-            return;
         }
 //\endcond
 
+        // TODO DEVSIX-5087 Support overflow visible/hidden property correctly
         /// <summary><inheritDoc/></summary>
         public override void AddChild(IRenderer renderer) {
             // TODO DEVSIX-5087 Since overflow-fit is an internal iText overflow value, we do not need to support if
@@ -545,11 +542,11 @@ namespace iText.Layout.Renderer {
         }
 
         private static void OrderChildRenderers(IList<IRenderer> renderers) {
-            JavaCollectionsUtil.Sort(renderers, new _IComparer_573());
+            JavaCollectionsUtil.Sort(renderers, new _IComparer_570());
         }
 
-        private sealed class _IComparer_573 : IComparer<IRenderer> {
-            public _IComparer_573() {
+        private sealed class _IComparer_570 : IComparer<IRenderer> {
+            public _IComparer_570() {
             }
 
             public int Compare(IRenderer a, IRenderer b) {

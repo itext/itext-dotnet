@@ -37,7 +37,7 @@ namespace iText.Forms.Form.Renderer {
     /// trimming strategy matches Acrobat's behavior
     /// </remarks>
     internal class FormFieldValueNonTrimmingTextRenderer : TextRenderer {
-        // Determines whether we want to trim leading space. In particular we don't want to trim
+        // Determines whether we want to trim leading space. In particular, we don't want to trim
         // the very first leading spaces of the text value. When text overflows to the next lines,
         // whether we should trim the text depends on why the overflow happened
         private bool callTrimFirst = false;
@@ -57,7 +57,7 @@ namespace iText.Forms.Form.Renderer {
                 // In case the overflow to the next line happened naturally (without a forced line break),
                 // we don't want to preserve the extra spaces at the beginning of the next line
                 ((iText.Forms.Form.Renderer.FormFieldValueNonTrimmingTextRenderer)baseLayoutResult.GetOverflowRenderer()).
-                    SetCallTrimFirst(true);
+                    SetCallTrimFirst();
             }
             return baseLayoutResult;
         }
@@ -82,8 +82,8 @@ namespace iText.Forms.Form.Renderer {
             return copy;
         }
 
-        private void SetCallTrimFirst(bool callTrimFirst) {
-            this.callTrimFirst = callTrimFirst;
+        private void SetCallTrimFirst() {
+            this.callTrimFirst = true;
         }
     }
 //\endcond

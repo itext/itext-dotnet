@@ -115,7 +115,7 @@ namespace iText.Layout.Renderer {
                     floatPropertyValue, overflowX);
                 floatRendererAreas = new List<Rectangle>();
             }
-            if (0 == childRenderers.Count) {
+            if (childRenderers.IsEmpty()) {
                 anythingPlaced = true;
                 currentRenderer = null;
             }
@@ -145,8 +145,7 @@ namespace iText.Layout.Renderer {
             ApplyPaddings(parentBBox, paddings, false);
             float additionalWidth = parentWidth - parentBBox.GetWidth();
             ApplyWidth(parentBBox, blockWidth, overflowX);
-            wasHeightClipped = ApplyMaxHeight(parentBBox, blockMaxHeight, marginsCollapseHandler, false, wasParentsHeightClipped
-                , overflowY);
+            wasHeightClipped = ApplyMaxHeight(parentBBox, blockMaxHeight, marginsCollapseHandler, false, overflowY);
             MinMaxWidth minMaxWidth = new MinMaxWidth(additionalWidth);
             AbstractWidthHandler widthHandler = new MaxMaxWidthHandler(minMaxWidth);
             IList<Rectangle> areas;
@@ -175,7 +174,7 @@ namespace iText.Layout.Renderer {
             bool floatOverflowedToNextPageWithNothing = false;
             // rectangles are compared by instances
             ICollection<Rectangle> nonChildFloatingRendererAreas = new HashSet<Rectangle>(floatRendererAreas);
-            if (marginsCollapsingEnabled && childRenderers.Count > 0) {
+            if (marginsCollapsingEnabled && !childRenderers.IsEmpty()) {
                 // passing null is sufficient to notify that there is a kid, however we don't care about it and it's margins
                 marginsCollapseHandler.StartChildMarginsHandling(null, layoutBox);
             }
@@ -224,12 +223,8 @@ namespace iText.Layout.Renderer {
                 if (result.GetFloatsOverflowedToNextPage() != null) {
                     inlineFloatsOverflowedToNextPage.AddAll(result.GetFloatsOverflowedToNextPage());
                 }
-                float minChildWidth = 0;
-                float maxChildWidth = 0;
-                if (result is MinMaxWidthLayoutResult) {
-                    minChildWidth = ((MinMaxWidthLayoutResult)result).GetMinMaxWidth().GetMinWidth();
-                    maxChildWidth = ((MinMaxWidthLayoutResult)result).GetMinMaxWidth().GetMaxWidth();
-                }
+                float minChildWidth = result.GetMinMaxWidth().GetMinWidth();
+                float maxChildWidth = result.GetMinMaxWidth().GetMaxWidth();
                 widthHandler.UpdateMinChildWidth(minChildWidth);
                 widthHandler.UpdateMaxChildWidth(maxChildWidth);
                 LineRenderer processedRenderer = (LineRenderer)result.GetSplitRenderer();
@@ -268,8 +263,7 @@ namespace iText.Layout.Renderer {
                     }
                     // for the first and last line in a paragraph, leading is smaller
                     if (firstLineInBox) {
-                        deltaY = processedRenderer != null && leading != null ? -processedRenderer.GetTopLeadingIndent(leading) : 
-                            0;
+                        deltaY = leading != null ? -processedRenderer.GetTopLeadingIndent(leading) : 0;
                     }
                     if (isLastLineReLaidOut) {
                         isFit = leading == null || processedRenderer.GetOccupiedArea().GetBBox().GetY() + deltaY - lastLineBottomLeadingIndent
@@ -336,7 +330,7 @@ namespace iText.Layout.Renderer {
                                 usedHeight = commonRectangle.GetHeight();
                             }
                             UpdateHeightsOnSplit(usedHeight, wasHeightClipped, this, split[1], includeFloatsInOccupiedAreaOnSplit);
-                            CorrectFixedLayout(layoutBox);
+                            CorrectFixedLayout();
                             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                             ApplyMargins(occupiedArea.GetBBox(), true);
@@ -421,10 +415,8 @@ namespace iText.Layout.Renderer {
                 occupiedArea.GetBBox().MoveDown(moveDown);
                 occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + moveDown);
             }
-            if (marginsCollapsingEnabled) {
-                if (childRenderers.Count > 0 && notAllKidsAreFloats) {
-                    marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
-                }
+            if (marginsCollapsingEnabled && !childRenderers.IsEmpty() && notAllKidsAreFloats) {
+                marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
             }
             if (includeFloatsInOccupiedArea) {
                 FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this, nonChildFloatingRendererAreas);
@@ -448,7 +440,7 @@ namespace iText.Layout.Renderer {
                 paddings = GetPaddings();
                 borders = GetBorders();
             }
-            CorrectFixedLayout(layoutBox);
+            CorrectFixedLayout();
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
             ApplyMargins(occupiedArea.GetBBox(), true);
@@ -517,7 +509,7 @@ namespace iText.Layout.Renderer {
         /// <summary><inheritDoc/></summary>
         public override String ToString() {
             StringBuilder sb = new StringBuilder();
-            if (lines != null && lines.Count > 0) {
+            if (lines != null && !lines.IsEmpty()) {
                 for (int i = 0; i < lines.Count; i++) {
                     if (i > 0) {
                         sb.Append("\n");
@@ -569,7 +561,7 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal override float? GetFirstYLineRecursively() {
-            if (lines == null || lines.Count == 0) {
+            if (lines == null || lines.IsEmpty()) {
                 return null;
             }
             return lines[0].GetFirstYLineRecursively();
@@ -579,7 +571,7 @@ namespace iText.Layout.Renderer {
             if (!AllowLastYLineRecursiveExtraction()) {
                 return null;
             }
-            if (lines == null || lines.Count == 0) {
+            if (lines == null || lines.IsEmpty()) {
                 return null;
             }
             for (int i = lines.Count - 1; i >= 0; i--) {

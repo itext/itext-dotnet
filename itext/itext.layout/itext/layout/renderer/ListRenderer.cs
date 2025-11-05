@@ -332,7 +332,7 @@ namespace iText.Layout.Renderer {
             // 'this' renderer will become split renderer
             splitRenderer.GetChildRenderers().RemoveAll(splitRenderer.GetChildRenderers().SubList(1, splitRenderer.GetChildRenderers
                 ().Count));
-            if (0 != childrenStillRemainingToRender.Count) {
+            if (!childrenStillRemainingToRender.IsEmpty()) {
                 newOverflowRenderer.GetChildRenderers()[0].GetChildRenderers().AddAll(childrenStillRemainingToRender);
                 splitRenderer.GetChildRenderers()[0].GetChildRenderers().RemoveAll(childrenStillRemainingToRender);
                 newOverflowRenderer.GetChildRenderers()[0].SetProperty(Property.MARGIN_LEFT, splitRenderer.GetChildRenderers
@@ -344,7 +344,7 @@ namespace iText.Layout.Renderer {
             if (null != overflowRenderer) {
                 newOverflowRenderer.childRenderers.AddAll(overflowRenderer.GetChildRenderers());
             }
-            if (0 != newOverflowRenderer.childRenderers.Count) {
+            if (!newOverflowRenderer.childRenderers.IsEmpty()) {
                 return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, splitRenderer, newOverflowRenderer, this);
             }
             else {
@@ -356,11 +356,11 @@ namespace iText.Layout.Renderer {
             if (!HasOwnProperty(Property.LIST_SYMBOLS_INITIALIZED)) {
                 IList<IRenderer> symbolRenderers = new List<IRenderer>();
                 int listItemNum = (int)this.GetProperty<int?>(Property.LIST_START, 1);
-                for (int i = 0; i < childRenderers.Count; i++) {
-                    childRenderers[i].SetParent(this);
-                    listItemNum = (childRenderers[i].GetProperty<int?>(Property.LIST_SYMBOL_ORDINAL_VALUE) != null) ? (int)childRenderers
-                        [i].GetProperty<int?>(Property.LIST_SYMBOL_ORDINAL_VALUE) : listItemNum;
-                    IRenderer currentSymbolRenderer = MakeListSymbolRenderer(listItemNum, childRenderers[i]);
+                foreach (IRenderer renderer in childRenderers) {
+                    renderer.SetParent(this);
+                    listItemNum = (renderer.GetProperty<int?>(Property.LIST_SYMBOL_ORDINAL_VALUE) != null) ? (int)renderer.GetProperty
+                        <int?>(Property.LIST_SYMBOL_ORDINAL_VALUE) : listItemNum;
+                    IRenderer currentSymbolRenderer = MakeListSymbolRenderer(listItemNum, renderer);
                     if (currentSymbolRenderer != null && BaseDirection.RIGHT_TO_LEFT == this.GetProperty<BaseDirection?>(Property
                         .BASE_DIRECTION)) {
                         currentSymbolRenderer.SetProperty(Property.BASE_DIRECTION, BaseDirection.RIGHT_TO_LEFT);
@@ -368,7 +368,7 @@ namespace iText.Layout.Renderer {
                     LayoutResult listSymbolLayoutResult = null;
                     if (currentSymbolRenderer != null) {
                         ++listItemNum;
-                        currentSymbolRenderer.SetParent(childRenderers[i]);
+                        currentSymbolRenderer.SetParent(renderer);
                         listSymbolLayoutResult = currentSymbolRenderer.Layout(layoutContext);
                         currentSymbolRenderer.SetParent(null);
                     }
@@ -436,7 +436,7 @@ namespace iText.Layout.Renderer {
         }
 
         private sealed class ConstantFontTextRenderer : TextRenderer {
-            private String constantFontName;
+            private readonly String constantFontName;
 
             public ConstantFontTextRenderer(Text textElement, String font)
                 : base(textElement) {
