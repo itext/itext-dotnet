@@ -124,10 +124,6 @@ namespace iText.Layout {
             return 0 == collection.Count;
         }
 
-        public static bool IsEmpty(this ICollection collection) {
-            return 0 == collection.Count;
-        }
-
         public static KeyValuePair<K, V>? HigherEntry<K, V>(this SortedDictionary<K, V> dict, K key) {
             List<K> list = dict.Keys.ToList();
             int index = list.BinarySearch(key, dict.Comparer);
