@@ -177,7 +177,7 @@ namespace iText.Layout.Renderer {
                 else {
                     boxSize = Math.Min(layoutBox.GetHeight(), (float)crossSize);
                 }
-                float lineCrossSize = (lines.Count - 1) * gap;
+                float lineCrossSize = 0;
                 int columnsOnPage = 0;
                 foreach (IList<FlexUtil.FlexItemCalculationInfo> line in lines) {
                     float maxItemSize = GetItemMaxCrossSize(line);
@@ -194,9 +194,11 @@ namespace iText.Layout.Renderer {
                         lineCrossSize += maxItemSize;
                     }
                 }
-                freeSpace = boxSize - lineCrossSize;
-                ApplyAlignContent(lines, IsColumnDirection(renderer) ? columnsOnPage : lines.Count, alignContent, freeSpace
-                     < 0 ? 0 : freeSpace, IsColumnDirection(renderer), isFirstFlexStart, renderer.IsWrapReverse());
+                int linesOnPage = IsColumnDirection(renderer) ? columnsOnPage : lines.Count;
+                float gapSize = (linesOnPage - 1) * gap;
+                freeSpace = boxSize - lineCrossSize - gapSize;
+                ApplyAlignContent(lines, linesOnPage, alignContent, freeSpace < 0 ? 0 : freeSpace, IsColumnDirection(renderer
+                    ), isFirstFlexStart, renderer.IsWrapReverse());
                 if (renderer.IsWrapReverse()) {
                     JavaCollectionsUtil.Reverse(lines);
                 }
