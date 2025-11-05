@@ -65,21 +65,22 @@ namespace iText.Signatures.Validation.Lotl {
              + "bLgd+mjfh8LzxM02i3WIM+Z2wdq/h8SVlupPPkrJr2edBv/CzCf1VFa8L7tDMpxP\n" + "9HdHBJz+nUfTe5mXzqHS0MxogW5sBUk8Rj9KCvNO5wdPZhfg8nGrEnGWXj8gl9Km\n"
              + "MwsoJseoWfQ6GjmQCv0kpQ==\n" + "-----END CERTIFICATE-----";
 
+        // Android-Conversion-Skip-Block-Start (TODO DEVSIX-7371 investigate different behavior of a few iTextCore)
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeAll() {
             // Initialize the LotlService with a default EuropeanResourceFetcher
             LotlService service = new LotlService(new LotlFetchingProperties(new ThrowExceptionOnFailingCountryData())
                 );
             service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
-            EuropeanTrustedListConfigurationFactory.SetFactory(() => new _EuropeanTrustedListConfigurationFactory_92()
+            EuropeanTrustedListConfigurationFactory.SetFactory(() => new _EuropeanTrustedListConfigurationFactory_93()
                 );
             service.WithLotlValidator(() => new LotlValidator(service));
             LotlService.GLOBAL_SERVICE = service;
             service.InitializeCache();
         }
 
-        private sealed class _EuropeanTrustedListConfigurationFactory_92 : EuropeanTrustedListConfigurationFactory {
-            public _EuropeanTrustedListConfigurationFactory_92() {
+        private sealed class _EuropeanTrustedListConfigurationFactory_93 : EuropeanTrustedListConfigurationFactory {
+            public _EuropeanTrustedListConfigurationFactory_93() {
             }
 
             public override String GetTrustedListUri() {
@@ -1743,5 +1744,6 @@ namespace iText.Signatures.Validation.Lotl {
                 ).GetQualificationConclusion();
             NUnit.Framework.Assert.AreEqual(QualificationConclusion.ESIG_WITH_QC_AND_QSCD, conclusion);
         }
+        // Android-Conversion-Skip-Block-End
     }
 }
