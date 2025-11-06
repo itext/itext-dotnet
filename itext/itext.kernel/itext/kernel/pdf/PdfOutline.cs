@@ -380,24 +380,34 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Remove this outline from the document.</summary>
-        /// <remarks>Remove this outline from the document. Outlines that are children of this outline are removed recursively
-        ///     </remarks>
         public virtual void RemoveOutline() {
             if (!pdfDoc.HasOutlines() || IsOutlineRoot()) {
                 pdfDoc.GetCatalog().Remove(PdfName.Outlines);
                 return;
             }
             iText.Kernel.Pdf.PdfOutline parent = this.parent;
-            IList<iText.Kernel.Pdf.PdfOutline> children = parent.children;
-            children.Remove(this);
+            IList<iText.Kernel.Pdf.PdfOutline> parentChildren = parent.children;
             PdfDictionary parentContent = parent.content;
-            if (children.Count > 0) {
-                parentContent.Put(PdfName.First, children[0].content);
-                parentContent.Put(PdfName.Last, children[children.Count - 1].content);
+            parentChildren.Remove(this);
+            if (parentChildren.IsEmpty()) {
+                parentContent.Remove(PdfName.Count);
+                if (parent.IsOutlineRoot()) {
+                    pdfDoc.GetCatalog().Remove(PdfName.Outlines);
+                    return;
+                }
+            }
+            int count = content.GetAsInt(PdfName.Count) == null ? 0 : Math.Abs((int)content.GetAsInt(PdfName.Count));
+            // Count this outline too
+            count += 1;
+            UpdateCount(parent, count);
+            if (parentChildren.IsEmpty()) {
+                parentContent.Remove(PdfName.First);
+                parentContent.Remove(PdfName.Last);
+                return;
             }
             else {
-                parent.RemoveOutline();
-                return;
+                parentContent.Put(PdfName.First, parentChildren[0].content);
+                parentContent.Put(PdfName.Last, parentChildren[parentChildren.Count - 1].content);
             }
             PdfDictionary next = content.GetAsDictionary(PdfName.Next);
             PdfDictionary prev = content.GetAsDictionary(PdfName.Prev);
@@ -472,6 +482,27 @@ namespace iText.Kernel.Pdf {
         private bool IsOutlineRoot() {
             PdfDictionary outlineRoot = GetOutlineRoot();
             return outlineRoot == content;
+        }
+
+        /// <summary>Recursively traverse parent tree and adjust Count in each visited outline.</summary>
+        /// <param name="outline">the current outline to process</param>
+        /// <param name="amountOfRemovedOutlines">the amount of removed outlines</param>
+        private static void UpdateCount(iText.Kernel.Pdf.PdfOutline outline, int amountOfRemovedOutlines) {
+            if (outline == null) {
+                return;
+            }
+            if (outline.content.GetAsInt(PdfName.Count) != null) {
+                int currentCount = (int)outline.content.GetAsInt(PdfName.Count);
+                // consider a case when count is 0 as impossible, because in that case there shouldn't be Count at all
+                if (currentCount > 0) {
+                    currentCount -= amountOfRemovedOutlines;
+                }
+                else {
+                    currentCount += amountOfRemovedOutlines;
+                }
+                outline.content.Put(PdfName.Count, new PdfNumber(currentCount));
+            }
+            UpdateCount(outline.parent, amountOfRemovedOutlines);
         }
     }
 }

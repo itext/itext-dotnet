@@ -109,5 +109,15 @@ namespace iText.Kernel.Pdf.Colorspace {
             }
             return null;
         }
+
+        /// <summary>
+        /// Returns the
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// of the namespace
+        /// </summary>
+        /// <returns>the PdfName of the namespace</returns>
+        public virtual PdfName GetName() {
+            return new PdfName(this.GetType().Name);
+        }
     }
 }

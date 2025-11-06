@@ -66,29 +66,31 @@ namespace iText.Layout.Renderer {
             // if that dimension of the flex container is being sized under a min or max-content constraint,
             // the available space in that dimension is that constraint;
             float mainSize = GetMainSize(flexContainerRenderer, layoutBox);
+            bool isColumnDirection = IsColumnDirection(flexContainerRenderer);
             // We need to have crossSize only if its value is definite.
             float?[] crossSizes = GetCrossSizes(flexContainerRenderer, layoutBox);
             float? crossSize = crossSizes[0];
-            if (crossSize == null && IsColumnDirection(flexContainerRenderer)) {
+            if (crossSize == null && isColumnDirection) {
                 crossSize = layoutBox.GetWidth();
             }
             float? minCrossSize = crossSizes[1];
             float? maxCrossSize = crossSizes[2];
-            float layoutBoxCrossSize = IsColumnDirection(flexContainerRenderer) ? layoutBox.GetWidth() : layoutBox.GetHeight
-                ();
+            float layoutBoxCrossSize = isColumnDirection ? layoutBox.GetWidth() : layoutBox.GetHeight();
             layoutBoxCrossSize = crossSize == null ? layoutBoxCrossSize : Math.Min((float)crossSize, layoutBoxCrossSize
                 );
             IList<FlexUtil.FlexItemCalculationInfo> flexItemCalculationInfos = CreateFlexItemCalculationInfos(flexContainerRenderer
                 , mainSize, layoutBoxCrossSize);
-            DetermineFlexBasisAndHypotheticalMainSizeForFlexItems(flexItemCalculationInfos, layoutBoxCrossSize, IsColumnDirection
-                (flexContainerRenderer));
+            DetermineFlexBasisAndHypotheticalMainSizeForFlexItems(flexItemCalculationInfos, layoutBoxCrossSize, isColumnDirection
+                );
+            float? columnGapProp = flexContainerRenderer.GetProperty<float?>(Property.COLUMN_GAP);
+            float? rowGapProp = flexContainerRenderer.GetProperty<float?>(Property.ROW_GAP);
+            float columnGap = columnGapProp == null ? 0f : (float)columnGapProp;
+            float rowGap = rowGapProp == null ? 0f : (float)rowGapProp;
             // 9.3. Main Size Determination
             // 5. Collect flex items into flex lines:
-            bool isSingleLine = !flexContainerRenderer.HasProperty(Property.FLEX_WRAP) || FlexWrapPropertyValue.NOWRAP
-                 == flexContainerRenderer.GetProperty<FlexWrapPropertyValue?>(Property.FLEX_WRAP);
             IList<IList<FlexUtil.FlexItemCalculationInfo>> lines = CollectFlexItemsIntoFlexLines(flexItemCalculationInfos
-                , IsColumnDirection(flexContainerRenderer) ? Math.Min(mainSize, layoutBox.GetHeight()) : mainSize, isSingleLine
-                );
+                , isColumnDirection ? Math.Min(mainSize, layoutBox.GetHeight()) : mainSize, IsSingleLine(flexContainerRenderer
+                ), isColumnDirection ? rowGap : columnGap);
             // 6. Resolve the flexible lengths of all the flex items to find their used main size.
             // See §9.7 Resolving Flexible Lengths.
             // 9.7. Resolving Flexible Lengths
@@ -97,25 +99,27 @@ namespace iText.Layout.Renderer {
             float maxHypotheticalMainSize = 0;
             foreach (IList<FlexUtil.FlexItemCalculationInfo> line in lines) {
                 float hypotheticalMainSizesSum = 0;
-                foreach (FlexUtil.FlexItemCalculationInfo info in line) {
+                for (int i = 0; i < line.Count; i++) {
+                    if (i != 0) {
+                        hypotheticalMainSizesSum += isColumnDirection ? rowGap : columnGap;
+                    }
+                    FlexUtil.FlexItemCalculationInfo info = line[i];
                     hypotheticalMainSizesSum += info.GetOuterMainSize(info.hypotheticalMainSize);
                 }
                 maxHypotheticalMainSize = Math.Max(maxHypotheticalMainSize, hypotheticalMainSizesSum);
             }
-            float containerMainSize = GetMainSize(flexContainerRenderer, new Rectangle(IsColumnDirection(flexContainerRenderer
-                ) ? 0 : maxHypotheticalMainSize, IsColumnDirection(flexContainerRenderer) ? maxHypotheticalMainSize : 
-                0));
-            if (IsColumnDirection(flexContainerRenderer)) {
-                ResolveFlexibleLengths(lines, layoutBox.GetHeight(), containerMainSize);
+            float containerMainSize = GetMainSize(flexContainerRenderer, new Rectangle(isColumnDirection ? 0 : maxHypotheticalMainSize
+                , isColumnDirection ? maxHypotheticalMainSize : 0));
+            if (isColumnDirection) {
+                ResolveFlexibleLengths(lines, layoutBox.GetHeight(), containerMainSize, rowGap);
             }
             else {
-                ResolveFlexibleLengths(lines, mainSize);
+                ResolveFlexibleLengths(lines, mainSize, columnGap);
             }
             // 9.4. Cross Size Determination
             // 7. Determine the hypothetical cross size of each item by
             // performing layout with the used main size and the available space, treating auto as fit-content.
-            DetermineHypotheticalCrossSizeForFlexItems(lines, IsColumnDirection(flexContainerRenderer), layoutBoxCrossSize
-                );
+            DetermineHypotheticalCrossSizeForFlexItems(lines, isColumnDirection, layoutBoxCrossSize);
             // 8. Calculate the cross size of each flex line.
             IList<float> lineCrossSizes = CalculateCrossSizeOfEachFlexLine(lines, minCrossSize, crossSize, maxCrossSize
                 );
@@ -123,16 +127,17 @@ namespace iText.Layout.Renderer {
             // the container’s computed min and max cross sizes. Note that if CSS 2.1’s definition of min/max-width/height
             // applied more generally, this behavior would fall out automatically.
             // 9. Handle 'align-content: stretch'.
-            float? currentCrossSize = IsColumnDirection(flexContainerRenderer) ? layoutBoxCrossSize : crossSize;
-            HandleAlignContentStretch(flexContainerRenderer, lines, currentCrossSize, lineCrossSizes, layoutBox);
+            float? currentCrossSize = isColumnDirection ? layoutBoxCrossSize : crossSize;
+            HandleAlignContentStretch(flexContainerRenderer, lines, currentCrossSize, lineCrossSizes, layoutBox, isColumnDirection
+                 ? columnGap : rowGap);
             // TODO DEVSIX-2090 visibility-collapse items are not supported
             // 10. Collapse visibility:collapse items.
             // 11. Determine the used cross size of each flex item.
             DetermineUsedCrossSizeOfEachFlexItem(lines, lineCrossSizes, flexContainerRenderer);
             // 9.5. Main-Axis Alignment
             // 12. Align the items along the main-axis per justify-content.
-            ApplyJustifyContent(lines, flexContainerRenderer, IsColumnDirection(flexContainerRenderer) ? layoutBox.GetHeight
-                () : mainSize, containerMainSize);
+            ApplyJustifyContent(lines, flexContainerRenderer, isColumnDirection ? layoutBox.GetHeight() : mainSize, containerMainSize
+                , isColumnDirection ? rowGap : columnGap);
             // 9.6. Cross-Axis Alignment
             // TODO DEVSIX-5002 margin: auto is not supported
             // 13. Resolve cross-axis auto margins
@@ -140,7 +145,9 @@ namespace iText.Layout.Renderer {
             ApplyAlignItemsAndAlignSelf(lines, flexContainerRenderer, lineCrossSizes);
             // 15. Determine the flex container’s used cross size
             // 16. Align all flex lines per align-content.
-            ApplyAlignContent(lines, flexContainerRenderer, crossSize, layoutBox);
+            ApplyAlignContent(lines, flexContainerRenderer, crossSize, layoutBox, isColumnDirection ? columnGap : rowGap
+                );
+            ApplyGap(lines, columnGap, rowGap, flexContainerRenderer);
             // Convert FlexItemCalculationInfo's into FlexItemInfo's
             IList<IList<FlexItemInfo>> layoutTable = new List<IList<FlexItemInfo>>();
             foreach (IList<FlexUtil.FlexItemCalculationInfo> line in lines) {
@@ -154,7 +161,7 @@ namespace iText.Layout.Renderer {
         }
 
         private static void ApplyAlignContent(IList<IList<FlexUtil.FlexItemCalculationInfo>> lines, FlexContainerRenderer
-             renderer, float? crossSize, Rectangle layoutBox) {
+             renderer, float? crossSize, Rectangle layoutBox, float gap) {
             AlignContentPropertyValue alignContent = (AlignContentPropertyValue)renderer.GetProperty<AlignContentPropertyValue?
                 >(Property.ALIGN_CONTENT, AlignContentPropertyValue.NORMAL);
             bool isFirstFlexStart = (bool)renderer.GetProperty<bool?>(Property.FLEX_FORCE_START_ON_TOP, false);
@@ -187,9 +194,11 @@ namespace iText.Layout.Renderer {
                         lineCrossSize += maxItemSize;
                     }
                 }
-                freeSpace = boxSize - lineCrossSize;
-                ApplyAlignContent(lines, IsColumnDirection(renderer) ? columnsOnPage : lines.Count, alignContent, freeSpace
-                     < 0 ? 0 : freeSpace, IsColumnDirection(renderer), isFirstFlexStart);
+                int linesOnPage = IsColumnDirection(renderer) ? columnsOnPage : lines.Count;
+                float gapSize = (linesOnPage - 1) * gap;
+                freeSpace = boxSize - lineCrossSize - gapSize;
+                ApplyAlignContent(lines, linesOnPage, alignContent, freeSpace < 0 ? 0 : freeSpace, IsColumnDirection(renderer
+                    ), isFirstFlexStart, renderer.IsWrapReverse());
                 if (renderer.IsWrapReverse()) {
                     JavaCollectionsUtil.Reverse(lines);
                 }
@@ -198,7 +207,7 @@ namespace iText.Layout.Renderer {
 
         private static void ApplyAlignContent(IList<IList<FlexUtil.FlexItemCalculationInfo>> lines, int linesOnPage
             , AlignContentPropertyValue alignContent, float freeSpace, bool isColumnDirection, bool isFirstFlexStart
-            ) {
+            , bool isWrapReverse) {
             if (!lines.IsEmpty()) {
                 switch (alignContent) {
                     case AlignContentPropertyValue.CENTER: {
@@ -206,7 +215,13 @@ namespace iText.Layout.Renderer {
                         break;
                     }
 
-                    case AlignContentPropertyValue.FLEX_END:
+                    case AlignContentPropertyValue.FLEX_END: {
+                        if (!isWrapReverse) {
+                            ApplyFlexEndAlignment(lines, freeSpace, isColumnDirection, isFirstFlexStart);
+                        }
+                        break;
+                    }
+
                     case AlignContentPropertyValue.END: {
                         ApplyFlexEndAlignment(lines, freeSpace, isColumnDirection, isFirstFlexStart);
                         break;
@@ -227,7 +242,13 @@ namespace iText.Layout.Renderer {
                         break;
                     }
 
-                    case AlignContentPropertyValue.FLEX_START:
+                    case AlignContentPropertyValue.FLEX_START: {
+                        if (isWrapReverse) {
+                            ApplyFlexEndAlignment(lines, freeSpace, isColumnDirection, isFirstFlexStart);
+                        }
+                        break;
+                    }
+
                     case AlignContentPropertyValue.START:
                     default: {
                         break;
@@ -310,7 +331,7 @@ namespace iText.Layout.Renderer {
                 return;
             }
             float indentation = freeSpace / 2;
-            int targetIndex = isFirstFlexStart && lines.Count > 1 ? 1 : 0;
+            int targetIndex = isFirstFlexStart ? 1 : 0;
             foreach (FlexUtil.FlexItemCalculationInfo item in lines[targetIndex]) {
                 if (isColumnDirection) {
                     item.xShift = indentation;
@@ -336,6 +357,13 @@ namespace iText.Layout.Renderer {
             FlexDirectionPropertyValue flexDir = (FlexDirectionPropertyValue)renderer.GetProperty<FlexDirectionPropertyValue?
                 >(Property.FLEX_DIRECTION, FlexDirectionPropertyValue.ROW);
             return FlexDirectionPropertyValue.COLUMN == flexDir || FlexDirectionPropertyValue.COLUMN_REVERSE == flexDir;
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal static bool IsSingleLine(FlexContainerRenderer flexContainerRenderer) {
+            return !flexContainerRenderer.HasProperty(Property.FLEX_WRAP) || FlexWrapPropertyValue.NOWRAP == flexContainerRenderer
+                .GetProperty<FlexWrapPropertyValue?>(Property.FLEX_WRAP);
         }
 //\endcond
 
@@ -399,7 +427,7 @@ namespace iText.Layout.Renderer {
             foreach (FlexUtil.FlexItemCalculationInfo info in flexItemCalculationInfos) {
                 // 3. Determine the flex base size and hypothetical main size of each item:
                 AbstractRenderer renderer = info.renderer;
-                // TODO DEVSIX-5001 content as width are not supported
+                // TODO DEVSIX-5255 Support aspect-ratio property
                 // B. If the flex item has ...
                 // an intrinsic aspect ratio,
                 // a used flex basis of content, and
@@ -417,25 +445,27 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     // A. If the item has a definite used flex basis, that’s the flex base size.
+                    // TODO DEVSIX-5001 width: max-content is not supported
+                    // E. Otherwise, size the item into the available space using its used flex basis in place of its main
+                    // size, treating a value of content as max-content (calculated during FlexItemCalculationInfo creation).
+                    // If a cross size is needed to determine the main size (e.g. when the flex item’s main size is in its
+                    // block axis (column direction), or when it has a preferred aspect ratio) and the flex item’s cross
+                    // size is auto and not definite, in this calculation use fit-content as the flex item’s cross size.
+                    // The flex base size is the item’s resulting main size.
                     info.flexBaseSize = info.flexBasis;
                 }
-                // TODO DEVSIX-5001 content as width is not supported
+                // TODO DEVSIX-5001 width: min-content and max-content are not supported, so we can't check whether
+                //  the flex container is being sized under a min-content or max-content constraint
                 // C. If the used flex basis is content or depends on its available space,
                 // and the flex container is being sized under a min-content or max-content constraint
                 // (e.g. when performing automatic table layout [CSS21]), size the item under that constraint.
-                // The flex base size is the item’s resulting main size.
-                // TODO DEVSIX-5001 content as width is not supported
-                // Otherwise, if the used flex basis is content or depends on its available space,
+                // The flex base size is the item’s resulting main size. E.g. for flex container parent with
+                // width: max-content flex item should be also layouted with width: max-content.
+                // TODO DEVSIX-5001 width: min-content and max-content are not supported
+                // D. Otherwise, if the used flex basis is content or depends on its available space,
                 // the available main size is infinite, and the flex item’s inline axis is parallel to the main axis,
                 // lay the item out using the rules for a box in an orthogonal flow [CSS3-WRITING-MODES].
                 // The flex base size is the item’s max-content main size.
-                // TODO DEVSIX-5001 max-content as width is not supported
-                // Otherwise, size the item into the available space using its used flex basis in place of its main size,
-                // treating a value of content as max-content. If a cross size is needed to determine the main size
-                // (e.g. when the flex item’s main size is in its block axis)
-                // and the flex item’s cross size is auto and not definite,
-                // in this calculation use fit-content as the flex item’s cross size.
-                // The flex base size is the item’s resulting main size.
                 // The hypothetical main size is the item’s flex base size clamped
                 // according to its used min and max main sizes (and flooring the content box size at zero).
                 info.hypotheticalMainSize = Math.Max(0, Math.Min(Math.Max(info.minContent, info.flexBaseSize), info.maxContent
@@ -450,7 +480,7 @@ namespace iText.Layout.Renderer {
         // Note: We assume that it was resolved on some upper level
         // 4. Determine the main size of the flex container
         internal static IList<IList<FlexUtil.FlexItemCalculationInfo>> CollectFlexItemsIntoFlexLines(IList<FlexUtil.FlexItemCalculationInfo
-            > flexItemCalculationInfos, float mainSize, bool isSingleLine) {
+            > flexItemCalculationInfos, float mainSize, bool isSingleLine, float gap) {
             IList<IList<FlexUtil.FlexItemCalculationInfo>> lines = new List<IList<FlexUtil.FlexItemCalculationInfo>>();
             IList<FlexUtil.FlexItemCalculationInfo> currentLineInfos = new List<FlexUtil.FlexItemCalculationInfo>();
             if (isSingleLine) {
@@ -473,10 +503,12 @@ namespace iText.Layout.Renderer {
                             currentLineInfos = new List<FlexUtil.FlexItemCalculationInfo>();
                             currentLineInfos.Add(info);
                             occupiedLineSpace = info.GetOuterMainSize(info.hypotheticalMainSize);
+                            occupiedLineSpace += gap;
                         }
                     }
                     else {
                         currentLineInfos.Add(info);
+                        occupiedLineSpace += gap;
                     }
                 }
             }
@@ -490,13 +522,14 @@ namespace iText.Layout.Renderer {
 
 //\cond DO_NOT_DOCUMENT
         internal static void ResolveFlexibleLengths(IList<IList<FlexUtil.FlexItemCalculationInfo>> lines, float mainSize
-            ) {
+            , float gap) {
             foreach (IList<FlexUtil.FlexItemCalculationInfo> line in lines) {
                 // 1. Determine the used flex factor.
                 float hypotheticalMainSizesSum = 0;
                 foreach (FlexUtil.FlexItemCalculationInfo info in line) {
                     hypotheticalMainSizesSum += info.GetOuterMainSize(info.hypotheticalMainSize);
                 }
+                hypotheticalMainSizesSum += gap * (line.Count - 1);
                 // if the sum is less than the flex container’s inner main size,
                 // use the flex grow factor for the rest of this algorithm; otherwise, use the flex shrink factor.
                 bool isFlexGrow = hypotheticalMainSizesSum < mainSize;
@@ -516,12 +549,12 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 // 3. Calculate initial free space.
-                float initialFreeSpace = CalculateFreeSpace(line, mainSize);
+                float initialFreeSpace = CalculateFreeSpace(line, mainSize, gap);
                 // 4. Loop:
                 // a. Check for flexible items
                 while (HasFlexibleItems(line)) {
                     // b. Calculate the remaining free space as for initial free space, above.
-                    float remainingFreeSpace = CalculateFreeSpace(line, mainSize);
+                    float remainingFreeSpace = CalculateFreeSpace(line, mainSize, gap);
                     float flexFactorSum = 0;
                     foreach (FlexUtil.FlexItemCalculationInfo info in line) {
                         if (!info.isFrozen) {
@@ -606,8 +639,8 @@ namespace iText.Layout.Renderer {
         // If the remaining free space is positive and at least one main-axis margin on this line is auto,
         // distribute the free space equally among these margins. Otherwise, set all auto margins to zero.
         private static void ResolveFlexibleLengths(IList<IList<FlexUtil.FlexItemCalculationInfo>> lines, float layoutBoxSize
-            , float containerSize) {
-            ResolveFlexibleLengths(lines, containerSize);
+            , float containerSize, float gap) {
+            ResolveFlexibleLengths(lines, containerSize, gap);
             if (lines.Count == 1 && layoutBoxSize < containerSize - EPSILON) {
                 IList<FlexUtil.FlexItemCalculationInfo> lineToRecalculate = new List<FlexUtil.FlexItemCalculationInfo>();
                 float mainSize = 0;
@@ -621,11 +654,11 @@ namespace iText.Layout.Renderer {
                         break;
                     }
                 }
-                if (lineToRecalculate.Count > 0) {
+                if (!lineToRecalculate.IsEmpty()) {
                     IList<IList<FlexUtil.FlexItemCalculationInfo>> updatedLines = new List<IList<FlexUtil.FlexItemCalculationInfo
                         >>();
                     updatedLines.Add(lineToRecalculate);
-                    ResolveFlexibleLengths(updatedLines, layoutBoxSize);
+                    ResolveFlexibleLengths(updatedLines, layoutBoxSize, gap);
                 }
             }
         }
@@ -663,11 +696,18 @@ namespace iText.Layout.Renderer {
                     UnitValue prevMainSize = info.renderer.ReplaceOwnProperty<UnitValue>(Property.WIDTH, UnitValue.CreatePointValue
                         (info.mainSize));
                     UnitValue prevMinMainSize = info.renderer.ReplaceOwnProperty<UnitValue>(Property.MIN_WIDTH, null);
+                    UnitValue prevMaxMainSize = info.renderer.ReplaceOwnProperty<UnitValue>(Property.MAX_WIDTH, null);
+                    float? horizontalScaling = (float?)info.renderer.ReplaceOwnProperty<Object>(Property.HORIZONTAL_SCALING, 1f
+                        );
+                    float? verticalScaling = (float?)info.renderer.ReplaceOwnProperty<Object>(Property.VERTICAL_SCALING, 1f);
                     info.renderer.SetProperty(Property.INLINE_VERTICAL_ALIGNMENT, InlineVerticalAlignmentType.BOTTOM);
                     LayoutResult result = info.renderer.Layout(new LayoutContext(new LayoutArea(0, new Rectangle(AbstractRenderer
                         .INF, AbstractRenderer.INF))));
-                    info.renderer.ReturnBackOwnProperty(Property.MIN_WIDTH, prevMinMainSize);
                     info.renderer.ReturnBackOwnProperty(Property.WIDTH, prevMainSize);
+                    info.renderer.ReturnBackOwnProperty(Property.MIN_WIDTH, prevMinMainSize);
+                    info.renderer.ReturnBackOwnProperty(Property.MAX_WIDTH, prevMaxMainSize);
+                    info.renderer.ReturnBackOwnProperty(Property.HORIZONTAL_SCALING, horizontalScaling);
+                    info.renderer.ReturnBackOwnProperty(Property.VERTICAL_SCALING, verticalScaling);
                     // Since main size is clamped with min-width, we do expect the result to be full
                     if (result.GetStatus() == LayoutResult.FULL) {
                         info.hypotheticalCrossSize = info.GetInnerCrossSize(result.GetOccupiedArea().GetBBox().GetHeight());
@@ -692,7 +732,7 @@ namespace iText.Layout.Renderer {
                 float largestCrossSize = 0;
                 foreach (FlexItemInfo info in line) {
                     // TODO DEVSIX-5002 Flex items whose cross-axis margins are both auto shouldn't be collected
-                    // TODO DEVSIX-5038 Support BASELINE as align-self
+                    // TODO DEVSIX-5167 Support BASELINE as align-self
                     largestCrossSize = Math.Max(largestCrossSize, info.GetRectangle().GetWidth());
                     flexLinesCrossSize = Math.Max(0, largestCrossSize);
                 }
@@ -721,7 +761,7 @@ namespace iText.Layout.Renderer {
                         // its hypothetical outer cross-start edge, and the largest of the distances
                         // between each item’s baseline and its hypothetical outer cross-end edge, and sum these two values.
                         // TODO DEVSIX-5002 margin: auto is not supported => "cross-axis margins are both non-auto" is true
-                        // TODO DEVSIX-5038 Support BASELINE as align-self
+                        // TODO DEVSIX-5167 Support BASELINE as align-self
                         // 2. Among all the items not collected by the previous step,
                         // find the largest outer hypothetical cross size.
                         if (largestHypotheticalCrossSize < info.GetOuterCrossSize(info.hypotheticalCrossSize)) {
@@ -748,10 +788,11 @@ namespace iText.Layout.Renderer {
 
 //\cond DO_NOT_DOCUMENT
         internal static void HandleAlignContentStretch(FlexContainerRenderer flexContainerRenderer, IList<IList<FlexUtil.FlexItemCalculationInfo
-            >> lines, float? crossSize, IList<float> lineCrossSizes, Rectangle layoutBox) {
+            >> lines, float? crossSize, IList<float> lineCrossSizes, Rectangle layoutBox, float gap) {
             AlignContentPropertyValue alignContent = (AlignContentPropertyValue)flexContainerRenderer.GetProperty<AlignContentPropertyValue?
                 >(Property.ALIGN_CONTENT, AlignContentPropertyValue.STRETCH);
-            if (crossSize != null && alignContent == AlignContentPropertyValue.STRETCH) {
+            if (crossSize != null && (alignContent == AlignContentPropertyValue.STRETCH || alignContent == AlignContentPropertyValue
+                .NORMAL)) {
                 // Line order becomes important for alignment
                 if (flexContainerRenderer.IsWrapReverse()) {
                     JavaCollectionsUtil.Reverse(lineCrossSizes);
@@ -759,10 +800,14 @@ namespace iText.Layout.Renderer {
                 }
                 IList<float> currentPageLineCrossSizes = RetrieveCurrentPageLineCrossSizes(flexContainerRenderer, lines, lineCrossSizes
                     , crossSize, layoutBox);
-                if (currentPageLineCrossSizes.Count > 0) {
+                if (!currentPageLineCrossSizes.IsEmpty()) {
                     float flexLinesCrossSizesSum = 0;
-                    foreach (float size in currentPageLineCrossSizes) {
+                    for (int i = 0; i < currentPageLineCrossSizes.Count; i++) {
+                        float size = currentPageLineCrossSizes[i];
                         flexLinesCrossSizesSum += size;
+                        if (i != 0) {
+                            flexLinesCrossSizesSum += gap;
+                        }
                     }
                     if (flexLinesCrossSizesSum < crossSize - EPSILON) {
                         float addition = ((float)crossSize - flexLinesCrossSizesSum) / currentPageLineCrossSizes.Count;
@@ -904,6 +949,15 @@ namespace iText.Layout.Renderer {
                             break;
                         }
 
+                        case AlignmentPropertyValue.NORMAL:
+                        case AlignmentPropertyValue.STRETCH: {
+                            bool isFirstFlexStart = (bool)renderer.GetProperty<bool?>(Property.FLEX_FORCE_START_ON_TOP, false);
+                            if (isFirstFlexStart) {
+                                break;
+                            }
+                            goto case AlignmentPropertyValue.FLEX_START;
+                        }
+
                         case AlignmentPropertyValue.FLEX_START: {
                             if (renderer.IsWrapReverse()) {
                                 if (isColumnDirection) {
@@ -920,14 +974,14 @@ namespace iText.Layout.Renderer {
                         case AlignmentPropertyValue.START:
                         case AlignmentPropertyValue.BASELINE:
                         case AlignmentPropertyValue.SELF_START:
-                        case AlignmentPropertyValue.STRETCH:
-                        case AlignmentPropertyValue.NORMAL:
                         default: {
                             break;
                         }
                     }
                 }
             }
+            // TODO DEVSIX-5167 Support baseline value for align-items and align-self
+            // Note, that isWrapReverse should be taken into account for baseline.
             // We don't need to do anything in these cases
             // Reverse back
             if (renderer.IsWrapReverse()) {
@@ -937,7 +991,7 @@ namespace iText.Layout.Renderer {
         }
 
         private static void ApplyJustifyContent(IList<IList<FlexUtil.FlexItemCalculationInfo>> lines, FlexContainerRenderer
-             renderer, float mainSize, float containerMainSize) {
+             renderer, float mainSize, float containerMainSize, float gap) {
             JustifyContent justifyContent = (JustifyContent)renderer.GetProperty<JustifyContent?>(Property.JUSTIFY_CONTENT
                 , JustifyContent.FLEX_START);
             bool containsFixedHeight = containerMainSize > 0;
@@ -946,7 +1000,7 @@ namespace iText.Layout.Renderer {
                 JavaCollectionsUtil.Reverse(lines);
             }
             foreach (IList<FlexUtil.FlexItemCalculationInfo> line in lines) {
-                float childrenMainSize = 0;
+                float childrenMainSize = (line.Count - 1) * gap;
                 // Items order becomes important for justification
                 bool isColumnReverse = FlexDirectionPropertyValue.COLUMN_REVERSE == renderer.GetProperty<FlexDirectionPropertyValue?
                     >(Property.FLEX_DIRECTION, null);
@@ -986,8 +1040,36 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        private static void ApplyGap(IList<IList<FlexUtil.FlexItemCalculationInfo>> lines, float columnGap, float 
+            rowGap, FlexContainerRenderer renderer) {
+            bool isDirReverse = FlexDirectionPropertyValue.COLUMN_REVERSE == renderer.GetProperty<FlexDirectionPropertyValue?
+                >(Property.FLEX_DIRECTION, null) || FlexDirectionPropertyValue.ROW_REVERSE == renderer.GetProperty<FlexDirectionPropertyValue?
+                >(Property.FLEX_DIRECTION, null);
+            if (renderer.IsWrapReverse()) {
+                JavaCollectionsUtil.Reverse(lines);
+            }
+            for (int j = 0; j < lines.Count; j++) {
+                IList<FlexUtil.FlexItemCalculationInfo> line = lines[j];
+                for (int i = 0; i < line.Count; i++) {
+                    FlexUtil.FlexItemCalculationInfo info = line[i];
+                    int mainDirSkipIndex = isDirReverse ? (line.Count - 1) : 0;
+                    if (IsColumnDirection(renderer)) {
+                        info.xShift += j == 0 ? 0 : columnGap;
+                        info.yShift += i == mainDirSkipIndex ? 0 : rowGap;
+                    }
+                    else {
+                        info.xShift += i == mainDirSkipIndex ? 0 : columnGap;
+                        info.yShift += j == 0 ? 0 : rowGap;
+                    }
+                }
+            }
+            if (renderer.IsWrapReverse()) {
+                JavaCollectionsUtil.Reverse(lines);
+            }
+        }
+
         private static float CalculateFreeSpace(IList<FlexUtil.FlexItemCalculationInfo> line, float initialFreeSpace
-            ) {
+            , float gap) {
             float result = initialFreeSpace;
             foreach (FlexUtil.FlexItemCalculationInfo info in line) {
                 if (info.isFrozen) {
@@ -997,6 +1079,7 @@ namespace iText.Layout.Renderer {
                     result -= info.GetOuterMainSize(info.flexBaseSize);
                 }
             }
+            result -= (line.Count - 1) * gap;
             return result;
         }
 
@@ -1022,13 +1105,10 @@ namespace iText.Layout.Renderer {
             foreach (IRenderer renderer in childRenderers) {
                 if (renderer is AbstractRenderer) {
                     AbstractRenderer abstractRenderer = (AbstractRenderer)renderer;
-                    // TODO DEVSIX-5091 improve determining of the flex base size when flex-basis: content
-                    float maxMainSize = CalculateMaxMainSize(abstractRenderer, flexContainerMainSize, IsColumnDirection(flexContainerRenderer
-                        ), crossSize);
-                    float flexBasis;
+                    float flexBasis = 0;
                     bool flexBasisContent = false;
                     if (renderer.GetProperty<UnitValue>(Property.FLEX_BASIS) == null) {
-                        flexBasis = maxMainSize;
+                        // Flex base size will be calculated on FlexItemCalculationInfo creation after min/maxContent.
                         flexBasisContent = true;
                     }
                     else {
@@ -1052,63 +1132,6 @@ namespace iText.Layout.Renderer {
                 }
             }
             return flexItems;
-        }
-
-        private static float CalculateMaxMainSize(AbstractRenderer flexItemRenderer, float flexContainerMainSize, 
-            bool isColumnDirection, float crossSize) {
-            float? maxMainSize;
-            if (flexItemRenderer is TableRenderer) {
-                // TODO DEVSIX-5214 we can't call TableRenderer#retrieveWidth method as far as it can throw NPE
-                if (isColumnDirection) {
-                    float? itemRendererMaxHeight = flexItemRenderer.RetrieveMaxHeight();
-                    maxMainSize = itemRendererMaxHeight;
-                    if (maxMainSize == null) {
-                        maxMainSize = CalculateHeight(flexItemRenderer, crossSize);
-                    }
-                }
-                else {
-                    maxMainSize = flexItemRenderer.GetMinMaxWidth().GetMaxWidth();
-                }
-                if (isColumnDirection) {
-                    maxMainSize = flexItemRenderer.ApplyMarginsBordersPaddings(new Rectangle(0, (float)maxMainSize), false).GetHeight
-                        ();
-                }
-                else {
-                    maxMainSize = flexItemRenderer.ApplyMarginsBordersPaddings(new Rectangle((float)maxMainSize, 0), false).GetWidth
-                        ();
-                }
-            }
-            else {
-                // We need to retrieve width and max-width manually because this methods take into account box-sizing
-                maxMainSize = isColumnDirection ? flexItemRenderer.RetrieveHeight() : flexItemRenderer.RetrieveWidth(flexContainerMainSize
-                    );
-                if (maxMainSize == null) {
-                    maxMainSize = isColumnDirection ? RetrieveMaxHeightForMainDirection(flexItemRenderer) : flexItemRenderer.RetrieveMaxWidth
-                        (flexContainerMainSize);
-                }
-                if (maxMainSize == null) {
-                    if (flexItemRenderer is ImageRenderer) {
-                        // TODO DEVSIX-5269 getMinMaxWidth doesn't always return the original image width
-                        maxMainSize = isColumnDirection ? ((ImageRenderer)flexItemRenderer).GetImageHeight() : ((ImageRenderer)flexItemRenderer
-                            ).GetImageWidth();
-                    }
-                    else {
-                        if (isColumnDirection) {
-                            float? height = RetrieveMaxHeightForMainDirection(flexItemRenderer);
-                            if (height == null) {
-                                height = CalculateHeight(flexItemRenderer, crossSize);
-                            }
-                            maxMainSize = flexItemRenderer.ApplyMarginsBordersPaddings(new Rectangle(0, (float)height), false).GetHeight
-                                ();
-                        }
-                        else {
-                            maxMainSize = flexItemRenderer.ApplyMarginsBordersPaddings(new Rectangle(flexItemRenderer.GetMinMaxWidth()
-                                .GetMaxWidth(), 0), false).GetWidth();
-                        }
-                    }
-                }
-            }
-            return (float)maxMainSize;
         }
 
         private static IList<float> RetrieveCurrentPageLineCrossSizes(FlexContainerRenderer flexContainerRenderer, 
@@ -1228,7 +1251,6 @@ namespace iText.Layout.Renderer {
                 this.isColumnDirection = isColumnDirection;
                 this.flexBasisContent = flexBasisContent;
                 this.renderer = renderer;
-                this.flexBasis = flexBasis;
                 if (flexShrink < 0) {
                     throw new ArgumentException(LayoutExceptionMessageConstant.FLEX_SHRINK_CANNOT_BE_NEGATIVE);
                 }
@@ -1243,8 +1265,16 @@ namespace iText.Layout.Renderer {
                 this.minContent = definiteMinContent == null ? CalculateMinContentAuto(areaMainSize, crossSize) : (float)definiteMinContent;
                 float? maxMainSize = isColumnDirection ? RetrieveMaxHeightForMainDirection(this.renderer) : this.renderer.
                     RetrieveMaxWidth(areaMainSize);
-                // As for now we assume that max width should be calculated so
-                this.maxContent = maxMainSize == null ? AbstractRenderer.INF : (float)maxMainSize;
+                // As for now we assume that max main size should be calculated. For columnDirection relative min-height is
+                // not taken into account, so we should handle it here.
+                this.maxContent = maxMainSize == null ? AbstractRenderer.INF : Math.Max(this.minContent, (float)maxMainSize
+                    );
+                if (this.flexBasisContent) {
+                    this.flexBasis = DetermineFlexBaseSize(areaMainSize, isColumnDirection, crossSize);
+                }
+                else {
+                    this.flexBasis = flexBasis;
+                }
             }
 
             public virtual Rectangle ToRectangle() {
@@ -1279,6 +1309,56 @@ namespace iText.Layout.Renderer {
                     renderer.ApplyMarginsBordersPaddings(new Rectangle(0, size), false).GetHeight();
             }
 //\endcond
+
+            private static float CalculateMaxMainSize(AbstractRenderer flexItemRenderer, float flexContainerMainSize, 
+                bool isColumnDirection, float crossSize) {
+                float? maxMainSize;
+                if (flexItemRenderer is TableRenderer) {
+                    // TODO DEVSIX-5214 we can't call TableRenderer#retrieveWidth method as far as it can throw NPE
+                    if (isColumnDirection) {
+                        float? itemRendererMaxHeight = flexItemRenderer.RetrieveMaxHeight();
+                        maxMainSize = itemRendererMaxHeight;
+                        if (maxMainSize == null) {
+                            maxMainSize = CalculateHeight(flexItemRenderer, crossSize);
+                        }
+                    }
+                    else {
+                        maxMainSize = flexItemRenderer.GetMinMaxWidth().GetMaxWidth();
+                    }
+                    if (isColumnDirection) {
+                        maxMainSize = flexItemRenderer.ApplyMarginsBordersPaddings(new Rectangle(0, (float)maxMainSize), false).GetHeight
+                            ();
+                    }
+                    else {
+                        maxMainSize = flexItemRenderer.ApplyMarginsBordersPaddings(new Rectangle((float)maxMainSize, 0), false).GetWidth
+                            ();
+                    }
+                }
+                else {
+                    // We need to retrieve width and max-width manually because this methods take into account box-sizing
+                    maxMainSize = isColumnDirection ? flexItemRenderer.RetrieveHeight() : flexItemRenderer.RetrieveWidth(flexContainerMainSize
+                        );
+                    if (maxMainSize == null) {
+                        maxMainSize = isColumnDirection ? RetrieveMaxHeightForMainDirection(flexItemRenderer) : flexItemRenderer.RetrieveMaxWidth
+                            (flexContainerMainSize);
+                    }
+                    if (maxMainSize == null) {
+                        if (isColumnDirection) {
+                            float? height = RetrieveMaxHeightForMainDirection(flexItemRenderer);
+                            if (height == null) {
+                                height = CalculateHeight(flexItemRenderer, crossSize);
+                            }
+                            maxMainSize = flexItemRenderer.ApplyMarginsBordersPaddings(new Rectangle(0, (float)height), false).GetHeight
+                                ();
+                        }
+                        else {
+                            maxMainSize = flexItemRenderer.ApplyMarginsBordersPaddings(new Rectangle(flexItemRenderer.GetMinMaxWidth()
+                                .GetMaxWidth(), 0), false).GetWidth();
+                        }
+                    }
+                }
+                return (float)maxMainSize;
+            }
 
             private float CalculateMinContentAuto(float flexContainerMainSize, float crossSize) {
                 // Automatic Minimum Size of Flex Items https://www.w3.org/TR/css-flexbox-1/#content-based-minimum-size
@@ -1409,6 +1489,36 @@ namespace iText.Layout.Renderer {
                 }
                 return Math.Min(Math.Max((float)(minCrossSize * renderer.GetAspectRatio()), value), (float)(maxCrossSize *
                      renderer.GetAspectRatio()));
+            }
+
+            private float DetermineFlexBaseSize(float mainSize, bool isColumnDirection, float crossSize) {
+                // When determining the flex base size, the item’s min and max main sizes are ignored (no clamping occurs).
+                UnitValue minMainSize = null;
+                UnitValue maxMainSize = null;
+                if (isColumnDirection) {
+                    minMainSize = this.renderer.GetProperty<UnitValue>(Property.MIN_HEIGHT);
+                    this.renderer.DeleteProperty(Property.MIN_HEIGHT);
+                    maxMainSize = this.renderer.GetProperty<UnitValue>(Property.MAX_HEIGHT);
+                    this.renderer.DeleteProperty(Property.MAX_HEIGHT);
+                }
+                else {
+                    minMainSize = this.renderer.GetProperty<UnitValue>(Property.MIN_WIDTH);
+                    this.renderer.DeleteProperty(Property.MIN_WIDTH);
+                    maxMainSize = this.renderer.GetProperty<UnitValue>(Property.MAX_WIDTH);
+                    this.renderer.DeleteProperty(Property.MAX_WIDTH);
+                }
+                // TODO DEVSIX-5091 improve determining of the flex base size when flex-basis: content
+                float flexBaseSize = CalculateMaxMainSize(this.renderer, mainSize, isColumnDirection, crossSize);
+                // Restore min and max main sizes
+                if (isColumnDirection) {
+                    this.renderer.ReturnBackOwnProperty(Property.MIN_HEIGHT, minMainSize);
+                    this.renderer.ReturnBackOwnProperty(Property.MAX_HEIGHT, maxMainSize);
+                }
+                else {
+                    this.renderer.ReturnBackOwnProperty(Property.MIN_WIDTH, minMainSize);
+                    this.renderer.ReturnBackOwnProperty(Property.MAX_WIDTH, maxMainSize);
+                }
+                return flexBaseSize;
             }
         }
 //\endcond

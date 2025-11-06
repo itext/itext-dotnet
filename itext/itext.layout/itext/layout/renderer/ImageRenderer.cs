@@ -167,7 +167,7 @@ namespace iText.Layout.Renderer {
                 else {
                     isPlacingForced = true;
                     if (width > layoutBox.GetWidth() + EPS) {
-                        isPlacingForced &= processOverflowX;
+                        isPlacingForced = processOverflowX;
                     }
                     if (height > layoutBox.GetHeight() + EPS) {
                         isPlacingForced &= processOverflowY;

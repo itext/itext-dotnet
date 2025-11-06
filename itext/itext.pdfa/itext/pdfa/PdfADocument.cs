@@ -108,7 +108,6 @@ namespace iText.Pdfa {
             validationContainer.AddChecker(checker);
             GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
             this.pdfPageFactory = new PdfAPageFactory(checker);
-            this.documentInfoHelper = new PdfADocumentInfoHelper(this);
             this.defaultFontStrategy = new PdfADefaultFontStrategy(this);
             AddOutputIntent(outputIntent);
         }
@@ -139,7 +138,6 @@ namespace iText.Pdfa {
             }
             GetDiContainer().Register(typeof(ValidationContainer), validationContainer);
             this.pdfPageFactory = new PdfAPageFactory(pdfAChecker);
-            this.documentInfoHelper = new PdfADocumentInfoHelper(this);
             this.defaultFontStrategy = new PdfADefaultFontStrategy(this);
         }
 

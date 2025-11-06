@@ -39,9 +39,13 @@ namespace iText.Layout.Renderer {
         /// <summary><inheritDoc/></summary>
         public override void ApplyJustifyContent(IList<FlexUtil.FlexItemCalculationInfo> line, JustifyContent justifyContent
             , float freeSpace) {
+            if (freeSpace < 0 && (JustifyContent.SPACE_AROUND == justifyContent || JustifyContent.SPACE_BETWEEN == justifyContent
+                 || JustifyContent.SPACE_EVENLY == justifyContent)) {
+                return;
+            }
+            float space;
             switch (justifyContent) {
                 case JustifyContent.END:
-                case JustifyContent.SELF_END:
                 case JustifyContent.FLEX_END: {
                     line[0].yShift = freeSpace;
                     break;
@@ -52,18 +56,44 @@ namespace iText.Layout.Renderer {
                     break;
                 }
 
-                case JustifyContent.FLEX_START:
-                case JustifyContent.NORMAL:
+                case JustifyContent.SPACE_BETWEEN: {
+                    space = freeSpace / (line.Count - 1);
+                    for (int i = 1; i < line.Count; i++) {
+                        FlexUtil.FlexItemCalculationInfo item = line[i];
+                        item.yShift = space;
+                    }
+                    break;
+                }
+
+                case JustifyContent.SPACE_AROUND: {
+                    space = freeSpace / (line.Count * 2);
+                    for (int i = 0; i < line.Count; i++) {
+                        FlexUtil.FlexItemCalculationInfo item = line[i];
+                        item.yShift = i == 0 ? space : space * 2;
+                    }
+                    break;
+                }
+
+                case JustifyContent.SPACE_EVENLY: {
+                    space = freeSpace / (line.Count + 1);
+                    foreach (FlexUtil.FlexItemCalculationInfo item in line) {
+                        item.yShift = space;
+                    }
+                    break;
+                }
+
                 case JustifyContent.STRETCH:
+                case JustifyContent.NORMAL:
+                case JustifyContent.FLEX_START:
                 case JustifyContent.START:
                 case JustifyContent.LEFT:
                 case JustifyContent.RIGHT:
-                case JustifyContent.SELF_START:
                 default: {
                     break;
                 }
             }
         }
+        // stretch in flexbox behaves as flex-start, see https://drafts.csswg.org/css-align/#distribution-flex
         // We don't need to do anything in these cases
     }
 //\endcond

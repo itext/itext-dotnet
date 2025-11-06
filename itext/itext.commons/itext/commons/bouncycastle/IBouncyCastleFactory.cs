@@ -35,6 +35,7 @@ using iText.Commons.Bouncycastle.Asn1.Tsp;
 using iText.Commons.Bouncycastle.Asn1.Util;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Asn1.X509;
+using iText.Commons.Bouncycastle.Asn1.X509.Qualified;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Cms;
@@ -311,7 +312,7 @@ namespace iText.Commons.Bouncycastle {
         /// to create ASN1 Output stream wrapper from
         /// </param>
         /// <returns>created ASN1 Output stream wrapper</returns>
-        IDerOutputStream CreateASN1OutputStream(Stream stream);
+        IAsn1OutputStream CreateASN1OutputStream(Stream stream);
 
         /// <summary>
         /// Create ASN1 Output stream wrapper from
@@ -325,7 +326,7 @@ namespace iText.Commons.Bouncycastle {
         /// </param>
         /// <param name="asn1Encoding">ASN1 Encoding to be used</param>
         /// <returns>created ASN1 Output stream wrapper</returns>
-        IDerOutputStream CreateASN1OutputStream(Stream outputStream, String asn1Encoding);
+        IAsn1OutputStream CreateASN1OutputStream(Stream outputStream, String asn1Encoding);
 
         /// <summary>
         /// Create DER Octet string wrapper from
@@ -1710,5 +1711,19 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="certificate">Bouncy-castle X509 certificate wrapper</param>
         /// <returns>Asymmetric algorithm instance</returns>
         RSAParameters? GetRsaParametersFromCertificate(IX509Certificate certificate);
+        
+        /// <summary>
+        /// Gets list of policies IDs from the provided certificate policy extension.
+        /// </summary>
+        /// <param name="policyExtension">certificate policy extension as byte array</param>
+        /// <returns>list of policies IDs</returns>
+        List<String> GetPoliciesIds(byte[] policyExtension);
+        
+        /// <summary>
+        /// Parses list of IQCStatement from the provided certificate QC Statements Extension value.
+        /// </summary>
+        /// <param name="qcStatementsExtensionValue">certificate QC Statements Extension value as byte array</param>
+        /// <returns>list of IQCStatement</returns>
+        List<IQCStatement> ParseQcStatement(byte[] qcStatementsExtensionValue);
     }
 }

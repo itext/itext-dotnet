@@ -66,7 +66,7 @@ namespace iText.Pdfua.Checkers {
                         // It doesn't matter what we call here.
                         
                         // Test fails on document creation and verapdf validation isn't triggered anyway.
-                        framework.AssertOnlyVeraPdfFail("addFENoteWithoutReferences", pdfUAConformance)).Message;
+                        framework.AssertOnlyVeraPdfFail("addNoteForUA2AndFENoteForUA1", pdfUAConformance)).Message;
             String expectedExceptionMessage = pdfUAConformance == PdfUAConformance.PDF_UA_1 ? MessageFormatUtil.Format
                 (KernelExceptionMessageConstant.ROLE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE, StandardRoles.FENOTE) : MessageFormatUtil
                 .Format(KernelExceptionMessageConstant.ROLE_IN_NAMESPACE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE, StandardRoles

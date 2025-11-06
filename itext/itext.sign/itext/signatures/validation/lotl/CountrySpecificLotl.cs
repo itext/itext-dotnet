@@ -43,6 +43,19 @@ namespace iText.Signatures.Validation.Lotl {
         }
 //\endcond
 
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Creates an empty instance of
+        /// <see cref="CountrySpecificLotl"/>.
+        /// </summary>
+        internal CountrySpecificLotl() {
+            //Empty constructor needed for deserialization.
+            this.schemeTerritory = null;
+            this.tslLocation = null;
+            this.mimeType = null;
+        }
+//\endcond
+
         /// <summary>Returns the scheme territory of this country-specific TSL.</summary>
         /// <returns>The scheme territory</returns>
         public String GetSchemeTerritory() {

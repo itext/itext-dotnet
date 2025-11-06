@@ -1186,6 +1186,7 @@ namespace iText.Barcodes {
         }
 
         /// <summary>Prints the segments to standard output.</summary>
+        [System.ObsoleteAttribute(@"Test method for printing a segment list to std out, to be removed")]
         protected internal virtual void DumpList() {
             if (segmentList.Size() == 0) {
                 return;

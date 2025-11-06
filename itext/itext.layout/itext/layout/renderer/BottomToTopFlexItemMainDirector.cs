@@ -39,20 +39,55 @@ namespace iText.Layout.Renderer {
 
         public override void ApplyJustifyContent(IList<FlexUtil.FlexItemCalculationInfo> line, JustifyContent justifyContent
             , float freeSpace) {
+            if (freeSpace < 0 && (JustifyContent.SPACE_AROUND == justifyContent || JustifyContent.SPACE_BETWEEN == justifyContent
+                 || JustifyContent.SPACE_EVENLY == justifyContent)) {
+                return;
+            }
+            float space;
             switch (justifyContent) {
-                case JustifyContent.NORMAL:
                 case JustifyContent.END:
-                case JustifyContent.SELF_END:
-                case JustifyContent.STRETCH:
-                case JustifyContent.SELF_START:
                 case JustifyContent.START:
+                case JustifyContent.STRETCH:
+                case JustifyContent.NORMAL:
                 case JustifyContent.FLEX_START: {
+                    // stretch in flexbox behaves as flex-start, see https://drafts.csswg.org/css-align/#distribution-flex
                     line[line.Count - 1].yShift = freeSpace;
                     break;
                 }
 
                 case JustifyContent.CENTER: {
                     line[line.Count - 1].yShift = freeSpace / 2;
+                    break;
+                }
+
+                case JustifyContent.SPACE_BETWEEN: {
+                    if (line.Count == 1) {
+                        line[0].yShift = freeSpace;
+                    }
+                    else {
+                        space = freeSpace / (line.Count - 1);
+                        for (int i = 0; i < line.Count - 1; i++) {
+                            FlexUtil.FlexItemCalculationInfo item = line[i];
+                            item.yShift = space;
+                        }
+                    }
+                    break;
+                }
+
+                case JustifyContent.SPACE_AROUND: {
+                    space = freeSpace / (line.Count * 2);
+                    for (int i = 0; i < line.Count; i++) {
+                        FlexUtil.FlexItemCalculationInfo item = line[i];
+                        item.yShift = i == (line.Count - 1) ? space : space * 2;
+                    }
+                    break;
+                }
+
+                case JustifyContent.SPACE_EVENLY: {
+                    space = freeSpace / (line.Count + 1);
+                    foreach (FlexUtil.FlexItemCalculationInfo item in line) {
+                        item.yShift = space;
+                    }
                     break;
                 }
 

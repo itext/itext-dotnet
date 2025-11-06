@@ -87,13 +87,12 @@ namespace iText.Kernel.Pdf.Xobject {
         public virtual void NegativeNTest() {
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "negativeN.pdf"))) {
                 PdfImageXObject img = GetPdfImageCObject(pdfDoc, 1, "Im1");
-                ImagePdfBytesInfo imagePdfBytesInfo = new ImagePdfBytesInfo((int)img.GetWidth(), (int)img.GetHeight(), img
-                    .GetPdfObject().GetAsNumber(PdfName.BitsPerComponent).IntValue(), img.GetPdfObject().Get(PdfName.ColorSpace
-                    ), img.GetPdfObject().GetAsArray(PdfName.Decode));
-                int pngColorType = imagePdfBytesInfo.GetPngColorType();
-                NUnit.Framework.Assert.AreEqual(-1, pngColorType);
-                Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => imagePdfBytesInfo
-                    .DecodeTiffAndPngBytes(img.GetImageBytes()));
+                Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => {
+                    ImagePdfBytesInfo imagePdfBytesInfo = new ImagePdfBytesInfo(img, PdfImageXObject.ImageBytesRetrievalProperties
+                        .GetApplyFiltersOnly());
+                    imagePdfBytesInfo.GetProcessedImageData(img.GetImageBytes());
+                }
+                );
                 NUnit.Framework.Assert.AreEqual("N value -1 is not supported.", e.Message);
             }
         }
@@ -102,22 +101,20 @@ namespace iText.Kernel.Pdf.Xobject {
         public virtual void UndefinedCSArrayTest() {
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "undefinedInCSArray.pdf"))) {
                 PdfImageXObject img = GetPdfImageCObject(pdfDoc, 1, "Im1");
-                ImagePdfBytesInfo imagePdfBytesInfo = new ImagePdfBytesInfo((int)img.GetWidth(), (int)img.GetHeight(), img
-                    .GetPdfObject().GetAsNumber(PdfName.BitsPerComponent).IntValue(), img.GetPdfObject().Get(PdfName.ColorSpace
-                    ), img.GetPdfObject().GetAsArray(PdfName.Decode));
-                int pngColorType = imagePdfBytesInfo.GetPngColorType();
-                NUnit.Framework.Assert.AreEqual(-1, pngColorType);
-                Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => imagePdfBytesInfo
-                    .DecodeTiffAndPngBytes(img.GetImageBytes()));
+                Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => {
+                    ImagePdfBytesInfo imagePdfBytesInfo = new ImagePdfBytesInfo(img, PdfImageXObject.ImageBytesRetrievalProperties
+                        .GetApplyFiltersOnly());
+                    imagePdfBytesInfo.GetProcessedImageData(img.GetImageBytes());
+                }
+                );
                 NUnit.Framework.Assert.AreEqual("The color space /Undefined is not supported.", e.Message);
             }
         }
 
         private int GetPngColorTypeFromObject(PdfDocument pdfDocument, int pageNum, String objectId) {
             PdfImageXObject img = GetPdfImageCObject(pdfDocument, pageNum, objectId);
-            ImagePdfBytesInfo imagePdfBytesInfo = new ImagePdfBytesInfo((int)img.GetWidth(), (int)img.GetHeight(), img
-                .GetPdfObject().GetAsNumber(PdfName.BitsPerComponent).IntValue(), img.GetPdfObject().Get(PdfName.ColorSpace
-                ), img.GetPdfObject().GetAsArray(PdfName.Decode));
+            ImagePdfBytesInfo imagePdfBytesInfo = new ImagePdfBytesInfo(img, PdfImageXObject.ImageBytesRetrievalProperties
+                .GetApplyFiltersOnly());
             return imagePdfBytesInfo.GetPngColorType();
         }
 

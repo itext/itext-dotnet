@@ -77,7 +77,7 @@ namespace iText.Layout.Renderer {
                 float layoutWidth = layoutBox.GetWidth();
                 float layoutHeight = layoutBox.GetHeight();
                 // consider returning some value to check if layoutBox has been changed due to floats,
-                // than reuse on non-float layout: kind of not first piece of content on the line
+                // then reuse on non-float layout: kind of not first piece of content on the line
                 FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, layoutBox);
                 if (layoutWidth > layoutBox.GetWidth() || layoutHeight > layoutBox.GetHeight()) {
                     floatsPlacedBeforeLine = true;
@@ -534,8 +534,9 @@ namespace iText.Layout.Renderer {
                     }
                     else {
                         bool forcePlacement = true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT));
-                        bool isInlineBlockAndFirstOnRootArea = isInlineBlockChild && IsFirstOnRootArea();
-                        if ((childResult.GetStatus() == LayoutResult.PARTIAL && (!isInlineBlockChild || forcePlacement || isInlineBlockAndFirstOnRootArea
+                        bool isInlineBlockAndFirstOnRootAreaOrFlexItem = isInlineBlockChild && (IsFirstOnRootArea() || IsInsideFlexContainer
+                            ());
+                        if ((childResult.GetStatus() == LayoutResult.PARTIAL && (!isInlineBlockChild || forcePlacement || isInlineBlockAndFirstOnRootAreaOrFlexItem
                             )) || childResult.GetStatus() == LayoutResult.FULL) {
                             IRenderer splitRenderer = childResult.GetSplitRenderer();
                             split[0].AddChild(splitRenderer);
@@ -547,7 +548,7 @@ namespace iText.Layout.Renderer {
                             anythingPlaced = true;
                         }
                         if (null != childResult.GetOverflowRenderer()) {
-                            if (isInlineBlockChild && !forcePlacement && !isInlineBlockAndFirstOnRootArea) {
+                            if (isInlineBlockChild && !forcePlacement && !isInlineBlockAndFirstOnRootAreaOrFlexItem) {
                                 split[1].AddChildRenderer(childRenderer);
                             }
                             else {
@@ -1370,7 +1371,7 @@ namespace iText.Layout.Renderer {
         /// Extracts ascender and descender of an already layouted
         /// <see cref="IRenderer">childRenderer</see>.
         /// </summary>
-        /// <param name="childRenderer">an already layouted child who's ascender and descender are to be extracted</param>
+        /// <param name="childRenderer">an already layouted child whose ascender and descender are to be extracted</param>
         /// <param name="childResult">
         /// 
         /// <see cref="iText.Layout.Layout.LayoutResult"/>
@@ -1576,7 +1577,7 @@ namespace iText.Layout.Renderer {
                         }
                     }
                 }
-                if (unicodeIdsReorderingList.Count > 0) {
+                if (!unicodeIdsReorderingList.IsEmpty()) {
                     PdfDocument pdfDocument = GetPdfDocument();
                     SequenceId sequenceId = pdfDocument == null ? null : pdfDocument.GetDocumentIdWrapper();
                     MetaInfoContainer metaInfoContainer = this.GetProperty<MetaInfoContainer>(Property.META_INFO);
@@ -1604,7 +1605,7 @@ namespace iText.Layout.Renderer {
                     newChildRenderers.Add(child);
                 }
             }
-            // this mean, that some TextRenderer has been replaced.
+            // This means that some TextRenderer has been replaced.
             if (updateChildRenderers) {
                 SetChildRenderers(newChildRenderers);
             }
@@ -1714,6 +1715,20 @@ namespace iText.Layout.Renderer {
                     return 0;
                 }
             }
+        }
+
+        // TODO DEVSIX-9509 Move whole flex container to the next page if inline-block flex item is not fit
+        private bool IsInsideFlexContainer() {
+            bool isInsideFlexContainer = false;
+            IRenderer ancestor = this;
+            while (!isInsideFlexContainer && ancestor.GetParent() != null) {
+                IRenderer parent = ancestor.GetParent();
+                if (parent is FlexContainerRenderer) {
+                    isInsideFlexContainer = true;
+                }
+                ancestor = parent;
+            }
+            return isInsideFlexContainer;
         }
 
         public class RendererGlyph {

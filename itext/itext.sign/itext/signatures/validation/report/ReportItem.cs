@@ -89,6 +89,15 @@ namespace iText.Signatures.Validation.Report {
             this.status = status;
         }
 
+//\cond DO_NOT_DOCUMENT
+        internal ReportItem() {
+            //Empty constructor needed for deserialization.
+            this.checkName = null;
+            this.message = null;
+            this.cause = null;
+        }
+//\endcond
+
         /// <summary>Create report item from another report item.</summary>
         /// <param name="otherReportItem">
         /// 

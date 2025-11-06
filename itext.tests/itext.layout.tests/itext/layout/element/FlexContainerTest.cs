@@ -31,20 +31,21 @@ using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Logs;
 using iText.Layout.Properties;
+using iText.Layout.Renderer;
 using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Layout.Element {
     [NUnit.Framework.Category("IntegrationTest")]
     public class FlexContainerTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/FlexContainerTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/layout/FlexContainerTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/FlexContainerTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         public static IEnumerable<Object[]> AlignItemsAndJustifyContentProperties() {
@@ -64,14 +65,18 @@ namespace iText.Layout.Element {
                 .WRAP_REVERSE, FlexDirectionPropertyValue.ROW, 10 }, new Object[] { AlignmentPropertyValue.CENTER, JustifyContent
                 .CENTER, FlexWrapPropertyValue.WRAP_REVERSE, FlexDirectionPropertyValue.ROW_REVERSE, 11 }, new Object[
                 ] { AlignmentPropertyValue.STRETCH, JustifyContent.CENTER, FlexWrapPropertyValue.WRAP_REVERSE, FlexDirectionPropertyValue
-                .ROW, 12 } });
+                .ROW, 12 }, new Object[] { AlignmentPropertyValue.FLEX_START, JustifyContent.SPACE_BETWEEN, FlexWrapPropertyValue
+                .NOWRAP, FlexDirectionPropertyValue.ROW, 13 }, new Object[] { AlignmentPropertyValue.CENTER, JustifyContent
+                .SPACE_AROUND, FlexWrapPropertyValue.WRAP, FlexDirectionPropertyValue.ROW_REVERSE, 14 }, new Object[] 
+                { AlignmentPropertyValue.STRETCH, JustifyContent.SPACE_EVENLY, FlexWrapPropertyValue.WRAP_REVERSE, FlexDirectionPropertyValue
+                .ROW, 15 } });
         }
 
         [NUnit.Framework.TestCaseSource("AlignItemsAndJustifyContentProperties")]
         public virtual void DefaultFlexContainerTest(AlignmentPropertyValue alignItemsValue, JustifyContent justifyContentValue
             , FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue, int? comparisonPdfId) {
-            String outFileName = destinationFolder + "defaultFlexContainerTest" + comparisonPdfId + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_defaultFlexContainerTest" + comparisonPdfId + ".pdf";
+            String outFileName = DESTINATION_FOLDER + "defaultFlexContainerTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_defaultFlexContainerTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
@@ -86,7 +91,7 @@ namespace iText.Layout.Element {
                 );
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -94,8 +99,8 @@ namespace iText.Layout.Element {
         public virtual void FlexContainerFixedHeightWidthTest(AlignmentPropertyValue alignItemsValue, JustifyContent
              justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue, int?
              comparisonPdfId) {
-            String outFileName = destinationFolder + "flexContainerFixedHeightWidthTest" + comparisonPdfId + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerFixedHeightWidthTest" + comparisonPdfId + ".pdf";
+            String outFileName = DESTINATION_FOLDER + "flexContainerFixedHeightWidthTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_flexContainerFixedHeightWidthTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
@@ -112,16 +117,52 @@ namespace iText.Layout.Element {
                 .Add(CreateNewDiv());
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ZeroMarginTopAndBottomTest() {
+            String outFileName = DESTINATION_FOLDER + "zeroMarginTopAndBottomTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_zeroMarginTopAndBottomTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Div flexContainer = new Div().SetBorder(new SolidBorder(ColorConstants.BLUE, 1)).SetBackgroundColor(ColorConstants
+                    .BLUE, 0.3f);
+                flexContainer.SetNextRenderer(new FlexContainerRenderer(flexContainer));
+                flexContainer.SetProperty(Property.MARGIN_TOP, new UnitValue(UnitValue.POINT, 0f));
+                flexContainer.SetProperty(Property.MARGIN_BOTTOM, new UnitValue(UnitValue.POINT, 0f));
+                flexContainer.SetProperty(Property.COLLAPSING_MARGINS, true);
+                flexContainer.Add(new Paragraph("flex container"));
+                document.Add(flexContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff01_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NullMarginTopAndBottomTest() {
+            String outFileName = DESTINATION_FOLDER + "nullMarginTopAndBottomTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_nullMarginTopAndBottomTest.pdf";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Div flexContainer = new Div().SetBorder(new SolidBorder(ColorConstants.BLUE, 1)).SetBackgroundColor(ColorConstants
+                    .BLUE, 0.3f);
+                flexContainer.SetNextRenderer(new FlexContainerRenderer(flexContainer));
+                flexContainer.SetProperty(Property.MARGIN_TOP, null);
+                flexContainer.SetProperty(Property.MARGIN_BOTTOM, null);
+                flexContainer.SetProperty(Property.COLLAPSING_MARGINS, true);
+                flexContainer.Add(new Paragraph("flex container"));
+                document.Add(flexContainer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff01_"));
         }
 
         [NUnit.Framework.TestCaseSource("AlignItemsAndJustifyContentProperties")]
         public virtual void FlexContainerDifferentChildrenTest(AlignmentPropertyValue alignItemsValue, JustifyContent
              justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue, int?
              comparisonPdfId) {
-            String outFileName = destinationFolder + "flexContainerDifferentChildrenTest" + comparisonPdfId + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenTest" + comparisonPdfId + ".pdf";
+            String outFileName = DESTINATION_FOLDER + "flexContainerDifferentChildrenTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_flexContainerDifferentChildrenTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
@@ -138,10 +179,10 @@ namespace iText.Layout.Element {
                 Add("Two").Add("Three");
             romanList.SetProperty(Property.BACKGROUND, new Background(ColorConstants.MAGENTA));
             flexContainer.Add(table).Add(new Paragraph("Test")).Add(innerDiv).Add(romanList).Add(new Image(ImageDataFactory
-                .Create(sourceFolder + "img.jpg")));
+                .Create(SOURCE_FOLDER + "img.jpg")));
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -151,8 +192,8 @@ namespace iText.Layout.Element {
             comparisonPdfId) {
             // If height is clipped the behavior strongly depends on the child renderers
             // and the results are not expected sometimes
-            String outFileName = destinationFolder + "flexContainerHeightClippedTest" + comparisonPdfId + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerHeightClippedTest" + comparisonPdfId + ".pdf";
+            String outFileName = DESTINATION_FOLDER + "flexContainerHeightClippedTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_flexContainerHeightClippedTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
@@ -170,10 +211,10 @@ namespace iText.Layout.Element {
                 Add("Two").Add("Three");
             romanList.SetProperty(Property.BACKGROUND, new Background(ColorConstants.MAGENTA));
             flexContainer.Add(table).Add(new Paragraph("Test")).Add(innerDiv).Add(romanList).Add(new iText.Layout.Element.Image
-                (ImageDataFactory.Create(sourceFolder + "img.jpg")));
+                (ImageDataFactory.Create(SOURCE_FOLDER + "img.jpg")));
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -183,9 +224,9 @@ namespace iText.Layout.Element {
             , JustifyContent justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue
             , int? comparisonPdfId) {
             // TODO DEVSIX-5042 HEIGHT property is ignored when FORCED_PLACEMENT is true
-            String outFileName = destinationFolder + "flexContainerDifferentChildrenDontFitHorizontallyTest" + comparisonPdfId
+            String outFileName = DESTINATION_FOLDER + "flexContainerDifferentChildrenDontFitHorizontallyTest" + comparisonPdfId
                  + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenDontFitHorizontallyTest" + comparisonPdfId
+            String cmpFileName = SOURCE_FOLDER + "cmp_flexContainerDifferentChildrenDontFitHorizontallyTest" + comparisonPdfId
                  + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
@@ -203,10 +244,10 @@ namespace iText.Layout.Element {
             List romanList = new List(ListNumberingType.ROMAN_LOWER).SetSymbolIndent(20).SetMarginLeft(25).Add("One").
                 Add("Two").Add("Three");
             flexContainer.Add(table).Add(new Paragraph("Test")).Add(innerDiv).Add(romanList).Add(new iText.Layout.Element.Image
-                (ImageDataFactory.Create(sourceFolder + "img.jpg")));
+                (ImageDataFactory.Create(SOURCE_FOLDER + "img.jpg")));
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -215,9 +256,9 @@ namespace iText.Layout.Element {
              alignItemsValue, JustifyContent justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue
              directionValue, int? comparisonPdfId) {
             // TODO DEVSIX-5042 HEIGHT property is ignored when FORCED_PLACEMENT is true
-            String outFileName = destinationFolder + "flexContainerDifferentChildrenDontFitHorizontallyForcedPlacementTest"
+            String outFileName = DESTINATION_FOLDER + "flexContainerDifferentChildrenDontFitHorizontallyForcedPlacementTest"
                  + comparisonPdfId + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenDontFitHorizontallyForcedPlacementTest"
+            String cmpFileName = SOURCE_FOLDER + "cmp_flexContainerDifferentChildrenDontFitHorizontallyForcedPlacementTest"
                  + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
@@ -235,10 +276,10 @@ namespace iText.Layout.Element {
             List romanList = new List(ListNumberingType.ROMAN_LOWER).SetSymbolIndent(20).SetMarginLeft(25).Add("MuchMoreText"
                 ).Add("MuchMoreText").Add("MuchMoreText");
             flexContainer.Add(table).Add(new Paragraph("MuchMoreText")).Add(innerDiv).Add(romanList).Add(new iText.Layout.Element.Image
-                (ImageDataFactory.Create(sourceFolder + "img.jpg")));
+                (ImageDataFactory.Create(SOURCE_FOLDER + "img.jpg")));
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -247,9 +288,9 @@ namespace iText.Layout.Element {
         public virtual void FlexContainerDifferentChildrenDontFitVerticallyTest(AlignmentPropertyValue alignItemsValue
             , JustifyContent justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue
             , int? comparisonPdfId) {
-            String outFileName = destinationFolder + "flexContainerDifferentChildrenDontFitVerticallyTest" + comparisonPdfId
+            String outFileName = DESTINATION_FOLDER + "flexContainerDifferentChildrenDontFitVerticallyTest" + comparisonPdfId
                  + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenDontFitVerticallyTest" + comparisonPdfId
+            String cmpFileName = SOURCE_FOLDER + "cmp_flexContainerDifferentChildrenDontFitVerticallyTest" + comparisonPdfId
                  + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
@@ -267,14 +308,14 @@ namespace iText.Layout.Element {
             List romanList = new List(ListNumberingType.ROMAN_LOWER).SetSymbolIndent(20).SetMarginLeft(25).Add("One").
                 Add("Two").Add("Three");
             flexContainer.Add(table).Add(new Paragraph("Test")).Add(innerDiv).Add(romanList).Add(new iText.Layout.Element.Image
-                (ImageDataFactory.Create(sourceFolder + "img.jpg")));
+                (ImageDataFactory.Create(SOURCE_FOLDER + "img.jpg")));
             Div prevDiv = new Div();
             prevDiv.SetHeight(480);
             prevDiv.SetProperty(Property.BACKGROUND, new Background(ColorConstants.RED));
             document.Add(prevDiv);
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -283,9 +324,9 @@ namespace iText.Layout.Element {
         public virtual void FlexContainerDifferentChildrenFitContainerDoesNotFitVerticallyTest(AlignmentPropertyValue
              alignItemsValue, JustifyContent justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue
              directionValue, int? comparisonPdfId) {
-            String outFileName = destinationFolder + "flexContainerDifferentChildrenFitContainerDoesNotFitVerticallyTest"
+            String outFileName = DESTINATION_FOLDER + "flexContainerDifferentChildrenFitContainerDoesNotFitVerticallyTest"
                  + comparisonPdfId + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenFitContainerDoesNotFitVerticallyTest"
+            String cmpFileName = SOURCE_FOLDER + "cmp_flexContainerDifferentChildrenFitContainerDoesNotFitVerticallyTest"
                  + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
@@ -303,14 +344,14 @@ namespace iText.Layout.Element {
             List romanList = new List(ListNumberingType.ROMAN_LOWER).SetSymbolIndent(20).SetMarginLeft(25).Add("One").
                 Add("Two").Add("Three");
             flexContainer.Add(table).Add(new Paragraph("Test")).Add(innerDiv).Add(romanList).Add(new iText.Layout.Element.Image
-                (ImageDataFactory.Create(sourceFolder + "img.jpg")));
+                (ImageDataFactory.Create(SOURCE_FOLDER + "img.jpg")));
             Div prevDiv = new Div();
             prevDiv.SetHeight(400);
             prevDiv.SetProperty(Property.BACKGROUND, new Background(ColorConstants.RED));
             document.Add(prevDiv);
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -318,9 +359,10 @@ namespace iText.Layout.Element {
         public virtual void FlexContainerDifferentChildrenWithGrowTest(AlignmentPropertyValue alignItemsValue, JustifyContent
              justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue, int?
              comparisonPdfId) {
-            String outFileName = destinationFolder + "flexContainerDifferentChildrenWithGrowTest" + comparisonPdfId + 
+            String outFileName = DESTINATION_FOLDER + "flexContainerDifferentChildrenWithGrowTest" + comparisonPdfId +
+                 ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_flexContainerDifferentChildrenWithGrowTest" + comparisonPdfId + 
                 ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenWithGrowTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
@@ -339,13 +381,13 @@ namespace iText.Layout.Element {
                 Add("Two").Add("Three");
             romanList.SetProperty(Property.FLEX_GROW, 1f);
             romanList.SetProperty(Property.BACKGROUND, new Background(ColorConstants.MAGENTA));
-            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "img.jpg"
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(SOURCE_FOLDER + "img.jpg"
                 ));
             img.SetProperty(Property.FLEX_GROW, 1f);
             flexContainer.Add(table).Add(innerDiv).Add(romanList).Add(img);
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -353,9 +395,9 @@ namespace iText.Layout.Element {
         public virtual void FlexContainerDifferentChildrenWithFlexBasisTest(AlignmentPropertyValue alignItemsValue
             , JustifyContent justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue
             , int? comparisonPdfId) {
-            String outFileName = destinationFolder + "flexContainerDifferentChildrenWithFlexBasisTest" + comparisonPdfId
+            String outFileName = DESTINATION_FOLDER + "flexContainerDifferentChildrenWithFlexBasisTest" + comparisonPdfId
                  + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenWithFlexBasisTest" + comparisonPdfId
+            String cmpFileName = SOURCE_FOLDER + "cmp_flexContainerDifferentChildrenWithFlexBasisTest" + comparisonPdfId
                  + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
@@ -371,13 +413,13 @@ namespace iText.Layout.Element {
                 Add("Two").Add("Three");
             romanList.SetProperty(Property.BACKGROUND, new Background(ColorConstants.MAGENTA));
             romanList.SetProperty(Property.FLEX_BASIS, UnitValue.CreatePointValue(100));
-            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "img.jpg"
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(SOURCE_FOLDER + "img.jpg"
                 ));
             img.SetProperty(Property.FLEX_BASIS, UnitValue.CreatePointValue(150));
             flexContainer.Add(table).Add(romanList).Add(img);
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -385,9 +427,9 @@ namespace iText.Layout.Element {
         public virtual void FlexContainerDifferentChildrenWithFlexShrinkTest(AlignmentPropertyValue alignItemsValue
             , JustifyContent justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue
             , int? comparisonPdfId) {
-            String outFileName = destinationFolder + "flexContainerDifferentChildrenWithFlexShrinkTest" + comparisonPdfId
+            String outFileName = DESTINATION_FOLDER + "flexContainerDifferentChildrenWithFlexShrinkTest" + comparisonPdfId
                  + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerDifferentChildrenWithFlexShrinkTest" + comparisonPdfId
+            String cmpFileName = SOURCE_FOLDER + "cmp_flexContainerDifferentChildrenWithFlexShrinkTest" + comparisonPdfId
                  + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
@@ -411,7 +453,7 @@ namespace iText.Layout.Element {
             flexContainer.Add(table).Add(romanList).Add(div);
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -419,8 +461,8 @@ namespace iText.Layout.Element {
         public virtual void FlexContainerInsideFlexContainerTest(AlignmentPropertyValue alignItemsValue, JustifyContent
              justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue, int?
              comparisonPdfId) {
-            String outFileName = destinationFolder + "flexContainerInsideFlexContainerTest" + comparisonPdfId + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerInsideFlexContainerTest" + comparisonPdfId + ".pdf";
+            String outFileName = DESTINATION_FOLDER + "flexContainerInsideFlexContainerTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_flexContainerInsideFlexContainerTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
@@ -436,7 +478,7 @@ namespace iText.Layout.Element {
             flexContainer.Add(innerFlex).Add(CreateNewDiv());
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -444,9 +486,9 @@ namespace iText.Layout.Element {
         public virtual void FlexContainerInsideFlexContainerWithHugeBordersTest(AlignmentPropertyValue alignItemsValue
             , JustifyContent justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue
             , int? comparisonPdfId) {
-            String outFileName = destinationFolder + "flexContainerInsideFlexContainerWithHugeBordersTest" + comparisonPdfId
+            String outFileName = DESTINATION_FOLDER + "flexContainerInsideFlexContainerWithHugeBordersTest" + comparisonPdfId
                  + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerInsideFlexContainerWithHugeBordersTest" + comparisonPdfId
+            String cmpFileName = SOURCE_FOLDER + "cmp_flexContainerInsideFlexContainerWithHugeBordersTest" + comparisonPdfId
                  + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
@@ -469,7 +511,7 @@ namespace iText.Layout.Element {
             flexContainer.Add(innerFlex).Add(CreateNewDiv().SetBorder(new SolidBorder(ColorConstants.GREEN, 10)));
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -477,10 +519,10 @@ namespace iText.Layout.Element {
         public virtual void MultipleFlexContainersInsideFlexContainerTest(AlignmentPropertyValue alignItemsValue, 
             JustifyContent justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue
             , int? comparisonPdfId) {
-            String outFileName = destinationFolder + "multipleFlexContainersInsideFlexContainerTest" + comparisonPdfId
+            String outFileName = DESTINATION_FOLDER + "multipleFlexContainersInsideFlexContainerTest" + comparisonPdfId
                  + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_multipleFlexContainersInsideFlexContainerTest" + comparisonPdfId 
-                + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_multipleFlexContainersInsideFlexContainerTest" + comparisonPdfId
+                 + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
@@ -503,7 +545,7 @@ namespace iText.Layout.Element {
             flexContainer.Add(innerFlex1).Add(innerFlex2);
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -511,9 +553,9 @@ namespace iText.Layout.Element {
         public virtual void MultipleFlexContainersWithPredefinedPointWidthsInsideFlexContainerTest(AlignmentPropertyValue
              alignItemsValue, JustifyContent justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue
              directionValue, int? comparisonPdfId) {
-            String outFileName = destinationFolder + "multipleFlexContainersWithPredefinedPointWidthsInsideFlexContainerTest"
+            String outFileName = DESTINATION_FOLDER + "multipleFlexContainersWithPredefinedPointWidthsInsideFlexContainerTest"
                  + comparisonPdfId + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_multipleFlexContainersWithPredefinedPointWidthsInsideFlexContainerTest"
+            String cmpFileName = SOURCE_FOLDER + "cmp_multipleFlexContainersWithPredefinedPointWidthsInsideFlexContainerTest"
                  + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
@@ -539,7 +581,7 @@ namespace iText.Layout.Element {
             flexContainer.Add(innerFlex1).Add(innerFlex2);
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -547,9 +589,9 @@ namespace iText.Layout.Element {
         public virtual void MultipleFlexContainersWithPredefinedPercentWidthsInsideFlexContainerTest(AlignmentPropertyValue
              alignItemsValue, JustifyContent justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue
              directionValue, int? comparisonPdfId) {
-            String outFileName = destinationFolder + "multipleFlexContainersWithPredefinedPercentWidthsInsideFlexContainerTest"
+            String outFileName = DESTINATION_FOLDER + "multipleFlexContainersWithPredefinedPercentWidthsInsideFlexContainerTest"
                  + comparisonPdfId + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_multipleFlexContainersWithPredefinedPercentWidthsInsideFlexContainerTest"
+            String cmpFileName = SOURCE_FOLDER + "cmp_multipleFlexContainersWithPredefinedPercentWidthsInsideFlexContainerTest"
                  + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
@@ -575,7 +617,7 @@ namespace iText.Layout.Element {
             flexContainer.Add(innerFlex1).Add(innerFlex2);
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -584,9 +626,9 @@ namespace iText.Layout.Element {
              alignItemsValue, JustifyContent justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue
              directionValue, int? comparisonPdfId) {
             // TODO DEVSIX-5087 Content should not overflow container by default
-            String outFileName = destinationFolder + "multipleFlexContainersWithPredefinedMinWidthsInsideFlexContainerTest"
+            String outFileName = DESTINATION_FOLDER + "multipleFlexContainersWithPredefinedMinWidthsInsideFlexContainerTest"
                  + comparisonPdfId + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_multipleFlexContainersWithPredefinedMinWidthsInsideFlexContainerTest"
+            String cmpFileName = SOURCE_FOLDER + "cmp_multipleFlexContainersWithPredefinedMinWidthsInsideFlexContainerTest"
                  + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
@@ -612,7 +654,7 @@ namespace iText.Layout.Element {
             flexContainer.Add(innerFlex1).Add(innerFlex2);
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -620,9 +662,9 @@ namespace iText.Layout.Element {
         public virtual void MultipleFlexContainersWithPredefinedMaxWidthsInsideFlexContainerTest(AlignmentPropertyValue
              alignItemsValue, JustifyContent justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue
              directionValue, int? comparisonPdfId) {
-            String outFileName = destinationFolder + "multipleFlexContainersWithPredefinedMaxWidthsInsideFlexContainerTest"
+            String outFileName = DESTINATION_FOLDER + "multipleFlexContainersWithPredefinedMaxWidthsInsideFlexContainerTest"
                  + comparisonPdfId + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_multipleFlexContainersWithPredefinedMaxWidthsInsideFlexContainerTest"
+            String cmpFileName = SOURCE_FOLDER + "cmp_multipleFlexContainersWithPredefinedMaxWidthsInsideFlexContainerTest"
                  + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
@@ -648,7 +690,7 @@ namespace iText.Layout.Element {
             flexContainer.Add(innerFlex1).Add(innerFlex2);
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -656,8 +698,8 @@ namespace iText.Layout.Element {
         public virtual void FlexContainerFillAvailableAreaTest(AlignmentPropertyValue alignItemsValue, JustifyContent
              justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue, int?
              comparisonPdfId) {
-            String outFileName = destinationFolder + "flexContainerFillAvailableAreaTest" + comparisonPdfId + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerFillAvailableAreaTest" + comparisonPdfId + ".pdf";
+            String outFileName = DESTINATION_FOLDER + "flexContainerFillAvailableAreaTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_flexContainerFillAvailableAreaTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
@@ -675,10 +717,10 @@ namespace iText.Layout.Element {
                 Add("Two").Add("Three");
             romanList.SetProperty(Property.BACKGROUND, new Background(ColorConstants.MAGENTA));
             flexContainer.Add(table).Add(new Paragraph("Test")).Add(innerDiv).Add(romanList).Add(new iText.Layout.Element.Image
-                (ImageDataFactory.Create(sourceFolder + "img.jpg")));
+                (ImageDataFactory.Create(SOURCE_FOLDER + "img.jpg")));
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -686,8 +728,8 @@ namespace iText.Layout.Element {
         public virtual void FlexContainerRotationAngleTest(AlignmentPropertyValue alignItemsValue, JustifyContent 
             justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue, int? 
             comparisonPdfId) {
-            String outFileName = destinationFolder + "flexContainerRotationAngleTest" + comparisonPdfId + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerRotationAngleTest" + comparisonPdfId + ".pdf";
+            String outFileName = DESTINATION_FOLDER + "flexContainerRotationAngleTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_flexContainerRotationAngleTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
@@ -702,10 +744,10 @@ namespace iText.Layout.Element {
                 Add("Two").Add("Three");
             romanList.SetProperty(Property.BACKGROUND, new Background(ColorConstants.MAGENTA));
             flexContainer.Add(table).Add(new Paragraph("Test")).Add(romanList).Add(new iText.Layout.Element.Image(ImageDataFactory
-                .Create(sourceFolder + "img.jpg")));
+                .Create(SOURCE_FOLDER + "img.jpg")));
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -714,8 +756,8 @@ namespace iText.Layout.Element {
              justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue, int?
              comparisonPdfId) {
             // TODO DEVSIX-5174 content should overflow bottom
-            String outFileName = destinationFolder + "respectFlexContainersHeightTest" + comparisonPdfId + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_respectFlexContainersHeightTest" + comparisonPdfId + ".pdf";
+            String outFileName = DESTINATION_FOLDER + "respectFlexContainersHeightTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_respectFlexContainersHeightTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Style containerStyle = new Style().SetWidth(60).SetHeight(50);
@@ -728,7 +770,7 @@ namespace iText.Layout.Element {
             flexContainer.Add(new Div().SetBackgroundColor(ColorConstants.YELLOW).SetWidth(10).SetHeight(200));
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -736,8 +778,8 @@ namespace iText.Layout.Element {
         public virtual void RespectFlexContainersWidthTest(AlignmentPropertyValue alignItemsValue, JustifyContent 
             justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue, int? 
             comparisonPdfId) {
-            String outFileName = destinationFolder + "respectFlexContainersWidthTest" + comparisonPdfId + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_respectFlexContainersWidthTest" + comparisonPdfId + ".pdf";
+            String outFileName = DESTINATION_FOLDER + "respectFlexContainersWidthTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_respectFlexContainersWidthTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             // default (overflow fit)
@@ -756,7 +798,7 @@ namespace iText.Layout.Element {
             flexContainer.Add(GetFlexItem(overflowX, itemStyle)).Add(GetFlexItem(overflowX, itemStyle));
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -764,8 +806,8 @@ namespace iText.Layout.Element {
         public virtual void FlexItemsMinHeightShouldBeOverriddenTest(AlignmentPropertyValue alignItemsValue, JustifyContent
              justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue, int?
              comparisonPdfId) {
-            String outFileName = destinationFolder + "flexItemsMinHeightShouldBeOverriddenTest" + comparisonPdfId + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexItemsMinHeightShouldBeOverriddenTest" + comparisonPdfId + ".pdf";
+            String outFileName = DESTINATION_FOLDER + "flexItemsMinHeightShouldBeOverriddenTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_flexItemsMinHeightShouldBeOverriddenTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
@@ -773,7 +815,7 @@ namespace iText.Layout.Element {
             flexContainer.Add(new Div().SetWidth(110).SetBackgroundColor(ColorConstants.YELLOW).SetMinHeight(20));
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -781,8 +823,8 @@ namespace iText.Layout.Element {
         public virtual void LinesMinHeightShouldBeRespectedTest(AlignmentPropertyValue alignItemsValue, JustifyContent
              justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue, int?
              comparisonPdfId) {
-            String outFileName = destinationFolder + "linesMinHeightShouldBeRespectedTest" + comparisonPdfId + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_linesMinHeightShouldBeRespectedTest" + comparisonPdfId + ".pdf";
+            String outFileName = DESTINATION_FOLDER + "linesMinHeightShouldBeRespectedTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_linesMinHeightShouldBeRespectedTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
@@ -792,7 +834,7 @@ namespace iText.Layout.Element {
             flexContainer.Add(child);
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -800,8 +842,8 @@ namespace iText.Layout.Element {
         public virtual void LinesMaxHeightShouldBeRespectedTest(AlignmentPropertyValue alignItemsValue, JustifyContent
              justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue, int?
              comparisonPdfId) {
-            String outFileName = destinationFolder + "linesMaxHeightShouldBeRespectedTest" + comparisonPdfId + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_linesMaxHeightShouldBeRespectedTest" + comparisonPdfId + ".pdf";
+            String outFileName = DESTINATION_FOLDER + "linesMaxHeightShouldBeRespectedTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_linesMaxHeightShouldBeRespectedTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
@@ -811,7 +853,7 @@ namespace iText.Layout.Element {
             flexContainer.Add(child);
             document.Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
@@ -819,8 +861,8 @@ namespace iText.Layout.Element {
         public virtual void CollapsingMarginsFlexContainerTest(AlignmentPropertyValue alignItemsValue, JustifyContent
              justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue, int?
              comparisonPdfId) {
-            String outFileName = destinationFolder + "collapsingMarginsFlexContainerTest" + comparisonPdfId + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_collapsingMarginsFlexContainerTest" + comparisonPdfId + ".pdf";
+            String outFileName = DESTINATION_FOLDER + "collapsingMarginsFlexContainerTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_collapsingMarginsFlexContainerTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.SetProperty(Property.COLLAPSING_MARGINS, true);
@@ -839,15 +881,15 @@ namespace iText.Layout.Element {
             flexContainersSibling.SetMarginBottom(40);
             document.Add(flexContainersSibling).Add(flexContainer);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.TestCaseSource("AlignItemsAndJustifyContentProperties")]
         public virtual void FlexItemBoxSizingTest(AlignmentPropertyValue alignItemsValue, JustifyContent justifyContentValue
             , FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue, int? comparisonPdfId) {
-            String outFileName = destinationFolder + "flexItemBoxSizingTest" + comparisonPdfId + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexItemBoxSizingTest" + comparisonPdfId + ".pdf";
+            String outFileName = DESTINATION_FOLDER + "flexItemBoxSizingTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_flexItemBoxSizingTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
@@ -883,15 +925,77 @@ namespace iText.Layout.Element {
             flexContainer.Add(innerDiv).Add(innerDiv2).Add(innerDiv3);
             document.Add(flexContainer).Add(divToCompare);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NestedFlexContainersTest() {
+            String outFileName = DESTINATION_FOLDER + "nestedFlexContainersTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_nestedFlexContainersTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Div innerFlex = new FlexContainer();
+            Div outerFlex = new FlexContainer();
+            Table table = new Table(2);
+            table.SetWidth(400);
+            innerFlex.Add(table);
+            outerFlex.Add(innerFlex);
+            document.Add(outerFlex);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NestedFlexContainersPercentValueTest() {
+            String outFileName = DESTINATION_FOLDER + "nestedFlexContainersPercentValueTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_nestedFlexContainersPercentValueTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Div innerFlex = new FlexContainer();
+            Div outerFlex = new FlexContainer();
+            Table table = new Table(2);
+            table.SetWidth(new UnitValue(UnitValue.PERCENT, 20));
+            innerFlex.Add(table);
+            outerFlex.Add(innerFlex);
+            document.Add(outerFlex);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ForcedPlacementInSmallAreaTest() {
+            String outFileName = DESTINATION_FOLDER + "forcedPlacementInSmallArea.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_forcedPlacementInSmallArea.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Div flexContainer = new FlexContainer();
+            flexContainer.SetProperty(Property.FORCED_PLACEMENT, true);
+            Div child1 = new Div();
+            child1.SetBorder(new SolidBorder(1));
+            child1.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(50));
+            child1.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(1000));
+            child1.Add(new Paragraph("First"));
+            Div child2 = new Div();
+            child2.SetBorder(new SolidBorder(1));
+            child2.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(100));
+            child2.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(1000));
+            child2.Add(new Paragraph("Second"));
+            flexContainer.Add(child1);
+            flexContainer.Add(child2);
+            document.Add(flexContainer);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.TestCaseSource("AlignItemsAndJustifyContentProperties")]
         public virtual void FlexContainerBoxSizingTest(AlignmentPropertyValue alignItemsValue, JustifyContent justifyContentValue
             , FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue, int? comparisonPdfId) {
-            String outFileName = destinationFolder + "flexContainerBoxSizingTest" + comparisonPdfId + ".pdf";
-            String cmpFileName = sourceFolder + "cmp_flexContainerBoxSizingTest" + comparisonPdfId + ".pdf";
+            String outFileName = DESTINATION_FOLDER + "flexContainerBoxSizingTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_flexContainerBoxSizingTest" + comparisonPdfId + ".pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div flexContainer = CreateFlexContainer(alignItemsValue, justifyContentValue, wrapValue, directionValue);
@@ -911,8 +1015,51 @@ namespace iText.Layout.Element {
             flexContainer.Add(innerDiv).Add(CreateNewDiv());
             document.Add(flexContainer).Add(divToCompare);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
+        }
+
+        [NUnit.Framework.TestCaseSource("AlignItemsAndJustifyContentProperties")]
+        public virtual void AlignSelfWithAlignItemsEndFlexWrapTest(AlignmentPropertyValue alignSelfValue, JustifyContent
+             justifyContentValue, FlexWrapPropertyValue wrapValue, FlexDirectionPropertyValue directionValue, int?
+             comparisonPdfId) {
+            String outFileName = DESTINATION_FOLDER + "alignSelfWithAlignItemsEndFlexWrapTest" + comparisonPdfId + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_alignSelfWithAlignItemsEndFlexWrapTest" + comparisonPdfId + ".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    Div flexContainer = new FlexContainer();
+                    flexContainer.SetProperty(Property.FLEX_WRAP, wrapValue);
+                    flexContainer.SetProperty(Property.FLEX_DIRECTION, directionValue);
+                    flexContainer.SetProperty(Property.JUSTIFY_CONTENT, justifyContentValue);
+                    flexContainer.SetProperty(Property.ALIGN_ITEMS, AlignmentPropertyValue.END);
+                    flexContainer.SetBackgroundColor(Color.CreateColorWithColorSpace(new float[] { 0.847f, 0.811f, 0.768f }));
+                    flexContainer.SetWidth(450);
+                    flexContainer.SetHeight(250);
+                    for (int i = 0; i < 6; i++) {
+                        Div item = new Div();
+                        item.SetWidth(100);
+                        item.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                        item.SetMargin(5);
+                        if (i == 0 || i == 3 || i == 5) {
+                            item.SetProperty(Property.ALIGN_SELF, alignSelfValue);
+                            item.SetBackgroundColor(Color.CreateColorWithColorSpace(new float[] { 0.67f, 0.84f, 0.9f }));
+                            if (i != 5 && !AlignmentPropertyValue.STRETCH.Equals(alignSelfValue)) {
+                                item.SetHeight(i == 0 ? 25 : 80);
+                            }
+                        }
+                        else {
+                            if (i == 4 && !AlignmentPropertyValue.STRETCH.Equals(alignSelfValue)) {
+                                item.SetHeight(100);
+                            }
+                        }
+                        item.Add(new Paragraph("Item " + i));
+                        flexContainer.Add(item);
+                    }
+                    document.Add(flexContainer);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
         }
 
         private Div GetFlexContainer(OverflowPropertyValue? overflowX, Style style, AlignmentPropertyValue alignItemsValue

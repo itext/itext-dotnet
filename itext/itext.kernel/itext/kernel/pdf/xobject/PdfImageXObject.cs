@@ -38,6 +38,8 @@ namespace iText.Kernel.Pdf.Xobject {
     /// <summary>A wrapper for Image XObject.</summary>
     /// <remarks>A wrapper for Image XObject. ISO 32000-1, 8.9 Images.</remarks>
     public class PdfImageXObject : PdfXObject {
+        private bool newImage = false;
+
         private float width;
 
         private float height;
@@ -69,6 +71,7 @@ namespace iText.Kernel.Pdf.Xobject {
         /// </param>
         public PdfImageXObject(ImageData image, iText.Kernel.Pdf.Xobject.PdfImageXObject imageMask)
             : this(CreatePdfStream(CheckImageType(image), imageMask)) {
+            newImage = true;
             mask = image.IsMask();
             softMask = image.IsSoftMask();
         }
@@ -120,6 +123,36 @@ namespace iText.Kernel.Pdf.Xobject {
             return height;
         }
 
+        /// <summary>Returns whether this image is a mask that can be used for other images.</summary>
+        /// <remarks>
+        /// Returns whether this image is a mask that can be used for other images.
+        /// <para />
+        /// A mask can hide parts of an image by making those parts fully transparent.
+        /// </remarks>
+        /// <returns>whether this image is a mask that can be used for other images</returns>
+        public virtual bool IsMask() {
+            if (newImage) {
+                return mask;
+            }
+            PdfObject val = GetPdfObject().Get(PdfName.ImageMask);
+            return val != null && val.IsBoolean() && ((PdfBoolean)val).GetValue();
+        }
+
+        /// <summary>Returns whether this image is a soft mask that can be used for other images.</summary>
+        /// <remarks>
+        /// Returns whether this image is a soft mask that can be used for other images.
+        /// <para />
+        /// A soft mask sets the transparency for an image.
+        /// </remarks>
+        /// <returns>whether this image is a soft mask.</returns>
+        public virtual bool IsSoftMask() {
+            if (newImage) {
+                return softMask;
+            }
+            PdfObject val = GetPdfObject().Get(PdfName.SMask);
+            return val != null && val.IsBoolean() && ((PdfBoolean)val).GetValue();
+        }
+
         /// <summary>
         /// To manually flush a
         /// <c>PdfObject</c>
@@ -159,7 +192,7 @@ namespace iText.Kernel.Pdf.Xobject {
         /// <summary>Gets decoded image bytes.</summary>
         /// <returns>byte array.</returns>
         public virtual byte[] GetImageBytes() {
-            return GetImageBytes(true);
+            return GetImageBytes(PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly());
         }
 
         /// <summary>Gets image bytes.</summary>
@@ -180,23 +213,38 @@ namespace iText.Kernel.Pdf.Xobject {
         /// </param>
         /// <returns>byte array.</returns>
         public virtual byte[] GetImageBytes(bool decoded) {
+            PdfImageXObject.ImageBytesRetrievalProperties props = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            props.SetApplyFilters(decoded);
+            return GetImageBytes(props);
+        }
+
+        /// <summary>Gets image bytes.</summary>
+        /// <remarks>
+        /// Gets image bytes.
+        /// Note,
+        /// <see cref="iText.Kernel.Pdf.PdfName.DCTDecode"/>
+        /// ,
+        /// <see cref="iText.Kernel.Pdf.PdfName.JBIG2Decode"/>
+        /// and
+        /// <see cref="iText.Kernel.Pdf.PdfName.JPXDecode"/>
+        /// filters will be ignored.
+        /// </remarks>
+        /// <param name="properties">
+        /// an instance of
+        /// <see cref="ImageBytesRetrievalProperties"/>
+        /// to configure the options.
+        /// </param>
+        /// <returns>byte array.</returns>
+        public virtual byte[] GetImageBytes(PdfImageXObject.ImageBytesRetrievalProperties properties) {
             // TODO: DEVSIX-1792 replace `.getBytes(false)` with `getBytes(true) and remove manual decoding
             byte[] bytes = GetPdfObject().GetBytes(false);
-            if (decoded) {
-                IDictionary<PdfName, IFilterHandler> filters = new Dictionary<PdfName, IFilterHandler>(FilterHandlers.GetDefaultFilterHandlers
-                    ());
-                filters.Put(PdfName.JBIG2Decode, new DoNothingFilter());
-                bytes = PdfReader.DecodeBytes(bytes, GetPdfObject(), filters);
-                ImageType imageType = IdentifyImageType();
-                if (imageType == ImageType.TIFF || imageType == ImageType.PNG) {
-                    try {
-                        bytes = new ImagePdfBytesInfo((int)width, (int)height, GetPdfObject().GetAsNumber(PdfName.BitsPerComponent
-                            ).IntValue(), GetPdfObject().Get(PdfName.ColorSpace), GetPdfObject().GetAsArray(PdfName.Decode)).DecodeTiffAndPngBytes
-                            (bytes);
-                    }
-                    catch (System.IO.IOException e) {
-                        throw new Exception("IO exception in PdfImageXObject", e);
-                    }
+            if (properties.IsApplyFilters()) {
+                try {
+                    return GetImageBytesDecoded(bytes, properties);
+                }
+                catch (System.IO.IOException e) {
+                    throw new PdfException(e);
                 }
             }
             return bytes;
@@ -227,6 +275,40 @@ namespace iText.Kernel.Pdf.Xobject {
         /// </remarks>
         /// <returns>the identified type of image</returns>
         public virtual ImageType IdentifyImageType() {
+            return IdentifyImageType(PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly());
+        }
+
+        /// <summary>
+        /// Identifies the type of the image that is stored in the bytes of this
+        /// <see cref="PdfImageXObject"/>.
+        /// </summary>
+        /// <remarks>
+        /// Identifies the type of the image that is stored in the bytes of this
+        /// <see cref="PdfImageXObject"/>.
+        /// Note that this has nothing to do with the original type of the image. For instance, the return value
+        /// of this method will never be
+        /// <see cref="iText.IO.Image.ImageType.PNG"/>
+        /// as we lose this information when converting a
+        /// PNG image into something that can be put into a PDF file.
+        /// The possible values are:
+        /// <see cref="iText.IO.Image.ImageType.JPEG"/>
+        /// ,
+        /// <see cref="iText.IO.Image.ImageType.JPEG2000"/>
+        /// ,
+        /// <see cref="iText.IO.Image.ImageType.JBIG2"/>
+        /// ,
+        /// <see cref="iText.IO.Image.ImageType.TIFF"/>
+        /// ,
+        /// <see cref="iText.IO.Image.ImageType.PNG"/>
+        /// </remarks>
+        /// <param name="properties">
+        /// an instance of
+        /// <see cref="ImageBytesRetrievalProperties"/>
+        /// to configure the options,
+        /// these options can influence the type
+        /// </param>
+        /// <returns>the identified type of image</returns>
+        public virtual ImageType IdentifyImageType(PdfImageXObject.ImageBytesRetrievalProperties properties) {
             PdfObject filter = GetPdfObject().Get(PdfName.Filter);
             PdfArray filters = new PdfArray();
             if (filter != null) {
@@ -256,15 +338,11 @@ namespace iText.Kernel.Pdf.Xobject {
                 }
             }
             // None of the previous types match
-            ImagePdfBytesInfo imageInfo = new ImagePdfBytesInfo((int)width, (int)height, GetPdfObject().GetAsNumber(PdfName
-                .BitsPerComponent).IntValue(), GetPdfObject().Get(PdfName.ColorSpace), GetPdfObject().GetAsArray(PdfName
-                .Decode));
-            if (imageInfo.GetPngColorType() < 0) {
+            ImagePdfBytesInfo imageInfo = new ImagePdfBytesInfo(this, properties);
+            if (imageInfo.GetImageType() == ImagePdfBytesInfo.OutputFileType.TIFF) {
                 return ImageType.TIFF;
             }
-            else {
-                return ImageType.PNG;
-            }
+            return ImageType.PNG;
         }
 
         /// <summary>
@@ -283,9 +361,35 @@ namespace iText.Kernel.Pdf.Xobject {
         /// <see cref="System.String"/>
         /// with recommended file extension
         /// </returns>
-        /// <seealso cref="IdentifyImageType()"/>
+        /// <seealso cref="IdentifyImageType(ImageBytesRetrievalProperties)"/>
         public virtual String IdentifyImageFileExtension() {
-            ImageType bytesType = IdentifyImageType();
+            return IdentifyImageFileExtension(PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly());
+        }
+
+        /// <summary>
+        /// Identifies recommended file extension to store the bytes of this
+        /// <see cref="PdfImageXObject"/>.
+        /// </summary>
+        /// <remarks>
+        /// Identifies recommended file extension to store the bytes of this
+        /// <see cref="PdfImageXObject"/>.
+        /// Possible values are: 'png', 'jpg', 'jp2', 'tif', 'jbig2'.
+        /// This extension can later be used together with the result of
+        /// <see cref="GetImageBytes()"/>.
+        /// </remarks>
+        /// <param name="properties">
+        /// an instance of
+        /// <see cref="ImageBytesRetrievalProperties"/>
+        /// to configure the options,
+        /// *                    these options can influence the file extension
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="System.String"/>
+        /// with recommended file extension
+        /// </returns>
+        public virtual String IdentifyImageFileExtension(PdfImageXObject.ImageBytesRetrievalProperties properties) {
+            ImageType bytesType = IdentifyImageType(properties);
             switch (bytesType) {
                 case ImageType.PNG: {
                     return "png";
@@ -327,6 +431,21 @@ namespace iText.Kernel.Pdf.Xobject {
             return this;
         }
 
+        private byte[] GetImageBytesDecoded(byte[] bytes, PdfImageXObject.ImageBytesRetrievalProperties properties
+            ) {
+            ImageType imageType = IdentifyImageType(properties);
+            if (imageType == ImageType.TIFF || imageType == ImageType.PNG) {
+                ImagePdfBytesInfo ibi = new ImagePdfBytesInfo(this, properties);
+                return ibi.GetProcessedImageData(bytes);
+            }
+            else {
+                IDictionary<PdfName, IFilterHandler> filters = new Dictionary<PdfName, IFilterHandler>(FilterHandlers.GetDefaultFilterHandlers
+                    ());
+                filters.Put(PdfName.JBIG2Decode, new DoNothingFilter());
+                return PdfReader.DecodeBytes(bytes, GetPdfObject(), filters);
+            }
+        }
+
         private float InitWidthField() {
             PdfNumber wNum = GetPdfObject().GetAsNumber(PdfName.Width);
             if (wNum != null) {
@@ -351,7 +470,7 @@ namespace iText.Kernel.Pdf.Xobject {
             }
             stream = new PdfStream(image.GetData());
             String filter = image.GetFilter();
-            if (filter != null && "JPXDecode".Equals(filter) && image.GetColorEncodingComponentsNumber() <= 0) {
+            if ("JPXDecode".Equals(filter) && image.GetColorEncodingComponentsNumber() <= 0) {
                 stream.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
                 image.SetBpc(0);
             }
@@ -399,7 +518,8 @@ namespace iText.Kernel.Pdf.Xobject {
                     colorspace.Add(GetColorSpaceInfo(pngImage));
                     if ((pngImage.GetColorPalette() != null) && (pngImage.GetColorPalette().Length > 0)) {
                         //Each palette entry is a three-byte series, so the number of entries is calculated as the length
-                        //of the stream divided by 3. The number below specifies the maximum valid index value (starting from 0 up)
+                        //of the stream divided by 3. The number below specifies the maximum valid index value (starting
+                        // from 0 up)
                         colorspace.Add(new PdfNumber(pngImage.GetColorPalette().Length / 3 - 1));
                     }
                     if (pngImage.GetColorPalette() != null) {
@@ -670,6 +790,146 @@ namespace iText.Kernel.Pdf.Xobject {
                 }
                 array.Add(map);
                 return array;
+            }
+        }
+
+        /// <summary>Manages the steps taken in extracting the image.</summary>
+        /// <remarks>
+        /// Manages the steps taken in extracting the image.
+        /// <para />
+        /// Use getApplyFiltersOnly to get the image as close to the stored state as possible.
+        /// No pixels will be manipulated.
+        /// <para />
+        /// Use getFullOption to get an image as displayed in the document.
+        /// The full options will be extended in the future to support more color spaces
+        /// and can lead to different outcomes for some image types.
+        /// </remarks>
+        public sealed class ImageBytesRetrievalProperties {
+            private bool applyTransparency;
+
+            private bool applyDecodeArray;
+
+            private bool applyTintTransformations;
+
+            private bool applyFilters;
+
+            private ImageBytesRetrievalProperties() {
+            }
+
+            //empty contructor
+            /// <summary>Create a property set with only the options applyFilters activates.</summary>
+            /// <remarks>
+            /// Create a property set with only the options applyFilters activates.
+            /// <para />
+            /// Use this to retrieve images as close to the stored state as possible.
+            /// No pixels will be manipulated.
+            /// </remarks>
+            /// <returns>A property set with only the options applyFilters activated.</returns>
+            public static PdfImageXObject.ImageBytesRetrievalProperties GetApplyFiltersOnly() {
+                PdfImageXObject.ImageBytesRetrievalProperties props = new PdfImageXObject.ImageBytesRetrievalProperties();
+                props.applyFilters = true;
+                return props;
+            }
+
+            /// <summary>Create a property set with all options activated.</summary>
+            /// <remarks>
+            /// Create a property set with all options activated.
+            /// <para />
+            /// Use this to retrieve images as closely as possible
+            /// to how they are being displayed in the document.
+            /// </remarks>
+            /// <returns>A property set with all options activated.</returns>
+            public static PdfImageXObject.ImageBytesRetrievalProperties GetFullOption() {
+                PdfImageXObject.ImageBytesRetrievalProperties props = new PdfImageXObject.ImageBytesRetrievalProperties();
+                props.applyFilters = true;
+                props.applyTintTransformations = true;
+                props.applyDecodeArray = true;
+                props.applyTransparency = true;
+                return props;
+            }
+
+            /// <summary>Returns whether transparency will be applied to the result.</summary>
+            /// <returns>Whether transparency will be applied to the result</returns>
+            public bool IsApplyTransparency() {
+                return applyTransparency;
+            }
+
+            /// <summary>Sets whether transparency will be applied to the result.</summary>
+            /// <param name="applyTransparency">set to true to apply transparency.</param>
+            public void SetApplyTransparency(bool applyTransparency) {
+                this.applyTransparency = applyTransparency;
+            }
+
+            /// <summary>Returns whether to apply an images decode transformation or not.</summary>
+            /// <remarks>
+            /// Returns whether to apply an images decode transformation or not.
+            /// <para />
+            /// An image’s Decode array specifies a linear mapping
+            /// of each integer component.
+            /// </remarks>
+            /// <returns>whether to apply an images decode transformation or not</returns>
+            public bool IsApplyDecodeArray() {
+                return applyDecodeArray;
+            }
+
+            /// <summary>Sets whether to apply an image's decode transformation.</summary>
+            /// <remarks>
+            /// Sets whether to apply an image's decode transformation.
+            /// <para />
+            /// An image’s Decode array specifies a linear mapping
+            /// of each integer component.
+            /// </remarks>
+            /// <param name="applyDecodeArray">whether to apply an images decode transformation</param>
+            public void SetApplyDecodeArray(bool applyDecodeArray) {
+                this.applyDecodeArray = applyDecodeArray;
+            }
+
+            /// <summary>Returns whether tint transformations will be applied.</summary>
+            /// <remarks>
+            /// Returns whether tint transformations will be applied.
+            /// <para />
+            /// Some color spaces define application-specific colors.
+            /// To be able to display these images in an rgb or cmyk color space,
+            /// there can be tint transformations defined to translate these colors.
+            /// </remarks>
+            /// <returns>whether any tint transformations will be applied.</returns>
+            public bool IsApplyTintTransformations() {
+                return applyTintTransformations;
+            }
+
+            /// <summary>Sets whether tint transformations will be applied.</summary>
+            /// <remarks>
+            /// Sets whether tint transformations will be applied.
+            /// <para />
+            /// Some color spaces define application-specific colors.
+            /// To be able to display these images in an rgb or cmyk color space,
+            /// there can be tint transformations defined to translate these colors.
+            /// </remarks>
+            /// <param name="applyTintTransformations">whether to apply tint transformations</param>
+            public void SetApplyTintTransformations(bool applyTintTransformations) {
+                this.applyTintTransformations = applyTintTransformations;
+            }
+
+            /// <summary>Returns whether to apply the bytestreams filters.</summary>
+            /// <remarks>
+            /// Returns whether to apply the bytestreams filters.
+            /// <para />
+            /// Without this option, the other options are disregarded.
+            /// </remarks>
+            /// <returns>whether to apply the filters to the byte stream.</returns>
+            public bool IsApplyFilters() {
+                return applyFilters;
+            }
+
+            /// <summary>Sets whether to apply the bytestreams filters.</summary>
+            /// <remarks>
+            /// Sets whether to apply the bytestreams filters.
+            /// <para />
+            /// Without this option, the other options are disregarded.
+            /// </remarks>
+            /// <param name="applyFilters">whether to apply the bytestreams filters</param>
+            public void SetApplyFilters(bool applyFilters) {
+                this.applyFilters = applyFilters;
             }
         }
 

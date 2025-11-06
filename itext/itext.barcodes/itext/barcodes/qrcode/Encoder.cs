@@ -563,7 +563,7 @@ namespace iText.Barcodes.Qrcode {
                 bytes = content.GetBytes(encoding);
             }
             catch (ArgumentException uee) {
-                throw new WriterException(uee.ToString());
+                throw new WriterException(uee.ToString(), uee);
             }
             for (int i = 0; i < bytes.Length; ++i) {
                 bits.AppendBits(bytes[i], 8);
@@ -578,7 +578,7 @@ namespace iText.Barcodes.Qrcode {
                 bytes = content.GetBytes("Shift_JIS");
             }
             catch (ArgumentException uee) {
-                throw new WriterException(uee.ToString());
+                throw new WriterException(uee.ToString(), uee);
             }
             int length = bytes.Length;
             for (int i = 0; i < length; i += 2) {

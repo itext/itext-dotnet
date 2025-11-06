@@ -114,8 +114,8 @@ namespace iText.Layout.Renderer {
                 !wasParentsHeightClipped ? OverflowPropertyValue.FIT : this.GetProperty<OverflowPropertyValue?>(Property
                 .OVERFLOW_Y);
             ApplyWidth(parentBBox, blockWidth, overflowX);
-            wasHeightClipped = ApplyMaxHeight(parentBBox, blockMaxHeight, marginsCollapseHandler, isCellRenderer, wasParentsHeightClipped
-                , overflowY);
+            wasHeightClipped = ApplyMaxHeight(parentBBox, blockMaxHeight, marginsCollapseHandler, isCellRenderer, overflowY
+                );
             IList<Rectangle> areas;
             if (isPositioned) {
                 areas = JavaCollectionsUtil.SingletonList(parentBBox);
@@ -264,7 +264,6 @@ namespace iText.Layout.Renderer {
                             childPos--;
                         }
                         layoutBox = areas[++currentAreaPos].Clone();
-                        break;
                     }
                     else {
                         LayoutResult layoutResult = ProcessNotFullChildResult(layoutContext, waitingFloatsSplitRenderers, waitingOverflowFloatRenderers
@@ -279,8 +278,8 @@ namespace iText.Layout.Renderer {
                             return layoutResult;
                         }
                         result = layoutResult;
-                        break;
                     }
+                    break;
                 }
                 anythingPlaced = anythingPlaced || result.GetStatus() != LayoutResult.NOTHING;
                 HandleForcedPlacement(anythingPlaced);
@@ -350,7 +349,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             AbstractRenderer splitRenderer_1 = this;
-            if (waitingFloatsSplitRenderers.Count > 0 && layoutResult_1 != LayoutResult.NOTHING) {
+            if (!waitingFloatsSplitRenderers.IsEmpty() && layoutResult_1 != LayoutResult.NOTHING) {
                 splitRenderer_1 = CreateSplitRenderer(layoutResult_1);
                 splitRenderer_1.childRenderers = new List<IRenderer>(childRenderers);
                 ReplaceSplitRendererKidFloats(waitingFloatsSplitRenderers, splitRenderer_1);
@@ -363,7 +362,7 @@ namespace iText.Layout.Renderer {
                 UpdateHeightsOnSplit(usedHeight, wasHeightClipped, splitRenderer_1, overflowRenderer_1, includeFloatsInOccupiedArea
                     );
             }
-            if (positionedRenderers.Count > 0) {
+            if (!positionedRenderers.IsEmpty()) {
                 foreach (IRenderer childPositionedRenderer in positionedRenderers) {
                     Rectangle fullBbox = occupiedArea.GetBBox().Clone();
                     // Use that value so that layout is independent of whether we are in the bottom of the page or in the
@@ -378,7 +377,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             if (isPositioned) {
-                CorrectFixedLayout(layoutBox);
+                CorrectFixedLayout();
             }
             ContinuousContainer continuousContainer = this.GetProperty<ContinuousContainer>(Property.TREAT_AS_CONTINUOUS_CONTAINER_RESULT
                 );
@@ -416,7 +415,7 @@ namespace iText.Layout.Renderer {
                 return new LayoutResult(layoutResult_1, editedArea, splitRenderer_1, overflowRenderer_1, causeOfNothing);
             }
             else {
-                if (positionedRenderers.Count > 0) {
+                if (!positionedRenderers.IsEmpty()) {
                     overflowRenderer_1.positionedRenderers = new List<IRenderer>(positionedRenderers);
                 }
                 floatRendererAreas.RetainAll(nonChildFloatingRendererAreas);
@@ -850,7 +849,7 @@ namespace iText.Layout.Renderer {
                     ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                     ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                     ApplyMargins(occupiedArea.GetBBox(), true);
-                    CorrectFixedLayout(layoutBox);
+                    CorrectFixedLayout();
                     LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
                         (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
                     if (wasHeightClipped) {
@@ -874,7 +873,7 @@ namespace iText.Layout.Renderer {
                         , waitingFloatsSplitRenderers, waitingOverflowFloatRenderers);
                     AbstractRenderer splitRenderer = splitAndOverflowRenderers[0];
                     AbstractRenderer overflowRenderer = splitAndOverflowRenderers[1];
-                    if (IsRelativePosition() && positionedRenderers.Count > 0) {
+                    if (IsRelativePosition() && !positionedRenderers.IsEmpty()) {
                         overflowRenderer.positionedRenderers = new List<IRenderer>(positionedRenderers);
                     }
                     UpdateHeightsOnSplit(wasHeightClipped, splitRenderer, overflowRenderer);
@@ -883,7 +882,7 @@ namespace iText.Layout.Renderer {
                         overflowRenderer.childRenderers.Clear();
                         overflowRenderer.AddAllChildRenderers(childRenderers);
                     }
-                    CorrectFixedLayout(layoutBox);
+                    CorrectFixedLayout();
                     ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                     ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                     ApplyMargins(occupiedArea.GetBBox(), true);
@@ -920,7 +919,7 @@ namespace iText.Layout.Renderer {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal virtual void CorrectFixedLayout(Rectangle layoutBox) {
+        internal virtual void CorrectFixedLayout() {
             if (IsFixedLayout()) {
                 float y = (float)this.GetPropertyAsFloat(Property.BOTTOM);
                 Move(0, y - occupiedArea.GetBBox().GetY());
@@ -950,14 +949,11 @@ namespace iText.Layout.Renderer {
 
 //\cond DO_NOT_DOCUMENT
         internal virtual bool ApplyMaxHeight(Rectangle parentBBox, float? blockMaxHeight, MarginsCollapseHandler marginsCollapseHandler
-            , bool isCellRenderer, bool wasParentsHeightClipped, OverflowPropertyValue? overflowY) {
+            , bool isCellRenderer, OverflowPropertyValue? overflowY) {
             if (null == blockMaxHeight || (blockMaxHeight >= parentBBox.GetHeight() && (IsOverflowFit(overflowY)))) {
                 return false;
             }
-            bool wasHeightClipped = false;
-            if (blockMaxHeight <= parentBBox.GetHeight()) {
-                wasHeightClipped = true;
-            }
+            bool wasHeightClipped = blockMaxHeight <= parentBBox.GetHeight();
             float heightDelta = parentBBox.GetHeight() - (float)blockMaxHeight;
             if (marginsCollapseHandler != null && !isCellRenderer) {
                 marginsCollapseHandler.ProcessFixedHeightAdjustment(heightDelta);
@@ -1148,67 +1144,6 @@ namespace iText.Layout.Renderer {
                     canvas.RestoreState().EndVariableText();
                 }
             }
-        }
-
-        private IList<Point> ClipPolygon(IList<Point> points, Point clipLineBeg, Point clipLineEnd) {
-            IList<Point> filteredPoints = new List<Point>();
-            bool prevOnRightSide = false;
-            Point filteringPoint = points[0];
-            if (CheckPointSide(filteringPoint, clipLineBeg, clipLineEnd) >= 0) {
-                filteredPoints.Add(filteringPoint);
-                prevOnRightSide = true;
-            }
-            Point prevPoint = filteringPoint;
-            for (int i = 1; i < points.Count + 1; ++i) {
-                filteringPoint = points[i % points.Count];
-                if (CheckPointSide(filteringPoint, clipLineBeg, clipLineEnd) >= 0) {
-                    if (!prevOnRightSide) {
-                        filteredPoints.Add(GetIntersectionPoint(prevPoint, filteringPoint, clipLineBeg, clipLineEnd));
-                    }
-                    filteredPoints.Add(filteringPoint);
-                    prevOnRightSide = true;
-                }
-                else {
-                    if (prevOnRightSide) {
-                        filteredPoints.Add(GetIntersectionPoint(prevPoint, filteringPoint, clipLineBeg, clipLineEnd));
-                    }
-                }
-                prevPoint = filteringPoint;
-            }
-            return filteredPoints;
-        }
-
-        private int CheckPointSide(Point filteredPoint, Point clipLineBeg, Point clipLineEnd) {
-            double x1;
-            double x2;
-            double y1;
-            double y2;
-            x1 = filteredPoint.GetX() - clipLineBeg.GetX();
-            y2 = clipLineEnd.GetY() - clipLineBeg.GetY();
-            x2 = clipLineEnd.GetX() - clipLineBeg.GetX();
-            y1 = filteredPoint.GetY() - clipLineBeg.GetY();
-            double sgn = x1 * y2 - x2 * y1;
-            if (Math.Abs(sgn) < 0.001) {
-                return 0;
-            }
-            if (sgn > 0) {
-                return 1;
-            }
-            if (sgn < 0) {
-                return -1;
-            }
-            return 0;
-        }
-
-        private Point GetIntersectionPoint(Point lineBeg, Point lineEnd, Point clipLineBeg, Point clipLineEnd) {
-            double A1 = lineBeg.GetY() - lineEnd.GetY();
-            double A2 = clipLineBeg.GetY() - clipLineEnd.GetY();
-            double B1 = lineEnd.GetX() - lineBeg.GetX();
-            double B2 = clipLineEnd.GetX() - clipLineBeg.GetX();
-            double C1 = lineBeg.GetX() * lineEnd.GetY() - lineBeg.GetY() * lineEnd.GetX();
-            double C2 = clipLineBeg.GetX() * clipLineEnd.GetY() - clipLineBeg.GetY() * clipLineEnd.GetX();
-            double M = B1 * A2 - B2 * A1;
-            return new Point((B2 * C1 - B1 * C2) / M, (C2 * A1 - C1 * A2) / M);
         }
     }
 }

@@ -26,8 +26,8 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 
 namespace iText.Signatures.Validation.Lotl {
-//\cond DO_NOT_DOCUMENT
-    internal class CountryServiceContext : IServiceContext {
+    /// <summary>Class representing TSPService entry in a country specific Trusted List.</summary>
+    public class CountryServiceContext : IServiceContext {
         private readonly IList<IX509Certificate> certificates = new List<IX509Certificate>();
 
         //It is expected that service statuses are ordered starting from the newest one.
@@ -41,7 +41,7 @@ namespace iText.Signatures.Validation.Lotl {
         }
 //\endcond
 
-        // Empty constructor
+        // Empty constructor.
         /// <summary><inheritDoc/></summary>
         public virtual IList<IX509Certificate> GetCertificates() {
             return new List<IX509Certificate>(certificates);
@@ -52,11 +52,86 @@ namespace iText.Signatures.Validation.Lotl {
             certificates.Add(certificate);
         }
 
-//\cond DO_NOT_DOCUMENT
-        internal virtual String GetServiceType() {
+        /// <summary>
+        /// Gets list of
+        /// <see cref="ServiceChronologicalInfo"/>
+        /// objects corresponding to this country service context.
+        /// </summary>
+        /// <returns>
+        /// list of
+        /// <see cref="ServiceChronologicalInfo"/>
+        /// objects
+        /// </returns>
+        public virtual IList<ServiceChronologicalInfo> GetServiceChronologicalInfos() {
+            return serviceChronologicalInfos;
+        }
+
+        /// <summary>
+        /// Gets service type
+        /// <see cref="System.String"/>
+        /// corresponding to this country service context.
+        /// </summary>
+        /// <returns>
+        /// service type
+        /// <see cref="System.String"/>
+        /// </returns>
+        public virtual String GetServiceType() {
             return serviceType;
         }
-//\endcond
+
+        /// <summary>
+        /// Gets
+        /// <see cref="ServiceChronologicalInfo"/>
+        /// corresponding to this country service context and DateTime in milliseconds.
+        /// </summary>
+        /// <param name="milliseconds">DateTime in milliseconds</param>
+        /// <returns>
+        /// corresponding
+        /// <see cref="ServiceChronologicalInfo"/>
+        /// instance
+        /// </returns>
+        public virtual ServiceChronologicalInfo GetServiceChronologicalInfoByDate(long milliseconds) {
+            return GetServiceChronologicalInfoByDate(DateTimeUtil.GetTimeFromMillis(milliseconds));
+        }
+
+        /// <summary>
+        /// Gets
+        /// <see cref="ServiceChronologicalInfo"/>
+        /// corresponding to this country service context and
+        /// <see cref="System.DateTime"/>.
+        /// </summary>
+        /// <param name="time">
+        /// 
+        /// <see cref="System.DateTime"/>
+        /// date time
+        /// </param>
+        /// <returns>
+        /// corresponding
+        /// <see cref="ServiceChronologicalInfo"/>
+        /// instance
+        /// </returns>
+        public virtual ServiceChronologicalInfo GetServiceChronologicalInfoByDate(DateTime time) {
+            foreach (ServiceChronologicalInfo serviceChronologicalInfo in serviceChronologicalInfos) {
+                if (!time.Before(serviceChronologicalInfo.GetServiceStatusStartingTime())) {
+                    return serviceChronologicalInfo;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the latest
+        /// <see cref="ServiceChronologicalInfo"/>
+        /// instance.
+        /// </summary>
+        /// <returns>
+        /// the latest
+        /// <see cref="ServiceChronologicalInfo"/>
+        /// instance
+        /// </returns>
+        public virtual ServiceChronologicalInfo GetCurrentChronologicalInfo() {
+            return serviceChronologicalInfos[0];
+        }
 
 //\cond DO_NOT_DOCUMENT
         internal virtual void SetServiceType(String serviceType) {
@@ -71,33 +146,9 @@ namespace iText.Signatures.Validation.Lotl {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal virtual ServiceChronologicalInfo GetServiceChronologicalInfoByDate(long milliseconds) {
-            return GetServiceChronologicalInfoByDate(DateTimeUtil.GetTimeFromMillis(milliseconds));
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        internal virtual ServiceChronologicalInfo GetServiceChronologicalInfoByDate(DateTime time) {
-            foreach (ServiceChronologicalInfo serviceChronologicalInfo in serviceChronologicalInfos) {
-                if (serviceChronologicalInfo.GetServiceStatusStartingTime().Before(time)) {
-                    return serviceChronologicalInfo;
-                }
-            }
-            return null;
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        internal virtual ServiceChronologicalInfo GetCurrentChronologicalInfo() {
-            return serviceChronologicalInfos[0];
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
         internal virtual int GetServiceChronologicalInfosSize() {
             return serviceChronologicalInfos.Count;
         }
 //\endcond
     }
-//\endcond
 }

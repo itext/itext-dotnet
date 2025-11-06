@@ -103,6 +103,18 @@ namespace iText.Signatures.Validation {
         internal const String VALIDITY_PERIOD_CHECK_FAILED = "Unexpected exception occurred while validating certificate validity period.";
 //\endcond
 
+//\cond DO_NOT_DOCUMENT
+        internal const String CERTIFICATE_RETRIEVER_ORIGIN = "Trusted Certificate is taken from manually configured Trust List.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String CERTIFICATE_LOTL_ORIGIN = "Trusted Certificate is taken from European Union List of Trusted Certificates.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String CERTIFICATE_CUSTOM_ORIGIN = "Trusted Certificate is taken from {0}.";
+//\endcond
+
         /// <summary>
         /// Create new instance of
         /// <see cref="CertificateChainValidator"/>.
@@ -171,19 +183,19 @@ namespace iText.Signatures.Validation {
         /// </returns>
         public virtual ValidationReport Validate(ValidationReport result, ValidationContext context, IX509Certificate
              certificate, DateTime validationDate) {
-            return Validate(result, context, certificate, validationDate, 0);
+            return Validate(result, context, certificate, validationDate, new List<IX509Certificate>());
         }
 
         private ValidationReport Validate(ValidationReport result, ValidationContext context, IX509Certificate certificate
-            , DateTime validationDate, int certificateChainSize) {
+            , DateTime validationDate, IList<IX509Certificate> previousCertificates) {
             ValidationContext localContext = context.SetValidatorContext(ValidatorContext.CERTIFICATE_CHAIN_VALIDATOR);
-            ValidateRequiredExtensions(result, localContext, certificate, certificateChainSize);
+            ValidateRequiredExtensions(result, localContext, certificate, previousCertificates.Count);
             if (StopValidation(result, localContext)) {
                 return result;
             }
             if (SafeCalling.OnExceptionLog(() => CheckIfCertIsTrusted(result, localContext, certificate, validationDate
-                ), false, result, (e) => new CertificateReportItem(certificate, CERTIFICATE_CHECK, TRUSTSTORE_RETRIEVAL_FAILED
-                , e, ReportItem.ReportItemStatus.INFO))) {
+                , previousCertificates), false, result, (e) => new CertificateReportItem(certificate, CERTIFICATE_CHECK
+                , TRUSTSTORE_RETRIEVAL_FAILED, e, ReportItem.ReportItemStatus.INFO))) {
                 return result;
             }
             ValidateValidityPeriod(result, certificate, validationDate);
@@ -191,19 +203,33 @@ namespace iText.Signatures.Validation {
             if (StopValidation(result, localContext)) {
                 return result;
             }
-            ValidateChain(result, localContext, certificate, validationDate, certificateChainSize);
+            ValidateChain(result, localContext, certificate, validationDate, previousCertificates);
             return result;
         }
 
         private bool CheckIfCertIsTrusted(ValidationReport result, ValidationContext context, IX509Certificate certificate
-            , DateTime validationDate) {
+            , DateTime validationDate, IList<IX509Certificate> previousCertificates) {
             if (certificateRetriever.GetTrustedCertificatesStore().CheckIfCertIsTrusted(result, context, certificate)) {
+                result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, CERTIFICATE_RETRIEVER_ORIGIN
+                    , ReportItem.ReportItemStatus.INFO));
                 return true;
             }
             if (lotlTrustedStore == null) {
                 return false;
             }
-            return lotlTrustedStore.CheckIfCertIsTrusted(result, context, certificate, validationDate);
+            if (lotlTrustedStore.SetPreviousCertificates(previousCertificates).CheckIfCertIsTrusted(result, context, certificate
+                , validationDate)) {
+                if (lotlTrustedStore.GetType() == typeof(LotlTrustedStore)) {
+                    result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, CERTIFICATE_LOTL_ORIGIN, ReportItem.ReportItemStatus
+                        .INFO));
+                }
+                else {
+                    result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format(CERTIFICATE_CUSTOM_ORIGIN
+                        , lotlTrustedStore.GetType().FullName), ReportItem.ReportItemStatus.INFO));
+                }
+                return true;
+            }
+            return false;
         }
 
         private bool StopValidation(ValidationReport result, ValidationContext context) {
@@ -254,7 +280,7 @@ namespace iText.Signatures.Validation {
         }
 
         private void ValidateChain(ValidationReport result, ValidationContext context, IX509Certificate certificate
-            , DateTime validationDate, int certificateChainSize) {
+            , DateTime validationDate, IList<IX509Certificate> previousCertificates) {
             IList<IX509Certificate> issuerCertificates;
             try {
                 issuerCertificates = certificateRetriever.RetrieveIssuerCertificate(certificate);
@@ -287,8 +313,10 @@ namespace iText.Signatures.Validation {
                         e, ReportItem.ReportItemStatus.INVALID));
                     continue;
                 }
+                previousCertificates.Add(certificate);
                 this.Validate(candidateReports[i], context.SetCertificateSource(CertificateSource.CERT_ISSUER), issuerCertificates
-                    [i], validationDate, certificateChainSize + 1);
+                    [i], validationDate, previousCertificates);
+                previousCertificates.JRemoveAt(previousCertificates.Count - 1);
                 if (candidateReports[i].GetValidationResult() == ValidationReport.ValidationResult.VALID) {
                     // We found valid issuer, no need to try other ones.
                     result.Merge(candidateReports[i]);

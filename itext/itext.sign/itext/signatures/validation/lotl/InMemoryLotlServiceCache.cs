@@ -36,7 +36,7 @@ namespace iText.Signatures.Validation.Lotl {
 
         private readonly long maxAllowedStalenessInMillis;
 
-        private readonly Dictionary<String, long?> staleTracker = new Dictionary<String, long?>();
+        private readonly Dictionary<String, long?> timeStamps = new Dictionary<String, long?>();
 
         private readonly IOnFailingCountryLotlData strategy;
 
@@ -148,8 +148,34 @@ namespace iText.Signatures.Validation.Lotl {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
+        internal Dictionary<String, long?> GetTimeStamps() {
+            lock (Lock) {
+                return new Dictionary<String, long?>(timeStamps);
+            }
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal void SetTimeStamps(IDictionary<String, long?> timeStamps) {
+            lock (Lock) {
+                this.timeStamps.Clear();
+                this.timeStamps.AddAll(timeStamps);
+            }
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal LotlCacheDataV1 GetAllData() {
+            lock (Lock) {
+                return new LotlCacheDataV1(lotlCache, pivotCache, europeanResourceFetcherCache, countrySpecificLotlCache, 
+                    (Dictionary<String, long?>)timeStamps);
+            }
+        }
+//\endcond
+
         private bool IsObjectStale(String key) {
-            long? lastUpdated = staleTracker.Get(key);
+            long? lastUpdated = timeStamps.Get(key);
             if (lastUpdated == null) {
                 return true;
             }
@@ -160,7 +186,7 @@ namespace iText.Signatures.Validation.Lotl {
         }
 
         private void AddToStaleTracker(String key) {
-            staleTracker.Put(key, SystemUtil.CurrentTimeMillis());
+            timeStamps.Put(key, SystemUtil.CurrentTimeMillis());
         }
 
         private CountrySpecificLotlFetcher.Result GetCountrySpecificLotl(String country) {

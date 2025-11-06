@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -15,9 +16,11 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("f542854e-7f6b-4207-b6ca-004a5d266e65")]
 
-[assembly: AssemblyVersion("9.3.0.0")]
-[assembly: AssemblyFileVersion("9.3.0.0")]
-[assembly: AssemblyInformationalVersion("9.3.0")]
+[assembly: AssemblyVersion("9.4.0.0")]
+[assembly: AssemblyFileVersion("9.4.0.0")]
+[assembly: AssemblyInformationalVersion("9.4.0")]
+
+[assembly: Parallelizable(ParallelScope.ContextMask)]
 
 #if !NETSTANDARD2_0
 [assembly: NUnit.Framework.Timeout(300000)]

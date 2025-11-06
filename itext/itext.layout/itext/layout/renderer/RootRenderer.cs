@@ -52,6 +52,8 @@ namespace iText.Layout.Renderer {
         internal IList<Rectangle> floatRendererAreas;
 //\endcond
 
+        private readonly IList<IRenderer> waitingNextPageRenderers = new List<IRenderer>();
+
         private IRenderer keepWithNextHangingRenderer;
 
         private LayoutResult keepWithNextHangingRendererLayoutResult;
@@ -59,8 +61,6 @@ namespace iText.Layout.Renderer {
         private MarginsCollapseHandler marginsCollapseHandler;
 
         private LayoutArea initialCurrentArea;
-
-        private IList<IRenderer> waitingNextPageRenderers = new List<IRenderer>();
 
         private bool floatOverflowedCompletely = false;
 
@@ -107,12 +107,12 @@ namespace iText.Layout.Renderer {
                 IList<IRenderer> resultRenderers = new List<IRenderer>();
                 LayoutResult result = null;
                 MarginsCollapseInfo childMarginsInfo = null;
-                if (marginsCollapsingEnabled && currentArea != null && renderer != null) {
+                if (marginsCollapsingEnabled && currentArea != null) {
                     childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(renderer, currentArea.GetBBox());
                 }
-                while (clearanceOverflowsToNextPage || currentArea != null && renderer != null && (result = renderer.SetParent
+                while (clearanceOverflowsToNextPage || (currentArea != null && renderer != null && (result = renderer.SetParent
                     (this).Layout(new LayoutContext(currentArea.Clone(), childMarginsInfo, floatRendererAreas))).GetStatus
-                    () != LayoutResult.FULL) {
+                    () != LayoutResult.FULL)) {
                     bool currentAreaNeedsToBeUpdated = false;
                     if (clearanceOverflowsToNextPage) {
                         result = new LayoutResult(LayoutResult.NOTHING, null, null, renderer);
@@ -133,7 +133,7 @@ namespace iText.Layout.Renderer {
                     else {
                         if (result.GetStatus() == LayoutResult.NOTHING && !clearanceOverflowsToNextPage) {
                             if (result.GetOverflowRenderer() is ImageRenderer) {
-                                float imgHeight = ((ImageRenderer)result.GetOverflowRenderer()).GetOccupiedArea().GetBBox().GetHeight();
+                                float imgHeight = result.GetOverflowRenderer().GetOccupiedArea().GetBBox().GetHeight();
                                 if (!floatRendererAreas.IsEmpty() || currentArea.GetBBox().GetHeight() < imgHeight && !currentArea.IsEmptyArea
                                     ()) {
                                     if (rendererIsFloat) {
@@ -221,8 +221,8 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            for (int i = 0; i < addedPositionedRenderers.Count; i++) {
-                positionedRenderers.Add(addedPositionedRenderers[i]);
+            foreach (IRenderer addedPositionedRenderer in addedPositionedRenderers) {
+                positionedRenderers.Add(addedPositionedRenderer);
                 renderer = positionedRenderers[positionedRenderers.Count - 1];
                 int? positionedPageNumber = renderer.GetProperty<int?>(Property.PAGE_NUMBER);
                 if (positionedPageNumber == null) {
@@ -388,7 +388,7 @@ namespace iText.Layout.Renderer {
                     ().GetBBox().GetHeight());
                 bool ableToProcessKeepWithNext = false;
                 if (renderer.SetParent(this).Layout(new LayoutContext(rest)).GetStatus() != LayoutResult.NOTHING) {
-                    // The area break will not be introduced and we are safe to place everything as is
+                    // The area break will not be introduced, and we are safe to place everything as is
                     ShrinkCurrentAreaAndProcessRenderer(keepWithNextHangingRenderer, new List<IRenderer>(), keepWithNextHangingRendererLayoutResult
                         );
                     ableToProcessKeepWithNext = true;
@@ -521,6 +521,10 @@ namespace iText.Layout.Renderer {
             if (toDisableKeepTogether == null) {
                 return false;
             }
+            if (result.GetOverflowRenderer() != null && !IsItemInSubtree(result.GetOverflowRenderer(), toDisableKeepTogether
+                )) {
+                return false;
+            }
             toDisableKeepTogether.SetProperty(Property.KEEP_TOGETHER, false);
             if (LOGGER.IsEnabled(LogLevel.Warning)) {
                 LOGGER.LogWarning(MessageFormatUtil.Format(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property will be ignored."
@@ -530,6 +534,28 @@ namespace iText.Layout.Renderer {
                 rootRendererStateHandler.AttemptGoBackToStoredPreviousStateAndStoreNextState(this);
             }
             return true;
+        }
+
+        private static bool IsItemInSubtree(IRenderer ancestor, IRenderer item) {
+            if (ancestor == item) {
+                return true;
+            }
+            foreach (IRenderer renderer in ancestor.GetChildRenderers()) {
+                if (IsItemInSubtree(renderer, item)) {
+                    return true;
+                }
+            }
+            if (ancestor is TableRenderer) {
+                TableRenderer tableRenderer = (TableRenderer)ancestor;
+                foreach (CellRenderer[] row in tableRenderer.rows) {
+                    foreach (CellRenderer cellRenderer in row) {
+                        if (IsItemInSubtree(cellRenderer, item)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
     }
 }

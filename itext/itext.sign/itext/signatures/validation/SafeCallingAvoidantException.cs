@@ -35,6 +35,10 @@ namespace iText.Signatures.Validation {
     /// but an underlying process might be affected.
     /// </remarks>
     public class SafeCallingAvoidantException : PdfException {
+        // Needed to be able to modify class, which implements serializable.
+        // Otherwise, japi-cmp won't allow any modifications.
+        private const long serialVersionUID = -660602896592130700L;
+
         /// <summary>
         /// Creates a new instance of
         /// <see cref="SafeCallingAvoidantException"/>
@@ -43,6 +47,20 @@ namespace iText.Signatures.Validation {
         /// <param name="message">the detail message</param>
         public SafeCallingAvoidantException(String message)
             : base(message) {
+        }
+
+        /// <summary>
+        /// Creates a new instance of
+        /// <see cref="SafeCallingAvoidantException"/>
+        /// with the specified underlying cause.
+        /// </summary>
+        /// <param name="cause">
+        /// 
+        /// <see cref="System.Exception"/>
+        /// which caused the exception
+        /// </param>
+        public SafeCallingAvoidantException(Exception cause)
+            : base(cause) {
         }
 
         /// <summary>

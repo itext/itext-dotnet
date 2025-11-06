@@ -171,6 +171,17 @@ namespace iText.Bouncycastle.X509 {
         public int GetBasicConstraints() {
             return certificate.GetBasicConstraints();
         }
+        
+        /// <summary><inheritDoc/></summary>
+        public IDerObjectIdentifier[] GetSubjectAttributeTypes()
+        {
+            IList<DerObjectIdentifier> subjectAttributeTypes = certificate.SubjectDN.GetOidList();
+            IDerObjectIdentifier[] subjectAttributeTypesWrapper = new IDerObjectIdentifier[subjectAttributeTypes.Count];
+            for (int i = 0; i < subjectAttributeTypes.Count; ++i) {
+                subjectAttributeTypesWrapper[i] = new DerObjectIdentifierBC(subjectAttributeTypes[i]);
+            }
+            return subjectAttributeTypesWrapper;
+        }
 
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
         public override bool Equals(Object o) {

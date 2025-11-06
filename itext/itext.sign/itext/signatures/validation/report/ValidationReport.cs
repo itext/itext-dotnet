@@ -39,6 +39,14 @@ namespace iText.Signatures.Validation.Report {
         }
 
         // Declaring default constructor explicitly to avoid removing it unintentionally.
+        /// <summary>Create a copy of another validation report.</summary>
+        /// <param name="report">to be copied</param>
+        public ValidationReport(iText.Signatures.Validation.Report.ValidationReport report) {
+            foreach (ReportItem item in report.reportItems) {
+                this.AddReportItem(new ReportItem(item));
+            }
+        }
+
         /// <summary>Get the result of a validation process.</summary>
         /// <returns>
         /// 

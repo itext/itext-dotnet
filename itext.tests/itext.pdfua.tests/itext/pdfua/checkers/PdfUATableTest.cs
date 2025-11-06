@@ -154,7 +154,7 @@ namespace iText.Pdfua.Checkers {
             }
             tableBuilder.AddFooterCell(new PdfUATableTest.DataCellSupplier("Footer 1", 3, 1, null));
             framework.AddSuppliers(tableBuilder);
-            framework.AssertBothFail("tableWithHeaderScopeColumn04", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
+            framework.AssertBothFail("notRegularRowGroupingsInTable", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
                 .ROWS_SPAN_DIFFERENT_NUMBER_OF_COLUMNS, 1, 2), false, pdfUAConformance);
         }
 

@@ -63,7 +63,7 @@ namespace iText.Signatures.Validation {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal const String FRESHNESS_CHECK = "OCSP response is not fresh enough: " + "this update: {0}, validation date: {1}, freshness: {2}.";
+        internal const String FRESHNESS_CHECK = "OCSP response is not fresh enough: this update: {0}, validation date: {1}, freshness: {2}.";
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
@@ -72,11 +72,11 @@ namespace iText.Signatures.Validation {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal const String OCSP_RESPONDER_NOT_RETRIEVED = "OCSP response could not be verified: \" +\n" + "            \"Unexpected exception occurred retrieving responder.";
+        internal const String OCSP_RESPONDER_NOT_RETRIEVED = "OCSP response could not be verified: " + "Unexpected exception occurred retrieving responder.";
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal const String OCSP_RESPONDER_NOT_VERIFIED = "OCSP response could not be verified: \" +\n" + "            \" Unexpected exception occurred while validating responder certificate.";
+        internal const String OCSP_RESPONDER_NOT_VERIFIED = "OCSP response could not be verified: " + "Unexpected exception occurred while validating responder certificate.";
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
@@ -84,8 +84,7 @@ namespace iText.Signatures.Validation {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal const String OCSP_RESPONDER_TRUST_NOT_RETRIEVED = "OCSP response could not be verified: \" +\n" +
-             "            \"responder trust state could not be retrieved.";
+        internal const String OCSP_RESPONDER_TRUST_NOT_RETRIEVED = "OCSP response could not be verified: " + "responder trust state could not be retrieved.";
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
@@ -112,6 +111,11 @@ namespace iText.Signatures.Validation {
 //\cond DO_NOT_DOCUMENT
         internal const String UNABLE_TO_RETRIEVE_ISSUER = "OCSP response could not be verified: Unexpected exception "
              + "occurred while retrieving issuer";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String OCSP_RESPONSE_IS_SIGNED_BY_CERTIFICATE_BEING_VALIDATED = "OCSP response could not be validated: "
+             + "OCSP response is signed by the same certificate as being validated.";
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
@@ -220,9 +224,9 @@ namespace iText.Signatures.Validation {
                 // Check the status of the certificate:
                 ICertStatus status = singleResp.GetCertStatus();
                 IRevokedCertStatus revokedStatus = BOUNCY_CASTLE_FACTORY.CreateRevokedStatus(status);
-                bool isStatusGood = BOUNCY_CASTLE_FACTORY.CreateCertificateStatus().GetGood().Equals(status);
+                bool isStatusOk = BOUNCY_CASTLE_FACTORY.CreateCertificateStatus().GetGood().Equals(status);
                 // Check OCSP Archive Cutoff extension in case OCSP response was generated after the certificate is expired.
-                if (isStatusGood && certificate.GetNotAfter().Before(ocspResp.GetProducedAt())) {
+                if (isStatusOk && certificate.GetNotAfter().Before(ocspResp.GetProducedAt())) {
                     DateTime startExpirationDate = GetArchiveCutoffExtension(ocspResp);
                     if (TimestampConstants.UNDEFINED_TIMESTAMP_DATE == startExpirationDate || certificate.GetNotAfter().Before
                         (startExpirationDate)) {
@@ -231,10 +235,11 @@ namespace iText.Signatures.Validation {
                         continue;
                     }
                 }
-                if (isStatusGood || (revokedStatus != null && validationDate.Before(revokedStatus.GetRevocationTime()))) {
+                if (isStatusOk || (revokedStatus != null && validationDate.Before(revokedStatus.GetRevocationTime()))) {
                     // Check if the OCSP response is genuine.
-                    VerifyOcspResponder(candidateReports[i], localContext, ocspResp, issuerCerts[i], responseGenerationDate);
-                    if (!isStatusGood) {
+                    VerifyOcspResponder(candidateReports[i], localContext, ocspResp, issuerCerts[i], certificate, responseGenerationDate
+                        );
+                    if (!isStatusOk) {
                         candidateReports[i].AddReportItem(new CertificateReportItem(certificate, OCSP_CHECK, MessageFormatUtil.Format
                             (SignLogMessageConstant.VALID_CERTIFICATE_IS_REVOKED, revokedStatus.GetRevocationTime()), ReportItem.ReportItemStatus
                             .INFO));
@@ -276,8 +281,10 @@ namespace iText.Signatures.Validation {
         /// the OCSP response wrapper
         /// </param>
         /// <param name="issuerCert">the issuer of the certificate for which the OCSP is checked</param>
+        /// <param name="certificate">the certificate for which the OCSP is checked</param>
+        /// <param name="responseGenerationDate">trusted date at which response is generated</param>
         private void VerifyOcspResponder(ValidationReport report, ValidationContext context, IBasicOcspResponse ocspResp
-            , IX509Certificate issuerCert, DateTime responseGenerationDate) {
+            , IX509Certificate issuerCert, IX509Certificate certificate, DateTime responseGenerationDate) {
             ValidationContext localContext = context.SetCertificateSource(CertificateSource.OCSP_ISSUER);
             // OCSP response might be signed by the issuer certificate or
             // the Authorized OCSP responder certificate containing the id-kp-OCSPSigning extended key usage extension.
@@ -336,6 +343,12 @@ namespace iText.Signatures.Validation {
                 catch (Exception e) {
                     candidateReport.AddReportItem(new CertificateReportItem(responderCert, OCSP_CHECK, INVALID_OCSP, e, ReportItem.ReportItemStatus
                         .INVALID));
+                    continue;
+                }
+                if (certificate.Equals(responderCert)) {
+                    // OCSP response is signed by this same certificate
+                    report.AddReportItem(new CertificateReportItem(responderCert, OCSP_CHECK, OCSP_RESPONSE_IS_SIGNED_BY_CERTIFICATE_BEING_VALIDATED
+                        , ReportItem.ReportItemStatus.INDETERMINATE));
                     continue;
                 }
                 // Validating of the ocsp signer's certificate (responderCert) described in the

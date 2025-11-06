@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 using iText.IO.Exceptions;
 using iText.IO.Source;
@@ -59,6 +60,10 @@ namespace iText.IO.Font {
         /// <c>int[3]</c>
         /// where position 0 is the checksum, position 1 is the offset
         /// from the start of the file and position 2 is the length of the table.
+        /// <para />
+        /// The length of the table can be any. But when writing data, it should be aligned to 4 bytes. Say, if table length
+        /// is 54 we should write 2 extra zeroes at the end, and it should be taken into account for calculating the start
+        /// offset of the next table (but not the length of the current table).
         /// </remarks>
         protected internal IDictionary<String, int[]> tableDirectory;
 
@@ -85,6 +90,10 @@ namespace iText.IO.Font {
 
         /// <summary>the name of font which will be modified</summary>
         protected internal readonly String fontName;
+
+        protected internal IDictionary<int, byte[]> horizontalMetricMap;
+
+        protected internal int numberOfHMetrics;
 
         private AbstractTrueTypeFontModifier.FontRawData outFont;
 
@@ -115,12 +124,12 @@ namespace iText.IO.Font {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal virtual byte[] Process() {
+        internal virtual Tuple2<int, byte[]> Process() {
             try {
                 CreateTableDirectory();
-                MergeTables();
+                int numberOfGlyphs = MergeTables();
                 AssembleFont();
-                return outFont.GetData();
+                return new Tuple2<int, byte[]>(numberOfGlyphs, outFont.GetData());
             }
             finally {
                 try {
@@ -133,10 +142,10 @@ namespace iText.IO.Font {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal abstract void MergeTables();
+        internal abstract int MergeTables();
 //\endcond
 
-        protected internal virtual void CreateNewGlyfAndLocaTables() {
+        protected internal virtual int CreateModifiedTables() {
             int[] activeGlyphs = new int[glyphDataMap.Count];
             int i = 0;
             int glyfSize = 0;
@@ -145,13 +154,15 @@ namespace iText.IO.Font {
                 glyfSize += entry.Value.Length;
             }
             JavaUtil.Sort(activeGlyphs);
+            int maxGlyphId = activeGlyphs[activeGlyphs.Length - 1];
+            // Update loca and glyf tables
             // If the biggest used GID is X, size of loca should be X + 1 (array index starts from 0),
             // plus one extra entry to get size of X element (loca[X + 1] - loca[X]), it's why 2 added
-            int locaSize = activeGlyphs[activeGlyphs.Length - 1] + 2;
+            int locaSize = maxGlyphId + 2;
             bool isLocaShortTable = IsLocaShortTable();
             int newLocaTableSize = isLocaShortTable ? locaSize * 2 : locaSize * 4;
-            byte[] newLoca = new byte[newLocaTableSize + 3 & ~3];
-            byte[] newGlyf = new byte[glyfSize + 3 & ~3];
+            byte[] newLoca = new byte[newLocaTableSize];
+            byte[] newGlyf = new byte[glyfSize];
             int glyfPtr = 0;
             int listGlyf = 0;
             for (int k = 0; k < locaSize; ++k) {
@@ -165,6 +176,69 @@ namespace iText.IO.Font {
             }
             modifiedTables.Put("glyf", newGlyf);
             modifiedTables.Put("loca", newLoca);
+            // Update maxp table
+            int[] tableLocation = tableDirectory.Get("maxp");
+            raf.Seek(tableLocation[TABLE_OFFSET]);
+            byte[] maxp = new byte[tableLocation[TABLE_LENGTH]];
+            raf.Read(maxp);
+            WriteShortToTable(maxp, 2, maxGlyphId + 1);
+            modifiedTables.Put("maxp", maxp);
+            // Merging vertical fonts aren't supported yet, it's why vmtx and vhea tables ignored
+            // Update hhea table
+            // numberOfHMetrics can't be increased because there are no advanced width data. So only
+            // numberOfHMetrics decreasing is allowed. See createNewHorizontalMetricsTable method for more info.
+            if (numberOfHMetrics > maxGlyphId + 1) {
+                int[] hheaTableLocation = tableDirectory.Get("hhea");
+                raf.Seek(hheaTableLocation[TABLE_OFFSET]);
+                byte[] hhea = new byte[hheaTableLocation[TABLE_LENGTH]];
+                raf.Read(hhea);
+                WriteShortToTable(hhea, 17, maxGlyphId + 1);
+                modifiedTables.Put("hhea", hhea);
+            }
+            // Update hmtx table
+            byte[] newHtmx = CreateNewHorizontalMetricsTable(maxGlyphId);
+            modifiedTables.Put("hmtx", newHtmx);
+            return maxGlyphId + 1;
+        }
+
+        /// <summary>Creates new hmtx table.</summary>
+        /// <remarks>
+        /// Creates new hmtx table.
+        /// <para />
+        /// hmtx is a "hybrid" table, it has maxp.numGlyphs indices, for (indices &lt;= hhea.numberOfHMetrics) 4 bytes (advanced
+        /// width + left side bearing), for (hhea.numberOfHMetrics &lt; indices &lt;= maxp.numGlyphs) 2 bytes (left side bearing).
+        /// </remarks>
+        /// <param name="maxGlyphId">the max glyph id</param>
+        /// <returns>raw data of new hmtx table</returns>
+        private byte[] CreateNewHorizontalMetricsTable(int maxGlyphId) {
+            int[] tableLocation = tableDirectory.Get("hmtx");
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            raf.Seek(tableLocation[TABLE_OFFSET]);
+            for (int k = 0; k < numberOfHMetrics; ++k) {
+                if (k > maxGlyphId) {
+                    break;
+                }
+                if (horizontalMetricMap.ContainsKey(k)) {
+                    raf.SkipBytes(4);
+                    baos.Write(horizontalMetricMap.Get(k));
+                }
+                else {
+                    baos.Write(raf.ReadByte());
+                    baos.Write(raf.ReadByte());
+                    baos.Write(raf.ReadByte());
+                    baos.Write(raf.ReadByte());
+                }
+            }
+            // The 2nd part of hmtx. Only left side bearings
+            for (int k = numberOfHMetrics; k <= maxGlyphId; ++k) {
+                if (horizontalMetricMap.ContainsKey(k)) {
+                    baos.Write(horizontalMetricMap.Get(k));
+                }
+                else {
+                    baos.Write(new byte[] { 0, 0 });
+                }
+            }
+            return baos.ToArray();
         }
 
         private void CreateTableDirectory() {
@@ -211,10 +285,11 @@ namespace iText.IO.Font {
                     continue;
                 }
                 tablesUsed++;
+                // + 3 & ~3 here and further is to align to 4 bytes
                 fullFontSize += tableLocation[TABLE_LENGTH] + 3 & ~3;
             }
             foreach (byte[] table in modifiedTables.Values) {
-                fullFontSize += table.Length;
+                fullFontSize += table.Length + 3 & ~3;
             }
             int reference = 16 * tablesUsed + 12;
             fullFontSize += reference;
@@ -290,6 +365,13 @@ namespace iText.IO.Font {
             }
         }
 
+        private static void WriteShortToTable(byte[] table, int index, int data) {
+            // 2 bytes per field
+            index *= 2;
+            table[index] = (byte)(data >> 8);
+            table[index + 1] = (byte)data;
+        }
+
         private int CalculateChecksum(byte[] b) {
             int len = b.Length / 4;
             int v0 = 0;
@@ -332,7 +414,7 @@ namespace iText.IO.Font {
 //\cond DO_NOT_DOCUMENT
             internal virtual void WriteFontTable(byte[] tableData) {
                 Array.Copy(tableData, 0, data, ptr, tableData.Length);
-                ptr += tableData.Length;
+                ptr += tableData.Length + 3 & ~3;
             }
 //\endcond
 

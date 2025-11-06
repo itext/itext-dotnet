@@ -69,7 +69,11 @@ namespace iText.Signatures.Validation.Lotl {
 
         private readonly ICollection<CountryServiceContext> contexts = new HashSet<CountryServiceContext>();
 
+        private readonly QualifiedValidator qualifiedValidator;
+
         private readonly ValidationReport report;
+
+        private IList<IX509Certificate> previousCertificates = new List<IX509Certificate>();
 
         static LotlTrustedStore() {
             ICollection<CertificateSource> crlOcspSignScope = new HashSet<CertificateSource>();
@@ -170,6 +174,7 @@ namespace iText.Signatures.Validation.Lotl {
             else {
                 this.report = new ValidationReport();
             }
+            qualifiedValidator = builder.GetQualifiedValidator();
         }
 
         /// <summary>Gets all the certificates stored in this trusted store.</summary>
@@ -184,6 +189,22 @@ namespace iText.Signatures.Validation.Lotl {
                 allCertificates.AddAll(context.GetCertificates());
             }
             return allCertificates;
+        }
+
+        /// <summary>Sets the certificate chain, corresponding to the certificate we are about to check.</summary>
+        /// <param name="previousCertificates">
+        /// list of
+        /// <see cref="iText.Commons.Bouncycastle.Cert.IX509Certificate"/>
+        /// certificates
+        /// </param>
+        /// <returns>
+        /// same instance of
+        /// <see cref="LotlTrustedStore"/>
+        /// </returns>
+        public virtual iText.Signatures.Validation.Lotl.LotlTrustedStore SetPreviousCertificates(IList<IX509Certificate
+            > previousCertificates) {
+            this.previousCertificates = JavaCollectionsUtil.UnmodifiableList(previousCertificates);
+            return this;
         }
 
         /// <summary>Checks if given certificate is trusted according to context and time in which it is used.</summary>
@@ -217,13 +238,26 @@ namespace iText.Signatures.Validation.Lotl {
         public virtual bool CheckIfCertIsTrusted(ValidationReport result, ValidationContext context, IX509Certificate
              certificate, DateTime validationDate) {
             ICollection<CountryServiceContext> currentContextSet = GetCertificateContext(certificate);
-            result.MergeWithDifferentStatus(report, ReportItem.ReportItemStatus.INFO);
+            CheckQualification(context, certificate, validationDate, currentContextSet);
+            return CheckTrustworthiness(result, context, certificate, validationDate, currentContextSet);
+        }
+
+        private void CheckQualification(ValidationContext context, IX509Certificate certificate, DateTime validationDate
+            , ICollection<CountryServiceContext> currentContextSet) {
+            foreach (CountryServiceContext currentContext in currentContextSet) {
+                qualifiedValidator.CheckSignatureQualification(previousCertificates, currentContext, certificate, validationDate
+                    , context);
+            }
+        }
+
+        private bool CheckTrustworthiness(ValidationReport result, ValidationContext context, IX509Certificate certificate
+            , DateTime validationDate, ICollection<CountryServiceContext> currentContextSet) {
             IList<ReportItem> validationReportItems = new List<ReportItem>();
             foreach (CountryServiceContext currentContext in currentContextSet) {
                 ServiceChronologicalInfo chronologicalInfo = GetCertificateChronologicalInfoByTime(validationReportItems, 
                     certificate, currentContext, validationDate);
                 if (chronologicalInfo == null || !IsScopeCorrectlySpecified(validationReportItems, certificate, chronologicalInfo
-                    .GetExtensions())) {
+                    .GetServiceExtensions())) {
                     continue;
                 }
                 ICollection<CertificateSource> currentScope = GetCertificateSourceBasedOnServiceType(currentContext.GetServiceType
@@ -252,6 +286,12 @@ namespace iText.Signatures.Validation.Lotl {
                 result.AddReportItem(reportItem);
             }
             return false;
+        }
+
+        /// <summary>Gets lotl validation report.</summary>
+        /// <returns>validation report regarding trusted lists accessibility.</returns>
+        public virtual ValidationReport GetLotlValidationReport() {
+            return new ValidationReport(report);
         }
 
         /// <summary>

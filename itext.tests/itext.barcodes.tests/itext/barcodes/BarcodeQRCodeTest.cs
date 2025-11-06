@@ -54,8 +54,6 @@ namespace iText.Barcodes {
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
-            IDictionary<EncodeHintType, Object> hints = new Dictionary<EncodeHintType, Object>();
-            hints.Put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
             BarcodeQRCode barcode = new BarcodeQRCode("some specific text 239214 hello world");
             barcode.PlaceBarcode(canvas, ColorConstants.GRAY, 12);
             document.Close();

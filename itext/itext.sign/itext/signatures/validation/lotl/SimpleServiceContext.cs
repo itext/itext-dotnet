@@ -29,6 +29,13 @@ namespace iText.Signatures.Validation.Lotl {
         private IList<IX509Certificate> certificates;
 
 //\cond DO_NOT_DOCUMENT
+        internal SimpleServiceContext() {
+            //Empty constructor needed for deserialization.
+            this.certificates = new List<IX509Certificate>();
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         internal SimpleServiceContext(IX509Certificate certificate) {
             this.certificates = new List<IX509Certificate>();
             certificates.Add(certificate);

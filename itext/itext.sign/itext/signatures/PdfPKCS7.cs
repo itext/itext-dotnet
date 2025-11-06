@@ -751,7 +751,7 @@ namespace iText.Signatures {
                     signatureValue = sig.GenerateSignature();
                 }
                 MemoryStream bOut = new MemoryStream();
-                IDerOutputStream dout = BOUNCY_CASTLE_FACTORY.CreateASN1OutputStream(bOut);
+                IAsn1OutputStream dout = BOUNCY_CASTLE_FACTORY.CreateASN1OutputStream(bOut);
                 dout.WriteObject(BOUNCY_CASTLE_FACTORY.CreateDEROctetString(signatureValue));
                 dout.Dispose();
                 return bOut.ToArray();
@@ -913,7 +913,7 @@ namespace iText.Signatures {
                 whole.Add(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(OID.PKCS7_SIGNED_DATA));
                 whole.Add(BOUNCY_CASTLE_FACTORY.CreateDERTaggedObject(0, BOUNCY_CASTLE_FACTORY.CreateDERSequence(body)));
                 MemoryStream bOut = new MemoryStream();
-                IDerOutputStream dout = BOUNCY_CASTLE_FACTORY.CreateASN1OutputStream(bOut);
+                IAsn1OutputStream dout = BOUNCY_CASTLE_FACTORY.CreateASN1OutputStream(bOut);
                 dout.WriteObject(BOUNCY_CASTLE_FACTORY.CreateDERSequence(whole));
                 dout.Dispose();
                 return bOut.ToArray();

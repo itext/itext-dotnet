@@ -20,77 +20,146 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using iText.Signatures.Validation.Lotl;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace iText.Signatures.Validation {
+namespace iText.Signatures.Validation.Lotl {
+    /// <summary>Class representing ServiceHistory entry in a country specific Trusted List.</summary>
+    public class ServiceChronologicalInfo {
+//\cond DO_NOT_DOCUMENT
+        internal const String GRANTED = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/granted";
+//\endcond
 
-    internal class ServiceChronologicalInfo {
+//\cond DO_NOT_DOCUMENT
+        internal const String GRANTED_NATIONALLY = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/recognisedatnationallevel";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String ACCREDITED = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/accredited";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String SET_BY_NATIONAL_LAW = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/setbynationallaw";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String UNDER_SUPERVISION = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String SUPERVISION_IN_CESSATION = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/supervisionincessation";
+//\endcond
+
+        private static readonly ICollection<String> VALID_STATUSES = new HashSet<String>();
+
+        private readonly IList<AdditionalServiceInformationExtension> serviceExtensions = new List<AdditionalServiceInformationExtension
+            >();
+
+        private readonly IList<QualifierExtension> qualifierExtensions = new List<QualifierExtension>();
+
+        private readonly String statusStartDateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
         private String serviceStatus;
+
         //Local time is used here because it is required to use UTC in a trusted lists, so no offset shall be presented.
         private DateTime serviceStatusStartingTime;
 
-        private readonly List<AdditionalServiceInformationExtension> extensions = new List<AdditionalServiceInformationExtension>();
-        private readonly String statusStartDateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-        internal const String GRANTED = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/granted";
-        internal const String GRANTED_NATIONALLY =
-            "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/recognisedatnationallevel";
-        internal const String ACCREDITED = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/accredited";
-        internal const String SET_BY_NATIONAL_LAW = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/setbynationallaw";
-        private static readonly HashSet<String> validStatuses = new HashSet<String>();
-
         static ServiceChronologicalInfo() {
-            validStatuses.Add(GRANTED);
-            validStatuses.Add(GRANTED_NATIONALLY);
-            validStatuses.Add(ACCREDITED);
-            validStatuses.Add(SET_BY_NATIONAL_LAW);
+            VALID_STATUSES.Add(GRANTED);
+            VALID_STATUSES.Add(GRANTED_NATIONALLY);
+            VALID_STATUSES.Add(ACCREDITED);
+            VALID_STATUSES.Add(SET_BY_NATIONAL_LAW);
+            VALID_STATUSES.Add(UNDER_SUPERVISION);
+            VALID_STATUSES.Add(SUPERVISION_IN_CESSATION);
         }
 
+//\cond DO_NOT_DOCUMENT
         internal ServiceChronologicalInfo() {
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         internal ServiceChronologicalInfo(String serviceStatus, DateTime serviceStatusStartingTime) {
             this.serviceStatus = serviceStatus;
             this.serviceStatusStartingTime = serviceStatusStartingTime;
         }
+//\endcond
 
-        internal virtual void SetServiceStatus(String serviceStatus) {
-            this.serviceStatus = serviceStatus;
-        }
-
-        internal virtual String GetServiceStatus() {
+        /// <summary>Gets service status corresponding to this Service Chronological Info instance.</summary>
+        /// <returns>service status</returns>
+        public virtual String GetServiceStatus() {
             return serviceStatus;
         }
 
-        internal virtual void SetServiceStatusStartingTime(String timeString) {
-            DateTime.TryParseExact(timeString, statusStartDateFormat, null,
-                                      DateTimeStyles.None, out this.serviceStatusStartingTime);
-        }
-
-        internal virtual void SetServiceStatusStartingTime(DateTime serviceStatusStartingTime) {
-            this.serviceStatusStartingTime = serviceStatusStartingTime;
-        }
-
-        internal virtual DateTime GetServiceStatusStartingTime() {
+        /// <summary>Gets service status starting time corresponding to this Service Chronological Info instance.</summary>
+        /// <returns>service status starting time</returns>
+        public virtual DateTime GetServiceStatusStartingTime() {
             return serviceStatusStartingTime;
         }
 
-        internal static Boolean IsStatusValid(String status)
-        {
-            return validStatuses.Contains(status);
+        /// <summary>
+        /// Gets list of
+        /// <see cref="AdditionalServiceInformationExtension"/>
+        /// corresponding to this Service Chronological Info.
+        /// </summary>
+        /// <returns>
+        /// list of
+        /// <see cref="AdditionalServiceInformationExtension"/>
+        /// </returns>
+        public virtual IList<AdditionalServiceInformationExtension> GetServiceExtensions() {
+            return serviceExtensions;
         }
 
-        internal virtual void AddExtension(AdditionalServiceInformationExtension extension)
-        {
-            extensions.Add(extension);
+        /// <summary>
+        /// Gets list of
+        /// <see cref="QualifierExtension"/>
+        /// corresponding to this Service Chronological Info.
+        /// </summary>
+        /// <returns>
+        /// list of
+        /// <see cref="QualifierExtension"/>
+        /// </returns>
+        public virtual IList<QualifierExtension> GetQualifierExtensions() {
+            return qualifierExtensions;
         }
 
-        internal virtual List<AdditionalServiceInformationExtension> GetExtensions()
-        {
-            return extensions;
+//\cond DO_NOT_DOCUMENT
+        internal static bool IsStatusValid(String status) {
+            return VALID_STATUSES.Contains(status);
         }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual void SetServiceStatus(String serviceStatus) {
+            this.serviceStatus = serviceStatus;
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual void SetServiceStatusStartingTime(String timeString) {
+            DateTime.TryParseExact(timeString, statusStartDateFormat, null,
+                            DateTimeStyles.None, out this.serviceStatusStartingTime);
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual void SetServiceStatusStartingTime(DateTime serviceStatusStartingTime) {
+            this.serviceStatusStartingTime = serviceStatusStartingTime;
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual void AddServiceExtension(AdditionalServiceInformationExtension extension) {
+            serviceExtensions.Add(extension);
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual void AddQualifierExtension(QualifierExtension qualifierExtension) {
+            qualifierExtensions.Add(qualifierExtension);
+        }
+//\endcond
     }
 }

@@ -205,8 +205,12 @@ namespace iText.Kernel.Pdf {
             return name;
         }
 
+        /// <summary>Retrieves a PdfFormXObject by its name from XObject resources.</summary>
+        /// <param name="name">the name of the PdfFormXObject to retrieve</param>
+        /// <returns>a PdfFormXObject if found and valid; null otherwise</returns>
         public virtual PdfFormXObject GetForm(PdfName name) {
-            PdfStream form = GetResource(PdfName.XObject).GetAsStream(name);
+            PdfDictionary resource = GetResource(PdfName.XObject);
+            PdfStream form = resource != null ? resource.GetAsStream(name) : null;
             return form != null && PdfName.Form.Equals(form.GetAsName(PdfName.Subtype)) ? new PdfFormXObject(form) : null;
         }
 

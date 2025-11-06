@@ -127,8 +127,7 @@ namespace iText.Signatures.Validation.Lotl {
             NUnit.Framework.Assert.AreEqual(2, serviceContext.GetServiceChronologicalInfosSize());
             NUnit.Framework.Assert.AreEqual("http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/withdrawn", serviceContext
                 .GetCurrentChronologicalInfo().GetServiceStatus());
-            NUnit.Framework.Assert.AreEqual("http://uri.etsi.org/TrstSvc/Svctype/CA/QC", serviceContext.GetServiceType
-                ());
+            NUnit.Framework.Assert.AreEqual(ServiceTypeIdentifiersConstants.CA_QC, serviceContext.GetServiceType());
             NUnit.Framework.Assert.AreEqual(iText.Commons.Utils.DateTimeUtil.CreateDateTime(2021, 12, 16, 6, 0, 18), serviceContext
                 .GetCurrentChronologicalInfo().GetServiceStatusStartingTime());
         }
@@ -146,15 +145,13 @@ namespace iText.Signatures.Validation.Lotl {
             NUnit.Framework.Assert.AreEqual(3, serviceContext.GetServiceChronologicalInfosSize());
             NUnit.Framework.Assert.AreEqual("http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/withdrawn", serviceContext
                 .GetCurrentChronologicalInfo().GetServiceStatus());
-            NUnit.Framework.Assert.AreEqual("http://uri.etsi.org/TrstSvc/Svctype/CA/QC", serviceContext.GetServiceType
-                ());
+            NUnit.Framework.Assert.AreEqual(ServiceTypeIdentifiersConstants.CA_QC, serviceContext.GetServiceType());
             NUnit.Framework.Assert.AreEqual(iText.Commons.Utils.DateTimeUtil.CreateDateTime(2017, 6, 30, 22, 0), serviceContext
                 .GetCurrentChronologicalInfo().GetServiceStatusStartingTime());
-            DateTime previousStatusTime = iText.Commons.Utils.DateTimeUtil.CreateDateTime(2016, 6, 30, 22, 0);
+            DateTime previousStatusTime = iText.Commons.Utils.DateTimeUtil.CreateDateTime(2017, 6, 30, 21, 59);
             String previousStatus = serviceContext.GetServiceChronologicalInfoByDate(previousStatusTime).GetServiceStatus
                 ();
-            NUnit.Framework.Assert.AreEqual("http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/undersupervision", previousStatus
-                );
+            NUnit.Framework.Assert.AreEqual(ServiceChronologicalInfo.GRANTED, previousStatus);
         }
 
         [NUnit.Framework.Test]
@@ -170,8 +167,7 @@ namespace iText.Signatures.Validation.Lotl {
             NUnit.Framework.Assert.AreEqual(3, serviceContext.GetServiceChronologicalInfosSize());
             NUnit.Framework.Assert.AreEqual("http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/withdrawn", serviceContext
                 .GetCurrentChronologicalInfo().GetServiceStatus());
-            NUnit.Framework.Assert.AreEqual("http://uri.etsi.org/TrstSvc/Svctype/CA/QC", serviceContext.GetServiceType
-                ());
+            NUnit.Framework.Assert.AreEqual(ServiceTypeIdentifiersConstants.CA_QC, serviceContext.GetServiceType());
             NUnit.Framework.Assert.AreEqual(iText.Commons.Utils.DateTimeUtil.CreateDateTime(2016, 6, 30, 22, 0), serviceContext
                 .GetCurrentChronologicalInfo().GetServiceStatusStartingTime());
         }

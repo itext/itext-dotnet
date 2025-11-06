@@ -40,6 +40,8 @@ namespace iText.IO.Source {
         /// <summary>Whether there is a pushed back byte</summary>
         private bool isBack = false;
 
+        private readonly Object lockObj = new Object();
+
         /// <summary>Creates a RandomAccessFileOrArray that wraps the specified byte source.</summary>
         /// <remarks>
         /// Creates a RandomAccessFileOrArray that wraps the specified byte source.  The byte source will be closed when
@@ -591,8 +593,10 @@ namespace iText.IO.Source {
         }
 
         private void EnsureByteSourceIsThreadSafe() {
-            if (!(byteSource is ThreadSafeRandomAccessSource)) {
-                byteSource = new ThreadSafeRandomAccessSource(byteSource);
+            lock (lockObj) {
+                if (!(byteSource is ThreadSafeRandomAccessSource)) {
+                    byteSource = new ThreadSafeRandomAccessSource(byteSource);
+                }
             }
         }
     }

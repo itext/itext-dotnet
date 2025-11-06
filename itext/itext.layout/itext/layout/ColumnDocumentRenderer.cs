@@ -55,32 +55,25 @@ namespace iText.Layout {
             this.columns = columns;
         }
 
-        /// <summary>
-        /// Creates a ColumnDocumentRenderer whose elements need not be flushed
-        /// immediately.
-        /// </summary>
+        /// <summary>Creates a ColumnDocumentRenderer whose elements need not be flushed immediately.</summary>
         /// <param name="document">
         /// the
         /// <see cref="Document"/>
-        /// on which this Renderer will calculate
-        /// and execute element placements
+        /// on which this Renderer will calculate and execute element placements
         /// </param>
-        /// <param name="immediateFlush">whether or not to flush contents as soon as possible</param>
+        /// <param name="immediateFlush">whether to flush contents as soon as possible</param>
         /// <param name="columns">
         /// an array of
         /// <see cref="iText.Kernel.Geom.Rectangle"/>
-        /// specifying the acceptable
-        /// positions for elements on a page
+        /// specifying the acceptable positions for elements on a page
         /// </param>
         public ColumnDocumentRenderer(Document document, bool immediateFlush, Rectangle[] columns)
             : base(document, immediateFlush) {
             this.columns = columns;
         }
 
-        /// <summary>
-        /// Gets the array index of the next area that will be written on after the
-        /// current one is full (overflowed).
-        /// </summary>
+        /// <summary>Gets the array index of the next area that will be written on after the current one is full (overflowed).
+        ///     </summary>
         /// <returns>the array index of the next area that will be written on</returns>
         public virtual int GetNextAreaNumber() {
             return nextAreaNumber;

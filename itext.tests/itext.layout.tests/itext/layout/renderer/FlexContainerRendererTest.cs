@@ -20,12 +20,17 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
+using System.Collections.Generic;
+using iText.IO.Font.Constants;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
+using iText.Layout.Splitting;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -51,6 +56,61 @@ namespace iText.Layout.Renderer {
             flexRenderer.AddChild(divRenderer);
             NUnit.Framework.Assert.AreEqual(50F, flexRenderer.GetMinMaxWidth().GetMinWidth(), EPS);
             NUnit.Framework.Assert.AreEqual(50F, flexRenderer.GetMinMaxWidth().GetMaxWidth(), EPS);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NestedFlexWrapReverseTest() {
+            FlexContainerRenderer flexRenderer = new FlexContainerRenderer(new Div());
+            FlexContainerRenderer flexRendererChild = new FlexContainerRenderer(new Div());
+            FlexContainerRenderer flexRendererChildInner = new FlexContainerRenderer(new Div());
+            flexRenderer.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP_REVERSE);
+            flexRendererChild.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP_REVERSE);
+            flexRendererChildInner.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.WRAP_REVERSE);
+            flexRendererChildInner.SetProperty(Property.WIDTH, new UnitValue(UnitValue.POINT, 100));
+            TextRenderer textRenderer1 = new TextRenderer(new Text("1"));
+            TextRenderer textRenderer2 = new TextRenderer(new Text("2"));
+            TextRenderer textRenderer3 = new TextRenderer(new Text("3"));
+            textRenderer1.SetProperty(Property.TEXT_RISE, 20F);
+            textRenderer1.SetProperty(Property.CHARACTER_SPACING, 20F);
+            textRenderer1.SetProperty(Property.WORD_SPACING, 20F);
+            textRenderer1.SetProperty(Property.FONT, PdfFontFactory.CreateFont(StandardFonts.HELVETICA));
+            textRenderer1.SetProperty(Property.FONT_SIZE, new UnitValue(UnitValue.POINT, 20));
+            textRenderer1.SetProperty(Property.SPLIT_CHARACTERS, new DefaultSplitCharacters());
+            textRenderer2.SetProperty(Property.TEXT_RISE, 20F);
+            textRenderer2.SetProperty(Property.CHARACTER_SPACING, 20F);
+            textRenderer2.SetProperty(Property.WORD_SPACING, 20F);
+            textRenderer2.SetProperty(Property.FONT, PdfFontFactory.CreateFont(StandardFonts.HELVETICA));
+            textRenderer2.SetProperty(Property.FONT_SIZE, new UnitValue(UnitValue.POINT, 20));
+            textRenderer2.SetProperty(Property.SPLIT_CHARACTERS, new DefaultSplitCharacters());
+            textRenderer3.SetProperty(Property.TEXT_RISE, 20F);
+            textRenderer3.SetProperty(Property.CHARACTER_SPACING, 20F);
+            textRenderer3.SetProperty(Property.WORD_SPACING, 20F);
+            textRenderer3.SetProperty(Property.FONT, PdfFontFactory.CreateFont(StandardFonts.HELVETICA));
+            textRenderer3.SetProperty(Property.FONT_SIZE, new UnitValue(UnitValue.POINT, 20));
+            textRenderer3.SetProperty(Property.SPLIT_CHARACTERS, new DefaultSplitCharacters());
+            flexRendererChildInner.AddChild(textRenderer1);
+            flexRendererChildInner.AddChild(textRenderer1);
+            flexRendererChildInner.AddChild(textRenderer2);
+            flexRendererChildInner.AddChild(textRenderer2);
+            flexRendererChildInner.AddChild(textRenderer3);
+            flexRendererChildInner.AddChild(textRenderer3);
+            flexRendererChild.AddChild(flexRendererChildInner);
+            flexRenderer.AddChild(flexRendererChild);
+            flexRenderer.Layout(new LayoutContext(new LayoutArea(0, new Rectangle(100, 100))));
+            IList<String> childRenderersLayout1 = new List<String>();
+            foreach (IRenderer childRenderer in flexRenderer.GetChildRenderers()[0].GetChildRenderers()[0].GetChildRenderers
+                ()) {
+                childRenderersLayout1.Add(((Text)childRenderer.GetModelElement()).GetText());
+            }
+            flexRenderer.Layout(new LayoutContext(new LayoutArea(0, new Rectangle(100, 100))));
+            IList<String> childRenderersLayout2 = new List<String>();
+            foreach (IRenderer childRenderer in flexRenderer.GetChildRenderers()[0].GetChildRenderers()[0].GetChildRenderers
+                ()) {
+                childRenderersLayout2.Add(((Text)childRenderer.GetModelElement()).GetText());
+            }
+            for (int i = 0; i < childRenderersLayout1.Count; i++) {
+                NUnit.Framework.Assert.AreEqual(childRenderersLayout1[i], childRenderersLayout2[i]);
+            }
         }
 
         [NUnit.Framework.Test]
@@ -237,14 +297,14 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
         public virtual void GetNextRendererShouldBeOverriddenTest() {
-            FlexContainerRenderer flexContainerRenderer = new _FlexContainerRenderer_281(new Div());
+            FlexContainerRenderer flexContainerRenderer = new _FlexContainerRenderer_341(new Div());
             // Nothing is overridden
             NUnit.Framework.Assert.AreEqual(typeof(FlexContainerRenderer), flexContainerRenderer.GetNextRenderer().GetType
                 ());
         }
 
-        private sealed class _FlexContainerRenderer_281 : FlexContainerRenderer {
-            public _FlexContainerRenderer_281(Div baseArg1)
+        private sealed class _FlexContainerRenderer_341 : FlexContainerRenderer {
+            public _FlexContainerRenderer_341(Div baseArg1)
                 : base(baseArg1) {
             }
         }

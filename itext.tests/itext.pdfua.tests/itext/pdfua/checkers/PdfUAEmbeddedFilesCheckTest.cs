@@ -36,7 +36,7 @@ using iText.Test;
 namespace iText.Pdfua.Checkers {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfUAEmbeddedFilesCheckTest : ExtendedITextTest {
-        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfua/PdfUAFormulaTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfua/PdfUAEmbeddedFilesCheckTest/";
 
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/FreeSans.ttf";

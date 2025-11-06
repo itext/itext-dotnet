@@ -286,6 +286,8 @@ namespace iText.Layout.Properties {
 
         public const int OPACITY = 92;
 
+        public const int ORDER = 159;
+
         public const int ORPHANS_CONTROL = 121;
 
         public const int OUTLINE = 106;

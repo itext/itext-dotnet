@@ -178,7 +178,7 @@ namespace iText.Signatures.Validation.Lotl {
         /// Gets the calculation function for the cache refresh interval.
         /// <para />
         /// This function will be used to determine the refresh interval based on the staleness time.
-        /// By default, it takes 70% of the staleness time as the refresh interval.
+        /// By default, it takes 23% of the staleness time as the refresh interval.
         /// </remarks>
         /// <returns>
         /// a function that takes the staleness time in milliseconds and returns the refresh interval in
@@ -269,6 +269,12 @@ namespace iText.Signatures.Validation.Lotl {
             }
             // Process if schema is in the specified list
             return schemaNames.Contains(countryName);
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual IList<String> GetSchemaNames() {
+            return JavaCollectionsUtil.UnmodifiableList(JavaUtil.ArraysAsList(schemaNames.ToArray(new String[0])));
         }
 //\endcond
     }

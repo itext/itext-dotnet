@@ -23,8 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 using iText.IO.Exceptions;
@@ -113,8 +111,8 @@ namespace iText.IO.Font {
 
         public virtual IDictionary<int, int[]> GetActiveCmap() {
             OpenTypeParser.CmapTable cmaps = fontParser.GetCmapTable();
-            if (cmaps.cmapExt != null) {
-                return cmaps.cmapExt;
+            if (cmaps.cmap310 != null) {
+                return cmaps.cmap310;
             }
             else {
                 if (!cmaps.fontSpecific && cmaps.cmap31 != null) {
@@ -192,7 +190,7 @@ namespace iText.IO.Font {
             return gdefTable;
         }
 
-        /// <summary>Gets subset of the current TrueType font based on the passed glyphs.</summary>
+        /// <summary>Gets subset based on the passed glyphs.</summary>
         /// <param name="glyphs">the glyphs to subset the font</param>
         /// <param name="subsetTables">
         /// whether subset tables (remove `name` and `post` tables) or not. It's used in case of ttc
@@ -201,6 +199,24 @@ namespace iText.IO.Font {
         /// </param>
         /// <returns>the subset font</returns>
         public virtual byte[] GetSubset(ICollection<int> glyphs, bool subsetTables) {
+            return Subset(glyphs, subsetTables).GetSecond();
+        }
+
+        /// <summary>Gets subset and a number of glyphs in it based on the passed glyphs.</summary>
+        /// <remarks>
+        /// Gets subset and a number of glyphs in it based on the passed glyphs.
+        /// <para />
+        /// The number of glyphs in a subset is not just glyphs.size() here. It's the biggest glyph id + 1 (for glyph 0).
+        /// It also may include possible composite glyphs.
+        /// </remarks>
+        /// <param name="glyphs">the glyphs to subset the font</param>
+        /// <param name="subsetTables">
+        /// whether subset tables (remove `name` and `post` tables) or not. It's used in case of ttc
+        /// (true type collection) font where single "full" font is needed. Despite the value of that
+        /// flag, only used glyphs will be left in the font
+        /// </param>
+        /// <returns>the subset of the font and the number of glyphs in it</returns>
+        public virtual Tuple2<int, byte[]> Subset(ICollection<int> glyphs, bool subsetTables) {
             try {
                 return fontParser.GetSubset(glyphs, subsetTables);
             }
@@ -215,16 +231,32 @@ namespace iText.IO.Font {
         /// <param name="toMerge">the fonts to merge with used glyphs per each font</param>
         /// <param name="fontName">the name of fonts to merge</param>
         /// <returns>the raw data of merged font</returns>
+        [System.ObsoleteAttribute(@"in favour of Merge(System.Collections.Generic.IDictionary{K, V}, System.String, bool)"
+            )]
         public static byte[] Merge(IDictionary<iText.IO.Font.TrueTypeFont, ICollection<int>> toMerge, String fontName
             ) {
+            return Merge(toMerge, fontName, true);
+        }
+
+        /// <summary>Merges the passed font into one.</summary>
+        /// <remarks>Merges the passed font into one. Used glyphs per each font are applied to subset the merged font.
+        ///     </remarks>
+        /// <param name="toMerge">the fonts to merge with used glyphs per each font</param>
+        /// <param name="fontName">the name of fonts to merge</param>
+        /// <param name="isCmapCheckRequired">the flag which specifies whether 'cmap' table should be checked while merging or not
+        ///     </param>
+        /// <returns>the raw data of merged font</returns>
+        public static byte[] Merge(IDictionary<iText.IO.Font.TrueTypeFont, ICollection<int>> toMerge, String fontName
+            , bool isCmapCheckRequired) {
             try {
                 IDictionary<OpenTypeParser, ICollection<int>> toMergeWithParsers = new LinkedDictionary<OpenTypeParser, ICollection
                     <int>>();
                 foreach (KeyValuePair<iText.IO.Font.TrueTypeFont, ICollection<int>> entry in toMerge) {
                     toMergeWithParsers.Put(entry.Key.fontParser, entry.Value);
                 }
-                TrueTypeFontMerger trueTypeFontMerger = new TrueTypeFontMerger(fontName, toMergeWithParsers);
-                return trueTypeFontMerger.Process();
+                TrueTypeFontMerger trueTypeFontMerger = new TrueTypeFontMerger(fontName, toMergeWithParsers, isCmapCheckRequired
+                    );
+                return trueTypeFontMerger.Process().GetSecond();
             }
             catch (System.IO.IOException e) {
                 throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.IO_EXCEPTION, e);
@@ -383,9 +415,7 @@ namespace iText.IO.Font {
             foreach (int charCode in cmap.Keys) {
                 int index = cmap.Get(charCode)[0];
                 if (index >= numOfGlyphs) {
-                    ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.IO.Font.TrueTypeFont));
-                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.FONT_HAS_INVALID_GLYPH, GetFontNames
-                        ().GetFontName(), index));
+                    // It seems to be a valid case. If the font is subsetted but cmap table is not, it's a valid case
                     continue;
                 }
                 int cid;
@@ -471,30 +501,37 @@ namespace iText.IO.Font {
         /// </remarks>
         /// <param name="usedGlyphs">
         /// a set of integers, which are glyph ids that denote used glyphs.
-        /// This set is updated inside of the method if needed.
+        /// This set is updated inside the method if needed.
         /// </param>
         /// <param name="subset">subset status</param>
         /// <param name="subsetRanges">additional subset ranges</param>
         public virtual void UpdateUsedGlyphs(SortedSet<int> usedGlyphs, bool subset, IList<int[]> subsetRanges) {
-            int[] compactRange;
-            if (subsetRanges != null) {
-                compactRange = ToCompactRange(subsetRanges);
-            }
-            else {
-                if (!subset) {
-                    compactRange = new int[] { 0, 0xFFFF };
-                }
-                else {
-                    compactRange = new int[] {  };
+            int[] compactRange = ToCompactRange(subsetRanges, subset);
+            ICollection<int> missingGlyphs = GetMissingGlyphs(compactRange);
+            foreach (int? glyphId in missingGlyphs) {
+                if (GetGlyphByCode(glyphId.Value) != null) {
+                    usedGlyphs.Add(glyphId.Value);
                 }
             }
-            for (int k = 0; k < compactRange.Length; k += 2) {
-                int from = compactRange[k];
-                int to = compactRange[k + 1];
-                for (int glyphId = from; glyphId <= to; glyphId++) {
-                    if (GetGlyphByCode(glyphId) != null) {
-                        usedGlyphs.Add(glyphId);
-                    }
+        }
+
+        /// <summary>The method will update usedGlyphs with additional range or with all glyphs if there is no subset.
+        ///     </summary>
+        /// <remarks>
+        /// The method will update usedGlyphs with additional range or with all glyphs if there is no subset.
+        /// This map of used glyphs can be used for building width array and ToUnicode CMAP.
+        /// </remarks>
+        /// <param name="usedGlyphs">a map of glyph ids to glyphs. This map is updated inside the method if needed</param>
+        /// <param name="subset">subset status</param>
+        /// <param name="subsetRanges">additional subset ranges</param>
+        public virtual void UpdateUsedGlyphs(IDictionary<int, Glyph> usedGlyphs, bool subset, IList<int[]> subsetRanges
+            ) {
+            int[] compactRange = ToCompactRange(subsetRanges, subset);
+            ICollection<int> missingGlyphs = GetMissingGlyphs(compactRange);
+            foreach (int? glyphId in missingGlyphs) {
+                Glyph glyph = GetGlyphByCode(glyphId.Value);
+                if (glyph != null && !usedGlyphs.ContainsKey(glyphId.Value)) {
+                    usedGlyphs.Put(glyphId.Value, glyph);
                 }
             }
         }
@@ -509,8 +546,25 @@ namespace iText.IO.Font {
         /// of integer arrays, which are constituted by pairs of ints that denote
         /// each range limits. Each integer array size shall be a multiple of two
         /// </param>
+        /// <param name="subset">
+        /// 
+        /// <see langword="true"/>
+        /// if a font subset is required. Used only if
+        /// <paramref name="ranges"/>
+        /// is
+        /// <see langword="null"/>
+        /// </param>
         /// <returns>single merged array consisting of pairs of integers, each of them denoting a range</returns>
-        private static int[] ToCompactRange(IList<int[]> ranges) {
+        private static int[] ToCompactRange(IList<int[]> ranges, bool subset) {
+            if (ranges == null) {
+                if (subset) {
+                    return new int[] {  };
+                }
+                else {
+                    return new int[] { 0, 0xFFFF };
+                }
+            }
+            // Ranges are requested
             IList<int[]> simp = new List<int[]>();
             foreach (int[] range in ranges) {
                 for (int j = 0; j < range.Length; j += 2) {
@@ -537,6 +591,18 @@ namespace iText.IO.Font {
                 s[k * 2 + 1] = r[1];
             }
             return s;
+        }
+
+        private static ICollection<int> GetMissingGlyphs(int[] compactRange) {
+            ICollection<int> missingGlyphs = new HashSet<int>();
+            for (int k = 0; k < compactRange.Length; k += 2) {
+                int from = compactRange[k];
+                int to = compactRange[k + 1];
+                for (int glyphId = from; glyphId <= to; glyphId++) {
+                    missingGlyphs.Add(glyphId);
+                }
+            }
+            return missingGlyphs;
         }
     }
 }

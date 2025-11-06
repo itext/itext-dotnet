@@ -148,9 +148,8 @@ namespace iText.StyledXmlParser.Css.Validate.Impl {
                 (JavaUtil.ArraysAsList(CommonCssConstants.SPACE_AROUND, CommonCssConstants.SPACE_BETWEEN, CommonCssConstants
                 .SPACE_EVENLY, CommonCssConstants.STRETCH, CommonCssConstants.NORMAL, CommonCssConstants.LEFT, CommonCssConstants
                 .RIGHT)), new CssEnumValidator(JavaUtil.ArraysAsList(CommonCssConstants.CENTER, CommonCssConstants.START
-                , CommonCssConstants.FLEX_START, CommonCssConstants.SELF_START, CommonCssConstants.END, CommonCssConstants
-                .FLEX_END, CommonCssConstants.SELF_END), JavaUtil.ArraysAsList(CommonCssConstants.SAFE, CommonCssConstants
-                .UNSAFE)), inheritInitialUnsetValidator));
+                , CommonCssConstants.FLEX_START, CommonCssConstants.END, CommonCssConstants.FLEX_END), JavaUtil.ArraysAsList
+                (CommonCssConstants.SAFE, CommonCssConstants.UNSAFE)), inheritInitialUnsetValidator));
             defaultValidators.Put(CommonCssConstants.JUSTIFY_ITEMS, new MultiTypeDeclarationValidator(normalValidator, 
                 new CssEnumValidator(JavaUtil.ArraysAsList(CommonCssConstants.BASELINE), JavaUtil.ArraysAsList(CommonCssConstants
                 .FIRST, CommonCssConstants.LAST)), new CssEnumValidator(JavaUtil.ArraysAsList(CommonCssConstants.STRETCH

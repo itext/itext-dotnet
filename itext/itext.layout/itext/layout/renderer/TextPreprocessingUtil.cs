@@ -49,7 +49,6 @@ namespace iText.Layout.Renderer {
                     bool isSpecialWhitespaceGlyph = xAdvance != null;
                     if (isSpecialWhitespaceGlyph) {
                         Glyph newGlyph = new Glyph(space);
-                        newGlyph.SetChars(glyph.GetChars());
                         System.Diagnostics.Debug.Assert(xAdvance <= short.MaxValue && xAdvance >= short.MinValue);
                         newGlyph.SetXAdvance((short)(int)xAdvance);
                         line.Set(i, newGlyph);

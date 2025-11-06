@@ -179,7 +179,7 @@ namespace iText.Pdfua.Checkers {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     String expectedMessage = MessageFormatUtil.Format(KernelExceptionMessageConstant.PARENT_CHILD_ROLE_RELATION_IS_NOT_ALLOWED
                         , "H1", "H2");
-                    framework.AssertBothFail("brokenHnInheritedSequenceTest1", expectedMessage, pdfUAConformance);
+                    framework.AssertBothFail("brokenHnMixedSequenceTest", expectedMessage, pdfUAConformance);
                 }
             }
         }
@@ -745,13 +745,13 @@ namespace iText.Pdfua.Checkers {
             framework.AddSuppliers(new _Generator_690());
             framework.AddSuppliers(new _Generator_714());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothValid("hnInheritedSequenceTest", pdfUAConformance);
+                framework.AssertBothValid("hnCompareWithLastFromAnotherBranchTest", pdfUAConformance);
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     String message = MessageFormatUtil.Format(KernelExceptionMessageConstant.PARENT_CHILD_ROLE_RELATION_IS_NOT_ALLOWED
                         , "H1", "H2");
-                    framework.AssertBothFail("hnInheritedSequenceTest", message, pdfUAConformance);
+                    framework.AssertBothFail("hnCompareWithLastFromAnotherBranchTest", message, pdfUAConformance);
                 }
             }
         }
@@ -850,13 +850,13 @@ namespace iText.Pdfua.Checkers {
             UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(new _Generator_784());
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothValid("hnCompareWithLastFromAnotherBranchTest2", pdfUAConformance);
+                framework.AssertBothValid("hnInheritedSequenceTest2", pdfUAConformance);
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
                     String message = MessageFormatUtil.Format(KernelExceptionMessageConstant.PARENT_CHILD_ROLE_RELATION_IS_NOT_ALLOWED
                         , "H1", "H2");
-                    framework.AssertBothFail("hnCompareWithLastFromAnotherBranchTest2", message, pdfUAConformance);
+                    framework.AssertBothFail("hnInheritedSequenceTest2", message, pdfUAConformance);
                 }
             }
         }
@@ -967,11 +967,11 @@ namespace iText.Pdfua.Checkers {
             // The test code is the same as in usualHTest with one exception:
             // the next line where another grouping element is defined.
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothValid("hnParallelSequenceTest", pdfUAConformance);
+                framework.AssertBothValid("usualHTest2", pdfUAConformance);
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothFail("hnParallelSequenceTest", PdfUAExceptionMessageConstants.DOCUMENT_USES_H_TAG, pdfUAConformance
+                    framework.AssertBothFail("usualHTest2", PdfUAExceptionMessageConstants.DOCUMENT_USES_H_TAG, pdfUAConformance
                         );
                 }
             }

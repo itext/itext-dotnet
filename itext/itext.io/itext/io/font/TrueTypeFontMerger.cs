@@ -30,33 +30,43 @@ namespace iText.IO.Font {
 //\cond DO_NOT_DOCUMENT
     /// <summary>Merges TrueType fonts and subset merged font by leaving only needed glyphs in the font.</summary>
     internal class TrueTypeFontMerger : AbstractTrueTypeFontModifier {
-        private readonly IDictionary<int, byte[]> horizontalMetricMap;
-
-        private readonly int numberOfHMetrics;
+        private OpenTypeParser cmapSourceParser = null;
 
 //\cond DO_NOT_DOCUMENT
-        internal TrueTypeFontMerger(String fontName, IDictionary<OpenTypeParser, ICollection<int>> fontsToMerge)
+        internal TrueTypeFontMerger(String fontName, IDictionary<OpenTypeParser, ICollection<int>> fontsToMerge, bool
+             isCmapCheckRequired)
             : base(fontName, true) {
-            horizontalMetricMap = new Dictionary<int, byte[]>(fontsToMerge.Count);
-            glyphDataMap = new Dictionary<int, byte[]>(fontsToMerge.Count);
+            horizontalMetricMap = new Dictionary<int, byte[]>();
+            glyphDataMap = new Dictionary<int, byte[]>();
             OpenTypeParser parserExample = null;
+            ICollection<int> allGids = new HashSet<int>();
+            IDictionary<OpenTypeParser, IList<int>> fontsToMergeWithFlatGlyphs = new LinkedDictionary<OpenTypeParser, 
+                IList<int>>();
             foreach (KeyValuePair<OpenTypeParser, ICollection<int>> entry in fontsToMerge) {
                 OpenTypeParser parser = entry.Key;
-                IList<int> usedGlyphs = parser.GetFlatGlyphs(entry.Value);
-                foreach (int? glyphObj in usedGlyphs) {
+                IList<int> usedFlatGlyphs = parser.GetFlatGlyphs(entry.Value);
+                fontsToMergeWithFlatGlyphs.Put(parser, usedFlatGlyphs);
+                allGids.AddAll(usedFlatGlyphs);
+            }
+            // 'cmap' table shouldn't contain mapping for .notdef glyph
+            allGids.Remove(0);
+            foreach (KeyValuePair<OpenTypeParser, IList<int>> entry in fontsToMergeWithFlatGlyphs) {
+                OpenTypeParser parser = entry.Key;
+                IList<int> usedFlatGlyphs = entry.Value;
+                foreach (int? glyphObj in usedFlatGlyphs) {
                     int glyph = (int)glyphObj;
                     byte[] glyphData = parser.GetGlyphDataForGid((int)glyph);
                     if (glyphDataMap.ContainsKey((int)glyph) && !JavaUtil.ArraysEquals(glyphDataMap.Get((int)glyph), glyphData
                         )) {
                         throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INCOMPATIBLE_GLYPH_DATA_DURING_FONT_MERGING
-                            ).SetMessageParams(fontName);
+                            );
                     }
                     glyphDataMap.Put(glyph, glyphData);
                     byte[] glyphMetric = parser.GetHorizontalMetricForGid(glyph);
                     if (horizontalMetricMap.ContainsKey(glyph) && !JavaUtil.ArraysEquals(horizontalMetricMap.Get(glyph), glyphMetric
                         )) {
                         throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.INCOMPATIBLE_GLYPH_DATA_DURING_FONT_MERGING
-                            ).SetMessageParams(fontName);
+                            );
                     }
                     horizontalMetricMap.Put(glyph, glyphMetric);
                 }
@@ -67,6 +77,12 @@ namespace iText.IO.Font {
                 if (parserExample == null || parser.hhea.numberOfHMetrics > parserExample.hhea.numberOfHMetrics) {
                     parserExample = parser;
                 }
+                if (isCmapCheckRequired && cmapSourceParser == null && IsCmapContainsGids(parser, allGids)) {
+                    cmapSourceParser = parser;
+                }
+            }
+            if (isCmapCheckRequired && cmapSourceParser == null) {
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.CMAP_TABLE_MERGING_IS_NOT_SUPPORTED);
             }
             this.raf = parserExample.raf.CreateView();
             this.directoryOffset = parserExample.directoryOffset;
@@ -75,31 +91,38 @@ namespace iText.IO.Font {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal override void MergeTables() {
-            base.CreateNewGlyfAndLocaTables();
-            // cmap table merging isn't supported yet
-            // merging vertical fonts aren't supported yet, it's why vmtx and vhea tables ignored
-            CreateNewHorizontalMetricsTable();
+        internal override int MergeTables() {
+            int numOfGlyphs = base.CreateModifiedTables();
+            // cmap table merging isn't supported yet, so cmap which
+            // contains all CID will be taken (if there is such)
+            if (cmapSourceParser != null) {
+                RandomAccessFileOrArray cmapSourceRaf = cmapSourceParser.raf.CreateView();
+                int[] tableLocation = cmapSourceParser.tables.Get("cmap");
+                byte[] cmap = new byte[tableLocation[1]];
+                cmapSourceRaf.Seek(tableLocation[0]);
+                cmapSourceRaf.Read(cmap);
+                modifiedTables.Put("cmap", cmap);
+            }
+            return numOfGlyphs;
         }
 //\endcond
 
-        private void CreateNewHorizontalMetricsTable() {
-            int[] tableLocation = tableDirectory.Get("hmtx");
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            raf.Seek(tableLocation[1]);
-            for (int k = 0; k < numberOfHMetrics; ++k) {
-                if (horizontalMetricMap.ContainsKey(k)) {
-                    raf.SkipBytes(4);
-                    baos.Write(horizontalMetricMap.Get(k));
-                }
-                else {
-                    baos.Write(raf.ReadByte());
-                    baos.Write(raf.ReadByte());
-                    baos.Write(raf.ReadByte());
-                    baos.Write(raf.ReadByte());
-                }
+        private static bool IsCmapContainsGids(OpenTypeParser parser, ICollection<int> gids) {
+            OpenTypeParser.CmapTable cmapTable = parser.GetCmapTable();
+            return IsEncodingContainsGids(cmapTable.cmap03, gids) && IsEncodingContainsGids(cmapTable.cmap10, gids) &&
+                 IsEncodingContainsGids(cmapTable.cmap30, gids) && IsEncodingContainsGids(cmapTable.cmap31, gids) && IsEncodingContainsGids
+                (cmapTable.cmap310, gids);
+        }
+
+        private static bool IsEncodingContainsGids(IDictionary<int, int[]> encoding, ICollection<int> gids) {
+            if (encoding == null) {
+                return true;
             }
-            modifiedTables.Put("hmtx", baos.ToArray());
+            ICollection<int> encodingGids = new HashSet<int>();
+            foreach (int[] mapping in encoding.Values) {
+                encodingGids.Add(mapping[0]);
+            }
+            return encodingGids.ContainsAll(gids);
         }
     }
 //\endcond

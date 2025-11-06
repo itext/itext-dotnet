@@ -74,10 +74,14 @@ namespace iText.IO.Exceptions {
 
         public const String CHARACTER_CODE_EXCEPTION = "Character code exception.";
 
+        public const String CMAP_TABLE_MERGING_IS_NOT_SUPPORTED = "cmap table merging isn't supported.";
+
         public const String CMAP_WAS_NOT_FOUND = "The CMap {0} was not found.";
 
+        [Obsolete]
         public const String COLOR_DEPTH_IS_NOT_SUPPORTED = "The color depth {0} is not supported.";
 
+        [Obsolete]
         public const String COLOR_SPACE_IS_NOT_SUPPORTED = "The color space {0} is not supported.";
 
         public const String COMPARE_COMMAND_IS_NOT_SPECIFIED = "ImageMagick comparison command is not specified. Set the "
@@ -200,6 +204,7 @@ namespace iText.IO.Exceptions {
 
         public const String NOT_FOUND_AS_FILE_OR_RESOURCE = "{0} not found as file or resource.";
 
+        [Obsolete]
         public const String N_VALUE_IS_NOT_SUPPORTED = "N value {0} is not supported.";
 
         public const String PADDING_OVERFLOW = "woff2 padding overflow exception";

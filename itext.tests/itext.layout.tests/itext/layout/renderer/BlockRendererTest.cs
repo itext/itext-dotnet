@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using iText.IO.Font.Constants;
 using iText.IO.Source;
 using iText.Kernel.Colors;
@@ -29,9 +30,11 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Font;
 using iText.Layout.Layout;
+using iText.Layout.Logs;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 using iText.Test;
@@ -175,6 +178,62 @@ namespace iText.Layout.Renderer {
             DivRenderer renderer = (DivRenderer)div.GetRenderer();
             PdfFont font = renderer.GetResolvedFont(null);
             NUnit.Framework.Assert.IsNull(font);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void EnableForcePlacementIfCauseOfNothingNotInOverflowTreeTest() {
+            String cmpFileName = SOURCE_FOLDER + "cmp_enableForcePlacementIfCauseOfNothingNotInOverflowTree.pdf";
+            String outFile = DESTINATION_FOLDER + "enableForcePlacementIfCauseOfNothingNotInOverflowTree.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            Document doc = new Document(pdfDoc);
+            // In this test we use custom DivRenderer implementation to break parent tree of cause of nothing element to
+            // check that RootRenderer.tryDisableKeepTogether catches that case and switches to enabling forced placement
+            WrongParentTreeDiv parentWrongParentTreeDiv = new WrongParentTreeDiv();
+            parentWrongParentTreeDiv.SetKeepTogether(true);
+            WrongParentTreeDiv wrongParentTreeDiv = new WrongParentTreeDiv();
+            AnonymousInlineBox longParagraph = new AnonymousInlineBox();
+            longParagraph.Add("Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! " + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! "
+                 + "Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! Hello, iText! ");
+            longParagraph.SetFontSize(35);
+            wrongParentTreeDiv.Add(longParagraph);
+            parentWrongParentTreeDiv.Add(wrongParentTreeDiv);
+            doc.Add(parentWrongParentTreeDiv);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER)
+                );
+        }
+
+        public class WrongParentTreeDivRenderer : DivRenderer {
+            public WrongParentTreeDivRenderer(Div modelElement)
+                : base(modelElement) {
+            }
+
+            public override IRenderer GetNextRenderer() {
+                return new BlockRendererTest.WrongParentTreeDivRenderer((Div)modelElement);
+            }
+
+//\cond DO_NOT_DOCUMENT
+            internal override LayoutResult ProcessNotFullChildResult(LayoutContext layoutContext, IDictionary<int, IRenderer
+                > waitingFloatsSplitRenderers, IList<IRenderer> waitingOverflowFloatRenderers, bool wasHeightClipped, 
+                IList<Rectangle> floatRendererAreas, bool marginsCollapsingEnabled, float clearHeightCorrection, Border
+                [] borders, UnitValue[] paddings, IList<Rectangle> areas, int currentAreaPos, Rectangle layoutBox, ICollection
+                <Rectangle> nonChildFloatingRendererAreas, IRenderer causeOfNothing, bool anythingPlaced, int childPos
+                , LayoutResult result) {
+                LayoutResult layoutResult = base.ProcessNotFullChildResult(layoutContext, waitingFloatsSplitRenderers, waitingOverflowFloatRenderers
+                    , wasHeightClipped, floatRendererAreas, marginsCollapsingEnabled, clearHeightCorrection, borders, paddings
+                    , areas, currentAreaPos, layoutBox, nonChildFloatingRendererAreas, causeOfNothing, anythingPlaced, childPos
+                    , result);
+                bool keepTogether = IsKeepTogether(causeOfNothing);
+                if (keepTogether && this.GetParent() is DocumentRenderer) {
+                    result.GetCauseOfNothing().GetParent().SetParent(this);
+                }
+                return layoutResult;
+            }
+//\endcond
         }
     }
 }

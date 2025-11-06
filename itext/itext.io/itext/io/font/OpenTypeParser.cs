@@ -285,6 +285,10 @@ namespace iText.IO.Font {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
+            internal IDictionary<int, int[]> cmap03;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
             /// <summary>The map containing the code information for the table 'cmap', encoding 1.0.</summary>
             /// <remarks>
             /// The map containing the code information for the table 'cmap', encoding 1.0.
@@ -295,6 +299,10 @@ namespace iText.IO.Font {
             /// </remarks>
             /// <seealso cref="FontProgram.UNITS_NORMALIZATION"/>
             internal IDictionary<int, int[]> cmap10;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal IDictionary<int, int[]> cmap30;
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
@@ -311,7 +319,7 @@ namespace iText.IO.Font {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-            internal IDictionary<int, int[]> cmapExt;
+            internal IDictionary<int, int[]> cmap310;
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
@@ -548,9 +556,21 @@ namespace iText.IO.Font {
             int start = locaTable[gid];
             int len = locaTable[gid + 1] - start;
             byte[] data = new byte[len];
-            raf.Seek(glyfOffset + start);
-            raf.ReadFully(data, 0, len);
-            return data;
+            // OpenTypeParser may be shared between different threads.
+            // raf.createView() returns thread safe RandomAccessFileOrArray
+            RandomAccessFileOrArray tmpRaf = raf.CreateView();
+            try {
+                tmpRaf.Seek(glyfOffset + start);
+                tmpRaf.ReadFully(data, 0, len);
+                return data;
+            }
+            finally {
+                try {
+                    tmpRaf.Close();
+                }
+                catch (Exception) {
+                }
+            }
         }
 
         /// <summary>Gets horizontal metric data from `hmtx` table for passed GID (glyph ID).</summary>
@@ -563,11 +583,32 @@ namespace iText.IO.Font {
                     ("hmtx", fileName);
             }
             int hmtxOffset = tableLocation[0];
-            // 4 bytes per each glyph, 2 bytes for width, 2 bytes for left side bearing
-            raf.Seek(hmtxOffset + gid * 4);
-            byte[] metric = new byte[4];
-            raf.Read(metric, 0, 4);
-            return metric;
+            // OpenTypeParser may be shared between different threads.
+            // raf.createView() returns thread safe RandomAccessFileOrArray
+            RandomAccessFileOrArray tmpRaf = raf.CreateView();
+            try {
+                // For first hhea.numberOfHMetrics - 4 bytes per each glyph, 2 bytes for width, 2 bytes for left side bearing
+                if (gid < hhea.numberOfHMetrics) {
+                    tmpRaf.Seek(hmtxOffset + gid * 4);
+                    byte[] metric = new byte[4];
+                    tmpRaf.Read(metric, 0, 4);
+                    return metric;
+                }
+                else {
+                    // For the rest - only 2 bytes for left side bearing for the rest
+                    tmpRaf.Seek(hmtxOffset + hhea.numberOfHMetrics * 4 + (gid - hhea.numberOfHMetrics) * 2);
+                    byte[] metric = new byte[2];
+                    tmpRaf.Read(metric, 0, 2);
+                    return metric;
+                }
+            }
+            finally {
+                try {
+                    tmpRaf.Close();
+                }
+                catch (Exception) {
+                }
+            }
         }
 
         /// <summary>
@@ -604,15 +645,21 @@ namespace iText.IO.Font {
         }
 
 //\cond DO_NOT_DOCUMENT
-        /// <summary>Gets raw bytes of subset of parsed font.</summary>
+        /// <summary>Gets raw bytes of subset of parsed font and a number of glyphs in a subset.</summary>
+        /// <remarks>
+        /// Gets raw bytes of subset of parsed font and a number of glyphs in a subset.
+        /// <para />
+        /// The number of glyphs in a subset is not just glyphs.size() here. It's the biggest glyph id + 1 (for glyph 0).
+        /// It also may include possible composite glyphs.
+        /// </remarks>
         /// <param name="glyphs">the glyphs to subset the font</param>
         /// <param name="subsetTables">
         /// whether subset tables (remove `name` and `post` tables) or not. It's used in case of ttc
         /// (true type collection) font where single "full" font is needed. Despite the value of that
         /// flag, only used glyphs will be left in the font
         /// </param>
-        /// <returns>the raw data of subset font</returns>
-        internal virtual byte[] GetSubset(ICollection<int> glyphs, bool subsetTables) {
+        /// <returns>a tuple of the number of glyphs and the raw data of subset font</returns>
+        internal virtual Tuple2<int, byte[]> GetSubset(ICollection<int> glyphs, bool subsetTables) {
             TrueTypeFontSubsetter sb = new TrueTypeFontSubsetter(fileName, this, glyphs, subsetTables);
             return sb.Process();
         }
@@ -660,41 +707,53 @@ namespace iText.IO.Font {
             if (start == locaTable[glyph + 1]) {
                 return;
             }
-            raf.Seek(glyfOffset + start);
-            int numContours = raf.ReadShort();
-            if (numContours >= 0) {
-                return;
-            }
-            raf.SkipBytes(8);
-            for (; ; ) {
-                int flags = raf.ReadUnsignedShort();
-                int cGlyph = raf.ReadUnsignedShort();
-                if (!glyphsUsed.Contains(cGlyph)) {
-                    glyphsUsed.Add(cGlyph);
-                    glyphsInList.Add(cGlyph);
-                }
-                if ((flags & MORE_COMPONENTS) == 0) {
+            // OpenTypeParser may be shared between different threads.
+            // raf.createView() returns thread safe RandomAccessFileOrArray
+            RandomAccessFileOrArray tmpRaf = raf.CreateView();
+            try {
+                tmpRaf.Seek(glyfOffset + start);
+                int numContours = tmpRaf.ReadShort();
+                if (numContours >= 0) {
                     return;
                 }
-                int skip;
-                if ((flags & ARG_1_AND_2_ARE_WORDS) != 0) {
-                    skip = 4;
-                }
-                else {
-                    skip = 2;
-                }
-                if ((flags & WE_HAVE_A_SCALE) != 0) {
-                    skip += 2;
-                }
-                else {
-                    if ((flags & WE_HAVE_AN_X_AND_Y_SCALE) != 0) {
-                        skip += 4;
+                tmpRaf.SkipBytes(8);
+                for (; ; ) {
+                    int flags = tmpRaf.ReadUnsignedShort();
+                    int cGlyph = tmpRaf.ReadUnsignedShort();
+                    if (!glyphsUsed.Contains(cGlyph)) {
+                        glyphsUsed.Add(cGlyph);
+                        glyphsInList.Add(cGlyph);
                     }
+                    if ((flags & MORE_COMPONENTS) == 0) {
+                        return;
+                    }
+                    int skip;
+                    if ((flags & ARG_1_AND_2_ARE_WORDS) != 0) {
+                        skip = 4;
+                    }
+                    else {
+                        skip = 2;
+                    }
+                    if ((flags & WE_HAVE_A_SCALE) != 0) {
+                        skip += 2;
+                    }
+                    else {
+                        if ((flags & WE_HAVE_AN_X_AND_Y_SCALE) != 0) {
+                            skip += 4;
+                        }
+                    }
+                    if ((flags & WE_HAVE_A_TWO_BY_TWO) != 0) {
+                        skip += 8;
+                    }
+                    tmpRaf.SkipBytes(skip);
                 }
-                if ((flags & WE_HAVE_A_TWO_BY_TWO) != 0) {
-                    skip += 8;
+            }
+            finally {
+                try {
+                    tmpRaf.Close();
                 }
-                raf.SkipBytes(skip);
+                catch (Exception) {
+                }
             }
         }
 
@@ -1178,41 +1237,62 @@ namespace iText.IO.Font {
             raf.Seek(table_location[0]);
             raf.SkipBytes(2);
             int num_tables = raf.ReadUnsignedShort();
-            int map10 = 0;
-            int map31 = 0;
-            int map30 = 0;
-            int mapExt = 0;
             int map03 = 0;
+            int map10 = 0;
+            int map30 = 0;
+            int map31 = 0;
+            int map310 = 0;
             cmaps = new OpenTypeParser.CmapTable();
             for (int k = 0; k < num_tables; ++k) {
                 int platId = raf.ReadUnsignedShort();
                 int platSpecId = raf.ReadUnsignedShort();
                 cmaps.cmapEncodings.Add(new Tuple2<int, int>(platId, platSpecId));
                 int offset = raf.ReadInt();
-                if (platId == 3 && platSpecId == 0) {
-                    cmaps.fontSpecific = true;
-                    map30 = offset;
+                if (platId == 0 && platSpecId == 3) {
+                    map03 = offset;
                 }
                 else {
-                    if (platId == 3 && platSpecId == 1) {
-                        map31 = offset;
+                    if (platId == 1 && platSpecId == 0) {
+                        map10 = offset;
                     }
                     else {
-                        if (platId == 3 && platSpecId == 10) {
-                            mapExt = offset;
+                        if (platId == 3 && platSpecId == 0) {
+                            cmaps.fontSpecific = true;
+                            map30 = offset;
                         }
                         else {
-                            if (platId == 1 && platSpecId == 0) {
-                                map10 = offset;
+                            if (platId == 3 && platSpecId == 1) {
+                                map31 = offset;
                             }
                             else {
-                                if (platId == 0 && platSpecId == 3) {
-                                    map03 = offset;
+                                if (platId == 3 && platSpecId == 10) {
+                                    map310 = offset;
                                 }
                             }
                         }
                     }
                 }
+            }
+            if (map03 > 0) {
+                // Unicode platform, Unicode >2.0 semantics, expect format 4 or 6 subtable
+                raf.Seek(table_location[0] + map03);
+                int format = raf.ReadUnsignedShort();
+                switch (format) {
+                    case 4: {
+                        cmaps.cmap03 = ReadFormat4(false);
+                        break;
+                    }
+
+                    case 6: {
+                        cmaps.cmap03 = ReadFormat6();
+                        break;
+                    }
+                }
+                // We treat this table as equivalent to (platformId = 3, encodingId = 1)
+                // for downstream processing, since both are intended to address the Unicode BMP.
+                // Note that only one of these encoding subtables is used at a time. If multiple encoding subtables
+                // are found, the ‘cmap’ parsing software determines which one to use.
+                cmaps.cmap31 = cmaps.cmap03;
             }
             if (map10 > 0) {
                 raf.Seek(table_location[0] + map10);
@@ -1234,24 +1314,15 @@ namespace iText.IO.Font {
                     }
                 }
             }
-            if (map03 > 0) {
-                // Unicode platform, Unicode >2.0 semantics, expect format 4 or 6 subtable
-                raf.Seek(table_location[0] + map03);
+            if (map30 > 0) {
+                raf.Seek(table_location[0] + map30);
                 int format = raf.ReadUnsignedShort();
-                // We treat this table as equivalent to (platformId = 3, encodingId = 1)
-                // for downstream processing, since both are intended to address the Unicode BMP.
-                // Note that only one of these encoding subtables is used at a time. If multiple encoding subtables
-                // are found, the ‘cmap’ parsing software determines which one to use.
-                switch (format) {
-                    case 4: {
-                        cmaps.cmap31 = ReadFormat4(false);
-                        break;
-                    }
-
-                    case 6: {
-                        cmaps.cmap31 = ReadFormat6();
-                        break;
-                    }
+                if (format == 4) {
+                    cmaps.cmap30 = ReadFormat4(cmaps.fontSpecific);
+                    cmaps.cmap10 = cmaps.cmap30;
+                }
+                else {
+                    cmaps.fontSpecific = false;
                 }
             }
             if (map31 > 0) {
@@ -1261,37 +1332,27 @@ namespace iText.IO.Font {
                     cmaps.cmap31 = ReadFormat4(false);
                 }
             }
-            if (map30 > 0) {
-                raf.Seek(table_location[0] + map30);
-                int format = raf.ReadUnsignedShort();
-                if (format == 4) {
-                    cmaps.cmap10 = ReadFormat4(cmaps.fontSpecific);
-                }
-                else {
-                    cmaps.fontSpecific = false;
-                }
-            }
-            if (mapExt > 0) {
-                raf.Seek(table_location[0] + mapExt);
+            if (map310 > 0) {
+                raf.Seek(table_location[0] + map310);
                 int format = raf.ReadUnsignedShort();
                 switch (format) {
                     case 0: {
-                        cmaps.cmapExt = ReadFormat0();
+                        cmaps.cmap310 = ReadFormat0();
                         break;
                     }
 
                     case 4: {
-                        cmaps.cmapExt = ReadFormat4(false);
+                        cmaps.cmap310 = ReadFormat4(false);
                         break;
                     }
 
                     case 6: {
-                        cmaps.cmapExt = ReadFormat6();
+                        cmaps.cmap310 = ReadFormat6();
                         break;
                     }
 
                     case 12: {
-                        cmaps.cmapExt = ReadFormat12();
+                        cmaps.cmap310 = ReadFormat12();
                         break;
                     }
                 }

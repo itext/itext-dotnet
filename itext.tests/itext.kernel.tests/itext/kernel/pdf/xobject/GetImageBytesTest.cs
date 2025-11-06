@@ -69,7 +69,6 @@ namespace iText.Kernel.Pdf.Xobject {
         [NUnit.Framework.Test]
         public virtual void TestFlateDecodeFilters() {
             // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
-            // TODO DEVSIX-2941: extracted indexed devicegray RunLengthDecode gets color inverted
             TestFile("flatedecode_runlengthdecode.pdf", "Im9", "png");
         }
 
@@ -123,18 +122,39 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TestSeparationCSWithICCBasedAsAlternativeWithColorTrans() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyTintTransformations(true);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => TestFile("separationCSWithICCBasedAsAlternative.pdf"
+                , "Im1", "png", ".ColorTrans", properties));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.GET_IMAGEBYTES_FOR_SEPARATION_COLOR_ONLY_SUPPORTS_RGB
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TestSeparationCSWithICCBasedAsAlternative() {
             TestFile("separationCSWithICCBasedAsAlternative.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestSeparationCSWithDeviceCMYKAsAlternativeWithColorTrans() {
+            // TODO: DEVSIX-6757 (update test after fix)
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyTintTransformations(true);
+            NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => {
+                TestFile("separationCSWithDeviceCMYKAsAlternative.pdf", "Im1", "png", ".ColorTrans", properties);
+            }
+            );
         }
 
         [NUnit.Framework.Test]
         public virtual void TestSeparationCSWithDeviceCMYKAsAlternative() {
             // TODO: DEVSIX-6757 (update test after fix)
             // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
-            NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => {
-                TestFile("separationCSWithDeviceCMYKAsAlternative.pdf", "Im1", "png");
-            }
-            );
+            TestFile("separationCSWithDeviceCMYKAsAlternative.pdf", "Im1", "png");
         }
 
         [NUnit.Framework.Test]
@@ -150,10 +170,30 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TestSeparationCSWithDeviceRGBAsAlternativeWithColorTrans() {
+            // TODO: DEVSIX-6757 (update test after fix)
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyTintTransformations(true);
+            TestFile("separationCSWithDeviceRgbAsAlternative.pdf", "Im1", "png", ".ColorTrans", properties);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void TestSeparationCSWithDeviceRGBAsAlternative2() {
             // TODO: DEVSIX-6757 (update test after fix)
             // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
             TestFile("spotColorImagesSmall.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestSeparationCSWithDeviceRGBAsAlternative2WithColorTrans() {
+            // TODO: DEVSIX-6757 (update test after fix)
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyTintTransformations(true);
+            TestFile("spotColorImagesSmall.pdf", "Im1", "png", ".ColorTrans", properties);
         }
 
         [NUnit.Framework.Test]
@@ -170,6 +210,15 @@ namespace iText.Kernel.Pdf.Xobject {
         public virtual void TestRGBSeparationCSWithFlateDecoderAndFunctionType0() {
             // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
             TestFile("RGBFlateF0.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestRGBSeparationCSWithFlateDecoderAndFunctionType0WithColorTrans() {
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyTintTransformations(true);
+            TestFile("RGBFlateF0.pdf", "Im1", "png", ".ColorTrans", properties);
         }
 
         [NUnit.Framework.Test]
@@ -193,8 +242,11 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestRGBSeparationCSWithFlateDecoderAndFunctionType2() {
-            TestFile("RGBFlateF2.pdf", "Im1", "png");
+        public virtual void TestRGBSeparationCSWithFlateDecoderAndFunctionType2WithColorTrans() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyTintTransformations(true);
+            TestFile("RGBFlateF2.pdf", "Im1", "png", ".ColorTrans", properties);
         }
 
         [NUnit.Framework.Test]
@@ -269,14 +321,37 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         [NUnit.Framework.Test]
+        public virtual void DeviceGray1bitFlateDecodeInvertedWithDecodeTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyDecodeArray(true);
+            TestFile("deviceGray1bitFlateDecodeInverted.pdf", "Im0", "png", ".decode", properties);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void DeviceGray4bitFlateDecodeInvertedTest() {
-            //TODO DEVSIX-7015 Support decoding images with Decode array and BitsPerComponent more than 1
             TestFile("deviceGray4bitFlateDecodeInverted.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceGray4bitFlateDecodeInvertedWithDecodeTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyDecodeArray(true);
+            TestFile("deviceGray4bitFlateDecodeInverted.pdf", "Im1", "png", ".decode", properties);
         }
 
         [NUnit.Framework.Test]
         public virtual void DeviceGray8bitFlateDecodeWithMaskTest() {
             TestFile("deviceGray8bitFlateDecodeWithMask.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DeviceGray8bitFlateDecodeWithMaskTransparencyTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyTransparency(true);
+            TestFile("deviceGray8bitFlateDecodeWithMask.pdf", "Im1", "png", ".trans", properties);
         }
 
         [NUnit.Framework.Test]
@@ -300,6 +375,14 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         [NUnit.Framework.Test]
+        public virtual void DeviceGray8bitFlateDecodeMaskRotatedWithTransparencyTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyTransparency(true);
+            TestFile("deviceGray8bitFlateDecodeMaskRotated.pdf", "Im1", "png", ".trans", properties);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void DeviceGray8bitFlateDecodeScaledTest() {
             TestFile("deviceGray8bitFlateDecodeScaled.pdf", "Im1", "png");
         }
@@ -312,49 +395,49 @@ namespace iText.Kernel.Pdf.Xobject {
         [NUnit.Framework.Test]
         public virtual void DRgb1BitDecodeInvertTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("dRgb1BitDecodeInvert.pdf"
-                , "Im1", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
-                , 1), e.Message);
+                , "Im1", "png"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_COLORSPACE
+                , 1, PdfName.DeviceRGB), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void DRgb1BitDecodeTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("dRgb1BitDecode.pdf"
-                , "Im1", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
-                , 1), e.Message);
+                , "Im1", "png"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_COLORSPACE
+                , 1, PdfName.DeviceRGB), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void DRgb1BitTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("dRgb1Bit.pdf"
-                , "Im1", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
-                , 1), e.Message);
+                , "Im1", "png"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_COLORSPACE
+                , 1, PdfName.DeviceRGB), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void DRgb4BitDecodeInvertTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("dRgb4BitDecodeInvert.pdf"
-                , "Im1", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
-                , 4), e.Message);
+                , "Im1", "png"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_COLORSPACE
+                , 4, PdfName.DeviceRGB), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void DRgb4BitDecodeTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("dRgb4BitDecode.pdf"
-                , "Im1", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
-                , 4), e.Message);
+                , "Im1", "png"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_COLORSPACE
+                , 4, PdfName.DeviceRGB), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void DRgb4BitTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("dRgb4Bit.pdf"
-                , "Im1", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
-                , 4), e.Message);
+                , "Im1", "png"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_COLORSPACE
+                , 4, PdfName.DeviceRGB), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -483,6 +566,14 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         [NUnit.Framework.Test]
+        public virtual void DRgbFlateInvertedWithDecodeTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyDecodeArray(true);
+            TestFile("dRgbFlateInverted.pdf", "Im0", "png", ".decode", properties);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void DRgbFlateRotatedTest() {
             TestFile("dRgbFlateRotated.pdf", "Im0", "png");
         }
@@ -493,19 +584,27 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         [NUnit.Framework.Test]
+        public virtual void DRgbFlateRotatedInvertedWithDecodeTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyDecodeArray(true);
+            TestFile("dRgbFlateRotatedInverted.pdf", "Im0", "png", ".decode", properties);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void DRgbFlate1bitTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("dRgbFlate1bit.pdf"
-                , "Im0", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
-                , 1), e.Message);
+                , "Im0", "png"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_COLORSPACE
+                , 1, PdfName.DeviceRGB), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void DRgbFlate4bitTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("dRgbFlate4bit.pdf"
-                , "Im0", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
-                , 4), e.Message);
+                , "Im0", "png"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_COLORSPACE
+                , 4, PdfName.DeviceRGB), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -544,6 +643,14 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         [NUnit.Framework.Test]
+        public virtual void DeviceCMYKFlateDecodeInvertedWithDecodeTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyDecodeArray(true);
+            TestFile("deviceCMYKFlateDecodeInverted.pdf", "Im1", "tif");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CalGray8bitTest() {
             TestFile("calGray8bit.pdf", "Im1", "png");
         }
@@ -559,6 +666,14 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CalGray8bitGamma18InvertedWithDecodeTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyDecodeArray(true);
+            TestFile("calGray8bitGamma18Inverted.pdf", "Im1", "png", ".decode", properties);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CalGray1bitTest() {
             TestFile("calGray1bit.pdf", "Im1", "png");
         }
@@ -569,6 +684,14 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CalGray1bitInvertedWithDecodingTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyDecodeArray(true);
+            TestFile("calGray1bitInverted.pdf", "Im1", "png", ".decode", properties);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CalGray4bitGamma22Test() {
             TestFile("calGray4bitGamma22.pdf", "Im1", "png");
         }
@@ -576,6 +699,14 @@ namespace iText.Kernel.Pdf.Xobject {
         [NUnit.Framework.Test]
         public virtual void CalGray4bitGamma10InvertedTest() {
             TestFile("calGray4bitGamma10Inverted.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalGray4bitGamma10InvertedWithDecodingTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyDecodeArray(true);
+            TestFile("calGray4bitGamma10Inverted.pdf", "Im1", "png", ".decode", properties);
         }
 
         [NUnit.Framework.Test]
@@ -595,15 +726,18 @@ namespace iText.Kernel.Pdf.Xobject {
 
         [NUnit.Framework.Test]
         public virtual void CalRGB8bitInvertedTest() {
-            TestFile("calRGB8bitInverted.pdf", "Im1", "png");
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyDecodeArray(true);
+            TestFile("calRGB8bitInverted.pdf", "Im1", "png", ".decode", properties);
         }
 
         [NUnit.Framework.Test]
         public virtual void CalRGB4bitTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("calRGB4bit.pdf"
-                , "Im1", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
-                , "4"), e.Message);
+                , "Im1", "png"));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_COLORSPACE
+                , "4", PdfName.CalRGB), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -614,6 +748,14 @@ namespace iText.Kernel.Pdf.Xobject {
         [NUnit.Framework.Test]
         public virtual void CalRGB8bitSMaskTest() {
             TestFile("calRGB8bitSMask.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CalRGB8bitSMaskWithTransparencyTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyTransparency(true);
+            TestFile("calRGB8bitSMask.pdf", "Im1", "png", ".trans", properties);
         }
 
         [NUnit.Framework.Test]
@@ -630,24 +772,24 @@ namespace iText.Kernel.Pdf.Xobject {
         public virtual void CalRGB1bitTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("calRGB1bit.pdf"
                 , "Im1", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
-                , "1"), e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_COLORSPACE
+                , "1", PdfName.CalRGB), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void CalRGB2bitTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("calRGB2bit.pdf"
                 , "Im1", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
-                , "2"), e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_COLORSPACE
+                , "2", PdfName.CalRGB), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void Lab8bitTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("lab8bit.pdf"
                 , "Im1", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
-                , "/Lab"), e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
+                , PdfName.Lab), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -711,19 +853,43 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         [NUnit.Framework.Test]
+        public virtual void Indexed8bitSMaskWithTransparencyTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyTransparency(true);
+            TestFile("indexed8bitSMask.pdf", "Im0", "png", ".trans", properties);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void Separation1bitDeviceCMYKTest() {
+            TestFile("separation1bitDeviceCMYK.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Separation1bitDeviceCMYKWithColorTransTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyTintTransformations(true);
             Exception e = NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => TestFile("separation1bitDeviceCMYK.pdf"
-                , "Im0", "png"));
+                , "Im0", "png", ".ColorTrans", properties));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.GET_IMAGEBYTES_FOR_SEPARATION_COLOR_ONLY_SUPPORTS_RGB
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Separation8bitDeviceCMYKWithColorTransTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyTintTransformations(true);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => TestFile("separation8bitDeviceCMYK.pdf"
+                , "Im0", "png", ".ColorTrans", properties));
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.GET_IMAGEBYTES_FOR_SEPARATION_COLOR_ONLY_SUPPORTS_RGB
                 , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void Separation8bitDeviceCMYKTest() {
-            Exception e = NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => TestFile("separation8bitDeviceCMYK.pdf"
-                , "Im0", "png"));
-            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.GET_IMAGEBYTES_FOR_SEPARATION_COLOR_ONLY_SUPPORTS_RGB
-                , e.Message);
+            TestFile("separation8bitDeviceCMYK.pdf", "Im0", "png");
         }
 
         [NUnit.Framework.Test]
@@ -732,21 +898,64 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         [NUnit.Framework.Test]
-        public virtual void Separation8bitLabTest() {
-            TestFile("separation8bitLab.pdf", "Im0", "png");
+        public virtual void Separation8bitDeviceRGBWithColorTransTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyTintTransformations(true);
+            TestFile("separation8bitDeviceRGB.pdf", "Im0", "png", ".ColorTrans", properties);
         }
 
         [NUnit.Framework.Test]
-        public virtual void Separation8bitDeviceCMYKExtGStateTest() {
-            Exception e = NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => TestFile("separation8bitDeviceCMYKExtGState.pdf"
-                , "Im0", "png"));
+        public virtual void Separation8bitLabTestWithColorTransTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyTintTransformations(true);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => TestFile("separation8bitLab.pdf"
+                , "Im0", "png", ".ColorTrans", properties));
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.GET_IMAGEBYTES_FOR_SEPARATION_COLOR_ONLY_SUPPORTS_RGB
                 , e.Message);
         }
 
         [NUnit.Framework.Test]
+        public virtual void Separation8bitLabTest() {
+            TestFile("separation8bitLab.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Separation8bitDeviceCMYKExtGStateWithColorTransTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyTintTransformations(true);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => TestFile("separation8bitDeviceCMYKExtGState.pdf"
+                , "Im0", "png", ".ColorTrans", properties));
+            NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.GET_IMAGEBYTES_FOR_SEPARATION_COLOR_ONLY_SUPPORTS_RGB
+                , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Separation8bitDeviceCMYKExtGStateTest() {
+            TestFile("separation8bitDeviceCMYKExtGState.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void Separation8bitDeviceRGBTransparencyTest() {
             TestFile("separation8bitDeviceRGBTransparency.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Separation8bitDeviceRGBTransparencyFullTest() {
+            // transparency is set trough graphic state and is not determinable from the xobject
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetFullOption
+                ();
+            TestFile("separation8bitDeviceRGBTransparency.pdf", "Im0", "png", ".Full", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Separation8bitDeviceRGBTransparencyWithColorTransTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyTintTransformations(true);
+            TestFile("separation8bitDeviceRGBTransparency.pdf", "Im0", "png", ".ColorTrans", properties);
         }
 
         [NUnit.Framework.Test]
@@ -760,13 +969,61 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         [NUnit.Framework.Test]
+        public virtual void Separation8bitDeviceRGBCustomDecodeRangeAllOptionsTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetFullOption
+                ();
+            TestFile("separation8bitDeviceRGBCustomDecodeRange.pdf", "Im0", "png", ".AllOptions", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Separation8bitDeviceRGBCustomDecodeRangeWithColorTransTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyTintTransformations(true);
+            TestFile("separation8bitDeviceRGBCustomDecodeRange.pdf", "Im0", "png", ".ColorTrans", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Separation1bitDeviceRGBWithColorTransTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyTintTransformations(true);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("separation1bitDeviceRGB.pdf"
+                , "Im0", "png", ".ColorTrans", properties));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_SEPARATION_ALTERNATE_COLORSPACE
+                , "1", PdfName.DeviceRGB), e.Message);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void Separation1bitDeviceRGBTest() {
             TestFile("separation1bitDeviceRGB.pdf", "Im0", "png");
         }
 
         [NUnit.Framework.Test]
+        public virtual void Separation2bitDeviceRGBWithColorTransformTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyTintTransformations(true);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("separation2bitDeviceRGB.pdf"
+                , "Im0", "png", ".ColorTrans", properties));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_SEPARATION_ALTERNATE_COLORSPACE
+                , "2", PdfName.DeviceRGB), e.Message);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void Separation2bitDeviceRGBTest() {
             TestFile("separation2bitDeviceRGB.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Separation4bitDeviceRGBWithColorTransTest() {
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyTintTransformations(true);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("separation4bitDeviceRGB.pdf"
+                , "Im0", "png", ".ColorTrans", properties));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_SEPARATION_ALTERNATE_COLORSPACE
+                , "4", PdfName.DeviceRGB), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -778,7 +1035,7 @@ namespace iText.Kernel.Pdf.Xobject {
         public virtual void DeviceN8bitDeviceCMYKTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("deviceN8bitDeviceCMYK.pdf"
                 , "Im0", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
                 , "/DeviceN"), e.Message);
         }
 
@@ -786,7 +1043,7 @@ namespace iText.Kernel.Pdf.Xobject {
         public virtual void DeviceN8bitDeviceRGBTransparencyTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("deviceN8bitDeviceRGBTransparency.pdf"
                 , "Im0", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
                 , "/DeviceN"), e.Message);
         }
 
@@ -794,7 +1051,7 @@ namespace iText.Kernel.Pdf.Xobject {
         public virtual void DeviceN8bitDeviceRGBSpotASpotBTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("deviceN8bitDeviceRGBSpotASpotB.pdf"
                 , "Im0", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
                 , "/DeviceN"), e.Message);
         }
 
@@ -802,8 +1059,8 @@ namespace iText.Kernel.Pdf.Xobject {
         public virtual void DeviceN4bitDeviceCMYKTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("deviceN4bitDeviceCMYKTest.pdf"
                 , "Im0", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED
-                , "4"), e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
+                , "/DeviceN"), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -815,7 +1072,7 @@ namespace iText.Kernel.Pdf.Xobject {
         public virtual void DeviceN8bit5ChannelsTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("deviceN8bit5Channels.pdf"
                 , "Im0", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
                 , "/DeviceN"), e.Message);
         }
 
@@ -823,7 +1080,7 @@ namespace iText.Kernel.Pdf.Xobject {
         public virtual void DeviceN8bitDeviceRGBCustomDecodeTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("deviceN8bitDeviceRGBCustomDecode.pdf"
                 , "Im0", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
                 , "/DeviceN"), e.Message);
         }
 
@@ -831,7 +1088,7 @@ namespace iText.Kernel.Pdf.Xobject {
         public virtual void DeviceN8bitDeviceCMYKFunctionType0Test() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("deviceN8bitDeviceCMYKFunctionType0.pdf"
                 , "Im0", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
                 , "/DeviceN"), e.Message);
         }
 
@@ -839,15 +1096,22 @@ namespace iText.Kernel.Pdf.Xobject {
         public virtual void DeviceN8bitDeviceRGBRotatedTest() {
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => TestFile("deviceN8bitDeviceRGBRotated.pdf"
                 , "Im0", "tif"));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
                 , "/DeviceN"), e.Message);
         }
 
         private void TestFile(String filename, String objectid, String expectedImageFormat) {
-            TestFile(filename, objectid, expectedImageFormat, false);
+            TestFile(filename, objectid, expectedImageFormat, "", PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ());
         }
 
-        private void TestFile(String filename, String objectid, String expectedImageFormat, bool saveResult) {
+        private void TestFile(String filename, String objectid, String expectedImageFormat, String compareFileMarker
+            , PdfImageXObject.ImageBytesRetrievalProperties properties) {
+            TestFile(filename, objectid, expectedImageFormat, false, compareFileMarker, properties);
+        }
+
+        private void TestFile(String filename, String objectid, String expectedImageFormat, bool saveResult, String
+             compareFileMarker, PdfImageXObject.ImageBytesRetrievalProperties properties) {
             using (PdfReader reader = new PdfReader(SOURCE_FOLDER + filename)) {
                 using (PdfDocument pdfDocument = new PdfDocument(reader)) {
                     PdfResources resources = pdfDocument.GetPage(1).GetResources();
@@ -857,14 +1121,14 @@ namespace iText.Kernel.Pdf.Xobject {
                         throw new ArgumentException("Image reference " + objectid + " not found - Available keys are " + xobjects.
                             KeySet());
                     }
-                    NUnit.Framework.Assert.AreEqual(expectedImageFormat, img.IdentifyImageFileExtension());
-                    byte[] result = img.GetImageBytes(true);
+                    byte[] result = img.GetImageBytes(properties);
+                    NUnit.Framework.Assert.AreEqual(expectedImageFormat, img.IdentifyImageFileExtension(properties));
                     if (saveResult) {
                         System.IO.File.WriteAllBytes(System.IO.Path.Combine(SOURCE_FOLDER, filename.JSubstring(0, filename.Length 
-                            - 4) + ".new." + expectedImageFormat), result);
+                            - 4) + compareFileMarker + ".new." + expectedImageFormat), result);
                     }
                     byte[] cmpBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER, filename.JSubstring(0, filename.
-                        Length - 4) + "." + expectedImageFormat));
+                        Length - 4) + compareFileMarker + "." + expectedImageFormat));
                     if (img.IdentifyImageFileExtension().Equals("tif")) {
                         CompareTiffImages(cmpBytes, result);
                     }

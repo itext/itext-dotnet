@@ -186,6 +186,19 @@ namespace iText.IO.Font.Otf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TestCharsForSubstitutedGlyphProcessingInSubstituteOneToMany() {
+            TrueTypeFont font = InitializeFont();
+            GlyphLine line = new GlyphLine(ConstructGlyphListFromString("1", font));
+            line.Get(0).SetChars(new char[] { (char)37, (char)38 });
+            // Modify glyphs from font program not to have chars so that old chars are preserved
+            font.GetGlyphByCode(39).SetChars(null);
+            font.GetGlyphByCode(40).SetChars(null);
+            line.SubstituteOneToMany(font.GetGsubTable(), new int[] { 39, 40 });
+            NUnit.Framework.Assert.IsNull(line.Get(0).GetChars());
+            NUnit.Framework.Assert.IsNull(line.Get(1).GetChars());
+        }
+
+        [NUnit.Framework.Test]
         public virtual void DefaultConstructorTest() {
             GlyphLine glyphLine = new GlyphLine();
             NUnit.Framework.Assert.AreEqual(0, glyphLine.GetStart());

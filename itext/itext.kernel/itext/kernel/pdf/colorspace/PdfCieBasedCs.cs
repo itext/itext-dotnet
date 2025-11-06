@@ -56,6 +56,11 @@ namespace iText.Kernel.Pdf.Colorspace {
             : base(pdfObject) {
         }
 
+        /// <summary><inheritDoc/></summary>
+        public override PdfName GetName() {
+            return ((PdfArray)GetPdfObject()).GetAsName(0);
+        }
+
         public class CalGray : PdfCieBasedCs {
             public CalGray(PdfArray pdfObject)
                 : base(pdfObject) {

@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Signatures.Validation;
@@ -46,6 +47,7 @@ namespace iText.Signatures.Validation.Lotl {
         public virtual EuropeanResourceFetcher.Result GetEUJournalCertificates() {
             EuropeanResourceFetcher.Result result = new EuropeanResourceFetcher.Result();
             EuropeanTrustedListConfigurationFactory factory = EuropeanTrustedListConfigurationFactory.GetFactory()();
+            result.SetCurrentlySupportedPublication(factory.GetCurrentlySupportedPublication());
             SafeCalling.OnExceptionLog(() => result.SetCertificates(factory.GetCertificates()), result.GetLocalReport(
                 ), (e) => new ReportItem(LotlValidator.LOTL_VALIDATION, LotlValidator.JOURNAL_CERT_NOT_PARSABLE, e, ReportItem.ReportItemStatus
                 .INFO));
@@ -62,12 +64,16 @@ namespace iText.Signatures.Validation.Lotl {
 
             private IList<IX509Certificate> certificates;
 
-//\cond DO_NOT_DOCUMENT
-            internal Result() {
+            private String currentlySupportedPublication;
+
+            /// <summary>
+            /// Create a new Instance of
+            /// <see cref="Result"/>.
+            /// </summary>
+            public Result() {
                 this.localReport = new ValidationReport();
                 certificates = new List<IX509Certificate>();
             }
-//\endcond
 
             /// <summary>Gets the list of report items.</summary>
             /// <returns>a ValidationReport object containing report items</returns>
@@ -81,10 +87,30 @@ namespace iText.Signatures.Validation.Lotl {
                 return certificates;
             }
 
+            /// <summary>Gets string constant representing currently used Official Journal publication.</summary>
+            /// <returns>
+            /// 
+            /// <see cref="System.String"/>
+            /// constant representing currently used Official Journal publication
+            /// </returns>
+            public virtual String GetCurrentlySupportedPublication() {
+                return currentlySupportedPublication;
+            }
+
             /// <summary>Sets the list of certificates.</summary>
             /// <param name="certificates">a list of Certificate objects to set</param>
             public virtual void SetCertificates(IList<IX509Certificate> certificates) {
                 this.certificates = certificates;
+            }
+
+            /// <summary>Sets string constant representing currently used Official Journal publication.</summary>
+            /// <param name="currentlySuppostedPublication">
+            /// 
+            /// <see cref="System.String"/>
+            /// constant representing currently used Official Journal publication
+            /// </param>
+            public virtual void SetCurrentlySupportedPublication(String currentlySuppostedPublication) {
+                this.currentlySupportedPublication = currentlySuppostedPublication;
             }
         }
     }

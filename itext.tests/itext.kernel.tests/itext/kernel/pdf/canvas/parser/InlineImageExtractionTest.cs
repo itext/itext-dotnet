@@ -40,6 +40,9 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/canvas/parser/InlineImageExtractionTest/";
 
+        public static readonly String pdfASourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf-association/pdf-differences/";
+
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
@@ -226,6 +229,58 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 PdfArray pdfArray = (PdfArray)colorSpace.GetPdfObject();
                 PdfName actualName = (PdfName)pdfArray.Get(0);
                 NUnit.Framework.Assert.AreEqual(PdfName.Indexed, actualName);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ExtractImagesFromInlineAbbreviationsTest() {
+            PdfDocument pdf = new PdfDocument(new PdfReader(pdfASourceFolder + "InlineAbbreviations.pdf"));
+            InlineImageExtractionTest.InlineImageEventListener eventListener = new InlineImageExtractionTest.InlineImageEventListener
+                ();
+            PdfCanvasProcessor canvasProcessor = new PdfCanvasProcessor(eventListener);
+            try {
+                canvasProcessor.ProcessPageContent(pdf.GetFirstPage());
+            }
+            catch (Exception) {
+            }
+            //don't crash without assertions
+            pdf.Close();
+            IList<PdfStream> inlineImages = eventListener.GetInlineImages();
+            PdfImageXObject.ImageBytesRetrievalProperties opts = PdfImageXObject.ImageBytesRetrievalProperties.GetFullOption
+                ();
+            byte[] cmpImgBytes = File.ReadAllBytes(System.IO.Path.Combine(pdfASourceFolder, "InlineAbbreviations.png")
+                );
+            int imagesValidated = 0;
+            for (int i = 0; i < inlineImages.Count; i++) {
+                try {
+                    PdfStream im = inlineImages[i];
+                    PdfImageXObject imXo = new PdfImageXObject(im);
+                    String filename = "InlineAbbreviations_" + i + "." + imXo.IdentifyImageFileExtension(opts);
+                    System.IO.File.WriteAllBytes(System.IO.Path.Combine(destinationFolder, filename), imXo.GetImageBytes(opts)
+                        );
+                    byte[] imgBytes = imXo.GetImageBytes(opts);
+                    NUnit.Framework.Assert.AreEqual(cmpImgBytes, imgBytes);
+                    imagesValidated++;
+                }
+                catch (Exception e) {
+                    System.Console.Out.WriteLine(i + ": " + e.GetType().FullName + ": " + e.Message);
+                }
+            }
+            NUnit.Framework.Assert.AreEqual(8, inlineImages.Count);
+            NUnit.Framework.Assert.AreEqual(8, imagesValidated);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseInlineImageMaskTest() {
+            InlineImageExtractionTest.InlineImageEventListener listener = new InlineImageExtractionTest.InlineImageEventListener
+                ();
+            using (PdfDocument pdf = new PdfDocument(new PdfReader(sourceFolder + "inlineMask.pdf"))) {
+                PdfCanvasProcessor pdfCanvasProcessor = new PdfCanvasProcessor(listener);
+                pdfCanvasProcessor.ProcessPageContent(pdf.GetPage(1));
+                PdfImageXObject img = new PdfImageXObject(listener.GetInlineImages()[0]);
+                byte[] bytes = img.GetImageBytes(PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly());
+                byte[] compareBytes = File.ReadAllBytes(System.IO.Path.Combine(sourceFolder, "inlineMask.png"));
+                NUnit.Framework.Assert.AreEqual(compareBytes, bytes);
             }
         }
 

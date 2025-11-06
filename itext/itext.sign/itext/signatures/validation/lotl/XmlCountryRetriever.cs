@@ -119,7 +119,7 @@ namespace iText.Signatures.Validation.Lotl {
                         break;
                     }
 
-                    case XmlTagConstants.TSLLOCATION: {
+                    case XmlTagConstants.TSL_LOCATION: {
                         tslLocation = value;
                         break;
                     }

@@ -598,7 +598,7 @@ namespace iText.Pdfua {
                 page.AddAnnotation(screen);
             }
             );
-            framework.AssertBothValid("screenAnnotationWithValidMediaDataTest", pdfUAConformance);
+            framework.AssertBothValid("screenAnnotationAAWithValidMediaDataTest", pdfUAConformance);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
@@ -704,12 +704,12 @@ namespace iText.Pdfua {
             }
             );
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("screenAnnotationWithMediaDataTest", PdfUAExceptionMessageConstants.CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP
+                framework.AssertBothFail("screenAnnotationWOAltMediaDataTest", PdfUAExceptionMessageConstants.CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP
                     , pdfUAConformance);
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothValid("screenAnnotationWithMediaDataTest", pdfUAConformance);
+                    framework.AssertBothValid("screenAnnotationWOAltMediaDataTest", pdfUAConformance);
                 }
             }
         }
@@ -728,12 +728,12 @@ namespace iText.Pdfua {
             }
             );
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("screenAnnotationWithMediaDataTest", PdfUAExceptionMessageConstants.CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP
+                framework.AssertBothFail("screenAnnotationAaWoAltMediaDataTest", PdfUAExceptionMessageConstants.CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP
                     , pdfUAConformance);
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothValid("screenAnnotationWithMediaDataTest", pdfUAConformance);
+                    framework.AssertBothValid("screenAnnotationAaWoAltMediaDataTest", pdfUAConformance);
                 }
             }
         }
@@ -755,12 +755,12 @@ namespace iText.Pdfua {
             }
             );
             if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("screenAnnotationWithMediaDataTest", PdfUAExceptionMessageConstants.CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP
+                framework.AssertBothFail("screenAnnotationWoCtMediaDataTest", PdfUAExceptionMessageConstants.CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP
                     , pdfUAConformance);
             }
             else {
                 if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothValid("screenAnnotationWithMediaDataTest", pdfUAConformance);
+                    framework.AssertBothValid("screenAnnotationWoCtMediaDataTest", pdfUAConformance);
                 }
             }
         }

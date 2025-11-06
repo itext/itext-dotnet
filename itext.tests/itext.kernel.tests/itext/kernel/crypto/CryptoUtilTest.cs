@@ -37,14 +37,14 @@ namespace iText.Kernel.Crypto {
         [NUnit.Framework.Test]
         public virtual void CreateBerStreamTest() {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            IDerOutputStream stream = CryptoUtil.CreateAsn1OutputStream(baos, FACTORY.CreateASN1Encoding().GetBer());
+            IAsn1OutputStream stream = CryptoUtil.CreateAsn1OutputStream(baos, FACTORY.CreateASN1Encoding().GetBer());
             NUnit.Framework.Assert.IsNotNull(stream);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDerStreamTest() {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            IDerOutputStream stream = CryptoUtil.CreateAsn1OutputStream(baos, FACTORY.CreateASN1Encoding().GetDer());
+            IAsn1OutputStream stream = CryptoUtil.CreateAsn1OutputStream(baos, FACTORY.CreateASN1Encoding().GetDer());
             NUnit.Framework.Assert.IsNotNull(stream);
         }
 

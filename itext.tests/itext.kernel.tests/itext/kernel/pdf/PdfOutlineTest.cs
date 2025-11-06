@@ -446,6 +446,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void RemovePageInDocWithComplexOutlineTreeStructTest() {
+            // TODO: DEVSIX-9313 Update page index destinationgs of outlines while removing page
             String input = SOURCE_FOLDER + "complexOutlineTreeStructure.pdf";
             String output = DESTINATION_FOLDER + "complexOutlineTreeStructure.pdf";
             String cmp = SOURCE_FOLDER + "cmp_complexOutlineTreeStructure.pdf";
@@ -736,6 +737,81 @@ namespace iText.Kernel.Pdf {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
                  + "cmp_" + filename, DESTINATION_FOLDER, "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveSingleChildTest() {
+            String filename = "removedSingleChild.pdf";
+            String input = SOURCE_FOLDER + "complexOutlineTreeStructure.pdf";
+            String output = DESTINATION_FOLDER + "cmp_" + filename;
+            String cmp = SOURCE_FOLDER + "cmp_" + filename;
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(input), CompareTool.CreateTestPdfWriter(output));
+            PdfOutline root = pdfDocument.GetOutlines(true);
+            PdfOutline toRemove = root.GetAllChildren()[0].GetAllChildren()[0];
+            toRemove.RemoveOutline();
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, DESTINATION_FOLDER, "diff_")
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveAllRootChildrenTest() {
+            String filename = "removeAllRootChildren.pdf";
+            String input = SOURCE_FOLDER + "documentWithOutlines.pdf";
+            String output = DESTINATION_FOLDER + "cmp_" + filename;
+            String cmp = SOURCE_FOLDER + "cmp_" + filename;
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(input), CompareTool.CreateTestPdfWriter(output));
+            PdfOutline root = pdfDocument.GetOutlines(true);
+            root.GetAllChildren()[0].RemoveOutline();
+            root.GetAllChildren()[0].RemoveOutline();
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, DESTINATION_FOLDER, "diff_")
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveSingleChildNegativeCountTest() {
+            String filename = "removeSingleChildNegativeCount.pdf";
+            String input = SOURCE_FOLDER + "negativeCount.pdf";
+            String output = DESTINATION_FOLDER + "cmp_" + filename;
+            String cmp = SOURCE_FOLDER + "cmp_" + filename;
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(input), CompareTool.CreateTestPdfWriter(output));
+            PdfOutline root = pdfDocument.GetOutlines(true);
+            // remove leaf
+            root.GetAllChildren()[3].GetAllChildren()[2].GetAllChildren()[1].GetAllChildren()[0].RemoveOutline();
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, DESTINATION_FOLDER, "diff_")
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveParentNegativeCountTest() {
+            String filename = "removeParentNegativeCount.pdf";
+            String input = SOURCE_FOLDER + "negativeCount.pdf";
+            String output = DESTINATION_FOLDER + "cmp_" + filename;
+            String cmp = SOURCE_FOLDER + "cmp_" + filename;
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(input), CompareTool.CreateTestPdfWriter(output));
+            PdfOutline root = pdfDocument.GetOutlines(true);
+            // remove parent which has 1 child
+            root.GetAllChildren()[3].GetAllChildren()[2].GetAllChildren()[1].RemoveOutline();
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, DESTINATION_FOLDER, "diff_")
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveClosedParentNegativeCountTest() {
+            String filename = "removeClosedParentNegativeCount.pdf";
+            String input = SOURCE_FOLDER + "negativeCount.pdf";
+            String output = DESTINATION_FOLDER + "cmp_" + filename;
+            String cmp = SOURCE_FOLDER + "cmp_" + filename;
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(input), CompareTool.CreateTestPdfWriter(output));
+            PdfOutline root = pdfDocument.GetOutlines(true);
+            // remove parent is closed (count=-3)
+            root.GetAllChildren()[3].GetAllChildren()[2].RemoveOutline();
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(output, cmp, DESTINATION_FOLDER, "diff_")
+                );
         }
 
         private sealed class EmptyNameTree : IPdfNameTreeAccess {

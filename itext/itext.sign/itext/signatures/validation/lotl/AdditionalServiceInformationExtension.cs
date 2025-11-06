@@ -26,12 +26,24 @@ using System.Collections.Generic;
 namespace iText.Signatures.Validation.Lotl {
     /// <summary>Wrapper class for additional service information extension.</summary>
     public class AdditionalServiceInformationExtension {
-        private static readonly ICollection<String> invalidScopes = new HashSet<String>();
+//\cond DO_NOT_DOCUMENT
+        internal const String FOR_E_SIGNATURES = "http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForeSignatures";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String FOR_E_SEALS = "http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForeSeals";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String FOR_WSA = "http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForWebSiteAuthentication";
+//\endcond
+
+        private static readonly ICollection<String> INVALID_SCOPES = new HashSet<String>();
 
         private String uri;
 
         static AdditionalServiceInformationExtension() {
-            invalidScopes.Add("http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForWebSiteAuthentication");
+            INVALID_SCOPES.Add(FOR_WSA);
         }
 
         /// <summary>
@@ -68,7 +80,7 @@ namespace iText.Signatures.Validation.Lotl {
 
 //\cond DO_NOT_DOCUMENT
         internal virtual bool IsScopeValid() {
-            return !invalidScopes.Contains(uri);
+            return !INVALID_SCOPES.Contains(uri);
         }
 //\endcond
     }

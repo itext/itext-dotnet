@@ -31,8 +31,6 @@ using iText.Layout.Properties.Grid;
 namespace iText.Layout.Renderer {
     /// <summary>Represents a renderer for a grid.</summary>
     public class GridContainerRenderer : BlockRenderer {
-        private bool isFirstLayout = true;
-
         private float containerHeight = 0.0f;
 
         private float containerWidth = 0.0f;
@@ -131,7 +129,6 @@ namespace iText.Layout.Renderer {
         private AbstractRenderer CreateOverflowRenderer(IList<IRenderer> children) {
             iText.Layout.Renderer.GridContainerRenderer overflowRenderer = (iText.Layout.Renderer.GridContainerRenderer
                 )GetNextRenderer();
-            overflowRenderer.isFirstLayout = false;
             overflowRenderer.parent = parent;
             overflowRenderer.modelElement = modelElement;
             overflowRenderer.AddAllProperties(GetOwnProperties());

@@ -25,6 +25,8 @@ using System;
 namespace iText.Layout.Logs {
     /// <summary>Class containing constants to be used in layout.</summary>
     public sealed class LayoutLogMessageConstant {
+        public const String AREA_BREAK_UNEXPECTED = "Unexpected use of AreaBreakRenderer detected, which may indicate an issue with layout processing.";
+
         public const String ELEMENT_DOES_NOT_FIT_AREA = "Element does not fit current area. {0}";
 
         private LayoutLogMessageConstant() {

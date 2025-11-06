@@ -25,11 +25,12 @@ using System.Collections.Generic;
 using System.Text;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Signatures;
+using iText.Signatures.Validation.Lotl.Criteria;
 
 namespace iText.Signatures.Validation.Lotl {
 //\cond DO_NOT_DOCUMENT
     internal class XmlCountryCertificateHandler : AbstractXmlCertificateHandler {
-        private static readonly IList<String> INFORMATION_TAGS = new List<String>();
+        private static readonly ICollection<String> INFORMATION_TAGS = new HashSet<String>();
 
         private readonly ICollection<String> serviceTypes;
 
@@ -39,7 +40,21 @@ namespace iText.Signatures.Validation.Lotl {
 
         private ServiceChronologicalInfo currentServiceChronologicalInfo = null;
 
-        private AdditionalServiceInformationExtension currentExtension = null;
+        private AdditionalServiceInformationExtension currentServiceExtension = null;
+
+        private QualifierExtension currentQualifierExtension = null;
+
+        private readonly LinkedList<CriteriaList> criteriaListQueue = new LinkedList<CriteriaList>();
+
+        private PolicySetCriteria currentPolicySetCriteria = null;
+
+        private CertSubjectDNAttributeCriteria currentCertSubjectDNAttributeCriteria = null;
+
+        private ExtendedKeyUsageCriteria currentExtendedKeyUsageCriteria = null;
+
+        private KeyUsageCriteria currentKeyUsageCriteria = null;
+
+        private String currentKeyUsageBitName = null;
 
         static XmlCountryCertificateHandler() {
             INFORMATION_TAGS.Add(XmlTagConstants.SERVICE_TYPE);
@@ -47,6 +62,9 @@ namespace iText.Signatures.Validation.Lotl {
             INFORMATION_TAGS.Add(XmlTagConstants.X509CERTIFICATE);
             INFORMATION_TAGS.Add(XmlTagConstants.SERVICE_STATUS_STARTING_TIME);
             INFORMATION_TAGS.Add(XmlTagConstants.URI);
+            INFORMATION_TAGS.Add(XmlTagConstants.IDENTIFIER);
+            INFORMATION_TAGS.Add(XmlTagConstants.KEY_PURPOSE_ID);
+            INFORMATION_TAGS.Add(XmlTagConstants.KEY_USAGE_BIT);
         }
 
 //\cond DO_NOT_DOCUMENT
@@ -58,6 +76,9 @@ namespace iText.Signatures.Validation.Lotl {
         /// <summary><inheritDoc/></summary>
         public override void StartElement(String uri, String localName, String qName, Dictionary<String, String> attributes
             ) {
+            if (INFORMATION_TAGS.Contains(localName)) {
+                information = new StringBuilder();
+            }
             if (XmlTagConstants.TSP_SERVICE.Equals(localName)) {
                 StartProvider();
             }
@@ -68,11 +89,53 @@ namespace iText.Signatures.Validation.Lotl {
                 }
                 else {
                     if (XmlTagConstants.ADDITIONAL_INFORMATION_EXTENSION.Equals(localName)) {
-                        currentExtension = new AdditionalServiceInformationExtension();
+                        currentServiceExtension = new AdditionalServiceInformationExtension();
                     }
                     else {
-                        if (INFORMATION_TAGS.Contains(localName)) {
-                            information = new StringBuilder();
+                        if (XmlTagConstants.QUALIFICATION_ELEMENT.Equals(localName)) {
+                            currentQualifierExtension = new QualifierExtension();
+                        }
+                        else {
+                            if (XmlTagConstants.QUALIFIER.Equals(localName)) {
+                                currentQualifierExtension.AddQualifier(attributes.Get(XmlTagConstants.URI_ATTRIBUTE));
+                            }
+                            else {
+                                if (XmlTagConstants.CRITERIA_LIST.Equals(localName)) {
+                                    CriteriaList criteriaList = new CriteriaList(attributes.Get(XmlTagConstants.ASSERT));
+                                    if (criteriaListQueue.IsEmpty()) {
+                                        currentQualifierExtension.SetCriteriaList(criteriaList);
+                                    }
+                                    else {
+                                        criteriaListQueue.Last.Value.AddCriteria(criteriaList);
+                                    }
+                                    criteriaListQueue.AddLast(criteriaList);
+                                }
+                                else {
+                                    if (XmlTagConstants.POLICY_SET.Equals(localName)) {
+                                        currentPolicySetCriteria = new PolicySetCriteria();
+                                    }
+                                    else {
+                                        if (XmlTagConstants.CERT_SUBJECT_DN_ATTRIBUTE.Equals(localName)) {
+                                            currentCertSubjectDNAttributeCriteria = new CertSubjectDNAttributeCriteria();
+                                        }
+                                        else {
+                                            if (XmlTagConstants.EXTENDED_KEY_USAGE.Equals(localName)) {
+                                                currentExtendedKeyUsageCriteria = new ExtendedKeyUsageCriteria();
+                                            }
+                                            else {
+                                                if (XmlTagConstants.KEY_USAGE.Equals(localName)) {
+                                                    currentKeyUsageCriteria = new KeyUsageCriteria();
+                                                }
+                                                else {
+                                                    if (XmlTagConstants.KEY_USAGE_BIT.Equals(localName)) {
+                                                        currentKeyUsageBitName = attributes.Get(XmlTagConstants.NAME);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -133,17 +196,89 @@ namespace iText.Signatures.Validation.Lotl {
                 }
 
                 case XmlTagConstants.URI: {
-                    if (currentExtension != null) {
-                        currentExtension.SetUri(information.ToString());
+                    if (currentServiceExtension != null) {
+                        currentServiceExtension.SetUri(information.ToString());
                     }
                     break;
                 }
 
                 case XmlTagConstants.ADDITIONAL_INFORMATION_EXTENSION: {
                     if (currentServiceChronologicalInfo != null) {
-                        currentServiceChronologicalInfo.AddExtension(currentExtension);
+                        currentServiceChronologicalInfo.AddServiceExtension(currentServiceExtension);
                     }
-                    currentExtension = null;
+                    currentServiceExtension = null;
+                    break;
+                }
+
+                case XmlTagConstants.QUALIFICATION_ELEMENT: {
+                    if (currentServiceChronologicalInfo != null) {
+                        currentServiceChronologicalInfo.AddQualifierExtension(currentQualifierExtension);
+                    }
+                    currentQualifierExtension = null;
+                    break;
+                }
+
+                case XmlTagConstants.CRITERIA_LIST: {
+                    criteriaListQueue.RemoveLast();
+                    break;
+                }
+
+                case XmlTagConstants.POLICY_SET: {
+                    if (criteriaListQueue.Last.Value != null) {
+                        criteriaListQueue.Last.Value.AddCriteria(currentPolicySetCriteria);
+                    }
+                    currentPolicySetCriteria = null;
+                    break;
+                }
+
+                case XmlTagConstants.CERT_SUBJECT_DN_ATTRIBUTE: {
+                    if (criteriaListQueue.Last.Value != null) {
+                        criteriaListQueue.Last.Value.AddCriteria(currentCertSubjectDNAttributeCriteria);
+                    }
+                    currentCertSubjectDNAttributeCriteria = null;
+                    break;
+                }
+
+                case XmlTagConstants.EXTENDED_KEY_USAGE: {
+                    if (criteriaListQueue.Last.Value != null) {
+                        criteriaListQueue.Last.Value.AddCriteria(currentExtendedKeyUsageCriteria);
+                    }
+                    currentExtendedKeyUsageCriteria = null;
+                    break;
+                }
+
+                case XmlTagConstants.KEY_USAGE: {
+                    if (criteriaListQueue.Last.Value != null) {
+                        criteriaListQueue.Last.Value.AddCriteria(currentKeyUsageCriteria);
+                    }
+                    currentKeyUsageCriteria = null;
+                    break;
+                }
+
+                case XmlTagConstants.IDENTIFIER: {
+                    if (currentPolicySetCriteria != null) {
+                        currentPolicySetCriteria.AddRequiredPolicyId(information.ToString());
+                    }
+                    else {
+                        if (currentCertSubjectDNAttributeCriteria != null) {
+                            currentCertSubjectDNAttributeCriteria.AddRequiredAttributeId(information.ToString());
+                        }
+                    }
+                    break;
+                }
+
+                case XmlTagConstants.KEY_PURPOSE_ID: {
+                    if (currentExtendedKeyUsageCriteria != null) {
+                        currentExtendedKeyUsageCriteria.AddRequiredExtendedKeyUsage(information.ToString());
+                    }
+                    break;
+                }
+
+                case XmlTagConstants.KEY_USAGE_BIT: {
+                    if (currentKeyUsageCriteria != null) {
+                        currentKeyUsageCriteria.AddKeyUsageBit(currentKeyUsageBitName, information.ToString());
+                    }
+                    currentKeyUsageBitName = null;
                     break;
                 }
             }

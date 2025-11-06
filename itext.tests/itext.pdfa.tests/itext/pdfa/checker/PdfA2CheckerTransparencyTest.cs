@@ -33,16 +33,10 @@ using iText.Test;
 namespace iText.Pdfa.Checker {
     [NUnit.Framework.Category("UnitTest")]
     public class PdfA2CheckerTransparencyTest : ExtendedITextTest {
-        private PdfA2Checker pdfA2Checker;
-
-        [NUnit.Framework.SetUp]
-        public virtual void Before() {
-            pdfA2Checker = new PdfA2Checker(PdfAConformance.PDF_A_2B);
-            pdfA2Checker.SetFullCheckMode(true);
-        }
-
         [NUnit.Framework.Test]
         public virtual void CheckPatternWithFormResourceCycle() {
+            PdfA2Checker pdfA2Checker = new PdfA2Checker(PdfAConformance.PDF_A_2B);
+            pdfA2Checker.SetFullCheckMode(true);
             using (MemoryStream bos = new MemoryStream()) {
                 using (PdfWriter writer = new PdfWriter(bos)) {
                     using (PdfDocument document = new PdfDocument(writer)) {
@@ -64,6 +58,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckAppearanceStreamsWithCycle() {
+            PdfA2Checker pdfA2Checker = new PdfA2Checker(PdfAConformance.PDF_A_2B);
+            pdfA2Checker.SetFullCheckMode(true);
             using (MemoryStream bos = new MemoryStream()) {
                 using (PdfWriter writer = new PdfWriter(bos)) {
                     using (PdfDocument document = new PdfDocument(writer)) {
@@ -84,6 +80,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckPatternWithTransparentFormResource() {
+            PdfA2Checker pdfA2Checker = new PdfA2Checker(PdfAConformance.PDF_A_2B);
+            pdfA2Checker.SetFullCheckMode(true);
             using (MemoryStream bos = new MemoryStream()) {
                 using (PdfWriter writer = new PdfWriter(bos)) {
                     using (PdfDocument document = new PdfDocument(writer)) {
@@ -106,6 +104,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckPatternWithoutTransparentFormResource() {
+            PdfA2Checker pdfA2Checker = new PdfA2Checker(PdfAConformance.PDF_A_2B);
+            pdfA2Checker.SetFullCheckMode(true);
             using (MemoryStream bos = new MemoryStream()) {
                 using (PdfWriter writer = new PdfWriter(bos)) {
                     using (PdfDocument document = new PdfDocument(writer)) {
@@ -126,6 +126,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckAppearanceStreamWithTransparencyGroup() {
+            PdfA2Checker pdfA2Checker = new PdfA2Checker(PdfAConformance.PDF_A_2B);
+            pdfA2Checker.SetFullCheckMode(true);
             using (MemoryStream bos = new MemoryStream()) {
                 using (PdfWriter writer = new PdfWriter(bos)) {
                     using (PdfDocument document = new PdfDocument(writer)) {
@@ -147,6 +149,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckAppearanceStreamWithTransparencyGroup2() {
+            PdfA2Checker pdfA2Checker = new PdfA2Checker(PdfAConformance.PDF_A_2B);
+            pdfA2Checker.SetFullCheckMode(true);
             using (MemoryStream bos = new MemoryStream()) {
                 using (PdfWriter writer = new PdfWriter(bos)) {
                     using (PdfDocument document = new PdfDocument(writer)) {
@@ -170,6 +174,8 @@ namespace iText.Pdfa.Checker {
 
         [NUnit.Framework.Test]
         public virtual void CheckAppearanceStreamWithoutTransparencyGroup() {
+            PdfA2Checker pdfA2Checker = new PdfA2Checker(PdfAConformance.PDF_A_2B);
+            pdfA2Checker.SetFullCheckMode(true);
             using (MemoryStream bos = new MemoryStream()) {
                 using (PdfWriter writer = new PdfWriter(bos)) {
                     using (PdfDocument document = new PdfDocument(writer)) {
@@ -188,6 +194,8 @@ namespace iText.Pdfa.Checker {
         }
 
         private void EnsureTransparencyObjectsNotEmpty() {
+            PdfA2Checker pdfA2Checker = new PdfA2Checker(PdfAConformance.PDF_A_2B);
+            pdfA2Checker.SetFullCheckMode(true);
             PdfFormXObject formXObject = new PdfFormXObject(new Rectangle(0f, 0f));
             formXObject.SetGroup(new PdfTransparencyGroup());
             pdfA2Checker.CheckFormXObject(formXObject.GetPdfObject());

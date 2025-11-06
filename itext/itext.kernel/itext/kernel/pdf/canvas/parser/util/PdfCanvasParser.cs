@@ -178,7 +178,23 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
                 }
 
                 default: {
-                    return new PdfLiteral(tokeniser.GetByteContent());
+                    if (tokeniser.TokenValueEqualsTo(PdfTokenizer.Null)) {
+                        return new PdfNull();
+                    }
+                    else {
+                        if (tokeniser.TokenValueEqualsTo(PdfTokenizer.True)) {
+                            return new PdfBoolean(true);
+                        }
+                        else {
+                            if (tokeniser.TokenValueEqualsTo(PdfTokenizer.False)) {
+                                return new PdfBoolean(false);
+                            }
+                            else {
+                                return new PdfLiteral(tokeniser.GetByteContent());
+                            }
+                        }
+                    }
+                    break;
                 }
             }
         }

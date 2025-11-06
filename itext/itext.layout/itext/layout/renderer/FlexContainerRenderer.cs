@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Layout.Borders;
@@ -47,9 +46,17 @@ namespace iText.Layout.Renderer {
 
         private IFlexItemMainDirector flexItemMainDirector = null;
 
-        /// <summary>Child renderers and their heights and min heights before the layout.</summary>
-        private readonly IDictionary<IRenderer, Tuple2<UnitValue, UnitValue>> heights = new Dictionary<IRenderer, 
-            Tuple2<UnitValue, UnitValue>>();
+//\cond DO_NOT_DOCUMENT
+        internal bool isWrapApplied = false;
+//\endcond
+
+        /// <summary>Child renderers and their heights and min/max heights before the layout.</summary>
+        private readonly IDictionary<IRenderer, IList<UnitValue>> heights = new Dictionary<IRenderer, IList<UnitValue
+            >>();
+
+        /// <summary>Child renderers and their widths and min/max widths before the layout.</summary>
+        private readonly IDictionary<IRenderer, IList<UnitValue>> widths = new Dictionary<IRenderer, IList<UnitValue
+            >>();
 
         /// <summary>Creates a FlexContainerRenderer from its corresponding layout object.</summary>
         /// <param name="modelElement">
@@ -89,13 +96,41 @@ namespace iText.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             Rectangle layoutContextRectangle = layoutContext.GetArea().GetBBox();
             SetThisAsParent(GetChildRenderers());
-            lines = FlexUtil.CalculateChildrenRectangles(layoutContextRectangle, this);
+            OrderChildRenderers(GetChildRenderers());
+            Rectangle layoutBox = layoutContextRectangle.Clone();
+            if (isWrapApplied) {
+                ApplyWrapReverse();
+                isWrapApplied = false;
+            }
+            UnitValue marginTop = this.GetProperty<UnitValue>(Property.MARGIN_TOP);
+            UnitValue marginBottom = this.GetProperty<UnitValue>(Property.MARGIN_BOTTOM);
+            bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
+            if (marginsCollapsingEnabled) {
+                MarginsCollapseInfo marginsCollapseInfo = layoutContext.GetMarginsCollapseInfo();
+                MarginsCollapseInfo deepCopy = marginsCollapseInfo == null ? null : MarginsCollapseInfo.CreateDeepCopy(marginsCollapseInfo
+                    );
+                MarginsCollapseHandler marginsCollapseHandler = new MarginsCollapseHandler(this, deepCopy);
+                marginsCollapseHandler.StartMarginsCollapse(layoutBox);
+            }
+            // Disable collapsing margins for container before calculating item's rectangles to avoid margin collapsing
+            // between parent and child (flex-container – flex-item) and two children (flex-item – flex-item)
+            this.SetProperty(Property.COLLAPSING_MARGINS, false);
+            lines = FlexUtil.CalculateChildrenRectangles(layoutBox, this);
+            if (marginsCollapsingEnabled) {
+                if (marginTop != null) {
+                    this.SetProperty(Property.MARGIN_TOP, marginTop);
+                }
+                if (marginBottom != null) {
+                    this.SetProperty(Property.MARGIN_BOTTOM, marginBottom);
+                }
+            }
+            // Return collapsing margins for container to inherited value from ancestors
+            this.DeleteProperty(Property.COLLAPSING_MARGINS);
             ApplyWrapReverse();
             IList<IRenderer> renderers = GetFlexItemMainDirector().ApplyDirection(lines);
             RemoveAllChildRenderers(GetChildRenderers());
             AddAllChildRenderers(renderers);
             IList<IRenderer> renderersToOverflow = RetrieveRenderersToOverflow(layoutContextRectangle);
-            IList<UnitValue> previousWidths = new List<UnitValue>();
             foreach (IList<FlexItemInfo> line in lines) {
                 foreach (FlexItemInfo itemInfo in line) {
                     Rectangle rectangleWithoutBordersMarginsPaddings;
@@ -107,18 +142,29 @@ namespace iText.Layout.Renderer {
                         rectangleWithoutBordersMarginsPaddings = itemInfo.GetRenderer().ApplyMarginsBordersPaddings(itemInfo.GetRectangle
                             ().Clone(), false);
                     }
-                    heights.Put(itemInfo.GetRenderer(), new Tuple2<UnitValue, UnitValue>(itemInfo.GetRenderer().GetProperty<UnitValue
-                        >(Property.HEIGHT), itemInfo.GetRenderer().GetProperty<UnitValue>(Property.MIN_HEIGHT)));
-                    previousWidths.Add(itemInfo.GetRenderer().GetProperty<UnitValue>(Property.WIDTH));
+                    heights.Put(itemInfo.GetRenderer(), JavaUtil.ArraysAsList(itemInfo.GetRenderer().GetProperty<UnitValue>(Property
+                        .HEIGHT), itemInfo.GetRenderer().GetProperty<UnitValue>(Property.MIN_HEIGHT), itemInfo.GetRenderer().GetProperty
+                        <UnitValue>(Property.MAX_HEIGHT)));
+                    widths.Put(itemInfo.GetRenderer(), JavaUtil.ArraysAsList(itemInfo.GetRenderer().GetProperty<UnitValue>(Property
+                        .WIDTH), itemInfo.GetRenderer().GetProperty<UnitValue>(Property.MIN_WIDTH), itemInfo.GetRenderer().GetProperty
+                        <UnitValue>(Property.MAX_WIDTH)));
                     itemInfo.GetRenderer().SetProperty(Property.WIDTH, UnitValue.CreatePointValue(rectangleWithoutBordersMarginsPaddings
                         .GetWidth()));
-                    itemInfo.GetRenderer().SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(rectangleWithoutBordersMarginsPaddings
-                        .GetHeight()));
+                    UnitValue height = UnitValue.CreatePointValue(rectangleWithoutBordersMarginsPaddings.GetHeight());
+                    itemInfo.GetRenderer().SetProperty(Property.HEIGHT, height);
                     // TODO DEVSIX-1895 Once the ticket is closed, there will be no need in setting min-height
                     // In case element takes less vertical space than expected, we need to make sure
                     // it is extended to the height predicted by the algo
-                    itemInfo.GetRenderer().SetProperty(Property.MIN_HEIGHT, UnitValue.CreatePointValue(rectangleWithoutBordersMarginsPaddings
-                        .GetHeight()));
+                    itemInfo.GetRenderer().SetProperty(Property.MIN_HEIGHT, height);
+                    if (FlexUtil.IsColumnDirection(this)) {
+                        // TODO DEVSIX-1895 Once the ticket is closed, uncomment this line
+                        // itemInfo.getRenderer().deleteProperty(Property.MIN_HEIGHT);
+                        itemInfo.GetRenderer().DeleteProperty(Property.MAX_HEIGHT);
+                    }
+                    else {
+                        itemInfo.GetRenderer().DeleteProperty(Property.MIN_WIDTH);
+                        itemInfo.GetRenderer().DeleteProperty(Property.MAX_WIDTH);
+                    }
                     // Property.HORIZONTAL_ALIGNMENT mustn't play, in flex container items are aligned
                     // using justify-content and align-items
                     itemInfo.GetRenderer().SetProperty(Property.HORIZONTAL_ALIGNMENT, null);
@@ -131,14 +177,16 @@ namespace iText.Layout.Renderer {
             // We must set back widths of the children because multiple layouts are possible
             // If flex-grow is less than 1, layout algorithm increases the width of the element based on the initial width
             // And if we would not set back widths, every layout flex-item width will grow.
-            int counter = 0;
             foreach (IList<FlexItemInfo> line in lines) {
                 foreach (FlexItemInfo itemInfo in line) {
-                    itemInfo.GetRenderer().SetProperty(Property.WIDTH, previousWidths[counter]);
-                    Tuple2<UnitValue, UnitValue> curHeights = heights.Get(itemInfo.GetRenderer());
-                    itemInfo.GetRenderer().SetProperty(Property.HEIGHT, curHeights.GetFirst());
-                    itemInfo.GetRenderer().SetProperty(Property.MIN_HEIGHT, curHeights.GetSecond());
-                    ++counter;
+                    IList<UnitValue> curWidths = widths.Get(itemInfo.GetRenderer());
+                    itemInfo.GetRenderer().ReturnBackOwnProperty(Property.WIDTH, curWidths[0]);
+                    itemInfo.GetRenderer().ReturnBackOwnProperty(Property.MIN_WIDTH, curWidths[1]);
+                    itemInfo.GetRenderer().ReturnBackOwnProperty(Property.MAX_WIDTH, curWidths[2]);
+                    IList<UnitValue> curHeights = heights.Get(itemInfo.GetRenderer());
+                    itemInfo.GetRenderer().ReturnBackOwnProperty(Property.HEIGHT, curHeights[0]);
+                    itemInfo.GetRenderer().ReturnBackOwnProperty(Property.MIN_HEIGHT, curHeights[1]);
+                    itemInfo.GetRenderer().ReturnBackOwnProperty(Property.MAX_HEIGHT, curHeights[2]);
                 }
             }
             return result;
@@ -248,6 +296,13 @@ namespace iText.Layout.Renderer {
                 }
             }
             overflowRenderer.DeleteOwnProperty(Property.FORCED_PLACEMENT);
+            // childResult.overflowRenderer must have overflowRenderer as a parent, f.e. to disable keep together correctly.
+            // See BlockRenderer.createSplitAndOverflowRenderers.
+            // But we can't add it as a child of overflowRenderer, because flex is layouted by lines, not items.
+            // So even if childResult is PARTIAL, we must move whole child to overflowRenderer.
+            if (childResult.GetOverflowRenderer() != null) {
+                childResult.GetOverflowRenderer().SetParent(overflowRenderer);
+            }
             return new AbstractRenderer[] { splitRenderer, overflowRenderer };
         }
 //\endcond
@@ -281,7 +336,7 @@ namespace iText.Layout.Renderer {
                 splitRenderer_1 = null;
                 overflowRenderer.SetChildRenderers(GetChildRenderers());
             }
-            CorrectFixedLayout(layoutBox);
+            CorrectFixedLayout();
             ApplyAbsolutePositionIfNeeded(layoutContext);
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
@@ -404,9 +459,7 @@ namespace iText.Layout.Renderer {
             if (childRenderer is AbstractRenderer) {
                 FlexItemInfo childFlexItemInfo = FindFlexItemInfo((AbstractRenderer)childRenderer);
                 if (childFlexItemInfo != null) {
-                    layoutBoxCopy.DecreaseWidth(childFlexItemInfo.GetRectangle().GetX());
-                    layoutBoxCopy.MoveRight(childFlexItemInfo.GetRectangle().GetX());
-                    layoutBoxCopy.DecreaseHeight(childFlexItemInfo.GetRectangle().GetY());
+                    AdjustLayoutBoxBeforeChildLayout(layoutBoxCopy, childFlexItemInfo, false);
                 }
             }
             return layoutBoxCopy;
@@ -446,6 +499,7 @@ namespace iText.Layout.Renderer {
             }
             RemoveAllChildRenderers(GetChildRenderers());
             AddAllChildRenderers(reorderedRendererList);
+            isWrapApplied = true;
         }
 
         private FlexItemInfo FindFlexItemInfo(AbstractRenderer renderer) {
@@ -472,18 +526,34 @@ namespace iText.Layout.Renderer {
 
 //\cond DO_NOT_DOCUMENT
         internal override void FixOccupiedAreaIfOverflowedX(OverflowPropertyValue? overflowX, Rectangle layoutBox) {
-            // TODO DEVSIX-5087 Support overflow visible/hidden property correctly
-            return;
         }
 //\endcond
 
+        // TODO DEVSIX-5087 Support overflow visible/hidden property correctly
         /// <summary><inheritDoc/></summary>
         public override void AddChild(IRenderer renderer) {
             // TODO DEVSIX-5087 Since overflow-fit is an internal iText overflow value, we do not need to support if
             // for html/css objects, such as flex. As for now we will set VISIBLE by default, however, while working
             // on the ticket one may come to some more satifactory approach
-            renderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
-            base.AddChild(renderer);
+            if (!(renderer is AreaBreakRenderer)) {
+                renderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+                base.AddChild(renderer);
+            }
+        }
+
+        private static void OrderChildRenderers(IList<IRenderer> renderers) {
+            JavaCollectionsUtil.Sort(renderers, new _IComparer_570());
+        }
+
+        private sealed class _IComparer_570 : IComparer<IRenderer> {
+            public _IComparer_570() {
+            }
+
+            public int Compare(IRenderer a, IRenderer b) {
+                int? orderA = a.GetProperty<int?>(Property.ORDER, 0);
+                int? orderB = b.GetProperty<int?>(Property.ORDER, 0);
+                return JavaUtil.IntegerCompare((int)orderA, (int)orderB);
+            }
         }
 
         private static void AddSimulateDiv(AbstractRenderer overflowRenderer, float width) {
@@ -530,6 +600,7 @@ namespace iText.Layout.Renderer {
                         // height - allowed height for the item
                         Rectangle neighbourBbox = new Rectangle(GetOccupiedAreaBBox().GetX() + occupiedSpace, GetOccupiedAreaBBox(
                             ).GetY(), itemInfo.GetRectangle().GetWidth(), maxHeightInLine - itemInfo.GetRectangle().GetY());
+                        AdjustLayoutBoxBeforeChildLayout(neighbourBbox, itemInfo, true);
                         LayoutResult neighbourLayoutResult = itemInfo.GetRenderer().Layout(new LayoutContext(new LayoutArea(childResult
                             .GetOccupiedArea().GetPageNumber(), neighbourBbox)));
                         RestoreHeightForOverflowRenderer(itemInfo.GetRenderer(), neighbourLayoutResult.GetOverflowRenderer());
@@ -557,7 +628,7 @@ namespace iText.Layout.Renderer {
                         }
                     }
                     else {
-                        // Process all preceeding renderers in the current line
+                        // Process all preceding renderers in the current line
                         // They all were layouted as FULL so add them into split renderer
                         splitRenderer.AddChildRenderer(itemInfo.GetRenderer());
                         // But we also need to occupy the space on overflow renderer
@@ -590,12 +661,15 @@ namespace iText.Layout.Renderer {
             }
             // childRenderer is the original renderer we set the height for before the layout
             // And we need to remove the height from the corresponding overflow renderer
-            Tuple2<UnitValue, UnitValue> curHeights = heights.Get(childRenderer);
-            if (curHeights.GetFirst() == null) {
+            IList<UnitValue> curHeights = heights.Get(childRenderer);
+            if (curHeights[0] == null) {
                 overflowRenderer.DeleteOwnProperty(Property.HEIGHT);
             }
-            if (curHeights.GetSecond() == null) {
+            if (curHeights[1] == null) {
                 overflowRenderer.DeleteOwnProperty(Property.MIN_HEIGHT);
+            }
+            if (curHeights[2] == null) {
+                overflowRenderer.DeleteOwnProperty(Property.MAX_HEIGHT);
             }
         }
 
@@ -621,7 +695,10 @@ namespace iText.Layout.Renderer {
             , IList<IRenderer> childRenderers) {
             float maxWidth = initialMaxWidth;
             float minWidth = initialMinWidth;
-            foreach (IRenderer childRenderer in childRenderers) {
+            float? columnGapProp = this.GetProperty<float?>(Property.COLUMN_GAP);
+            float columnGap = columnGapProp == null ? 0f : (float)columnGapProp;
+            for (int i = 0; i < childRenderers.Count; ++i) {
+                IRenderer childRenderer = childRenderers[i];
                 MinMaxWidth childMinMaxWidth;
                 childRenderer.SetParent(this);
                 if (childRenderer is AbstractRenderer) {
@@ -635,8 +712,13 @@ namespace iText.Layout.Renderer {
                     minWidth = Math.Max(minWidth, childMinMaxWidth.GetMinWidth());
                 }
                 else {
-                    maxWidth += childMinMaxWidth.GetMaxWidth();
-                    minWidth += childMinMaxWidth.GetMinWidth();
+                    maxWidth += childMinMaxWidth.GetMaxWidth() + (i == 0 ? 0 : columnGap);
+                    if (FlexUtil.IsSingleLine(this)) {
+                        minWidth += childMinMaxWidth.GetMinWidth() + (i == 0 ? 0 : columnGap);
+                    }
+                    else {
+                        minWidth = Math.Max(minWidth, childMinMaxWidth.GetMinWidth());
+                    }
                 }
             }
             minMaxWidthHandler.UpdateMaxChildWidth(maxWidth);
@@ -737,6 +819,17 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+        }
+
+        private static void AdjustLayoutBoxBeforeChildLayout(Rectangle layoutBox, FlexItemInfo childFlexItemInfo, 
+            bool adjustOnlyHorizontal) {
+            layoutBox.DecreaseWidth(childFlexItemInfo.GetRectangle().GetX());
+            layoutBox.MoveRight(childFlexItemInfo.GetRectangle().GetX());
+            if (adjustOnlyHorizontal) {
+                // skip vertical adjustments
+                return;
+            }
+            layoutBox.DecreaseHeight(childFlexItemInfo.GetRectangle().GetY());
         }
     }
 }
