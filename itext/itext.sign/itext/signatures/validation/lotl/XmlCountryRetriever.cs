@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using iText.Signatures.Validation.Lotl.Xml;
 
 namespace iText.Signatures.Validation.Lotl {
@@ -62,27 +63,27 @@ namespace iText.Signatures.Validation.Lotl {
         }
 
         private sealed class TSLLocationExtractor : IDefaultXmlHandler {
+            private static readonly ICollection<String> INFORMATION_TAGS = new HashSet<String>();
+
             private const String MIME_TYPE_ETSI_TSL = "application/vnd.etsi.tsl+xml";
 
 //\cond DO_NOT_DOCUMENT
             internal readonly IList<CountrySpecificLotl> tslLocations = new List<CountrySpecificLotl>();
 //\endcond
 
-//\cond DO_NOT_DOCUMENT
-            internal String parsingState = null;
-//\endcond
+            private String schemeTerritory;
 
-//\cond DO_NOT_DOCUMENT
-            internal String schemeTerritory = null;
-//\endcond
+            private String tslLocation;
 
-//\cond DO_NOT_DOCUMENT
-            internal String tslLocation = null;
-//\endcond
+            private String mimeType;
 
-//\cond DO_NOT_DOCUMENT
-            internal String mimeType = null;
-//\endcond
+            private StringBuilder information;
+
+            static TSLLocationExtractor() {
+                INFORMATION_TAGS.Add(XmlTagConstants.SCHEME_TERRITORY);
+                INFORMATION_TAGS.Add(XmlTagConstants.TSL_LOCATION);
+                INFORMATION_TAGS.Add(XmlTagConstants.MIME_TYPE);
+            }
 
 //\cond DO_NOT_DOCUMENT
             internal TSLLocationExtractor() {
@@ -92,40 +93,34 @@ namespace iText.Signatures.Validation.Lotl {
             //Empty constructor
             public void StartElement(String uri, String localName, String qName, Dictionary<String, String> attributes
                 ) {
-                parsingState = localName;
+                if (INFORMATION_TAGS.Contains(localName)) {
+                    information = new StringBuilder();
+                }
             }
 
             public void EndElement(String uri, String localName, String qName) {
-                if (XmlTagConstants.OTHER_TSL_POINTER.Equals(localName)) {
-                    CountrySpecificLotl data = new CountrySpecificLotl(schemeTerritory, tslLocation, mimeType);
-                    if (IsXmlLink(data)) {
-                        tslLocations.Add(data);
+                switch (localName) {
+                    case XmlTagConstants.OTHER_TSL_POINTER: {
+                        CountrySpecificLotl data = new CountrySpecificLotl(schemeTerritory, tslLocation, mimeType);
+                        if (IsXmlLink(data)) {
+                            tslLocations.Add(data);
+                        }
+                        ResetState();
+                        break;
                     }
-                    ResetState();
-                }
-            }
 
-            public void Characters(char[] ch, int start, int length) {
-                if (parsingState == null) {
-                    return;
-                }
-                String value = new String(ch, start, length).Trim();
-                if (String.IsNullOrEmpty(value)) {
-                    return;
-                }
-                switch (parsingState) {
                     case XmlTagConstants.SCHEME_TERRITORY: {
-                        schemeTerritory = value;
+                        schemeTerritory = information.ToString();
                         break;
                     }
 
                     case XmlTagConstants.TSL_LOCATION: {
-                        tslLocation = value;
+                        tslLocation = information.ToString();
                         break;
                     }
 
                     case XmlTagConstants.MIME_TYPE: {
-                        mimeType = value;
+                        mimeType = information.ToString();
                         break;
                     }
 
@@ -133,12 +128,22 @@ namespace iText.Signatures.Validation.Lotl {
                         break;
                     }
                 }
+                information = null;
+            }
+
+            public void Characters(char[] ch, int start, int length) {
+                String value = new String(ch, start, length).Trim();
+                if (String.IsNullOrEmpty(value)) {
+                    return;
+                }
+                if (information != null) {
+                    information.Append(ch, start, length);
+                }
             }
 
             private void ResetState() {
                 schemeTerritory = null;
                 tslLocation = null;
-                parsingState = null;
                 mimeType = null;
             }
 
