@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Css.Parse;
 using iText.StyledXmlParser.Css.Selector;
 using iText.Test;
@@ -49,6 +50,15 @@ namespace iText.StyledXmlParser.Css {
             for (int i = 0; i < expectedImportant.Length; i++) {
                 NUnit.Framework.Assert.AreEqual(expectedImportant[i], importantDeclarations[i].ToString());
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddCssRuleSetWithNullDeclarationExpressionTest() {
+            CssSelector selector = new CssSelector("ol");
+            CssDeclaration cssDeclaration = new CssDeclaration("list-style-type", null);
+            CssRuleSet cssRuleSet = new CssRuleSet(selector, JavaCollectionsUtil.SingletonList(cssDeclaration));
+            NUnit.Framework.Assert.AreEqual(0, cssRuleSet.GetImportantDeclarations().Count);
+            NUnit.Framework.Assert.AreEqual(0, cssRuleSet.GetNormalDeclarations().Count);
         }
     }
 }
