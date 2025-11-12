@@ -325,6 +325,12 @@ namespace iText.Signatures.Validation {
             SignatureUtil util = new SignatureUtil(originalDocument);
             IList<String> signatureNames = util.GetSignatureNames();
             JavaCollectionsUtil.Reverse(signatureNames);
+            // Get OCSP/CRL responses and certificates from DSS
+            UpdateValidationClients(null, validationReport, validationContext, originalDocument);
+            IList<IX509Certificate> certificatesFromDss = GetCertificatesFromDss(validationReport, originalDocument);
+            SafeCalling.OnRuntimeExceptionLog(() => certificateRetriever.AddKnownCertificates(certificatesFromDss), validationReport
+                , (e) => new ReportItem(SIGNATURE_VERIFICATION, ADD_KNOWN_CERTIFICATES_FAILED, e, ReportItem.ReportItemStatus
+                .INFO));
             foreach (String fieldName in signatureNames) {
                 ValidationReport subReport = new ValidationReport();
                 try {
@@ -494,7 +500,9 @@ namespace iText.Signatures.Validation {
             validationContext, PdfDocument document) {
             RetrieveOcspResponsesFromDss(validationReport, validationContext, document);
             RetrieveCrlResponsesFromDss(validationReport, validationContext, document);
-            RetrieveSignedRevocationInfoFromSignatureContainer(pkcs7, validationContext);
+            if (pkcs7 != null) {
+                RetrieveSignedRevocationInfoFromSignatureContainer(pkcs7, validationContext);
+            }
         }
 
         private void RetrieveSignedRevocationInfoFromSignatureContainer(PdfPKCS7 pkcs7, ValidationContext validationContext
