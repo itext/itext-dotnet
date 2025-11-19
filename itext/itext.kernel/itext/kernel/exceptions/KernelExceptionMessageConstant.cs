@@ -592,6 +592,8 @@ namespace iText.Kernel.Exceptions {
         public const String TRAILER_PREV_ENTRY_POINTS_TO_ITS_OWN_CROSS_REFERENCE_SECTION = "Trailer prev entry " +
              "points to its own cross reference section.";
 
+        public const String TRANSFORMATION_MATRIX_ARRAY_SIZE_SHOULD_BE_EQUAL_TO_6 = "Transformation matrix array size shuold be equal to 6";
+
         public const String TYPE4_EXECUTION_NOT_SUPPORTED = "Type 4 functions are not yet supported for separation color image extraction.";
 
         public const String TYPE_SHOULD_NOT_BE_NULL = "ClassArgument type should not be null";
