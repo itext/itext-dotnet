@@ -198,6 +198,7 @@ namespace iText.Pdfua.Exceptions {
 
         public const String ROWS_SPAN_DIFFERENT_NUMBER_OF_COLUMNS = "Table rows {0} and {1} span different number of columns.";
 
+        [Obsolete]
         public const String SAME_LINKS_IN_DIFFERENT_STRUCT_ELEMS = "Multiple link annotations targeting the same "
              + "location shall be included in a single Link or Reference structure element instead of separate ones.";
 
