@@ -1001,9 +1001,7 @@ namespace iText.Pdfua {
             }
             else {
                 if (PdfUAConformance.PDF_UA_2 == pdfUAConformance) {
-                    // TODO DEVSIX-9036. VeraPDF claims the document to be invalid, although it is valid.
-                    //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
-                    framework.AssertOnlyVeraPdfFail("toggleNoViewAnnotation", pdfUAConformance);
+                    framework.AssertBothValid("toggleNoViewAnnotation", pdfUAConformance);
                 }
             }
         }

@@ -130,8 +130,7 @@ namespace iText.Pdfua.Checkers {
             }
             );
             String filename = "differentStructureDestinations_";
-            String expectedMessage = PdfUAExceptionMessageConstants.DIFFERENT_LINKS_IN_SINGLE_STRUCT_ELEM;
-            Validate(filename, expectedMessage, destLocation, framework);
+            framework.AssertBothFail(filename + destLocation.GetValue(), PdfUAConformance.PDF_UA_2);
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
@@ -145,9 +144,7 @@ namespace iText.Pdfua.Checkers {
                 AddLinkAnnotations(destLocation, pdfDoc, namedDestination1, namedDestination2, false);
             }
             );
-            // TODO DEVSIX-9036. VeraPDF claims the document to be valid, although it's not.
-            //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
-            framework.AssertOnlyITextFail("differentNamedDestinations_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
+            framework.AssertBothFail("differentNamedDestinations_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
                 .DIFFERENT_LINKS_IN_SINGLE_STRUCT_ELEM, PdfUAConformance.PDF_UA_2);
         }
 
@@ -162,9 +159,7 @@ namespace iText.Pdfua.Checkers {
                 AddLinkAnnotations(destLocation, pdfDoc, namedDestination1, namedDestination2, false);
             }
             );
-            // TODO DEVSIX-9036. VeraPDF claims the document to be valid, although it's not.
-            //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
-            framework.AssertOnlyITextFail("differentStringDestinations_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
+            framework.AssertBothFail("differentStringDestinations_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
                 .DIFFERENT_LINKS_IN_SINGLE_STRUCT_ELEM, PdfUAConformance.PDF_UA_2);
         }
 
@@ -243,7 +238,7 @@ namespace iText.Pdfua.Checkers {
 
         private void Validate(String filename, String expectedMessage, PdfName destLocation, UaValidationTestFramework
              framework) {
-            // TODO DEVSIX-9036. VeraPDF claims the document to be valid, although it's not.
+            // TODO DEVSIX-9580. VeraPDF claims the document to be valid, although it's not.
             //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
             if (PdfName.D.Equals(destLocation)) {
                 // In case PdfName.D equals destLocation, VeraPDF doesn't allow actions with structure destination being
