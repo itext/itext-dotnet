@@ -86,6 +86,8 @@ namespace iText.Kernel.XMP.Impl {
                     }
                 }
             }
+            // It's broken ASCII character sequence, let's just skip them
+            // If we try to preserve them, SAX parser will throw later on anyway
             return read > 0 || available ? read : -1;
         }
 
