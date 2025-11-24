@@ -37,15 +37,10 @@ using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
-using iText.Signatures;
 using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
-using NUnit.Framework;
-using Org.BouncyCastle.Tls;
-using Org.BouncyCastle.Utilities.Zlib;
-using Org.BouncyCastle.Utilities;
 
 namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]

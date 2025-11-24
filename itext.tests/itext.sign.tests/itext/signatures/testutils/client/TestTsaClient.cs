@@ -40,23 +40,40 @@ namespace iText.Signatures.Testutils.Client {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
 
+        private const String SIGN_ALG = "SHA256withRSA";
+
         private const String DIGEST_ALG = "SHA256";
 
         private readonly IPrivateKey tsaPrivateKey;
 
-        private IList<IX509Certificate> tsaCertificateChain;
+        private readonly IList<IX509Certificate> tsaCertificateChain;
+
+        private int estimatedSize = 4096;
+
+        private String signatureAlgo = SIGN_ALG;
+
+        private String digestAlgo = DIGEST_ALG;
 
         public TestTsaClient(IList<IX509Certificate> tsaCertificateChain, IPrivateKey tsaPrivateKey) {
             this.tsaCertificateChain = tsaCertificateChain;
             this.tsaPrivateKey = tsaPrivateKey;
         }
 
+        public TestTsaClient(IList<IX509Certificate> tsaCertificateChain, IPrivateKey tsaPrivateKey, int estimatedSize
+            , String signatureAlgo, String digestAlgo) {
+            this.tsaCertificateChain = tsaCertificateChain;
+            this.tsaPrivateKey = tsaPrivateKey;
+            this.estimatedSize = estimatedSize;
+            this.signatureAlgo = signatureAlgo;
+            this.digestAlgo = digestAlgo;
+        }
+
         public virtual int GetTokenSizeEstimate() {
-            return 4096;
+            return estimatedSize;
         }
 
         public virtual IMessageDigest GetMessageDigest() {
-            return SignTestPortUtil.GetMessageDigest(DIGEST_ALG);
+            return SignTestPortUtil.GetMessageDigest(digestAlgo);
         }
 
         public virtual byte[] GetTimeStampToken(byte[] imprint) {
@@ -65,8 +82,12 @@ namespace iText.Signatures.Testutils.Client {
             IBigInteger nonce = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateBigInteger().ValueOf
                 (SystemUtil.GetTimeBasedSeed());
             ITimeStampRequest request = tsqGenerator.Generate(BOUNCY_CASTLE_FACTORY.CreateASN1ObjectIdentifier(DigestAlgorithms
-                .GetAllowedDigest(DIGEST_ALG)), imprint, nonce);
-            return new TestTimestampTokenBuilder(tsaCertificateChain, tsaPrivateKey).CreateTimeStampToken(request);
+                .GetAllowedDigest(digestAlgo)), imprint, nonce);
+            if (SIGN_ALG.Equals(signatureAlgo)) {
+                return new TestTimestampTokenBuilder(tsaCertificateChain, tsaPrivateKey).CreateTimeStampToken(request);
+            }
+            return new TestTimestampTokenBuilder(tsaCertificateChain, tsaPrivateKey, signatureAlgo, digestAlgo).CreateTimeStampToken
+                (request);
         }
     }
 }

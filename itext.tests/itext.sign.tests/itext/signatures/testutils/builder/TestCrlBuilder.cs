@@ -34,15 +34,21 @@ namespace iText.Signatures.Testutils.Builder {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
         private const String SIGN_ALG = "SHA256withRSA";
 
+        private readonly String signatureAlgorithm;
         private readonly IPrivateKey issuerPrivateKey;
         private readonly IX509V2CrlGenerator crlBuilder;
-
         private DateTime nextUpdate = TimeTestUtil.TEST_DATE_TIME.AddDays(30);
 
-        public TestCrlBuilder(IX509Certificate issuerCert, IPrivateKey issuerPrivateKey, DateTime thisUpdate) {
+        public TestCrlBuilder(IX509Certificate issuerCert, IPrivateKey issuerPrivateKey, DateTime thisUpdate, 
+            String signatureAlgorithm) {
             IX500Name issuerCertSubjectDn = issuerCert.GetSubjectDN();
             this.crlBuilder = FACTORY.CreateX509v2CRLBuilder(issuerCertSubjectDn, thisUpdate);
             this.issuerPrivateKey = issuerPrivateKey;
+            this.signatureAlgorithm = signatureAlgorithm;
+        }
+
+        public TestCrlBuilder(IX509Certificate issuerCert, IPrivateKey issuerPrivateKey, DateTime thisUpdate) :
+            this(issuerCert, issuerPrivateKey, thisUpdate, SIGN_ALG) {
         }
 
         public TestCrlBuilder(IX509Certificate issuerCert, IPrivateKey issuerPrivateKey)
@@ -69,7 +75,7 @@ namespace iText.Signatures.Testutils.Builder {
 
         public virtual byte[] MakeCrl() {
             crlBuilder.SetNextUpdate(nextUpdate);
-            IX509Crl crl = crlBuilder.Build(FACTORY.CreateContentSigner(SIGN_ALG, issuerPrivateKey));
+            IX509Crl crl = crlBuilder.Build(FACTORY.CreateContentSigner(signatureAlgorithm, issuerPrivateKey));
             return crl.GetEncoded();
         }
     }

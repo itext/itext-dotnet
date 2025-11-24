@@ -990,6 +990,34 @@ namespace iText.Commons.Bouncycastle {
         /// </summary>
         /// <param name="pk">private key wrapper to create timestamp response generator wrapper from</param>
         /// <param name="cert">X509 Certificate wrapper to create timestamp response generator wrapper from</param>
+        /// <param name="signatureAlgorithm">
+        ///
+        /// <see cref="System.string"/>
+        /// signature algorithm used for the private key to create timestamp response generator wrapper from
+        /// </param>
+        /// <param name="allowedDigest">
+        ///
+        /// <see cref="System.string"/>
+        /// allowed digest to create timestamp response generator wrapper from
+        /// </param>
+        /// <param name="policyOid">
+        ///
+        /// <see cref="System.string"/>
+        /// policy oid to create timestamp response generator wrapper from
+        /// </param>
+        /// <returns>created timestamp response generator wrapper</returns>
+        ITimeStampTokenGenerator CreateTimeStampTokenGenerator(IPrivateKey pk, IX509Certificate cert,
+            string signatureAlgorithm, string allowedDigest, string policyOid);
+
+        /// <summary>
+        /// Create timestamp response generator wrapper from private key wrapper, X509 Certificate wrapper, 
+        /// <see cref="System.string"/> 
+        /// allowed digest and
+        /// <see cref="System.string"/>
+        /// policy oid.
+        /// </summary>
+        /// <param name="pk">private key wrapper to create timestamp response generator wrapper from</param>
+        /// <param name="cert">X509 Certificate wrapper to create timestamp response generator wrapper from</param>
         /// <param name="allowedDigest">
         ///
         /// <see cref="System.string"/>

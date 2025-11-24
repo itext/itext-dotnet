@@ -142,6 +142,8 @@ namespace iText.Kernel.Exceptions {
         public const String CANNOT_REMOVE_TAG_BECAUSE_ITS_PARENT_IS_FLUSHED = "Cannot remove tag, because its " + 
             "parent is flushed.";
 
+        public const String CANNOT_RESIZE_PAGE_WITH_NEGATIVE_OR_INFINITE_SCALE = "Can't resize page to the given size {0} because it is negative or zero";
+
         public const String CANNOT_RETRIEVE_MEDIA_BOX_ATTRIBUTE = "Invalid PDF. There is no media box attribute " 
             + "for page or its parents.";
 
@@ -159,12 +161,18 @@ namespace iText.Kernel.Exceptions {
 
         public const String CANNOT_WRITE_TO_PDF_STREAM = "Cannot write to PdfStream.";
 
-        public const String CANNOT_RESIZE_PAGE_WITH_NEGATIVE_OR_INFINITE_SCALE = "Can't resize page to the given size {0} because it is negative or zero";
-
         public const String CERTIFICATE_IS_NOT_PROVIDED_DOCUMENT_IS_ENCRYPTED_WITH_PUBLIC_KEY_CERTIFICATE = "Certificate is not provided. Document is encrypted with public key certificate, it should be passed "
              + "to PdfReader constructor with properties. See ReaderProperties#setPublicKeySecurityParams() " + "method.";
 
         public const String CF_NOT_FOUND_ENCRYPTION = "/CF not found (encryption)";
+
+        public const String COLOR_DEPTH_IS_NOT_SUPPORTED = "The color depth {0} is not supported.";
+
+        public const String COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_COLORSPACE = "The color depth {0} is not supported for color space {1}.";
+
+        public const String COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_SEPARATION_ALTERNATE_COLORSPACE = "The color depth {0} is not supported for separation target color space {1}.";
+
+        public const String COLOR_SPACE_IS_NOT_SUPPORTED = "The color space {0} is not supported.";
 
         public const String COLOR_SPACE_NOT_FOUND = "ColorSpace not found.";
 
@@ -311,6 +319,8 @@ namespace iText.Kernel.Exceptions {
         public const String INVALID_CROSS_REFERENCE_ENTRY_IN_THIS_XREF_SUBSECTION = "Invalid cross reference entry "
              + "in this xref subsection.";
 
+        public const String INVALID_DATA_LENGTH = "Invalid data length, expected length = {0}, actual length = {1}";
+
         public const String INVALID_INDIRECT_REFERENCE = "Invalid indirect reference {0} {1} R.";
 
         public const String INVALID_INPUT_FOR_TYPE_2_FUNCTION = "Invalid input value for PDF Type 2 Function, value should be a single number.";
@@ -381,6 +391,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String IO_EXCEPTION_WHILE_CREATING_FONT = "I/O exception while creating Font";
 
+        public const String LENGTH_OF_ARRAY_SHOULD_MATCH_NUMBER_OF_COMPONENTS = "Length of pixel array ({0}) should match number of components ({1})";
+
         public const String LZW_DECODER_EXCEPTION = "LZW decoder exception.";
 
         public const String LZW_FLAVOUR_NOT_SUPPORTED = "LZW flavour not supported.";
@@ -430,6 +442,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String NO_KID_WITH_SUCH_ROLE = "No kid with such role.";
 
+        public const String NO_SUCH_ALGORITHM = "algorithm identifier in key not recognised";
+
         public const String NO_SUCH_ALGORITHM_FOR_PROVIDER_BCFIPS = "no such algorithm: {0} for provider BCFIPS";
 
         public const String NO_VALID_ENCRYPTION_MODE = "No valid encryption mode.";
@@ -441,6 +455,8 @@ namespace iText.Kernel.Exceptions {
              + "subsection not found.";
 
         public const String NUMBER_OF_PAGES_CAN_NOT_BE_NEGATIVE = "Number of pages can not be negative.";
+
+        public const String N_VALUE_IS_NOT_SUPPORTED = "N value {0} is not supported.";
 
         public const String OBJECT_MUST_BE_INDIRECT_TO_WORK_WITH_THIS_WRAPPER = "Object must be indirect to work "
              + "with this wrapper.";
@@ -463,6 +479,11 @@ namespace iText.Kernel.Exceptions {
              + "to this document ({2}).";
 
         public const String PAGE_IS_NOT_SET_FOR_THE_PDF_TAG_STRUCTURE = "Page is not set for the pdf tag structure.";
+
+        public const String PALLET_CONTENT_ERROR = "Indexed color spaces require four array entries.";
+
+        public const String PARENT_CHILD_ROLE_RELATION_IS_NOT_ALLOWED = "Parent-child ({0}:{1}) relation is not " 
+            + "allowed.";
 
         public const String PASSED_BYTE_BUFFER_CAN_NOT_BE_NULL = "Passed byte buffer can not be null.";
 
@@ -507,6 +528,10 @@ namespace iText.Kernel.Exceptions {
         public const String PDF_TYPE0_FUNCTION_NOT_NULL_PARAMETERS = "Domain, range and size must be not null";
 
         public const String PDF_VERSION_IS_NOT_VALID = "PDF version is not valid.";
+
+        public const String PIXEL_OUT_OF_BORDERS = "Pixel ({0}, {1}) is out of borders of the image with parameter {2} x {3}";
+
+        public const String PNG_CHANNEL_ERROR = "PngGeneration does not support {0} color components.";
 
         public const String PNG_FILTER_UNKNOWN = "PNG filter unknown.";
 
@@ -688,29 +713,6 @@ namespace iText.Kernel.Exceptions {
 
         public const String YOU_NEED_A_SINGLE_BOOLEAN_FOR_THIS_COLLECTION_SORT_DICTIONARY = "You need a single " +
              "boolean for this collection sort dictionary.";
-
-        public const String PARENT_CHILD_ROLE_RELATION_IS_NOT_ALLOWED = "Parent-child ({0}:{1}) relation is not " 
-            + "allowed.";
-
-        public const String INVALID_DATA_LENGTH = "Invalid data length, expected length = {0}, actual length = {1}";
-
-        public const String PIXEL_OUT_OF_BORDERS = "Pixel ({0}, {1}) is out of borders of the image with parameter {2} x {3}";
-
-        public const String LENGTH_OF_ARRAY_SHOULD_MATCH_NUMBER_OF_COMPONENTS = "Length of pixel array ({0}) should match number of components ({1})";
-
-        public const String COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_COLORSPACE = "The color depth {0} is not supported for color space {1}.";
-
-        public const String COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_SEPARATION_ALTERNATE_COLORSPACE = "The color depth {0} is not supported for separation target color space {1}.";
-
-        public const String N_VALUE_IS_NOT_SUPPORTED = "N value {0} is not supported.";
-
-        public const String COLOR_DEPTH_IS_NOT_SUPPORTED = "The color depth {0} is not supported.";
-
-        public const String COLOR_SPACE_IS_NOT_SUPPORTED = "The color space {0} is not supported.";
-
-        public const String PNG_CHANNEL_ERROR = "PngGeneration does not support {0} color components.";
-
-        public const String PALLET_CONTENT_ERROR = "Indexed color spaces require four array entries.";
 
         private KernelExceptionMessageConstant() {
         }

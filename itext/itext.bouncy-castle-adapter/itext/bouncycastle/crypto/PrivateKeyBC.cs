@@ -70,9 +70,15 @@ namespace iText.Bouncycastle.Crypto {
             if (privateKey is Ed25519PrivateKeyParameters) {
                 return "Ed25519";
             }
+            if (privateKey is MLDsaPrivateKeyParameters) {
+                return ((MLDsaPrivateKeyParameters) privateKey).Parameters.Name;
+            }
+            if (privateKey is SlhDsaPrivateKeyParameters) {
+                return ((SlhDsaPrivateKeyParameters) privateKey).Parameters.Name;
+            }
             return null;
         }
-        
+
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
         public override bool Equals(Object o) {
             if (this == o) {

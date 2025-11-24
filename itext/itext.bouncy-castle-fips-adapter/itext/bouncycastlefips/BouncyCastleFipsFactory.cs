@@ -861,6 +861,23 @@ namespace iText.Bouncycastlefips {
 
         /// <summary><inheritDoc/></summary>
         public ITimeStampTokenGenerator CreateTimeStampTokenGenerator(IPrivateKey pk, IX509Certificate certificate, 
+            string signatureAlgorithm, string allowedDigest, string policyOid) {
+            ContentSignerBCFips signer = (ContentSignerBCFips)CreateContentSigner(signatureAlgorithm, pk);
+            ISignatureFactory<AlgorithmIdentifier> contentSigner = signer.GetContentSigner();
+
+            SignerInfoGenerator siGen = new SignerInfoGeneratorBuilder(new PkixDigestFactoryProvider())
+                .Build(contentSigner, ((X509CertificateBCFips)certificate).GetCertificate());
+
+            String digestForTsSigningCert = GetDigestAlgorithmOid(allowedDigest.ToUpperInvariant());
+            IDigestFactory<AlgorithmIdentifier> digestCalculator = new PkixDigestFactory(
+                new AlgorithmIdentifier(new DerObjectIdentifier(digestForTsSigningCert)));
+            DerObjectIdentifier tsaPolicy = new DerObjectIdentifier(policyOid);
+
+            return new TimeStampTokenGeneratorBCFips(contentSigner, siGen, digestCalculator, tsaPolicy);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public ITimeStampTokenGenerator CreateTimeStampTokenGenerator(IPrivateKey pk, IX509Certificate certificate, 
             string allowedDigest, string policyOid) {
             return new TimeStampTokenGeneratorBCFips(pk, certificate, allowedDigest, policyOid);
         }

@@ -35,25 +35,40 @@ using iText.Kernel.Crypto;
 namespace iText.Signatures.Testutils.Builder {
     public class TestTimestampTokenBuilder {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
-        private IList<IX509Certificate> tsaCertificateChain;
-        
+
+        private static readonly String SIGN_ALG = "SHA256withRSA";
+
         // just a more or less random oid of timestamp policy
         private static readonly String POLICY_OID = "1.3.6.1.4.1.45794.1.1";
 
-        private IPrivateKey tsaPrivateKey;
+        private readonly IList<IX509Certificate> tsaCertificateChain;
+        private readonly IPrivateKey tsaPrivateKey;
+        private String signatureAlgo = SIGN_ALG;
+        private String digestAlgo = "SHA1";
 
         public TestTimestampTokenBuilder(IList<IX509Certificate> tsaCertificateChain, IPrivateKey tsaPrivateKey
             ) {
-            if (tsaCertificateChain.Count == 0) {
+            if (tsaCertificateChain.IsEmpty()) {
                 throw new ArgumentException("tsaCertificateChain shall not be empty");
             }
             this.tsaCertificateChain = tsaCertificateChain;
             this.tsaPrivateKey = tsaPrivateKey;
         }
 
+        public TestTimestampTokenBuilder(IList<IX509Certificate> tsaCertificateChain, IPrivateKey tsaPrivateKey,
+            String signatureAlgo, String digestAlgo) {
+            if (tsaCertificateChain.IsEmpty()) {
+                throw new ArgumentException("tsaCertificateChain shall not be empty");
+            }
+            this.tsaCertificateChain = tsaCertificateChain; 
+            this.tsaPrivateKey = tsaPrivateKey;
+            this.signatureAlgo = signatureAlgo;
+            this.digestAlgo = digestAlgo;
+        }
+
         public virtual byte[] CreateTimeStampToken(ITimeStampRequest request) {
             ITimeStampTokenGenerator tsTokGen = CreateTimeStampTokenGenerator(tsaPrivateKey, tsaCertificateChain[0], 
-                "SHA1", POLICY_OID);
+                signatureAlgo, digestAlgo, POLICY_OID);
             tsTokGen.SetAccuracySeconds(1);
 
             tsTokGen.SetCertificates(tsaCertificateChain);
@@ -63,12 +78,12 @@ namespace iText.Signatures.Testutils.Builder {
             ITimeStampToken tsToken = tsTokGen.Generate(request, serialNumber, genTime);
             return tsToken.GetEncoded();
         }
-        
+
         public virtual byte[] CreateTSAResponse(byte[] requestBytes, String signatureAlgorithm, String allowedDigest) {
             try {
                 String digestForTsSigningCert = DigestAlgorithms.GetAllowedDigest(allowedDigest);
                 ITimeStampTokenGenerator tokenGenerator = CreateTimeStampTokenGenerator(tsaPrivateKey,
-                    tsaCertificateChain[0], allowedDigest, POLICY_OID);
+                    tsaCertificateChain[0], signatureAlgorithm, allowedDigest, POLICY_OID);
 
                 IList<String> algorithms = new List<string>();
                 algorithms.Add(digestForTsSigningCert);
@@ -81,8 +96,8 @@ namespace iText.Signatures.Testutils.Builder {
         }
 
         private static ITimeStampTokenGenerator CreateTimeStampTokenGenerator(IPrivateKey pk, IX509Certificate cert,
-            String allowedDigest, String policyOid) {
-            return FACTORY.CreateTimeStampTokenGenerator(pk, cert,
+            String signatureAlgorithm, String allowedDigest, String policyOid) {
+            return FACTORY.CreateTimeStampTokenGenerator(pk, cert, signatureAlgorithm,
                 DigestAlgorithms.GetDigest(DigestAlgorithms.GetAllowedDigest(allowedDigest)), policyOid);
         }
 
