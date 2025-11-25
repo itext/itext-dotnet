@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+    <PropertyGroup Label="Configuration">
+        <SignAssembly>True</SignAssembly>
+        <DelaySign>False</DelaySign>
+        <WarningLevel>0</WarningLevel>
+    </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Library</OutputType>
+        <AssemblyOriginatorKeyFile>itext.snk</AssemblyOriginatorKeyFile>
+    </PropertyGroup>
+    <PropertyGroup>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <ApplicationIcon />
+        <OutputTypeEx>library</OutputTypeEx>
+        <StartupObject />
+        <RootNamespace />
+        <AssemblyName>itext.brotli-compressor.tests</AssemblyName>
+    </PropertyGroup>
+    <PropertyGroup>
+        <NoWarn>1701;1702;1591;1570;1572;1573;1574;1580;1584;1658</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="coverlet.collector" Version="6.0.2"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0"/>
+
+        <PackageReference Include="NUnit" Version="3.7.1" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="NUnit.Framework"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\itext\itext.brotli-compressor\itext.brotli-compressor.csproj" />
+      <ProjectReference Include="..\..\itext\itext.layout\itext.layout.csproj" />
+      <ProjectReference Include="..\..\itext\itext.pdftest\itext.pdftest.csproj" />
+    </ItemGroup>
+
+</Project>

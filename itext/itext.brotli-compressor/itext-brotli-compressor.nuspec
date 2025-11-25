@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+    <metadata>
+        <id>itext.brotli-compressor</id>
+        <version>9.5.0-SNAPSHOT</version>
+        <title>iText brotli-compressor module</title>
+        <authors>Apryse Software</authors>
+        <owners>Apryse Software</owners>
+        <licenseUrl>https://www.gnu.org/licenses/agpl.html</licenseUrl>
+        <projectUrl>https://itextpdf.com/</projectUrl>
+        <icon>ITSC-avatar.png</icon>
+        <requireLicenseAcceptance>true</requireLicenseAcceptance>
+        <description>brotli-compressor module</description>
+        <summary/>
+        <releaseNotes>https://itextpdf.com/itext7release</releaseNotes>
+        <copyright>Copyright (c) 1998-2025 Apryse Group NV</copyright>
+        <language>en-US</language>
+        <tags>itext itext7 itextsharp c# .net csharp brotli</tags>
+        <dependencies>
+            <dependency id="itext.commons" version="9.5.0-SNAPSHOT" />
+            <dependency id="itext.kernel" version="9.5.0-SNAPSHOT" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="bin\Release\net8.0\itext.brotli-compressor.dll" target="lib\net8.0" />
+        <file src="bin\Release\net8.0\itext.brotli-compressor.xml" target="lib\net8.0" />
+        <file src="bin\Release\netstandard2.1\itext.brotli-compressor.dll" target="lib\netstandard2.1" />
+        <file src="bin\Release\netstandard2.1\itext.brotli-compressor.xml" target="lib\netstandard2.1" />
+        <file src="..\..\ITSC-avatar.png" target=""/>
+    </files>
+</package>
