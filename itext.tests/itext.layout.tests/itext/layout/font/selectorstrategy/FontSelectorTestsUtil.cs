@@ -112,5 +112,15 @@ namespace iText.Layout.Font.Selectorstrategy {
             fontFamilies.Add("random");
             return fontProvider.CreateFontSelectorStrategy(fontFamilies, new FontCharacteristics(), null);
         }
+
+        public static IFontSelectorStrategy CreateStrategyWithSymbolFont(IFontSelectorStrategyFactory factory) {
+            FontProvider fontProvider = new FontProvider();
+            // TODO DEVSIX-9589 Create symbol font with cmap 3,0 for testing
+            fontProvider.AddFont(FONTS_FOLDER + "Symbols1.ttf");
+            fontProvider.SetFontSelectorStrategyFactory(factory);
+            IList<String> fontFamilies = new List<String>();
+            fontFamilies.Add("Symbols1");
+            return fontProvider.CreateFontSelectorStrategy(fontFamilies, new FontCharacteristics(), null);
+        }
     }
 }

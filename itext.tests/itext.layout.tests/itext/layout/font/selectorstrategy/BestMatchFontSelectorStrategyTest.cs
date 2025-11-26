@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using System.Collections.Generic;
 using iText.Commons.Datastructures;
 using iText.IO.Font.Otf;
@@ -137,6 +138,18 @@ namespace iText.Layout.Font.Selectorstrategy {
             IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines("Hello\r\n   World!\r\n ");
             NUnit.Framework.Assert.AreEqual(1, result.Count);
             NUnit.Framework.Assert.AreEqual("Hello\r\n   World!\r\n ", result[0].GetFirst().ToString());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ChineseNotSymbolTest() {
+            IFontSelectorStrategy strategy = FontSelectorTestsUtil.CreateStrategyWithSymbolFont(new BestMatchFontSelectorStrategy.BestMatchFontSelectorStrategyFactory
+                ());
+            String chinese = "佗";
+            IList<Tuple2<GlyphLine, PdfFont>> result = strategy.GetGlyphLines(chinese);
+            NUnit.Framework.Assert.AreEqual(1, result.Count);
+            String resultedString = result[0].GetFirst().ToString();
+            NUnit.Framework.Assert.AreNotEqual(chinese, resultedString);
+            NUnit.Framework.Assert.AreEqual("", resultedString);
         }
 
         [NUnit.Framework.Test]
