@@ -70,9 +70,6 @@ namespace iText.Signatures.Mac {
                 ().UseAppendMode())) {
             }
             // Do nothing.
-            // This call produces INFO log from AESCipher caused by exception while decrypting. The reason is that,
-            // while comparing encrypted signed documents, CompareTool needs to mark signature value as unencrypted.
-            // Instead, it tries to decrypt not encrypted value which results in exception.
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff", ENCRYPTION_PASSWORD, ENCRYPTION_PASSWORD));
         }

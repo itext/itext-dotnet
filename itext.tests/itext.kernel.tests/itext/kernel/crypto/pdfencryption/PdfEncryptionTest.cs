@@ -522,6 +522,20 @@ namespace iText.Kernel.Crypto.Pdfencryption {
             doc.Close();
         }
 
+        //TODO DEVSIX-9588: this test logs ERROR_WHILE_FINALIZING_AES_CIPHER under FIPS mode
+        [LogMessage(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT, Ignore = true)]
+        [NUnit.Framework.Test]
+        public virtual void ReadPdfWithEmptyStreamTest() {
+            String inFileName = sourceFolder + "empty-aes256.pdf";
+            String outFileName = destinationFolder + "empty-aes256.pdf";
+            PdfReader pdfReader = new PdfReader(inFileName).SetUnethicalReading(true);
+            using (PdfDocument pdfDocument = new PdfDocument(pdfReader, CompareTool.CreateTestPdfWriter(outFileName), 
+                new StampingProperties().UseAppendMode().PreserveEncryption())) {
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, inFileName, destinationFolder
+                ));
+        }
+
         public virtual void EncryptWithPassword2(String filename, int encryptionType, int compression) {
             EncryptWithPassword2(filename, encryptionType, compression, false);
         }

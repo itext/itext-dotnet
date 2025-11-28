@@ -432,6 +432,10 @@ namespace iText.Kernel.Pdf {
                         }
                         filter.Release();
                     }
+                    // Skip decryption for document-level metadata stream if EncryptMetadata is false
+                    if (!skip && !decrypt.IsMetadataEncrypted() && PdfName.Metadata.Equals(type)) {
+                        skip = true;
+                    }
                     if (!skip) {
                         decrypt.SetHashKeyForNextObject(stream.GetIndirectReference().GetObjNumber(), stream.GetIndirectReference(
                             ).GetGenNumber());

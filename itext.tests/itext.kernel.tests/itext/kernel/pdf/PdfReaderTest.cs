@@ -2681,6 +2681,27 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        [NUnit.Framework.Test]
+        public virtual void UnencryptedMetadataInEncryptedDocumentIsReadable() {
+            byte[] user = "userpass".GetBytes(System.Text.Encoding.UTF8);
+            Stream pdf = iText.Commons.Utils.FileUtil.GetInputStreamForFile(System.IO.Path.Combine(SOURCE_FOLDER + "unencryptedMetadataAes256.pdf"
+                ));
+            using (PdfReader reader = new PdfReader(pdf, new ReaderProperties().SetPassword(user))) {
+                using (PdfDocument readDoc = new PdfDocument(reader)) {
+                    byte[] xmpBytes = readDoc.GetXmpMetadataBytes();
+                    NUnit.Framework.Assert.IsNotNull(xmpBytes, "XMP metadata bytes should be present");
+                    // Should be readable XML; parse using XMPMetaFactory to be strict
+                    XMPMeta parsed = XMPMetaFactory.ParseFromBuffer(xmpBytes);
+                    NUnit.Framework.Assert.IsNotNull(parsed, "Parsed XMP metadata should not be null");
+                    String xmpXml = iText.Commons.Utils.JavaUtil.GetStringForBytes(xmpBytes, System.Text.Encoding.UTF8);
+                    // Sanity checks that it looks like RDF/XML
+                    NUnit.Framework.Assert.IsTrue(xmpXml.Contains("<rdf:RDF") || xmpXml.Contains("<x:xmpmeta"));
+                    // XMP metadata should contain the title we set
+                    NUnit.Framework.Assert.IsTrue(xmpXml.Contains("UnitTest Title"));
+                }
+            }
+        }
+
         private static PdfDictionary GetTestPdfDictionary() {
             Dictionary<PdfName, PdfObject> tmpMap = new Dictionary<PdfName, PdfObject>();
             tmpMap.Put(new PdfName("b"), new PdfName("c"));
