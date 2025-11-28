@@ -29,6 +29,8 @@ namespace iText.Kernel.Crypto {
     public sealed class OID {
         public const String PKCS7_DATA = "1.2.840.113549.1.7.1";
 
+        public const String ID_DATA = "1.2.840.113549.1.7.1";
+
         public const String PKCS7_SIGNED_DATA = "1.2.840.113549.1.7.2";
 
         public const String RSA = "1.2.840.113549.1.1.1";
@@ -40,6 +42,8 @@ namespace iText.Kernel.Crypto {
         public const String AA_SIGNING_CERTIFICATE_V1 = "1.2.840.113549.1.9.16.2.12";
 
         public const String AA_SIGNING_CERTIFICATE_V2 = "1.2.840.113549.1.9.16.2.47";
+
+        public const String AA_ETS_COMMITMENTTYPE = "1.2.840.113549.1.9.16.2.16";
 
         public const String MGF1 = "1.2.840.113549.1.1.8";
 

@@ -32,6 +32,7 @@ using iText.Signatures;
 using iText.Signatures.Cms;
 using iText.Signatures.Testutils.Report.Xml;
 using iText.Signatures.Validation;
+using iText.Signatures.Validation.Report;
 using iText.Test;
 
 namespace iText.Signatures.Validation.Report.Xml {
@@ -59,10 +60,56 @@ namespace iText.Signatures.Validation.Report.Xml {
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "docWithMultipleSignaturesAndTimeStamp.pdf"
                 ))) {
                 AdESReportAggregator reportAggregator = new DefaultAdESReportAggregator();
-                builder.WithAdESReportAggregator(reportAggregator).BuildSignatureValidator(document).ValidateSignatures();
+                ValidationReport report = builder.WithAdESReportAggregator(reportAggregator).BuildSignatureValidator(document
+                    ).ValidateSignatures();
                 XmlReportGenerator reportGenerator = new XmlReportGenerator(new XmlReportOptions());
                 StringWriter stringWriter = new StringWriter();
                 reportGenerator.Generate(reportAggregator.GetReport(), stringWriter);
+                XmlReportTestTool testTool = new XmlReportTestTool(stringWriter.ToString());
+                NUnit.Framework.Assert.AreEqual("ValidationReport", testTool.GetDocumentNode().Name);
+                // There are 5 signatures, but 3 are timestamps
+                NUnit.Framework.Assert.AreEqual(2, testTool.CountElements("//r:SignatureValidationReport"));
+                XmlNodeList signatureValueNodes = testTool.ExecuteXpathAsNodeList("//r:SignatureValidationReport//ds:SignatureValue"
+                    );
+                IList<String> b64ReportedSignatures = new List<String>(signatureValueNodes.Count);
+                for (int i = 0; i < signatureValueNodes.Count; i++) {
+                    b64ReportedSignatures.Add(signatureValueNodes.Item(i).InnerText);
+                }
+                SignatureUtil sigUtil = new SignatureUtil(document);
+                foreach (String sigName in sigUtil.GetSignatureNames()) {
+                    PdfSignature signature = sigUtil.GetSignature(sigName);
+                    if (!PdfName.ETSI_RFC3161.Equals(signature.GetSubFilter())) {
+                        CMSContainer cms = new CMSContainer(sigUtil.GetSignature(sigName).GetContents().GetValueBytes());
+                        String b64signature = Convert.ToBase64String(cms.GetSignerInfo().GetSignatureData());
+                        NUnit.Framework.Assert.IsTrue(b64ReportedSignatures.Contains(b64signature));
+                    }
+                }
+                // For each reported signature the certificate is added to the validation objects
+                // We don't use something like
+                // testTool.countElements("//r:ValidationObject[r:ObjectType=\"urn:etsi:019102:validationObject:certificate\"]");
+                // here because it fails in native by not clear reason
+                XmlNodeList objectTypesNodes = testTool.ExecuteXpathAsNodeList("//r:ValidationObject//r:ObjectType");
+                int requiredObjectTypesCount = 0;
+                for (int i = 0; i < objectTypesNodes.Count; i++) {
+                    if ("urn:etsi:019102:validationObject:certificate".Equals(objectTypesNodes.Item(i).InnerText)) {
+                        ++requiredObjectTypesCount;
+                    }
+                }
+                NUnit.Framework.Assert.AreEqual(2, requiredObjectTypesCount);
+                NUnit.Framework.Assert.IsNull(testTool.ValidateXMLSchema());
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EventBasedXmlReportGenerationTest() {
+            XmlReportAggregator reportEventListener = new XmlReportAggregator();
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "docWithMultipleSignaturesAndTimeStamp.pdf"
+                ))) {
+                builder.WithAdESLevelReportGenerator(reportEventListener);
+                builder.BuildSignatureValidator(document).ValidateSignatures();
+                XmlReportGenerator reportGenerator = new XmlReportGenerator(new XmlReportOptions());
+                StringWriter stringWriter = new StringWriter();
+                reportGenerator.Generate(reportEventListener.GetReport(), stringWriter);
                 XmlReportTestTool testTool = new XmlReportTestTool(stringWriter.ToString());
                 NUnit.Framework.Assert.AreEqual("ValidationReport", testTool.GetDocumentNode().Name);
                 // There are 5 signatures, but 3 are timestamps

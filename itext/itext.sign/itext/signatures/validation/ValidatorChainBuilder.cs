@@ -22,10 +22,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Actions;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Kernel.Pdf;
 using iText.Signatures;
 using iText.Signatures.Validation.Lotl;
+using iText.Signatures.Validation.Report.Pades;
 using iText.Signatures.Validation.Report.Xml;
 using iText.StyledXmlParser.Resolver.Resource;
 
@@ -66,9 +68,11 @@ namespace iText.Signatures.Validation {
 
         private ICollection<IX509Certificate> knownCertificates;
 
-        private AdESReportAggregator adESReportAggregator = new NullAdESReportAggregator();
-
         private bool trustEuropeanLotl = false;
+
+        private readonly EventManager eventManager;
+
+        private AdESReportAggregator adESReportAggregator = new NullAdESReportAggregator();
 
         /// <summary>Creates a ValidatorChainBuilder using default implementations</summary>
         public ValidatorChainBuilder() {
@@ -84,6 +88,7 @@ namespace iText.Signatures.Validation {
             crlClientFactory = () => new CrlClientOnline();
             lotlServiceFactory = () => BuildLotlService();
             qualifiedValidator = new NullQualifiedValidator();
+            eventManager = EventManager.CreateNewInstance();
         }
 
         /// <summary>Establishes trust in European Union List of Trusted Lists.</summary>
@@ -400,10 +405,37 @@ namespace iText.Signatures.Validation {
         /// </remarks>
         /// <param name="adESReportAggregator">the report aggregator to use</param>
         /// <returns>the current ValidatorChainBuilder</returns>
+        [System.ObsoleteAttribute(@"This method will be removed in a later version, use WithAdESLevelReportGenerator(iText.Signatures.Validation.Report.Xml.XmlReportAggregator) instead."
+            )]
         public virtual iText.Signatures.Validation.ValidatorChainBuilder WithAdESReportAggregator(AdESReportAggregator
              adESReportAggregator) {
             this.adESReportAggregator = adESReportAggregator;
+            eventManager.Register(new EventsToAdESReportAggratorConvertor(adESReportAggregator));
             return this;
+        }
+
+        /// <summary>Use this reportEventListener to generate an AdES xml report.</summary>
+        /// <remarks>
+        /// Use this reportEventListener to generate an AdES xml report.
+        /// <para />
+        /// Generated
+        /// <see cref="iText.Signatures.Validation.Report.Xml.PadesValidationReport"/>
+        /// report could be provided to
+        /// <see cref="iText.Signatures.Validation.Report.Xml.XmlReportGenerator.Generate(iText.Signatures.Validation.Report.Xml.PadesValidationReport, System.IO.TextWriter)
+        ///     "/>.
+        /// </remarks>
+        /// <param name="reportEventListener">the AdESReportEventListener to use</param>
+        /// <returns>the current ValidatorChainBuilder</returns>
+        public virtual iText.Signatures.Validation.ValidatorChainBuilder WithAdESLevelReportGenerator(XmlReportAggregator
+             reportEventListener) {
+            eventManager.Register(reportEventListener);
+            return this;
+        }
+
+        /// <summary>Use this PAdES level report generator to generate PAdES report.</summary>
+        /// <param name="reportGenerator">the PAdESLevelReportGenerator to use</param>
+        public virtual void WithPAdESLevelReportGenerator(PAdESLevelReportGenerator reportGenerator) {
+            eventManager.Register(reportGenerator);
         }
 
         /// <summary>
@@ -464,6 +496,12 @@ namespace iText.Signatures.Validation {
             return properties;
         }
 
+        /// <summary>Returns the EventManager to be used for all events fired during validation.</summary>
+        /// <returns>the EventManager to be used for all events fired during validation</returns>
+        public virtual EventManager GetEventManager() {
+            return eventManager;
+        }
+
         /// <summary>
         /// Retrieves the explicitly added or automatically created
         /// <see cref="iText.Signatures.Validation.Report.Xml.AdESReportAggregator"/>
@@ -481,6 +519,8 @@ namespace iText.Signatures.Validation {
         /// <see cref="iText.Signatures.Validation.Report.Xml.AdESReportAggregator"/>
         /// instance.
         /// </returns>
+        [System.ObsoleteAttribute(@"The AdESReportAggregator system is replaced by the iText.Signatures.Validation.Report.Xml.XmlReportAggregator system."
+            )]
         public virtual AdESReportAggregator GetAdESReportAggregator() {
             return adESReportAggregator;
         }

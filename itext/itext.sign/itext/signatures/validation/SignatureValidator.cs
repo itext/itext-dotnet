@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using iText.Bouncycastleconnector;
+using iText.Commons.Actions;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
@@ -37,6 +38,7 @@ using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures;
 using iText.Signatures.Validation.Context;
+using iText.Signatures.Validation.Events;
 using iText.Signatures.Validation.Report;
 
 namespace iText.Signatures.Validation {
@@ -134,6 +136,8 @@ namespace iText.Signatures.Validation {
 
         private ValidationCrlClient validationCrlClient;
 
+        private readonly EventManager eventManager;
+
         private bool validationPerformed = false;
 
         /// <summary>
@@ -156,6 +160,7 @@ namespace iText.Signatures.Validation {
             this.properties = builder.GetProperties();
             this.certificateChainValidator = builder.GetCertificateChainValidator();
             this.documentRevisionsValidator = builder.GetDocumentRevisionsValidator();
+            this.eventManager = builder.GetEventManager();
             FindValidationClients();
         }
 
@@ -307,7 +312,7 @@ namespace iText.Signatures.Validation {
 
         private void ReportResult(ValidationReport validationReport) {
             if (validationReport.GetValidationResult() == ValidationReport.ValidationResult.VALID) {
-                builder.GetAdESReportAggregator().ReportSignatureValidationSuccess();
+                eventManager.OnEvent(new SignatureValidationSuccessEvent());
                 return;
             }
             StringBuilder reason = new StringBuilder("[");
@@ -315,8 +320,8 @@ namespace iText.Signatures.Validation {
                 reason.Append(reportItem).Append("\n");
             }
             reason.Append("]");
-            builder.GetAdESReportAggregator().ReportSignatureValidationFailure(validationReport.GetValidationResult() 
-                == ValidationReport.ValidationResult.INDETERMINATE, reason.ToString());
+            eventManager.OnEvent(new SignatureValidationFailureEvent(validationReport.GetValidationResult() == ValidationReport.ValidationResult
+                .INDETERMINATE, reason.ToString()));
         }
 
         private ValidationReport Validate(String signatureName) {
@@ -390,13 +395,13 @@ namespace iText.Signatures.Validation {
             validationReport.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, MessageFormatUtil.Format(VALIDATING_SIGNATURE_NAME
                 , latestSignatureName), ReportItem.ReportItemStatus.INFO));
             if (pkcs7.IsTsp()) {
-                builder.GetAdESReportAggregator().ProofOfExistenceFound(signatureUtil.GetSignature(latestSignatureName).GetContents
-                    ().GetValueBytes(), true);
+                eventManager.OnEvent(new ProofOfExistenceFoundEvent(signatureUtil.GetSignature(latestSignatureName), latestSignatureName
+                    ));
             }
             else {
                 builder.GetQualifiedValidator().StartSignatureValidation(latestSignatureName);
-                builder.GetAdESReportAggregator().StartSignatureValidation(signatureUtil.GetSignature(latestSignatureName)
-                    .GetContents().GetValueBytes(), latestSignatureName, lastKnownPoE);
+                eventManager.OnEvent(new StartSignatureValidationEvent(signatureUtil.GetSignature(latestSignatureName), latestSignatureName
+                    , lastKnownPoE));
             }
             if (!signatureUtil.SignatureCoversWholeDocument(latestSignatureName)) {
                 validationReport.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, MessageFormatUtil.Format(DOCUMENT_IS_NOT_COVERED
