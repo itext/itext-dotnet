@@ -42,7 +42,8 @@ namespace iText.Kernel.Pdf {
             MemoryLimitsAwareOutputStream outputStream = new MemoryLimitsAwareOutputStream();
             MemoryLimitsAwareHandler memoryLimitsAwareHandler = null;
             if (null != streamDictionary.GetIndirectReference()) {
-                memoryLimitsAwareHandler = streamDictionary.GetIndirectReference().GetDocument().memoryLimitsAwareHandler;
+                memoryLimitsAwareHandler = streamDictionary.GetIndirectReference().GetDocument().GetMemoryLimitsAwareHandler
+                    ();
             }
             else {
                 // We do not reuse some static instance because one can process pdfs in different threads.

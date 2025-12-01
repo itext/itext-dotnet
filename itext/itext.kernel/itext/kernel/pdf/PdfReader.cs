@@ -513,7 +513,8 @@ namespace iText.Kernel.Pdf {
             }
             MemoryLimitsAwareHandler memoryLimitsAwareHandler = null;
             if (null != streamDictionary.GetIndirectReference()) {
-                memoryLimitsAwareHandler = streamDictionary.GetIndirectReference().GetDocument().memoryLimitsAwareHandler;
+                memoryLimitsAwareHandler = streamDictionary.GetIndirectReference().GetDocument().GetMemoryLimitsAwareHandler
+                    ();
             }
             bool memoryLimitsAwarenessRequired = null != memoryLimitsAwareHandler && memoryLimitsAwareHandler.IsMemoryLimitsAwarenessRequiredOnDecompression
                 (filters);

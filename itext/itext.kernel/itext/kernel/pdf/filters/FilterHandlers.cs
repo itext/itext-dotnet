@@ -56,6 +56,7 @@ namespace iText.Kernel.Pdf.Filters {
             map.Put(PdfName.RunLengthDecode, new RunLengthDecodeFilter());
             map.Put(PdfName.DCTDecode, new DctDecodeFilter());
             map.Put(PdfName.JPXDecode, new JpxDecodeFilter());
+            map.Put(PdfName.BrotliDecode, new BrotliFilter());
             defaults = JavaCollectionsUtil.UnmodifiableMap(map);
         }
 
