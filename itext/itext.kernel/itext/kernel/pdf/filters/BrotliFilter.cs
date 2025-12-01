@@ -20,7 +20,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
 using System.IO;
 using iText.IO.Codec.Brotli.Dec;
 using iText.Kernel.Exceptions;
@@ -33,7 +32,7 @@ namespace iText.Kernel.Pdf.Filters {
     /// This filter supports optional Brotli dictionary streams and memory limits awareness.
     /// </remarks>
     public class BrotliFilter : MemoryLimitsAwareFilter {
-        public const int DEFAULT_INTERNAL_BUFFER_SIZE = 16384;
+        private const int DEFAULT_INTERNAL_BUFFER_SIZE = 16384;
 
         /// <summary>Default buffer size for Brotli decompression (64 KiB).</summary>
         private const int DEFAULT_BUFFER_SIZE = 65536;
@@ -66,7 +65,7 @@ namespace iText.Kernel.Pdf.Filters {
                     output.Write(buffer, 0, len);
                 }
                 brotliInput.Dispose();
-                return output.ToArray();
+                return FlateDecodeFilter.DecodePredictor(output.ToArray(), decodeParams);
             }
             catch (System.IO.IOException e) {
                 throw new PdfException(KernelExceptionMessageConstant.FAILED_TO_DECODE_BROTLI_STREAM, e);
@@ -76,7 +75,7 @@ namespace iText.Kernel.Pdf.Filters {
         /// <summary>Extracts the Brotli dictionary stream from decode parameters if present.</summary>
         /// <param name="decodeParams">decode parameters, may contain a Brotli dictionary stream under key 'D'</param>
         /// <returns>an Optional containing the Brotli dictionary stream if present, otherwise empty</returns>
-        private PdfStream GetBrotliDictionaryStream(PdfObject decodeParams) {
+        private static PdfStream GetBrotliDictionaryStream(PdfObject decodeParams) {
             if (!(decodeParams is PdfDictionary)) {
                 return null;
             }
@@ -88,7 +87,7 @@ namespace iText.Kernel.Pdf.Filters {
             }
             else {
                 if (brotliDecompressionDictionary != null) {
-                    throw new Exception(KernelExceptionMessageConstant.BROTLI_DICTIONARY_IS_NOT_A_STREAM);
+                    throw new PdfException(KernelExceptionMessageConstant.BROTLI_DICTIONARY_IS_NOT_A_STREAM);
                 }
                 else {
                     return null;

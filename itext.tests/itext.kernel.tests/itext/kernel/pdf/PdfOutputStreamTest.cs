@@ -76,6 +76,91 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.DoesNotThrow(() => document.Close());
         }
 
+        [NUnit.Framework.Test]
+        public virtual void SingleFilterNoDecodeChangesNothing() {
+            PdfOutputStreamTest.CustomPdfStream stream = new PdfOutputStreamTest.CustomPdfStream(new MemoryStream(10));
+            PdfStream pdfStream = new PdfStream();
+            stream.UpdateCompressionFilter(pdfStream);
+            NUnit.Framework.Assert.AreEqual(PdfName.FlateDecode, pdfStream.GetAsName(PdfName.Filter));
+            NUnit.Framework.Assert.IsNull(pdfStream.Get(PdfName.DecodeParms));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WithoutFilterAndWithDecodeParamsRemovesDecodeParamsAndAddsFilter() {
+            PdfOutputStreamTest.CustomPdfStream stream = new PdfOutputStreamTest.CustomPdfStream(new MemoryStream(10));
+            PdfStream pdfStream = new PdfStream();
+            PdfDictionary decodeParms = new PdfDictionary();
+            decodeParms.Put(PdfName.Predictor, new PdfNumber(12));
+            pdfStream.Put(PdfName.DecodeParms, decodeParms);
+            stream.UpdateCompressionFilter(pdfStream);
+            NUnit.Framework.Assert.AreEqual(PdfName.FlateDecode, pdfStream.GetAsName(PdfName.Filter));
+            NUnit.Framework.Assert.IsNull(pdfStream.Get(PdfName.DecodeParms));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FilterAlreadyExistsAddItConvertsItToArray() {
+            PdfOutputStreamTest.CustomPdfStream stream = new PdfOutputStreamTest.CustomPdfStream(new MemoryStream(10));
+            PdfStream pdfStream = new PdfStream();
+            pdfStream.Put(PdfName.Filter, PdfName.FlateDecode);
+            stream.UpdateCompressionFilter(pdfStream);
+            PdfArray filterArray = pdfStream.GetAsArray(PdfName.Filter);
+            NUnit.Framework.Assert.AreEqual(2, filterArray.Size());
+            NUnit.Framework.Assert.AreEqual(PdfName.FlateDecode, filterArray.GetAsName(0));
+            NUnit.Framework.Assert.AreEqual(PdfName.FlateDecode, filterArray.GetAsName(1));
+            PdfArray decodeParmsArray = pdfStream.GetAsArray(PdfName.DecodeParms);
+            NUnit.Framework.Assert.IsNull(decodeParmsArray);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FilterArrayExistsAddsNewFilterAtTheEnd() {
+            PdfOutputStreamTest.CustomPdfStream stream = new PdfOutputStreamTest.CustomPdfStream(new MemoryStream(10));
+            PdfStream pdfStream = new PdfStream();
+            PdfArray filterArray = new PdfArray();
+            filterArray.Add(PdfName.LZWDecode);
+            pdfStream.Put(PdfName.Filter, filterArray);
+            PdfArray decodeParmsArray = new PdfArray();
+            decodeParmsArray.Add(new PdfNumber(20));
+            pdfStream.Put(PdfName.DecodeParms, decodeParmsArray);
+            stream.UpdateCompressionFilter(pdfStream);
+            PdfArray updatedFilterArray = pdfStream.GetAsArray(PdfName.Filter);
+            NUnit.Framework.Assert.AreEqual(2, updatedFilterArray.Size());
+            //new filter should be added at the beginning
+            NUnit.Framework.Assert.AreEqual(PdfName.FlateDecode, updatedFilterArray.GetAsName(0));
+            NUnit.Framework.Assert.AreEqual(PdfName.LZWDecode, updatedFilterArray.GetAsName(1));
+            PdfArray updatedDecodeParmsArray = pdfStream.GetAsArray(PdfName.DecodeParms);
+            NUnit.Framework.Assert.AreEqual(2, updatedDecodeParmsArray.Size());
+            //new decode parms should be added at the beginning
+            NUnit.Framework.Assert.IsTrue(updatedDecodeParmsArray.Get(0) is PdfNull);
+            NUnit.Framework.Assert.AreEqual(new PdfNumber(20), updatedDecodeParmsArray.GetAsNumber(1));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FilterWith3AlreadyExistingFiltersButNoDecodeBackFillsDecodeParams() {
+            PdfOutputStreamTest.CustomPdfStream stream = new PdfOutputStreamTest.CustomPdfStream(new MemoryStream(10));
+            PdfStream pdfStream = new PdfStream();
+            PdfArray filterArray = new PdfArray();
+            filterArray.Add(PdfName.LZWDecode);
+            filterArray.Add(PdfName.FlateDecode);
+            filterArray.Add(PdfName.ASCII85Decode);
+            pdfStream.Put(PdfName.Filter, filterArray);
+            stream.UpdateCompressionFilter(pdfStream);
+            PdfArray updatedFilterArray = pdfStream.GetAsArray(PdfName.Filter);
+            NUnit.Framework.Assert.AreEqual(4, updatedFilterArray.Size());
+            //new filter should be added at the beginning
+            NUnit.Framework.Assert.AreEqual(PdfName.FlateDecode, updatedFilterArray.GetAsName(0));
+            NUnit.Framework.Assert.AreEqual(PdfName.LZWDecode, updatedFilterArray.GetAsName(1));
+            NUnit.Framework.Assert.AreEqual(PdfName.FlateDecode, updatedFilterArray.GetAsName(2));
+            NUnit.Framework.Assert.AreEqual(PdfName.ASCII85Decode, updatedFilterArray.GetAsName(3));
+            PdfArray updatedDecodeParmsArray = pdfStream.GetAsArray(PdfName.DecodeParms);
+            NUnit.Framework.Assert.IsNull(updatedDecodeParmsArray);
+        }
+
+        private sealed class CustomPdfStream : PdfOutputStream {
+            public CustomPdfStream(Stream outputStream)
+                : base(outputStream) {
+            }
+        }
+
         private sealed class CustomPdfDocument1 : PdfDocument {
 //\cond DO_NOT_DOCUMENT
             internal CustomPdfDocument1(PdfWriter writer)

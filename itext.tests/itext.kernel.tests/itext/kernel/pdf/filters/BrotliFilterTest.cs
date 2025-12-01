@@ -118,7 +118,7 @@ namespace iText.Kernel.Pdf.Filters {
             byte[] bytes = ConvertUnicodeStringToBytes("\u001B*\u0000\u0000\u0004\u0004\u00BAF:\u0085\u0003\u00E9\u00FA\f\u0091\u0002H\u0011,"
                  + "\u00F3\u008A:\u00A3V\u007F\u001A\u00AE\u00BF\u00A4\u00AB\u008EM\u00BF\u00ED\u00E2\u0004K" + "\u0091\u00FF\u0087\u00E9\u001E"
                 );
-            using (PdfDocument pdf = new _PdfDocument_167(new BrotliFilterTest.NoOpPdfReader(), new PdfWriter(new MemoryStream
+            using (PdfDocument pdf = new _PdfDocument_168(new BrotliFilterTest.NoOpPdfReader(), new PdfWriter(new MemoryStream
                 ()))) {
                 // No need to open the pdf for this test
                 PdfStream stream = new PdfStream(bytes);
@@ -134,8 +134,8 @@ namespace iText.Kernel.Pdf.Filters {
             }
         }
 
-        private sealed class _MemoryLimitsAwareHandler_168 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_168() {
+        private sealed class _MemoryLimitsAwareHandler_169 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_169() {
             }
 
             public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {
@@ -143,10 +143,10 @@ namespace iText.Kernel.Pdf.Filters {
             }
         }
 
-        private sealed class _PdfDocument_167 : PdfDocument {
-            public _PdfDocument_167(PdfReader baseArg1, PdfWriter baseArg2)
+        private sealed class _PdfDocument_168 : PdfDocument {
+            public _PdfDocument_168(PdfReader baseArg1, PdfWriter baseArg2)
                 : base(baseArg1, baseArg2) {
-                this.handler = new _MemoryLimitsAwareHandler_168();
+                this.handler = new _MemoryLimitsAwareHandler_169();
             }
 
 //\cond DO_NOT_DOCUMENT
@@ -194,7 +194,7 @@ namespace iText.Kernel.Pdf.Filters {
 //\cond DO_NOT_DOCUMENT
             internal NoOpPdfReader()
                 : base(new MemoryStream(("%PDF-1.7\n%âãÏÓ\n1 0 obj\n<< /Type /Catalog >>\nendobj\ntrailer\n<< /Root 1 0 R "
-                     + ">>\n%%EOF").GetBytes()), new ReaderProperties()) {
+                     + ">>\n%%EOF").GetBytes(System.Text.Encoding.UTF8)), new ReaderProperties()) {
             }
 //\endcond
         }

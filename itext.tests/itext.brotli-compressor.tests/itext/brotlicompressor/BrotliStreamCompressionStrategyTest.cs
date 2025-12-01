@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Pdf;
 using iText.Layout;
@@ -8,13 +9,14 @@ using iText.Test;
 
 namespace iText.Brotlicompressor {
     [NUnit.Framework.Category("IntegrationTest")]
+    [iText.Commons.Utils.NoopAnnotation]
     public class BrotliStreamCompressionStrategyTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void GenerateSimplePdf() {
             RunTest(((pdfDocument) => {
                 Document layoutDoc = new Document(pdfDocument);
                 Table table = new Table(3);
-                for (int i = 0; i < 30000; i++) {
+                for (int i = 0; i < 3000; i++) {
                     table.AddCell("Cell " + (i + 1) + ", 1");
                     table.AddCell("Cell " + (i + 1) + ", 2");
                     table.AddCell("Cell " + (i + 1) + ", 3");
@@ -31,7 +33,7 @@ namespace iText.Brotlicompressor {
                 pdfDocument.GetWriter().SetCompressionLevel(9);
                 Document layoutDoc = new Document(pdfDocument);
                 Table table = new Table(3);
-                for (int i = 0; i < 30000; i++) {
+                for (int i = 0; i < 300; i++) {
                     table.AddCell("Cell " + (i + 1) + ", 1");
                     table.AddCell("Cell " + (i + 1) + ", 2");
                     table.AddCell("Cell " + (i + 1) + ", 3");
@@ -48,7 +50,7 @@ namespace iText.Brotlicompressor {
                 pdfDocument.GetWriter().SetCompressionLevel(1);
                 Document layoutDoc = new Document(pdfDocument);
                 Table table = new Table(3);
-                for (int i = 0; i < 30000; i++) {
+                for (int i = 0; i < 3000; i++) {
                     table.AddCell("Cell " + (i + 1) + ", 1");
                     table.AddCell("Cell " + (i + 1) + ", 2");
                     table.AddCell("Cell " + (i + 1) + ", 3");
@@ -63,9 +65,9 @@ namespace iText.Brotlicompressor {
         public virtual void ComparePdfStreamsTest() {
             // Create PDF with Brotli compression
             ByteArrayOutputStream brotliBaos = new ByteArrayOutputStream();
-            PdfDocument brotliPdfDoc = new PdfDocument(new PdfWriter(brotliBaos));
-            brotliPdfDoc.GetDiContainer().Register(typeof(IStreamCompressionStrategy), new BrotliStreamCompressionStrategy
-                ());
+            DocumentProperties props = new DocumentProperties();
+            props.RegisterDependency(typeof(IStreamCompressionStrategy), new BrotliStreamCompressionStrategy());
+            PdfDocument brotliPdfDoc = new PdfDocument(new PdfWriter(brotliBaos), props);
             Document brotliLayoutDoc = new Document(brotliPdfDoc);
             Table brotliTable = new Table(3);
             for (int i = 0; i < 1000; i++) {
@@ -75,7 +77,7 @@ namespace iText.Brotlicompressor {
             }
             brotliLayoutDoc.Add(brotliTable);
             brotliLayoutDoc.Close();
-            int brotliSize = brotliBaos.Length;
+            long brotliSize = brotliBaos.ToArray().Length;
             // Create PDF with Flate compression
             ByteArrayOutputStream flateBaos = new ByteArrayOutputStream();
             PdfDocument flatePdfDoc = new PdfDocument(new PdfWriter(flateBaos));
@@ -88,7 +90,7 @@ namespace iText.Brotlicompressor {
             }
             flateLayoutDoc.Add(flateTable);
             flateLayoutDoc.Close();
-            int flateSize = flateBaos.Length;
+            long flateSize = flateBaos.ToArray().Length;
             // Verify both PDFs were created successfully
             NUnit.Framework.Assert.IsTrue(brotliSize > 0, "Brotli compressed PDF should not be empty");
             NUnit.Framework.Assert.IsTrue(flateSize > 0, "Flate compressed PDF should not be empty");
@@ -111,25 +113,41 @@ namespace iText.Brotlicompressor {
         }
 
         private void RunTest(Action<PdfDocument> testRunner) {
-            long startTime = iText.CurrentTimeMillis();
+            long startTime = SystemUtil.CurrentTimeMillis();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(baos));
-            pdfDoc.GetDiContainer().Register(typeof(IStreamCompressionStrategy), new BrotliStreamCompressionStrategy()
-                );
+            DocumentProperties props = new DocumentProperties();
+            props.RegisterDependency(typeof(IStreamCompressionStrategy), new BrotliStreamCompressionStrategy());
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(baos), props);
             testRunner(pdfDoc);
-            int length = baos.Length;
-            long endTime = iText.CurrentTimeMillis();
-            long startFlateTime = iText.CurrentTimeMillis();
+            long length = baos.ToArray().Length;
+            long endTime = SystemUtil.CurrentTimeMillis();
+            long startFlateTime = SystemUtil.CurrentTimeMillis();
             ByteArrayOutputStream flateBaos = new ByteArrayOutputStream();
             PdfDocument flatePdfDoc = new PdfDocument(new PdfWriter(flateBaos));
             testRunner(flatePdfDoc);
-            int flateLength = flateBaos.Length;
+            long flateLength = flateBaos.ToArray().Length;
             System.Console.Out.WriteLine("Generated PDF size with Brotli compression: " + length + " bytes" + " in " +
                  (endTime - startTime) + " ms");
             System.Console.Out.WriteLine("Generated PDF size with Flate  compression: " + flateLength + " bytes" + " in "
-                 + (iText.CurrentTimeMillis() - startFlateTime) + " ms");
+                 + (SystemUtil.CurrentTimeMillis() - startFlateTime) + " ms");
             double ratio = (double)flateLength / length;
-            System.Console.Out.Printf("Compression ratio (Flate / Brotli): %.2f%n", ratio);
+            System.Console.Out.WriteLine("Compression ratio (Flate / Brotli): " + ratio);
+            PdfDocument readDoc = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())));
+            PdfDocument flateReadDoc = new PdfDocument(new PdfReader(new MemoryStream(flateBaos.ToArray())));
+            int numberOfPdfObjects = readDoc.GetNumberOfPdfObjects();
+            int numberOfFlatePdfObjects = flateReadDoc.GetNumberOfPdfObjects();
+            NUnit.Framework.Assert.AreEqual(numberOfFlatePdfObjects, numberOfPdfObjects, "Number of PDF objects should be the same in both documents"
+                );
+            for (int i = 1; i < numberOfPdfObjects; i++) {
+                PdfObject obj = readDoc.GetPdfObject(i);
+                PdfObject flateObj = flateReadDoc.GetPdfObject(i);
+                if (obj is PdfStream && flateObj is PdfStream) {
+                    byte[] brotliBytes = ((PdfStream)obj).GetBytes();
+                    byte[] flateBytes = ((PdfStream)flateObj).GetBytes();
+                    NUnit.Framework.Assert.AreEqual(flateBytes, brotliBytes, "PDF stream bytes should be identical for object number "
+                         + i);
+                }
+            }
         }
     }
 }
