@@ -38,13 +38,13 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
         public virtual void GetNextRendererShouldBeOverriddenTest() {
-            ListRenderer listRenderer = new _ListRenderer_56(new List());
+            ListRenderer listRenderer = new _ListRenderer_57(new List());
             // Nothing is overridden
             NUnit.Framework.Assert.AreEqual(typeof(ListRenderer), listRenderer.GetNextRenderer().GetType());
         }
 
-        private sealed class _ListRenderer_56 : ListRenderer {
-            public _ListRenderer_56(List baseArg1)
+        private sealed class _ListRenderer_57 : ListRenderer {
+            public _ListRenderer_57(List baseArg1)
                 : base(baseArg1) {
             }
         }
@@ -98,6 +98,19 @@ namespace iText.Layout.Renderer {
             IList<IRenderer> childRenderers = listRenderer.GetChildRenderers();
             NUnit.Framework.Assert.AreEqual(0, childRenderers.Where((listitem) => iText.Commons.Utils.Matcher.Match(regex
                 , listitem.ToString()).Matches()).Count());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SymbolRendererNullCauseOfNothingTest() {
+            List modelElement = new List();
+            modelElement.SetListSymbol(new iText.Layout.Element.Text("-"));
+            modelElement.Add((ListItem)new ListItem().Add(new Paragraph("Lorem ipsum dolor sit amet")));
+            BlockRenderer listRenderer = (BlockRenderer)modelElement.CreateRendererSubTree();
+            Document document = CreateDummyDocument();
+            listRenderer.SetParent(document.GetRenderer());
+            LayoutResult result = listRenderer.Layout(CreateLayoutContext(100, -10));
+            NUnit.Framework.Assert.AreEqual(LayoutResult.NOTHING, result.GetStatus());
+            NUnit.Framework.Assert.IsNotNull(result.GetCauseOfNothing());
         }
 
         private class ListRendererCreatingNotifyingListSymbols : ListRenderer {
