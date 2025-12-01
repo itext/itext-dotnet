@@ -29,20 +29,22 @@ namespace iText.Commons.Actions {
     public sealed class NamespaceConstant {
         public const String ITEXT = "iText";
 
-        //Core
+        // Core
+        public const String CORE_BARCODES = ITEXT + ".Barcodes";
+        public const String CORE_COMMONS = ITEXT + ".Commons";
+        [Obsolete]
         public const String CORE_EVENTS = ITEXT + ".Events";
+        public const String CORE_FORMS = ITEXT + ".Forms";
         public const String CORE_IO = ITEXT + ".IO";
         public const String CORE_KERNEL = ITEXT + ".Kernel";
         public const String CORE_LAYOUT = ITEXT + ".Layout";
-        public const String CORE_BARCODES = ITEXT + ".Barcodes";
         public const String CORE_PDFA = ITEXT + ".Pdfa";
         public const String CORE_PDFUA = ITEXT + ".Pdfua";
         public const String CORE_SIGN = ITEXT + ".Signatures";
-        public const String CORE_FORMS = ITEXT + ".Forms";
         public const String CORE_SXP = ITEXT + ".StyledXmlParser";
         public const String CORE_SVG = ITEXT + ".Svg";
 
-        //Addons
+        // Addons
         public const String PDF_HTML = ITEXT + ".Html2pdf";
         public const String PDF_SWEEP = ITEXT + ".PdfCleanup";
         public const String PDF_OCR = ITEXT + ".Pdfocr";
@@ -50,7 +52,7 @@ namespace iText.Commons.Actions {
         public const String PDF_OCR_ONNXTR = PDF_OCR + ".Onnxtr";
 
         public static readonly IList<String> ITEXT_CORE_NAMESPACES = JavaCollectionsUtil.UnmodifiableList(JavaUtil.ArraysAsList(
-            NamespaceConstant.CORE_EVENTS,
+            NamespaceConstant.CORE_COMMONS,
             NamespaceConstant.CORE_IO, 
             NamespaceConstant.CORE_KERNEL, 
             NamespaceConstant.CORE_LAYOUT,
