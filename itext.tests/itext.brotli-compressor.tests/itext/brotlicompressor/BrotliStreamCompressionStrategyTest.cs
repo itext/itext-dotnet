@@ -9,7 +9,6 @@ using iText.Test;
 
 namespace iText.Brotlicompressor {
     [NUnit.Framework.Category("IntegrationTest")]
-    [iText.Commons.Utils.NoopAnnotation]
     public class BrotliStreamCompressionStrategyTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void GenerateSimplePdf() {
