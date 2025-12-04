@@ -24,7 +24,7 @@ using System.IO;
 using System.util.zlib;
 
 namespace iText.IO.Source {
-	public class DeflaterOutputStream : ZDeflaterOutputStream
+	public class DeflaterOutputStream : ZDeflaterOutputStream , IFinishable
 	{
 		public DeflaterOutputStream(Stream outp, int level, int size)
 			: base(outp, level)
