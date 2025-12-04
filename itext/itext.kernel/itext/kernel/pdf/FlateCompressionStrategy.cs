@@ -20,11 +20,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
 using System.IO;
-using iText.Commons.Utils;
 using iText.IO.Source;
-using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
     /// <summary>A compression strategy that uses the Flate (DEFLATE) compression algorithm for PDF streams.</summary>
@@ -96,37 +93,6 @@ namespace iText.Kernel.Pdf {
         public virtual Stream CreateNewOutputStream(Stream original, PdfStream stream) {
             // Use 32KB buffer size for deflater stream
             return new DeflaterOutputStream(original, stream.GetCompressionLevel(), BUFFER);
-        }
-
-        /// <summary>Finishes writing compressed data to the output stream and flushes any remaining data.</summary>
-        /// <remarks>
-        /// Finishes writing compressed data to the output stream and flushes any remaining data.
-        /// <para />
-        /// This method must be called after all data has been written to ensure that all compressed
-        /// data is properly flushed to the underlying stream. The output stream must be an instance
-        /// of
-        /// <see cref="iText.IO.Source.DeflaterOutputStream"/>
-        /// , otherwise a
-        /// <see cref="iText.Kernel.Exceptions.PdfException"/>
-        /// will be thrown.
-        /// </remarks>
-        /// <param name="outputStream">
-        /// the output stream to finish, must be a
-        /// <see cref="iText.IO.Source.DeflaterOutputStream"/>
-        /// </param>
-        public virtual void Finish(Stream outputStream) {
-            if (outputStream is DeflaterOutputStream) {
-                try {
-                    ((DeflaterOutputStream)outputStream).Finish();
-                }
-                catch (Exception e) {
-                    throw new PdfException(KernelExceptionMessageConstant.CANNOT_WRITE_TO_PDF_STREAM, e);
-                }
-            }
-            else {
-                throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.OUTPUTSTREAM_IS_NOT_OF_INSTANCE
-                    , "DeflaterOutputStream"));
-            }
         }
     }
 }

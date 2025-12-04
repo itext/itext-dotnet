@@ -601,8 +601,8 @@ namespace iText.Kernel.Pdf {
                         }
                         fout.Write(buf, 0, n);
                     }
-                    if (def != null) {
-                        GetCompressionStrategy().Finish(def);
+                    if (def is IFinishable) {
+                        ((IFinishable)def).Finish();
                     }
                     if (ose != null) {
                         ose.Finish();
@@ -643,7 +643,9 @@ namespace iText.Kernel.Pdf {
                                 System.Diagnostics.Debug.Assert(pdfStream.GetOutputStream() != null, "Error in outputStream");
                                 ((ByteArrayOutputStream)pdfStream.GetOutputStream().GetOutputStream()).WriteTo(zip);
                             }
-                            GetCompressionStrategy().Finish(zip);
+                            if (zip is IFinishable) {
+                                ((IFinishable)zip).Finish();
+                            }
                         }
                         else {
                             if (pdfStream is PdfObjectStream) {

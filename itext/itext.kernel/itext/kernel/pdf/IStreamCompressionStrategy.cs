@@ -66,21 +66,15 @@ namespace iText.Kernel.Pdf {
         /// This method wraps the provided output stream with a compression implementation.
         /// Data written to the returned stream will be compressed before being written
         /// to the original stream.
+        /// <para />
+        /// If the stream requires finalization (e.g., to flush buffers or write end markers),
+        /// the returned output stream should also implement the
+        /// <see cref="iText.IO.Source.IFinishable"/>
+        /// interface,
         /// </remarks>
         /// <param name="original">the original output stream to wrap</param>
         /// <param name="stream">the PDF stream being compressed (may be used for context or configuration)</param>
         /// <returns>a new output stream that performs compression</returns>
         Stream CreateNewOutputStream(Stream original, PdfStream stream);
-
-        /// <summary>Finalizes the compression process.</summary>
-        /// <remarks>
-        /// Finalizes the compression process.  The underlying compression stream should still be open when this method is
-        /// called.
-        /// <para />
-        /// This method should be called when compression is complete to ensure that
-        /// all data is properly flushed.
-        /// </remarks>
-        /// <param name="outputStream">the output stream to finalize</param>
-        void Finish(Stream outputStream);
     }
 }

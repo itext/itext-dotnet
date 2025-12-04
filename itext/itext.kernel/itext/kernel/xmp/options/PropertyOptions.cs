@@ -210,8 +210,12 @@ namespace iText.Kernel.XMP.Options {
 
         /// <returns>
         /// Return whether this property is an alt-text array. Appears in conjunction with
-        /// getPropArrayIsAlternate(). It is serialized using an <tt>rdf:Alt</tt> container.
-        /// Each array element is a simple property with an <tt>xml:lang</tt> attribute.
+        /// getPropArrayIsAlternate(). It is serialized using an
+        /// <c>rdf:Alt</c>
+        /// container.
+        /// Each array element is a simple property with an
+        /// <c>xml:lang</c>
+        /// attribute.
         /// </returns>
         public bool IsArrayAltText() {
             return GetOption(ARRAY_ALT_TEXT);

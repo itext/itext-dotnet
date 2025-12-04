@@ -26,6 +26,7 @@ using iText.Kernel.Pdf.Tagutils;
 namespace iText.Pdfua.Checkers.Utils {
     /// <summary>Class that holds the validation context while iterating the tag tree structure.</summary>
     public abstract class ContextAwareTagTreeIteratorHandler : ITagTreeIteratorHandler {
+        /// <summary>The validation context that holds necessary information during the tag tree iteration.</summary>
         protected internal readonly PdfUAValidationContext context;
 
         /// <summary>
