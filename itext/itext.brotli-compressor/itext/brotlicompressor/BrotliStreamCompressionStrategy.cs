@@ -115,27 +115,13 @@ namespace iText.Brotlicompressor {
         /// </returns>
         public virtual Stream CreateNewOutputStream(Stream original, PdfStream stream) {
             //https://github.com/dotnet/runtime/issues/112656 there is no support for dictionary in BrotliStream we should update this implementation once it's addedI
-            BrotliStream brotliStream =
-                new BrotliStream(original, ConvertCompressionLevel(stream.GetCompressionLevel()), true);
+            BrotliOutputStream brotliStream =
+                new BrotliOutputStream(original, ConvertCompressionLevel(stream.GetCompressionLevel()));
             return brotliStream;
         }
 
-        public void Finish(Stream outputStream) {
-            if (outputStream is BrotliStream) {
-                try {
-                    outputStream.Close();
-                }
-                catch (IOException e) {
-                    throw new PdfException(KernelExceptionMessageConstant.CANNOT_WRITE_TO_PDF_STREAM, e);
-                }
-            }
-            else {
-                throw new PdfException(
-                    MessageFormatUtil.Format(KernelExceptionMessageConstant.OUTPUTSTREAM_IS_NOT_OF_INSTANCE,
-                        "BrotliStream"));
-            }
-        }
 
+                
         /// <summary>Converts iText compression level (0-9) to .NET CompressionLevel enum.</summary>
         /// <remarks>
         /// Converts iText compression level (0-9) to .NET CompressionLevel enum.
