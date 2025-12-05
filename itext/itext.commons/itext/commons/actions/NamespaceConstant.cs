@@ -28,6 +28,7 @@ namespace iText.Commons.Actions {
     /// <summary>Class that stores namespaces of iText open source products.</summary>
     public sealed class NamespaceConstant {
         public const String ITEXT = "iText";
+        public const String ITEXT5 = "iTextSharp";
 
         // Core
         public const String CORE_BARCODES = ITEXT + ".Barcodes";
