@@ -1,3 +1,25 @@
+/*
+This file is part of the iText (R) project.
+Copyright (c) 1998-2025 Apryse Group NV
+Authors: Apryse Software.
+
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
+
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 using System;
 using System.Collections.Generic;
 using iText.Bouncycastleconnector;
@@ -106,14 +128,14 @@ namespace iText.Signatures.Validation.Report.Pades {
         private void SetUpOcspClient(RevocationResponseOrigin responseOrigin, TimeBasedContext timeBasedContext) {
             TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(parentCert, privateKey);
             SignatureValidationProperties validationProperties = new SignatureValidationProperties();
-            validationProperties.AddOcspClient(new _ValidationOcspClient_121(this, testOcspClient, timeBasedContext, responseOrigin
+            validationProperties.AddOcspClient(new _ValidationOcspClient_143(this, testOcspClient, timeBasedContext, responseOrigin
                 ));
             builder.WithSignatureValidationProperties(validationProperties);
-            builder.WithOCSPValidatorFactory(() => new _OCSPValidator_134(builder));
+            builder.WithOCSPValidatorFactory(() => new _OCSPValidator_156(builder));
         }
 
-        private sealed class _ValidationOcspClient_121 : ValidationOcspClient {
-            public _ValidationOcspClient_121(RevocationEventsFiredTest _enclosing, TestOcspClient testOcspClient, TimeBasedContext
+        private sealed class _ValidationOcspClient_143 : ValidationOcspClient {
+            public _ValidationOcspClient_143(RevocationEventsFiredTest _enclosing, TestOcspClient testOcspClient, TimeBasedContext
                  timeBasedContext, RevocationResponseOrigin responseOrigin) {
                 this._enclosing = _enclosing;
                 this.testOcspClient = testOcspClient;
@@ -141,8 +163,8 @@ namespace iText.Signatures.Validation.Report.Pades {
             private readonly RevocationResponseOrigin responseOrigin;
         }
 
-        private sealed class _OCSPValidator_134 : OCSPValidator {
-            public _OCSPValidator_134(ValidatorChainBuilder baseArg1)
+        private sealed class _OCSPValidator_156 : OCSPValidator {
+            public _OCSPValidator_156(ValidatorChainBuilder baseArg1)
                 : base(baseArg1) {
             }
 
