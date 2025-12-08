@@ -34,7 +34,7 @@ using iText.Signatures.Validation.Events;
 using iText.Test;
 
 namespace iText.Signatures.Validation.Report.Pades {
-    [NUnit.Framework.Category("UnitTest")]
+    [NUnit.Framework.Category("BouncyCastleUnitTest")]
     public class PAdESLevelReportGeneratorTest : ExtendedITextTest {
         private static readonly String certsSrc = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
@@ -43,11 +43,9 @@ namespace iText.Signatures.Validation.Report.Pades {
 
         private EventManager eventManager;
 
-        private ValidatorChainBuilder builder;
-
         [NUnit.Framework.SetUp]
         public virtual void SetUp() {
-            builder = new ValidatorChainBuilder();
+            ValidatorChainBuilder builder = new ValidatorChainBuilder();
             sut = new PAdESLevelReportGenerator();
             builder.WithPAdESLevelReportGenerator(sut);
             eventManager = builder.GetEventManager();
@@ -86,6 +84,9 @@ namespace iText.Signatures.Validation.Report.Pades {
             signatureDict.Put(PdfName.M, new PdfString("D:20231204144752+01'00'"));
             PdfSignature sig = new PdfSignature(signatureDict);
             IValidationEvent @event = new StartSignatureValidationEvent(sig, "test", new DateTime());
+            eventManager.OnEvent(@event);
+            IX509Certificate[] chain = PemFileHelper.ReadFirstChain(certsSrc + "signCertRsa01.pem");
+            @event = new RevocationNotFromDssEvent((IX509Certificate)chain[0]);
             eventManager.OnEvent(@event);
             @event = new SignatureValidationSuccessEvent();
             eventManager.OnEvent(@event);
@@ -156,12 +157,18 @@ namespace iText.Signatures.Validation.Report.Pades {
             PdfSignature sig = new PdfSignature(signatureDict);
             IValidationEvent @event = new StartSignatureValidationEvent(sig, "test", new DateTime());
             eventManager.OnEvent(@event);
+            IX509Certificate[] chain = PemFileHelper.ReadFirstChain(certsSrc + "signCertRsa01.pem");
+            @event = new RevocationNotFromDssEvent((IX509Certificate)chain[0]);
+            eventManager.OnEvent(@event);
             @event = new SignatureValidationSuccessEvent();
             eventManager.OnEvent(@event);
             DocumentPAdESLevelReport report = sut.GetReport();
             System.Console.Out.WriteLine(report);
             NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetSignatureReport("test").GetLevel());
             NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetDocumentLevel());
+            NUnit.Framework.Assert.IsTrue(report.GetSignatureReport("test").GetNonConformaties().Get(PAdESLevel.B_LT).
+                Any((nc) => nc.Contains(AbstractPadesLevelRequirements.REVOCATION_DATA_FOR_THESE_CERTIFICATES_IS_MISSING
+                )));
         }
 
         [NUnit.Framework.Test]
@@ -527,7 +534,7 @@ namespace iText.Signatures.Validation.Report.Pades {
             eventManager.OnEvent(@event);
             DocumentPAdESLevelReport report = sut.GetReport();
             System.Console.Out.WriteLine(report);
-            NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetDocumentLevel());
+            NUnit.Framework.Assert.AreEqual(PAdESLevel.B_LTA, report.GetDocumentLevel());
         }
 
         [NUnit.Framework.Test]
@@ -579,7 +586,7 @@ namespace iText.Signatures.Validation.Report.Pades {
             NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetSignatureReport("test").GetLevel());
             NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetDocumentLevel());
             NUnit.Framework.Assert.IsTrue(report.GetSignatureReport("test").GetNonConformaties().Get(PAdESLevel.B_LT).
-                Any((nc) => nc.Contains(AbstractPadesLevelRequirements.ISSUER_FOR_THESE_CERTIFICATES_ARE_MISSING)));
+                Any((nc) => nc.Contains(AbstractPadesLevelRequirements.ISSUER_FOR_THESE_CERTIFICATES_IS_MISSING)));
         }
 
         [NUnit.Framework.Test]
@@ -610,11 +617,11 @@ namespace iText.Signatures.Validation.Report.Pades {
             NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetSignatureReport("test").GetLevel());
             NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetDocumentLevel());
             NUnit.Framework.Assert.IsTrue(report.GetSignatureReport("test").GetNonConformaties().Get(PAdESLevel.B_LT).
-                Any((nc) => nc.Contains(AbstractPadesLevelRequirements.ISSUER_FOR_THESE_CERTIFICATES_ARE_MISSING)));
+                Any((nc) => nc.Contains(AbstractPadesLevelRequirements.ISSUER_FOR_THESE_CERTIFICATES_IS_MISSING)));
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestB_DSSMissingCrlResponse() {
+        public virtual void TestB_DSSMissingRevData() {
             PdfDictionary signatureDict = new PdfDictionary();
             PdfString contents = new PdfString(Convert.FromBase64String(PAdESLevelHelper.B_LTA_1_B64));
             contents.SetHexWriting(true);
@@ -632,7 +639,7 @@ namespace iText.Signatures.Validation.Report.Pades {
             IValidationEvent @event = new StartSignatureValidationEvent(sig, "test", new DateTime());
             eventManager.OnEvent(@event);
             IX509Certificate[] chain = PemFileHelper.ReadFirstChain(certsSrc + "signCertRsa01.pem");
-            @event = new CRLRequestEvent((IX509Certificate)chain[0]);
+            @event = new RevocationNotFromDssEvent((IX509Certificate)chain[0]);
             eventManager.OnEvent(@event);
             @event = new SignatureValidationSuccessEvent();
             eventManager.OnEvent(@event);
@@ -646,7 +653,7 @@ namespace iText.Signatures.Validation.Report.Pades {
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestB_DSSMissingCrlResponse2() {
+        public virtual void TestB_DSSMissingTimestampedRevData() {
             PdfDictionary signatureDict = new PdfDictionary();
             PdfString contents = new PdfString(Convert.FromBase64String(PAdESLevelHelper.B_LTA_1_B64));
             contents.SetHexWriting(true);
@@ -664,80 +671,16 @@ namespace iText.Signatures.Validation.Report.Pades {
             IValidationEvent @event = new StartSignatureValidationEvent(sig, "test", new DateTime());
             eventManager.OnEvent(@event);
             IX509Certificate[] chain = PemFileHelper.ReadFirstChain(certsSrc + "signCertRsa01.pem");
-            @event = new OlderCRLResponseUsedEvent((IX509Certificate)chain[0]);
+            @event = new DssNotTimestampedEvent((IX509Certificate)chain[0]);
             eventManager.OnEvent(@event);
             @event = new SignatureValidationSuccessEvent();
             eventManager.OnEvent(@event);
             DocumentPAdESLevelReport report = sut.GetReport();
             System.Console.Out.WriteLine(report);
-            NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetSignatureReport("test").GetLevel());
-            NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetDocumentLevel());
-            NUnit.Framework.Assert.IsTrue(report.GetSignatureReport("test").GetNonConformaties().Get(PAdESLevel.B_LT).
-                Any((nc) => nc.Contains(AbstractPadesLevelRequirements.REVOCATION_DATA_FOR_THESE_CERTIFICATES_IS_MISSING
-                )));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void TestB_DSSMissingOCSPResponse() {
-            PdfDictionary signatureDict = new PdfDictionary();
-            PdfString contents = new PdfString(Convert.FromBase64String(PAdESLevelHelper.B_LTA_1_B64));
-            contents.SetHexWriting(true);
-            signatureDict.Put(PdfName.Contents, contents);
-            signatureDict.Put(PdfName.Filter, PdfName.Sig);
-            signatureDict.Put(PdfName.SubFilter, PdfName.ETSI_CAdES_DETACHED);
-            signatureDict.Put(PdfName.ByteRange, new PdfString("1 2 3 4"));
-            signatureDict.Put(PdfName.M, new PdfString("D:20231204144752+01'00'"));
-            PdfSignature sig = new PdfSignature(signatureDict);
-            contents = new PdfString(Convert.FromBase64String(PAdESLevelHelper.LTA_1_TS_B64));
-            PdfSignature timestampDict = GetTimestampPdfDictionary(contents);
-            eventManager.OnEvent(new ProofOfExistenceFoundEvent(timestampDict, "timestampSig1"));
-            eventManager.OnEvent(new SignatureValidationSuccessEvent());
-            eventManager.OnEvent(new DSSProcessedEvent(new PdfDictionary()));
-            IValidationEvent @event = new StartSignatureValidationEvent(sig, "test", new DateTime());
-            eventManager.OnEvent(@event);
-            IX509Certificate[] chain = PemFileHelper.ReadFirstChain(certsSrc + "signCertRsa01.pem");
-            @event = new OCSPResponseRetrievalEvent((IX509Certificate)chain[0]);
-            eventManager.OnEvent(@event);
-            @event = new SignatureValidationSuccessEvent();
-            eventManager.OnEvent(@event);
-            DocumentPAdESLevelReport report = sut.GetReport();
-            System.Console.Out.WriteLine(report);
-            NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetSignatureReport("test").GetLevel());
-            NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetDocumentLevel());
-            NUnit.Framework.Assert.IsTrue(report.GetSignatureReport("test").GetNonConformaties().Get(PAdESLevel.B_LT).
-                Any((nc) => nc.Contains(AbstractPadesLevelRequirements.REVOCATION_DATA_FOR_THESE_CERTIFICATES_IS_MISSING
-                )));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void TestB_DSSMissingOCSPResponse2() {
-            PdfDictionary signatureDict = new PdfDictionary();
-            PdfString contents = new PdfString(Convert.FromBase64String(PAdESLevelHelper.B_LTA_1_B64));
-            contents.SetHexWriting(true);
-            signatureDict.Put(PdfName.Contents, contents);
-            signatureDict.Put(PdfName.Filter, PdfName.Sig);
-            signatureDict.Put(PdfName.SubFilter, PdfName.ETSI_CAdES_DETACHED);
-            signatureDict.Put(PdfName.ByteRange, new PdfString("1 2 3 4"));
-            signatureDict.Put(PdfName.M, new PdfString("D:20231204144752+01'00'"));
-            PdfSignature sig = new PdfSignature(signatureDict);
-            contents = new PdfString(Convert.FromBase64String(PAdESLevelHelper.LTA_1_TS_B64));
-            PdfSignature timestampDict = GetTimestampPdfDictionary(contents);
-            eventManager.OnEvent(new ProofOfExistenceFoundEvent(timestampDict, "timestampSig1"));
-            eventManager.OnEvent(new SignatureValidationSuccessEvent());
-            eventManager.OnEvent(new DSSProcessedEvent(new PdfDictionary()));
-            IValidationEvent @event = new StartSignatureValidationEvent(sig, "test", new DateTime());
-            eventManager.OnEvent(@event);
-            IX509Certificate[] chain = PemFileHelper.ReadFirstChain(certsSrc + "signCertRsa01.pem");
-            @event = new OlderOCSPResponseUsedEvent((IX509Certificate)chain[0]);
-            eventManager.OnEvent(@event);
-            @event = new SignatureValidationSuccessEvent();
-            eventManager.OnEvent(@event);
-            DocumentPAdESLevelReport report = sut.GetReport();
-            System.Console.Out.WriteLine(report);
-            NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetSignatureReport("test").GetLevel());
-            NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetDocumentLevel());
-            NUnit.Framework.Assert.IsTrue(report.GetSignatureReport("test").GetNonConformaties().Get(PAdESLevel.B_LT).
-                Any((nc) => nc.Contains(AbstractPadesLevelRequirements.REVOCATION_DATA_FOR_THESE_CERTIFICATES_IS_MISSING
+            NUnit.Framework.Assert.AreEqual(PAdESLevel.B_LT, report.GetSignatureReport("test").GetLevel());
+            NUnit.Framework.Assert.AreEqual(PAdESLevel.B_LT, report.GetDocumentLevel());
+            NUnit.Framework.Assert.IsTrue(report.GetSignatureReport("test").GetNonConformaties().Get(PAdESLevel.B_LTA)
+                .Any((nc) => nc.Contains(AbstractPadesLevelRequirements.REVOCATION_DATA_FOR_THESE_CERTIFICATES_NOT_TIMESTAMPED
                 )));
         }
 

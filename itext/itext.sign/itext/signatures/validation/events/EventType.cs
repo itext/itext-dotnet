@@ -41,14 +41,12 @@ namespace iText.Signatures.Validation.Events {
         /// that was not in the most recent DSS.
         /// </summary>
         CERTIFICATE_ISSUER_OTHER_INTERNAL_SOURCE_USED,
-        /// <summary>Event triggered for every outgoing OCSP request.</summary>
-        OCSP_REQUEST,
-        /// <summary>Event triggered for every OCSP response from the document that was not in the most recent DSS.</summary>
-        OCSP_OTHER_INTERNAL_SOURCE_USED,
-        /// <summary>Event triggered for every outgoing CRL request.</summary>
-        CRL_REQUEST,
-        /// <summary>Event triggered for every CRL response from the document that was not in the most recent DSS.</summary>
-        CRL_OTHER_INTERNAL_SOURCE_USED,
+        /// <summary>Event triggered when revocation data coming not from the latest DSS is needed to perform signature validation.
+        ///     </summary>
+        REVOCATION_NOT_FROM_DSS,
+        /// <summary>Event triggered when revocation data from a timestamped DSS is not enough to perform signature validation.
+        ///     </summary>
+        DSS_NOT_TIMESTAMPED,
         /// <summary>Event triggered when the most recent DSS has been processed.</summary>
         DSS_ENTRY_PROCESSED,
         /// <summary>Event triggered when the certificate chain was validated successfully.</summary>

@@ -56,53 +56,55 @@ namespace iText.Signatures.Validation.Report.Xml {
         public virtual void OnEvent(IEvent rawEvent) {
             if (rawEvent is IValidationEvent) {
                 IValidationEvent @event = (IValidationEvent)rawEvent;
-                switch (@event.GetEventType()) {
-                    case EventType.PROOF_OF_EXISTENCE_FOUND: {
-                        ProofOfExistenceFoundEvent poe = (ProofOfExistenceFoundEvent)@event;
-                        this.ProofOfExistenceFound(poe.GetTimeStampSignature(), poe.IsDocumentTimestamp());
-                        break;
-                    }
+                if (@event.GetEventType() != null) {
+                    switch (@event.GetEventType()) {
+                        case EventType.PROOF_OF_EXISTENCE_FOUND: {
+                            ProofOfExistenceFoundEvent poe = (ProofOfExistenceFoundEvent)@event;
+                            this.ProofOfExistenceFound(poe.GetTimeStampSignature(), poe.IsDocumentTimestamp());
+                            break;
+                        }
 
-                    case EventType.SIGNATURE_VALIDATION_STARTED: {
-                        StartSignatureValidationEvent start = (StartSignatureValidationEvent)@event;
-                        this.StartSignatureValidation(start.GetPdfSignature().GetContents().GetValueBytes(), start.GetSignatureName
-                            (), start.GetSigningDate());
-                        break;
-                    }
+                        case EventType.SIGNATURE_VALIDATION_STARTED: {
+                            StartSignatureValidationEvent start = (StartSignatureValidationEvent)@event;
+                            this.StartSignatureValidation(start.GetPdfSignature().GetContents().GetValueBytes(), start.GetSignatureName
+                                (), start.GetSigningDate());
+                            break;
+                        }
 
-                    case EventType.SIGNATURE_VALIDATION_SUCCESS: {
-                        this.ReportSignatureValidationSuccess();
-                        break;
-                    }
+                        case EventType.SIGNATURE_VALIDATION_SUCCESS: {
+                            this.ReportSignatureValidationSuccess();
+                            break;
+                        }
 
-                    case EventType.SIGNATURE_VALIDATION_FAILURE: {
-                        SignatureValidationFailureEvent failure = (SignatureValidationFailureEvent)@event;
-                        this.ReportSignatureValidationFailure(failure.IsInconclusive(), failure.GetReason());
-                        break;
-                    }
+                        case EventType.SIGNATURE_VALIDATION_FAILURE: {
+                            SignatureValidationFailureEvent failure = (SignatureValidationFailureEvent)@event;
+                            this.ReportSignatureValidationFailure(failure.IsInconclusive(), failure.GetReason());
+                            break;
+                        }
 
-                    case EventType.CERTIFICATE_CHAIN_SUCCESS: {
-                        break;
-                    }
+                        case EventType.CERTIFICATE_CHAIN_SUCCESS: {
+                            break;
+                        }
 
-                    case EventType.CERTIFICATE_CHAIN_FAILURE: {
-                        break;
-                    }
+                        case EventType.CERTIFICATE_CHAIN_FAILURE: {
+                            break;
+                        }
 
-                    case EventType.CRL_VALIDATION_SUCCESS: {
-                        break;
-                    }
+                        case EventType.CRL_VALIDATION_SUCCESS: {
+                            break;
+                        }
 
-                    case EventType.CRL_VALIDATION_FAILURE: {
-                        break;
-                    }
+                        case EventType.CRL_VALIDATION_FAILURE: {
+                            break;
+                        }
 
-                    case EventType.OCSP_VALIDATION_SUCCESS: {
-                        break;
-                    }
+                        case EventType.OCSP_VALIDATION_SUCCESS: {
+                            break;
+                        }
 
-                    case EventType.OCSP_VALIDATION_FAILURE: {
-                        break;
+                        case EventType.OCSP_VALIDATION_FAILURE: {
+                            break;
+                        }
                     }
                 }
             }

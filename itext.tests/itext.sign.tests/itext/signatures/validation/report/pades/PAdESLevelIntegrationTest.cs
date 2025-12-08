@@ -37,7 +37,7 @@ namespace iText.Signatures.Validation.Report.Pades {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PAdESLevelIntegrationTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/report/pades/";
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/report/pades/PAdESLevelIntegrationTest/";
 
         private static readonly String CERT_SOURCE = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/report/pades/certs/";
@@ -129,7 +129,7 @@ namespace iText.Signatures.Validation.Report.Pades {
                     SignatureValidator validator = builder.BuildSignatureValidator(doc);
                     ValidationReport validationReport = validator.ValidateSignatures();
                     DocumentPAdESLevelReport report = reportGenerator.GetReport();
-                    NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetDocumentLevel());
+                    NUnit.Framework.Assert.AreEqual(PAdESLevel.B_LTA, report.GetDocumentLevel());
                 }
             }
         }

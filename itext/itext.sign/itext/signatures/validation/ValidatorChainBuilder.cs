@@ -74,6 +74,8 @@ namespace iText.Signatures.Validation {
 
         private AdESReportAggregator adESReportAggregator = new NullAdESReportAggregator();
 
+        private bool padesValidationRequested = false;
+
         /// <summary>Creates a ValidatorChainBuilder using default implementations</summary>
         public ValidatorChainBuilder() {
             lotlTrustedStoreFactory = () => BuildLotlTrustedStore();
@@ -433,9 +435,32 @@ namespace iText.Signatures.Validation {
         }
 
         /// <summary>Use this PAdES level report generator to generate PAdES report.</summary>
+        /// <remarks>
+        /// Use this PAdES level report generator to generate PAdES report.
+        /// <para />
+        /// If called multiple times, multiple
+        /// <see cref="iText.Signatures.Validation.Report.Pades.PAdESLevelReportGenerator"/>
+        /// objects will be registered.
+        /// </remarks>
         /// <param name="reportGenerator">the PAdESLevelReportGenerator to use</param>
-        public virtual void WithPAdESLevelReportGenerator(PAdESLevelReportGenerator reportGenerator) {
+        /// <returns>current ValidatorChainBuilder</returns>
+        public virtual iText.Signatures.Validation.ValidatorChainBuilder WithPAdESLevelReportGenerator(PAdESLevelReportGenerator
+             reportGenerator) {
+            padesValidationRequested = true;
             eventManager.Register(reportGenerator);
+            return this;
+        }
+
+        /// <summary>Checks whether PAdES compliance validation was requested.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if PAdES compliance validation was requested,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        public virtual bool PadesValidationRequested() {
+            return padesValidationRequested;
         }
 
         /// <summary>

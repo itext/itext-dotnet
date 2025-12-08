@@ -31,7 +31,9 @@ namespace iText.Signatures.Validation.Report.Pades {
     /// <remarks>
     /// This class gathers all information needed to establish the achieved PAdES level of a signature.
     /// It also holds the rules in common for both common signatures and document timestamps.
+    /// <para />
     /// Specific rules are delegated to implementors of this class.
+    /// <para />
     /// It also executes all those rules to define the achieved level.
     /// </remarks>
     internal abstract class AbstractPadesLevelRequirements {
@@ -84,19 +86,17 @@ namespace iText.Signatures.Validation.Report.Pades {
         public const String THERE_MUST_BE_A_SIGNATURE_OR_DOCUMENT_TIMESTAMP_AVAILABLE = "There must be a signature "
              + "or document timestamp available";
 
-        public const String DSS_DICTIONARY_IS_MISSING = "A DSS dictionary is missing";
-
-        public const String ISSUER_FOR_THESE_CERTIFICATES_ARE_MISSING = "Issuer for the following certificates is "
+        public const String ISSUER_FOR_THESE_CERTIFICATES_IS_MISSING = "Issuer for the following certificates is "
              + "missing:\n";
 
         public const String REVOCATION_DATA_FOR_THESE_CERTIFICATES_IS_MISSING = "Revocation data for the " + "following certificates is missing:\n";
 
+        public const String REVOCATION_DATA_FOR_THESE_CERTIFICATES_NOT_TIMESTAMPED = "Revocation data for the " + 
+            "following certificates is not timestamped:\n";
+
         public const String DOCUMENT_TIMESTAMP_IS_MISSING = "A document timestamp is missing";
 
-        public const String DSS_DICTIONARY_IS_NOT_COVERED_BY_A_DOCUMENT_TIMESTAMP = "The DSS dictionary is not " +
-             "covered by a document timestamp";
-
-        private static readonly IDictionary<PAdESLevel, AbstractPadesLevelRequirements.LevelChecks> checks = new Dictionary
+        private static readonly IDictionary<PAdESLevel, AbstractPadesLevelRequirements.LevelChecks> CHECKS = new Dictionary
             <PAdESLevel, AbstractPadesLevelRequirements.LevelChecks>();
 
         private static readonly PAdESLevel[] PADES_LEVELS = new PAdESLevel[] { PAdESLevel.B_B, PAdESLevel.B_T, PAdESLevel
@@ -174,16 +174,12 @@ namespace iText.Signatures.Validation.Report.Pades {
         // Table 1 row 25
         protected internal bool documentTimestampPresent;
 
-        // Table 1 row 27
-        protected internal bool isDSSPresent;
-
-        // Table 1 row 29
-        protected internal bool poeDssPresent;
-
         // Table 1 row 30 note x
         protected internal IList<IX509Certificate> certificatesIssuerNotInDSS = new List<IX509Certificate>();
 
         protected internal IList<IX509Certificate> revocationDataNotInDSS = new List<IX509Certificate>();
+
+        protected internal IList<IX509Certificate> revocationDataNotTimestamped = new List<IX509Certificate>();
 
         // Table 1 row 30 note y
         protected internal bool timestampDictionaryEntrySubFilterValueEtsiRfc3161;
@@ -192,12 +188,11 @@ namespace iText.Signatures.Validation.Report.Pades {
 
         static AbstractPadesLevelRequirements() {
             AbstractPadesLevelRequirements.LevelChecks bbChecks = new AbstractPadesLevelRequirements.LevelChecks();
-            checks.Put(PAdESLevel.B_B, bbChecks);
+            CHECKS.Put(PAdESLevel.B_B, bbChecks);
             bbChecks.shalls.Add(new AbstractPadesLevelRequirements.CheckAndMessage((r) => r.signedDataCertificatesPresent
                 , SIGNED_DATA_CERTIFICATES_MUST_BE_INCLUDED));
             bbChecks.shalls.Add(new AbstractPadesLevelRequirements.CheckAndMessage((r) => r.signatureCertificatesContainsSigningCertificate
                 , SIGNED_DATA_CERTIFICATES_MUST_INCLUDE_SIGNING_CERTIFICATE));
-            //TODO
             bbChecks.shoulds.Add(new AbstractPadesLevelRequirements.CheckAndMessage((r) => true, (r) => SIGNED_DATA_CERTIFICATES_SHOULD_INCLUDE_THE_ENTIRE_CERTIFICATE_CHAIN
                 ));
             bbChecks.shoulds.Add(new AbstractPadesLevelRequirements.CheckAndMessage((r) => r.signatureCertificatesContainsCertificatePathIncludingCA
@@ -230,14 +225,14 @@ namespace iText.Signatures.Validation.Report.Pades {
             bbChecks.shoulds.Add(new AbstractPadesLevelRequirements.CheckAndMessage((r) => r.essSigningCertificateV2Present
                 , SIGNED_ATTRIBUTES_SHOULD_CONTAIN_SIGNING_CERTIFICATE_V2));
             AbstractPadesLevelRequirements.LevelChecks BTChecks = new AbstractPadesLevelRequirements.LevelChecks();
-            checks.Put(PAdESLevel.B_T, BTChecks);
+            CHECKS.Put(PAdESLevel.B_T, BTChecks);
             AbstractPadesLevelRequirements.LevelChecks bltChecks = new AbstractPadesLevelRequirements.LevelChecks();
-            checks.Put(PAdESLevel.B_LT, bltChecks);
+            CHECKS.Put(PAdESLevel.B_LT, bltChecks);
             bltChecks.shalls.Add(new AbstractPadesLevelRequirements.CheckAndMessage((r) => r.certificatesIssuerNotInDSS
                 .IsEmpty() && r.revocationDataNotInDSS.IsEmpty(), (r) => {
                 StringBuilder message = new StringBuilder();
                 if (!r.certificatesIssuerNotInDSS.IsEmpty()) {
-                    message.Append(ISSUER_FOR_THESE_CERTIFICATES_ARE_MISSING);
+                    message.Append(ISSUER_FOR_THESE_CERTIFICATES_IS_MISSING);
                     foreach (IX509Certificate cert in r.certificatesIssuerNotInDSS) {
                         message.Append('\t').Append(cert).Append('\n');
                     }
@@ -252,7 +247,19 @@ namespace iText.Signatures.Validation.Report.Pades {
             }
             ));
             AbstractPadesLevelRequirements.LevelChecks bltaChecks = new AbstractPadesLevelRequirements.LevelChecks();
-            checks.Put(PAdESLevel.B_LTA, bltaChecks);
+            bltaChecks.shalls.Add(new AbstractPadesLevelRequirements.CheckAndMessage((r) => r.revocationDataNotTimestamped
+                .IsEmpty(), (r) => {
+                StringBuilder message = new StringBuilder();
+                if (!r.revocationDataNotTimestamped.IsEmpty()) {
+                    message.Append(REVOCATION_DATA_FOR_THESE_CERTIFICATES_NOT_TIMESTAMPED);
+                    foreach (IX509Certificate cert in r.revocationDataNotTimestamped) {
+                        message.Append('\t').Append(cert).Append('\n');
+                    }
+                }
+                return message.ToString();
+            }
+            ));
+            CHECKS.Put(PAdESLevel.B_LTA, bltaChecks);
         }
 
         /// <summary>Calculates the highest achieved PAdES level for the signature being checked.</summary>
@@ -262,7 +269,7 @@ namespace iText.Signatures.Validation.Report.Pades {
             foreach (PAdESLevel level in PADES_LEVELS) {
                 List<String> messages = new List<String>();
                 this.nonConformaties.Put(level, messages);
-                foreach (AbstractPadesLevelRequirements.CheckAndMessage check in checks.Get(level).shalls) {
+                foreach (AbstractPadesLevelRequirements.CheckAndMessage check in CHECKS.Get(level).shalls) {
                     if (!check.GetCheck()(this)) {
                         messages.Add(check.GetMessageGenerator().Invoke(this));
                     }
@@ -277,7 +284,7 @@ namespace iText.Signatures.Validation.Report.Pades {
                 }
                 messages = new List<String>();
                 this.warnings.Put(level, messages);
-                foreach (AbstractPadesLevelRequirements.CheckAndMessage check in checks.Get(level).shoulds) {
+                foreach (AbstractPadesLevelRequirements.CheckAndMessage check in CHECKS.Get(level).shoulds) {
                     if (!check.GetCheck()(this)) {
                         messages.Add(check.GetMessageGenerator().Invoke(this));
                     }
@@ -489,12 +496,6 @@ namespace iText.Signatures.Validation.Report.Pades {
             this.documentTimestampPresent = documentTimestampPresent;
         }
 
-        /// <summary>Sets whether there is a DSS covering the signature.</summary>
-        /// <param name="isDSSPresent">whether there is a DSS covering the signature</param>
-        public virtual void SetDSSPresent(bool isDSSPresent) {
-            this.isDSSPresent = isDSSPresent;
-        }
-
         /// <summary>Adds a certificate for which the issuer missing in the DSS.</summary>
         /// <param name="certificateUnderInvestigation">a certificate for which the issuer missing in the DSS</param>
         public virtual void AddCertificateIssuerNotInDSS(IX509Certificate certificateUnderInvestigation) {
@@ -508,10 +509,11 @@ namespace iText.Signatures.Validation.Report.Pades {
             revocationDataNotInDSS.Add(certificateUnderInvestigation);
         }
 
-        /// <summary>Sets whether there is a Proof of Existence covering the DSS.</summary>
-        /// <param name="poeDssPresent">whether there is a Proof of Existence covering the DSS</param>
-        public virtual void SetPoeDssPresent(bool poeDssPresent) {
-            this.poeDssPresent = poeDssPresent;
+        /// <summary>Adds a certificate for which no revocation data was available in a timestamped DSS.</summary>
+        /// <param name="certificateUnderInvestigation">a certificate for which no revocation data was available in the DSS
+        ///     </param>
+        public virtual void AddRevocationDataNotTimestamped(IX509Certificate certificateUnderInvestigation) {
+            revocationDataNotTimestamped.Add(certificateUnderInvestigation);
         }
 
         /// <summary>Sets whether the signature validation was successful.</summary>

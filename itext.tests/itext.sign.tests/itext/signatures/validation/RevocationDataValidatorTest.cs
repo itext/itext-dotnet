@@ -159,7 +159,7 @@ namespace iText.Signatures.Validation {
             AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(0)
                         // the logitem from the CRL valdiation should be copied to the final report
                         .HasNumberOfLogs(1).HasLogItem(reportItem));
-            // there should be one call per CrlClient
+            // there should be two calls per CrlClient, second one is needed for PAdES compliance check.
             NUnit.Framework.Assert.AreEqual(1, crlClient.GetCalls().Count);
             // since there was one response there should be one validator call
             NUnit.Framework.Assert.AreEqual(1, mockCrlValidator.calls.Count);
@@ -628,14 +628,15 @@ namespace iText.Signatures.Validation {
                 , caCert, null);
             IBasicOcspResponse basicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspResponseBytes
                 ));
-            ocspClient.AddResponse(basicOCSPResp, ocspGeneration, TimeBasedContext.HISTORICAL);
+            ocspClient.AddResponse(basicOCSPResp, ocspGeneration, TimeBasedContext.HISTORICAL, RevocationResponseOrigin
+                .OTHER);
             validator.AddOcspClient(ocspClient);
             ValidationCrlClient crlClient = new _ValidationCrlClient_824();
             TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
             byte[] crlResponseBytes = new List<byte[]>(new TestCrlClient().AddBuilderForCertIssuer(crlBuilder).GetEncoded
                 (checkCert, null))[0];
             crlClient.AddCrl((IX509Crl)CertificateUtil.ParseCrlFromBytes(crlResponseBytes), crlGeneration, TimeBasedContext
-                .HISTORICAL);
+                .HISTORICAL, RevocationResponseOrigin.OTHER);
             validator.AddCrlClient(crlClient);
             validator.Validate(report, baseContext, checkCert, checkDate);
         }
@@ -682,14 +683,15 @@ namespace iText.Signatures.Validation {
                 , caCert, null);
             IBasicOcspResponse basicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspResponseBytes
                 ));
-            ocspClient.AddResponse(basicOCSPResp, checkDate, TimeBasedContext.HISTORICAL);
+            ocspClient.AddResponse(basicOCSPResp, checkDate, TimeBasedContext.HISTORICAL, RevocationResponseOrigin.OTHER
+                );
             validator.AddOcspClient(ocspClient);
             ValidationCrlClient crlClient = new ValidationCrlClient();
             TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
             byte[] crlResponseBytes = new List<byte[]>(new TestCrlClient().AddBuilderForCertIssuer(crlBuilder).GetEncoded
                 (checkCert, null))[0];
             crlClient.AddCrl((IX509Crl)CertificateUtil.ParseCrlFromBytes(crlResponseBytes), checkDate, TimeBasedContext
-                .HISTORICAL);
+                .HISTORICAL, RevocationResponseOrigin.OTHER);
             validator.AddCrlClient(crlClient);
             validator.Validate(report, baseContext, checkCert, checkDate);
         }
