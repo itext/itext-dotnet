@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using iText.Commons.Exceptions;
 using iText.Commons.Utils;
 using iText.Test;
@@ -99,6 +100,279 @@ namespace iText.Commons.Json {
             obj.Add("nullString", new JsonString(null));
             JsonValue serDeserObj = JsonValue.FromJson(obj.ToJson());
             NUnit.Framework.Assert.AreEqual(cmpObj, serDeserObj);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptyStringTest() {
+            JsonString emptyString = new JsonString("");
+            String json = emptyString.ToJson();
+            JsonValue deserialized = JsonValue.FromJson(json);
+            NUnit.Framework.Assert.AreEqual(emptyString, deserialized);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SpecialCharactersInStringTest() {
+            String[] specialStrings = new String[] { "\"quoted\"", "\\backslash\\", "/forward/slash/", "\b\f\n\r\t", "Mixed: \"quotes\" and \\backslash\\ and \n newlines"
+                , "\u0000\u0001\u001F" };
+            foreach (String str in specialStrings) {
+                JsonString jsonString = new JsonString(str);
+                String serialized = jsonString.ToJson();
+                JsonValue deserialized = JsonValue.FromJson(serialized);
+                NUnit.Framework.Assert.AreEqual(jsonString, deserialized, "Failed for: " + str);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SpecialNumberValuesTest() {
+            JsonNumber nanNumber = new JsonNumber(double.NaN);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ITextException), () => nanNumber.ToJson());
+            NUnit.Framework.Assert.IsTrue(e.Message.Contains("Failed to serialize json into string"));
+            JsonNumber infNumber = new JsonNumber(double.PositiveInfinity);
+            e = NUnit.Framework.Assert.Catch(typeof(ITextException), () => infNumber.ToJson());
+            NUnit.Framework.Assert.IsTrue(e.Message.Contains("Failed to serialize json into string"));
+            JsonNumber negInfNumber = new JsonNumber(double.NegativeInfinity);
+            e = NUnit.Framework.Assert.Catch(typeof(ITextException), () => negInfNumber.ToJson());
+            NUnit.Framework.Assert.IsTrue(e.Message.Contains("Failed to serialize json into string"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptyArrayTest() {
+            JsonArray emptyArray = new JsonArray();
+            String serialized = emptyArray.ToJson();
+            JsonValue deserialized = JsonValue.FromJson(serialized);
+            NUnit.Framework.Assert.AreEqual(emptyArray, deserialized);
+            NUnit.Framework.Assert.AreEqual("[]", serialized);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptyObjectTest() {
+            JsonObject emptyObject = new JsonObject();
+            String serialized = emptyObject.ToJson();
+            JsonValue deserialized = JsonValue.FromJson(serialized);
+            NUnit.Framework.Assert.AreEqual(emptyObject, deserialized);
+            NUnit.Framework.Assert.AreEqual("{}", serialized);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ArrayWithMixedTypesTest() {
+            JsonArray mixedArray = new JsonArray();
+            mixedArray.Add(new JsonString("string"));
+            mixedArray.Add(new JsonNumber(42));
+            mixedArray.Add(JsonBoolean.Of(true));
+            mixedArray.Add(JsonBoolean.Of(false));
+            mixedArray.Add(JsonNull.JSON_NULL);
+            mixedArray.Add(new JsonObject());
+            mixedArray.Add(new JsonArray());
+            String serialized = mixedArray.ToJson();
+            JsonValue deserialized = JsonValue.FromJson(serialized);
+            NUnit.Framework.Assert.AreEqual(mixedArray, deserialized);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DuplicateKeysInObjectTest() {
+            JsonObject obj = new JsonObject();
+            obj.Add("key", new JsonString("first"));
+            obj.Add("key", new JsonString("second"));
+            String serialized = obj.ToJson();
+            JsonValue deserialized = JsonValue.FromJson(serialized);
+            // The second value should have overwritten the first
+            JsonObject deserializedObj = (JsonObject)deserialized;
+            NUnit.Framework.Assert.AreEqual(1, deserializedObj.GetFields().Count);
+            NUnit.Framework.Assert.AreEqual(new JsonString("second"), deserializedObj.GetFields().Get("key"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MalformedJsonMissingQuoteTest() {
+            String malformedJson = "{\"key: \"value\"}";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ITextException), () => JsonValue.FromJson(malformedJson)
+                );
+            NUnit.Framework.Assert.IsTrue(e.Message.Contains("Failed to parse json string"));
+        }
+
+#if NETSTANDARD2_0
+        [NUnit.Framework.Test]
+        public virtual void MalformedJsonTrailingCommaTest() {
+            String malformedJson = "{\"key\": \"value\",}";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ITextException), () => JsonValue.FromJson(malformedJson)
+                );
+            NUnit.Framework.Assert.IsTrue(e.Message.Contains("Failed to parse json string"));
+        }
+#endif // NETSTANDARD2_0
+
+        [NUnit.Framework.Test]
+        public virtual void MalformedJsonUnterminatedArrayTest() {
+            String malformedJson = "[1, 2, 3";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ITextException), () => JsonValue.FromJson(malformedJson)
+                );
+            NUnit.Framework.Assert.IsTrue(e.Message.Contains("Failed to parse json string"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MalformedJsonUnterminatedObjectTest() {
+            String malformedJson = "{\"key\": \"value\"";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ITextException), () => JsonValue.FromJson(malformedJson)
+                );
+            NUnit.Framework.Assert.IsTrue(e.Message.Contains("Failed to parse json string"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MalformedJsonInvalidNumberTest() {
+            String malformedJson = "{\"key\": 12.34.56}";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ITextException), () => JsonValue.FromJson(malformedJson)
+                );
+            NUnit.Framework.Assert.IsTrue(e.Message.Contains("Failed to parse json string"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EmptyJsonStringTest() {
+            String emptyJson = "";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ITextException), () => JsonValue.FromJson(emptyJson));
+            NUnit.Framework.Assert.IsTrue(e.Message.Contains("Failed to parse json string"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WhitespaceOnlyJsonTest() {
+            String whitespaceJson = "   \t\n   ";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ITextException), () => JsonValue.FromJson(whitespaceJson
+                ));
+            NUnit.Framework.Assert.IsTrue(e.Message.Contains("Failed to parse json string"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ValidWhitespaceAroundValuesTest() {
+            String jsonWithWhitespace = "  {  \"key\"  :  \"value\"  }  ";
+            JsonValue deserialized = JsonValue.FromJson(jsonWithWhitespace);
+            JsonObject expected = new JsonObject();
+            expected.Add("key", new JsonString("value"));
+            NUnit.Framework.Assert.AreEqual(expected, deserialized);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void KeyWithSpecialCharactersTest() {
+            JsonObject obj = new JsonObject();
+            obj.Add("key with spaces", new JsonString("value1"));
+            obj.Add("key\"with\"quotes", new JsonString("value2"));
+            obj.Add("key\\with\\backslash", new JsonString("value3"));
+            obj.Add("key\nwith\nnewlines", new JsonString("value4"));
+            obj.Add("key/with/slashes", new JsonString("value5"));
+            String serialized = obj.ToJson();
+            JsonValue deserialized = JsonValue.FromJson(serialized);
+            NUnit.Framework.Assert.AreEqual(obj, deserialized);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BooleanSerializationTest() {
+            JsonBoolean trueValue = JsonBoolean.Of(true);
+            JsonBoolean falseValue = JsonBoolean.Of(false);
+            String serializedTrue = trueValue.ToJson();
+            String serializedFalse = falseValue.ToJson();
+            NUnit.Framework.Assert.AreEqual("true", serializedTrue);
+            NUnit.Framework.Assert.AreEqual("false", serializedFalse);
+            JsonValue deserializedTrue = JsonValue.FromJson(serializedTrue);
+            JsonValue deserializedFalse = JsonValue.FromJson(serializedFalse);
+            NUnit.Framework.Assert.AreEqual(trueValue, deserializedTrue);
+            NUnit.Framework.Assert.AreEqual(falseValue, deserializedFalse);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StringWithOnlyEscapedCharactersTest() {
+            String onlyEscaped = "\"\\\b\f\n\r\t";
+            JsonString jsonString = new JsonString(onlyEscaped);
+            String serialized = jsonString.ToJson();
+            JsonValue deserialized = JsonValue.FromJson(serialized);
+            NUnit.Framework.Assert.AreEqual(jsonString, deserialized);
+        }
+
+#if NETSTANDARD2_0
+        [NUnit.Framework.Test]
+        public virtual void LeadingZerosInNumbersTest() {
+            // JSON does not allow leading zeros, but we can test what happens after deserialization
+            String jsonWithNumber = "{\"value\": 007}";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ITextException), () => JsonValue.FromJson(jsonWithNumber
+                ));
+            NUnit.Framework.Assert.IsTrue(e.Message.Contains("Failed to parse json string"));
+        }
+#endif // NETSTANDARD2_0
+
+        [NUnit.Framework.Test]
+        public virtual void ArrayWithOnlyNullsTest() {
+            JsonArray arrayOfNulls = new JsonArray();
+            for (int i = 0; i < 100; i++) {
+                arrayOfNulls.Add(JsonNull.JSON_NULL);
+            }
+            String serialized = arrayOfNulls.ToJson();
+            JsonValue deserialized = JsonValue.FromJson(serialized);
+            NUnit.Framework.Assert.AreEqual(arrayOfNulls, deserialized);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StringWithAllControlCharactersTest() {
+            StringBuilder sb = new StringBuilder();
+            // Test all control characters (0x00 to 0x1F)
+            for (int i = 0; i <= 0x1F; i++) {
+                sb.Append((char)i);
+            }
+            String controlChars = sb.ToString();
+            JsonString jsonString = new JsonString(controlChars);
+            String serialized = jsonString.ToJson();
+            JsonValue deserialized = JsonValue.FromJson(serialized);
+            NUnit.Framework.Assert.AreEqual(jsonString, deserialized);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MalformedJsonMissingColonTest() {
+            String malformedJson = "{\"key\" \"value\"}";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ITextException), () => JsonValue.FromJson(malformedJson)
+                );
+            NUnit.Framework.Assert.IsTrue(e.Message.Contains("Failed to parse json string"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MalformedJsonExtraCommaInArrayTest() {
+            String malformedJson = "[1, 2,, 3]";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ITextException), () => JsonValue.FromJson(malformedJson)
+                );
+            NUnit.Framework.Assert.IsTrue(e.Message.Contains("Failed to parse json string"));
+        }
+
+#if NETSTANDARD2_0
+        [NUnit.Framework.Test]
+        public virtual void MalformedJsonSingleQuotesTest() {
+            String malformedJson = "{'key': 'value'}";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ITextException), () => JsonValue.FromJson(malformedJson)
+                );
+            NUnit.Framework.Assert.IsTrue(e.Message.Contains("Failed to parse json string"));
+        }
+#endif // NETSTANDARD2_0
+
+#if NETSTANDARD2_0
+        [NUnit.Framework.Test]
+        public virtual void MalformedJsonUnescapedNewlineInStringTest() {
+            String malformedJson = "{\"key\": \"value with\nnewline\"}";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ITextException), () => JsonValue.FromJson(malformedJson)
+                );
+            NUnit.Framework.Assert.IsTrue(e.Message.Contains("Failed to parse json string"));
+        }
+#endif // NETSTANDARD2_0
+
+        [NUnit.Framework.Test]
+        public virtual void JsonWithCommentsTest() {
+            String jsonWithComments = "{ /* comment */ \"key\": \"value\" }";
+            JsonObject cmpObj = new JsonObject();
+            cmpObj.Add("key", new JsonString("value"));
+            NUnit.Framework.Assert.AreEqual(cmpObj, JsonValue.FromJson(jsonWithComments));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ConsecutiveBackslashesTest() {
+            String[] backslashStrings = new String[] { "\\", "\\\\", "\\\\\\", "\\\\\\\\", "path\\to\\file", "\\\\server\\share"
+                 };
+            foreach (String str in backslashStrings) {
+                JsonString jsonString = new JsonString(str);
+                String serialized = jsonString.ToJson();
+                JsonValue deserialized = JsonValue.FromJson(serialized);
+                NUnit.Framework.Assert.AreEqual(jsonString, deserialized, "Failed for: " + str);
+            }
         }
 
         private String GetJsonStringFromFile(String pathToFile) {
