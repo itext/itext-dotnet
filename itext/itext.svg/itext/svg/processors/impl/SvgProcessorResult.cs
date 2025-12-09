@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using iText.Layout.Font;
 using iText.Svg.Exceptions;
 using iText.Svg.Processors;
@@ -110,8 +111,8 @@ namespace iText.Svg.Processors.Impl {
                 return false;
             }
             iText.Svg.Processors.Impl.SvgProcessorResult otherResult = (iText.Svg.Processors.Impl.SvgProcessorResult)o;
-            return otherResult.GetNamedObjects().Equals(this.GetNamedObjects()) && otherResult.GetRootRenderer().Equals
-                (this.GetRootRenderer());
+            return Enumerable.SequenceEqual(otherResult.GetNamedObjects(), this.GetNamedObjects()) && otherResult.GetRootRenderer
+                ().Equals(this.GetRootRenderer());
         }
 
         public override int GetHashCode() {
