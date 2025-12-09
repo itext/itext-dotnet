@@ -21,7 +21,12 @@ This module provides a Brotli compression implementation for PDF streams in iTex
 
 ## Installation
 
-Add the following dependency to your Maven project:
+
+`brotli-compressor` is experimental so the artifacts are only available on iText's artifactory.
+
+ You can add it as a custom NuGet repository to Visual Studio. In the NuGet Package Manager, go to the settings and add the following URL as a package source: https://repo.itextsupport.com/api/nuget/nuget. You can also browse the iText Artifactory server and download NuGet packages manually.
+
+Add the following dependency to your .NET project:
 
 ```bash
 
