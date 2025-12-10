@@ -20,9 +20,9 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-namespace iText.Signatures.Validation {
+namespace iText.Signatures.Validation.Dataorigin {
     /// <summary>Enum representing an origin from where the revocation data comes from.</summary>
-    public enum RevocationResponseOrigin {
+    public enum RevocationDataOrigin {
         /// <summary>Latest DSS dictionary in a PDF document.</summary>
         LATEST_DSS,
         /// <summary>DSS dictionary, corresponding to previous PDF document revisions.</summary>

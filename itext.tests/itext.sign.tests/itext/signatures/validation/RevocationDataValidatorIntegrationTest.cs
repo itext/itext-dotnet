@@ -31,6 +31,7 @@ using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
 using iText.Signatures.Testutils.Client;
 using iText.Signatures.Validation.Context;
+using iText.Signatures.Validation.Dataorigin;
 using iText.Signatures.Validation.Report;
 using iText.Test;
 
@@ -131,7 +132,7 @@ namespace iText.Signatures.Validation {
             //TestCrlClientWrapper crlClient = new TestCrlClientWrapper(new TestCrlClient().addBuilderForCertIssuer(builder));
             ValidationCrlClient crlClient = (ValidationCrlClient)parameters.GetCrlClients()[0];
             crlClient.AddCrl((IX509Crl)CertificateUtil.ParseCrlFromBytes(builder.MakeCrl()), checkDate, TimeBasedContext
-                .HISTORICAL, RevocationResponseOrigin.OTHER);
+                .HISTORICAL, RevocationDataOrigin.OTHER);
             ValidationReport report = new ValidationReport();
             certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCert));
             parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts
@@ -173,7 +174,7 @@ namespace iText.Signatures.Validation {
             //TestCrlClientWrapper crlClient = new TestCrlClientWrapper(new TestCrlClient().addBuilderForCertIssuer(builder));
             ValidationCrlClient crlClient = (ValidationCrlClient)parameters.GetCrlClients()[0];
             crlClient.AddCrl((IX509Crl)CertificateUtil.ParseCrlFromBytes(builder.MakeCrl()), checkDate, TimeBasedContext
-                .HISTORICAL, RevocationResponseOrigin.OTHER);
+                .HISTORICAL, RevocationDataOrigin.OTHER);
             ValidationReport report = new ValidationReport();
             //certificateRetriever.addTrustedCertificates(Collections.singletonList(caCert));
             parameters.SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts

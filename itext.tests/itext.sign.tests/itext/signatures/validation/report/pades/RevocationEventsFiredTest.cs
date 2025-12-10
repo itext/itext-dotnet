@@ -34,6 +34,7 @@ using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Client;
 using iText.Signatures.Validation;
 using iText.Signatures.Validation.Context;
+using iText.Signatures.Validation.Dataorigin;
 using iText.Signatures.Validation.Events;
 using iText.Signatures.Validation.Report;
 using iText.Test;
@@ -86,7 +87,7 @@ namespace iText.Signatures.Validation.Report.Pades {
 
         [NUnit.Framework.Test]
         public virtual void NotTimestampedResponsesFireOneEventTest() {
-            SetUpOcspClient(RevocationResponseOrigin.LATEST_DSS, TimeBasedContext.PRESENT);
+            SetUpOcspClient(RevocationDataOrigin.LATEST_DSS, TimeBasedContext.PRESENT);
             RevocationDataValidator revocationDataValidator = builder.BuildRevocationDataValidator();
             revocationDataValidator.Validate(new ValidationReport(), VALIDATION_CONTEXT, dummyCertificate, CURRENT_DATE
                 );
@@ -96,7 +97,7 @@ namespace iText.Signatures.Validation.Report.Pades {
 
         [NUnit.Framework.Test]
         public virtual void ResponsesNotFromLatestDssFireTwoEventsTest() {
-            SetUpOcspClient(RevocationResponseOrigin.HISTORICAL_DSS, TimeBasedContext.HISTORICAL);
+            SetUpOcspClient(RevocationDataOrigin.HISTORICAL_DSS, TimeBasedContext.HISTORICAL);
             RevocationDataValidator revocationDataValidator = builder.BuildRevocationDataValidator();
             revocationDataValidator.Validate(new ValidationReport(), VALIDATION_CONTEXT, dummyCertificate, CURRENT_DATE
                 );
@@ -107,7 +108,7 @@ namespace iText.Signatures.Validation.Report.Pades {
 
         [NUnit.Framework.Test]
         public virtual void ResponsesFromSignatureFireTwoEventsTest() {
-            SetUpOcspClient(RevocationResponseOrigin.SIGNATURE, TimeBasedContext.HISTORICAL);
+            SetUpOcspClient(RevocationDataOrigin.SIGNATURE, TimeBasedContext.HISTORICAL);
             RevocationDataValidator revocationDataValidator = builder.BuildRevocationDataValidator();
             revocationDataValidator.Validate(new ValidationReport(), VALIDATION_CONTEXT, dummyCertificate, CURRENT_DATE
                 );
@@ -118,14 +119,14 @@ namespace iText.Signatures.Validation.Report.Pades {
 
         [NUnit.Framework.Test]
         public virtual void ResponsesFromTimestampedDssDontFireEventsTest() {
-            SetUpOcspClient(RevocationResponseOrigin.LATEST_DSS, TimeBasedContext.HISTORICAL);
+            SetUpOcspClient(RevocationDataOrigin.LATEST_DSS, TimeBasedContext.HISTORICAL);
             RevocationDataValidator revocationDataValidator = builder.BuildRevocationDataValidator();
             revocationDataValidator.Validate(new ValidationReport(), VALIDATION_CONTEXT, dummyCertificate, CURRENT_DATE
                 );
             NUnit.Framework.Assert.AreEqual(0, customReportGenerator.firedEvents.Count);
         }
 
-        private void SetUpOcspClient(RevocationResponseOrigin responseOrigin, TimeBasedContext timeBasedContext) {
+        private void SetUpOcspClient(RevocationDataOrigin? responseOrigin, TimeBasedContext timeBasedContext) {
             TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(parentCert, privateKey);
             SignatureValidationProperties validationProperties = new SignatureValidationProperties();
             validationProperties.AddOcspClient(new _ValidationOcspClient_143(this, testOcspClient, timeBasedContext, responseOrigin
@@ -136,7 +137,7 @@ namespace iText.Signatures.Validation.Report.Pades {
 
         private sealed class _ValidationOcspClient_143 : ValidationOcspClient {
             public _ValidationOcspClient_143(RevocationEventsFiredTest _enclosing, TestOcspClient testOcspClient, TimeBasedContext
-                 timeBasedContext, RevocationResponseOrigin responseOrigin) {
+                 timeBasedContext, RevocationDataOrigin? responseOrigin) {
                 this._enclosing = _enclosing;
                 this.testOcspClient = testOcspClient;
                 this.timeBasedContext = timeBasedContext;
@@ -160,7 +161,7 @@ namespace iText.Signatures.Validation.Report.Pades {
 
             private readonly TimeBasedContext timeBasedContext;
 
-            private readonly RevocationResponseOrigin responseOrigin;
+            private readonly RevocationDataOrigin? responseOrigin;
         }
 
         private sealed class _OCSPValidator_156 : OCSPValidator {

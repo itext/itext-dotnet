@@ -24,10 +24,10 @@ using iText.Commons.Bouncycastle.Cert;
 
 namespace iText.Signatures.Validation.Events {
     /// <summary>This event is triggered when a certificate issues was retrieved from the internet.</summary>
-    public class CertificateIssuerRetrievalEvent : AbstractCertificateChainEvent {
+    public class CertificateIssuerExternalRetrievalEvent : AbstractCertificateChainEvent {
         /// <summary>Creates a new event instance.</summary>
         /// <param name="certificate">the certificate for which the issuer was retrieved externally</param>
-        public CertificateIssuerRetrievalEvent(IX509Certificate certificate)
+        public CertificateIssuerExternalRetrievalEvent(IX509Certificate certificate)
             : base(certificate) {
         }
 

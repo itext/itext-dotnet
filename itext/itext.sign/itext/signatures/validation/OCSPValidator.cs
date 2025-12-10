@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
@@ -29,6 +30,7 @@ using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Utils;
+using iText.Commons.Utils.Collections;
 using iText.Signatures;
 using iText.Signatures.Logs;
 using iText.Signatures.Validation.Context;
@@ -305,6 +307,10 @@ namespace iText.Signatures.Validation {
                     .INDETERMINATE));
                 return;
             }
+            // We need to sort certificates to process them starting from those, better suited for PAdES validation.
+            candidates = new HashSet<IX509Certificate>(candidates.Sorted((issuer1, issuer2) => JavaUtil.IntegerCompare
+                ((int)(certificateRetriever.GetCertificateOrigin(issuer1)), (int)(certificateRetriever.GetCertificateOrigin
+                (issuer2)))).ToList());
             ValidationReport[] candidateReports = new ValidationReport[candidates.Count];
             int reportIndex = 0;
             foreach (IX509Certificate cert in candidates) {

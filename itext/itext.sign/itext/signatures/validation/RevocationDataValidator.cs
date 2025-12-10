@@ -33,6 +33,7 @@ using iText.Commons.Utils.Collections;
 using iText.Kernel.Crypto;
 using iText.Signatures;
 using iText.Signatures.Validation.Context;
+using iText.Signatures.Validation.Dataorigin;
 using iText.Signatures.Validation.Events;
 using iText.Signatures.Validation.Report;
 
@@ -285,7 +286,7 @@ namespace iText.Signatures.Validation {
         }
 
         private static void FillOcspResponses(IList<RevocationDataValidator.OcspResponseValidationInfo> ocspResponses
-            , IBasicOcspResponse basicOCSPResp, DateTime generationDate, TimeBasedContext timeBasedContext, RevocationResponseOrigin
+            , IBasicOcspResponse basicOCSPResp, DateTime generationDate, TimeBasedContext timeBasedContext, RevocationDataOrigin?
              responseOrigin) {
             if (basicOCSPResp != null) {
                 // Getting the responses.
@@ -313,7 +314,7 @@ namespace iText.Signatures.Validation {
                 foreach (byte[] crlBytes in crlBytesCollection) {
                     SafeCalling.OnExceptionLog(() => crlResponses.Add(new RevocationDataValidator.CrlValidationInfo((IX509Crl)
                         CertificateUtil.ParseCrlFromBytes(crlBytes), DateTimeUtil.GetCurrentUtcTime(), TimeBasedContext.PRESENT
-                        , RevocationResponseOrigin.OTHER)), report, (e) => new CertificateReportItem(certificate, REVOCATION_DATA_CHECK
+                        , RevocationDataOrigin.OTHER)), report, (e) => new CertificateReportItem(certificate, REVOCATION_DATA_CHECK
                         , MessageFormatUtil.Format(CANNOT_PARSE_CRL, crlClient), e, ReportItem.ReportItemStatus.INFO));
                 }
             }
@@ -417,7 +418,7 @@ namespace iText.Signatures.Validation {
                     ValidationOcspClient validationOcspClient = (ValidationOcspClient)ocspClient;
                     foreach (KeyValuePair<IBasicOcspResponse, RevocationDataValidator.OcspResponseValidationInfo> response in 
                         validationOcspClient.GetResponses()) {
-                        if (response.Value.responseOrigin == RevocationResponseOrigin.LATEST_DSS) {
+                        if (response.Value.responseOrigin == RevocationDataOrigin.LATEST_DSS) {
                             // This method handles all OCSP responses coming from the latest DSS.
                             FillOcspResponses(ocspResponses, response.Key, response.Value.trustedGenerationDate, response.Value.timeBasedContext
                                 , response.Value.responseOrigin);
@@ -461,7 +462,7 @@ namespace iText.Signatures.Validation {
                                 IBasicOcspResponse basicOCSPResp = BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(BOUNCY_CASTLE_FACTORY.CreateASN1Primitive
                                     (basicOcspRespBytes));
                                 FillOcspResponses(ocspResponses, basicOCSPResp, DateTimeUtil.GetCurrentUtcTime(), TimeBasedContext.PRESENT
-                                    , RevocationResponseOrigin.OTHER);
+                                    , RevocationDataOrigin.OTHER);
                             }
                             catch (System.IO.IOException e) {
                                 report.AddReportItem(new ReportItem(REVOCATION_DATA_CHECK, MessageFormatUtil.Format(CANNOT_PARSE_OCSP, ocspClient
@@ -482,7 +483,7 @@ namespace iText.Signatures.Validation {
                     SafeCalling.OnRuntimeExceptionLog(() => {
                         IBasicOcspResponse basicOCSPResp = builder.GetOcspClient().GetBasicOCSPResp(certificate, issuerCert, null);
                         FillOcspResponses(ocspResponses, basicOCSPResp, DateTimeUtil.GetCurrentUtcTime(), TimeBasedContext.PRESENT
-                            , RevocationResponseOrigin.OTHER);
+                            , RevocationDataOrigin.OTHER);
                     }
                     , report, (e) => new CertificateReportItem(certificate, REVOCATION_DATA_CHECK, MessageFormatUtil.Format(OCSP_CLIENT_FAILURE
                         , "OcspClientBouncyCastle"), e, ReportItem.ReportItemStatus.INDETERMINATE));
@@ -499,8 +500,8 @@ namespace iText.Signatures.Validation {
                 crlResponses.AddAll(RetrieveAllCRLResponsesUsingClient(report, certificate, crlClient));
             }
             // This method handles all CRL responses coming from the latest DSS.
-            return crlResponses.Where((crlResponse) => crlResponse.responseOrigin == RevocationResponseOrigin.LATEST_DSS
-                ).ToList();
+            return crlResponses.Where((crlResponse) => crlResponse.responseOrigin == RevocationDataOrigin.LATEST_DSS).
+                ToList();
         }
 
         private IList<RevocationDataValidator.CrlValidationInfo> RetrieveAllCRLResponses(ValidationReport report, 
@@ -537,7 +538,7 @@ namespace iText.Signatures.Validation {
                         IList<RevocationDataValidator.OcspResponseValidationInfo> ocspResponses = new List<RevocationDataValidator.OcspResponseValidationInfo
                             >();
                         FillOcspResponses(ocspResponses, basicOCSPResp, DateTimeUtil.GetCurrentUtcTime(), TimeBasedContext.PRESENT
-                            , RevocationResponseOrigin.OTHER);
+                            , RevocationDataOrigin.OTHER);
                         // Sort all the OCSP responses available based on the most recent revocation data.
                         onlineOcspResponses.AddAll(ocspResponses.Sorted((o1, o2) => o2.singleResp.GetThisUpdate().CompareTo(o1.singleResp
                             .GetThisUpdate())).ToList());
@@ -567,7 +568,7 @@ namespace iText.Signatures.Validation {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-            internal RevocationResponseOrigin responseOrigin;
+            internal RevocationDataOrigin? responseOrigin;
 //\endcond
 
             /// <summary>Creates validation related information about single OCSP response.</summary>
@@ -591,10 +592,11 @@ namespace iText.Signatures.Validation {
             /// <see cref="iText.Signatures.Validation.Context.TimeBasedContext"/>
             /// time based context which corresponds to generation date
             /// </param>
-            [System.ObsoleteAttribute(@"use a constructor with RevocationResponseOrigin parameter instead")]
+            [System.ObsoleteAttribute(@"use a constructor with iText.Signatures.Validation.Dataorigin.RevocationDataOrigin? parameter instead"
+                )]
             public OcspResponseValidationInfo(ISingleResponse singleResp, IBasicOcspResponse basicOCSPResp, DateTime trustedGenerationDate
                 , TimeBasedContext timeBasedContext)
-                : this(singleResp, basicOCSPResp, trustedGenerationDate, timeBasedContext, RevocationResponseOrigin.OTHER) {
+                : this(singleResp, basicOCSPResp, trustedGenerationDate, timeBasedContext, RevocationDataOrigin.OTHER) {
             }
 
             /// <summary>Creates validation related information about single OCSP response.</summary>
@@ -620,12 +622,12 @@ namespace iText.Signatures.Validation {
             /// </param>
             /// <param name="responseOrigin">
             /// 
-            /// <see cref="RevocationResponseOrigin"/>
+            /// <see cref="iText.Signatures.Validation.Dataorigin.RevocationDataOrigin?"/>
             /// representing an origin,
             /// from which this OCSP response comes from
             /// </param>
             public OcspResponseValidationInfo(ISingleResponse singleResp, IBasicOcspResponse basicOCSPResp, DateTime trustedGenerationDate
-                , TimeBasedContext timeBasedContext, RevocationResponseOrigin responseOrigin) {
+                , TimeBasedContext timeBasedContext, RevocationDataOrigin? responseOrigin) {
                 this.singleResp = singleResp;
                 this.basicOCSPResp = basicOCSPResp;
                 this.trustedGenerationDate = trustedGenerationDate;
@@ -649,7 +651,7 @@ namespace iText.Signatures.Validation {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-            internal RevocationResponseOrigin responseOrigin;
+            internal RevocationDataOrigin? responseOrigin;
 //\endcond
 
             /// <summary>Creates validation related information about CRL response.</summary>
@@ -668,9 +670,10 @@ namespace iText.Signatures.Validation {
             /// <see cref="iText.Signatures.Validation.Context.TimeBasedContext"/>
             /// time based context which corresponds to generation date
             /// </param>
-            [System.ObsoleteAttribute(@"use a constructor with RevocationResponseOrigin parameter instead")]
+            [System.ObsoleteAttribute(@"use a constructor with iText.Signatures.Validation.Dataorigin.RevocationDataOrigin? parameter instead"
+                )]
             public CrlValidationInfo(IX509Crl crl, DateTime trustedGenerationDate, TimeBasedContext timeBasedContext)
-                : this(crl, trustedGenerationDate, timeBasedContext, RevocationResponseOrigin.OTHER) {
+                : this(crl, trustedGenerationDate, timeBasedContext, RevocationDataOrigin.OTHER) {
             }
 
             /// <summary>Creates validation related information about CRL response.</summary>
@@ -691,12 +694,12 @@ namespace iText.Signatures.Validation {
             /// </param>
             /// <param name="responseOrigin">
             /// 
-            /// <see cref="RevocationResponseOrigin"/>
+            /// <see cref="iText.Signatures.Validation.Dataorigin.RevocationDataOrigin?"/>
             /// representing an origin,
             /// from which this CRL response comes from
             /// </param>
             public CrlValidationInfo(IX509Crl crl, DateTime trustedGenerationDate, TimeBasedContext timeBasedContext, 
-                RevocationResponseOrigin responseOrigin) {
+                RevocationDataOrigin? responseOrigin) {
                 this.crl = crl;
                 this.trustedGenerationDate = trustedGenerationDate;
                 this.timeBasedContext = timeBasedContext;

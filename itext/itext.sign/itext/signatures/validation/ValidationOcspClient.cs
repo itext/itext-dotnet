@@ -29,6 +29,7 @@ using iText.Commons.Utils;
 using iText.Commons.Utils.Collections;
 using iText.Signatures;
 using iText.Signatures.Validation.Context;
+using iText.Signatures.Validation.Dataorigin;
 
 namespace iText.Signatures.Validation {
     /// <summary>OCSP client which is expected to be used in case OCSP responses shall be linked with generation date.
@@ -62,10 +63,10 @@ namespace iText.Signatures.Validation {
         /// <see cref="iText.Signatures.Validation.Context.TimeBasedContext"/>
         /// time based context which corresponds to generation date
         /// </param>
-        [System.ObsoleteAttribute(@"use AddResponse(iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOcspResponse, System.DateTime, iText.Signatures.Validation.Context.TimeBasedContext, RevocationResponseOrigin) instead"
+        [System.ObsoleteAttribute(@"use AddResponse(iText.Commons.Bouncycastle.Asn1.Ocsp.IBasicOcspResponse, System.DateTime, iText.Signatures.Validation.Context.TimeBasedContext, iText.Signatures.Validation.Dataorigin.RevocationDataOrigin?) instead"
             )]
         public virtual void AddResponse(IBasicOcspResponse response, DateTime date, TimeBasedContext context) {
-            AddResponse(response, date, context, RevocationResponseOrigin.OTHER);
+            AddResponse(response, date, context, RevocationDataOrigin.OTHER);
         }
 
         /// <summary>Add OCSP response which is linked with generation date.</summary>
@@ -86,10 +87,10 @@ namespace iText.Signatures.Validation {
         /// </param>
         /// <param name="responseOrigin">
         /// 
-        /// <see cref="RevocationResponseOrigin"/>
+        /// <see cref="iText.Signatures.Validation.Dataorigin.RevocationDataOrigin?"/>
         /// representing an origin from which OCSP comes from
         /// </param>
-        public virtual void AddResponse(IBasicOcspResponse response, DateTime date, TimeBasedContext context, RevocationResponseOrigin
+        public virtual void AddResponse(IBasicOcspResponse response, DateTime date, TimeBasedContext context, RevocationDataOrigin?
              responseOrigin) {
             RevocationDataValidator.OcspResponseValidationInfo validationInfo = responses.Get(response);
             if (validationInfo == null) {

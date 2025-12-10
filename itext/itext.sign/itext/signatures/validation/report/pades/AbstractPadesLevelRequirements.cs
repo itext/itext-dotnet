@@ -89,6 +89,9 @@ namespace iText.Signatures.Validation.Report.Pades {
         public const String ISSUER_FOR_THESE_CERTIFICATES_IS_MISSING = "Issuer for the following certificates is "
              + "missing:\n";
 
+        public const String ISSUER_FOR_THESE_CERTIFICATES_IS_NOT_IN_DSS = "Issuer for the following certificates is "
+             + "missing from the DSS dictionary:\n";
+
         public const String REVOCATION_DATA_FOR_THESE_CERTIFICATES_IS_MISSING = "Revocation data for the " + "following certificates is missing:\n";
 
         public const String REVOCATION_DATA_FOR_THESE_CERTIFICATES_NOT_TIMESTAMPED = "Revocation data for the " + 
@@ -175,7 +178,9 @@ namespace iText.Signatures.Validation.Report.Pades {
         protected internal bool documentTimestampPresent;
 
         // Table 1 row 30 note x
-        protected internal IList<IX509Certificate> certificatesIssuerNotInDSS = new List<IX509Certificate>();
+        protected internal IList<IX509Certificate> certificateIssuerMissing = new List<IX509Certificate>();
+
+        protected internal IList<IX509Certificate> certificateIssuerNotInDss = new List<IX509Certificate>();
 
         protected internal IList<IX509Certificate> revocationDataNotInDSS = new List<IX509Certificate>();
 
@@ -228,12 +233,12 @@ namespace iText.Signatures.Validation.Report.Pades {
             CHECKS.Put(PAdESLevel.B_T, BTChecks);
             AbstractPadesLevelRequirements.LevelChecks bltChecks = new AbstractPadesLevelRequirements.LevelChecks();
             CHECKS.Put(PAdESLevel.B_LT, bltChecks);
-            bltChecks.shalls.Add(new AbstractPadesLevelRequirements.CheckAndMessage((r) => r.certificatesIssuerNotInDSS
-                .IsEmpty() && r.revocationDataNotInDSS.IsEmpty(), (r) => {
+            bltChecks.shalls.Add(new AbstractPadesLevelRequirements.CheckAndMessage((r) => r.certificateIssuerMissing.
+                IsEmpty() && r.revocationDataNotInDSS.IsEmpty(), (r) => {
                 StringBuilder message = new StringBuilder();
-                if (!r.certificatesIssuerNotInDSS.IsEmpty()) {
+                if (!r.certificateIssuerMissing.IsEmpty()) {
                     message.Append(ISSUER_FOR_THESE_CERTIFICATES_IS_MISSING);
-                    foreach (IX509Certificate cert in r.certificatesIssuerNotInDSS) {
+                    foreach (IX509Certificate cert in r.certificateIssuerMissing) {
                         message.Append('\t').Append(cert).Append('\n');
                     }
                 }
@@ -242,6 +247,16 @@ namespace iText.Signatures.Validation.Report.Pades {
                     foreach (IX509Certificate cert in r.revocationDataNotInDSS) {
                         message.Append('\t').Append(cert).Append('\n');
                     }
+                }
+                return message.ToString();
+            }
+            ));
+            bltChecks.shoulds.Add(new AbstractPadesLevelRequirements.CheckAndMessage((r) => r.certificateIssuerNotInDss
+                .IsEmpty(), (r) => {
+                StringBuilder message = new StringBuilder();
+                message.Append(ISSUER_FOR_THESE_CERTIFICATES_IS_NOT_IN_DSS);
+                foreach (IX509Certificate cert in r.certificateIssuerNotInDss) {
+                    message.Append('\t').Append(cert).Append('\n');
                 }
                 return message.ToString();
             }
@@ -496,10 +511,17 @@ namespace iText.Signatures.Validation.Report.Pades {
             this.documentTimestampPresent = documentTimestampPresent;
         }
 
+        /// <summary>Adds a certificate for which the issuer cannot be found anywhere in the document.</summary>
+        /// <param name="certificateUnderInvestigation">a certificate for which the issuer cannot be found anywhere in the document
+        ///     </param>
+        public virtual void AddCertificateIssuerMissing(IX509Certificate certificateUnderInvestigation) {
+            certificateIssuerMissing.Add(certificateUnderInvestigation);
+        }
+
         /// <summary>Adds a certificate for which the issuer missing in the DSS.</summary>
         /// <param name="certificateUnderInvestigation">a certificate for which the issuer missing in the DSS</param>
         public virtual void AddCertificateIssuerNotInDSS(IX509Certificate certificateUnderInvestigation) {
-            certificatesIssuerNotInDSS.Add(certificateUnderInvestigation);
+            certificateIssuerNotInDss.Add(certificateUnderInvestigation);
         }
 
         /// <summary>Adds a certificate for which no revocation data was available in the DSS.</summary>

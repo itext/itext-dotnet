@@ -27,6 +27,7 @@ using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
 using iText.Signatures;
 using iText.Signatures.Validation.Context;
+using iText.Signatures.Validation.Dataorigin;
 
 namespace iText.Signatures.Validation {
     /// <summary>CRL client which is expected to be used in case CRL responses shall be linked with generation date.
@@ -60,10 +61,10 @@ namespace iText.Signatures.Validation {
         /// <see cref="iText.Signatures.Validation.Context.TimeBasedContext"/>
         /// time based context which corresponds to generation date
         /// </param>
-        [System.ObsoleteAttribute(@"use AddCrl(iText.Commons.Bouncycastle.Cert.IX509Crl, System.DateTime, iText.Signatures.Validation.Context.TimeBasedContext, RevocationResponseOrigin) instead"
+        [System.ObsoleteAttribute(@"use AddCrl(iText.Commons.Bouncycastle.Cert.IX509Crl, System.DateTime, iText.Signatures.Validation.Context.TimeBasedContext, iText.Signatures.Validation.Dataorigin.RevocationDataOrigin?) instead"
             )]
         public virtual void AddCrl(IX509Crl response, DateTime date, TimeBasedContext context) {
-            AddCrl(response, date, context, RevocationResponseOrigin.OTHER);
+            AddCrl(response, date, context, RevocationDataOrigin.OTHER);
         }
 
         /// <summary>Add CRL response which is linked with generation date.</summary>
@@ -84,10 +85,10 @@ namespace iText.Signatures.Validation {
         /// </param>
         /// <param name="responseOrigin">
         /// 
-        /// <see cref="RevocationResponseOrigin"/>
+        /// <see cref="iText.Signatures.Validation.Dataorigin.RevocationDataOrigin?"/>
         /// representing an origin from which CRL comes from
         /// </param>
-        public virtual void AddCrl(IX509Crl response, DateTime date, TimeBasedContext context, RevocationResponseOrigin
+        public virtual void AddCrl(IX509Crl response, DateTime date, TimeBasedContext context, RevocationDataOrigin?
              responseOrigin) {
             RevocationDataValidator.CrlValidationInfo validationInfo = crls.Get(response);
             if (validationInfo != null) {

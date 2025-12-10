@@ -577,7 +577,7 @@ namespace iText.Signatures.Validation.Report.Pades {
             IValidationEvent @event = new StartSignatureValidationEvent(sig, "test", new DateTime());
             eventManager.OnEvent(@event);
             IX509Certificate[] chain = PemFileHelper.ReadFirstChain(certsSrc + "signCertRsa01.pem");
-            @event = new CertificateIssuerRetrievalEvent((IX509Certificate)chain[0]);
+            @event = new CertificateIssuerExternalRetrievalEvent((IX509Certificate)chain[0]);
             eventManager.OnEvent(@event);
             @event = new SignatureValidationSuccessEvent();
             eventManager.OnEvent(@event);
@@ -614,10 +614,10 @@ namespace iText.Signatures.Validation.Report.Pades {
             eventManager.OnEvent(@event);
             DocumentPAdESLevelReport report = sut.GetReport();
             System.Console.Out.WriteLine(report);
-            NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetSignatureReport("test").GetLevel());
-            NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetDocumentLevel());
-            NUnit.Framework.Assert.IsTrue(report.GetSignatureReport("test").GetNonConformaties().Get(PAdESLevel.B_LT).
-                Any((nc) => nc.Contains(AbstractPadesLevelRequirements.ISSUER_FOR_THESE_CERTIFICATES_IS_MISSING)));
+            NUnit.Framework.Assert.AreEqual(PAdESLevel.B_LTA, report.GetSignatureReport("test").GetLevel());
+            NUnit.Framework.Assert.AreEqual(PAdESLevel.B_LTA, report.GetDocumentLevel());
+            NUnit.Framework.Assert.IsTrue(report.GetSignatureReport("test").GetWarnings().Get(PAdESLevel.B_LT).Any((nc
+                ) => nc.Contains(AbstractPadesLevelRequirements.ISSUER_FOR_THESE_CERTIFICATES_IS_NOT_IN_DSS)));
         }
 
         [NUnit.Framework.Test]

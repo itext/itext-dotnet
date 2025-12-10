@@ -100,9 +100,13 @@ namespace iText.Signatures.Validation.Report.Pades {
                             break;
                         }
 
-                        case EventType.CERTIFICATE_ISSUER_EXTERNAL_RETRIEVAL:
+                        case EventType.CERTIFICATE_ISSUER_EXTERNAL_RETRIEVAL: {
+                            ProcessIssuerMissing((AbstractCertificateChainEvent)@event);
+                            break;
+                        }
+
                         case EventType.CERTIFICATE_ISSUER_OTHER_INTERNAL_SOURCE_USED: {
-                            ProcessIssuerRetrieval((AbstractCertificateChainEvent)@event);
+                            ProcessIssuerNotInDss((AbstractCertificateChainEvent)@event);
                             break;
                         }
 
@@ -140,9 +144,15 @@ namespace iText.Signatures.Validation.Report.Pades {
             }
         }
 
-        private void ProcessIssuerRetrieval(AbstractCertificateChainEvent @event) {
+        private void ProcessIssuerNotInDss(AbstractCertificateChainEvent @event) {
             if (currentSignature != null) {
                 signatureInfos.Get(currentSignature).AddCertificateIssuerNotInDSS(@event.GetCertificate());
+            }
+        }
+
+        private void ProcessIssuerMissing(AbstractCertificateChainEvent @event) {
+            if (currentSignature != null) {
+                signatureInfos.Get(currentSignature).AddCertificateIssuerMissing(@event.GetCertificate());
             }
         }
 

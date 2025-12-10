@@ -23,6 +23,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 namespace iText.Signatures.Validation.Events {
     /// <summary>This event is triggered after a successful validation of the current signature.</summary>
     public class SignatureValidationSuccessEvent : IValidationEvent {
+        /// <summary>
+        /// Creates an instance of
+        /// <see cref="SignatureValidationSuccessEvent"/>.
+        /// </summary>
         public SignatureValidationSuccessEvent() {
         }
 

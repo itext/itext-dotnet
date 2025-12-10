@@ -26,6 +26,7 @@ using iText.Commons.Actions;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Kernel.Pdf;
 using iText.Signatures;
+using iText.Signatures.Validation.Dataorigin;
 using iText.Signatures.Validation.Lotl;
 using iText.Signatures.Validation.Report.Pades;
 using iText.Signatures.Validation.Report.Xml;
@@ -768,9 +769,9 @@ namespace iText.Signatures.Validation {
                 result.SetTrustedCertificates(trustedCertificates);
             }
             if (knownCertificates != null) {
-                result.AddKnownCertificates(knownCertificates);
+                result.AddKnownCertificates(knownCertificates, CertificateOrigin.OTHER);
             }
-            result.AddKnownCertificates(lotlTrustedStoreFactory().GetCertificates());
+            result.AddKnownCertificates(lotlTrustedStoreFactory().GetCertificates(), CertificateOrigin.OTHER);
             return result;
         }
 

@@ -38,6 +38,7 @@ using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures;
 using iText.Signatures.Validation.Context;
+using iText.Signatures.Validation.Dataorigin;
 using iText.Signatures.Validation.Events;
 using iText.Signatures.Validation.Report;
 
@@ -257,11 +258,16 @@ namespace iText.Signatures.Validation {
                 return validationReport;
             }
             IList<IX509Certificate> certificatesFromDss = GetCertificatesFromDss(validationReport, document);
-            SafeCalling.OnRuntimeExceptionLog(() => certificateRetriever.AddKnownCertificates(certificatesFromDss), validationReport
-                , (e) => new ReportItem(SIGNATURE_VERIFICATION, ADD_KNOWN_CERTIFICATES_FAILED, e, ReportItem.ReportItemStatus
-                .INFO));
+            SafeCalling.OnRuntimeExceptionLog(() => certificateRetriever.AddKnownCertificates(certificatesFromDss, CertificateOrigin
+                .HISTORICAL_DSS), validationReport, (e) => new ReportItem(SIGNATURE_VERIFICATION, ADD_KNOWN_CERTIFICATES_FAILED
+                , e, ReportItem.ReportItemStatus.INFO));
+            IX509Certificate[] certificates = pkcs7.GetCertificates();
+            SafeCalling.OnRuntimeExceptionLog(() => certificateRetriever.AddKnownCertificates(JavaUtil.ArraysAsList(certificates
+                ), CertificateOrigin.SIGNATURE), validationReport, (e) => new ReportItem(SIGNATURE_VERIFICATION, ADD_KNOWN_CERTIFICATES_FAILED
+                , e, ReportItem.ReportItemStatus.INFO));
+            IX509Certificate signingCertificate = pkcs7.GetSigningCertificate();
             if (pkcs7.IsTsp()) {
-                ValidateTimestampChain(validationReport, pkcs7.GetCertificates(), pkcs7.GetSigningCertificate());
+                ValidateTimestampChain(validationReport, signingCertificate);
                 if (UpdateLastKnownPoE(validationReport, pkcs7.GetTimeStampTokenInfo())) {
                     UpdateValidationClients(pkcs7, validationReport, validationContext, document);
                 }
@@ -285,11 +291,6 @@ namespace iText.Signatures.Validation {
                     return validationReport;
                 }
             }
-            IX509Certificate[] certificates = pkcs7.GetCertificates();
-            SafeCalling.OnRuntimeExceptionLog(() => certificateRetriever.AddKnownCertificates(JavaUtil.ArraysAsList(certificates
-                )), validationReport, (e) => new ReportItem(SIGNATURE_VERIFICATION, ADD_KNOWN_CERTIFICATES_FAILED, e, 
-                ReportItem.ReportItemStatus.INFO));
-            IX509Certificate signingCertificate = pkcs7.GetSigningCertificate();
             ValidationReport signatureReport = new ValidationReport();
             ValidationContext localContext = new ValidationContext(validationContext.GetValidatorContext(), CertificateSource
                 .SIGNER_CERT, validationContext.GetTimeBasedContext());
@@ -333,9 +334,9 @@ namespace iText.Signatures.Validation {
             // Get OCSP/CRL responses and certificates from DSS
             UpdateValidationClients(null, validationReport, validationContext, originalDocument, true);
             IList<IX509Certificate> certificatesFromDss = GetCertificatesFromDss(validationReport, originalDocument);
-            SafeCalling.OnRuntimeExceptionLog(() => certificateRetriever.AddKnownCertificates(certificatesFromDss), validationReport
-                , (e) => new ReportItem(SIGNATURE_VERIFICATION, ADD_KNOWN_CERTIFICATES_FAILED, e, ReportItem.ReportItemStatus
-                .INFO));
+            SafeCalling.OnRuntimeExceptionLog(() => certificateRetriever.AddKnownCertificates(certificatesFromDss, CertificateOrigin
+                .LATEST_DSS), validationReport, (e) => new ReportItem(SIGNATURE_VERIFICATION, ADD_KNOWN_CERTIFICATES_FAILED
+                , e, ReportItem.ReportItemStatus.INFO));
             foreach (String fieldName in signatureNames) {
                 ValidationReport subReport = new ValidationReport();
                 try {
@@ -463,16 +464,14 @@ namespace iText.Signatures.Validation {
                 return tsValidationReport;
             }
             IX509Certificate[] timestampCertificates = timestampSignatureContainer.GetCertificates();
-            ValidateTimestampChain(tsValidationReport, timestampCertificates, timestampSignatureContainer.GetSigningCertificate
-                ());
+            SafeCalling.OnRuntimeExceptionLog(() => certificateRetriever.AddKnownCertificates(JavaUtil.ArraysAsList(timestampCertificates
+                ), CertificateOrigin.SIGNATURE), tsValidationReport, (e) => new ReportItem(SIGNATURE_VERIFICATION, ADD_KNOWN_CERTIFICATES_FAILED
+                , e, ReportItem.ReportItemStatus.INFO));
+            ValidateTimestampChain(tsValidationReport, timestampSignatureContainer.GetSigningCertificate());
             return tsValidationReport;
         }
 
-        private void ValidateTimestampChain(ValidationReport validationReport, IX509Certificate[] knownCerts, IX509Certificate
-             signingCert) {
-            SafeCalling.OnExceptionLog(() => certificateRetriever.AddKnownCertificates(JavaUtil.ArraysAsList(knownCerts
-                )), validationReport, (e) => new ReportItem(SIGNATURE_VERIFICATION, ADD_KNOWN_CERTIFICATES_FAILED, e, 
-                ReportItem.ReportItemStatus.INFO));
+        private void ValidateTimestampChain(ValidationReport validationReport, IX509Certificate signingCert) {
             try {
                 ValidationContext localContext = new ValidationContext(validationContext.GetValidatorContext(), CertificateSource
                     .TIMESTAMP, validationContext.GetTimeBasedContext());
@@ -519,12 +518,12 @@ namespace iText.Signatures.Validation {
             ) {
             if (pkcs7.GetCRLs() != null) {
                 foreach (IX509Crl crl in pkcs7.GetCRLs()) {
-                    validationCrlClient.AddCrl((IX509Crl)crl, lastKnownPoE, validationContext.GetTimeBasedContext(), RevocationResponseOrigin
+                    validationCrlClient.AddCrl((IX509Crl)crl, lastKnownPoE, validationContext.GetTimeBasedContext(), RevocationDataOrigin
                         .SIGNATURE);
                 }
             }
             if (pkcs7.GetOcsp() != null) {
-                validationOcspClient.AddResponse(pkcs7.GetOcsp(), lastKnownPoE, validationContext.GetTimeBasedContext(), RevocationResponseOrigin
+                validationOcspClient.AddResponse(pkcs7.GetOcsp(), lastKnownPoE, validationContext.GetTimeBasedContext(), RevocationDataOrigin
                     .SIGNATURE);
             }
         }
@@ -532,11 +531,11 @@ namespace iText.Signatures.Validation {
         private void RetrieveNotSignedRevocationInfoFromSignatureContainer(PdfPKCS7 pkcs7, ValidationContext validationContext
             ) {
             foreach (IX509Crl crl in pkcs7.GetSignedDataCRLs()) {
-                validationCrlClient.AddCrl((IX509Crl)crl, lastKnownPoE, validationContext.GetTimeBasedContext(), RevocationResponseOrigin
+                validationCrlClient.AddCrl((IX509Crl)crl, lastKnownPoE, validationContext.GetTimeBasedContext(), RevocationDataOrigin
                     .SIGNATURE);
             }
             foreach (IBasicOcspResponse oscp in pkcs7.GetSignedDataOcsps()) {
-                validationOcspClient.AddResponse(oscp, lastKnownPoE, validationContext.GetTimeBasedContext(), RevocationResponseOrigin
+                validationOcspClient.AddResponse(oscp, lastKnownPoE, validationContext.GetTimeBasedContext(), RevocationDataOrigin
                     .SIGNATURE);
             }
         }
@@ -552,7 +551,7 @@ namespace iText.Signatures.Validation {
                         try {
                             validationOcspClient.AddResponse(BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(BOUNCY_CASTLE_FACTORY.CreateOCSPResponse
                                 (ocspStream.GetBytes()).GetResponseObject()), lastKnownPoE, context.GetTimeBasedContext(), latestDss ? 
-                                RevocationResponseOrigin.LATEST_DSS : RevocationResponseOrigin.HISTORICAL_DSS);
+                                RevocationDataOrigin.LATEST_DSS : RevocationDataOrigin.HISTORICAL_DSS);
                         }
                         catch (System.IO.IOException e) {
                             validationReport.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, MessageFormatUtil.Format(CANNOT_PARSE_OCSP_FROM_DSS
@@ -580,8 +579,8 @@ namespace iText.Signatures.Validation {
                     for (int i = 0; i < crls.Size(); ++i) {
                         PdfStream crlStream = crls.GetAsStream(i);
                         SafeCalling.OnExceptionLog(() => validationCrlClient.AddCrl((IX509Crl)CertificateUtil.ParseCrlFromBytes(crlStream
-                            .GetBytes()), lastKnownPoE, context.GetTimeBasedContext(), latestDss ? RevocationResponseOrigin.LATEST_DSS
-                             : RevocationResponseOrigin.HISTORICAL_DSS), validationReport, (e) => new ReportItem(SIGNATURE_VERIFICATION
+                            .GetBytes()), lastKnownPoE, context.GetTimeBasedContext(), latestDss ? RevocationDataOrigin.LATEST_DSS
+                             : RevocationDataOrigin.HISTORICAL_DSS), validationReport, (e) => new ReportItem(SIGNATURE_VERIFICATION
                             , MessageFormatUtil.Format(CANNOT_PARSE_CRL_FROM_DSS, crlStream), e, ReportItem.ReportItemStatus.INFO)
                             );
                     }

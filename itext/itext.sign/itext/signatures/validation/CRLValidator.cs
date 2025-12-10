@@ -29,6 +29,7 @@ using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
+using iText.Commons.Utils.Collections;
 using iText.Signatures;
 using iText.Signatures.Logs;
 using iText.Signatures.Validation.Context;
@@ -304,7 +305,7 @@ namespace iText.Signatures.Validation {
 
         private void VerifyCrlIntegrity(ValidationReport report, ValidationContext context, IX509Certificate certificate
             , IX509Crl crl, DateTime responseGenerationDate) {
-            IX509Certificate[][] certificateSets = null;
+            IX509Certificate[][] certificateSets;
             try {
                 certificateSets = certificateRetriever.GetCrlIssuerCertificatesByName(crl);
             }
@@ -318,11 +319,15 @@ namespace iText.Signatures.Validation {
                     .INDETERMINATE));
                 return;
             }
-            ValidationReport[] candidateReports = new ValidationReport[certificateSets.Length];
-            for (int i = 0; i < certificateSets.Length; i++) {
+            // We need to sort certificates to process them starting from those, better suited for PAdES validation.
+            IList<IX509Certificate[]> certificatesList = JavaUtil.ArraysToEnumerable(certificateSets).Sorted((array1, 
+                array2) => JavaUtil.IntegerCompare((int)(certificateRetriever.GetCertificateOrigin(array1[0])), (int)(
+                certificateRetriever.GetCertificateOrigin(array2[0])))).ToList();
+            ValidationReport[] candidateReports = new ValidationReport[certificatesList.Count];
+            for (int i = 0; i < certificatesList.Count; i++) {
                 ValidationReport candidateReport = new ValidationReport();
                 candidateReports[i] = candidateReport;
-                IX509Certificate[] certs = certificateSets[i];
+                IX509Certificate[] certs = certificatesList[i];
                 if (JavaUtil.ArraysAsList(certs).Contains(certificate)) {
                     candidateReport.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, CERTIFICATE_IN_ISSUER_CHAIN
                         , ReportItem.ReportItemStatus.INDETERMINATE));
