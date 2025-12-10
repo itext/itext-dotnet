@@ -617,6 +617,7 @@ namespace iText.Kernel.Pdf.Xobject {
         [NUnit.Framework.Test]
         public virtual void DRGBFlateSmaskTest() {
             //TODO DEVSIX-1682: Update after supporting
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
             PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
                 ();
             properties.SetApplyTransparency(true);
@@ -1140,12 +1141,14 @@ namespace iText.Kernel.Pdf.Xobject {
         [NUnit.Framework.Test]
         public virtual void CustomIndexedColorSpaceTest() {
             //TODO DEVSIX-1683: Update after supporting
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
             TestFile("customColorIndexed.pdf", "Im1", "png");
         }
 
         [NUnit.Framework.Test]
         public virtual void CustomSeparationColorSpaceTest() {
             //TODO DEVSIX-1683: Update after supporting
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
             TestFile("customColorSpaceSeparation.pdf", "Im1", "png");
         }
 
