@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Pdf;
 using iText.Test;
@@ -241,6 +242,36 @@ namespace iText.Kernel.Pdf.Layer {
                 NUnit.Framework.Assert.AreEqual("title layer", layers[0].GetTitle());
                 NUnit.Framework.Assert.AreEqual(1, layers[0].GetParents().Count);
                 NUnit.Framework.Assert.AreEqual(1, layers[1].GetChildren().Count);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveNotRegisteredOcgsWhenCatalogOcPropertiesMissingTest() {
+            using (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+                using (PdfDocument document = new PdfDocument(new PdfWriter(baos))) {
+                    // Create two layers and register them as a radio group so that /D->/RBGroups is populated.
+                    PdfLayer layer1 = new PdfLayer("Layer1", document);
+                    PdfLayer layer2 = new PdfLayer("Layer2", document);
+                    PdfLayer.AddOCGRadioGroup(document, JavaUtil.ArraysAsList(layer1, layer2));
+                    PdfOCProperties ocProps = document.GetCatalog().GetOCProperties(true);
+                    PdfDictionary dDict = ocProps.GetPdfObject().GetAsDictionary(PdfName.D);
+                    PdfArray rbGroupsBefore = dDict.GetAsArray(PdfName.RBGroups);
+                    // RBGroups array should be present before cleanup
+                    NUnit.Framework.Assert.IsNotNull(rbGroupsBefore);
+                    // RBGroups should contain at least one group before cleanup
+                    NUnit.Framework.Assert.IsFalse(rbGroupsBefore.IsEmpty());
+                    document.GetCatalog().GetPdfObject().Remove(PdfName.OCProperties);
+                    ocProps.FillDictionary(true);
+                    PdfDictionary dDictAfter = ocProps.GetPdfObject().GetAsDictionary(PdfName.D);
+                    PdfArray rbGroupsAfter = dDictAfter.GetAsArray(PdfName.RBGroups);
+                    // RBGroups must still exist after cleanup
+                    NUnit.Framework.Assert.IsNotNull(rbGroupsAfter);
+                    foreach (PdfObject rbGroupObj in rbGroupsAfter) {
+                        PdfArray rbGroup = (PdfArray)rbGroupObj;
+                        // All OCGs should be removed from RBGroups when catalog has no OCProperties
+                        NUnit.Framework.Assert.IsTrue(rbGroup.IsEmpty());
+                    }
+                }
             }
         }
     }

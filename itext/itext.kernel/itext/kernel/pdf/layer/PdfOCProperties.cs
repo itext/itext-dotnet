@@ -249,6 +249,7 @@ namespace iText.Kernel.Pdf.Layer {
                 throw new ArgumentException("layer argument is null");
             }
             layers.Add(layer);
+            SetModified();
         }
 
         /// <summary>
@@ -313,7 +314,7 @@ namespace iText.Kernel.Pdf.Layer {
             PdfDictionary ocProperties = this.GetDocument().GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties
                 );
             ICollection<PdfIndirectReference> ocgsFromDocument = new HashSet<PdfIndirectReference>();
-            if (ocProperties.GetAsArray(PdfName.OCGs) != null) {
+            if (ocProperties != null && ocProperties.GetAsArray(PdfName.OCGs) != null) {
                 PdfArray ocgs = ocProperties.GetAsArray(PdfName.OCGs);
                 foreach (PdfObject ocgObj in ocgs) {
                     if (ocgObj.IsDictionary()) {

@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Font.Constants;
 using iText.IO.Source;
@@ -527,6 +528,170 @@ namespace iText.Kernel.Pdf.Layer {
             canvas.Release();
             pdfDoc.Close();
             PdfLayerTestUtils.CompareLayers(outPdf, cmpPdf);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddOcgLayerInAppendModeWhenNoLayersExist() {
+            // Create a base document without any OCProperties / OCGs.
+            ByteArrayOutputStream baseBaos = new ByteArrayOutputStream();
+            using (PdfDocument baseDoc = new PdfDocument(new PdfWriter(baseBaos))) {
+                baseDoc.AddNewPage();
+            }
+            byte[] baseBytes = baseBaos.ToArray();
+            ByteArrayOutputStream resultBaos = new ByteArrayOutputStream();
+            // Append: add a single OCG layer in append mode.
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(new MemoryStream(baseBytes)), new PdfWriter(resultBaos
+                ), new StampingProperties().UseAppendMode())) {
+                PdfFont font = PdfFontFactory.CreateFont();
+                PdfLayer layer = new PdfLayer("AppendLayer", pdfDoc);
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.GetFirstPage());
+                canvas.SetFontAndSize(font, 12);
+                PdfLayerTestUtils.AddTextInsideLayer(layer, canvas, "Content in appended layer", 50, 700);
+            }
+            // Assert that the resulting document has exactly one OCG with the expected name.
+            using (PdfDocument resultDoc = new PdfDocument(new PdfReader(new MemoryStream(resultBaos.ToArray())))) {
+                PdfOCProperties ocProps = resultDoc.GetCatalog().GetOCProperties(false);
+                // OCProperties must be present after appending a layer
+                NUnit.Framework.Assert.IsNotNull(ocProps);
+                IList<PdfLayer> layers = ocProps.GetLayers();
+                // Exactly one layer is expected
+                NUnit.Framework.Assert.AreEqual(1, layers.Count);
+                PdfLayer layer = layers[0];
+                NUnit.Framework.Assert.AreEqual("AppendLayer", layer.GetPdfObject().GetAsString(PdfName.Name).ToUnicodeString
+                    ());
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddOcgLayerInAppendModeWhenLayersExist() {
+            // Phase 1: create base document with a single OCG.
+            ByteArrayOutputStream baseBaos = new ByteArrayOutputStream();
+            using (PdfDocument baseDoc = new PdfDocument(new PdfWriter(baseBaos))) {
+                PdfFont font = PdfFontFactory.CreateFont();
+                PdfCanvas canvas = new PdfCanvas(baseDoc.AddNewPage());
+                canvas.SetFontAndSize(font, 12);
+                PdfLayer baseLayer = new PdfLayer("BaseLayer", baseDoc);
+                PdfLayerTestUtils.AddTextInsideLayer(baseLayer, canvas, "Base layer content", 50, 750);
+            }
+            byte[] baseBytes = baseBaos.ToArray();
+            ByteArrayOutputStream resultBaos = new ByteArrayOutputStream();
+            // Phase 2: append a new OCG to the existing OCProperties.
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(new MemoryStream(baseBytes)), new PdfWriter(resultBaos
+                ), new StampingProperties().UseAppendMode())) {
+                PdfFont font = PdfFontFactory.CreateFont();
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.GetFirstPage());
+                canvas.SetFontAndSize(font, 12);
+                PdfLayer appendedLayer = new PdfLayer("AppendedLayer", pdfDoc);
+                PdfLayerTestUtils.AddTextInsideLayer(appendedLayer, canvas, "Appended layer content", 50, 700);
+            }
+            // Assert that both the original and the appended layers are present.
+            using (PdfDocument resultDoc = new PdfDocument(new PdfReader(new MemoryStream(resultBaos.ToArray())))) {
+                PdfOCProperties ocProps = resultDoc.GetCatalog().GetOCProperties(false);
+                NUnit.Framework.Assert.IsNotNull(ocProps);
+                IList<PdfLayer> layers = ocProps.GetLayers();
+                // Two layers expected after append
+                NUnit.Framework.Assert.AreEqual(2, layers.Count);
+                IList<String> names = new List<String>();
+                foreach (PdfLayer l in layers) {
+                    names.Add(l.GetPdfObject().GetAsString(PdfName.Name).ToUnicodeString());
+                }
+                NUnit.Framework.Assert.IsTrue(names.Contains("BaseLayer"));
+                NUnit.Framework.Assert.IsTrue(names.Contains("AppendedLayer"));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemoveOcgLayersInAppendMode() {
+            // Phase 1: create base document with two OCGs.
+            ByteArrayOutputStream baseBaos = new ByteArrayOutputStream();
+            using (PdfDocument baseDoc = new PdfDocument(new PdfWriter(baseBaos))) {
+                PdfFont font = PdfFontFactory.CreateFont();
+                PdfCanvas canvas = new PdfCanvas(baseDoc.AddNewPage());
+                canvas.SetFontAndSize(font, 12);
+                PdfLayer layer1 = new PdfLayer("LayerToRemove1", baseDoc);
+                PdfLayer layer2 = new PdfLayer("LayerToRemove2", baseDoc);
+                PdfLayerTestUtils.AddTextInsideLayer(layer1, canvas, "Layer 1 content", 50, 750);
+                PdfLayerTestUtils.AddTextInsideLayer(layer2, canvas, "Layer 2 content", 50, 700);
+            }
+            byte[] baseBytes = baseBaos.ToArray();
+            ByteArrayOutputStream resultBaos = new ByteArrayOutputStream();
+            // Phase 2: in append mode, remove all OCGs directly from the OCProperties dictionary.
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(new MemoryStream(baseBytes)), new PdfWriter(resultBaos
+                ), new StampingProperties().UseAppendMode())) {
+                PdfDictionary catalogDict = pdfDoc.GetCatalog().GetPdfObject();
+                PdfDictionary ocPropsDict = catalogDict.GetAsDictionary(PdfName.OCProperties);
+                // OCProperties must exist in base document
+                NUnit.Framework.Assert.IsNotNull(ocPropsDict);
+                PdfArray ocgsArray = ocPropsDict.GetAsArray(PdfName.OCGs);
+                // OCGs array must exist in base document
+                NUnit.Framework.Assert.IsNotNull(ocgsArray);
+                // Base document is expected to have OCGs
+                NUnit.Framework.Assert.IsFalse(ocgsArray.IsEmpty());
+                //TODO DEVSIX-778: use OCGRemover alternative here
+                ocgsArray.Clear();
+                ocPropsDict.SetModified();
+            }
+            // Phase 3: verify that resulting document has no OCGs registered.
+            using (PdfDocument resultDoc = new PdfDocument(new PdfReader(new MemoryStream(resultBaos.ToArray())))) {
+                PdfDictionary catalogDict = resultDoc.GetCatalog().GetPdfObject();
+                PdfDictionary ocPropsDict = catalogDict.GetAsDictionary(PdfName.OCProperties);
+                // OCProperties dictionary should still exist
+                NUnit.Framework.Assert.IsNotNull(ocPropsDict);
+                PdfArray ocgs = ocPropsDict.GetAsArray(PdfName.OCGs);
+                // OCGs array is expected to be empty after removal in append mode
+                NUnit.Framework.Assert.IsTrue(ocgs == null || ocgs.IsEmpty());
+                // Additionally assert via PdfOCProperties API that no layers are reported.
+                PdfOCProperties ocProps = resultDoc.GetCatalog().GetOCProperties(false);
+                if (ocProps != null) {
+                    // No layers should be registered after OCG removal
+                    NUnit.Framework.Assert.IsTrue(ocProps.GetLayers().IsEmpty());
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ModifyExistingOcgLayersInAppendMode() {
+            // Phase 1: create base document with one visible (ON) layer.
+            ByteArrayOutputStream baseBaos = new ByteArrayOutputStream();
+            using (PdfDocument baseDoc = new PdfDocument(new PdfWriter(baseBaos))) {
+                PdfFont font = PdfFontFactory.CreateFont();
+                PdfCanvas canvas = new PdfCanvas(baseDoc.AddNewPage());
+                canvas.SetFontAndSize(font, 12);
+                PdfLayer layer = new PdfLayer("ModifiableLayer", baseDoc);
+                layer.SetOn(true);
+                PdfLayerTestUtils.AddTextInsideLayer(layer, canvas, "Initially visible layer", 50, 750);
+            }
+            byte[] baseBytes = baseBaos.ToArray();
+            ByteArrayOutputStream resultBaos = new ByteArrayOutputStream();
+            // Phase 2: in append mode, modify the existing layer (e.g. turn it OFF and lock it).
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(new MemoryStream(baseBytes)), new PdfWriter(resultBaos
+                ), new StampingProperties().UseAppendMode())) {
+                PdfOCProperties ocProps = pdfDoc.GetCatalog().GetOCProperties(false);
+                NUnit.Framework.Assert.IsNotNull(ocProps);
+                IList<PdfLayer> layers = ocProps.GetLayers();
+                // Single layer expected in base document
+                NUnit.Framework.Assert.AreEqual(1, layers.Count);
+                PdfLayer layer = layers[0];
+                NUnit.Framework.Assert.AreEqual("ModifiableLayer", layer.GetPdfObject().GetAsString(PdfName.Name).ToUnicodeString
+                    ());
+                // Modify: make the layer OFF and locked.
+                layer.SetOn(false);
+                layer.SetLocked(true);
+            }
+            // Phase 3: verify modification persisted in resulting document.
+            using (PdfDocument resultDoc = new PdfDocument(new PdfReader(new MemoryStream(resultBaos.ToArray())))) {
+                PdfOCProperties ocProps = resultDoc.GetCatalog().GetOCProperties(false);
+                NUnit.Framework.Assert.IsNotNull(ocProps);
+                IList<PdfLayer> layers = ocProps.GetLayers();
+                NUnit.Framework.Assert.AreEqual(1, layers.Count);
+                PdfLayer layer = layers[0];
+                NUnit.Framework.Assert.AreEqual("ModifiableLayer", layer.GetPdfObject().GetAsString(PdfName.Name).ToUnicodeString
+                    ());
+                // Layer should be OFF after modification in append mode
+                NUnit.Framework.Assert.IsFalse(layer.IsOn());
+                // Layer should be locked after modification in append mode
+                NUnit.Framework.Assert.IsTrue(layer.IsLocked());
+            }
         }
     }
 }
