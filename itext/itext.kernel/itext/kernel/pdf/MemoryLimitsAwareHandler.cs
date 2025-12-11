@@ -274,7 +274,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>calculated limit.</returns>
         protected internal static int CalculateMaxElementsInXref(long documentSizeInBytes) {
             int maxDocSizeForMaxLimit = MAX_NUMBER_OF_ELEMENTS_IN_XREF_STRUCTURE / MIN_LIMIT_FOR_NUMBER_OF_ELEMENTS_IN_XREF_STRUCTURE;
-            int documentSizeInMb = Math.Max(1, Math.Min((int)documentSizeInBytes / (1024 * 1024), maxDocSizeForMaxLimit
+            int documentSizeInMb = (int)Math.Max(1, Math.Min(documentSizeInBytes / (1024 * 1024), maxDocSizeForMaxLimit
                 ));
             return documentSizeInMb * MIN_LIMIT_FOR_NUMBER_OF_ELEMENTS_IN_XREF_STRUCTURE;
         }
