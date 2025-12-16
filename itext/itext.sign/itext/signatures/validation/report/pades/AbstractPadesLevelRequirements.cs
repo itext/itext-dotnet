@@ -76,8 +76,9 @@ namespace iText.Signatures.Validation.Report.Pades {
 
         public const String CERT_ENTRY_IS_ADDED_TO_THE_SIGNATURE_DICTIONARY = "Cert entry is added to the " + "signature dictionary";
 
-        public const String AN_UNSUPPORTED_HASH_OR_SIGNING_ALGORITHM_WAS_USED = "An unsupported hash or signing " 
-            + "algorithm was used:\n";
+        public const String A_DISCOURAGED_HASH_OR_SIGNING_ALGORITHM_WAS_USED = "A hash or signing " + "algorithm was used that is not allowed according to ETSI 119 312 :\n";
+
+        public const String A_FORBIDDEN_HASH_OR_SIGNING_ALGORITHM_WAS_USED = "A hash or signing " + "algorithm was used that is not allowed according to ETSI 319 142-1 :\n";
 
         public const String SIGNED_ATTRIBUTES_MUST_CONTAIN_SINGING_CERTIFICATE = "The singing certificate must be added as a signed attribute";
 
@@ -99,6 +100,8 @@ namespace iText.Signatures.Validation.Report.Pades {
 
         public const String DOCUMENT_TIMESTAMP_IS_MISSING = "A document timestamp is missing";
 
+        public const String DSS_IS_NOT_COVERED_BY_TIMESTAMP = "The DSS entry is not covered by a document timestamp";
+
         private static readonly IDictionary<PAdESLevel, AbstractPadesLevelRequirements.LevelChecks> CHECKS = new Dictionary
             <PAdESLevel, AbstractPadesLevelRequirements.LevelChecks>();
 
@@ -112,7 +115,9 @@ namespace iText.Signatures.Validation.Report.Pades {
             >>();
 
         //section 6.2.1
-        protected internal IList<String> algorithmUsage = new List<String>();
+        protected internal IList<String> discouragedAlgorithmUsage = new List<String>();
+
+        protected internal IList<String> forbiddenAlgorithmUsage = new List<String>();
 
         // Table 1 row 1
         protected internal bool signedDataCertificatesPresent;
@@ -177,6 +182,12 @@ namespace iText.Signatures.Validation.Report.Pades {
         // Table 1 row 25
         protected internal bool documentTimestampPresent;
 
+        // Table 1 row 27
+        protected internal bool isDSSPresent;
+
+        // Table 1 row 29
+        protected internal bool poeDssPresent;
+
         // Table 1 row 30 note x
         protected internal IList<IX509Certificate> certificateIssuerMissing = new List<IX509Certificate>();
 
@@ -216,10 +227,19 @@ namespace iText.Signatures.Validation.Report.Pades {
                 , FILTER_ENTRY_IS_MISSING_FROM_THE_SIGNATURE_DICTIONARY1));
             bbChecks.shalls.Add(new AbstractPadesLevelRequirements.CheckAndMessage((r) => !r.dictionaryEntryCertPresent
                 , CERT_ENTRY_IS_ADDED_TO_THE_SIGNATURE_DICTIONARY));
-            bbChecks.shalls.Add(new AbstractPadesLevelRequirements.CheckAndMessage((r) => r.algorithmUsage.IsEmpty(), 
-                (r) => {
-                StringBuilder message = new StringBuilder(AN_UNSUPPORTED_HASH_OR_SIGNING_ALGORITHM_WAS_USED);
-                foreach (String usage in r.algorithmUsage) {
+            bbChecks.shoulds.Add(new AbstractPadesLevelRequirements.CheckAndMessage((r) => r.discouragedAlgorithmUsage
+                .IsEmpty(), (r) => {
+                StringBuilder message = new StringBuilder(A_DISCOURAGED_HASH_OR_SIGNING_ALGORITHM_WAS_USED);
+                foreach (String usage in r.discouragedAlgorithmUsage) {
+                    message.Append('\t').Append(usage).Append('\n');
+                }
+                return message.ToString();
+            }
+            ));
+            bbChecks.shalls.Add(new AbstractPadesLevelRequirements.CheckAndMessage((r) => r.forbiddenAlgorithmUsage.IsEmpty
+                (), (r) => {
+                StringBuilder message = new StringBuilder(A_FORBIDDEN_HASH_OR_SIGNING_ALGORITHM_WAS_USED);
+                foreach (String usage in r.forbiddenAlgorithmUsage) {
                     message.Append('\t').Append(usage).Append('\n');
                 }
                 return message.ToString();
@@ -326,10 +346,16 @@ namespace iText.Signatures.Validation.Report.Pades {
             return PAdESLevel.INDETERMINATE;
         }
 
-        /// <summary>Adds a message about a non-approved algorithm being used.</summary>
-        /// <param name="message">a message about a non-approved algorithm being used</param>
-        public virtual void AddAlgorithmUsage(String message) {
-            this.algorithmUsage.Add(message);
+        /// <summary>Adds a message about a non-approved algorithm, according to ETSI TS 119 312,  being used.</summary>
+        /// <param name="message">a message about a non-approved, according to ETSI TS 119 312, algorithm being used</param>
+        public virtual void AddDiscouragedAlgorithmUsage(String message) {
+            this.discouragedAlgorithmUsage.Add(message);
+        }
+
+        /// <summary>Adds a message about a forbidden algorithm, according to ETSI TS 319 142,  being used.</summary>
+        /// <param name="message">a message about a forbidden, according to ETSI TS 319 142, algorithm being used</param>
+        public virtual void AddForbiddenAlgorithmUsage(String message) {
+            this.forbiddenAlgorithmUsage.Add(message);
         }
 
         /// <summary>Sets whether the signatures container contains the certificate entry.</summary>
@@ -511,6 +537,12 @@ namespace iText.Signatures.Validation.Report.Pades {
             this.documentTimestampPresent = documentTimestampPresent;
         }
 
+        /// <summary>Sets whether there is a DSS covering the signature.</summary>
+        /// <param name="isDSSPresent">whether there is a DSS covering the signature</param>
+        public virtual void SetDSSPresent(bool isDSSPresent) {
+            this.isDSSPresent = isDSSPresent;
+        }
+
         /// <summary>Adds a certificate for which the issuer cannot be found anywhere in the document.</summary>
         /// <param name="certificateUnderInvestigation">a certificate for which the issuer cannot be found anywhere in the document
         ///     </param>
@@ -536,6 +568,12 @@ namespace iText.Signatures.Validation.Report.Pades {
         ///     </param>
         public virtual void AddRevocationDataNotTimestamped(IX509Certificate certificateUnderInvestigation) {
             revocationDataNotTimestamped.Add(certificateUnderInvestigation);
+        }
+
+        /// <summary>Sets whether there is a Proof of Existence covering the DSS.</summary>
+        /// <param name="poeDssPresent">whether there is a Proof of Existence covering the DSS</param>
+        public virtual void SetPoeDssPresent(bool poeDssPresent) {
+            this.poeDssPresent = poeDssPresent;
         }
 
         /// <summary>Sets whether the signature validation was successful.</summary>

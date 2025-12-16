@@ -47,6 +47,10 @@ namespace iText.Signatures.Validation.Report.Pades {
 
         private bool poeFound;
 
+        private bool DssFound;
+
+        private bool DssHasPoe;
+
         private String currentSignature;
 
         private readonly IList<PAdESLevelReport> timestampReports = new List<PAdESLevelReport>();
@@ -120,10 +124,23 @@ namespace iText.Signatures.Validation.Report.Pades {
                             break;
                         }
 
+                        case EventType.DSS_ENTRY_PROCESSED: {
+                            DssFound = true;
+                            DssHasPoe = poeFound;
+                            break;
+                        }
+
                         case EventType.ALGORITHM_USAGE: {
                             AlgorithmUsageEvent ae = (AlgorithmUsageEvent)@event;
-                            if (!ae.IsAllowedAccordingToEtsiTs119_312()) {
-                                this.signatureInfos.Get(currentSignature).AddAlgorithmUsage(ae.ToString());
+                            if (currentSignature != null) {
+                                if (!ae.IsAllowedAccordingToAdES()) {
+                                    this.signatureInfos.Get(currentSignature).AddForbiddenAlgorithmUsage(ae.ToString());
+                                }
+                                else {
+                                    if (!ae.IsAllowedAccordingToEtsiTs119_312()) {
+                                        this.signatureInfos.Get(currentSignature).AddDiscouragedAlgorithmUsage(ae.ToString());
+                                    }
+                                }
                             }
                             break;
                         }
@@ -166,20 +183,20 @@ namespace iText.Signatures.Validation.Report.Pades {
             currentSignature = null;
         }
 
-        private void ProcessSignature(StartSignatureValidationEvent @event) {
+        private void ProcessSignature(StartSignatureValidationEvent start) {
             SignatureRequirements sReqs = new SignatureRequirements();
-            GetDictionaryInfo(@event.GetPdfSignature(), sReqs);
-            GetCmsInfo(@event.GetPdfSignature(), sReqs);
-            signatureInfos.Put(@event.GetSignatureName(), sReqs);
-            currentSignature = @event.GetSignatureName();
+            GetDictionaryInfo(start.GetPdfSignature(), sReqs);
+            GetCmsInfo(start.GetPdfSignature(), sReqs);
+            signatureInfos.Put(start.GetSignatureName(), sReqs);
+            currentSignature = start.GetSignatureName();
         }
 
-        private void ProcessPoE(ProofOfExistenceFoundEvent @event) {
+        private void ProcessPoE(ProofOfExistenceFoundEvent poe) {
             timestampCount++;
-            if (@event.IsDocumentTimestamp()) {
+            if (poe.IsDocumentTimestamp()) {
                 DocumentTimestampRequirements tsReqs = new DocumentTimestampRequirements(timestampCount == 0);
-                GetDictionaryInfo(@event.GetPdfSignature(), tsReqs);
-                GetCmsInfo(@event.GetPdfSignature(), tsReqs);
+                GetDictionaryInfo(poe.GetPdfSignature(), tsReqs);
+                GetCmsInfo(poe.GetPdfSignature(), tsReqs);
                 currentSignature = "timestamp" + timestampCount;
                 signatureInfos.Put(currentSignature, tsReqs);
             }
@@ -247,6 +264,8 @@ namespace iText.Signatures.Validation.Report.Pades {
                 //Table 1 row 24
                 reqs.SetPoeSignaturePresent(poeFound || cms.GetSignerInfo().GetUnSignedAttributes().Any((a) => OID.AA_TIME_STAMP_TOKEN
                     .Equals(a.GetType())));
+                reqs.SetDSSPresent(DssFound);
+                reqs.SetPoeDssPresent(DssHasPoe);
             }
             catch (Exception) {
             }

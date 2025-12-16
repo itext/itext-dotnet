@@ -52,6 +52,8 @@ namespace iText.Signatures.Validation.Report.Pades {
             CHECKS.Put(PAdESLevel.B_LTA, bltaChecks);
             bltaChecks.shalls.Add(new AbstractPadesLevelRequirements.CheckAndMessage((r) => r.documentTimestampPresent
                 , DOCUMENT_TIMESTAMP_IS_MISSING));
+            bltaChecks.shalls.Add(new AbstractPadesLevelRequirements.CheckAndMessage((r) => r.poeDssPresent, DSS_IS_NOT_COVERED_BY_TIMESTAMP
+                ));
         }
 
         /// <summary>Creates a new instance.</summary>

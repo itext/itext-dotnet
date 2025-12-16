@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using iText.Bouncycastleconnector;
+using iText.Commons.Actions;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
@@ -34,6 +35,7 @@ using iText.Commons.Utils.Collections;
 using iText.Signatures;
 using iText.Signatures.Logs;
 using iText.Signatures.Validation.Context;
+using iText.Signatures.Validation.Events;
 using iText.Signatures.Validation.Report;
 
 namespace iText.Signatures.Validation {
@@ -133,6 +135,8 @@ namespace iText.Signatures.Validation {
 
         private readonly ValidatorChainBuilder builder;
 
+        private readonly EventManager eventManager;
+
         /// <summary>
         /// Creates new
         /// <see cref="OCSPValidator"/>
@@ -145,6 +149,7 @@ namespace iText.Signatures.Validation {
         protected internal OCSPValidator(ValidatorChainBuilder builder) {
             this.certificateRetriever = builder.GetCertificateRetriever();
             this.properties = builder.GetProperties();
+            this.eventManager = builder.GetEventManager();
             this.builder = builder;
         }
 
@@ -159,6 +164,7 @@ namespace iText.Signatures.Validation {
         public virtual void Validate(ValidationReport report, ValidationContext context, IX509Certificate certificate
             , ISingleResponse singleResp, IBasicOcspResponse ocspResp, DateTime validationDate, DateTime responseGenerationDate
             ) {
+            ReportAlgorithmUsage(ocspResp);
             ValidationContext localContext = context.SetValidatorContext(ValidatorContext.OCSP_VALIDATOR);
             if (CertificateUtil.IsSelfSigned(certificate)) {
                 report.AddReportItem(new CertificateReportItem(certificate, OCSP_CHECK, RevocationDataValidator.SELF_SIGNED_CERTIFICATE
@@ -267,6 +273,11 @@ namespace iText.Signatures.Validation {
             foreach (ValidationReport candidateReport in candidateReports) {
                 report.Merge(candidateReport);
             }
+        }
+
+        private void ReportAlgorithmUsage(IBasicOcspResponse ocspResp) {
+            eventManager.OnEvent(new AlgorithmUsageEvent(null, ocspResp.GetSignatureAlgorithmID().GetAlgorithm().GetId
+                (), OCSP_CHECK));
         }
 
         /// <summary>Verifies if an OCSP response is genuine.</summary>

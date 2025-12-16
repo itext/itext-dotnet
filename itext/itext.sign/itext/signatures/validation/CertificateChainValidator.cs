@@ -196,6 +196,7 @@ namespace iText.Signatures.Validation {
 
         private ValidationReport Validate(ValidationReport result, ValidationContext context, IX509Certificate certificate
             , DateTime validationDate, IList<IX509Certificate> previousCertificates) {
+            ReportAlgorithmUsage(certificate);
             ValidationContext localContext = context.SetValidatorContext(ValidatorContext.CERTIFICATE_CHAIN_VALIDATOR);
             ValidateRequiredExtensions(result, localContext, certificate, previousCertificates.Count);
             if (StopValidation(result, localContext)) {
@@ -214,6 +215,11 @@ namespace iText.Signatures.Validation {
             }
             ValidateChain(result, localContext, certificate, validationDate, previousCertificates);
             return result;
+        }
+
+        private void ReportAlgorithmUsage(IX509Certificate certificate) {
+            eventManager.OnEvent(new AlgorithmUsageEvent(certificate.GetSigAlgName(), certificate.GetSigAlgOID(), CERTIFICATE_CHECK
+                ));
         }
 
         private void HandlePadesEvents(IX509Certificate certificate) {

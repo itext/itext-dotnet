@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Linq;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 using iText.Signatures;
@@ -83,7 +84,8 @@ namespace iText.Signatures.Validation.Report.Pades {
             certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCertificate));
             CertificateChainValidator validator = builder.BuildCertificateChainValidator();
             validator.ValidateCertificate(VALIDATION_CONTEXT, dummyCertificate, CURRENT_DATE);
-            NUnit.Framework.Assert.AreEqual(0, customReportGenerator.firedEvents.Count);
+            NUnit.Framework.Assert.AreEqual(0, customReportGenerator.firedEvents.Where((e) => e is CertificateIssuerExternalRetrievalEvent
+                ).Count());
         }
 
         [NUnit.Framework.Test]
@@ -93,9 +95,8 @@ namespace iText.Signatures.Validation.Report.Pades {
             certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCertificate));
             CertificateChainValidator validator = builder.BuildCertificateChainValidator();
             validator.ValidateCertificate(VALIDATION_CONTEXT, dummyCertificate, CURRENT_DATE);
-            NUnit.Framework.Assert.AreEqual(1, customReportGenerator.firedEvents.Count);
-            NUnit.Framework.Assert.IsTrue(customReportGenerator.firedEvents[0] is CertificateIssuerRetrievedOutsideDSSEvent
-                );
+            NUnit.Framework.Assert.AreEqual(1, customReportGenerator.firedEvents.Where((e) => e is CertificateIssuerRetrievedOutsideDSSEvent
+                ).Count());
         }
 
         [NUnit.Framework.Test]
@@ -106,11 +107,10 @@ namespace iText.Signatures.Validation.Report.Pades {
                 .SIGNATURE);
             CertificateChainValidator validator = builder.BuildCertificateChainValidator();
             validator.ValidateCertificate(VALIDATION_CONTEXT, dummyCertificate, CURRENT_DATE);
-            NUnit.Framework.Assert.AreEqual(2, customReportGenerator.firedEvents.Count);
-            NUnit.Framework.Assert.IsTrue(customReportGenerator.firedEvents[0] is CertificateIssuerExternalRetrievalEvent
-                );
-            NUnit.Framework.Assert.IsTrue(customReportGenerator.firedEvents[1] is CertificateIssuerRetrievedOutsideDSSEvent
-                );
+            NUnit.Framework.Assert.AreEqual(1, customReportGenerator.firedEvents.Where((e) => e is CertificateIssuerExternalRetrievalEvent
+                ).Count());
+            NUnit.Framework.Assert.AreEqual(1, customReportGenerator.firedEvents.Where((e) => e is CertificateIssuerRetrievedOutsideDSSEvent
+                ).Count());
         }
 
         [NUnit.Framework.Test]
@@ -118,9 +118,8 @@ namespace iText.Signatures.Validation.Report.Pades {
             certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCertificate));
             CertificateChainValidator validator = builder.BuildCertificateChainValidator();
             validator.ValidateCertificate(VALIDATION_CONTEXT, dummyCertificate, CURRENT_DATE);
-            NUnit.Framework.Assert.AreEqual(1, customReportGenerator.firedEvents.Count);
-            NUnit.Framework.Assert.IsTrue(customReportGenerator.firedEvents[0] is CertificateIssuerExternalRetrievalEvent
-                );
+            NUnit.Framework.Assert.AreEqual(1, customReportGenerator.firedEvents.Where((e) => e is CertificateIssuerExternalRetrievalEvent
+                ).Count());
         }
 
         [NUnit.Framework.Test]
@@ -134,7 +133,8 @@ namespace iText.Signatures.Validation.Report.Pades {
             certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList(caCertificate));
             CertificateChainValidator validator = builder.BuildCertificateChainValidator();
             validator.ValidateCertificate(VALIDATION_CONTEXT, dummyCertificate, CURRENT_DATE);
-            NUnit.Framework.Assert.AreEqual(0, customReportGenerator.firedEvents.Count);
+            NUnit.Framework.Assert.AreEqual(0, customReportGenerator.firedEvents.Where((e) => e is CertificateIssuerExternalRetrievalEvent
+                ).Count());
         }
     }
 }

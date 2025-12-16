@@ -83,6 +83,12 @@ namespace iText.Bouncycastle.X509 {
         }
 
         /// <summary><inheritDoc/></summary>
+        public string GetSigAlgName()
+        {
+            return certificate.SigAlgName;
+        }
+
+        /// <summary><inheritDoc/></summary>
         public string GetSigAlgOID() => this.certificate.SigAlgOid;
 
         /// <summary><inheritDoc/></summary>
@@ -208,5 +214,6 @@ namespace iText.Bouncycastle.X509 {
         public override String ToString() {
             return certificate.ToString();
         }
+        
     }
 }

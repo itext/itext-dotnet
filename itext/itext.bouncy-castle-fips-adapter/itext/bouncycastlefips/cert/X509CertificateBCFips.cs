@@ -82,6 +82,12 @@ namespace iText.Bouncycastlefips.Cert {
         }
 
         /// <summary><inheritDoc/></summary>
+        public string GetSigAlgName()
+        {
+            return certificate.SigAlgName;
+        }
+
+        /// <summary><inheritDoc/></summary>
         public string GetSigAlgOID() => certificate.SigAlgOid.Id;
 
         /// <summary><inheritDoc/></summary>

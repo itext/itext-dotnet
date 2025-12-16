@@ -409,6 +409,10 @@ namespace iText.Signatures.Validation {
                     , latestSignatureName), ReportItem.ReportItemStatus.INVALID));
             }
             try {
+                eventManager.OnEvent(new AlgorithmUsageEvent(pkcs7.GetDigestAlgorithmName(), pkcs7.GetDigestAlgorithmOid()
+                    , SIGNATURE_VERIFICATION));
+                eventManager.OnEvent(new AlgorithmUsageEvent(pkcs7.GetSignatureAlgorithmName(), pkcs7.GetSignatureMechanismOid
+                    (), SIGNATURE_VERIFICATION));
                 if (!pkcs7.VerifySignatureIntegrityAndAuthenticity()) {
                     validationReport.AddReportItem(new ReportItem(SIGNATURE_VERIFICATION, MessageFormatUtil.Format(CANNOT_VERIFY_SIGNATURE
                         , latestSignatureName), ReportItem.ReportItemStatus.INVALID));

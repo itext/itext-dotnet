@@ -67,6 +67,8 @@ namespace iText.Kernel.Crypto {
 
         public const String TSA = "1.2.840.113583.1.1.9.1";
 
+        public const String MD5 = "1.2.840.113549.2.5";
+
         public const String RSA_WITH_SHA3_512 = "2.16.840.1.101.3.4.3.16";
 
         public const String SHA_224 = "2.16.840.1.101.3.4.2.4";
@@ -76,6 +78,8 @@ namespace iText.Kernel.Crypto {
         public const String SHA_384 = "2.16.840.1.101.3.4.2.2";
 
         public const String SHA_512 = "2.16.840.1.101.3.4.2.3";
+
+        public const String SHA_512_256 = "2.16.840.1.101.3.4.2.6";
 
         public const String SHA3_224 = "2.16.840.1.101.3.4.2.7";
 

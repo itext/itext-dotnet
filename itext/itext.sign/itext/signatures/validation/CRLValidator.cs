@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using iText.Bouncycastleconnector;
+using iText.Commons.Actions;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X509;
@@ -33,6 +34,7 @@ using iText.Commons.Utils.Collections;
 using iText.Signatures;
 using iText.Signatures.Logs;
 using iText.Signatures.Validation.Context;
+using iText.Signatures.Validation.Events;
 using iText.Signatures.Validation.Extensions;
 using iText.Signatures.Validation.Report;
 
@@ -127,6 +129,8 @@ namespace iText.Signatures.Validation {
 
         private readonly ValidatorChainBuilder builder;
 
+        private readonly EventManager eventManager;
+
         /// <summary>
         /// Creates new
         /// <see cref="CRLValidator"/>
@@ -139,6 +143,7 @@ namespace iText.Signatures.Validation {
         protected internal CRLValidator(ValidatorChainBuilder builder) {
             this.certificateRetriever = builder.GetCertificateRetriever();
             this.properties = builder.GetProperties();
+            this.eventManager = builder.GetEventManager();
             this.builder = builder;
         }
 
@@ -151,6 +156,7 @@ namespace iText.Signatures.Validation {
         /// <param name="responseGenerationDate">trusted date at which response is generated</param>
         public virtual void Validate(ValidationReport report, ValidationContext context, IX509Certificate certificate
             , IX509Crl crl, DateTime validationDate, DateTime responseGenerationDate) {
+            ReportAlgortihmUsage(crl);
             ValidationContext localContext = context.SetValidatorContext(ValidatorContext.CRL_VALIDATOR);
             if (CertificateUtil.IsSelfSigned(certificate)) {
                 report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, RevocationDataValidator.SELF_SIGNED_CERTIFICATE
@@ -223,6 +229,10 @@ namespace iText.Signatures.Validation {
                 report.AddReportItem(new CertificateReportItem(certificate, CRL_CHECK, ONLY_SOME_REASONS_CHECKED, ReportItem.ReportItemStatus
                     .INDETERMINATE));
             }
+        }
+
+        private void ReportAlgortihmUsage(IX509Crl crl) {
+            eventManager.OnEvent(new AlgorithmUsageEvent(crl.GetSigAlgName(), crl.GetSigAlgOID(), CRL_CHECK));
         }
 
         private static void VerifyRevocation(ValidationReport report, IX509Certificate certificate, DateTime verificationDate

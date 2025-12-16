@@ -35,6 +35,7 @@ using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
+using iText.Commons.Bouncycastle.Asn1.X509;
 
 namespace iText.Bouncycastle.Asn1.Ocsp {
     /// <summary>
@@ -132,6 +133,12 @@ namespace iText.Bouncycastle.Asn1.Ocsp {
         public IRespID GetResponderId()
         {
             return new RespIDBC(new X509NameBC(GetBasicOcspResponse().TbsResponseData.ResponderID.Name));
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IAlgorithmIdentifier GetSignatureAlgorithmID()
+        {
+            return new AlgorithmIdentifierBC(GetBasicOcspResponse().SignatureAlgorithm);
         }
     }
 }
