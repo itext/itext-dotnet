@@ -941,9 +941,12 @@ namespace iText.Forms.Fields {
                 }
                 formFieldElement.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(fontSize));
                 value = iText.Commons.Utils.StringUtil.ReplaceAll(value, LINE_ENDINGS_REGEXP, " ");
-                ((InputField)formFieldElement).SetComb(this.IsCombTextFormField());
-                ((InputField)formFieldElement).SetMaxLen((parent is PdfTextFormField ? (PdfTextFormField)parent : PdfFormCreator
-                    .CreateTextFormField(parent.GetPdfObject())).GetMaxLen());
+                bool isComb = this.IsCombTextFormField();
+                ((InputField)formFieldElement).SetComb(isComb);
+                if (isComb) {
+                    ((InputField)formFieldElement).SetMaxLen((parent is PdfTextFormField ? (PdfTextFormField)parent : PdfFormCreator
+                        .CreateTextFormField(parent.GetPdfObject())).GetMaxLen());
+                }
                 ((InputField)formFieldElement).UseAsPassword(parent.IsPassword());
             }
             formFieldElement.SetValue(value);
