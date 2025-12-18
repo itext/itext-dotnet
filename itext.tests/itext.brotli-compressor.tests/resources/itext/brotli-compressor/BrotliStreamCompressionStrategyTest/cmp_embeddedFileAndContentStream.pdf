@@ -1,0 +1,52 @@
+%PDF-1.7
+%‚„œ”
+8 0 obj
+<</Filter/BrotliDecode/Length 33>>stream
+ÄHello from Brotli page stream
+endstream
+endobj
+6 0 obj
+<</Contents[8 0 R]/MediaBox[0 0 595 842]/Parent 2 0 R/Resources<<>>/TrimBox[0 0 595 842]/Type/Page>>
+endobj
+1 0 obj
+<</Names 10 0 R/Pages 2 0 R/Type/Catalog>>
+endobj
+3 0 obj
+<</CreationDate(D:20251218145643+01'00')/ModDate(D:20251218145643+01'00')/Producer(iTextÆ Core 9.5.0-SNAPSHOT \(AGPL version\) ©2000-2025 Apryse Group NV)>>
+endobj
+2 0 obj
+<</Count 1/Kids[6 0 R]/Type/Pages>>
+endobj
+10 0 obj
+<</EmbeddedFiles 9 0 R>>
+endobj
+9 0 obj
+<</Names[(embedded.txt) 5 0 R]>>
+endobj
+5 0 obj
+<</AFRelationship/Unspecified/Desc(Brotli File)/EF<</F 4 0 R/UF 4 0 R>>/F(embedded.txt)/Type/Filespec/UF(embedded.txt)>>
+endobj
+4 0 obj
+<</Filter/BrotliDecode/Length 29/Params<</ModDate(D:20251218145643+01'00')/Size 25>>/Subtype/application#2foctet-stream/Type/EmbeddedFile>>stream
+ÄEmbedded + Brotli content
+endstream
+endobj
+xref
+0 11
+0000000007 65535 f 
+0000000231 00000 n 
+0000000461 00000 n 
+0000000289 00000 n 
+0000000737 00000 n 
+0000000601 00000 n 
+0000000115 00000 n 
+0000000000 00001 f 
+0000000015 00000 n 
+0000000553 00000 n 
+0000000512 00000 n 
+trailer
+<</ID [<4d7d3cd6bdd88e36131f829199cf71f2ff8bfcc028a570b22d26119c659d6cf4af23ea99447e4ceba8637cb63b76b5aafa48601cef2f9e32129be6ed7321cd45><4d7d3cd6bdd88e36131f829199cf71f2ff8bfcc028a570b22d26119c659d6cf4af23ea99447e4ceba8637cb63b76b5aafa48601cef2f9e32129be6ed7321cd45>]/Info 3 0 R/Root 1 0 R/Size 11>>
+%iText-Core-9.5.0-SNAPSHOT
+startxref
+938
+%%EOF

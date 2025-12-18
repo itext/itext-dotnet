@@ -1,0 +1,51 @@
+%PDF-1.7
+%‚„œ”
+7 0 obj
+<</Filter/BrotliDecode/Length 1>>stream
+;
+endstream
+endobj
+6 0 obj
+<</Contents 7 0 R/MediaBox[0 0 595 842]/Parent 2 0 R/Resources<<>>/TrimBox[0 0 595 842]/Type/Page>>
+endobj
+1 0 obj
+<</Names 9 0 R/Pages 2 0 R/Type/Catalog>>
+endobj
+3 0 obj
+<</CreationDate(D:20251218145646+01'00')/ModDate(D:20251218145646+01'00')/Producer(iTextÆ Core 9.5.0-SNAPSHOT \(AGPL version\) ©2000-2025 Apryse Group NV)>>
+endobj
+2 0 obj
+<</Count 1/Kids[6 0 R]/Type/Pages>>
+endobj
+9 0 obj
+<</EmbeddedFiles 8 0 R>>
+endobj
+8 0 obj
+<</Names[(data.json) 5 0 R]>>
+endobj
+5 0 obj
+<</AFRelationship/Unspecified/Desc(JSON File)/EF<</F 4 0 R/UF 4 0 R>>/F(data.json)/Type/Filespec/UF(data.json)>>
+endobj
+4 0 obj
+<</Filter/BrotliDecode/Length 46/Params<</ModDate(D:20251218145646+01'00')/Size 42>>/Subtype/application#2foctet-stream/Type/EmbeddedFile>>stream
+ãÄ{"message": "Hello Brotli JSON", "id": 42}
+endstream
+endobj
+xref
+0 10
+0000000000 65535 f 
+0000000197 00000 n 
+0000000426 00000 n 
+0000000254 00000 n 
+0000000690 00000 n 
+0000000562 00000 n 
+0000000082 00000 n 
+0000000015 00000 n 
+0000000517 00000 n 
+0000000477 00000 n 
+trailer
+<</ID [<6b90e4fbcc6fb13b0b1c83cb9c5007090f884c7de62b6623f268f4ea191ecf7934e5364a5a337683b1cbbb553f29d8e1fdc5017b79548ea3560a356a5ab6291f><6b90e4fbcc6fb13b0b1c83cb9c5007090f884c7de62b6623f268f4ea191ecf7934e5364a5a337683b1cbbb553f29d8e1fdc5017b79548ea3560a356a5ab6291f>]/Info 3 0 R/Root 1 0 R/Size 10>>
+%iText-Core-9.5.0-SNAPSHOT
+startxref
+908
+%%EOF

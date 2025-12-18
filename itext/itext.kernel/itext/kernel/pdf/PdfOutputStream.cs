@@ -167,6 +167,7 @@ namespace iText.Kernel.Pdf {
         }
 
         protected internal virtual bool ContainsFlateFilter(PdfStream pdfStream) {
+            PdfName compressionFilter = GetCompressionStrategy().GetFilterName();
             PdfObject filter = pdfStream.Get(PdfName.Filter);
             if (filter == null) {
                 return false;
@@ -179,7 +180,7 @@ namespace iText.Kernel.Pdf {
                 throw new PdfException(KernelExceptionMessageConstant.FILTER_IS_NOT_A_NAME_OR_ARRAY);
             }
             if (filter.GetObjectType() == PdfObject.NAME) {
-                return PdfName.FlateDecode.Equals(filter);
+                return compressionFilter.Equals(filter);
             }
             foreach (PdfObject obj in (PdfArray)filter) {
                 if (obj.IsFlushed()) {
@@ -187,7 +188,7 @@ namespace iText.Kernel.Pdf {
                     return true;
                 }
             }
-            return ((PdfArray)filter).Contains(PdfName.FlateDecode);
+            return ((PdfArray)filter).Contains(compressionFilter);
         }
 
         protected internal virtual void UpdateCompressionFilter(PdfStream pdfStream) {
