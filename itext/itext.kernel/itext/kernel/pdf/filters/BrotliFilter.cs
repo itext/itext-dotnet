@@ -58,13 +58,19 @@ namespace iText.Kernel.Pdf.Filters {
                 byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
                 MemoryStream input = new MemoryStream(b);
                 MemoryStream output = EnableMemoryLimitsAwareHandler(streamDictionary);
-                Stream brotliInput = brotliDictionary != null ? new BrotliInputStream(input, DEFAULT_INTERNAL_BUFFER_SIZE, 
-                    brotliDictionary.GetBytes()) : new BrotliInputStream(input);
+                BrotliInputStream brotliInput;
+                if (brotliDictionary != null) {
+                    brotliInput = new BrotliInputStream(input, DEFAULT_INTERNAL_BUFFER_SIZE);
+                    brotliInput.AttachDictionaryChunk(brotliDictionary.GetBytes());
+                }
+                else {
+                    brotliInput = new BrotliInputStream(input);
+                }
                 int len;
                 while ((len = brotliInput.JRead(buffer, 0, buffer.Length)) > 0) {
                     output.Write(buffer, 0, len);
                 }
-                brotliInput.Dispose();
+                brotliInput.Close();
                 return FlateDecodeFilter.DecodePredictor(output.ToArray(), decodeParams);
             }
             catch (System.IO.IOException e) {

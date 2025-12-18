@@ -3,268 +3,340 @@
 Distributed under MIT license.
 See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
-namespace iText.IO.Codec.Brotli.Dec
-{
-	/// <summary>Bit reading helpers.</summary>
-	internal sealed class BitReader
-	{
-		/// <summary>
-		/// Input byte buffer, consist of a ring-buffer and a "slack" region where bytes from the start of
-		/// the ring-buffer are copied.
-		/// </summary>
-		private const int Capacity = 1024;
+using System;
 
-		private const int Slack = 16;
+namespace iText.IO.Codec.Brotli.Dec {
+//\cond DO_NOT_DOCUMENT
+    /// <summary>Bit reading helpers.</summary>
+    internal sealed class BitReader {
+        // Possible values: {5, 6}.  5 corresponds to 32-bit build, 6 to 64-bit. This value is used for
+        // JIT conditional compilation.
+        private static readonly int LOG_BITNESS = Utils.GetLogBintness();
 
-		private const int IntBufferSize = Capacity + Slack;
+        // Not only Java compiler prunes "if (const false)" code, but JVM as well.
+        // Code under "if (BIT_READER_DEBUG != 0)" have zero performance impact (outside unit tests).
+        private static readonly int BIT_READER_DEBUG = Utils.IsDebugMode();
 
-		private const int ByteReadSize = Capacity << 2;
+//\cond DO_NOT_DOCUMENT
+        internal static readonly int BITNESS = 1 << LOG_BITNESS;
+//\endcond
 
-		private const int ByteBufferSize = IntBufferSize << 2;
+        private static readonly int BYTENESS = BITNESS / 8;
 
-		private readonly byte[] byteBuffer = new byte[ByteBufferSize];
+        private const int CAPACITY = 4096;
 
-		private readonly int[] intBuffer = new int[IntBufferSize];
+        // After encountering the end of the input stream, this amount of zero bytes will be appended.
+        private const int SLACK = 64;
 
-		private readonly iText.IO.Codec.Brotli.Dec.IntReader intReader = new iText.IO.Codec.Brotli.Dec.IntReader();
+        private const int BUFFER_SIZE = CAPACITY + SLACK;
 
-		private System.IO.Stream input;
+        // Don't bother to replenish the buffer while this number of bytes is available.
+        private const int SAFEGUARD = 36;
 
-		/// <summary>Input stream is finished.</summary>
-		private bool endOfStreamReached;
+        private const int WATERLINE = CAPACITY - SAFEGUARD;
 
-		/// <summary>Pre-fetched bits.</summary>
-		internal long accumulator;
+        // "Half" refers to "half of native integer type", i.e. on 64-bit machines it is 32-bit type,
+        // on 32-bit machines it is 16-bit.
+        private static readonly int HALF_BITNESS = BITNESS / 2;
 
-		/// <summary>Current bit-reading position in accumulator.</summary>
-		internal int bitOffset;
+        private static readonly int HALF_SIZE = BYTENESS / 2;
 
-		/// <summary>Offset of next item in intBuffer.</summary>
-		private int intOffset;
+        private static readonly int HALVES_CAPACITY = CAPACITY / HALF_SIZE;
 
-		private int tailBytes = 0;
+        private static readonly int HALF_BUFFER_SIZE = BUFFER_SIZE / HALF_SIZE;
 
-		/* Number of bytes in unfinished "int" item. */
-		/// <summary>Fills up the input buffer.</summary>
-		/// <remarks>
-		/// Fills up the input buffer.
-		/// <p> No-op if there are at least 36 bytes present after current position.
-		/// <p> After encountering the end of the input stream, 64 additional zero bytes are copied to the
-		/// buffer.
-		/// </remarks>
-		internal static void ReadMoreInput(iText.IO.Codec.Brotli.Dec.BitReader br)
-		{
-			// TODO: Split to check and read; move read outside of decoding loop.
-			if (br.intOffset <= Capacity - 9)
-			{
-				return;
-			}
-			if (br.endOfStreamReached)
-			{
-				if (IntAvailable(br) >= -2)
-				{
-					return;
-				}
-				throw new iText.IO.Codec.Brotli.Dec.BrotliRuntimeException("No more input");
-			}
-			int readOffset = br.intOffset << 2;
-			int bytesRead = ByteReadSize - readOffset;
-			System.Array.Copy(br.byteBuffer, readOffset, br.byteBuffer, 0, bytesRead);
-			br.intOffset = 0;
-			try
-			{
-				while (bytesRead < ByteReadSize)
-				{
-					int len = br.input.Read(br.byteBuffer, bytesRead, ByteReadSize - bytesRead);
-					// EOF is -1 in Java, but 0 in C#.
-					if (len <= 0)
-					{
-						br.endOfStreamReached = true;
-						br.tailBytes = bytesRead;
-						bytesRead += 3;
-						break;
-					}
-					bytesRead += len;
-				}
-			}
-			catch (System.IO.IOException e)
-			{
-				throw new iText.IO.Codec.Brotli.Dec.BrotliRuntimeException("Failed to read input", e);
-			}
-			iText.IO.Codec.Brotli.Dec.IntReader.Convert(br.intReader, bytesRead >> 2);
-		}
+        private static readonly int LOG_HALF_SIZE = LOG_BITNESS - 4;
 
-		internal static void CheckHealth(iText.IO.Codec.Brotli.Dec.BitReader br, bool endOfStream)
-		{
-			if (!br.endOfStreamReached)
-			{
-				return;
-			}
-			int byteOffset = (br.intOffset << 2) + ((br.bitOffset + 7) >> 3) - 8;
-			if (byteOffset > br.tailBytes)
-			{
-				throw new iText.IO.Codec.Brotli.Dec.BrotliRuntimeException("Read after end");
-			}
-			if (endOfStream && (byteOffset != br.tailBytes))
-			{
-				throw new iText.IO.Codec.Brotli.Dec.BrotliRuntimeException("Unused bytes after end");
-			}
-		}
+//\cond DO_NOT_DOCUMENT
+        internal static readonly int HALF_WATERLINE = WATERLINE / HALF_SIZE;
+//\endcond
 
-		/// <summary>Advances the Read buffer by 5 bytes to make room for reading next 24 bits.</summary>
-		internal static void FillBitWindow(iText.IO.Codec.Brotli.Dec.BitReader br)
-		{
-			if (br.bitOffset >= 32)
-			{
-				br.accumulator = ((long)br.intBuffer[br.intOffset++] << 32) | ((long)(((ulong)br.accumulator) >> 32));
-				br.bitOffset -= 32;
-			}
-		}
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Fills up the input buffer.</summary>
+        /// <remarks>
+        /// Fills up the input buffer.
+        /// <para /> Should not be called if there are at least 36 bytes present after current position.
+        /// <para /> After encountering the end of the input stream, 64 additional zero bytes are copied to the
+        /// buffer.
+        /// </remarks>
+        internal static int ReadMoreInput(State s) {
+            if (s.endOfStreamReached != 0) {
+                if (HalfAvailable(s) >= -2) {
+                    return BrotliError.BROTLI_OK;
+                }
+                return Utils.MakeError(s, BrotliError.BROTLI_ERROR_TRUNCATED_INPUT);
+            }
+            int readOffset = s.halfOffset << LOG_HALF_SIZE;
+            int bytesInBuffer = CAPACITY - readOffset;
+            // Move unused bytes to the head of the buffer.
+            Utils.CopyBytesWithin(s.byteBuffer, 0, readOffset, CAPACITY);
+            s.halfOffset = 0;
+            while (bytesInBuffer < CAPACITY) {
+                int spaceLeft = CAPACITY - bytesInBuffer;
+                int len = Utils.ReadInput(s, s.byteBuffer, bytesInBuffer, spaceLeft);
+                if (len < BrotliError.BROTLI_ERROR) {
+                    return len;
+                }
+                // EOF is -1 in Java, but 0 in C#.
+                if (len <= 0) {
+                    s.endOfStreamReached = 1;
+                    s.tailBytes = bytesInBuffer;
+                    bytesInBuffer += HALF_SIZE - 1;
+                    break;
+                }
+                bytesInBuffer += len;
+            }
+            BytesToNibbles(s, bytesInBuffer);
+            return BrotliError.BROTLI_OK;
+        }
+//\endcond
 
-		/// <summary>Reads the specified number of bits from Read Buffer.</summary>
-		internal static int ReadBits(iText.IO.Codec.Brotli.Dec.BitReader br, int n)
-		{
-			FillBitWindow(br);
-			int val = (int)((long)(((ulong)br.accumulator) >> br.bitOffset)) & ((1 << n) - 1);
-			br.bitOffset += n;
-			return val;
-		}
+//\cond DO_NOT_DOCUMENT
+        internal static int CheckHealth(State s, int endOfStream) {
+            if (s.endOfStreamReached == 0) {
+                return BrotliError.BROTLI_OK;
+            }
+            int byteOffset = (s.halfOffset << LOG_HALF_SIZE) + ((s.bitOffset + 7) >> 3) - BYTENESS;
+            if (byteOffset > s.tailBytes) {
+                return Utils.MakeError(s, BrotliError.BROTLI_ERROR_READ_AFTER_END);
+            }
+            if ((endOfStream != 0) && (byteOffset != s.tailBytes)) {
+                return Utils.MakeError(s, BrotliError.BROTLI_ERROR_UNUSED_BYTES_AFTER_END);
+            }
+            return BrotliError.BROTLI_OK;
+        }
+//\endcond
 
-		/// <summary>Initialize bit reader.</summary>
-		/// <remarks>
-		/// Initialize bit reader.
-		/// <p> Initialisation turns bit reader to a ready state. Also a number of bytes is prefetched to
-		/// accumulator. Because of that this method may block until enough data could be read from input.
-		/// </remarks>
-		/// <param name="br">BitReader POJO</param>
-		/// <param name="input">data source</param>
-		internal static void Init(iText.IO.Codec.Brotli.Dec.BitReader br, System.IO.Stream input)
-		{
-			if (br.input != null)
-			{
-				throw new System.InvalidOperationException("Bit reader already has associated input stream");
-			}
-			iText.IO.Codec.Brotli.Dec.IntReader.Init(br.intReader, br.byteBuffer, br.intBuffer);
-			br.input = input;
-			br.accumulator = 0;
-			br.bitOffset = 64;
-			br.intOffset = Capacity;
-			br.endOfStreamReached = false;
-			Prepare(br);
-		}
+//\cond DO_NOT_DOCUMENT
+        internal static void AssertAccumulatorHealthy(State s) {
+            if (s.bitOffset > BITNESS) {
+                throw new InvalidOperationException("Accumulator underloaded: " + s.bitOffset);
+            }
+        }
+//\endcond
 
-		private static void Prepare(iText.IO.Codec.Brotli.Dec.BitReader br)
-		{
-			ReadMoreInput(br);
-			CheckHealth(br, false);
-			FillBitWindow(br);
-			FillBitWindow(br);
-		}
+//\cond DO_NOT_DOCUMENT
+        internal static void FillBitWindow(State s) {
+            if (BIT_READER_DEBUG != 0) {
+                AssertAccumulatorHealthy(s);
+            }
+            if (s.bitOffset >= HALF_BITNESS) {
+                // Same as doFillBitWindow. JVM fails to inline it.
+                if (BITNESS == 64) {
+                    s.accumulator64 = ((long)s.intBuffer[s.halfOffset++] << HALF_BITNESS) | Utils.Shr64(s.accumulator64, HALF_BITNESS
+                        );
+                }
+                else {
+                    s.accumulator32 = ((int)s.shortBuffer[s.halfOffset++] << HALF_BITNESS) | Utils.Shr32(s.accumulator32, HALF_BITNESS
+                        );
+                }
+                s.bitOffset -= HALF_BITNESS;
+            }
+        }
+//\endcond
 
-		internal static void Reload(iText.IO.Codec.Brotli.Dec.BitReader br)
-		{
-			if (br.bitOffset == 64)
-			{
-				Prepare(br);
-			}
-		}
+//\cond DO_NOT_DOCUMENT
+        internal static void DoFillBitWindow(State s) {
+            if (BIT_READER_DEBUG != 0) {
+                AssertAccumulatorHealthy(s);
+            }
+            if (BITNESS == 64) {
+                s.accumulator64 = ((long)s.intBuffer[s.halfOffset++] << HALF_BITNESS) | Utils.Shr64(s.accumulator64, HALF_BITNESS
+                    );
+            }
+            else {
+                s.accumulator32 = ((int)s.shortBuffer[s.halfOffset++] << HALF_BITNESS) | Utils.Shr32(s.accumulator32, HALF_BITNESS
+                    );
+            }
+            s.bitOffset -= HALF_BITNESS;
+        }
+//\endcond
 
-		internal static void Close(iText.IO.Codec.Brotli.Dec.BitReader br)
-		{
-			System.IO.Stream @is = br.input;
-			br.input = null;
-			if (@is != null)
-			{
-				@is.Dispose();
-			}
-		}
+//\cond DO_NOT_DOCUMENT
+        internal static int PeekBits(State s) {
+            if (BITNESS == 64) {
+                return (int)Utils.Shr64(s.accumulator64, s.bitOffset);
+            }
+            else {
+                return Utils.Shr32(s.accumulator32, s.bitOffset);
+            }
+        }
+//\endcond
 
-		internal static void JumpToByteBoundary(iText.IO.Codec.Brotli.Dec.BitReader br)
-		{
-			int padding = (64 - br.bitOffset) & 7;
-			if (padding != 0)
-			{
-				int paddingBits = iText.IO.Codec.Brotli.Dec.BitReader.ReadBits(br, padding);
-				if (paddingBits != 0)
-				{
-					throw new iText.IO.Codec.Brotli.Dec.BrotliRuntimeException("Corrupted padding bits");
-				}
-			}
-		}
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Fetches bits from accumulator.</summary>
+        /// <remarks>
+        /// Fetches bits from accumulator.
+        /// WARNING: accumulator MUST contain at least the specified amount of bits,
+        /// otherwise BitReader will become broken.
+        /// </remarks>
+        internal static int ReadFewBits(State s, int n) {
+            int v = PeekBits(s) & ((1 << n) - 1);
+            s.bitOffset += n;
+            return v;
+        }
+//\endcond
 
-		internal static int IntAvailable(iText.IO.Codec.Brotli.Dec.BitReader br)
-		{
-			int limit = Capacity;
-			if (br.endOfStreamReached)
-			{
-				limit = (br.tailBytes + 3) >> 2;
-			}
-			return limit - br.intOffset;
-		}
+//\cond DO_NOT_DOCUMENT
+        internal static int ReadBits(State s, int n) {
+            if (HALF_BITNESS >= 24) {
+                return ReadFewBits(s, n);
+            }
+            else {
+                return (n <= 16) ? ReadFewBits(s, n) : ReadManyBits(s, n);
+            }
+        }
+//\endcond
 
-		internal static void CopyBytes(iText.IO.Codec.Brotli.Dec.BitReader br, byte[] data, int offset, int length)
-		{
-			if ((br.bitOffset & 7) != 0)
-			{
-				throw new iText.IO.Codec.Brotli.Dec.BrotliRuntimeException("Unaligned copyBytes");
-			}
-			// Drain accumulator.
-			while ((br.bitOffset != 64) && (length != 0))
-			{
-				data[offset++] = unchecked((byte)((long)(((ulong)br.accumulator) >> br.bitOffset)));
-				br.bitOffset += 8;
-				length--;
-			}
-			if (length == 0)
-			{
-				return;
-			}
-			// Get data from shadow buffer with "sizeof(int)" granularity.
-			int copyInts = System.Math.Min(IntAvailable(br), length >> 2);
-			if (copyInts > 0)
-			{
-				int readOffset = br.intOffset << 2;
-				System.Array.Copy(br.byteBuffer, readOffset, data, offset, copyInts << 2);
-				offset += copyInts << 2;
-				length -= copyInts << 2;
-				br.intOffset += copyInts;
-			}
-			if (length == 0)
-			{
-				return;
-			}
-			// Read tail bytes.
-			if (IntAvailable(br) > 0)
-			{
-				// length = 1..3
-				FillBitWindow(br);
-				while (length != 0)
-				{
-					data[offset++] = unchecked((byte)((long)(((ulong)br.accumulator) >> br.bitOffset)));
-					br.bitOffset += 8;
-					length--;
-				}
-				CheckHealth(br, false);
-				return;
-			}
-			// Now it is possible to copy bytes directly.
-			try
-			{
-				while (length > 0)
-				{
-					int len = br.input.Read(data, offset, length);
-					if (len == -1)
-					{
-						throw new iText.IO.Codec.Brotli.Dec.BrotliRuntimeException("Unexpected end of input");
-					}
-					offset += len;
-					length -= len;
-				}
-			}
-			catch (System.IO.IOException e)
-			{
-				throw new iText.IO.Codec.Brotli.Dec.BrotliRuntimeException("Failed to read input", e);
-			}
-		}
-	}
+        private static int ReadManyBits(State s, int n) {
+            int low = ReadFewBits(s, 16);
+            DoFillBitWindow(s);
+            return low | (ReadFewBits(s, n - 16) << 16);
+        }
+
+//\cond DO_NOT_DOCUMENT
+        internal static int InitBitReader(State s) {
+            s.byteBuffer = new byte[BUFFER_SIZE];
+            if (BITNESS == 64) {
+                s.accumulator64 = 0;
+                s.intBuffer = new int[HALF_BUFFER_SIZE];
+            }
+            else {
+                s.accumulator32 = 0;
+                s.shortBuffer = new short[HALF_BUFFER_SIZE];
+            }
+            s.bitOffset = BITNESS;
+            s.halfOffset = HALVES_CAPACITY;
+            s.endOfStreamReached = 0;
+            return Prepare(s);
+        }
+//\endcond
+
+        private static int Prepare(State s) {
+            if (s.halfOffset > BitReader.HALF_WATERLINE) {
+                int result = ReadMoreInput(s);
+                if (result != BrotliError.BROTLI_OK) {
+                    return result;
+                }
+            }
+            int health = CheckHealth(s, 0);
+            if (health != BrotliError.BROTLI_OK) {
+                return health;
+            }
+            DoFillBitWindow(s);
+            DoFillBitWindow(s);
+            return BrotliError.BROTLI_OK;
+        }
+
+//\cond DO_NOT_DOCUMENT
+        internal static int Reload(State s) {
+            if (s.bitOffset == BITNESS) {
+                return Prepare(s);
+            }
+            return BrotliError.BROTLI_OK;
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal static int JumpToByteBoundary(State s) {
+            int padding = (BITNESS - s.bitOffset) & 7;
+            if (padding != 0) {
+                int paddingBits = ReadFewBits(s, padding);
+                if (paddingBits != 0) {
+                    return Utils.MakeError(s, BrotliError.BROTLI_ERROR_CORRUPTED_PADDING_BITS);
+                }
+            }
+            return BrotliError.BROTLI_OK;
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal static int HalfAvailable(State s) {
+            int limit = HALVES_CAPACITY;
+            if (s.endOfStreamReached != 0) {
+                limit = (s.tailBytes + (HALF_SIZE - 1)) >> LOG_HALF_SIZE;
+            }
+            return limit - s.halfOffset;
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal static int CopyRawBytes(State s, byte[] data, int offset, int length) {
+            int pos = offset;
+            int len = length;
+            if ((s.bitOffset & 7) != 0) {
+                return Utils.MakeError(s, BrotliError.BROTLI_PANIC_UNALIGNED_COPY_BYTES);
+            }
+            // Drain accumulator.
+            while ((s.bitOffset != BITNESS) && (len != 0)) {
+                data[pos++] = (byte)PeekBits(s);
+                s.bitOffset += 8;
+                len--;
+            }
+            if (len == 0) {
+                return BrotliError.BROTLI_OK;
+            }
+            // Get data from shadow buffer with "sizeof(int)" granularity.
+            int copyNibbles = Utils.Min(HalfAvailable(s), len >> LOG_HALF_SIZE);
+            if (copyNibbles > 0) {
+                int readOffset = s.halfOffset << LOG_HALF_SIZE;
+                int delta = copyNibbles << LOG_HALF_SIZE;
+                Utils.CopyBytes(data, pos, s.byteBuffer, readOffset, readOffset + delta);
+                pos += delta;
+                len -= delta;
+                s.halfOffset += copyNibbles;
+            }
+            if (len == 0) {
+                return BrotliError.BROTLI_OK;
+            }
+            // Read tail bytes.
+            if (HalfAvailable(s) > 0) {
+                // length = 1..3
+                FillBitWindow(s);
+                while (len != 0) {
+                    data[pos++] = (byte)PeekBits(s);
+                    s.bitOffset += 8;
+                    len--;
+                }
+                return CheckHealth(s, 0);
+            }
+            // Now it is possible to copy bytes directly.
+            while (len > 0) {
+                int chunkLen = Utils.ReadInput(s, data, pos, len);
+                if (chunkLen < BrotliError.BROTLI_ERROR) {
+                    return chunkLen;
+                }
+                // EOF is -1 in Java, but 0 in C#.
+                if (chunkLen <= 0) {
+                    return Utils.MakeError(s, BrotliError.BROTLI_ERROR_TRUNCATED_INPUT);
+                }
+                pos += chunkLen;
+                len -= chunkLen;
+            }
+            return BrotliError.BROTLI_OK;
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Translates bytes to halves (int/short).</summary>
+        internal static void BytesToNibbles(State s, int byteLen) {
+            byte[] byteBuffer = s.byteBuffer;
+            int halfLen = byteLen >> LOG_HALF_SIZE;
+            if (BITNESS == 64) {
+                int[] intBuffer = s.intBuffer;
+                for (int i = 0; i < halfLen; ++i) {
+                    intBuffer[i] = ((int)byteBuffer[i * 4] & 0xFF) | (((int)byteBuffer[(i * 4) + 1] & 0xFF) << 8) | (((int)byteBuffer
+                        [(i * 4) + 2] & 0xFF) << 16) | (((int)byteBuffer[(i * 4) + 3] & 0xFF) << 24);
+                }
+            }
+            else {
+                short[] shortBuffer = s.shortBuffer;
+                for (int i = 0; i < halfLen; ++i) {
+                    shortBuffer[i] = (short)(((int)byteBuffer[i * 2] & 0xFF) | (((int)byteBuffer[(i * 2) + 1] & 0xFF) << 8));
+                }
+            }
+        }
+//\endcond
+    }
+//\endcond
 }
