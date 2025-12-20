@@ -118,8 +118,8 @@ namespace iText.Signatures.Validation {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal const String OCSP_RESPONSE_IS_SIGNED_BY_CERTIFICATE_BEING_VALIDATED = "OCSP response could not be validated: "
-             + "OCSP response is signed by the same certificate as being validated.";
+        internal const String CERTIFICATE_IN_ISSUER_CHAIN = "Unable to validate OCSP response: validated certificate is"
+             + " part of issuer certificate chain.";
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
@@ -362,28 +362,34 @@ namespace iText.Signatures.Validation {
                         .INVALID));
                     continue;
                 }
-                if (certificate.Equals(responderCert)) {
-                    // OCSP response is signed by this same certificate
-                    report.AddReportItem(new CertificateReportItem(responderCert, OCSP_CHECK, OCSP_RESPONSE_IS_SIGNED_BY_CERTIFICATE_BEING_VALIDATED
-                        , ReportItem.ReportItemStatus.INDETERMINATE));
+                if (builder.IsCertificateBeingValidated(responderCert)) {
+                    // OCSP response is signed by the certificate from the issue chain
+                    report.AddReportItem(new CertificateReportItem(responderCert, OCSP_CHECK, CERTIFICATE_IN_ISSUER_CHAIN, ReportItem.ReportItemStatus
+                        .INDETERMINATE));
                     continue;
                 }
-                // Validating of the ocsp signer's certificate (responderCert) described in the
-                // RFC6960 4.2.2.2.1. Revocation Checking of an Authorized Responder.
-                ValidationReport responderReport = new ValidationReport();
-                try {
-                    builder.GetCertificateChainValidator().Validate(responderReport, localContext, responderCert, responseGenerationDate
-                        );
-                }
-                catch (Exception e) {
-                    candidateReport.AddReportItem(new CertificateReportItem(responderCert, OCSP_CHECK, OCSP_RESPONDER_NOT_VERIFIED
-                        , e, ReportItem.ReportItemStatus.INDETERMINATE));
-                    continue;
-                }
-                AddResponderValidationReport(candidateReport, responderReport);
-                if (candidateReport.GetValidationResult() == ValidationReport.ValidationResult.VALID) {
-                    AddResponderValidationReport(report, candidateReport);
-                    return;
+                else {
+                    builder.AddCertificateBeingValidated(responderCert);
+                    // Validating of the ocsp signer's certificate (responderCert) described in the
+                    // RFC6960 4.2.2.2.1. Revocation Checking of an Authorized Responder.
+                    ValidationReport responderReport = new ValidationReport();
+                    try {
+                        builder.GetCertificateChainValidator().Validate(responderReport, localContext, responderCert, responseGenerationDate
+                            );
+                    }
+                    catch (Exception e) {
+                        candidateReport.AddReportItem(new CertificateReportItem(responderCert, OCSP_CHECK, OCSP_RESPONDER_NOT_VERIFIED
+                            , e, ReportItem.ReportItemStatus.INDETERMINATE));
+                        continue;
+                    }
+                    finally {
+                        builder.RemoveCertificateBeingValidated(responderCert);
+                    }
+                    AddResponderValidationReport(candidateReport, responderReport);
+                    if (candidateReport.GetValidationResult() == ValidationReport.ValidationResult.VALID) {
+                        AddResponderValidationReport(report, candidateReport);
+                        return;
+                    }
                 }
             }
             //if we get here, none of the candidates were successful

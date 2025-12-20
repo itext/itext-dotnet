@@ -505,7 +505,7 @@ namespace iText.Signatures.Validation {
                 SignatureValidator signatureValidator = chainBuilder.BuildSignatureValidator(document);
                 ValidationReport report = signatureValidator.ValidateSignatures();
                 AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                    (0).HasLogItem((l) => l.WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator.OCSP_RESPONSE_IS_SIGNED_BY_CERTIFICATE_BEING_VALIDATED
+                    (0).HasLogItem((l) => l.WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator.CERTIFICATE_IN_ISSUER_CHAIN
                     )));
             }
         }

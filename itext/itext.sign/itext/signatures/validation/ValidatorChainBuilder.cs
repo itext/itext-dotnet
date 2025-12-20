@@ -65,6 +65,17 @@ namespace iText.Signatures.Validation {
 
         private QualifiedValidator qualifiedValidator;
 
+        /// <summary>This set is used to catch recursions while CRL/OCSP responses validation.</summary>
+        /// <remarks>
+        /// This set is used to catch recursions while CRL/OCSP responses validation.
+        /// There might be loops when
+        /// Revocation data for cert 0 is signed by cert 0. Or
+        /// Revocation data for cert 0 is signed by cert 1 and revocation data for cert 1 is signed by cert 0.
+        /// Some more complex loops are possible, and they all are supposed to be caught by this set
+        /// and the methods to manipulate this set.
+        /// </remarks>
+        private ICollection<IX509Certificate> certificatesChainBeingValidated = new HashSet<IX509Certificate>();
+
         private ICollection<IX509Certificate> trustedCertificates;
 
         private ICollection<IX509Certificate> knownCertificates;
@@ -758,6 +769,24 @@ namespace iText.Signatures.Validation {
         public virtual LotlService GetLotlService() {
             return this.lotlServiceFactory();
         }
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual void AddCertificateBeingValidated(IX509Certificate certificate) {
+            certificatesChainBeingValidated.Add(certificate);
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual void RemoveCertificateBeingValidated(IX509Certificate certificate) {
+            certificatesChainBeingValidated.Remove(certificate);
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual bool IsCertificateBeingValidated(IX509Certificate certificate) {
+            return certificatesChainBeingValidated.Contains(certificate);
+        }
+//\endcond
 
         private static LotlService BuildLotlService() {
             return LotlService.GetGlobalService();

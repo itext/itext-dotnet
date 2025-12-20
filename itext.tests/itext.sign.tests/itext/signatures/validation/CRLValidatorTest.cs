@@ -32,6 +32,7 @@ using iText.Signatures.Logs;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
 using iText.Signatures.Validation.Context;
+using iText.Signatures.Validation.Dataorigin;
 using iText.Signatures.Validation.Mocks;
 using iText.Signatures.Validation.Report;
 using iText.Test;
@@ -408,6 +409,42 @@ namespace iText.Signatures.Validation {
                 ));
             ValidationReport report = PerformValidation("happyPath", TimeTestUtil.TEST_DATE_TIME, crl);
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CrlResponsesCrossSignedTest() {
+            // Android-Conversion-Ignore-Test (Fails on android earlier with an error 'The CRL issuer does not share the root of the inspected certificate.')
+            String testDataPath = SOURCE_FOLDER + "crlResponsesCrossSigned/";
+            validatorChainBuilder.WithCertificateChainValidatorFactory(() => new CertificateChainValidator(validatorChainBuilder
+                ));
+            validatorChainBuilder.GetProperties().SetRevocationOnlineFetching(ValidatorContexts.All(), CertificateSources
+                .All(), TimeBasedContexts.All(), SignatureValidationProperties.OnlineFetching.NEVER_FETCH);
+            // Load CRL responses
+            ValidationCrlClient crlClient = (ValidationCrlClient)validatorChainBuilder.GetProperties().GetCrlClients()
+                [0];
+            IX509Crl crl = (IX509Crl)CertificateUtil.ParseCrlFromStream(FileUtil.GetInputStreamForFile(testDataPath + 
+                "crl1.crl"));
+            crlClient.AddCrl(crl, TimeTestUtil.TEST_DATE_TIME, TimeBasedContext.HISTORICAL, RevocationDataOrigin.OTHER
+                );
+            crl = (IX509Crl)CertificateUtil.ParseCrlFromStream(FileUtil.GetInputStreamForFile(testDataPath + "crl2.crl"
+                ));
+            crlClient.AddCrl(crl, TimeTestUtil.TEST_DATE_TIME, TimeBasedContext.HISTORICAL, RevocationDataOrigin.OTHER
+                );
+            // Load certificates
+            IX509Certificate knownCert = CertificateUtil.GenerateCertificate(new MemoryStream(File.ReadAllBytes(System.IO.Path.Combine
+                (testDataPath, "cert1.crt"))));
+            certificateRetriever.AddKnownCertificates(JavaUtil.ArraysAsList(knownCert));
+            knownCert = CertificateUtil.GenerateCertificate(new MemoryStream(File.ReadAllBytes(System.IO.Path.Combine(
+                testDataPath, "cert2.crt"))));
+            certificateRetriever.AddKnownCertificates(JavaUtil.ArraysAsList(knownCert));
+            // Validate
+            ValidationReport report = new ValidationReport();
+            ValidationContext context = new ValidationContext(ValidatorContext.REVOCATION_DATA_VALIDATOR, CertificateSource
+                .SIGNER_CERT, TimeBasedContext.PRESENT);
+            validatorChainBuilder.GetCRLValidator().Validate(report, context, (IX509Certificate)knownCert, crl, TimeTestUtil
+                .TEST_DATE_TIME, TimeTestUtil.TEST_DATE_TIME);
+            AssertValidationReport.AssertThat(report, (a) => a.HasLogItems(3, (l) => l.WithMessage(CRLValidator.CERTIFICATE_IN_ISSUER_CHAIN
+                )));
         }
 
         private ValidationReport CheckCrlScope(String crlPath) {
