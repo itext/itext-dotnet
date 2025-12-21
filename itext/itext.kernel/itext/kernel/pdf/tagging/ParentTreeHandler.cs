@@ -195,12 +195,12 @@ namespace iText.Kernel.Pdf.Tagging {
                     }
                     PdfNumber n = obj.GetAsNumber(PdfName.StructParent);
                     if (n != null) {
-                        pageMcrs.PutObjectReferenceMcr(n.IntValue(), mcr);
+                        pageMcrs.PutObjectReferenceMcr(n.IntValue(), mcr, structTreeRoot.GetPdfObject());
                     }
                     else {
                         if (IsModificationAllowed()) {
                             maxStructParentIndex++;
-                            pageMcrs.PutObjectReferenceMcr(maxStructParentIndex, mcr);
+                            pageMcrs.PutObjectReferenceMcr(maxStructParentIndex, mcr, structTreeRoot.GetPdfObject());
                             obj.Put(PdfName.StructParent, new PdfNumber(maxStructParentIndex));
                             structTreeRoot.GetPdfObject().Put(PdfName.ParentTreeNextKey, new PdfNumber(maxStructParentIndex + 1));
                             LOGGER.LogWarning(KernelLogMessageConstant.STRUCT_PARENT_INDEX_MISSED_AND_RECREATED);
@@ -423,8 +423,16 @@ namespace iText.Kernel.Pdf.Tagging {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-            internal virtual void PutObjectReferenceMcr(int structParentIndex, PdfMcr mcr) {
-                objRefs.Put(structParentIndex, mcr);
+            internal virtual void PutObjectReferenceMcr(int structParentIndex, PdfMcr mcr, PdfDictionary structTreeRootObject
+                ) {
+                if (!objRefs.ContainsKey(structParentIndex)) {
+                    objRefs.Put(structParentIndex, mcr);
+                    return;
+                }
+                LOGGER.LogWarning(KernelLogMessageConstant.DUPLICATE_STRUCT_PARENT_INDEX_IN_TAGGED_OBJECT_REFERENCES);
+                if (FindStructTreeRoot(((PdfStructElem)mcr.GetParent()).GetPdfObject(), structTreeRootObject)) {
+                    objRefs.Put(structParentIndex, mcr);
+                }
             }
 //\endcond
 
@@ -475,6 +483,17 @@ namespace iText.Kernel.Pdf.Tagging {
                 return collection;
             }
 //\endcond
+
+            private bool FindStructTreeRoot(PdfDictionary structElem, PdfDictionary structTreeRootObject) {
+                if (structElem == null) {
+                    return false;
+                }
+                if (structElem.Equals(structTreeRootObject)) {
+                    return true;
+                }
+                PdfDictionary parent = structElem.GetAsDictionary(PdfName.P);
+                return FindStructTreeRoot(parent, structTreeRootObject);
+            }
         }
 //\endcond
     }

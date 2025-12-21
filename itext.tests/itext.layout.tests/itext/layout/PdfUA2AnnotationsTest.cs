@@ -25,6 +25,7 @@ using System.IO;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
@@ -38,6 +39,7 @@ using iText.Kernel.Utils;
 using iText.Kernel.XMP;
 using iText.Layout.Element;
 using iText.Test;
+using iText.Test.Attributes;
 using iText.Test.Pdfa;
 
 namespace iText.Layout {
@@ -91,6 +93,7 @@ namespace iText.Layout {
             CompareAndValidate(outFile, cmpFile);
         }
 
+        [LogMessage(KernelLogMessageConstant.DUPLICATE_STRUCT_PARENT_INDEX_IN_TAGGED_OBJECT_REFERENCES, Count = 1)]
         [NUnit.Framework.Test]
         public virtual void PdfUA2FileAttachmentAnnotTest() {
             String outFile = DESTINATION_FOLDER + "pdfuaFileAttachmentAnnotTest.pdf";
