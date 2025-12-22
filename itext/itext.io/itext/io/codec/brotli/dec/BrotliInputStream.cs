@@ -3,215 +3,221 @@
 Distributed under MIT license.
 See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
-namespace iText.IO.Codec.Brotli.Dec
-{
-	/// <summary>
-	/// <see cref="System.IO.Stream"/>
-	/// decorator that decompresses brotli data.
-	/// <p> Not thread-safe.
-	/// </summary>
-	public class BrotliInputStream : System.IO.Stream
-	{
-		public const int DefaultInternalBufferSize = 16384;
+using System;
+using System.IO;
 
-		/// <summary>Internal buffer used for efficient byte-by-byte reading.</summary>
-		private byte[] buffer;
+namespace iText.IO.Codec.Brotli.Dec {
+    /// <summary>
+    /// <see cref="System.IO.Stream"/>
+    /// decorator that decompresses brotli data.
+    /// </summary>
+    /// <remarks>
+    /// <see cref="System.IO.Stream"/>
+    /// decorator that decompresses brotli data.
+    /// <para /> Not thread-safe.
+    /// </remarks>
+    public class BrotliInputStream : Stream {
+        /// <summary>Default size of internal buffer (used for faster byte-by-byte reading).</summary>
+        public const int DEFAULT_INTERNAL_BUFFER_SIZE = 256;
 
-		/// <summary>Number of decoded but still unused bytes in internal buffer.</summary>
-		private int remainingBufferBytes;
+        /// <summary>Value expected by InputStream contract when stream is over.</summary>
+        /// <remarks>
+        /// Value expected by InputStream contract when stream is over.
+        /// In Java it is -1.
+        /// In C# it is 0 (should be patched during transpilation).
+        /// </remarks>
+        private const int END_OF_STREAM_MARKER = -1;
 
-		/// <summary>Next unused byte offset.</summary>
-		private int bufferOffset;
+        /// <summary>Internal buffer used for efficient byte-by-byte reading.</summary>
+        private byte[] buffer;
 
-		/// <summary>Decoder state.</summary>
-		private readonly iText.IO.Codec.Brotli.Dec.State state = new iText.IO.Codec.Brotli.Dec.State();
+        /// <summary>Number of decoded but still unused bytes in internal buffer.</summary>
+        private int remainingBufferBytes;
 
-		/// <summary>
-		/// Creates a
-		/// <see cref="System.IO.Stream"/>
-		/// wrapper that decompresses brotli data.
-		/// <p> For byte-by-byte reading (
-		/// <see cref="ReadByte()"/>
-		/// ) internal buffer with
-		/// <see cref="DefaultInternalBufferSize"/>
-		/// size is allocated and used.
-		/// <p> Will block the thread until first kilobyte of data of source is available.
-		/// </summary>
-		/// <param name="source">underlying data source</param>
-		public BrotliInputStream(System.IO.Stream source)
-			: this(source, DefaultInternalBufferSize, null)
-		{
-		}
+        /// <summary>Next unused byte offset.</summary>
+        private int bufferOffset;
 
-		/// <summary>
-		/// Creates a
-		/// <see cref="System.IO.Stream"/>
-		/// wrapper that decompresses brotli data.
-		/// <p> For byte-by-byte reading (
-		/// <see cref="ReadByte()"/>
-		/// ) internal buffer of specified size is
-		/// allocated and used.
-		/// <p> Will block the thread until first kilobyte of data of source is available.
-		/// </summary>
-		/// <param name="source">compressed data source</param>
-		/// <param name="byteReadBufferSize">
-		/// size of internal buffer used in case of
-		/// byte-by-byte reading
-		/// </param>
-		public BrotliInputStream(System.IO.Stream source, int byteReadBufferSize)
-			: this(source, byteReadBufferSize, null)
-		{
-		}
+        /// <summary>Decoder state.</summary>
+        private readonly State state = new State();
 
-		/// <summary>
-		/// Creates a
-		/// <see cref="System.IO.Stream"/>
-		/// wrapper that decompresses brotli data.
-		/// <p> For byte-by-byte reading (
-		/// <see cref="ReadByte()"/>
-		/// ) internal buffer of specified size is
-		/// allocated and used.
-		/// <p> Will block the thread until first kilobyte of data of source is available.
-		/// </summary>
-		/// <param name="source">compressed data source</param>
-		/// <param name="byteReadBufferSize">
-		/// size of internal buffer used in case of
-		/// byte-by-byte reading
-		/// </param>
-		/// <param name="customDictionary">
-		/// custom dictionary data;
-		/// <see langword="null"/>
-		/// if not used
-		/// </param>
-		public BrotliInputStream(System.IO.Stream source, int byteReadBufferSize, byte[] customDictionary)
-		{
-			if (byteReadBufferSize <= 0)
-			{
-				throw new System.ArgumentException("Bad buffer size:" + byteReadBufferSize);
-			}
-			else if (source == null)
-			{
-				throw new System.ArgumentException("source is null");
-			}
-			this.buffer = new byte[byteReadBufferSize];
-			this.remainingBufferBytes = 0;
-			this.bufferOffset = 0;
-			try
-			{
-				iText.IO.Codec.Brotli.Dec.State.SetInput(state, source);
-			}
-			catch (iText.IO.Codec.Brotli.Dec.BrotliRuntimeException ex)
-			{
-				throw new System.IO.IOException("Brotli decoder initialization failed", ex);
-			}
-			if (customDictionary != null)
-			{
-				iText.IO.Codec.Brotli.Dec.Decode.SetCustomDictionary(state, customDictionary);
-			}
-		}
+        /// <summary>
+        /// Creates a
+        /// <see cref="System.IO.Stream"/>
+        /// wrapper that decompresses brotli data.
+        /// </summary>
+        /// <remarks>
+        /// Creates a
+        /// <see cref="System.IO.Stream"/>
+        /// wrapper that decompresses brotli data.
+        /// <para /> For byte-by-byte reading (
+        /// <see cref="ReadByte()"/>
+        /// ) internal buffer with
+        /// <see cref="DEFAULT_INTERNAL_BUFFER_SIZE"/>
+        /// size is allocated and used.
+        /// <para /> Will block the thread until first
+        /// <see cref="BitReader#CAPACITY"/>
+        /// bytes of data of source
+        /// are available.
+        /// </remarks>
+        /// <param name="source">underlying data source</param>
+        public BrotliInputStream(Stream source)
+            : this(source, DEFAULT_INTERNAL_BUFFER_SIZE) {
+        }
 
-	    protected override void Dispose(bool disposing) {
-	        iText.IO.Codec.Brotli.Dec.State.Close(state);
-	    }
+        /// <summary>
+        /// Creates a
+        /// <see cref="System.IO.Stream"/>
+        /// wrapper that decompresses brotli data.
+        /// </summary>
+        /// <remarks>
+        /// Creates a
+        /// <see cref="System.IO.Stream"/>
+        /// wrapper that decompresses brotli data.
+        /// <para /> For byte-by-byte reading (
+        /// <see cref="ReadByte()"/>
+        /// ) internal buffer of specified size is
+        /// allocated and used.
+        /// <para /> Will block the thread until first
+        /// <see cref="BitReader#CAPACITY"/>
+        /// bytes of data of source
+        /// are available.
+        /// </remarks>
+        /// <param name="source">compressed data source</param>
+        /// <param name="byteReadBufferSize">
+        /// size of internal buffer used in case of
+        /// byte-by-byte reading
+        /// </param>
+        public BrotliInputStream(Stream source, int byteReadBufferSize) {
+            if (byteReadBufferSize <= 0) {
+                throw new ArgumentException("Bad buffer size:" + byteReadBufferSize);
+            }
+            else {
+                if (source == null) {
+                    throw new ArgumentException("source is null");
+                }
+            }
+            this.buffer = new byte[byteReadBufferSize];
+            this.remainingBufferBytes = 0;
+            this.bufferOffset = 0;
+            try {
+                state.input = source;
+                Decode.InitState(state);
+            }
+            catch (BrotliRuntimeException ex) {
+                throw new System.IO.IOException("Brotli decoder initialization failed", ex);
+            }
+        }
 
-	    /// <summary><inheritDoc/></summary>
-		public override int ReadByte()
-		{
-			if (bufferOffset >= remainingBufferBytes)
-			{
-				remainingBufferBytes = Read(buffer, 0, buffer.Length);
-				bufferOffset = 0;
-				if (remainingBufferBytes == -1)
-				{
-					return -1;
-				}
-			}
-			return buffer[bufferOffset++] & unchecked((int)(0xFF));
-		}
+        /// <summary>Attach "RAW" dictionary (chunk) to decoder.</summary>
+        public virtual void AttachDictionaryChunk(byte[] data) {
+            Decode.AttachDictionaryChunk(state, data);
+        }
 
-		/// <summary><inheritDoc/></summary>
-		public override int Read(byte[] destBuffer, int destOffset, int destLen)
-		{
-			if (destOffset < 0)
-			{
-				throw new System.ArgumentException("Bad offset: " + destOffset);
-			}
-			else if (destLen < 0)
-			{
-				throw new System.ArgumentException("Bad length: " + destLen);
-			}
-			else if (destOffset + destLen > destBuffer.Length)
-			{
-				throw new System.ArgumentException("Buffer overflow: " + (destOffset + destLen) + " > " + destBuffer.Length);
-			}
-			else if (destLen == 0)
-			{
-				return 0;
-			}
-			int copyLen = System.Math.Max(remainingBufferBytes - bufferOffset, 0);
-			if (copyLen != 0)
-			{
-				copyLen = System.Math.Min(copyLen, destLen);
-				System.Array.Copy(buffer, bufferOffset, destBuffer, destOffset, copyLen);
-				bufferOffset += copyLen;
-				destOffset += copyLen;
-				destLen -= copyLen;
-				if (destLen == 0)
-				{
-					return copyLen;
-				}
-			}
-			try
-			{
-				state.output = destBuffer;
-				state.outputOffset = destOffset;
-				state.outputLength = destLen;
-				state.outputUsed = 0;
-				iText.IO.Codec.Brotli.Dec.Decode.Decompress(state);
-				if (state.outputUsed == 0)
-				{
-					return -1;
-				}
-				return state.outputUsed + copyLen;
-			}
-			catch (iText.IO.Codec.Brotli.Dec.BrotliRuntimeException ex)
-			{
-				throw new System.IO.IOException("Brotli stream decoding failed", ex);
-			}
-		}
-		// <{[INJECTED CODE]}>
-		public override bool CanRead {
-			get {return true;}
-		}
+        /// <summary>Request decoder to produce output as soon as it is available.</summary>
+        public virtual void EnableEagerOutput() {
+            Decode.EnableEagerOutput(state);
+        }
 
-		public override bool CanSeek {
-			get {return false;}
-		}
-		public override long Length {
-			get {throw new System.NotSupportedException();}
-		}
-		public override long Position {
-			get {throw new System.NotSupportedException();}
-			set {throw new System.NotSupportedException();}
-		}
-		public override long Seek(long offset, System.IO.SeekOrigin origin) {
-			throw new System.NotSupportedException();
-		}
-		public override void SetLength(long value){
-			throw new System.NotSupportedException();
-		}
+        /// <summary>Enable "large window" stream feature.</summary>
+        public virtual void EnableLargeWindow() {
+            Decode.EnableLargeWindow(state);
+        }
 
-		public override bool CanWrite{get{return false;}}
+        /// <summary><inheritDoc/></summary>
+        public override void Close() {
+            Decode.Close(state);
+            Utils.CloseInput(state);
+        }
 
+        /// <summary><inheritDoc/></summary>
+        public override int ReadByte() {
+            if (bufferOffset >= remainingBufferBytes) {
+                remainingBufferBytes = Read(buffer, 0, buffer.Length);
+                bufferOffset = 0;
+                if (remainingBufferBytes == END_OF_STREAM_MARKER) {
+                    // Both Java and C# return the same value for EOF on single-byte read.
+                    return -1;
+                }
+            }
+            return buffer[bufferOffset++] & 0xFF;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override int Read(byte[] destBuffer, int destOffset, int destLen) {
+            if (destOffset < 0) {
+                throw new ArgumentException("Bad offset: " + destOffset);
+            }
+            else {
+                if (destLen < 0) {
+                    throw new ArgumentException("Bad length: " + destLen);
+                }
+                else {
+                    if (destOffset + destLen > destBuffer.Length) {
+                        throw new ArgumentException("Buffer overflow: " + (destOffset + destLen) + " > " + destBuffer.Length);
+                    }
+                    else {
+                        if (destLen == 0) {
+                            return 0;
+                        }
+                    }
+                }
+            }
+            int copyLen = Math.Max(remainingBufferBytes - bufferOffset, 0);
+            if (copyLen != 0) {
+                copyLen = Math.Min(copyLen, destLen);
+                Array.Copy(buffer, bufferOffset, destBuffer, destOffset, copyLen);
+                bufferOffset += copyLen;
+                destOffset += copyLen;
+                destLen -= copyLen;
+                if (destLen == 0) {
+                    return copyLen;
+                }
+            }
+            try {
+                state.output = destBuffer;
+                state.outputOffset = destOffset;
+                state.outputLength = destLen;
+                state.outputUsed = 0;
+                Decode.Decompress(state);
+                copyLen += state.outputUsed;
+                copyLen = (copyLen > 0) ? copyLen : END_OF_STREAM_MARKER;
+                return copyLen;
+            }
+            catch (BrotliRuntimeException ex) {
+                throw new System.IO.IOException("Brotli stream decoding failed", ex);
+            }
+        }
+        // <{[INJECTED CODE]}>
+        public override bool CanRead {
+            get {return true;}
+        }
+
+        public override bool CanSeek {
+            get {return false;}
+        }
+        public override long Length {
+            get {throw new System.NotSupportedException();}
+        }
+        public override long Position {
+            get {throw new System.NotSupportedException();}
+            set {throw new System.NotSupportedException();}
+        }
+        public override long Seek(long offset, System.IO.SeekOrigin origin) {
+            throw new System.NotSupportedException();
+        }
+        public override void SetLength(long value){
+            throw new System.NotSupportedException();
+        }
+
+        public override bool CanWrite{get{return false;}}
         public override System.IAsyncResult BeginWrite(byte[] buffer, int offset,
-				int count, System.AsyncCallback callback, object state) {
-			throw new System.NotSupportedException();
-		}
+            int count, System.AsyncCallback callback, object state) {
+            throw new System.NotSupportedException();
+        }
+        public override void Write(byte[] buffer, int offset, int count) {
+            throw new System.NotSupportedException();
+        }
 
-		public override void Write(byte[] buffer, int offset, int count) {
-			throw new System.NotSupportedException();
-		}
-
-		public override void Flush() {}
-	}
+        public override void Flush() {}
+    }
 }

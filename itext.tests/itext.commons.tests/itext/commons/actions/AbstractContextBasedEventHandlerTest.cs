@@ -41,7 +41,7 @@ namespace iText.Commons.Actions {
             AbstractContextBasedEventHandlerTest.TestEventHandler handler = new AbstractContextBasedEventHandlerTest.TestEventHandler
                 (UnknownContext.PERMISSIVE);
             handler.OnEvent(new ITextTestEvent(new SequenceId(), null, "test-event", ProductNameConstant.PDF_HTML));
-            NUnit.Framework.Assert.IsTrue(handler.WasInvoked());
+            NUnit.Framework.Assert.IsFalse(handler.WasInvoked());
         }
 
         [NUnit.Framework.Test]

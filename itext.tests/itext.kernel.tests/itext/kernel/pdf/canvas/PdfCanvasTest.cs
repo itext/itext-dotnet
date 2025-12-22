@@ -61,8 +61,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         private const String TITLE = "Empty iText Document";
 
-        private sealed class _ContentProvider_102 : PdfCanvasTest.ContentProvider {
-            public _ContentProvider_102() {
+        private sealed class _ContentProvider_103 : PdfCanvasTest.ContentProvider {
+            public _ContentProvider_103() {
             }
 
             public void DrawOnCanvas(PdfCanvas canvas, int pageNumber) {
@@ -72,7 +72,7 @@ namespace iText.Kernel.Pdf.Canvas {
             }
         }
 
-        private static readonly PdfCanvasTest.ContentProvider DEFAULT_CONTENT_PROVIDER = new _ContentProvider_102(
+        private static readonly PdfCanvasTest.ContentProvider DEFAULT_CONTENT_PROVIDER = new _ContentProvider_103(
             );
 
         [NUnit.Framework.OneTimeSetUp]
@@ -247,12 +247,12 @@ namespace iText.Kernel.Pdf.Canvas {
             int pageCount = 1000;
             String filename = DESTINATION_FOLDER + "1000PagesDocumentWithText.pdf";
             PdfWriter writer = CompareTool.CreateTestPdfWriter(filename);
-            CreateStandardDocument(writer, pageCount, new _ContentProvider_403());
+            CreateStandardDocument(writer, pageCount, new _ContentProvider_404());
             AssertStandardDocument(filename, pageCount);
         }
 
-        private sealed class _ContentProvider_403 : PdfCanvasTest.ContentProvider {
-            public _ContentProvider_403() {
+        private sealed class _ContentProvider_404 : PdfCanvasTest.ContentProvider {
+            public _ContentProvider_404() {
             }
 
             public void DrawOnCanvas(PdfCanvas canvas, int pageNumber) {
@@ -865,7 +865,7 @@ namespace iText.Kernel.Pdf.Canvas {
         [NUnit.Framework.Test]
         public virtual void CanvasStreamFlushedNoException() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-            PdfStream stream = new _PdfStream_1138();
+            PdfStream stream = new _PdfStream_1139();
             stream.Put(PdfName.Filter, new PdfName("FlateDecode"));
             NUnit.Framework.Assert.DoesNotThrow(() => {
                 new PdfCanvas(stream, new PdfResources(), doc);
@@ -873,8 +873,8 @@ namespace iText.Kernel.Pdf.Canvas {
             );
         }
 
-        private sealed class _PdfStream_1138 : PdfStream {
-            public _PdfStream_1138() {
+        private sealed class _PdfStream_1139 : PdfStream {
+            public _PdfStream_1139() {
                 this.isFlushed = false;
             }
 
@@ -894,7 +894,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void CanvasInitializationStampingExistingStreamMemoryLimitAware() {
             String srcFile = SOURCE_FOLDER + "pageWithContent.pdf";
             ReaderProperties properties = new ReaderProperties();
-            MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_1161();
+            MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_1162();
             handler.SetMaxSizeOfSingleDecompressedPdfStream(1);
             properties.SetMemoryLimitsAwareHandler(handler);
             PdfDocument document = new PdfDocument(new PdfReader(srcFile, properties));
@@ -905,8 +905,8 @@ namespace iText.Kernel.Pdf.Canvas {
             );
         }
 
-        private sealed class _MemoryLimitsAwareHandler_1161 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_1161() {
+        private sealed class _MemoryLimitsAwareHandler_1162 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_1162() {
             }
 
             public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {
@@ -1006,18 +1006,17 @@ namespace iText.Kernel.Pdf.Canvas {
 
         [NUnit.Framework.Test]
         public virtual void WrongLengthOfTransMatrixTest() {
-            //TODO DEVSIX-6486 Transformation matrix of wrong length are processed without any warning
-            String cmpPdf = SOURCE_FOLDER + "cmp_wrongLengthOfTransMatrix.pdf";
             String outPdf = DESTINATION_FOLDER + "wrongLengthOfTransMatrix.pdf";
-            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
-            PdfPage documentPage = document.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(documentPage);
-            PdfArray wrongNumberOfTransMatrix = new PdfArray(new int[] { 1, 0, 0, 1, 100 });
-            canvas.SaveState().BeginText().ConcatMatrix(wrongNumberOfTransMatrix).SetFontAndSize(PdfFontFactory.CreateFont
-                (), 14).ShowText("Hello World").EndText().RestoreState();
-            canvas.Release();
-            document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+            using (PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
+                PdfPage documentPage = document.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(documentPage);
+                PdfArray wrongNumberOfTransMatrix = new PdfArray(new int[] { 1, 0, 0, 1, 100 });
+                canvas.SaveState().BeginText();
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => canvas.ConcatMatrix(wrongNumberOfTransMatrix
+                    ));
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.TRANSFORMATION_MATRIX_ARRAY_SIZE_SHOULD_BE_EQUAL_TO_6
+                    , e.Message);
+            }
         }
 
         [NUnit.Framework.Test]

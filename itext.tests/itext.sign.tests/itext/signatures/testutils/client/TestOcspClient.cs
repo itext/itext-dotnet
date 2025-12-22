@@ -41,6 +41,13 @@ namespace iText.Signatures.Testutils.Client {
         private readonly IDictionary<String, TestOcspResponseBuilder> issuerIdToResponseBuilder = new LinkedDictionary
             <String, TestOcspResponseBuilder>();
 
+        public virtual TestOcspClient AddBuilderForCertIssuer(IX509Certificate cert, IPrivateKey privateKey, String
+             signatureAlgo) {
+            issuerIdToResponseBuilder.Put(cert.GetSerialNumber().ToString(16), new TestOcspResponseBuilder(cert, privateKey
+                , signatureAlgo));
+            return this;
+        }
+
         public virtual TestOcspClient AddBuilderForCertIssuer(IX509Certificate cert, IPrivateKey privateKey) {
             issuerIdToResponseBuilder.Put(cert.GetSerialNumber().ToString(16), new TestOcspResponseBuilder(cert, privateKey
                 ));

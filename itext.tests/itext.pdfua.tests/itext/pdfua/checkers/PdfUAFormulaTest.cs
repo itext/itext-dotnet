@@ -330,9 +330,7 @@ namespace iText.Pdfua.Checkers {
         public virtual void MathStructureElementInvalidUA2Test() {
             UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddSuppliers(new _Generator_319());
-            // TODO DEVSIX-9036. VeraPDF claims the document to be valid, although it's not.
-            //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
-            framework.AssertOnlyITextFail("mathStructureElementInvalidUA2Test", PdfUAExceptionMessageConstants.MATH_NOT_CHILD_OF_FORMULA
+            framework.AssertBothFail("mathStructureElementInvalidUA2Test", PdfUAExceptionMessageConstants.MATH_NOT_CHILD_OF_FORMULA
                 , PdfUAConformance.PDF_UA_2);
         }
 

@@ -303,8 +303,8 @@ namespace iText.IO.Image {
                     tiff.image.SetRotation(rotation);
                 }
             }
-            catch (Exception) {
-                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.CANNOT_READ_TIFF_IMAGE);
+            catch (Exception e) {
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.CANNOT_READ_TIFF_IMAGE, e);
             }
         }
 

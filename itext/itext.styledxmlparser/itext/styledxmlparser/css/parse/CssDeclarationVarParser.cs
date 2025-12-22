@@ -21,7 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.Text;
 using iText.StyledXmlParser.Util;
 
 namespace iText.StyledXmlParser.Css.Parse {
@@ -66,7 +65,7 @@ namespace iText.StyledXmlParser.Css.Parse {
             String tokenValue = token.GetValue();
             // handle the following tokens: var(--one), calc(var(--one)), ...
             if (IsEndingWithBracket(tokenValue)) {
-                String resultTokenValue = RemoveUnclosedBrackets(tokenValue.Substring(tokenValue.IndexOf("var", StringComparison.Ordinal
+                String resultTokenValue = ExtractSingleVar(tokenValue.Substring(tokenValue.IndexOf("var", StringComparison.Ordinal
                     )));
                 return new CssDeclarationVarParser.VarToken(resultTokenValue, start, index + 1);
             }
@@ -74,33 +73,34 @@ namespace iText.StyledXmlParser.Css.Parse {
             CssDeclarationValueTokenizer.Token func = ParseFunctionToken(token, functionDepth - 1);
             // func == null condition is not expected and shouldn't be invoked since all cases which can produce null func
             // are handled above
-            String resultTokenValue_1 = RemoveUnclosedBrackets(func.GetValue().Substring(func.GetValue().IndexOf("var"
-                , StringComparison.Ordinal)));
+            String resultTokenValue_1 = ExtractSingleVar(func.GetValue().Substring(func.GetValue().IndexOf("var", StringComparison.Ordinal
+                )));
             return new CssDeclarationVarParser.VarToken(resultTokenValue_1, start, index + 1);
         }
 
-        private String RemoveUnclosedBrackets(String expression) {
-            StringBuilder resultBuilder = new StringBuilder();
-            int openBrackets = 0;
-            int closeBrackets = 0;
-            for (int i = 0; i < expression.Length; ++i) {
-                if (expression[i] == '(') {
-                    ++openBrackets;
+        /// <summary>Cut symbols not related to first variable.</summary>
+        /// <param name="expression">expression to process</param>
+        /// <returns>expression with single variable</returns>
+        private String ExtractSingleVar(String expression) {
+            //Starting from index 3 as we expect string to start like "var(..."
+            int currentIndex = 3;
+            int depth = 0;
+            do {
+                char ch = expression[currentIndex];
+                if (ch == '(') {
+                    depth++;
                 }
                 else {
-                    if (expression[i] == ')') {
-                        ++closeBrackets;
-                        if (closeBrackets > openBrackets) {
-                            --index;
-                            continue;
-                        }
+                    if (ch == ')') {
+                        depth--;
                     }
                 }
-                resultBuilder.Append(expression[i]);
+                currentIndex++;
             }
-            String resultTrimmed = resultBuilder.ToString().Trim();
-            index -= resultBuilder.Length - resultTrimmed.Length;
-            return resultTrimmed;
+            while (currentIndex <= expression.Length - 1 && depth != 0);
+            String result = expression.JSubstring(0, currentIndex);
+            this.index -= expression.Length - result.Length;
+            return result;
         }
 
         private static bool IsEndingWithBracket(String expression) {

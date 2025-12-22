@@ -287,6 +287,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Btn = CreateDirectName("Btn");
 
+        public static readonly iText.Kernel.Pdf.PdfName BrotliDecode = CreateDirectName("BrotliDecode");
+
         public static readonly iText.Kernel.Pdf.PdfName Butt = CreateDirectName("Butt");
 
         public static readonly iText.Kernel.Pdf.PdfName ByteRange = CreateDirectName("ByteRange");

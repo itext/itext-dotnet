@@ -220,7 +220,8 @@ namespace iText.Kernel.XMP {
         /// <param name="fieldValue">The desired value of the field.</param>
         /// <returns>
         /// Returns the composed path. This will be of the form
-        /// <tt>ns:arrayName[fNS:fieldName='fieldValue']</tt>, where &amp;quot;ns&amp;quot; is the
+        /// <c>ns:arrayName[fNS:fieldName='fieldValue']</c>
+        /// , where &amp;quot;ns&amp;quot; is the
         /// prefix for schemaNS and &amp;quot;fNS&amp;quot; is the prefix for fieldNS.
         /// </returns>
         public static String ComposeFieldSelector(String arrayName, String fieldNS, String fieldName, String fieldValue

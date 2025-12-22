@@ -21,7 +21,6 @@ Copyright (c) 1998-2025 Apryse Group NV
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -50,8 +49,8 @@ namespace iText.Bouncycastlefips.Tsp {
     /// Wrapper class for TimeStampToken generator.
     /// </summary>
     public class TimeStampTokenGeneratorBCFips : ITimeStampTokenGenerator {
-        private readonly SignerInfoGenerator signerInfoGenerator;
-        private readonly String tsaPolicyOID;
+        private SignerInfoGenerator signerInfoGenerator;
+        private String tsaPolicyOID;
         private IStore<X509Certificate> x509Certs;
         private int accuracySeconds = -1;
 
@@ -62,75 +61,34 @@ namespace iText.Bouncycastlefips.Tsp {
         /// <param name="cert">X509Certificate wrapper</param>
         /// <param name="allowedDigest">allowed digest</param>
         /// <param name="policyOid">policy OID</param>
-        public TimeStampTokenGeneratorBCFips(IPrivateKey pk, IX509Certificate cert, 
-            string allowedDigest, string policyOid) {
+        public TimeStampTokenGeneratorBCFips(IPrivateKey pk, IX509Certificate cert, string allowedDigest, 
+            string policyOid) {
             string signatureName = allowedDigest + "with" + pk.GetAlgorithm();
 
+            ISignatureFactory<AlgorithmIdentifier> contentSigner = ((ContentSignerBCFips)new BouncyCastleFipsFactory()
+                .CreateContentSigner(signatureName, pk)).GetContentSigner();
             SignerInfoGenerator signerInfoGen = new SignerInfoGeneratorBuilder(new PkixDigestFactoryProvider(), 
                     new SignatureEncryptionAlgorithmFinder())
-                .WithSignedAttributeGenerator(
-                    new DefaultSignedAttributeTableGenerator(
-                        new Org.BouncyCastle.Asn1.Cms.AttributeTable(new Hashtable())))
-                .WithUnsignedAttributeGenerator(new DefaultSignedAttributeTableGenerator(null))
-                .Build(((ContentSignerBCFips) new BouncyCastleFipsFactory()
-                        .CreateContentSigner(signatureName, pk)).GetContentSigner(),
-                    ((X509CertificateBCFips)cert).GetCertificate());
+                .Build(contentSigner, ((X509CertificateBCFips)cert).GetCertificate());
 
             IDigestFactory<AlgorithmIdentifier> digestCalculator = new PkixDigestFactory(
                 new AlgorithmIdentifier(OiwObjectIdentifiers.IdSha1));
             DerObjectIdentifier tsaPolicy = new DerObjectIdentifier(policyOid);
 
-            this.signerInfoGenerator = signerInfoGen;
-            this.tsaPolicyOID = tsaPolicy.Id;
+            InitializeTimeStampTokenGenerator(contentSigner, signerInfoGen, digestCalculator, tsaPolicy);
+        }
 
-            if (signerInfoGenerator.AssociatedCertificate == null) {
-                throw new ArgumentException("SignerInfoGenerator must have an associated certificate");
-            }
-            X509Certificate assocCert = signerInfoGenerator.AssociatedCertificate;
-            if (assocCert.Version != 3) {
-                throw new ArgumentException("Certificate must have an ExtendedKeyUsage extension.");
-            }
-            if (assocCert.GetExtensionValue(X509Extensions.ExtendedKeyUsage) == null) {
-                throw new Exception("Certificate must have an ExtendedKeyUsage extension.");
-            }
-            if (!new X509CertificateBCFips(assocCert).GetCriticalExtensionOids().Contains(X509Extensions.ExtendedKeyUsage.Id)) {
-                throw new Exception("Certificate must have an ExtendedKeyUsage extension marked as critical.");
-            }
-            try {
-                ExtendedKeyUsage extKey = ExtendedKeyUsage.GetInstance(
-                    Asn1Object.FromByteArray(assocCert.GetExtensionValue(X509Extensions.ExtendedKeyUsage)));
-                if (!extKey.HasKeyPurposeId(KeyPurposeID.IdKPTimeStamping) || extKey.Count != 1) {
-                    throw new Exception("ExtendedKeyUsage not solely time stamping.");
-                }
-            } catch (IOException) {
-                throw new Exception("cannot process ExtendedKeyUsage extension");
-            }
-            try {
-                IStreamCalculator<IBlockResult> calculator = digestCalculator.CreateCalculator();
-                Stream stream = calculator.Stream;
-                byte[] certEnc = assocCert.GetEncoded();
-                stream.Write(certEnc, 0, certEnc.Length);
-                stream.Flush();
-                stream.Close();
-                if (digestCalculator.AlgorithmDetails.Algorithm.Equals(OiwObjectIdentifiers.IdSha1)) {
-                    signerInfoGenerator = new SignerInfoGeneratorBuilder(new PkixDigestFactoryProvider(), 
-                            new SignatureEncryptionAlgorithmFinder())
-                        .WithSignedAttributeGenerator(new TableGen(signerInfoGen, 
-                            new EssCertID(calculator.GetResult().Collect(), null)))
-                        .Build(((ContentSignerBCFips) new BouncyCastleFipsFactory()
-                            .CreateContentSigner(signatureName, pk)).GetContentSigner(), signerInfoGen.AssociatedCertificate);
-                } else {
-                    signerInfoGenerator = new SignerInfoGeneratorBuilder(new PkixDigestFactoryProvider(), 
-                            new SignatureEncryptionAlgorithmFinder())
-                        .WithSignedAttributeGenerator(new TableGen2(signerInfoGen, 
-                            new EssCertIDv2(calculator.GetResult().Collect(), null)))
-                        .Build(((ContentSignerBCFips) new BouncyCastleFipsFactory()
-                            .CreateContentSigner(signatureName, pk)).GetContentSigner(), signerInfoGen.AssociatedCertificate);
-                }
-            } catch (Exception ex) {
-                throw new Exception("Exception processing certificate", ex);
-            }
-            tsaPolicyOID = policyOid;
+        /// <summary>
+        /// Creates new wrapper instance for
+        /// <see cref="Org.BouncyCastle.Tsp.TimeStampTokenGenerator"/>.
+        /// </summary>
+        /// <param name="siGen">SignerInfoGenerator</param>
+        /// <param name="digestCalculator">IDigestFactory with AlgorithmIdentifier for TsSigningCert digest</param>
+        /// <param name="tsaPolicy">timestamp policy DerObjectIdentifier</param>
+        public TimeStampTokenGeneratorBCFips(ISignatureFactory<AlgorithmIdentifier> contentSigner,
+            SignerInfoGenerator siGen, IDigestFactory<AlgorithmIdentifier> digestCalculator, 
+            DerObjectIdentifier tsaPolicy) {
+            InitializeTimeStampTokenGenerator(contentSigner, siGen, digestCalculator, tsaPolicy);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -149,7 +107,7 @@ namespace iText.Bouncycastlefips.Tsp {
         public virtual ITimeStampToken Generate(ITimeStampRequest request, IBigInteger bigInteger, DateTime date) {
             TimeStampReq req = ((TimeStampRequestBCFips)request).GetTimeStampRequest();
             DerObjectIdentifier digestAlgOID = new DerObjectIdentifier(req.MessageImprint.HashAlgorithm.Algorithm.Id);
-            AlgorithmIdentifier algID = new AlgorithmIdentifier(digestAlgOID, DerNull.Instance);
+            AlgorithmIdentifier algID = new AlgorithmIdentifier(digestAlgOID);
             MessageImprint messageImprint = new MessageImprint(algID, req.MessageImprint.GetHashedMessage());
 
             Accuracy accuracy = null;
@@ -157,10 +115,8 @@ namespace iText.Bouncycastlefips.Tsp {
                 accuracy = new Accuracy(new DerInteger(accuracySeconds), null, null);
             }
             DerInteger nonce = req.Nonce;
-            DerObjectIdentifier tsaPolicy = new DerObjectIdentifier(tsaPolicyOID);
-            if (req.ReqPolicy != null) {
-                tsaPolicy = req.ReqPolicy;
-            }
+            DerObjectIdentifier tsaPolicy = req.ReqPolicy != null ? req.ReqPolicy : 
+                new DerObjectIdentifier(tsaPolicyOID);
             X509Extensions respExtensions = req.Extensions;
             DerGeneralizedTime generalizedTime = new DerGeneralizedTime(date);
             TstInfo tstInfo = new TstInfo(tsaPolicy, messageImprint,
@@ -207,7 +163,61 @@ namespace iText.Bouncycastlefips.Tsp {
         public override String ToString() {
             return signerInfoGenerator + " " + tsaPolicyOID + " " + x509Certs + " " + accuracySeconds;
         }
-        
+
+        private void InitializeTimeStampTokenGenerator(ISignatureFactory<AlgorithmIdentifier> contentSigner,
+            SignerInfoGenerator signerInfoGen,
+            IDigestFactory<AlgorithmIdentifier> digestCalculator,
+            DerObjectIdentifier tsaPolicy) {
+            this.signerInfoGenerator = signerInfoGen;
+            this.tsaPolicyOID = tsaPolicy.Id;
+
+            if (signerInfoGenerator.AssociatedCertificate == null) {
+                throw new ArgumentException("SignerInfoGenerator must have an associated certificate");
+            }
+            X509Certificate assocCert = signerInfoGenerator.AssociatedCertificate;
+            if (assocCert.Version != 3) {
+                throw new ArgumentException("Certificate must have an ExtendedKeyUsage extension.");
+            }
+            if (assocCert.GetExtensionValue(X509Extensions.ExtendedKeyUsage) == null) {
+                throw new Exception("Certificate must have an ExtendedKeyUsage extension.");
+            }
+            if (!new X509CertificateBCFips(assocCert).GetCriticalExtensionOids().Contains(X509Extensions.ExtendedKeyUsage.Id)) {
+                throw new Exception("Certificate must have an ExtendedKeyUsage extension marked as critical.");
+            }
+            try {
+                ExtendedKeyUsage extKey = ExtendedKeyUsage.GetInstance(
+                    Asn1Object.FromByteArray(assocCert.GetExtensionValue(X509Extensions.ExtendedKeyUsage)));
+                if (!extKey.HasKeyPurposeId(KeyPurposeID.IdKPTimeStamping) || extKey.Count != 1) {
+                    throw new Exception("ExtendedKeyUsage not solely time stamping.");
+                }
+            } catch (IOException) {
+                throw new Exception("cannot process ExtendedKeyUsage extension");
+            }
+            try {
+                IStreamCalculator<IBlockResult> calculator = digestCalculator.CreateCalculator();
+                Stream stream = calculator.Stream;
+                byte[] certEnc = assocCert.GetEncoded();
+                stream.Write(certEnc, 0, certEnc.Length);
+                stream.Flush();
+                stream.Close();
+                if (digestCalculator.AlgorithmDetails.Algorithm.Equals(OiwObjectIdentifiers.IdSha1)) {
+                    signerInfoGenerator = new SignerInfoGeneratorBuilder(new PkixDigestFactoryProvider(), 
+                            new SignatureEncryptionAlgorithmFinder())
+                        .WithSignedAttributeGenerator(new TableGen(signerInfoGen, 
+                            new EssCertID(calculator.GetResult().Collect())))
+                        .Build(contentSigner, signerInfoGen.AssociatedCertificate);
+                } else {
+                    signerInfoGenerator = new SignerInfoGeneratorBuilder(new PkixDigestFactoryProvider(), 
+                            new SignatureEncryptionAlgorithmFinder())
+                        .WithSignedAttributeGenerator(new TableGen2(signerInfoGen, 
+                            new EssCertIDv2(digestCalculator.AlgorithmDetails, calculator.GetResult().Collect())))
+                        .Build(contentSigner, signerInfoGen.AssociatedCertificate);
+                }
+            } catch (Exception ex) {
+                throw new Exception("Exception processing certificate", ex);
+            }
+        }
+
         private class TableGen : ICmsAttributeTableGenerator {
             private readonly SignerInfoGenerator infoGen;
             private readonly EssCertID essCertID;
@@ -218,8 +228,7 @@ namespace iText.Bouncycastlefips.Tsp {
             }
 
             public AttributeTable GetAttributes(IDictionary<string, object> parameters) {
-                AttributeTable tab = infoGen.SignedAttributeTableGenerator.GetAttributes(parameters)
-                    .Remove(PkcsObjectIdentifiers.id_aa_cmsAlgorithmProtect);
+                AttributeTable tab = infoGen.SignedAttributeTableGenerator.GetAttributes(parameters);
                 if (tab[PkcsObjectIdentifiers.IdAASigningCertificate] == null) {
                     return tab.Add(PkcsObjectIdentifiers.IdAASigningCertificate, new SigningCertificate(essCertID));
                 }
@@ -237,8 +246,7 @@ namespace iText.Bouncycastlefips.Tsp {
             }
 
             public AttributeTable GetAttributes(IDictionary<string, object> parameters) {
-                AttributeTable tab = infoGen.SignedAttributeTableGenerator.GetAttributes(parameters)
-                    .Remove(PkcsObjectIdentifiers.id_aa_cmsAlgorithmProtect);
+                AttributeTable tab = infoGen.SignedAttributeTableGenerator.GetAttributes(parameters);
                 if (tab[PkcsObjectIdentifiers.IdAASigningCertificateV2] == null) {
                     return tab.Add(PkcsObjectIdentifiers.IdAASigningCertificateV2, new SigningCertificateV2(essCertID));
                 }

@@ -122,6 +122,8 @@ namespace iText.IO.Image {
                 , 1, 1024D, 768D));
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.CANNOT_READ_TIFF_IMAGE
                 ), e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(IoExceptionMessageConstant.ALL_FILL_BITS_PRECEDING_EOL_CODE_MUST_BE_0
+                ), e.InnerException.Message);
         }
 
         [NUnit.Framework.Test]

@@ -60,7 +60,9 @@ namespace iText.Kernel.XMP.Options {
 
         /// <summary>Include a padding allowance for a thumbnail image.</summary>
         /// <remarks>
-        /// Include a padding allowance for a thumbnail image. If no <tt>xmp:Thumbnails</tt> property
+        /// Include a padding allowance for a thumbnail image. If no
+        /// <c>xmp:Thumbnails</c>
+        /// property
         /// is present, the typical space for a JPEG thumbnail is used.
         /// </remarks>
         public const int INCLUDE_THUMBNAIL_PAD = 0x0100;

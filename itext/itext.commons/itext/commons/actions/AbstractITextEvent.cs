@@ -34,6 +34,7 @@ namespace iText.Commons.Actions {
 
         static AbstractITextEvent() {
             RegisterNamespace(NamespaceConstant.ITEXT);
+            RegisterNamespace(NamespaceConstant.ITEXT5);
         }
 
         /// <summary>Creates an instance of abstract iText event.</summary>

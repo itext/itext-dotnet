@@ -188,6 +188,46 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CloseInAppendModeWithUnmodifiedOcPropsDictTest() {
+            // Phase 1: create an in‑memory document that already has OCProperties.
+            byte[] baseBytes;
+            using (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+                using (PdfDocument baseDoc = new PdfDocument(new PdfWriter(baos))) {
+                    PdfPage page = baseDoc.AddNewPage();
+                    PdfResources resources = page.GetResources();
+                    PdfDictionary ocg = new PdfDictionary();
+                    ocg.Put(PdfName.Type, PdfName.OCG);
+                    ocg.Put(PdfName.Name, new PdfString("BaseLayer"));
+                    ocg.MakeIndirect(baseDoc);
+                    resources.AddProperties(ocg);
+                    baseDoc.GetCatalog().GetOCProperties(true);
+                }
+                baseBytes = baos.ToArray();
+            }
+            byte[] stampedBytes;
+            using (ByteArrayOutputStream stampedBaos = new ByteArrayOutputStream()) {
+                // Phase 2: open in append mode, mark OCProperties as "may have changed"
+                // without actually modifying the OCProperties dictionary.
+                using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(new MemoryStream(baseBytes)), new PdfWriter(stampedBaos
+                    ), new StampingProperties().UseAppendMode())) {
+                    PdfDictionary ocPropsDict = pdfDoc.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties);
+                    // Base document must contain OCProperties
+                    NUnit.Framework.Assert.IsNotNull(ocPropsDict);
+                    // Force isOCPropertiesMayHaveChanged() to return true, but keep ocPropsDict unmodified.
+                    pdfDoc.GetCatalog().SetOcgCopied(true);
+                    pdfDoc.GetCatalog().SetModified();
+                }
+                stampedBytes = stampedBaos.ToArray();
+            }
+            // Phase 3: verify that the resulting document still has valid OCProperties
+            using (PdfDocument resultDoc = new PdfDocument(new PdfReader(new MemoryStream(stampedBytes)))) {
+                PdfOCProperties ocProps = resultDoc.GetCatalog().GetOCProperties(false);
+                // OCProperties must be present after append‑mode close
+                NUnit.Framework.Assert.IsNotNull(ocProps);
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void GetDocumentInfoAlreadyClosedTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "pdfWithMetadata.pdf"));
             pdfDocument.Close();

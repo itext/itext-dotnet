@@ -119,155 +119,6 @@ namespace iText.Pdfua.Checkers {
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
-        public virtual void DifferentStructureDestinationsInDifferentStructureElementsTest(PdfName destLocation) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddBeforeGenerationHook((pdfDoc) => {
-                PdfStructElem structElem = GetPdfStructElem(pdfDoc);
-                PdfStructElem structElem2 = structElem.AddKid(new PdfStructElem(pdfDoc, PdfName.P));
-                PdfStructureDestination dest1 = PdfStructureDestination.CreateFit(structElem);
-                PdfStructureDestination dest2 = PdfStructureDestination.CreateFit(structElem2);
-                AddLinkAnnotations(destLocation, pdfDoc, dest1, dest2);
-            }
-            );
-            if (PdfName.D.Equals(destLocation)) {
-                // VeraPDF doesn't allow actions with structure destination being placed in D entry. Instead, it requires
-                // structure destination to be added into special SD entry. There is no such requirement in released
-                // PDF 2.0 spec. Although it is already mentioned in errata version.
-                framework.AssertOnlyVeraPdfFail("validLink_" + destLocation.GetValue(), PdfUAConformance.PDF_UA_2);
-            }
-            else {
-                framework.AssertBothValid("validLink_" + destLocation.GetValue(), PdfUAConformance.PDF_UA_2);
-            }
-        }
-
-        [NUnit.Framework.TestCaseSource("TestSources")]
-        public virtual void SameStructureDestinationsInDifferentParagraphsTest(PdfName destLocation) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddBeforeGenerationHook((pdfDoc) => {
-                Document document = new Document(pdfDoc);
-                document.SetFont(LoadFont());
-                Paragraph paragraph = new Paragraph("Some text");
-                document.Add(paragraph);
-                TagStructureContext context = pdfDoc.GetTagStructureContext();
-                TagTreePointer tagPointer = context.GetAutoTaggingPointer();
-                PdfStructElem structElem = context.GetPointerStructElem(tagPointer);
-                PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(35, 785, 160, 15));
-                linkAnnotation.SetContents("Some text");
-                PdfStructureDestination dest = PdfStructureDestination.CreateFit(structElem);
-                AddDestination(destLocation, linkAnnotation, dest);
-                PdfLinkAnnotation linkAnnotation2 = new PdfLinkAnnotation(new Rectangle(35, 785, 160, 15));
-                PdfStructureDestination dest2 = PdfStructureDestination.CreateFit(structElem);
-                AddDestination(destLocation, linkAnnotation2, dest2);
-                linkAnnotation2.SetContents("Some text 2");
-                document.Add(new AreaBreak());
-                Link linkElem = new Link("Link to paragraph", linkAnnotation);
-                linkElem.GetAccessibilityProperties().SetRole(StandardRoles.LINK).SetAlternateDescription("Some text");
-                Link linkElem2 = new Link("Link 2 to paragraph", linkAnnotation2);
-                linkElem2.GetAccessibilityProperties().SetRole(StandardRoles.LINK).SetAlternateDescription("Some text 2");
-                document.Add(new Paragraph(linkElem));
-                document.Add(new Paragraph(linkElem2));
-            }
-            );
-            String filename = "sameStructDestsParagraph_";
-            String expectedMessage = PdfUAExceptionMessageConstants.SAME_LINKS_IN_DIFFERENT_STRUCT_ELEMS;
-            Validate(filename, expectedMessage, destLocation, framework);
-        }
-
-        [NUnit.Framework.TestCaseSource("TestSources")]
-        public virtual void SameStructureDestinationsInDifferentStructureElementsOnPageTest(PdfName destLocation) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddBeforeGenerationHook((pdfDoc) => {
-                PdfStructElem structElem = GetPdfStructElem(pdfDoc);
-                PdfStructureDestination dest = PdfStructureDestination.CreateFit(structElem);
-                AddLinkAnnotations(destLocation, pdfDoc, dest);
-            }
-            );
-            String filename = "sameStructureDestinations_";
-            String expectedMessage = PdfUAExceptionMessageConstants.SAME_LINKS_IN_DIFFERENT_STRUCT_ELEMS;
-            Validate(filename, expectedMessage, destLocation, framework);
-        }
-
-        [NUnit.Framework.TestCaseSource("TestSources")]
-        public virtual void SameNamedDestinationsInDifferentStructureElementsOnPageTest(PdfName destLocation) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddBeforeGenerationHook((pdfDoc) => {
-                PdfStructElem structElem = GetPdfStructElem(pdfDoc);
-                PdfNamedDestination namedDestination = GetNamedDestination(pdfDoc, structElem, "dest");
-                AddLinkAnnotations(destLocation, pdfDoc, namedDestination);
-            }
-            );
-            // TODO DEVSIX-9036. VeraPDF claims the document to be valid, although it's not.
-            //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
-            framework.AssertOnlyITextFail("sameNamedDestinations_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
-                .SAME_LINKS_IN_DIFFERENT_STRUCT_ELEMS, PdfUAConformance.PDF_UA_2);
-        }
-
-        [NUnit.Framework.TestCaseSource("TestSources")]
-        public virtual void SameStringDestinationsInDifferentStructureElementsOnPageTest(PdfName destLocation) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddBeforeGenerationHook((pdfDoc) => {
-                PdfStructElem structElem = GetPdfStructElem(pdfDoc);
-                PdfStringDestination namedDestination = GetStringDestination(pdfDoc, structElem, "dest");
-                AddLinkAnnotations(destLocation, pdfDoc, namedDestination);
-            }
-            );
-            // TODO DEVSIX-9036. VeraPDF claims the document to be valid, although it's not.
-            //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
-            framework.AssertOnlyITextFail("sameStringDestinations_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
-                .SAME_LINKS_IN_DIFFERENT_STRUCT_ELEMS, PdfUAConformance.PDF_UA_2);
-        }
-
-        [NUnit.Framework.TestCaseSource("TestSources")]
-        public virtual void SameStringDestinationsInDifferentStructureElementsSDTest(PdfName destLocation) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddBeforeGenerationHook((pdfDoc) => {
-                PdfStructElem structElem = GetPdfStructElem(pdfDoc);
-                PdfStructureDestination dest = PdfStructureDestination.CreateFit(structElem);
-                PdfDictionary destDictionary = new PdfDictionary();
-                destDictionary.Put(PdfName.S, PdfName.GoTo);
-                destDictionary.Put(PdfName.D, dest.GetPdfObject());
-                destDictionary.Put(PdfName.SD, dest.GetPdfObject());
-                pdfDoc.AddNamedDestination("dest", destDictionary);
-                PdfStringDestination namedDestination = new PdfStringDestination("dest");
-                AddLinkAnnotations(destLocation, pdfDoc, namedDestination);
-            }
-            );
-            // TODO DEVSIX-9036. VeraPDF claims the document to be valid, although it's not.
-            //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
-            framework.AssertOnlyITextFail("sameStringDestinationsSD_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
-                .SAME_LINKS_IN_DIFFERENT_STRUCT_ELEMS, PdfUAConformance.PDF_UA_2);
-        }
-
-        [NUnit.Framework.TestCaseSource("TestSources")]
-        public virtual void SameStringDestinationsInDifferentStructureElementsDTest(PdfName destLocation) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddBeforeGenerationHook((pdfDoc) => {
-                PdfStructElem structElem = GetPdfStructElem(pdfDoc);
-                PdfStructureDestination dest = PdfStructureDestination.CreateFit(structElem);
-                PdfDictionary destDictionary = new PdfDictionary();
-                destDictionary.Put(PdfName.S, PdfName.GoTo);
-                destDictionary.Put(PdfName.D, dest.GetPdfObject());
-                pdfDoc.AddNamedDestination("dest", destDictionary);
-                PdfStringDestination namedDestination = new PdfStringDestination("dest");
-                AddLinkAnnotations(destLocation, pdfDoc, namedDestination);
-            }
-            );
-            // TODO DEVSIX-9036. VeraPDF claims the document to be valid, although it's not.
-            //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
-            if (PdfName.SD.Equals(destLocation)) {
-                framework.AssertOnlyITextFail("sameStringDestinationsD_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
-                    .SAME_LINKS_IN_DIFFERENT_STRUCT_ELEMS, PdfUAConformance.PDF_UA_2);
-            }
-            else {
-                // In case PdfName.D or Dest equals destLocation, VeraPDF doesn't allow actions with structure destination being
-                // placed in D entry. Instead, it requires structure destination to be added into special SD entry. There is
-                // no such requirement in released PDF 2.0 spec. Although it is already mentioned in errata version.
-                framework.AssertBothFail("sameStringDestinationsD_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
-                    .SAME_LINKS_IN_DIFFERENT_STRUCT_ELEMS, PdfUAConformance.PDF_UA_2);
-            }
-        }
-
-        [NUnit.Framework.TestCaseSource("TestSources")]
         public virtual void DifferentStructureDestinationsInSameStructureElementTest(PdfName destLocation) {
             UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
             framework.AddBeforeGenerationHook((pdfDoc) => {
@@ -279,8 +130,7 @@ namespace iText.Pdfua.Checkers {
             }
             );
             String filename = "differentStructureDestinations_";
-            String expectedMessage = PdfUAExceptionMessageConstants.DIFFERENT_LINKS_IN_SINGLE_STRUCT_ELEM;
-            Validate(filename, expectedMessage, destLocation, framework);
+            framework.AssertBothFail(filename + destLocation.GetValue(), PdfUAConformance.PDF_UA_2);
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
@@ -294,9 +144,7 @@ namespace iText.Pdfua.Checkers {
                 AddLinkAnnotations(destLocation, pdfDoc, namedDestination1, namedDestination2, false);
             }
             );
-            // TODO DEVSIX-9036. VeraPDF claims the document to be valid, although it's not.
-            //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
-            framework.AssertOnlyITextFail("differentNamedDestinations_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
+            framework.AssertBothFail("differentNamedDestinations_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
                 .DIFFERENT_LINKS_IN_SINGLE_STRUCT_ELEM, PdfUAConformance.PDF_UA_2);
         }
 
@@ -311,41 +159,8 @@ namespace iText.Pdfua.Checkers {
                 AddLinkAnnotations(destLocation, pdfDoc, namedDestination1, namedDestination2, false);
             }
             );
-            // TODO DEVSIX-9036. VeraPDF claims the document to be valid, although it's not.
-            //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
-            framework.AssertOnlyITextFail("differentStringDestinations_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
+            framework.AssertBothFail("differentStringDestinations_" + destLocation.GetValue(), PdfUAExceptionMessageConstants
                 .DIFFERENT_LINKS_IN_SINGLE_STRUCT_ELEM, PdfUAConformance.PDF_UA_2);
-        }
-
-        [NUnit.Framework.TestCaseSource("TestSources")]
-        public virtual void SameDestinationsDifferentTypesTest(PdfName destLocation) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddBeforeGenerationHook((pdfDoc) => {
-                PdfStructElem structElem = GetPdfStructElem(pdfDoc);
-                PdfStructureDestination dest = PdfStructureDestination.CreateFit(structElem);
-                PdfStringDestination namedDestination = GetStringDestination(pdfDoc, structElem, "dest");
-                AddLinkAnnotations(destLocation, pdfDoc, dest, namedDestination);
-            }
-            );
-            String filename = "sameDestinationsDifferentTypes_";
-            String expectedMessage = PdfUAExceptionMessageConstants.SAME_LINKS_IN_DIFFERENT_STRUCT_ELEMS;
-            Validate(filename, expectedMessage, destLocation, framework);
-        }
-
-        private static void AddLinkAnnotations(PdfName destLocation, PdfDocument pdfDoc, PdfDestination destination
-            ) {
-            PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(35, 785, 160, 15));
-            linkAnnotation.SetContents("Some text");
-            AddDestination(destLocation, linkAnnotation, destination);
-            PdfLinkAnnotation linkAnnotation2 = new PdfLinkAnnotation(new Rectangle(35, 785, 160, 15));
-            linkAnnotation2.SetContents("Some text2");
-            AddDestination(destLocation, linkAnnotation2, destination);
-            pdfDoc.GetPage(1).AddAnnotation(linkAnnotation).AddAnnotation(linkAnnotation2);
-        }
-
-        private static void AddLinkAnnotations(PdfName destLocation, PdfDocument pdfDoc, PdfDestination destination1
-            , PdfDestination destination2) {
-            AddLinkAnnotations(destLocation, pdfDoc, destination1, destination2, true);
         }
 
         private static void AddLinkAnnotations(PdfName destLocation, PdfDocument pdfDoc, PdfDestination destination1
@@ -423,7 +238,7 @@ namespace iText.Pdfua.Checkers {
 
         private void Validate(String filename, String expectedMessage, PdfName destLocation, UaValidationTestFramework
              framework) {
-            // TODO DEVSIX-9036. VeraPDF claims the document to be valid, although it's not.
+            // TODO DEVSIX-9580. VeraPDF claims the document to be valid, although it's not.
             //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
             if (PdfName.D.Equals(destLocation)) {
                 // In case PdfName.D equals destLocation, VeraPDF doesn't allow actions with structure destination being

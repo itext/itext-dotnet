@@ -432,6 +432,10 @@ namespace iText.Kernel.Pdf {
                         }
                         filter.Release();
                     }
+                    // Skip decryption for document-level metadata stream if EncryptMetadata is false
+                    if (!skip && !decrypt.IsMetadataEncrypted() && PdfName.Metadata.Equals(type)) {
+                        skip = true;
+                    }
                     if (!skip) {
                         decrypt.SetHashKeyForNextObject(stream.GetIndirectReference().GetObjNumber(), stream.GetIndirectReference(
                             ).GetGenNumber());
@@ -509,7 +513,8 @@ namespace iText.Kernel.Pdf {
             }
             MemoryLimitsAwareHandler memoryLimitsAwareHandler = null;
             if (null != streamDictionary.GetIndirectReference()) {
-                memoryLimitsAwareHandler = streamDictionary.GetIndirectReference().GetDocument().memoryLimitsAwareHandler;
+                memoryLimitsAwareHandler = streamDictionary.GetIndirectReference().GetDocument().GetMemoryLimitsAwareHandler
+                    ();
             }
             bool memoryLimitsAwarenessRequired = null != memoryLimitsAwareHandler && memoryLimitsAwareHandler.IsMemoryLimitsAwarenessRequiredOnDecompression
                 (filters);

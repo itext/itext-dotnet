@@ -33,6 +33,7 @@ using iText.Commons.Utils;
 using iText.Commons.Utils.Collections;
 using iText.Signatures.Logs;
 using iText.Signatures.Validation;
+using iText.Signatures.Validation.Dataorigin;
 using iText.StyledXmlParser.Resolver.Resource;
 
 namespace iText.Signatures {
@@ -50,6 +51,9 @@ namespace iText.Signatures {
 
         private readonly IDictionary<String, IList<IX509Certificate>> knownCertificates = new Dictionary<String, IList
             <IX509Certificate>>();
+
+        private readonly IDictionary<IX509Certificate, CertificateOrigin?> certificateOrigins = new Dictionary<IX509Certificate
+            , CertificateOrigin?>();
 
         private readonly IResourceRetriever resourceRetriever;
 
@@ -101,7 +105,7 @@ namespace iText.Signatures {
                     String url = CertificateUtil.GetIssuerCertURL(lastAddedCert);
                     ICollection<IX509Certificate> certificatesFromAIA = ProcessCertificatesFromAIA(url);
                     if (certificatesFromAIA != null) {
-                        AddKnownCertificates(certificatesFromAIA);
+                        AddKnownCertificates(certificatesFromAIA, CertificateOrigin.OTHER);
                     }
                     // Retrieve Issuer from the certificate store
                     IX509Certificate issuer = GetIssuerFromCertificateSet(lastAddedCert, trustedCertificatesStore.GetKnownCertificates
@@ -185,7 +189,7 @@ namespace iText.Signatures {
             String url = CertificateUtil.GetIssuerCertURL(certificate);
             ICollection<IX509Certificate> certificatesFromAIA = ProcessCertificatesFromAIA(url);
             if (certificatesFromAIA != null) {
-                AddKnownCertificates(certificatesFromAIA);
+                AddKnownCertificates(certificatesFromAIA, CertificateOrigin.OTHER);
             }
             ICollection<IX509Certificate> possibleIssuers = trustedCertificatesStore.GetKnownCertificates(certificate.
                 GetIssuerDN().ToString());
@@ -238,11 +242,15 @@ namespace iText.Signatures {
         /// <returns>retrieved OCSP responder candidates or an empty set in case none were found.</returns>
         public virtual ICollection<IX509Certificate> RetrieveOCSPResponderByNameCertificate(IBasicOcspResponse ocspResp
             ) {
-            String name = null;
-            name = FACTORY.CreateX500Name(FACTORY.CreateASN1Sequence(ocspResp.GetResponderId().ToASN1Primitive().GetName
-                ().ToASN1Primitive())).GetName();
+            String name = FACTORY.CreateX500Name(FACTORY.CreateASN1Sequence(ocspResp.GetResponderId().ToASN1Primitive(
+                ).GetName().ToASN1Primitive())).GetName();
             // Look for the existence of an Authorized OCSP responder inside the cert chain in the ocsp response.
             IEnumerable<IX509Certificate> certs = SignUtils.GetCertsFromOcspResponse(ocspResp);
+            IList<IX509Certificate> certList = new List<IX509Certificate>();
+            foreach (IX509Certificate certificate in certs) {
+                certList.Add(certificate);
+            }
+            AddKnownCertificates(certList, CertificateOrigin.OCSP_RESPONSE);
             foreach (IX509Certificate cert in certs) {
                 try {
                     if (name.Equals(cert.GetSubjectDN().ToString())) {
@@ -253,7 +261,7 @@ namespace iText.Signatures {
                 }
             }
             // Ignore.
-            // Certificate chain is not present in the response, or is does not contain the responder.
+            // Certificate chain is not present in the response, or it does not contain the responder.
             return trustedCertificatesStore.GetKnownCertificates(name);
         }
 
@@ -297,7 +305,7 @@ namespace iText.Signatures {
             String url = CertificateUtil.GetIssuerCertURL(crl);
             IList<IX509Certificate> certificatesFromAIA = (IList<IX509Certificate>)ProcessCertificatesFromAIA(url);
             if (certificatesFromAIA != null) {
-                AddKnownCertificates(certificatesFromAIA);
+                AddKnownCertificates(certificatesFromAIA, CertificateOrigin.OTHER);
             }
             // Retrieve Issuer from the certificate store
             ICollection<IX509Certificate> issuers = trustedCertificatesStore.GetKnownCertificates(((IX509Crl)crl).GetIssuerDN
@@ -343,7 +351,7 @@ namespace iText.Signatures {
             trustedCertificatesStore.AddGenerallyTrustedCertificates(certificates);
         }
 
-        /// <summary>Add certificates collection to known certificates storage, which is used for issuer certificates retrieval.
+        /// <summary>Adds certificates collection to known certificates storage, which is used for issuer certificates retrieval.
         ///     </summary>
         /// <param name="certificates">
         /// certificates
@@ -351,12 +359,57 @@ namespace iText.Signatures {
         /// to be added
         /// </param>
         public virtual void AddKnownCertificates(ICollection<IX509Certificate> certificates) {
+            AddKnownCertificates(certificates, CertificateOrigin.OTHER);
+        }
+
+        /// <summary>Adds certificates collection to known certificates storage, which is used for issuer certificates retrieval.
+        ///     </summary>
+        /// <remarks>
+        /// Adds certificates collection to known certificates storage, which is used for issuer certificates retrieval.
+        /// <para />
+        /// Additionally, adds stores the provided origin for all these certificates.
+        /// </remarks>
+        /// <param name="certificates">
+        /// certificates
+        /// <see cref="System.Collections.ICollection{E}"/>
+        /// to be added
+        /// </param>
+        /// <param name="dataOrigin">
+        /// 
+        /// <see cref="iText.Signatures.Validation.Dataorigin.RevocationDataOrigin?"/>
+        /// from which these certificates come from
+        /// </param>
+        public virtual void AddKnownCertificates(ICollection<IX509Certificate> certificates, CertificateOrigin? dataOrigin
+            ) {
             foreach (IX509Certificate certificate in certificates) {
                 String name = ((IX509Certificate)certificate).GetSubjectDN().ToString();
                 IList<IX509Certificate> certs = knownCertificates.ComputeIfAbsent(name, (k) => new List<IX509Certificate>(
                     ));
                 certs.Add(certificate);
+                CertificateOrigin? currentCertOrigin = certificateOrigins.Get(certificate);
+                if (currentCertOrigin == null || (int)(currentCertOrigin) > (int)(dataOrigin)) {
+                    certificateOrigins.Put(certificate, dataOrigin);
+                }
             }
+        }
+
+        /// <summary>
+        /// Gets certificate origin for provided
+        /// <see cref="iText.Commons.Bouncycastle.Cert.IX509Certificate"/>.
+        /// </summary>
+        /// <param name="certificate">
+        /// 
+        /// <see cref="iText.Commons.Bouncycastle.Cert.IX509Certificate"/>
+        /// for which origin is requested
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Signatures.Validation.Dataorigin.RevocationDataOrigin?"/>
+        /// for the certificate
+        /// </returns>
+        public virtual CertificateOrigin? GetCertificateOrigin(IX509Certificate certificate) {
+            CertificateOrigin? dataOrigin = certificateOrigins.Get(certificate);
+            return dataOrigin == null ? CertificateOrigin.OTHER : dataOrigin;
         }
 
         /// <summary>

@@ -33,6 +33,7 @@ using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Utils;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Cert;
+using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Operators;
 
 namespace iText.Bouncycastlefips.Cert {
@@ -53,6 +54,18 @@ namespace iText.Bouncycastlefips.Cert {
         public X509CrlBCFips(X509Crl x509Crl) {
             this.x509Crl = x509Crl;
         }
+
+        /// <summary><inheritDoc/></summary>
+        public string GetSigAlgName()
+        {
+            return x509Crl.SigAlgName;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public string GetSigAlgOID() => x509Crl.SigAlgOid;
+
+        /// <summary><inheritDoc/></summary>
+        public byte[] GetSigAlgParams() => x509Crl.GetSigAlgParams();
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>

@@ -48,9 +48,6 @@ namespace iText.Signatures.Validation {
         private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/SignatureValidatorIntegrationTest/certs/";
 
-        private static readonly String COMMON_CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
-
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/SignatureValidatorIntegrationTest/";
 
@@ -490,25 +487,25 @@ namespace iText.Signatures.Validation {
         }
 
         [NUnit.Framework.Test]
-        public virtual void InfiniteRecursionTest() {
-            String trustedCertsFileName = COMMON_CERTS_SRC + "tsCertRsa.pem";
-            IX509Certificate[] trustedCerts = PemFileHelper.ReadFirstChain(trustedCertsFileName);
+        public virtual void InfiniteRecursionForOCSPFromDSSTest() {
             LotlService service = new LotlService(new LotlFetchingProperties(new RemoveOnFailingCountryData()));
             service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
             service.WithLotlValidator(() => new LotlValidator(service));
             service.InitializeCache();
-            SignatureValidationProperties param = new SignatureValidationProperties().SetFreshness(ValidatorContexts.All
-                (), CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays(1000000));
+            SignatureValidationProperties param = new SignatureValidationProperties().SetRevocationOnlineFetching(ValidatorContexts
+                .All(), CertificateSources.All(), TimeBasedContexts.All(), SignatureValidationProperties.OnlineFetching
+                .NEVER_FETCH).SetFreshness(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts.All(), 
+                TimeSpan.FromDays(1000000));
             ValidatorChainBuilder chainBuilder = new ValidatorChainBuilder().WithSignatureValidationProperties(param).
-                WithLotlService(() => service).TrustEuropeanLotl(true)
-                        // Trust self signed certificate used for timestamping
-                        .WithTrustedCertificates(JavaUtil.ArraysAsList(trustedCerts));
+                WithLotlService(() => service).TrustEuropeanLotl(true);
+            chainBuilder.WithCertificateChainValidatorFactory(() => new CustomDateChainValidator(chainBuilder, DateTimeUtil
+                .CreateUtcDateTime(2025, 10, 0x5, 0, 0, 0)));
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "ocspResponseSignedByCertToCheck.pdf"
                 ))) {
                 SignatureValidator signatureValidator = chainBuilder.BuildSignatureValidator(document);
                 ValidationReport report = signatureValidator.ValidateSignatures();
                 AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
-                    (0).HasLogItem((l) => l.WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator.OCSP_RESPONSE_IS_SIGNED_BY_CERTIFICATE_BEING_VALIDATED
+                    (0).HasLogItem((l) => l.WithCheckName(OCSPValidator.OCSP_CHECK).WithMessage(OCSPValidator.CERTIFICATE_IN_ISSUER_CHAIN
                     )));
             }
         }

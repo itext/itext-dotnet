@@ -380,8 +380,8 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>current canvas</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ConcatMatrix(PdfArray array) {
             if (array.Size() != 6) {
-                //Throw exception or warning here
-                return this;
+                throw new PdfException(KernelExceptionMessageConstant.TRANSFORMATION_MATRIX_ARRAY_SIZE_SHOULD_BE_EQUAL_TO_6
+                    );
             }
             for (int i = 0; i < array.Size(); i++) {
                 if (!array.Get(i).IsNumber()) {

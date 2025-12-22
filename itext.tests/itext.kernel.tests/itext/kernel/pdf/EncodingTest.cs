@@ -186,6 +186,7 @@ namespace iText.Kernel.Pdf {
             String fileName = "symbolTrueTypeFontWinAnsiTest.pdf";
             PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
+            // TODO DEVSIX-9589 Create symbol font with cmap 3,0 for testing
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "Symbols1.ttf", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
                 .PREFER_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
@@ -217,6 +218,7 @@ namespace iText.Kernel.Pdf {
             String fileName = "symbolTrueTypeFontIdentityTest.pdf";
             PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
+            // TODO DEVSIX-9589 Create symbol font with cmap 3,0 for testing
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "Symbols1.ttf", PdfEncodings.IDENTITY_H);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             StringBuilder builder = new StringBuilder();
@@ -248,6 +250,7 @@ namespace iText.Kernel.Pdf {
             String fileName = "symbolTrueTypeFontSameCharsIdentityTest.pdf";
             PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
+            // TODO DEVSIX-9589 Create symbol font with cmap 3,0 for testing
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "Symbols1.ttf", PdfEncodings.IDENTITY_H);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             String line = "AABBCCDDEEFFGGHHIIJJ";

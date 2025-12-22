@@ -52,6 +52,13 @@ namespace iText.Signatures.Testutils.Client {
             return this;
         }
 
+        public virtual iText.Signatures.Testutils.Client.TestCrlClient AddBuilderForCertIssuer(IX509Certificate issuerCert
+            , IPrivateKey issuerPrivateKey, String signatureAlgorithm) {
+            DateTime yesterday = TimeTestUtil.TEST_DATE_TIME.AddDays(-1);
+            crlBuilders.Add(new TestCrlBuilder(issuerCert, issuerPrivateKey, yesterday, signatureAlgorithm));
+            return this;
+        }
+
         public virtual ICollection<byte[]> GetEncoded(IX509Certificate checkCert, String url) {
             return crlBuilders.Select((testCrlBuilder) => {
                 try {

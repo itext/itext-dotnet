@@ -35,18 +35,26 @@ namespace iText.Commons.Actions {
     /// </remarks>
     public sealed class EventManager {
         private static readonly iText.Commons.Actions.EventManager INSTANCE = new iText.Commons.Actions.EventManager
-            ();
+            (true);
 
         private readonly ConcurrentHashSet<IEventHandler> handlers = new ConcurrentHashSet<IEventHandler>();
 
-        private EventManager() {
-            handlers.Add(ProductEventHandler.INSTANCE);
+        private EventManager(bool addProductEventHandler) {
+            if (addProductEventHandler) {
+                handlers.Add(ProductEventHandler.INSTANCE);
+            }
         }
 
-        /// <summary>Allows access to the instance of EventManager.</summary>
-        /// <returns>the instance of the class</returns>
+        /// <summary>Allows access to the default instance of EventManager.</summary>
+        /// <returns>the default instance of the class</returns>
         public static iText.Commons.Actions.EventManager GetInstance() {
             return INSTANCE;
+        }
+
+        /// <summary>Creates a new instance of EventManager, it should be used for dedicated event usage.</summary>
+        /// <returns>a new instance of the class</returns>
+        public static iText.Commons.Actions.EventManager CreateNewInstance() {
+            return new iText.Commons.Actions.EventManager(false);
         }
 
         /// <summary>Deliberately turns off the warning message about AGPL usage.</summary>

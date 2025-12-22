@@ -86,7 +86,7 @@ namespace iText.Kernel.XMP {
         /// The available options are:
         /// <list type="bullet">
         /// <item><description> XMP_REQUIRE_XMPMETA - The &lt;x:xmpmeta&gt; XML element is required around
-        /// <tt>&lt;rdf:RDF&gt;</tt>.
+        /// <c>&lt;rdf:RDF&gt;</c>.
         /// </description></item>
         /// <item><description> XMP_STRICT_ALIASING - Do not reconcile alias differences, throw an exception.
         /// </description></item>

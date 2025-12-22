@@ -943,8 +943,13 @@ namespace iText.Kernel.Pdf {
                         if (structTreeRoot != null) {
                             TryFlushTagStructure(true);
                         }
-                        if (catalog.IsOCPropertiesMayHaveChanged() && catalog.GetOCProperties(false).GetPdfObject().IsModified()) {
-                            catalog.GetOCProperties(false).Flush();
+                        if (catalog.IsOCPropertiesMayHaveChanged()) {
+                            PdfObject ocPropsDict = catalog.GetOCProperties(false).GetPdfObject();
+                            // Ensure OCProperties is referenced from the catalog, even if it didn't exist originally.
+                            catalog.Put(PdfName.OCProperties, ocPropsDict);
+                            if (ocPropsDict.IsModified()) {
+                                catalog.GetOCProperties(false).Flush();
+                            }
                         }
                         if (catalog.pageLabels != null) {
                             catalog.Put(PdfName.PageLabels, catalog.pageLabels.BuildTree());

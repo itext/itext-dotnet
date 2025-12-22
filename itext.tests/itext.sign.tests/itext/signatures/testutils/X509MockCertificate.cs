@@ -64,14 +64,18 @@ namespace iText.Signatures.Testutils
             throw new NotImplementedException();
         }
 
+        public string GetSigAlgName()
+        {
+            return "SHA256withRSA";
+        }
         public string GetSigAlgOID()
         {
-            throw new NotImplementedException();
+            return "1.2.840.113549.1.1.11";
         }
 
         public byte[] GetSigAlgParams()
         {
-            throw new NotImplementedException();
+            return null;    
         }
 
         public byte[] GetEncoded()

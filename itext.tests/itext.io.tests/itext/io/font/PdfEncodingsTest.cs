@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Test;
 
 namespace iText.IO.Font {
@@ -30,6 +31,39 @@ namespace iText.IO.Font {
             NUnit.Framework.Assert.AreEqual(new byte[] { (byte)194 }, PdfEncodings.ConvertToBytes('Â', null));
             NUnit.Framework.Assert.AreEqual(new byte[] { (byte)194 }, PdfEncodings.ConvertToBytes('Â', ""));
             NUnit.Framework.Assert.AreEqual(new byte[] { (byte)194 }, PdfEncodings.ConvertToBytes('Â', "symboltt"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ConvertToBytesSymbolTTTest() {
+            NUnit.Framework.Assert.AreEqual(new byte[] {  }, PdfEncodings.ConvertToBytes('原', "symboltt"));
+            NUnit.Framework.Assert.AreEqual(new byte[] {  }, PdfEncodings.ConvertToBytes((char)21407, "symboltt"));
+            NUnit.Framework.Assert.AreEqual(new byte[] { (byte)159 }, PdfEncodings.ConvertToBytes((char)21407, null));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ConvertToBytesExtraEncodingTest() {
+            NUnit.Framework.Assert.AreEqual(new byte[] {  }, PdfEncodings.ConvertToBytes('奆', "symbol"));
+            NUnit.Framework.Assert.AreEqual(new byte[] {  }, PdfEncodings.ConvertToBytes('奆', PdfEncodings.WINANSI));
+            PdfEncodings.AddExtraEncoding("TestExtra", new _IExtraEncoding_51());
+            NUnit.Framework.Assert.AreEqual(new byte[] {  }, PdfEncodings.ConvertToBytes('奆', "TestExtra"));
+            NUnit.Framework.Assert.AreEqual(new byte[] {  }, PdfEncodings.ConvertToBytes("奆時灈", "TestExtra"));
+        }
+
+        private sealed class _IExtraEncoding_51 : IExtraEncoding {
+            public _IExtraEncoding_51() {
+            }
+
+            public byte[] CharToByte(String text, String encoding) {
+                return null;
+            }
+
+            public byte[] CharToByte(char char1, String encoding) {
+                return null;
+            }
+
+            public String ByteToChar(byte[] b, String encoding) {
+                return "";
+            }
         }
     }
 }

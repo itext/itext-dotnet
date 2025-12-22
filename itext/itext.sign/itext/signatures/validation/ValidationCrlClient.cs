@@ -27,6 +27,7 @@ using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
 using iText.Signatures;
 using iText.Signatures.Validation.Context;
+using iText.Signatures.Validation.Dataorigin;
 
 namespace iText.Signatures.Validation {
     /// <summary>CRL client which is expected to be used in case CRL responses shall be linked with generation date.
@@ -60,9 +61,56 @@ namespace iText.Signatures.Validation {
         /// <see cref="iText.Signatures.Validation.Context.TimeBasedContext"/>
         /// time based context which corresponds to generation date
         /// </param>
+        [System.ObsoleteAttribute(@"use AddCrl(iText.Commons.Bouncycastle.Cert.IX509Crl, System.DateTime, iText.Signatures.Validation.Context.TimeBasedContext, iText.Signatures.Validation.Dataorigin.RevocationDataOrigin?) instead"
+            )]
         public virtual void AddCrl(IX509Crl response, DateTime date, TimeBasedContext context) {
-            // We need to have these data stored in Map in order to replace duplicates.
-            crls.Put(response, new RevocationDataValidator.CrlValidationInfo(response, date, context));
+            AddCrl(response, date, context, RevocationDataOrigin.OTHER);
+        }
+
+        /// <summary>Add CRL response which is linked with generation date.</summary>
+        /// <param name="response">
+        /// 
+        /// <see cref="iText.Commons.Bouncycastle.Cert.IX509Crl"/>
+        /// response to be added
+        /// </param>
+        /// <param name="date">
+        /// 
+        /// <see cref="System.DateTime"/>
+        /// to be linked with the response
+        /// </param>
+        /// <param name="context">
+        /// 
+        /// <see cref="iText.Signatures.Validation.Context.TimeBasedContext"/>
+        /// time based context which corresponds to generation date
+        /// </param>
+        /// <param name="responseOrigin">
+        /// 
+        /// <see cref="iText.Signatures.Validation.Dataorigin.RevocationDataOrigin?"/>
+        /// representing an origin from which CRL comes from
+        /// </param>
+        public virtual void AddCrl(IX509Crl response, DateTime date, TimeBasedContext context, RevocationDataOrigin?
+             responseOrigin) {
+            RevocationDataValidator.CrlValidationInfo validationInfo = crls.Get(response);
+            if (validationInfo != null) {
+                // If CRL is already there, we don't need to update response origin.
+                // But we do need to update so-called trusted generation date.
+                // Consider such update as following: we've encountered the same CRL in the document,
+                // but now it's covered with a timestamp. So now we know, if was generated at a certain point in time,
+                // and we can use this information during the validation.
+                // This of course only works, because the CRL is exactly the same.
+                if (validationInfo.trustedGenerationDate.After(date)) {
+                    // We found better data, so update.
+                    validationInfo.trustedGenerationDate = date;
+                    validationInfo.timeBasedContext = context;
+                }
+                if ((int)(validationInfo.responseOrigin) > (int)(responseOrigin)) {
+                    // We found better response origin, so update. It's considered better in terms of PAdES compliance.
+                    validationInfo.responseOrigin = responseOrigin;
+                }
+            }
+            else {
+                crls.Put(response, new RevocationDataValidator.CrlValidationInfo(response, date, context, responseOrigin));
+            }
         }
 
         /// <summary>Get all the CRL responses linked with generation dates.</summary>

@@ -157,6 +157,7 @@ namespace iText.Kernel.Pdf.Xobject {
             TestFile("separationCSWithDeviceCMYKAsAlternative.pdf", "Im1", "png");
         }
 
+        //TODO DEVSIX-5751: update image
         [NUnit.Framework.Test]
         public virtual void TestGrayScalePng() {
             TestFile("grayImages.pdf", "Im1", "png");
@@ -608,6 +609,34 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         [NUnit.Framework.Test]
+        public virtual void DRGBDCTSmaskTest() {
+            //TODO DEVSIX-1682: Update after supporting
+            TestFile("dRGBDCTSmask.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DRGBFlateSmaskTest() {
+            //TODO DEVSIX-1682: Update after supporting
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
+            PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
+                ();
+            properties.SetApplyTransparency(true);
+            TestFile("dRGBFlateSmask.pdf", "Im1", "png", ".trans", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DGrayDCTSmaskTest() {
+            //TODO DEVSIX-1682: Update after supporting
+            TestFile("dGrayDCTSmask.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DGrayFlateSmaskTest() {
+            //TODO DEVSIX-1682: Update after supporting
+            TestFile("dGrayFlateSmask.pdf", "Im0", "png");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ICCBasedDctMaskedInvertedTest() {
             TestFile("ICCBasedDctMaskedInverted.pdf", "Im1", "jpg");
         }
@@ -750,6 +779,7 @@ namespace iText.Kernel.Pdf.Xobject {
             TestFile("calRGB8bitSMask.pdf", "Im1", "png");
         }
 
+        //TODO DEVSIX-1682: update after supporting
         [NUnit.Framework.Test]
         public virtual void CalRGB8bitSMaskWithTransparencyTest() {
             PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
@@ -847,11 +877,13 @@ namespace iText.Kernel.Pdf.Xobject {
             TestFile("indexed8bitGradient.pdf", "Im0", "png");
         }
 
+        //TODO DEVSIX-1682: update after supporting
         [NUnit.Framework.Test]
         public virtual void Indexed8bitSMaskTest() {
             TestFile("indexed8bitSMask.pdf", "Im0", "png");
         }
 
+        //TODO DEVSIX-1682: update after supporting
         [NUnit.Framework.Test]
         public virtual void Indexed8bitSMaskWithTransparencyTest() {
             PdfImageXObject.ImageBytesRetrievalProperties properties = PdfImageXObject.ImageBytesRetrievalProperties.GetApplyFiltersOnly
@@ -1098,6 +1130,26 @@ namespace iText.Kernel.Pdf.Xobject {
                 , "Im0", "tif"));
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.COLOR_SPACE_IS_NOT_SUPPORTED
                 , "/DeviceN"), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CustomCalRGBColorSpaceTest() {
+            //TODO DEVSIX-1683: Update after supporting
+            TestFile("customColorSpaceRGB.pdf", "Im1", "jpg");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CustomIndexedColorSpaceTest() {
+            //TODO DEVSIX-1683: Update after supporting
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
+            TestFile("customColorIndexed.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CustomSeparationColorSpaceTest() {
+            //TODO DEVSIX-1683: Update after supporting
+            // Android-Conversion-Ignore-Test (TODO DEVSIX-6445 fix different DeflaterOutputStream behavior)
+            TestFile("customColorSpaceSeparation.pdf", "Im1", "png");
         }
 
         private void TestFile(String filename, String objectid, String expectedImageFormat) {

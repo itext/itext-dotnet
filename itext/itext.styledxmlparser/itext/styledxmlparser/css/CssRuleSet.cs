@@ -146,6 +146,9 @@ namespace iText.StyledXmlParser.Css {
         private static void SplitDeclarationsIntoNormalAndImportant(IList<CssDeclaration> declarations, IList<CssDeclaration
             > normalDeclarations, IList<CssDeclaration> importantDeclarations) {
             foreach (CssDeclaration declaration in declarations) {
+                if (declaration == null || declaration.GetExpression() == null) {
+                    continue;
+                }
                 int exclIndex = declaration.GetExpression().IndexOf('!');
                 if (exclIndex > 0 && iText.Commons.Utils.Matcher.Match(IMPORTANT_MATCHER, declaration.GetExpression()).Matches
                     ()) {

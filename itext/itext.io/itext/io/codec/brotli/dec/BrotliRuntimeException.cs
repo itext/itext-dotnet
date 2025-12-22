@@ -3,19 +3,23 @@
 Distributed under MIT license.
 See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
-namespace iText.IO.Codec.Brotli.Dec
-{
-	/// <summary>Unchecked exception used internally.</summary>
-	internal class BrotliRuntimeException : System.Exception
-	{
-		internal BrotliRuntimeException(string message)
-			: base(message)
-		{
-		}
+using System;
 
-		internal BrotliRuntimeException(string message, System.Exception cause)
-			: base(message, cause)
-		{
-		}
-	}
+namespace iText.IO.Codec.Brotli.Dec {
+//\cond DO_NOT_DOCUMENT
+    /// <summary>Unchecked exception used internally.</summary>
+    internal class BrotliRuntimeException : Exception {
+//\cond DO_NOT_DOCUMENT
+        internal BrotliRuntimeException(String message)
+            : base(message) {
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal BrotliRuntimeException(String message, Exception cause)
+            : base(message, cause) {
+        }
+//\endcond
+    }
+//\endcond
 }

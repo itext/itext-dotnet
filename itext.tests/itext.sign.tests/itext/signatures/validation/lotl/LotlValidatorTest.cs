@@ -448,7 +448,7 @@ namespace iText.Signatures.Validation.Lotl {
                 service.InitializeCache();
                 Thread.Sleep(80);
                 // Increase cache staleness to stabilize the refresh during the simulated failure
-                lotlFetchingProperties.SetCacheStalenessInMilliseconds(10000);
+                lotlFetchingProperties.SetCacheStalenessInMilliseconds(10000000);
                 service.WithLotlServiceCache(new InMemoryLotlServiceCache(lotlFetchingProperties.GetCacheStalenessInMilliseconds
                     (), lotlFetchingProperties.GetOnCountryFetchFailureStrategy()));
                 validator = service.GetLotlValidator();
@@ -613,7 +613,7 @@ namespace iText.Signatures.Validation.Lotl {
                 Thread.Sleep(80);
                 // Wait for the cache refresh to complete
                 // Increase cache staleness to stabilize the refresh during the simulated failure
-                lotlFetchingProperties.SetCacheStalenessInMilliseconds(10000);
+                lotlFetchingProperties.SetCacheStalenessInMilliseconds(10000000);
                 service.WithLotlServiceCache(new InMemoryLotlServiceCache(lotlFetchingProperties.GetCacheStalenessInMilliseconds
                     (), lotlFetchingProperties.GetOnCountryFetchFailureStrategy()));
                 NUnit.Framework.Assert.Catch(typeof(SafeCallingAvoidantException), () => service.GetLotlValidator().Validate
@@ -655,7 +655,7 @@ namespace iText.Signatures.Validation.Lotl {
                 service.WithCountrySpecificLotlFetcher(new _CountrySpecificLotlFetcher_644(service));
                 Thread.Sleep(80);
                 // Increase cache staleness to stabilize the refresh during the simulated failure
-                lotlFetchingProperties.SetCacheStalenessInMilliseconds(10000);
+                lotlFetchingProperties.SetCacheStalenessInMilliseconds(10000000);
                 service.WithLotlServiceCache(new InMemoryLotlServiceCache(lotlFetchingProperties.GetCacheStalenessInMilliseconds
                     (), lotlFetchingProperties.GetOnCountryFetchFailureStrategy()));
                 service.TryAndRefreshCache();
@@ -703,7 +703,7 @@ namespace iText.Signatures.Validation.Lotl {
                      + originalAmountOfCertificates);
                 Thread.Sleep(80);
                 // Increase cache staleness to stabilize the refresh during the simulated failure
-                properties.SetCacheStalenessInMilliseconds(10000);
+                properties.SetCacheStalenessInMilliseconds(10000000);
                 service.WithLotlServiceCache(new InMemoryLotlServiceCache(properties.GetCacheStalenessInMilliseconds(), properties
                     .GetOnCountryFetchFailureStrategy()));
                 service.TryAndRefreshCache();
@@ -768,7 +768,7 @@ namespace iText.Signatures.Validation.Lotl {
                      + originalAmountOfCertificates);
                 Thread.Sleep(80);
                 // Increase cache staleness to stabilize the refresh during the simulated failure
-                properties.SetCacheStalenessInMilliseconds(10000);
+                properties.SetCacheStalenessInMilliseconds(10000000);
                 service.WithLotlServiceCache(new InMemoryLotlServiceCache(properties.GetCacheStalenessInMilliseconds(), properties
                     .GetOnCountryFetchFailureStrategy()));
                 service.TryAndRefreshCache();

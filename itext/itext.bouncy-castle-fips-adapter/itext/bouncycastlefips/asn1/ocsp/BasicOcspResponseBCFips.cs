@@ -36,6 +36,8 @@ using Org.BouncyCastle.Cert;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Asymmetric;
 using Org.BouncyCastle.Crypto.Fips;
+using iText.Commons.Bouncycastle.Asn1.X509;
+using iText.Bouncycastlefips.Asn1.X509;
 
 namespace iText.Bouncycastlefips.Asn1.Ocsp {
     /// <summary>
@@ -133,6 +135,12 @@ namespace iText.Bouncycastlefips.Asn1.Ocsp {
         public IRespID GetResponderId()
         {
             return new RespIDBCFips(GetBasicOcspResponse().TbsResponseData.ResponderID);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IAlgorithmIdentifier GetSignatureAlgorithmID()
+        {
+            return new AlgorithmIdentifierBCFips(GetBasicOcspResponse().SignatureAlgorithm);
         }
     }
 }

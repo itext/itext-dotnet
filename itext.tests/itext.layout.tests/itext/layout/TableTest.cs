@@ -3082,6 +3082,30 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [NUnit.Framework.Test]
+        public virtual void KeepTogetherNestedTableDoesNotThrow() {
+            String testName = "keepTogetherNestedTableDoesNotThrow.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+            Div leftContent = new Div().Add(new Table(2).AddCell(new Cell(2, 1)).AddCell(new Cell()).AddCell(new Cell(
+                )));
+            Table table = new Table(1);
+            for (int i = 0; i < 35; i++) {
+                table.AddCell(new Cell().Add(new Paragraph("Item #" + i)));
+            }
+            Div rightContent = new Div().Add(table);
+            Table outerTable = new Table(2).AddCell(new Cell().Add(leftContent)).AddCell(new Cell().SetKeepTogether(true
+                ).Add(rightContent));
+            document.Add(outerTable);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
         private class RotatedDocumentRenderer : DocumentRenderer {
             private readonly PdfDocument pdfDoc;
 

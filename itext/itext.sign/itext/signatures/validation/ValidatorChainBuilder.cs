@@ -22,10 +22,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Actions;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Kernel.Pdf;
 using iText.Signatures;
+using iText.Signatures.Validation.Dataorigin;
 using iText.Signatures.Validation.Lotl;
+using iText.Signatures.Validation.Report.Pades;
 using iText.Signatures.Validation.Report.Xml;
 using iText.StyledXmlParser.Resolver.Resource;
 
@@ -62,13 +65,28 @@ namespace iText.Signatures.Validation {
 
         private QualifiedValidator qualifiedValidator;
 
+        /// <summary>This set is used to catch recursions while CRL/OCSP responses validation.</summary>
+        /// <remarks>
+        /// This set is used to catch recursions while CRL/OCSP responses validation.
+        /// There might be loops when
+        /// Revocation data for cert 0 is signed by cert 0. Or
+        /// Revocation data for cert 0 is signed by cert 1 and revocation data for cert 1 is signed by cert 0.
+        /// Some more complex loops are possible, and they all are supposed to be caught by this set
+        /// and the methods to manipulate this set.
+        /// </remarks>
+        private ICollection<IX509Certificate> certificatesChainBeingValidated = new HashSet<IX509Certificate>();
+
         private ICollection<IX509Certificate> trustedCertificates;
 
         private ICollection<IX509Certificate> knownCertificates;
 
+        private bool trustEuropeanLotl = false;
+
+        private readonly EventManager eventManager;
+
         private AdESReportAggregator adESReportAggregator = new NullAdESReportAggregator();
 
-        private bool trustEuropeanLotl = false;
+        private bool padesValidationRequested = false;
 
         /// <summary>Creates a ValidatorChainBuilder using default implementations</summary>
         public ValidatorChainBuilder() {
@@ -84,6 +102,7 @@ namespace iText.Signatures.Validation {
             crlClientFactory = () => new CrlClientOnline();
             lotlServiceFactory = () => BuildLotlService();
             qualifiedValidator = new NullQualifiedValidator();
+            eventManager = EventManager.CreateNewInstance();
         }
 
         /// <summary>Establishes trust in European Union List of Trusted Lists.</summary>
@@ -400,10 +419,60 @@ namespace iText.Signatures.Validation {
         /// </remarks>
         /// <param name="adESReportAggregator">the report aggregator to use</param>
         /// <returns>the current ValidatorChainBuilder</returns>
+        [System.ObsoleteAttribute(@"This method will be removed in a later version, use WithAdESLevelReportGenerator(iText.Signatures.Validation.Report.Xml.XmlReportAggregator) instead."
+            )]
         public virtual iText.Signatures.Validation.ValidatorChainBuilder WithAdESReportAggregator(AdESReportAggregator
              adESReportAggregator) {
             this.adESReportAggregator = adESReportAggregator;
+            eventManager.Register(new EventsToAdESReportAggratorConvertor(adESReportAggregator));
             return this;
+        }
+
+        /// <summary>Use this reportEventListener to generate an AdES xml report.</summary>
+        /// <remarks>
+        /// Use this reportEventListener to generate an AdES xml report.
+        /// <para />
+        /// Generated
+        /// <see cref="iText.Signatures.Validation.Report.Xml.PadesValidationReport"/>
+        /// report could be provided to
+        /// <see cref="iText.Signatures.Validation.Report.Xml.XmlReportGenerator.Generate(iText.Signatures.Validation.Report.Xml.PadesValidationReport, System.IO.TextWriter)
+        ///     "/>.
+        /// </remarks>
+        /// <param name="reportEventListener">the AdESReportEventListener to use</param>
+        /// <returns>the current ValidatorChainBuilder</returns>
+        public virtual iText.Signatures.Validation.ValidatorChainBuilder WithAdESLevelReportGenerator(XmlReportAggregator
+             reportEventListener) {
+            eventManager.Register(reportEventListener);
+            return this;
+        }
+
+        /// <summary>Use this PAdES level report generator to generate PAdES report.</summary>
+        /// <remarks>
+        /// Use this PAdES level report generator to generate PAdES report.
+        /// <para />
+        /// If called multiple times, multiple
+        /// <see cref="iText.Signatures.Validation.Report.Pades.PAdESLevelReportGenerator"/>
+        /// objects will be registered.
+        /// </remarks>
+        /// <param name="reportGenerator">the PAdESLevelReportGenerator to use</param>
+        /// <returns>current ValidatorChainBuilder</returns>
+        public virtual iText.Signatures.Validation.ValidatorChainBuilder WithPAdESLevelReportGenerator(PAdESLevelReportGenerator
+             reportGenerator) {
+            padesValidationRequested = true;
+            eventManager.Register(reportGenerator);
+            return this;
+        }
+
+        /// <summary>Checks whether PAdES compliance validation was requested.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if PAdES compliance validation was requested,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        public virtual bool PadesValidationRequested() {
+            return padesValidationRequested;
         }
 
         /// <summary>
@@ -464,6 +533,12 @@ namespace iText.Signatures.Validation {
             return properties;
         }
 
+        /// <summary>Returns the EventManager to be used for all events fired during validation.</summary>
+        /// <returns>the EventManager to be used for all events fired during validation</returns>
+        public virtual EventManager GetEventManager() {
+            return eventManager;
+        }
+
         /// <summary>
         /// Retrieves the explicitly added or automatically created
         /// <see cref="iText.Signatures.Validation.Report.Xml.AdESReportAggregator"/>
@@ -481,6 +556,8 @@ namespace iText.Signatures.Validation {
         /// <see cref="iText.Signatures.Validation.Report.Xml.AdESReportAggregator"/>
         /// instance.
         /// </returns>
+        [System.ObsoleteAttribute(@"The AdESReportAggregator system is replaced by the iText.Signatures.Validation.Report.Xml.XmlReportAggregator system."
+            )]
         public virtual AdESReportAggregator GetAdESReportAggregator() {
             return adESReportAggregator;
         }
@@ -693,6 +770,24 @@ namespace iText.Signatures.Validation {
             return this.lotlServiceFactory();
         }
 
+//\cond DO_NOT_DOCUMENT
+        internal virtual void AddCertificateBeingValidated(IX509Certificate certificate) {
+            certificatesChainBeingValidated.Add(certificate);
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual void RemoveCertificateBeingValidated(IX509Certificate certificate) {
+            certificatesChainBeingValidated.Remove(certificate);
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual bool IsCertificateBeingValidated(IX509Certificate certificate) {
+            return certificatesChainBeingValidated.Contains(certificate);
+        }
+//\endcond
+
         private static LotlService BuildLotlService() {
             return LotlService.GetGlobalService();
         }
@@ -703,9 +798,9 @@ namespace iText.Signatures.Validation {
                 result.SetTrustedCertificates(trustedCertificates);
             }
             if (knownCertificates != null) {
-                result.AddKnownCertificates(knownCertificates);
+                result.AddKnownCertificates(knownCertificates, CertificateOrigin.OTHER);
             }
-            result.AddKnownCertificates(lotlTrustedStoreFactory().GetCertificates());
+            result.AddKnownCertificates(lotlTrustedStoreFactory().GetCertificates(), CertificateOrigin.OTHER);
             return result;
         }
 

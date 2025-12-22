@@ -857,6 +857,21 @@ namespace iText.Bouncycastle {
 
         /// <summary><inheritDoc/></summary>
         public ITimeStampTokenGenerator CreateTimeStampTokenGenerator(IPrivateKey pk, IX509Certificate certificate, 
+            string signatureAlgorithm, string allowedDigest, string policyOid) {
+            ContentSignerBC signer = (ContentSignerBC)CreateContentSigner(signatureAlgorithm, pk);
+
+            SignerInfoGenerator siGen = new SignerInfoGeneratorBuilder()
+                .Build(signer.GetContentSigner(), ((X509CertificateBC)certificate).GetCertificate());
+
+            String digestForTsSigningCert = GetDigestAlgorithmOid(allowedDigest.ToUpperInvariant());
+            IDigestFactory digestCalculator = Asn1DigestFactory.Get(new DerObjectIdentifier(digestForTsSigningCert));
+            DerObjectIdentifier tsaPolicy = new DerObjectIdentifier(policyOid);
+
+            return new TimeStampTokenGeneratorBC(siGen, digestCalculator, tsaPolicy);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public ITimeStampTokenGenerator CreateTimeStampTokenGenerator(IPrivateKey pk, IX509Certificate certificate, 
             string allowedDigest, string policyOid) {
             String digestOid = GetDigestAlgorithmOid(allowedDigest.ToUpperInvariant());
             return new TimeStampTokenGeneratorBC(pk, certificate, digestOid, policyOid);

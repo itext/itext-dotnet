@@ -22,6 +22,7 @@
  */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 
@@ -93,6 +94,14 @@ namespace iText.Commons.Bouncycastle.Asn1.Ocsp {
         /// </summary>
         /// <returns>Parsed extension value.</returns>
         IAsn1Encodable GetExtensionParsedValue(IDerObjectIdentifier getIdPkixOcspArchiveCutoff);
+
+        /// <summary>
+        /// Calls actual 
+        /// <c>getSignatureAlgorithmID</c> 
+        /// method for the wrapped BasicOCSPResp object.
+        /// </summary> 
+        /// <returns> the signature algorithm id</returns>
+        IAlgorithmIdentifier GetSignatureAlgorithmID();
 
         IRespID GetResponderId();
     }

@@ -22,11 +22,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using iText.Commons.Actions;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
+using iText.Commons.Utils.Collections;
 using iText.Signatures;
 using iText.Signatures.Validation.Context;
+using iText.Signatures.Validation.Dataorigin;
+using iText.Signatures.Validation.Events;
 using iText.Signatures.Validation.Extensions;
 using iText.Signatures.Validation.Lotl;
 using iText.Signatures.Validation.Report;
@@ -41,6 +46,8 @@ namespace iText.Signatures.Validation {
         private readonly RevocationDataValidator revocationDataValidator;
 
         private readonly LotlTrustedStore lotlTrustedStore;
+
+        private readonly EventManager eventManager;
 
 //\cond DO_NOT_DOCUMENT
         internal const String CERTIFICATE_CHECK = "Certificate check.";
@@ -128,6 +135,7 @@ namespace iText.Signatures.Validation {
             this.properties = builder.GetProperties();
             this.revocationDataValidator = builder.GetRevocationDataValidator();
             this.lotlTrustedStore = builder.GetLotlTrustedStore();
+            this.eventManager = builder.GetEventManager();
         }
 
         /// <summary>Validate given certificate using provided validation date and required extensions.</summary>
@@ -188,6 +196,7 @@ namespace iText.Signatures.Validation {
 
         private ValidationReport Validate(ValidationReport result, ValidationContext context, IX509Certificate certificate
             , DateTime validationDate, IList<IX509Certificate> previousCertificates) {
+            ReportAlgorithmUsage(certificate);
             ValidationContext localContext = context.SetValidatorContext(ValidatorContext.CERTIFICATE_CHAIN_VALIDATOR);
             ValidateRequiredExtensions(result, localContext, certificate, previousCertificates.Count);
             if (StopValidation(result, localContext)) {
@@ -198,6 +207,7 @@ namespace iText.Signatures.Validation {
                 , TRUSTSTORE_RETRIEVAL_FAILED, e, ReportItem.ReportItemStatus.INFO))) {
                 return result;
             }
+            HandlePadesEvents(certificate);
             ValidateValidityPeriod(result, certificate, validationDate);
             ValidateRevocationData(result, localContext, certificate, validationDate);
             if (StopValidation(result, localContext)) {
@@ -205,6 +215,23 @@ namespace iText.Signatures.Validation {
             }
             ValidateChain(result, localContext, certificate, validationDate, previousCertificates);
             return result;
+        }
+
+        private void ReportAlgorithmUsage(IX509Certificate certificate) {
+            eventManager.OnEvent(new AlgorithmUsageEvent(certificate.GetSigAlgName(), certificate.GetSigAlgOID(), CERTIFICATE_CHECK
+                ));
+        }
+
+        private void HandlePadesEvents(IX509Certificate certificate) {
+            CertificateOrigin? certificateOrigin = certificateRetriever.GetCertificateOrigin(certificate);
+            if (certificateOrigin == CertificateOrigin.OTHER) {
+                eventManager.OnEvent(new CertificateIssuerExternalRetrievalEvent(certificate));
+            }
+            else {
+                if (certificateOrigin != CertificateOrigin.LATEST_DSS) {
+                    eventManager.OnEvent(new CertificateIssuerRetrievedOutsideDSSEvent(certificate));
+                }
+            }
         }
 
         private bool CheckIfCertIsTrusted(ValidationReport result, ValidationContext context, IX509Certificate certificate
@@ -295,6 +322,9 @@ namespace iText.Signatures.Validation {
                     , certificate.GetSubjectDN()), ReportItem.ReportItemStatus.INDETERMINATE));
                 return;
             }
+            // We need to sort certificates to process them starting from those, better suited for PAdES validation.
+            issuerCertificates = issuerCertificates.Sorted((issuer1, issuer2) => JavaUtil.IntegerCompare((int)(certificateRetriever
+                .GetCertificateOrigin(issuer1)), (int)(certificateRetriever.GetCertificateOrigin(issuer2)))).ToList();
             ValidationReport[] candidateReports = new ValidationReport[issuerCertificates.Count];
             for (int i = 0; i < issuerCertificates.Count; i++) {
                 candidateReports[i] = new ValidationReport();

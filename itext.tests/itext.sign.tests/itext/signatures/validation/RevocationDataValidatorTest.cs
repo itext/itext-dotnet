@@ -34,6 +34,7 @@ using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
 using iText.Signatures.Testutils.Client;
 using iText.Signatures.Validation.Context;
+using iText.Signatures.Validation.Dataorigin;
 using iText.Signatures.Validation.Mocks;
 using iText.Signatures.Validation.Report;
 using iText.Test;
@@ -159,7 +160,7 @@ namespace iText.Signatures.Validation {
             AssertValidationReport.AssertThat(report, (a) => a.HasNumberOfFailures(0)
                         // the logitem from the CRL valdiation should be copied to the final report
                         .HasNumberOfLogs(1).HasLogItem(reportItem));
-            // there should be one call per CrlClient
+            // there should be two calls per CrlClient, second one is needed for PAdES compliance check.
             NUnit.Framework.Assert.AreEqual(1, crlClient.GetCalls().Count);
             // since there was one response there should be one validator call
             NUnit.Framework.Assert.AreEqual(1, mockCrlValidator.calls.Count);
@@ -500,7 +501,7 @@ namespace iText.Signatures.Validation {
             parameters.SetFreshness(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays
                 (2));
             RevocationDataValidator validator = validatorChainBuilder.BuildRevocationDataValidator();
-            validator.AddCrlClient(new _ICrlClient_674(crl)).Validate(report, baseContext, checkCert, TimeTestUtil.TEST_DATE_TIME
+            validator.AddCrlClient(new _ICrlClient_670(crl)).Validate(report, baseContext, checkCert, TimeTestUtil.TEST_DATE_TIME
                 );
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INDETERMINATE
                 ).HasLogItem((la) => la.WithCheckName(RevocationDataValidator.REVOCATION_DATA_CHECK).WithMessage(MessageFormatUtil
@@ -509,8 +510,8 @@ namespace iText.Signatures.Validation {
                 )));
         }
 
-        private sealed class _ICrlClient_674 : ICrlClient {
-            public _ICrlClient_674(byte[] crl) {
+        private sealed class _ICrlClient_670 : ICrlClient {
+            public _ICrlClient_670(byte[] crl) {
                 this.crl = crl;
             }
 
@@ -622,26 +623,27 @@ namespace iText.Signatures.Validation {
             mockCrlValidator.OnCallDo((c) => NUnit.Framework.Assert.AreEqual(crlGeneration, c.responseGenerationDate));
             ValidationReport report = new ValidationReport();
             RevocationDataValidator validator = validatorChainBuilder.GetRevocationDataValidator();
-            ValidationOcspClient ocspClient = new _ValidationOcspClient_809();
+            ValidationOcspClient ocspClient = new _ValidationOcspClient_805();
             TestOcspResponseBuilder ocspBuilder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             byte[] ocspResponseBytes = new TestOcspClient().AddBuilderForCertIssuer(caCert, ocspBuilder).GetEncoded(checkCert
                 , caCert, null);
             IBasicOcspResponse basicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspResponseBytes
                 ));
-            ocspClient.AddResponse(basicOCSPResp, ocspGeneration, TimeBasedContext.HISTORICAL);
+            ocspClient.AddResponse(basicOCSPResp, ocspGeneration, TimeBasedContext.HISTORICAL, RevocationDataOrigin.OTHER
+                );
             validator.AddOcspClient(ocspClient);
-            ValidationCrlClient crlClient = new _ValidationCrlClient_824();
+            ValidationCrlClient crlClient = new _ValidationCrlClient_820();
             TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
             byte[] crlResponseBytes = new List<byte[]>(new TestCrlClient().AddBuilderForCertIssuer(crlBuilder).GetEncoded
                 (checkCert, null))[0];
             crlClient.AddCrl((IX509Crl)CertificateUtil.ParseCrlFromBytes(crlResponseBytes), crlGeneration, TimeBasedContext
-                .HISTORICAL);
+                .HISTORICAL, RevocationDataOrigin.OTHER);
             validator.AddCrlClient(crlClient);
             validator.Validate(report, baseContext, checkCert, checkDate);
         }
 
-        private sealed class _ValidationOcspClient_809 : ValidationOcspClient {
-            public _ValidationOcspClient_809() {
+        private sealed class _ValidationOcspClient_805 : ValidationOcspClient {
+            public _ValidationOcspClient_805() {
             }
 
             public override byte[] GetEncoded(IX509Certificate checkCert, IX509Certificate issuerCert, String url) {
@@ -650,8 +652,8 @@ namespace iText.Signatures.Validation {
             }
         }
 
-        private sealed class _ValidationCrlClient_824 : ValidationCrlClient {
-            public _ValidationCrlClient_824() {
+        private sealed class _ValidationCrlClient_820 : ValidationCrlClient {
+            public _ValidationCrlClient_820() {
             }
 
             public override ICollection<byte[]> GetEncoded(IX509Certificate checkCert, String url) {
@@ -682,14 +684,14 @@ namespace iText.Signatures.Validation {
                 , caCert, null);
             IBasicOcspResponse basicOCSPResp = FACTORY.CreateBasicOCSPResponse(FACTORY.CreateASN1Primitive(ocspResponseBytes
                 ));
-            ocspClient.AddResponse(basicOCSPResp, checkDate, TimeBasedContext.HISTORICAL);
+            ocspClient.AddResponse(basicOCSPResp, checkDate, TimeBasedContext.HISTORICAL, RevocationDataOrigin.OTHER);
             validator.AddOcspClient(ocspClient);
             ValidationCrlClient crlClient = new ValidationCrlClient();
             TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
             byte[] crlResponseBytes = new List<byte[]>(new TestCrlClient().AddBuilderForCertIssuer(crlBuilder).GetEncoded
                 (checkCert, null))[0];
             crlClient.AddCrl((IX509Crl)CertificateUtil.ParseCrlFromBytes(crlResponseBytes), checkDate, TimeBasedContext
-                .HISTORICAL);
+                .HISTORICAL, RevocationDataOrigin.OTHER);
             validator.AddCrlClient(crlClient);
             validator.Validate(report, baseContext, checkCert, checkDate);
         }
@@ -738,18 +740,18 @@ namespace iText.Signatures.Validation {
             RevocationDataValidator validator = validatorChainBuilder.GetRevocationDataValidator();
             TestOcspResponseBuilder ocspBuilder = new TestOcspResponseBuilder(responderCert, ocspRespPrivateKey);
             TestOcspClient testOcspClient = new TestOcspClient().AddBuilderForCertIssuer(caCert, ocspBuilder);
-            OcspClientBouncyCastle ocspClient = new _OcspClientBouncyCastle_927(testOcspClient);
+            OcspClientBouncyCastle ocspClient = new _OcspClientBouncyCastle_923(testOcspClient);
             validator.AddOcspClient(ocspClient);
             TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, caPrivateKey, checkDate);
             TestCrlClient testCrlClient = new TestCrlClient().AddBuilderForCertIssuer(crlBuilder);
-            CrlClientOnline crlClient = new _CrlClientOnline_937(testCrlClient);
+            CrlClientOnline crlClient = new _CrlClientOnline_933(testCrlClient);
             validator.AddCrlClient(crlClient);
             validator.Validate(report, baseContext.SetTimeBasedContext(TimeBasedContext.HISTORICAL), checkCert, checkDate
                 );
         }
 
-        private sealed class _OcspClientBouncyCastle_927 : OcspClientBouncyCastle {
-            public _OcspClientBouncyCastle_927(TestOcspClient testOcspClient) {
+        private sealed class _OcspClientBouncyCastle_923 : OcspClientBouncyCastle {
+            public _OcspClientBouncyCastle_923(TestOcspClient testOcspClient) {
                 this.testOcspClient = testOcspClient;
             }
 
@@ -760,8 +762,8 @@ namespace iText.Signatures.Validation {
             private readonly TestOcspClient testOcspClient;
         }
 
-        private sealed class _CrlClientOnline_937 : CrlClientOnline {
-            public _CrlClientOnline_937(TestCrlClient testCrlClient) {
+        private sealed class _CrlClientOnline_933 : CrlClientOnline {
+            public _CrlClientOnline_933(TestCrlClient testCrlClient) {
                 this.testCrlClient = testCrlClient;
             }
 

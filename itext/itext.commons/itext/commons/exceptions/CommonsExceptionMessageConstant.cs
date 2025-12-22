@@ -71,6 +71,10 @@ namespace iText.Commons.Exceptions {
 
         public const String UNSUPPORTED_OPERATION = "This operation is not supported.";
 
+        public const String JSON_PARSE_FAILED = "Failed to parse json string: {0}";
+
+        public const String JSON_SERIALIZATION_FAILED = "Failed to serialize json into string: {0}";
+
         private CommonsExceptionMessageConstant() {
         }
         // Empty constructor.

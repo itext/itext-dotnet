@@ -3,168 +3,321 @@
 Distributed under MIT license.
 See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
-namespace iText.IO.Codec.Brotli.Dec
-{
-	internal sealed class State
-	{
-		internal int runningState = iText.IO.Codec.Brotli.Dec.RunningState.Uninitialized;
+using System.IO;
 
-		internal int nextRunningState;
+namespace iText.IO.Codec.Brotli.Dec {
+//\cond DO_NOT_DOCUMENT
+    internal sealed class State {
+//\cond DO_NOT_DOCUMENT
+        internal byte[] ringBuffer;
+//\endcond
 
-		internal readonly iText.IO.Codec.Brotli.Dec.BitReader br = new iText.IO.Codec.Brotli.Dec.BitReader();
+//\cond DO_NOT_DOCUMENT
+        internal byte[] contextModes;
+//\endcond
 
-		internal byte[] ringBuffer;
+//\cond DO_NOT_DOCUMENT
+        internal byte[] contextMap;
+//\endcond
 
-		internal readonly int[] blockTypeTrees = new int[3 * iText.IO.Codec.Brotli.Dec.Huffman.HuffmanMaxTableSize];
+//\cond DO_NOT_DOCUMENT
+        internal byte[] distContextMap;
+//\endcond
 
-		internal readonly int[] blockLenTrees = new int[3 * iText.IO.Codec.Brotli.Dec.Huffman.HuffmanMaxTableSize];
+//\cond DO_NOT_DOCUMENT
+        internal byte[] distExtraBits;
+//\endcond
 
-		internal int metaBlockLength;
+//\cond DO_NOT_DOCUMENT
+        internal byte[] output;
+//\endcond
 
-		internal bool inputEnd;
+//\cond DO_NOT_DOCUMENT
+        internal byte[] byteBuffer;
+//\endcond
 
-		internal bool isUncompressed;
+//\cond DO_NOT_DOCUMENT
+        // BitReader
+        internal short[] shortBuffer;
+//\endcond
 
-		internal bool isMetadata;
+//\cond DO_NOT_DOCUMENT
+        // BitReader
+        internal int[] intBuffer;
+//\endcond
 
-		internal readonly iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup hGroup0 = new iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup();
+//\cond DO_NOT_DOCUMENT
+        // BitReader
+        internal int[] rings;
+//\endcond
 
-		internal readonly iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup hGroup1 = new iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup();
+//\cond DO_NOT_DOCUMENT
+        internal int[] blockTrees;
+//\endcond
 
-		internal readonly iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup hGroup2 = new iText.IO.Codec.Brotli.Dec.HuffmanTreeGroup();
+//\cond DO_NOT_DOCUMENT
+        internal int[] literalTreeGroup;
+//\endcond
 
-		internal readonly int[] blockLength = new int[3];
+//\cond DO_NOT_DOCUMENT
+        internal int[] commandTreeGroup;
+//\endcond
 
-		internal readonly int[] numBlockTypes = new int[3];
+//\cond DO_NOT_DOCUMENT
+        internal int[] distanceTreeGroup;
+//\endcond
 
-		internal readonly int[] blockTypeRb = new int[6];
+//\cond DO_NOT_DOCUMENT
+        internal int[] distOffset;
+//\endcond
 
-		internal readonly int[] distRb = new int[] { 16, 15, 11, 4 };
+//\cond DO_NOT_DOCUMENT
+        internal long accumulator64;
+//\endcond
 
-		internal int pos = 0;
+//\cond DO_NOT_DOCUMENT
+        // BitReader: pre-fetched bits.
+        internal int runningState;
+//\endcond
 
-		internal int maxDistance = 0;
+//\cond DO_NOT_DOCUMENT
+        // Default value is 0 == Decode.UNINITIALIZED
+        internal int nextRunningState;
+//\endcond
 
-		internal int distRbIdx = 0;
+//\cond DO_NOT_DOCUMENT
+        internal int accumulator32;
+//\endcond
 
-		internal bool trivialLiteralContext = false;
+//\cond DO_NOT_DOCUMENT
+        // BitReader: pre-fetched bits.
+        internal int bitOffset;
+//\endcond
 
-		internal int literalTreeIndex = 0;
+//\cond DO_NOT_DOCUMENT
+        // BitReader: bit-reading position in accumulator.
+        internal int halfOffset;
+//\endcond
 
-		internal int literalTree;
+//\cond DO_NOT_DOCUMENT
+        // BitReader: offset of next item in intBuffer/shortBuffer.
+        internal int tailBytes;
+//\endcond
 
-		internal int j;
+//\cond DO_NOT_DOCUMENT
+        // BitReader: number of bytes in unfinished half.
+        internal int endOfStreamReached;
+//\endcond
 
-		internal int insertLength;
+//\cond DO_NOT_DOCUMENT
+        // BitReader: input stream is finished.
+        internal int metaBlockLength;
+//\endcond
 
-		internal byte[] contextModes;
+//\cond DO_NOT_DOCUMENT
+        internal int inputEnd;
+//\endcond
 
-		internal byte[] contextMap;
+//\cond DO_NOT_DOCUMENT
+        internal int isUncompressed;
+//\endcond
 
-		internal int contextMapSlice;
+//\cond DO_NOT_DOCUMENT
+        internal int isMetadata;
+//\endcond
 
-		internal int distContextMapSlice;
+//\cond DO_NOT_DOCUMENT
+        internal int literalBlockLength;
+//\endcond
 
-		internal int contextLookupOffset1;
+//\cond DO_NOT_DOCUMENT
+        internal int numLiteralBlockTypes;
+//\endcond
 
-		internal int contextLookupOffset2;
+//\cond DO_NOT_DOCUMENT
+        internal int commandBlockLength;
+//\endcond
 
-		internal int treeCommandOffset;
+//\cond DO_NOT_DOCUMENT
+        internal int numCommandBlockTypes;
+//\endcond
 
-		internal int distanceCode;
+//\cond DO_NOT_DOCUMENT
+        internal int distanceBlockLength;
+//\endcond
 
-		internal byte[] distContextMap;
+//\cond DO_NOT_DOCUMENT
+        internal int numDistanceBlockTypes;
+//\endcond
 
-		internal int numDirectDistanceCodes;
+//\cond DO_NOT_DOCUMENT
+        internal int pos;
+//\endcond
 
-		internal int distancePostfixMask;
+//\cond DO_NOT_DOCUMENT
+        internal int maxDistance;
+//\endcond
 
-		internal int distancePostfixBits;
+//\cond DO_NOT_DOCUMENT
+        internal int distRbIdx;
+//\endcond
 
-		internal int distance;
+//\cond DO_NOT_DOCUMENT
+        internal int trivialLiteralContext;
+//\endcond
 
-		internal int copyLength;
+//\cond DO_NOT_DOCUMENT
+        internal int literalTreeIdx;
+//\endcond
 
-		internal int copyDst;
+//\cond DO_NOT_DOCUMENT
+        internal int commandTreeIdx;
+//\endcond
 
-		internal int maxBackwardDistance;
+//\cond DO_NOT_DOCUMENT
+        internal int j;
+//\endcond
 
-		internal int maxRingBufferSize;
+//\cond DO_NOT_DOCUMENT
+        internal int insertLength;
+//\endcond
 
-		internal int ringBufferSize = 0;
+//\cond DO_NOT_DOCUMENT
+        internal int contextMapSlice;
+//\endcond
 
-		internal long expectedTotalSize = 0;
+//\cond DO_NOT_DOCUMENT
+        internal int distContextMapSlice;
+//\endcond
 
-		internal byte[] customDictionary = new byte[0];
+//\cond DO_NOT_DOCUMENT
+        internal int contextLookupOffset1;
+//\endcond
 
-		internal int bytesToIgnore = 0;
+//\cond DO_NOT_DOCUMENT
+        internal int contextLookupOffset2;
+//\endcond
 
-		internal int outputOffset;
+//\cond DO_NOT_DOCUMENT
+        internal int distanceCode;
+//\endcond
 
-		internal int outputLength;
+//\cond DO_NOT_DOCUMENT
+        internal int numDirectDistanceCodes;
+//\endcond
 
-		internal int outputUsed;
+//\cond DO_NOT_DOCUMENT
+        internal int distancePostfixBits;
+//\endcond
 
-		internal int bytesWritten;
+//\cond DO_NOT_DOCUMENT
+        internal int distance;
+//\endcond
 
-		internal int bytesToWrite;
+//\cond DO_NOT_DOCUMENT
+        internal int copyLength;
+//\endcond
 
-		internal byte[] output;
+//\cond DO_NOT_DOCUMENT
+        internal int maxBackwardDistance;
+//\endcond
 
-		// Current meta-block header information.
-		// TODO: Update to current spec.
-		private static int DecodeWindowBits(iText.IO.Codec.Brotli.Dec.BitReader br)
-		{
-			if (iText.IO.Codec.Brotli.Dec.BitReader.ReadBits(br, 1) == 0)
-			{
-				return 16;
-			}
-			int n = iText.IO.Codec.Brotli.Dec.BitReader.ReadBits(br, 3);
-			if (n != 0)
-			{
-				return 17 + n;
-			}
-			n = iText.IO.Codec.Brotli.Dec.BitReader.ReadBits(br, 3);
-			if (n != 0)
-			{
-				return 8 + n;
-			}
-			return 17;
-		}
+//\cond DO_NOT_DOCUMENT
+        internal int maxRingBufferSize;
+//\endcond
 
-		/// <summary>Associate input with decoder state.</summary>
-		/// <param name="state">uninitialized state without associated input</param>
-		/// <param name="input">compressed data source</param>
-		internal static void SetInput(iText.IO.Codec.Brotli.Dec.State state, System.IO.Stream input)
-		{
-			if (state.runningState != iText.IO.Codec.Brotli.Dec.RunningState.Uninitialized)
-			{
-				throw new System.InvalidOperationException("State MUST be uninitialized");
-			}
-			iText.IO.Codec.Brotli.Dec.BitReader.Init(state.br, input);
-			int windowBits = DecodeWindowBits(state.br);
-			if (windowBits == 9)
-			{
-				/* Reserved case for future expansion. */
-				throw new iText.IO.Codec.Brotli.Dec.BrotliRuntimeException("Invalid 'windowBits' code");
-			}
-			state.maxRingBufferSize = 1 << windowBits;
-			state.maxBackwardDistance = state.maxRingBufferSize - 16;
-			state.runningState = iText.IO.Codec.Brotli.Dec.RunningState.BlockStart;
-		}
+//\cond DO_NOT_DOCUMENT
+        internal int ringBufferSize;
+//\endcond
 
-		internal static void Close(iText.IO.Codec.Brotli.Dec.State state)
-		{
-			if (state.runningState == iText.IO.Codec.Brotli.Dec.RunningState.Uninitialized)
-			{
-				throw new System.InvalidOperationException("State MUST be initialized");
-			}
-			if (state.runningState == iText.IO.Codec.Brotli.Dec.RunningState.Closed)
-			{
-				return;
-			}
-			state.runningState = iText.IO.Codec.Brotli.Dec.RunningState.Closed;
-			iText.IO.Codec.Brotli.Dec.BitReader.Close(state.br);
-		}
-	}
+//\cond DO_NOT_DOCUMENT
+        internal int expectedTotalSize;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal int outputOffset;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal int outputLength;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal int outputUsed;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal int ringBufferBytesWritten;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal int ringBufferBytesReady;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal int isEager;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal int isLargeWindow;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        // Compound dictionary
+        internal int cdNumChunks;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal int cdTotalSize;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal int cdBrIndex;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal int cdBrOffset;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal int cdBrLength;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal int cdBrCopied;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal byte[][] cdChunks;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal int[] cdChunkOffsets;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal int cdBlockBits;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal byte[] cdBlockMap;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal Stream input = Utils.MakeEmptyInput();
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        // BitReader
+        internal State() {
+            this.ringBuffer = new byte[0];
+            this.rings = new int[10];
+            this.rings[0] = 16;
+            this.rings[1] = 15;
+            this.rings[2] = 11;
+            this.rings[3] = 4;
+        }
+//\endcond
+    }
+//\endcond
 }

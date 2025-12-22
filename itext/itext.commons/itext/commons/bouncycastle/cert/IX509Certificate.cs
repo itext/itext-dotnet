@@ -69,7 +69,14 @@ namespace iText.Commons.Bouncycastle.Cert {
         /// </summary>
         /// <returns>A byte array containing the Der encoded version of the parameters or null if there are none.</returns>
         byte[] GetSigAlgParams();
-        
+
+        /// <summary>
+        /// Get the Signature Algorithms name.
+        /// </summary>
+        /// <returns>The Signature Algortihm name.</returns>
+        string GetSigAlgName();
+
+
         /// <summary>
         /// Calls actual
         /// <c>GetEncoded</c>
@@ -181,5 +188,6 @@ namespace iText.Commons.Bouncycastle.Cert {
         /// </summary>
         /// <returns>array of IDerObjectIdentifier representing subject attribute types</returns>
         IDerObjectIdentifier[] GetSubjectAttributeTypes();
+
     }
 }

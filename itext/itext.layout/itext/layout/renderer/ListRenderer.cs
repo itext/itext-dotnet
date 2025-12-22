@@ -382,7 +382,7 @@ namespace iText.Layout.Renderer {
                     symbolRenderers.Add(currentSymbolRenderer);
                     if (listSymbolNotFit && !isForcedPlacement) {
                         return new LayoutResult(LayoutResult.NOTHING, null, null, this, listSymbolLayoutResult.GetCauseOfNothing()
-                            );
+                             == null ? this : listSymbolLayoutResult.GetCauseOfNothing());
                     }
                 }
                 float maxSymbolWidth = 0;

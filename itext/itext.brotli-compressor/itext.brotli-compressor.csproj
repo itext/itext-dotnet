@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+  <PropertyGroup Label="Configuration">
+    <SignAssembly>True</SignAssembly>
+    <DelaySign>False</DelaySign>
+    <DocumentationFile>$(TargetDir)bin\$(Configuration)\$(TargetFramework)\itext.brotli-compressor.xml</DocumentationFile>
+    <WarningLevel>0</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutputType>library</OutputType>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>itext.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyName>itext.brotli-compressor</AssemblyName>
+    <RootNamespace />
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWarn>1701;1702;1591;1570;1572;1573;1574;1580;1584;1658</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\itext.commons\itext.commons.csproj" />
+    <ProjectReference Include="..\itext.kernel\itext.kernel.csproj" />
+  </ItemGroup>
+
+</Project>

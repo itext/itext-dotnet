@@ -792,5 +792,20 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff02_"));
         }
+
+        [NUnit.Framework.Test]
+        //TODO DEVSIX-5751: Update after fixing
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void PngImageDistortedTest() {
+            String outFileName = destinationFolder + "distortedPngStream.pdf";
+            String cmpFileName = sourceFolder + "cmp_distortedPngStream.pdf";
+            String imgPath = sourceFolder + "bee.png";
+            ImageData imgData = ImageDataFactory.Create(imgPath);
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument).Add(new iText.Layout.Element.Image(imgData));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff02_"));
+        }
     }
 }

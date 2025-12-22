@@ -339,5 +339,30 @@ namespace iText.StyledXmlParser.Util {
             NUnit.Framework.Assert.AreEqual("1px", styles.Get("border-right-width"));
             NUnit.Framework.Assert.AreEqual("gray", styles.Get("border-right-color"));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ResolveFunctionWithMultipleParamsTest() {
+            IDictionary<String, String> styles = new Dictionary<String, String>();
+            styles.Put("--color-l", "48%");
+            styles.Put("--color-s", "89%");
+            styles.Put("--color-h", "27%");
+            styles.Put("box-shadow", "3px solid hsl(var(--color-h),var(--color-s),var(--color-l))");
+            CssVariableUtil.ResolveCssVariables(styles);
+            NUnit.Framework.Assert.AreEqual(4, styles.Count);
+            NUnit.Framework.Assert.AreEqual("3px solid hsl(27%,89%,48%)", styles.Get("box-shadow"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ResolveFunctionWithMultipleParamsNestedTest() {
+            IDictionary<String, String> styles = new Dictionary<String, String>();
+            styles.Put("--color-r", "255");
+            styles.Put("--color-r-2", "0");
+            styles.Put("--color-g", "127");
+            styles.Put("--color-b", "0");
+            styles.Put("border", "1px dotted rgb(var(--color-r, var(--color-r-2)), var(--color-g), var(--color-b))");
+            CssVariableUtil.ResolveCssVariables(styles);
+            NUnit.Framework.Assert.AreEqual(16, styles.Count);
+            NUnit.Framework.Assert.AreEqual("rgb(255,127,0)", styles.Get("border-bottom-color"));
+        }
     }
 }

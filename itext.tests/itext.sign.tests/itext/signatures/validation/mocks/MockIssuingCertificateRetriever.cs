@@ -28,6 +28,7 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 using iText.Signatures;
 using iText.Signatures.Validation;
+using iText.Signatures.Validation.Dataorigin;
 
 namespace iText.Signatures.Validation.Mocks {
     public class MockIssuingCertificateRetriever : IssuingCertificateRetriever {
@@ -157,6 +158,11 @@ namespace iText.Signatures.Validation.Mocks {
         }
 
         public override void AddKnownCertificates(ICollection<IX509Certificate> certificates) {
+            AddKnownCertificates(certificates, CertificateOrigin.OTHER);
+        }
+
+        public override void AddKnownCertificates(ICollection<IX509Certificate> certificates, CertificateOrigin? dataOrigin
+            ) {
             addKnownCertificatesCalls.Add(certificates);
             if (addKnownCertificatesHandler != null) {
                 addKnownCertificatesHandler(certificates);
