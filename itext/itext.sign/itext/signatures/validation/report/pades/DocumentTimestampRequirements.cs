@@ -29,44 +29,60 @@ namespace iText.Signatures.Validation.Report.Pades {
     internal class DocumentTimestampRequirements : AbstractPadesLevelRequirements {
         public const String SUBFILTER_NOT_ETSI_RFC3161 = "Timestamp SubFilter entry value is not ETSI.RFC3161";
 
-        private static IDictionary<PAdESLevel, AbstractPadesLevelRequirements.LevelChecks> checks = new Dictionary
+        private static readonly IDictionary<PAdESLevel, AbstractPadesLevelRequirements.LevelChecks> CHECKS = new Dictionary
             <PAdESLevel, AbstractPadesLevelRequirements.LevelChecks>();
 
-        private static IDictionary<PAdESLevel, AbstractPadesLevelRequirements.LevelChecks> dssCoveredTsChecks = new 
-            Dictionary<PAdESLevel, AbstractPadesLevelRequirements.LevelChecks>();
+        private static readonly IDictionary<PAdESLevel, AbstractPadesLevelRequirements.LevelChecks> DSS_COVERED_TS_CHECKS
+             = new Dictionary<PAdESLevel, AbstractPadesLevelRequirements.LevelChecks>();
 
-        private readonly bool firstTimestamp;
+        private readonly bool coveredByDss;
 
         static DocumentTimestampRequirements() {
             AbstractPadesLevelRequirements.LevelChecks bbChecks = new AbstractPadesLevelRequirements.LevelChecks();
-            checks.Put(PAdESLevel.B_B, bbChecks);
+            CHECKS.Put(PAdESLevel.B_B, bbChecks);
             AbstractPadesLevelRequirements.LevelChecks btChecks = new AbstractPadesLevelRequirements.LevelChecks();
-            checks.Put(PAdESLevel.B_T, btChecks);
+            CHECKS.Put(PAdESLevel.B_T, btChecks);
             AbstractPadesLevelRequirements.LevelChecks bltChecks = new AbstractPadesLevelRequirements.LevelChecks();
-            checks.Put(PAdESLevel.B_LT, bltChecks);
+            CHECKS.Put(PAdESLevel.B_LT, bltChecks);
             AbstractPadesLevelRequirements.LevelChecks bltaChecks = new AbstractPadesLevelRequirements.LevelChecks();
-            checks.Put(PAdESLevel.B_LTA, bltaChecks);
+            CHECKS.Put(PAdESLevel.B_LTA, bltaChecks);
             bltaChecks.shalls.Add(new AbstractPadesLevelRequirements.CheckAndMessage((r) => r.timestampDictionaryEntrySubFilterValueEtsiRfc3161
                 , SUBFILTER_NOT_ETSI_RFC3161));
-            bbChecks = new AbstractPadesLevelRequirements.LevelChecks();
-            dssCoveredTsChecks.Put(PAdESLevel.B_B, bbChecks);
-            btChecks = new AbstractPadesLevelRequirements.LevelChecks();
-            dssCoveredTsChecks.Put(PAdESLevel.B_T, btChecks);
-            bltChecks = new AbstractPadesLevelRequirements.LevelChecks();
-            dssCoveredTsChecks.Put(PAdESLevel.B_LT, bltChecks);
-            bltaChecks = new AbstractPadesLevelRequirements.LevelChecks();
-            dssCoveredTsChecks.Put(PAdESLevel.B_LTA, bltaChecks);
+            AbstractPadesLevelRequirements.LevelChecks dssBbChecks = new AbstractPadesLevelRequirements.LevelChecks();
+            dssBbChecks.shalls.AddAll(bbChecks.shalls);
+            dssBbChecks.shoulds.AddAll(bbChecks.shoulds);
+            DSS_COVERED_TS_CHECKS.Put(PAdESLevel.B_B, dssBbChecks);
+            AbstractPadesLevelRequirements.LevelChecks dssBtChecks = new AbstractPadesLevelRequirements.LevelChecks();
+            dssBtChecks.shalls.AddAll(btChecks.shalls);
+            dssBtChecks.shoulds.AddAll(btChecks.shoulds);
+            DSS_COVERED_TS_CHECKS.Put(PAdESLevel.B_T, dssBtChecks);
+            AbstractPadesLevelRequirements.LevelChecks dssBltChecks = new AbstractPadesLevelRequirements.LevelChecks();
+            dssBltChecks.shalls.AddAll(bltChecks.shalls);
+            dssBltChecks.shoulds.AddAll(bltChecks.shoulds);
+            DSS_COVERED_TS_CHECKS.Put(PAdESLevel.B_LT, dssBltChecks);
+            dssBltChecks.shalls.Add(CreateRevocationDssUsageCheck());
+            bltChecks.shalls.Add(CreateCertificateExternalRetrievalCheck());
+            dssBltChecks.shoulds.Add(CreateCertificatesDssUsageCheck());
+            AbstractPadesLevelRequirements.LevelChecks dssBltaChecks = new AbstractPadesLevelRequirements.LevelChecks(
+                );
+            dssBltaChecks.shalls.AddAll(bltaChecks.shalls);
+            dssBltaChecks.shoulds.AddAll(bltaChecks.shoulds);
+            dssBltaChecks.shalls.Add(CreateRevocationDssPoECoverage());
+            DSS_COVERED_TS_CHECKS.Put(PAdESLevel.B_LTA, dssBltaChecks);
         }
 
         /// <summary>Creates a new instance.</summary>
-        public DocumentTimestampRequirements(bool firstTimestamp)
-            : base() {
-            this.firstTimestamp = firstTimestamp;
+        public DocumentTimestampRequirements(String name, bool coveredByDss)
+            : base(name) {
+            this.coveredByDss = coveredByDss;
         }
 
         protected internal override IDictionary<PAdESLevel, AbstractPadesLevelRequirements.LevelChecks> GetChecks(
             ) {
-            return checks;
+            if (coveredByDss) {
+                return DSS_COVERED_TS_CHECKS;
+            }
+            return CHECKS;
         }
     }
 //\endcond

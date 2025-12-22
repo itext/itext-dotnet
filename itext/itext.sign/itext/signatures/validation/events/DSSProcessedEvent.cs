@@ -20,27 +20,16 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using iText.Kernel.Pdf;
-
 namespace iText.Signatures.Validation.Events {
     /// <summary>This event is triggered after the most recent DSS is being read.</summary>
     public class DSSProcessedEvent : IValidationEvent {
-        private readonly PdfDictionary dss;
-
         /// <summary>Creates a new instance.</summary>
-        /// <param name="dss">the dss that was read</param>
-        public DSSProcessedEvent(PdfDictionary dss) {
-            this.dss = dss;
+        public DSSProcessedEvent() {
         }
 
+        // empty constructor
         public virtual EventType GetEventType() {
             return EventType.DSS_ENTRY_PROCESSED;
-        }
-
-        /// <summary>Returns the DSS.</summary>
-        /// <returns>the DSS</returns>
-        public virtual PdfDictionary GetDss() {
-            return dss;
         }
     }
 }

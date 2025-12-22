@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Linq;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
@@ -78,8 +79,8 @@ namespace iText.Signatures.Validation.Report.Pades {
             reportGenerator = new PAdESLevelReportGenerator();
             builder.WithPAdESLevelReportGenerator(reportGenerator);
             SignatureValidationProperties properties = new SignatureValidationProperties();
-            properties.SetFreshness(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts.Of(TimeBasedContext
-                .PRESENT), TimeSpan.FromDays(99999));
+            properties.SetFreshness(ValidatorContexts.All(), CertificateSources.All(), TimeBasedContexts.All(), TimeSpan.FromDays
+                (99999));
             builder.WithSignatureValidationProperties(properties);
         }
 
@@ -91,6 +92,12 @@ namespace iText.Signatures.Validation.Report.Pades {
                     validator.ValidateSignatures();
                     DocumentPAdESLevelReport report = reportGenerator.GetReport();
                     NUnit.Framework.Assert.AreEqual(PAdESLevel.B_B, report.GetDocumentLevel());
+                    NUnit.Framework.Assert.IsTrue(report.GetSignatureReport("Signature1").GetNonConformaties().Get(PAdESLevel.
+                        B_T).Any((nc) => AbstractPadesLevelRequirements.THERE_MUST_BE_A_SIGNATURE_OR_DOCUMENT_TIMESTAMP_AVAILABLE
+                        .Equals(nc)));
+                    NUnit.Framework.Assert.IsTrue(report.GetSignatureReport("Signature1").GetWarnings().Get(PAdESLevel.B_B).Any
+                        ((w) => AbstractPadesLevelRequirements.SIGNED_DATA_CERTIFICATES_SHOULD_INCLUDE_THE_ENTIRE_CERTIFICATE_CHAIN_AND_INCLUDE_CA
+                        .Equals(w)));
                 }
             }
         }
@@ -103,6 +110,14 @@ namespace iText.Signatures.Validation.Report.Pades {
                     validator.ValidateSignatures();
                     DocumentPAdESLevelReport report = reportGenerator.GetReport();
                     NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetDocumentLevel());
+                    NUnit.Framework.Assert.AreEqual(1, report.GetSignatureReport("Signature1").GetNonConformaties().Get(PAdESLevel
+                        .B_LT).Where((nc) => AbstractPadesLevelRequirements.DSS_DICTIONARY_IS_MISSING.Equals(nc)).Count());
+                    NUnit.Framework.Assert.AreEqual(1, report.GetSignatureReport("Signature1").GetNonConformaties().Get(PAdESLevel
+                        .B_LT).Count);
+                    NUnit.Framework.Assert.AreEqual(0, report.GetSignatureReport("Signature1").GetWarnings().Get(PAdESLevel.B_T
+                        ).Count);
+                    NUnit.Framework.Assert.AreEqual(1, report.GetSignatureReport("Signature1").GetWarnings().Get(PAdESLevel.B_B
+                        ).Count);
                 }
             }
         }
@@ -115,6 +130,18 @@ namespace iText.Signatures.Validation.Report.Pades {
                     validator.ValidateSignatures();
                     DocumentPAdESLevelReport report = reportGenerator.GetReport();
                     NUnit.Framework.Assert.AreEqual(PAdESLevel.B_LT, report.GetDocumentLevel());
+                    NUnit.Framework.Assert.AreEqual(1, report.GetSignatureReport("Signature1").GetNonConformaties().Get(PAdESLevel
+                        .B_LTA).Where((nc) => AbstractPadesLevelRequirements.DSS_IS_NOT_COVERED_BY_TIMESTAMP.Equals(nc)).Count
+                        ());
+                    NUnit.Framework.Assert.AreEqual(1, report.GetSignatureReport("Signature1").GetNonConformaties().Get(PAdESLevel
+                        .B_LTA).Where((nc) => AbstractPadesLevelRequirements.DOCUMENT_TIMESTAMP_IS_MISSING.Equals(nc)).Count()
+                        );
+                    NUnit.Framework.Assert.AreEqual(0, report.GetSignatureReport("Signature1").GetWarnings().Get(PAdESLevel.B_LT
+                        ).Count);
+                    NUnit.Framework.Assert.AreEqual(0, report.GetSignatureReport("Signature1").GetWarnings().Get(PAdESLevel.B_T
+                        ).Count);
+                    NUnit.Framework.Assert.AreEqual(1, report.GetSignatureReport("Signature1").GetWarnings().Get(PAdESLevel.B_B
+                        ).Count);
                 }
             }
         }
@@ -128,8 +155,28 @@ namespace iText.Signatures.Validation.Report.Pades {
                     SignatureValidator validator = builder.BuildSignatureValidator(doc);
                     validator.ValidateSignatures();
                     DocumentPAdESLevelReport report = reportGenerator.GetReport();
-                    NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetSignatureReport("Signature1").GetLevel());
+                    NUnit.Framework.Assert.AreEqual(PAdESLevel.B_LT, report.GetSignatureReport("Signature1").GetLevel());
                     NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetSignatureReport("Signature2").GetLevel());
+                    NUnit.Framework.Assert.AreEqual(1, report.GetSignatureReport("Signature1").GetNonConformaties().Get(PAdESLevel
+                        .B_LTA).Where((nc) => AbstractPadesLevelRequirements.DSS_IS_NOT_COVERED_BY_TIMESTAMP.Equals(nc)).Count
+                        ());
+                    NUnit.Framework.Assert.AreEqual(1, report.GetSignatureReport("Signature1").GetNonConformaties().Get(PAdESLevel
+                        .B_LTA).Where((nc) => AbstractPadesLevelRequirements.DOCUMENT_TIMESTAMP_IS_MISSING.Equals(nc)).Count()
+                        );
+                    NUnit.Framework.Assert.AreEqual(0, report.GetSignatureReport("Signature1").GetWarnings().Get(PAdESLevel.B_LT
+                        ).Count);
+                    NUnit.Framework.Assert.AreEqual(0, report.GetSignatureReport("Signature1").GetWarnings().Get(PAdESLevel.B_T
+                        ).Count);
+                    NUnit.Framework.Assert.AreEqual(1, report.GetSignatureReport("Signature1").GetWarnings().Get(PAdESLevel.B_B
+                        ).Count);
+                    NUnit.Framework.Assert.AreEqual(1, report.GetSignatureReport("Signature2").GetNonConformaties().Get(PAdESLevel
+                        .B_LT).Where((nc) => AbstractPadesLevelRequirements.DSS_DICTIONARY_IS_MISSING.Equals(nc)).Count());
+                    NUnit.Framework.Assert.AreEqual(1, report.GetSignatureReport("Signature2").GetNonConformaties().Get(PAdESLevel
+                        .B_LT).Count);
+                    NUnit.Framework.Assert.AreEqual(0, report.GetSignatureReport("Signature2").GetWarnings().Get(PAdESLevel.B_T
+                        ).Count);
+                    NUnit.Framework.Assert.AreEqual(1, report.GetSignatureReport("Signature2").GetWarnings().Get(PAdESLevel.B_B
+                        ).Count);
                 }
             }
         }
@@ -143,8 +190,24 @@ namespace iText.Signatures.Validation.Report.Pades {
                     SignatureValidator validator = builder.BuildSignatureValidator(doc);
                     validator.ValidateSignatures();
                     DocumentPAdESLevelReport report = reportGenerator.GetReport();
-                    NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetSignatureReport("Signature1").GetLevel());
-                    NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetSignatureReport("Signature2").GetLevel());
+                    NUnit.Framework.Assert.AreEqual(PAdESLevel.B_LTA, report.GetSignatureReport("Signature1").GetLevel());
+                    NUnit.Framework.Assert.AreEqual(PAdESLevel.B_LTA, report.GetSignatureReport("Signature2").GetLevel());
+                    NUnit.Framework.Assert.AreEqual(0, report.GetSignatureReport("Signature1").GetWarnings().Get(PAdESLevel.B_LTA
+                        ).Count);
+                    NUnit.Framework.Assert.AreEqual(0, report.GetSignatureReport("Signature1").GetWarnings().Get(PAdESLevel.B_LT
+                        ).Count);
+                    NUnit.Framework.Assert.AreEqual(0, report.GetSignatureReport("Signature1").GetWarnings().Get(PAdESLevel.B_T
+                        ).Count);
+                    NUnit.Framework.Assert.AreEqual(2, report.GetSignatureReport("Signature1").GetWarnings().Get(PAdESLevel.B_B
+                        ).Count);
+                    NUnit.Framework.Assert.AreEqual(0, report.GetSignatureReport("Signature2").GetWarnings().Get(PAdESLevel.B_LTA
+                        ).Count);
+                    NUnit.Framework.Assert.AreEqual(0, report.GetSignatureReport("Signature2").GetWarnings().Get(PAdESLevel.B_LT
+                        ).Count);
+                    NUnit.Framework.Assert.AreEqual(0, report.GetSignatureReport("Signature2").GetWarnings().Get(PAdESLevel.B_T
+                        ).Count);
+                    NUnit.Framework.Assert.AreEqual(2, report.GetSignatureReport("Signature2").GetWarnings().Get(PAdESLevel.B_B
+                        ).Count);
                 }
             }
         }
@@ -158,6 +221,16 @@ namespace iText.Signatures.Validation.Report.Pades {
                     validator.ValidateSignatures();
                     DocumentPAdESLevelReport report = reportGenerator.GetReport();
                     NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetSignatureReport("Signature1").GetLevel());
+                    NUnit.Framework.Assert.AreEqual(1, report.GetSignatureReport("Signature1").GetNonConformaties().Get(PAdESLevel
+                        .B_LT).Where((nc) => nc.Contains(AbstractPadesLevelRequirements.REVOCATION_DATA_FOR_THESE_CERTIFICATES_IS_MISSING
+                        )).Count());
+                    // There should be only one certificate listed
+                    // each listed certificate contains a SerialNumber
+                    NUnit.Framework.Assert.AreEqual(1, report.GetSignatureReport("Signature1").GetNonConformaties().Get(PAdESLevel
+                        .B_LT).Where((nc) => nc.Contains("SerialNumber")).Count());
+                    // it should be the correct certificate
+                    NUnit.Framework.Assert.AreEqual(1, report.GetSignatureReport("Signature1").GetNonConformaties().Get(PAdESLevel
+                        .B_LT).Where((nc) => nc.Contains("iTextAdvancedTSTest")).Count());
                 }
             }
         }
@@ -169,8 +242,15 @@ namespace iText.Signatures.Validation.Report.Pades {
                     SignatureValidator validator = builder.BuildSignatureValidator(doc);
                     validator.ValidateSignatures();
                     DocumentPAdESLevelReport report = reportGenerator.GetReport();
-                    // TODO DEVSIX-9591 The level is T because there is no logic to distinguish between last timestamp and everything else.
-                    NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetDocumentLevel());
+                    NUnit.Framework.Assert.AreEqual(PAdESLevel.B_LTA, report.GetDocumentLevel());
+                    NUnit.Framework.Assert.AreEqual(0, report.GetSignatureReport("Signature1").GetWarnings().Get(PAdESLevel.B_LTA
+                        ).Count);
+                    NUnit.Framework.Assert.AreEqual(0, report.GetSignatureReport("Signature1").GetWarnings().Get(PAdESLevel.B_LT
+                        ).Count);
+                    NUnit.Framework.Assert.AreEqual(0, report.GetSignatureReport("Signature1").GetWarnings().Get(PAdESLevel.B_T
+                        ).Count);
+                    NUnit.Framework.Assert.AreEqual(2, report.GetSignatureReport("Signature1").GetWarnings().Get(PAdESLevel.B_B
+                        ).Count);
                 }
             }
         }
@@ -184,6 +264,16 @@ namespace iText.Signatures.Validation.Report.Pades {
                     validator.ValidateSignatures();
                     DocumentPAdESLevelReport report = reportGenerator.GetReport();
                     NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetDocumentLevel());
+                    NUnit.Framework.Assert.AreEqual(1, report.GetSignatureReport("Signature1").GetNonConformaties().Get(PAdESLevel
+                        .B_LT).Where((nc) => nc.Contains(AbstractPadesLevelRequirements.REVOCATION_DATA_FOR_THESE_CERTIFICATES_IS_MISSING
+                        )).Count());
+                    // There should be only one certificated listed
+                    // each listed certificate contains a SerialNumber
+                    NUnit.Framework.Assert.AreEqual(1, report.GetSignatureReport("Signature1").GetNonConformaties().Get(PAdESLevel
+                        .B_LT).Where((nc) => nc.Contains("SerialNumber")).Count());
+                    // it should be the correct certificate
+                    NUnit.Framework.Assert.AreEqual(1, report.GetSignatureReport("Signature1").GetNonConformaties().Get(PAdESLevel
+                        .B_LT).Where((nc) => nc.Contains("iTextAdvancedTSTest")).Count());
                 }
             }
         }
@@ -211,8 +301,7 @@ namespace iText.Signatures.Validation.Report.Pades {
                     SignatureValidator validator = builder.BuildSignatureValidator(doc);
                     validator.ValidateSignatures();
                     DocumentPAdESLevelReport report = reportGenerator.GetReport();
-                    // TODO DEVSIX-9591 The level is T because there is no logic to distinguish between last timestamp and everything else.
-                    NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetDocumentLevel());
+                    NUnit.Framework.Assert.AreEqual(PAdESLevel.B_LTA, report.GetDocumentLevel());
                 }
             }
         }
@@ -225,8 +314,15 @@ namespace iText.Signatures.Validation.Report.Pades {
                     SignatureValidator validator = builder.BuildSignatureValidator(doc);
                     validator.ValidateSignatures();
                     DocumentPAdESLevelReport report = reportGenerator.GetReport();
-                    // TODO DEVSIX-9591 The level is T because there is no logic to distinguish between last timestamp and everything else.
-                    NUnit.Framework.Assert.AreEqual(PAdESLevel.B_T, report.GetDocumentLevel());
+                    NUnit.Framework.Assert.AreEqual(PAdESLevel.B_LTA, report.GetDocumentLevel());
+                    NUnit.Framework.Assert.AreEqual(0, report.GetSignatureReport("Signature1").GetWarnings().Get(PAdESLevel.B_LTA
+                        ).Count);
+                    NUnit.Framework.Assert.AreEqual(0, report.GetSignatureReport("Signature1").GetWarnings().Get(PAdESLevel.B_LT
+                        ).Count);
+                    NUnit.Framework.Assert.AreEqual(0, report.GetSignatureReport("Signature1").GetWarnings().Get(PAdESLevel.B_T
+                        ).Count);
+                    NUnit.Framework.Assert.AreEqual(2, report.GetSignatureReport("Signature1").GetWarnings().Get(PAdESLevel.B_B
+                        ).Count);
                 }
             }
         }

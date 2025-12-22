@@ -33,7 +33,7 @@ namespace iText.Signatures.Validation.Events {
 
         /// <summary><inheritDoc/></summary>
         public override EventType GetEventType() {
-            return EventType.CERTIFICATE_ISSUER_EXTERNAL_RETRIEVAL;
+            return EventType.CERTIFICATE_ISSUER_NOT_FROM_DOCUMENT;
         }
     }
 }

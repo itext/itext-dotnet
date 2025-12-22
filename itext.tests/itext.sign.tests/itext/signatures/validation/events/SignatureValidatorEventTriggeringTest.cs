@@ -21,8 +21,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using iText.Bouncycastleconnector;
+using iText.Commons.Actions;
 using iText.Commons.Bouncycastle;
 using iText.Kernel.Pdf;
 using iText.Signatures.Validation;
@@ -68,6 +70,39 @@ namespace iText.Signatures.Validation.Events {
                 ());
             NUnit.Framework.Assert.AreEqual(2, testEventHandler.GetEvents().Where((e) => e is AlgorithmUsageEvent && "Signature verification check."
                 .Equals(((AlgorithmUsageEvent)e).GetUsageLocation())).Count());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DssEventIssuingTest() {
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "docWithMultipleSignaturesAndTimeStamp.pdf"
+                ))) {
+                MockChainValidator mockCertificateChainValidator = new MockChainValidator();
+                SignatureValidationProperties parameters = new SignatureValidationProperties();
+                MockIssuingCertificateRetriever mockCertificateRetriever = new MockIssuingCertificateRetriever();
+                MockDocumentRevisionsValidator mockDocumentRevisionsValidator = new MockDocumentRevisionsValidator();
+                ValidatorChainBuilder builder = CreateValidatorChainBuilder(mockCertificateRetriever, parameters, mockCertificateChainValidator
+                    , mockDocumentRevisionsValidator);
+                MockEventListener testEventHandler = new MockEventListener();
+                builder.GetEventManager().Register(testEventHandler);
+                SignatureValidator signatureValidator = builder.BuildSignatureValidator(document);
+                signatureValidator.ValidateSignatures();
+                NUnit.Framework.Assert.AreEqual(2, testEventHandler.GetEvents().Where((e) => e is DSSProcessedEvent).Count
+                    ());
+                //structure
+                // R1
+                // R2  signer1 (8.0)
+                // R3 TS1 (23.0) DSSv1
+                // R4 signer 2 (30.0)
+                // R5 TS2 (42.0) DSSv2
+                // R6 TD3 (51.0)
+                IList<IEvent> filtered = testEventHandler.GetEvents().Where((e) => e is ProofOfExistenceFoundEvent || e is
+                     DSSProcessedEvent).ToList();
+                NUnit.Framework.Assert.AreEqual(typeof(ProofOfExistenceFoundEvent), filtered[0].GetType());
+                NUnit.Framework.Assert.AreEqual(typeof(ProofOfExistenceFoundEvent), filtered[1].GetType());
+                NUnit.Framework.Assert.AreEqual(typeof(DSSProcessedEvent), filtered[2].GetType());
+                NUnit.Framework.Assert.AreEqual(typeof(ProofOfExistenceFoundEvent), filtered[3].GetType());
+                NUnit.Framework.Assert.AreEqual(typeof(DSSProcessedEvent), filtered[4].GetType());
+            }
         }
     }
 }

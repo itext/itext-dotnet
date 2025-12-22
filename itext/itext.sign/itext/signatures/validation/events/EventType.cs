@@ -32,15 +32,15 @@ namespace iText.Signatures.Validation.Events {
         /// <summary>Event triggered for every timestamp validation started.</summary>
         PROOF_OF_EXISTENCE_FOUND,
         /// <summary>
-        /// Event triggered for every certificate issuer that
-        /// is retrieved via Authority Information Access extension.
+        /// Event triggered for every certificate issuer that is retrieved via Authority Information Access extension,
+        /// or any other external source.
         /// </summary>
-        CERTIFICATE_ISSUER_EXTERNAL_RETRIEVAL,
+        CERTIFICATE_ISSUER_NOT_FROM_DOCUMENT,
         /// <summary>
         /// Event triggered for every certificate issuer available in the document
         /// that was not in the most recent DSS.
         /// </summary>
-        CERTIFICATE_ISSUER_OTHER_INTERNAL_SOURCE_USED,
+        CERTIFICATE_ISSUER_NOT_FROM_DSS,
         /// <summary>Event triggered when revocation data coming not from the latest DSS is needed to perform signature validation.
         ///     </summary>
         REVOCATION_NOT_FROM_DSS,

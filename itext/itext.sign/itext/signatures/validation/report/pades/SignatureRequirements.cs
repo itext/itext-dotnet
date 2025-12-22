@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using System.Collections.Generic;
 
 namespace iText.Signatures.Validation.Report.Pades {
@@ -48,17 +49,24 @@ namespace iText.Signatures.Validation.Report.Pades {
                 , THERE_MUST_BE_A_SIGNATURE_OR_DOCUMENT_TIMESTAMP_AVAILABLE));
             AbstractPadesLevelRequirements.LevelChecks bltChecks = new AbstractPadesLevelRequirements.LevelChecks();
             CHECKS.Put(PAdESLevel.B_LT, bltChecks);
+            bltChecks.shalls.Add(new AbstractPadesLevelRequirements.CheckAndMessage((r) => r.isDSSPresent, DSS_DICTIONARY_IS_MISSING
+                ));
+            bltChecks.shalls.Add(CreateRevocationDssUsageCheck());
+            bltChecks.shalls.Add(CreateCertificateExternalRetrievalCheck());
+            bltChecks.shoulds.Add(CreateCertificatesDssUsageCheck());
             AbstractPadesLevelRequirements.LevelChecks bltaChecks = new AbstractPadesLevelRequirements.LevelChecks();
             CHECKS.Put(PAdESLevel.B_LTA, bltaChecks);
             bltaChecks.shalls.Add(new AbstractPadesLevelRequirements.CheckAndMessage((r) => r.documentTimestampPresent
                 , DOCUMENT_TIMESTAMP_IS_MISSING));
             bltaChecks.shalls.Add(new AbstractPadesLevelRequirements.CheckAndMessage((r) => r.poeDssPresent, DSS_IS_NOT_COVERED_BY_TIMESTAMP
                 ));
+            bltaChecks.shalls.Add(CreateRevocationDssPoECoverage());
         }
 
         /// <summary>Creates a new instance.</summary>
-        public SignatureRequirements()
-            : base() {
+        /// <param name="name">the signature name</param>
+        public SignatureRequirements(String name)
+            : base(name) {
         }
 
         protected internal override IDictionary<PAdESLevel, AbstractPadesLevelRequirements.LevelChecks> GetChecks(

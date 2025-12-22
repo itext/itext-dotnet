@@ -34,18 +34,17 @@ namespace iText.Signatures.Validation.Report.Pades {
 
         private readonly PAdESLevel highestAchievedLevel;
 
-        private readonly IDictionary<PAdESLevel, IList<String>> nonConformaties;
+        private readonly IDictionary<PAdESLevel, ICollection<String>> nonConformaties;
 
-        private readonly IDictionary<PAdESLevel, IList<String>> warnings;
+        private readonly IDictionary<PAdESLevel, ICollection<String>> warnings;
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>Creates new instance.</summary>
-        /// <param name="signatureName">the signature name</param>
         /// <param name="reqs">the requirements gathered for this signature</param>
         /// <param name="timestampReports">the timestamp reports gathered before for this signature</param>
-        internal PAdESLevelReport(String signatureName, AbstractPadesLevelRequirements reqs, IEnumerable<iText.Signatures.Validation.Report.Pades.PAdESLevelReport
+        internal PAdESLevelReport(AbstractPadesLevelRequirements reqs, IEnumerable<iText.Signatures.Validation.Report.Pades.PAdESLevelReport
             > timestampReports) {
-            this.signatureName = signatureName;
+            this.signatureName = reqs.GetSignatureName();
             this.highestAchievedLevel = reqs.GetHighestAchievedPadesLevel(timestampReports);
             this.nonConformaties = reqs.GetNonConformaties();
             this.warnings = reqs.GetWarnings();
@@ -66,13 +65,13 @@ namespace iText.Signatures.Validation.Report.Pades {
 
         /// <summary>Returns non-conformaties, violated must have rules, per PAdES level.</summary>
         /// <returns>non-conformaties, violated must have rules, per PAdES level</returns>
-        public virtual IDictionary<PAdESLevel, IList<String>> GetNonConformaties() {
+        public virtual IDictionary<PAdESLevel, ICollection<String>> GetNonConformaties() {
             return nonConformaties;
         }
 
         /// <summary>Returns warnings, violated should have rules, per PAdES level.</summary>
         /// <returns>warnings, violated should have rules, per PAdES level</returns>
-        public virtual IDictionary<PAdESLevel, IList<String>> GetWarnings() {
+        public virtual IDictionary<PAdESLevel, ICollection<String>> GetWarnings() {
             return warnings;
         }
 
