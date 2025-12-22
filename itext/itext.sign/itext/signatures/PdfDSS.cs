@@ -30,10 +30,23 @@ using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 
 namespace iText.Signatures {
+    /// <summary>Represents the DSS dictionary.</summary>
     public class PdfDSS : PdfObjectWrapper<PdfDictionary> {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="PdfDSS"/>
+        /// instance.
+        /// </summary>
+        /// <param name="pdfObject">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// to create new
+        /// <see cref="PdfDSS"/>
+        /// instance from
+        /// </param>
         public PdfDSS(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
@@ -42,6 +55,8 @@ namespace iText.Signatures {
             return true;
         }
 
+        /// <summary>Returns certificates stored in DSS dictionary.</summary>
+        /// <returns>certificates stored in DSS dictionary</returns>
         public virtual IX509Certificate[] GetCertificates() {
             PdfArray certs = base.GetPdfObject().GetAsArray(PdfName.Certs);
             IX509Certificate[] result = new IX509Certificate[certs == null ? 0 : certs.Size()];
@@ -56,6 +71,8 @@ namespace iText.Signatures {
             return result;
         }
 
+        /// <summary>Returns OCSP responses stored in DSS dictionary.</summary>
+        /// <returns>OCSP responses stored in DSS dictionary</returns>
         public virtual IOcspResponse[] GetOcsps() {
             PdfArray ocsps = GetPdfObject().GetAsArray(PdfName.OCSPs);
             IOcspResponse[] result = new IOcspResponse[ocsps == null ? 0 : ocsps.Size()];
@@ -70,6 +87,8 @@ namespace iText.Signatures {
             return result;
         }
 
+        /// <summary>Returns CRL responses stored in DSS dictionary.</summary>
+        /// <returns>CRL responses stored in DSS dictionary</returns>
         public virtual IX509Crl[] GetCrls() {
             PdfArray crls = GetPdfObject().GetAsArray(PdfName.CRLs);
             IX509Crl[] result = new IX509Crl[crls == null ? 0 : crls.Size()];
