@@ -1956,16 +1956,13 @@ namespace iText.Layout.Renderer {
             // the number of cells behind is less than minRowspan-1
             // so we should process the last cell in the column as in the case 1 == minRowspan
             if (i != row + minRowspan - 1 && null != rows[i][col]) {
-                CellRenderer overflowCell = (CellRenderer)((Cell)rows[i][col].GetModelElement()).GetRenderer().SetParent(this
-                    );
+                CellRenderer originalCell = rows[i][col];
+                CellRenderer overflowCell = (CellRenderer)originalCell.CreateOverflowRenderer(-1);
                 overflowRows.SetCell(i - row, col, null);
                 overflowRows.SetCell(targetOverflowRowIndex[col] - row, col, overflowCell);
-                CellRenderer originalCell = rows[i][col];
                 rows[i][col] = null;
                 rows[targetOverflowRowIndex[col]][col] = originalCell;
                 originalCell.isLastRendererForModelElement = false;
-                overflowCell.SetProperty(Property.TAGGING_HINT_KEY, originalCell.GetProperty<Object>(Property.TAGGING_HINT_KEY
-                    ));
             }
         }
 
@@ -1976,21 +1973,25 @@ namespace iText.Layout.Renderer {
                 // Here we use the same cell, but create a new renderer which doesn't have any children,
                 // therefore it won't have any content.
                 // we will change properties
-                CellRenderer overflowCell = (CellRenderer)((Cell)currentRow[col].GetModelElement()).Clone(true).GetRenderer
-                    ();
+                Cell cellClone = ((Cell)currentRow[col].GetModelElement()).Clone(true);
+                CellRenderer overflowCell = (CellRenderer)cellClone.GetRenderer();
                 overflowCell.SetParent(this);
+                // Remove properties from model element
+                overflowCell.DeleteProperty(Property.HEIGHT);
+                overflowCell.DeleteProperty(Property.MIN_HEIGHT);
+                overflowCell.DeleteProperty(Property.MAX_HEIGHT);
+                CellRenderer originalCell = currentRow[col];
+                overflowCell.AddAllProperties(originalCell.GetOwnProperties());
+                // Remove properties from renderer after copying
                 overflowCell.DeleteProperty(Property.HEIGHT);
                 overflowCell.DeleteProperty(Property.MIN_HEIGHT);
                 overflowCell.DeleteProperty(Property.MAX_HEIGHT);
                 overflowRows.SetCell(0, col, null);
                 overflowRows.SetCell(targetOverflowRowIndex[col] - row, col, overflowCell);
                 childRenderers.Add(currentRow[col]);
-                CellRenderer originalCell = currentRow[col];
                 currentRow[col] = null;
                 rows[targetOverflowRowIndex[col]][col] = originalCell;
                 originalCell.isLastRendererForModelElement = false;
-                overflowCell.SetProperty(Property.TAGGING_HINT_KEY, originalCell.GetProperty<Object>(Property.TAGGING_HINT_KEY
-                    ));
             }
             else {
                 EnlargeCellWithBigRowspan(currentRow, overflowRows, row, col, minRowspan, splitResult, targetOverflowRowIndex

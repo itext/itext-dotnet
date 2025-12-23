@@ -44,10 +44,10 @@ using iText.Test.Attributes;
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
     public class TableTest : AbstractTableTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/TableTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/layout/TableTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/TableTest/";
 
         private const String TEXT_CONTENT = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
              + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
@@ -59,21 +59,21 @@ namespace iText.Layout {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void SimpleTableTest01() {
             String testName = "tableTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 50, 50 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell
                 (new Cell().Add(new Paragraph("cell 1, 2")));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
             NUnit.Framework.Assert.AreEqual("Cell[row=0, col=0, rowspan=1, colspan=1]", table.GetCell(0, 0).ToString()
                 );
@@ -82,8 +82,8 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void SimpleTableTest02() {
             String testName = "tableTest02.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 50, 50 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell
@@ -92,15 +92,15 @@ namespace iText.Layout {
                 (new Cell());
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SimpleTableTest03() {
             String testName = "tableTest03.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String textContent1 = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
@@ -113,15 +113,15 @@ namespace iText.Layout {
                 ("cell 2, 2\n" + textContent2)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SimpleTableTest04() {
             String testName = "tableTest04.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + TEXT_CONTENT
@@ -132,15 +132,15 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(new Paragraph("cell 3, 1\n" + TEXT_CONTENT)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SimpleTableTest05() {
             String testName = "tableTest05.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell(3, 1).Add(new Paragraph("cell 1, 1:3\n"
@@ -149,15 +149,15 @@ namespace iText.Layout {
                 ).Add(new Paragraph("cell 3, 2\n" + TEXT_CONTENT)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SimpleTableTest06() {
             String testName = "tableTest06.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + TEXT_CONTENT
@@ -166,15 +166,15 @@ namespace iText.Layout {
                  + TEXT_CONTENT)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SimpleTableTest07() {
             String testName = "tableTest07.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell(3, 1).Add(new Paragraph("cell 1, 1:3\n"
@@ -183,15 +183,15 @@ namespace iText.Layout {
                 ("cell 3, 2\n" + TEXT_CONTENT)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SimpleTableTest08() {
             String testName = "tableTest08.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
@@ -205,15 +205,15 @@ namespace iText.Layout {
                 Paragraph("cell 4, 3\n" + middleTextContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SimpleTableTest09() {
             String testName = "tableTest09.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
@@ -229,15 +229,15 @@ namespace iText.Layout {
                 ))).AddCell(new Cell().Add(new Paragraph("cell 5, 3\n" + middleTextContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SimpleTableTest10() {
             String testName = "tableTest10.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph("Table 1"));
@@ -251,7 +251,7 @@ namespace iText.Layout {
                 (new Paragraph("2, 2")));
             doc.Add(table2);
             doc.Add(new Paragraph("Table 3"));
-            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(sourceFolder + "itext.png"
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(SOURCE_FOLDER + "itext.png"
                 )));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 50);
             Table table3 = new Table(new float[] { 100, 100 }).AddCell(new Cell().Add(new Paragraph("1, 1"))).AddCell(
@@ -259,15 +259,15 @@ namespace iText.Layout {
                 ("2, 2")));
             doc.Add(table3);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SimpleTableTest11() {
             String testName = "tableTest11.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
@@ -287,15 +287,15 @@ namespace iText.Layout {
                 )));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SimpleTableTest12() {
             String testName = "tableTest12.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
@@ -320,15 +320,15 @@ namespace iText.Layout {
                 Paragraph("cell 11, 2\n" + shortTextContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SimpleTableTest13() {
             String testName = "tableTest13.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
@@ -346,15 +346,15 @@ namespace iText.Layout {
                 ))).AddCell(new Cell().Add(new Paragraph("cell 7, 2\n" + middleTextContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SimpleTableTest14() {
             String testName = "tableTest14.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
@@ -372,15 +372,15 @@ namespace iText.Layout {
                 Paragraph("cell 6, 3\n" + middleTextContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SimpleTableTest15() {
             String testName = "tableTest15.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
@@ -400,15 +400,15 @@ namespace iText.Layout {
                 ))).AddCell(new Cell().Add(new Paragraph("cell 7, 3\n" + middleTextContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SimpleTableTest16() {
             String testName = "tableTest16.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
@@ -422,15 +422,15 @@ namespace iText.Layout {
                 ))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + longTextContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void WideFirstCellBorderDoesntAffectSecondCellTest() {
             String testName = "wideFirstCellBorderDoesntAffectSecondCellTest.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String longTextContent = "1. " + TEXT_CONTENT + "2. " + TEXT_CONTENT + "3. " + TEXT_CONTENT + "4. " + TEXT_CONTENT
@@ -447,7 +447,7 @@ namespace iText.Layout {
                 ))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + longTextContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -455,8 +455,8 @@ namespace iText.Layout {
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void SimpleTableTest17() {
             String testName = "tableTest17.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 50, 50, 50 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell
@@ -470,7 +470,7 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(new Paragraph("cell 2.3\n" + longText)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -478,8 +478,8 @@ namespace iText.Layout {
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void SimpleTableTest18() {
             String testName = "tableTest18.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph(TEXT_CONTENT));
@@ -494,7 +494,7 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(new Paragraph("cell 2.3\n" + longText)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -502,15 +502,15 @@ namespace iText.Layout {
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void SimpleTableTest19() {
             String testName = "tableTest19.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell(3, 2).Add(new Paragraph("cell 1:2, 1:3\n"
                  + TEXT_CONTENT + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 1, 3\n" + TEXT_CONTENT)))
                 .AddCell(new Cell().Add(new Paragraph("cell 2, 3\n" + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph
                 ("cell 3, 3\n" + TEXT_CONTENT))).AddCell(new Cell().Add(new iText.Layout.Element.Image(ImageDataFactory
-                .Create(sourceFolder + "red.png")))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n" + SHORT_TEXT_CONTENT
+                .Create(SOURCE_FOLDER + "red.png")))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n" + SHORT_TEXT_CONTENT
                 ))).AddCell(new Cell().Add(new Paragraph("cell 4, 3\n" + MIDDLE_TEXT_CONTENT))).AddCell(new Cell().Add
                 (new Paragraph("cell 5, 1\n" + SHORT_TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 5, 2\n"
                  + SHORT_TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 5, 3\n" + MIDDLE_TEXT_CONTENT))).AddCell
@@ -519,7 +519,7 @@ namespace iText.Layout {
                 )));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -527,12 +527,12 @@ namespace iText.Layout {
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void SimpleTableTest20() {
             String testName = "tableTest20.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell().Add(new iText.Layout.Element.Image
-                (ImageDataFactory.Create(sourceFolder + "red.png")))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n"
+                (ImageDataFactory.Create(SOURCE_FOLDER + "red.png")))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n"
                  + SHORT_TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 4, 3\n" + MIDDLE_TEXT_CONTENT))).AddCell
                 (new Cell().Add(new Paragraph("cell 5, 1\n" + SHORT_TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph
                 ("cell 5, 2\n" + SHORT_TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 5, 3\n" + MIDDLE_TEXT_CONTENT
@@ -541,7 +541,7 @@ namespace iText.Layout {
                  + MIDDLE_TEXT_CONTENT)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -549,8 +549,8 @@ namespace iText.Layout {
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         public virtual void SimpleTableTest21() {
             String testName = "tableTest21.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
@@ -558,7 +558,7 @@ namespace iText.Layout {
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
             doc.Add(new Paragraph(TEXT_CONTENT));
             Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell().Add(new iText.Layout.Element.Image
-                (ImageDataFactory.Create(sourceFolder + "red.png")))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n"
+                (ImageDataFactory.Create(SOURCE_FOLDER + "red.png")))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n"
                  + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 3\n" + middleTextContent))).AddCell
                 (new Cell().Add(new Paragraph("cell 5, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph
                 ("cell 5, 2\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 5, 3\n" + middleTextContent
@@ -567,15 +567,15 @@ namespace iText.Layout {
                 )));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SimpleTableTest22() {
             String testName = "tableTest22.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new UnitValue[] { UnitValue.CreatePointValue(30), UnitValue.CreatePointValue(30), 
@@ -584,15 +584,15 @@ namespace iText.Layout {
                 ("cell 1, 3"))).AddCell(new Cell().Add(new Paragraph("cell 1, 4")));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SimpleTableTest23() {
             String testName = "tableTest23.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(2).AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell(new Cell().Add(new 
@@ -616,15 +616,15 @@ namespace iText.Layout {
                 ))).Flush();
             table.Complete();
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void WidthInPercentShouldBeResetAfterOverflow() {
             String testName = "widthInPercentShouldBeResetAfterOverflow.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new Div().SetHeight(730).SetWidth(523));
@@ -636,15 +636,15 @@ namespace iText.Layout {
             // will be added on the second page
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void BigRowspanTest01() {
             String testName = "bigRowspanTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
@@ -659,15 +659,15 @@ namespace iText.Layout {
                 (new Cell().Add(new Paragraph("cell 5, 1\n" + middleTextContent)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void BigRowspanTest02() {
             String testName = "bigRowspanTest02.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
@@ -682,15 +682,15 @@ namespace iText.Layout {
                 ("cell 5, 1\n" + TEXT_CONTENT)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void BigRowspanTest03() {
             String testName = "bigRowspanTest03.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
@@ -702,15 +702,15 @@ namespace iText.Layout {
                 ("cell 5, 1\n" + TEXT_CONTENT)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void BigRowspanTest04() {
             String testName = "bigRowspanTest04.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
@@ -725,15 +725,15 @@ namespace iText.Layout {
                 (new Cell().Add(new Paragraph("cell 5, 1\n" + TEXT_CONTENT)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void BigRowspanTest05() {
             String testName = "bigRowspanTest05.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String longTextContent = "1. " + TEXT_CONTENT + "2. " + TEXT_CONTENT + "3. " + TEXT_CONTENT + "4. " + TEXT_CONTENT
@@ -745,15 +745,15 @@ namespace iText.Layout {
                  + TEXT_CONTENT))).AddCell(new Cell().Add(new Paragraph("cell 3, 2\n" + TEXT_CONTENT)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void BigRowspanTest06() {
             String testName = "bigRowspanTest06.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth().AddCell(new Cell(2, 1).Add
@@ -764,15 +764,15 @@ namespace iText.Layout {
                 .ORANGE, 40));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void BigRowspanTest07() {
             String testName = "bigRowspanTest07.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
@@ -789,15 +789,15 @@ namespace iText.Layout {
             }
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void DifferentPageOrientationTest01() {
             String testName = "differentPageOrientationTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String textContent1 = "Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add. You can also type a keyword to search online for the video that best fits your document.";
@@ -814,18 +814,18 @@ namespace iText.Layout {
             doc.SetRenderer(new TableTest.RotatedDocumentRenderer(doc, pdfDoc));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void ExtendLastRowTest01() {
             String testName = "extendLastRowTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(sourceFolder + "itext.png"
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(SOURCE_FOLDER + "itext.png"
                 )));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
@@ -840,7 +840,7 @@ namespace iText.Layout {
             table.SetExtendBottomRowOnSplit(true);
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -848,8 +848,8 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void ToLargeElementWithKeepTogetherPropertyInTableTest01() {
             String testName = "toLargeElementWithKeepTogetherPropertyInTableTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
@@ -866,7 +866,7 @@ namespace iText.Layout {
             table.AddCell(cell);
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -874,9 +874,10 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void ToLargeElementInTableTest01() {
             String testName = "toLargeElementInTableTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "toLargeElementInTableTest01.pdf"));
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "toLargeElementInTableTest01.pdf")
+                );
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 5 });
             table.SetWidth(5).SetProperty(Property.TABLE_LAYOUT, "fixed");
@@ -886,15 +887,15 @@ namespace iText.Layout {
             table.AddCell(cell);
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void NestedTablesCollapseTest01() {
             String testName = "nestedTablesCollapseTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Cell cell;
@@ -934,15 +935,15 @@ namespace iText.Layout {
             // add the table
             doc.Add(outertable);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void NestedTableSkipHeaderFooterTest() {
             String testName = "nestedTableSkipHeaderFooter.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(5)).UseAllAvailableWidth();
@@ -957,15 +958,15 @@ namespace iText.Layout {
             t.AddCell(new Cell().SetBorder(new SolidBorder(ColorConstants.RED, 1)).SetPaddings(3, 3, 3, 3).Add(table));
             doc.Add(t);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void NestedTablesWithMarginsTest01() {
             String testName = "nestedTablesWithMarginsTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A8.Rotate());
             Table innerTable = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
@@ -977,7 +978,7 @@ namespace iText.Layout {
             outerTable.SetMarginTop(10);
             doc.Add(outerTable);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -985,8 +986,8 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void SplitTableOnShortPage() {
             String testName = "splitTableOnShortPage.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, new PageSize(300, 98));
             doc.Add(new Paragraph("Table with setKeepTogether(true):"));
@@ -1011,15 +1012,15 @@ namespace iText.Layout {
             table.SetKeepTogether(false);
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SplitCellWithStyles() {
             String testName = "splitCellWithStyles.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             String text = "Make Gretzky Great Again";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A7);
@@ -1034,18 +1035,18 @@ namespace iText.Layout {
             }
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void ImageInTableTest_HA() {
             String testName = "imageInTableTest_HA.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(sourceFolder + "itext.png"
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(SOURCE_FOLDER + "itext.png"
                 )));
             iText.Layout.Element.Image imageL = new iText.Layout.Element.Image(xObject);
             imageL.SetHorizontalAlignment(HorizontalAlignment.LEFT);
@@ -1058,15 +1059,15 @@ namespace iText.Layout {
                 )).AddCell(new Cell().Add(imageC)).AddCell(new Cell().Add(imageR));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CellAlignmentAndSplittingTest01() {
             String testName = "cellAlignmentAndSplittingTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
@@ -1076,15 +1077,15 @@ namespace iText.Layout {
             }
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CellAlignmentAndKeepTogetherTest01() {
             String testName = "cellAlignmentAndKeepTogetherTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
@@ -1094,7 +1095,7 @@ namespace iText.Layout {
             }
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -1102,8 +1103,8 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void TableWithSetHeightProperties01() {
             String testName = "tableWithSetHeightProperties01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
@@ -1158,7 +1159,7 @@ namespace iText.Layout {
             table.SetHeight(1700);
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -1166,8 +1167,8 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void TableWithSetHeightProperties02() {
             String testName = "tableWithSetHeightProperties02.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
@@ -1246,15 +1247,15 @@ namespace iText.Layout {
             table.SetHeight(1700);
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithSetHeightProperties03() {
             String testName = "tableWithSetHeightProperties03.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
@@ -1313,15 +1314,15 @@ namespace iText.Layout {
             table.SetHeight(600);
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderInTheBottomOfPageTest() {
             String testName = "tableWithHeaderInTheBottomOfPageTest.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             for (int i = 0; i < 28; i++) {
@@ -1334,7 +1335,7 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(new Paragraph("World")));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -1342,8 +1343,8 @@ namespace iText.Layout {
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void BigFooterTest01() {
             String testName = "bigFooterTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
@@ -1352,7 +1353,7 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(new Paragraph("Body")).SetHeight(30));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -1360,8 +1361,8 @@ namespace iText.Layout {
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void BigFooterTest02() {
             String testName = "bigFooterTest02.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
@@ -1372,15 +1373,15 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(new Paragraph("Body")));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithDocumentRelayoutTest() {
             String testName = "tableWithDocumentRelayoutTest.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4, false);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10 }));
@@ -1389,15 +1390,15 @@ namespace iText.Layout {
             }
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithKeepTogetherOnCells() {
             String testName = "tableWithKeepTogetherOnCells.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             Document document = new Document(new PdfDocument(new PdfWriter(outFileName)));
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 1.3f, 1f, 1f, 1f, 1f, 1f, 1f }));
             table.SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
@@ -1407,15 +1408,15 @@ namespace iText.Layout {
             }
             document.Add(table);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void EmptyTableTest01() {
             String testName = "emptyTableTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().SetBorderTop(new SolidBorder(ColorConstants
@@ -1434,15 +1435,15 @@ namespace iText.Layout {
                 (ColorConstants.BLUE, 50)));
             AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void EmptyTableTest02() {
             String testName = "emptyTableTest02.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
@@ -1452,7 +1453,7 @@ namespace iText.Layout {
             doc.Add(table);
             AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -1460,8 +1461,8 @@ namespace iText.Layout {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 2)]
         public virtual void TableWithIncompleteFooter() {
             String testName = "tableWithIncompleteFooter.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
@@ -1471,7 +1472,7 @@ namespace iText.Layout {
             table.AddFooterCell(new Cell(1, 2).Add(new Paragraph("Liberte Egalite")));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -1480,8 +1481,8 @@ namespace iText.Layout {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
         public virtual void TableWithCustomRendererTest01() {
             String testName = "tableWithCustomRendererTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
@@ -1492,7 +1493,7 @@ namespace iText.Layout {
             table.SetNextRenderer(new TableTest.CustomRenderer(table, new Table.RowRange(0, 10)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -1502,8 +1503,8 @@ namespace iText.Layout {
             // A naive algorithm would have this table on two pages with only one row with data on the second page
             // However, as setSkipLastFooter is true, we can lay out that row with data on the first page and avoid unnecessary footer placement.
             String testName = "skipLastRowTest.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
@@ -1517,15 +1518,15 @@ namespace iText.Layout {
             }
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SkipFooterTest01() {
             String testName = "skipFooterTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth();
@@ -1538,15 +1539,15 @@ namespace iText.Layout {
             table.SetSkipLastFooter(true);
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SkipHeaderTest01() {
             String testName = "skipHeaderTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdf);
             // construct a table
@@ -1563,15 +1564,15 @@ namespace iText.Layout {
             // add the table
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TableSplitTest01() {
             String testName = "tableSplitTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             String gretzky = "Make Gretzky great again!";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A8.Rotate());
@@ -1581,21 +1582,21 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(new Paragraph(gretzky)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TableSplitTest02() {
             String testName = "tableSplitTest02.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             String gretzky = "Make Gretzky great again!";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 15));
-            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(sourceFolder + "itext.png"
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(SOURCE_FOLDER + "itext.png"
                 )));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 50);
             table.AddCell(new Cell().Add(new Paragraph(gretzky)));
@@ -1606,15 +1607,15 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(new Paragraph(gretzky)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TableSplitTest03() {
             String testName = "tableSplitTest03.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             String gretzky = "Make Gretzky great again!";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A8.Rotate());
@@ -1627,21 +1628,21 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(new Paragraph(gretzky)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TableSplitTest04() {
             String testName = "tableSplitTest04.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             String gretzky = "Make Gretzky great again!";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 15));
-            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(sourceFolder + "itext.png"
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(SOURCE_FOLDER + "itext.png"
                 )));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 50);
             table.AddCell(new Cell().Add(new Paragraph(gretzky)));
@@ -1651,7 +1652,7 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(new Paragraph(gretzky)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -1660,8 +1661,8 @@ namespace iText.Layout {
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void TableNothingResultTest() {
             String testName = "tableNothingResultTest.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
@@ -1673,7 +1674,7 @@ namespace iText.Layout {
             }
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -1681,8 +1682,8 @@ namespace iText.Layout {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
         public virtual void TableWithEmptyLastRowTest() {
             String testName = "tableWithEmptyLastRowTest.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
@@ -1691,15 +1692,15 @@ namespace iText.Layout {
             StartSeveralEmptyRows(table);
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithEmptyRowsBetweenFullRowsTest() {
             String testName = "tableWithEmptyRowsBetweenFullRowsTest.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
@@ -1710,7 +1711,7 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(new Paragraph("World")));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -1718,8 +1719,8 @@ namespace iText.Layout {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
         public virtual void TableWithEmptyRowAfterJustOneCellTest() {
             String testName = "tableWithEmptyRowAfterJustOneCellTest.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(3);
@@ -1731,7 +1732,7 @@ namespace iText.Layout {
             }
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -1739,8 +1740,8 @@ namespace iText.Layout {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
         public virtual void TableWithAlternatingRowsTest() {
             String testName = "tableWithAlternatingRowsTest.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
@@ -1751,15 +1752,15 @@ namespace iText.Layout {
             }
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void ColoredTableWithColoredCellsTest() {
             String testName = "coloredTableWithColoredCellsTest.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
@@ -1772,15 +1773,15 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(new Paragraph("World")).SetBackgroundColor(ColorConstants.GREEN));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithEmptyRowsAndSpansTest() {
             String testName = "tableWithEmptyRowsAndSpansTest.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30, 30 }));
@@ -1793,15 +1794,15 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(new Paragraph("World")));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithEmptyRowsAndSeparatedBordersTest() {
             String testName = "tableWithEmptyRowsAndSeparatedBordersTest.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
@@ -1813,15 +1814,15 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(new Paragraph("World")));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithCollapsedBordersTest() {
             String testName = "tableWithCollapsedBordersTest.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
@@ -1836,7 +1837,7 @@ namespace iText.Layout {
                 );
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -1844,8 +1845,8 @@ namespace iText.Layout {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
         public virtual void TableWithCollapsedBordersAndFooterTest() {
             String testName = "tableWithCollapsedBordersAndFooterTest.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 30, 30 }));
@@ -1860,15 +1861,15 @@ namespace iText.Layout {
                 , 20)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void AutoLayoutTest01() {
             String testName = "autoLayoutTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             //Initialize PDF document
             PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
             // Initialize document
@@ -1886,15 +1887,15 @@ namespace iText.Layout {
             table.AddCell("A cell").SimulateItalic();
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void AutoLayoutTest02() {
             String testName = "autoLayoutTest02.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdf);
             doc.Add(new Paragraph("Simple cell:"));
@@ -1904,15 +1905,15 @@ namespace iText.Layout {
                 )));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void AutoLayoutTest03() {
             String testName = "autoLayoutTest03.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdf);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 1, 1, 1 }));
@@ -1922,15 +1923,15 @@ namespace iText.Layout {
             }
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void FixedLayoutTest01() {
             String testName = "fixedLayoutTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             //Initialize PDF document
             PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
             // Initialize document
@@ -1943,15 +1944,15 @@ namespace iText.Layout {
             table.AddCell("3x");
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void FixedLayoutTest02() {
             String testName = "fixedLayoutTest02.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             //Initialize PDF document
             PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
             // Initialize document
@@ -1964,7 +1965,7 @@ namespace iText.Layout {
             table.AddCell("3x");
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -1972,8 +1973,8 @@ namespace iText.Layout {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 2)]
         public virtual void FixedPositionTest01() {
             String testName = "fixedPositionTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             //Initialize PDF document
             PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
             // Initialize document
@@ -1994,7 +1995,7 @@ namespace iText.Layout {
                 ));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -2003,8 +2004,8 @@ namespace iText.Layout {
         public virtual void NestedTableLostContent() {
             // When the test was created, only first line of text was displayed on the first page
             String testName = "nestedTableLostContent.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdf);
             String text = "abacaba absa ";
@@ -2019,7 +2020,7 @@ namespace iText.Layout {
                 (true)));
             doc.Add(outerTable);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -2029,8 +2030,8 @@ namespace iText.Layout {
             // When the test was created, an exception was thrown due to min-max width calculations for an inner table.
             // At some point isOriginalNonSplitRenderer was true for a parent renderer but false for the inner table renderer
             String testName = "nestedTableMinMaxWidthException.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdf);
             String text = "abacaba absa ";
@@ -2044,15 +2045,15 @@ namespace iText.Layout {
             outerTable.AddCell(new Cell().Add(innerTable));
             doc.Add(outerTable);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TableMinMaxWidthTest01() {
             String testName = "tableMinMaxWidthTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 100 }));
@@ -2061,15 +2062,15 @@ namespace iText.Layout {
             table.AddCell(cell);
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TableMinMaxWidthTest02() {
             String testName = "tableMinMaxWidthTest02.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 100 }));
@@ -2078,15 +2079,15 @@ namespace iText.Layout {
             table.AddCell(cell);
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TableMinMaxWidthTest03() {
             String testName = "tableMinMaxWidthTest03.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 100 }));
@@ -2095,15 +2096,15 @@ namespace iText.Layout {
             table.AddCell(cell);
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TableMinMaxWidthTest04() {
             String testName = "tableMinMaxWidthTest04.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 100 }));
@@ -2112,15 +2113,15 @@ namespace iText.Layout {
             table.AddCell(cell);
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TableMinMaxWidthTest05() {
             String testName = "tableMinMaxWidthTest05.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 2, 1, 1 }));
@@ -2134,15 +2135,15 @@ namespace iText.Layout {
             table.AddCell("row 2; cell 2");
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CellsWithEdgeCaseLeadingTest01() {
             String testName = "cellsWithEdgeCaseLeadingTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfWriter writer = new PdfWriter(outFileName);
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
@@ -2206,15 +2207,15 @@ namespace iText.Layout {
             table.AddCell(cell20);
             document.Add(table);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TableMinMaxWidthTest06() {
             String testName = "tableMinMaxWidthTest06.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(2));
@@ -2226,7 +2227,7 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(new Paragraph("The cell with width 50. Number 1").SetWidth(50)));
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -2272,8 +2273,8 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void MarginPaddingTest01() {
             String testName = "marginPaddingTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
@@ -2291,15 +2292,15 @@ namespace iText.Layout {
             doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell(new Cell().Add(new Paragraph
                 ("Hello"))).SetBorder(new SolidBorder(ColorConstants.BLACK, 10)));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SpacingTest01() {
             String testName = "spacingTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             int n = 4;
@@ -2319,15 +2320,15 @@ namespace iText.Layout {
             doc.Add(new Table(UnitValue.CreatePercentArray(1)).UseAllAvailableWidth().AddCell(new Cell().Add(new Paragraph
                 ("Hello"))).SetBorder(new SolidBorder(ColorConstants.BLACK, 10)));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TaggedTableWithCaptionTest01() {
             String testName = "taggedTableWithCaptionTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             pdfDoc.SetTagged();
             Document doc = new Document(pdfDoc);
@@ -2339,15 +2340,15 @@ namespace iText.Layout {
             table.GetCaption().SetProperty(Property.CAPTION_SIDE, CaptionSide.BOTTOM);
             AddTable(table, true, true, doc);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void WideCaptionTest01() {
             String testName = "wideCaptionTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = CreateTestTable(2, 3, 3, 3, (UnitValue)null, BorderCollapsePropertyValue.COLLAPSE, new Style
@@ -2376,15 +2377,15 @@ namespace iText.Layout {
             table.GetCaption().SetProperty(Property.CAPTION_SIDE, CaptionSide.BOTTOM);
             AddTable(table, true, true, doc);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SplitTableWithCaptionTest01() {
             String testName = "splitTableWithCaptionTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = CreateTestTable(2, 30, 3, 3, (UnitValue)null, BorderCollapsePropertyValue.COLLAPSE, new Style
@@ -2401,15 +2402,15 @@ namespace iText.Layout {
             table.GetCaption().SetProperty(Property.CAPTION_SIDE, CaptionSide.BOTTOM);
             AddTable(table, true, true, doc);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CaptionedTableOfOnePageWithCollapsedBordersTest01() {
             String testName = "captionedTableOfOnePageWithCollapsedBordersTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = CreateTestTable(2, 10, 2, 2, (UnitValue)null, BorderCollapsePropertyValue.COLLAPSE, new Style
@@ -2439,15 +2440,15 @@ namespace iText.Layout {
             table.GetCaption().SetProperty(Property.CAPTION_SIDE, CaptionSide.BOTTOM);
             AddTable(table, true, true, doc);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TableWithDifferentStylesOfCollapsedBordersTest() {
             String testName = "tableWithDifferentStylesOfCollapsedBordersTest.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = CreateTestTable(2, 10, 2, 2, (UnitValue)null, BorderCollapsePropertyValue.COLLAPSE, new Style
@@ -2457,15 +2458,15 @@ namespace iText.Layout {
             // no caption
             AddTable(table, true, true, doc);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CaptionedTableOfOnePageWithSeparatedBordersTest01() {
             String testName = "captionedTableOfOnePageWithSeparatedBordersTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = CreateTestTable(2, 10, 2, 2, (UnitValue)null, BorderCollapsePropertyValue.SEPARATE, new Style
@@ -2493,7 +2494,7 @@ namespace iText.Layout {
             table.GetCaption().SetProperty(Property.CAPTION_SIDE, CaptionSide.BOTTOM);
             AddTable(table, true, true, doc);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -2543,8 +2544,8 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void SkipLastFooterAndProcessBigRowspanTest01() {
             String testName = "skipLastFooterAndProcessBigRowspanTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, new PageSize(595, 140));
             Table table = new Table(2);
@@ -2556,15 +2557,15 @@ namespace iText.Layout {
             }
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SkipLastFooterAndProcessBigRowspanTest02() {
             String testName = "skipLastFooterAndProcessBigRowspanTest02.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             int numRows = 3;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
@@ -2584,15 +2585,15 @@ namespace iText.Layout {
             }
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SkipLastFooterOnShortPageTest01() {
             String testName = "skipLastFooterOnShortPageTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, new PageSize(595, 120));
             Table table = new Table(2);
@@ -2605,15 +2606,15 @@ namespace iText.Layout {
             }
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void FirstRowPartiallyFitWideBottomBorderTest() {
             String testName = "firstRowPartiallyFitWideBottomBorderTest.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4);
             Table table = new Table(1);
@@ -2631,15 +2632,15 @@ namespace iText.Layout {
             doc.Add(table);
             AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CollapseWithNextRowWiderThanWithTableBorderTest() {
             String testName = "collapseWithNextRowWiderThanWithTableBorderTest.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4);
             Table table = new Table(1);
@@ -2658,15 +2659,15 @@ namespace iText.Layout {
             doc.Add(table);
             AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TableBottomBorderWideTest() {
             String testName = "tableBottomBorderWideTest.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(1).SetBorderBottom(new SolidBorder(ColorConstants.RED, 500)).AddCell(new Cell().Add
@@ -2678,15 +2679,15 @@ namespace iText.Layout {
             doc.Add(table);
             AddTableBelowToCheckThatOccupiedAreaIsCorrect(doc);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CellWithBigRowspanCompletedRowTooTest() {
             String testName = "cellWithBigRowspanCompletedRowTooTest.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Div div = new Div();
@@ -2710,15 +2711,15 @@ namespace iText.Layout {
                 }
             }
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CellWithBigRowspanCompletedRowNotTest() {
             String testName = "cellWithBigRowspanCompletedRowNotTest.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Div div = new Div();
@@ -2743,14 +2744,14 @@ namespace iText.Layout {
                 }
             }
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void InheritHeaderPropsWhileMinMaxWidthCalculationsTest() {
             String filename = "inheritHeaderPropsWhileMinMaxWidthCalculations.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument pdf = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             Document document = new Document(pdf);
             Paragraph p = new Paragraph("Some text is placed at the beginning" + " of the page, so that page isn't being empty."
                 );
@@ -2765,16 +2766,16 @@ namespace iText.Layout {
             table.GetHeader().SimulateBold();
             document.Add(table);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER, "diff"));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void InfiniteLoopOnUnfitCellAndBigRowspanTest() {
             String testName = "infiniteLoopOnUnfitCellAndBigRowspanTest.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
             Table table = new Table(38);
@@ -2783,7 +2784,7 @@ namespace iText.Layout {
             Cell cellNum1 = new Cell(1, 1);
             table.AddCell(cellNum1);
             Cell cellNum2 = new Cell(2, 2);
-            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itext.png"
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(SOURCE_FOLDER + "itext.png"
                 ));
             cellNum2.Add(img);
             table.AddCell(cellNum2);
@@ -2792,7 +2793,7 @@ namespace iText.Layout {
             table.AddCell(cellNum3);
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -2801,8 +2802,8 @@ namespace iText.Layout {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
         public virtual void FirstRowNotFitBigRowspanTest() {
             String testName = "firstRowNotFitBigRowspanTest.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4);
             Table table = new Table(4);
@@ -2817,82 +2818,72 @@ namespace iText.Layout {
             table.AddCell("row 2 col 1");
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void BigRowSpanTooFarFullTest() {
-            String filename = "bigRowSpanTooFarFullTest.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + filename));
-            Document document = new Document(pdf);
-            Table table = new Table(2);
-            int bigRowSpan = 5;
-            table.AddCell(new Cell(bigRowSpan, 1).Add(new Paragraph("row span " + bigRowSpan)).SetBackgroundColor(ColorConstants
-                .RED));
-            for (int i = 0; i < bigRowSpan; i++) {
-                table.AddCell(new Cell().Add(new Paragraph(JavaUtil.IntegerToString(i))).SetHeight(375).SetBackgroundColor
-                    (ColorConstants.BLUE));
-            }
-            document.Add(table);
-            document.Add(new AreaBreak());
-            table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
-            document.Add(table);
-            document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder));
+            BigRowspanTooFar("bigRowSpanTooFarFullTest.pdf", false, false, false);
         }
 
         [NUnit.Framework.Test]
         public virtual void BigRowSpanTooFarPartialTest() {
-            String filename = "bigRowSpanTooFarPartialTest.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + filename));
-            Document document = new Document(pdf);
-            Table table = new Table(2);
-            int bigRowSpan = 5;
-            table.AddCell(new Cell(bigRowSpan, 1).Add(new Paragraph("row span " + bigRowSpan)).SetHeight(800).SetBackgroundColor
-                (ColorConstants.RED));
-            for (int i = 0; i < bigRowSpan; i++) {
-                table.AddCell(new Cell().Add(new Paragraph(JavaUtil.IntegerToString(i))).SetHeight(375).SetBackgroundColor
-                    (ColorConstants.BLUE));
-            }
-            document.Add(table);
-            document.Add(new AreaBreak());
-            table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
-            document.Add(table);
-            document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder));
+            BigRowspanTooFar("bigRowSpanTooFarPartialTest.pdf", false, false, true);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BigRowSpanTooFarPartialLongLastCellTest() {
+            BigRowspanTooFar("bigRowSpanTooFarPartialLongLastCell.pdf", false, true, true);
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         public virtual void BigRowSpanTooFarNothingTest() {
-            String filename = "bigRowSpanTooFarNothingTest.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            BigRowspanTooFar("bigRowSpanTooFarNothingTest.pdf", true, false, true);
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        public virtual void BigRowSpanTooFarNothingLongLastCellTest() {
+            BigRowspanTooFar("bigRowSpanTooFarNothingLongLastCell.pdf", true, true, true);
+        }
+
+        private static void BigRowspanTooFar(String filename, bool addKeepTogether, bool longLastCell, bool bigRowspanWithHeight
+            ) {
+            PdfDocument pdf = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             Document document = new Document(pdf);
             Table table = new Table(2);
             int bigRowSpan = 5;
-            table.AddCell(new Cell(bigRowSpan, 1).Add(new Paragraph("row span " + bigRowSpan)).SetHeight(800).SetKeepTogether
-                (true).SetBackgroundColor(ColorConstants.RED));
-            for (int i = 0; i < bigRowSpan; i++) {
-                table.AddCell(new Cell().Add(new Paragraph(JavaUtil.IntegerToString(i))).SetHeight(375).SetBackgroundColor
-                    (ColorConstants.BLUE));
+            Cell bigRowspanCell = new Cell(bigRowSpan, 1).Add(new Paragraph("row span " + bigRowSpan)).SetBackgroundColor
+                (ColorConstants.RED);
+            if (bigRowspanWithHeight) {
+                bigRowspanCell.SetHeight(800);
             }
+            if (addKeepTogether) {
+                bigRowspanCell.SetKeepTogether(true);
+            }
+            table.AddCell(bigRowspanCell);
+            for (int i = 0; i < bigRowSpan - 1; i++) {
+                table.AddCell(new Cell().Add(new Paragraph(JavaUtil.IntegerToString(i))).SetHeight(375));
+            }
+            Cell lastCell = new Cell().Add(new Paragraph(JavaUtil.IntegerToString(bigRowSpan - 1))).SetHeight(longLastCell
+                 ? 1000 : 375);
+            table.AddCell(lastCell);
             document.Add(table);
             document.Add(new AreaBreak());
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
             document.Add(table);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
         public virtual void SetWidthShouldBeRespectedTest() {
             // TODO DEVSIX-5916 The first cell's width is the same as the second one's, however, it's not respected
             String fileName = "setWidthShouldBeRespectedTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + fileName));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + fileName));
             Document doc = new Document(pdfDocument, new PageSize(842, 1400));
             Table table = new Table(2);
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 90f));
@@ -2907,8 +2898,8 @@ namespace iText.Layout {
             table.AddCell(cell);
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
-                 + "cmp_" + fileName, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + fileName, SOURCE_FOLDER
+                 + "cmp_" + fileName, DESTINATION_FOLDER));
         }
 
         //creates 2 empty lines, where 2 is random number
@@ -2920,7 +2911,7 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void PreciseFittingItalicBoldSimulatedTextInCellsTest() {
             String fileName = "preciseFittingItalicBoldSimulatedTextInCells.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + fileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + fileName))) {
                 using (Document doc = new Document(pdfDocument)) {
                     int numberOfColumns = 9;
                     Table table = new Table(UnitValue.CreatePercentArray(numberOfColumns));
@@ -2939,8 +2930,8 @@ namespace iText.Layout {
                     doc.Add(table);
                 }
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
-                 + "cmp_" + fileName, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + fileName, SOURCE_FOLDER
+                 + "cmp_" + fileName, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
@@ -2971,7 +2962,7 @@ namespace iText.Layout {
         public virtual void InfiniteLoopKeepTogetherTest() {
             String fileName = "infiniteLoopKeepTogether.pdf";
             float fontSize = 8;
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + fileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + fileName))) {
                 using (Document doc = new Document(pdfDoc)) {
                     doc.SetMargins(138, 20, 75, 20);
                     Table table = new Table(5);
@@ -2989,8 +2980,8 @@ namespace iText.Layout {
                     doc.Add(table);
                 }
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
-                 + "cmp_" + fileName, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + fileName, SOURCE_FOLDER
+                 + "cmp_" + fileName, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
@@ -2999,13 +2990,13 @@ namespace iText.Layout {
             )]
         public virtual void NegativeLayoutAreaTest() {
             String testName = "negativeLayoutAreaTable.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, new PageSize(595.0f, 50.0f));
             doc.Add(new Table(new float[] { 1, 1 }).AddCell(new Cell().SetHeight(10.0f)));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -3013,7 +3004,7 @@ namespace iText.Layout {
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, LogLevel = LogLevelConstants.WARN)]
         public virtual void KeepTogetherCaptionAndHugeCellTest() {
             String fileName = "keepTogetherCaptionAndHugeCell.pdf";
-            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + fileName));
             Document document = new Document(pdfDocument, PageSize.A4);
             Table table = new Table(1).SetCaption(new Div().Add(new Paragraph("hello world")));
             Cell dataCell = new Cell().SetKeepTogether(true).Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(
@@ -3021,15 +3012,15 @@ namespace iText.Layout {
             table.AddCell(dataCell);
             document.Add(table);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
-                 + "cmp_" + fileName, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + fileName, SOURCE_FOLDER
+                 + "cmp_" + fileName, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, LogLevel = LogLevelConstants.WARN)]
         public virtual void KeepTogetherCaptionDoesntFitPageTest() {
             String fileName = "keepTogetherCaptionDoesntFitPage.pdf";
-            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + fileName));
             Document document = new Document(pdfDocument, PageSize.A4);
             document.Add(new Paragraph(PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS
                 , 580)));
@@ -3039,15 +3030,15 @@ namespace iText.Layout {
             table.AddCell(dataCell);
             document.Add(table);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
-                 + "cmp_" + fileName, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + fileName, SOURCE_FOLDER
+                 + "cmp_" + fileName, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, LogLevel = LogLevelConstants.WARN)]
         public virtual void KeepTogetherCaptionAndSplitCellTest() {
             String fileName = "keepTogetherCaptionAndSplitCell.pdf";
-            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + fileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + fileName));
             Document document = new Document(pdfDocument, PageSize.A4);
             Table table = new Table(1).SetCaption(new Div().Add(new Paragraph("hello world").SetFontSize(40)), CaptionSide
                 .BOTTOM);
@@ -3056,8 +3047,8 @@ namespace iText.Layout {
             table.AddCell(dataCell);
             document.Add(table);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
-                 + "cmp_" + fileName, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + fileName, SOURCE_FOLDER
+                 + "cmp_" + fileName, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
@@ -3067,8 +3058,8 @@ namespace iText.Layout {
             // ComplexTableGenerator class was auto-generated by https://github.com/itext/document-layout-code-generator
             // and then minimized
             String testName = "splitComplexTable.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             ComplexTableGenerator template = new ComplexTableGenerator();
             ComplexTableGenerator.GenerationContext context = new ComplexTableGenerator.GenerationContext();
             FontProvider fontProvider = new FontProvider();
@@ -3078,7 +3069,7 @@ namespace iText.Layout {
             context.pdf.SetDefaultPageSize(PageSize.A5);
             template.Generate(context);
             context.pdf.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 
@@ -3086,8 +3077,8 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void KeepTogetherNestedTableDoesNotThrow() {
             String testName = "keepTogetherNestedTableDoesNotThrow.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String outFileName = DESTINATION_FOLDER + testName;
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
             PdfWriter writer = new PdfWriter(outFileName);
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
@@ -3102,7 +3093,7 @@ namespace iText.Layout {
                 ).Add(rightContent));
             document.Add(outerTable);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , testName + "_diff"));
         }
 

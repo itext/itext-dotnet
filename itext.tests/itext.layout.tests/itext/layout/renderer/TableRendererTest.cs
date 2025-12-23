@@ -119,5 +119,34 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 ));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void CollapsedBorderRowspanOnPageSplitTest() {
+            String outFileName = DESTINATION_FOLDER + "collapsedBorderRowspanOnPageSplit.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_collapsedBorderRowspanOnPageSplit.pdf";
+            using (Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+                Div dummyDiv = new Div();
+                dummyDiv.SetBorder(new SolidBorder(ColorConstants.BLACK, 1.5f));
+                dummyDiv.SetWidth(400);
+                dummyDiv.SetHeight(720);
+                doc.Add(dummyDiv);
+                Table table = new Table(2);
+                table.SetBorderCollapse(BorderCollapsePropertyValue.COLLAPSE);
+                table.SetBorder(new SolidBorder(ColorConstants.BLACK, 1.5f));
+                Cell cell1 = new Cell(4, 1);
+                cell1.SetBackgroundColor(ColorConstants.GRAY);
+                cell1.Add(new Paragraph("Text 0"));
+                table.AddCell(cell1);
+                Cell cell2 = new Cell(4, 1);
+                cell2.Add(new Paragraph("Text 1"));
+                cell2.Add(new Paragraph("Text 2"));
+                cell2.Add(new Paragraph("Text 3"));
+                cell2.Add(new Paragraph("Text 4"));
+                table.AddCell(cell2);
+                doc.Add(table);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
+        }
     }
 }
