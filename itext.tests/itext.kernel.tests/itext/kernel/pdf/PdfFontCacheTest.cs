@@ -32,17 +32,15 @@ using iText.Test;
 namespace iText.Kernel.Pdf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfFontCacheTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfFontCacheTest/";
 
         private static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/fonts/";
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/fonts/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/PdfFontCacheTest/";
+        private static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/PdfFontCacheTest/";
 
-//\cond DO_NOT_DOCUMENT
-        internal const String pangramme = "Amazingly few discotheques provide jukeboxes " + "but it now while sayingly ABEFGHJKNOPQRSTUWYZ?";
-//\endcond
+        private const String pangramme = "Amazingly few discotheques provide jukeboxes " + "but it now while sayingly ABEFGHJKNOPQRSTUWYZ?";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -168,12 +166,12 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithAbserifAndIdentityHEncodings() {
-            String testName = "DocumentWithAbserifAndIdentityHEncodings";
+        public virtual void CreateDocumentWithPTserifAndIdentityHEncodings() {
+            String testName = "DocumentWithPTserifAndIdentityHEncodings";
             String filename = destinationFolder + testName + ".pdf";
             String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
-            String font = fontsFolder + "abserif4_5.ttf";
+            String font = fontsFolder + "PTSerif-Regular.ttf";
             //All those encodings actually the same Identity-H.
             AddPagesWithFonts(pdfDoc, font, null, TextSetWithABC);
             AddPagesWithFonts(pdfDoc, font, "", TextSetWithABC);
@@ -185,12 +183,12 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithEmbeddedAbserifFirstWinAnsiThenIdentityHEncodings() {
-            String testName = "DocumentWithEmbeddedAbserifFirstWinAnsiThenIdentityHEncodings";
+        public virtual void CreateDocumentWithEmbeddedPTserifFirstWinAnsiThenIdentityHEncodings() {
+            String testName = "DocumentWithEmbeddedPTserifFirstWinAnsiThenIdentityHEncodings";
             String filename = destinationFolder + testName + ".pdf";
             String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
-            String font = fontsFolder + "abserif4_5.ttf";
+            String font = fontsFolder + "PTSerif-Regular.ttf";
             AddPagesWithFonts(pdfDoc, font, PdfEncodings.WINANSI, TextSetWithABC);
             AddPagesWithFonts(pdfDoc, font, "", TextSetWithABC);
             pdfDoc.Close();
@@ -200,12 +198,12 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithEmbeddedAbserifFirstIdentityHThenWinAnsiEncodings() {
-            String testName = "DocumentWithEmbeddedAbserifFirstIdentityHThenWinAnsiEncodings";
+        public virtual void CreateDocumentWithEmbeddedPTserifFirstIdentityHThenWinAnsiEncodings() {
+            String testName = "DocumentWithEmbeddedPTserifFirstIdentityHThenWinAnsiEncodings";
             String filename = destinationFolder + testName + ".pdf";
             String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
-            String font = fontsFolder + "abserif4_5.ttf";
+            String font = fontsFolder + "PTSerif-Regular.ttf";
             AddPagesWithFonts(pdfDoc, font, "", TextSetWithABC);
             AddPagesWithFonts(pdfDoc, font, PdfEncodings.WINANSI, TextSetWithABC);
             pdfDoc.Close();
@@ -215,12 +213,12 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithNotEmbeddedAbserifFirstWinAnsiThenIdentityHEncodings() {
-            String testName = "DocumentWithNotEmbeddedAbserifFirstWinAnsiThenIdentityHEncodings";
+        public virtual void CreateDocumentWithNotEmbeddedPTserifFirstWinAnsiThenIdentityHEncodings() {
+            String testName = "DocumentWithNotEmbeddedPTserifFirstWinAnsiThenIdentityHEncodings";
             String filename = destinationFolder + testName + ".pdf";
             String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
-            String font = fontsFolder + "abserif4_5.ttf";
+            String font = fontsFolder + "PTSerif-Regular.ttf";
             PdfFontFactory.EmbeddingStrategy embeddingStrategy = PdfFontFactory.EmbeddingStrategy.PREFER_NOT_EMBEDDED;
             AddPagesWithFonts(pdfDoc, font, PdfEncodings.WINANSI, embeddingStrategy, TextSetWithABC);
             AddPagesWithFonts(pdfDoc, font, "", embeddingStrategy, TextSetWithABC);
@@ -231,12 +229,12 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithNotEmbeddedAbserifFirstIdentityHThenWinAnsiEncodings() {
-            String testName = "DocumentWithNotEmbeddedAbserifFirstIdentityHThenWinAnsiEncodings";
+        public virtual void CreateDocumentWithNotEmbeddedPTserifFirstIdentityHThenWinAnsiEncodings() {
+            String testName = "DocumentWithNotEmbeddedPTserifFirstIdentityHThenWinAnsiEncodings";
             String filename = destinationFolder + testName + ".pdf";
             String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
-            String font = fontsFolder + "abserif4_5.ttf";
+            String font = fontsFolder + "PTSerif-Regular.ttf";
             PdfFontFactory.EmbeddingStrategy embeddingStrategy = PdfFontFactory.EmbeddingStrategy.PREFER_NOT_EMBEDDED;
             AddPagesWithFonts(pdfDoc, font, "", embeddingStrategy, TextSetWithABC);
             AddPagesWithFonts(pdfDoc, font, PdfEncodings.WINANSI, embeddingStrategy, TextSetWithABC);
@@ -268,7 +266,7 @@ namespace iText.Kernel.Pdf {
             String filename = destinationFolder + testName + ".pdf";
             String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
-            String font = fontsFolder + "abserif4_5.ttf";
+            String font = fontsFolder + "PTSerif-Regular.ttf";
             String encoding = null;
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
@@ -285,7 +283,7 @@ namespace iText.Kernel.Pdf {
             String filename = destinationFolder + testName + ".pdf";
             String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
-            String font = fontsFolder + "abserif4_5.ttf";
+            String font = fontsFolder + "PTSerif-Regular.ttf";
             String encoding = PdfEncodings.WINANSI;
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
@@ -302,7 +300,7 @@ namespace iText.Kernel.Pdf {
             String filename = destinationFolder + testName + ".pdf";
             String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
-            String font = fontsFolder + "abserif4_5.ttf";
+            String font = fontsFolder + "PTSerif-Regular.ttf";
             String encoding = null;
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
             pdfDoc.FlushFonts();
@@ -324,7 +322,7 @@ namespace iText.Kernel.Pdf {
             String filename = destinationFolder + testName + ".pdf";
             String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
-            String font = fontsFolder + "abserif4_5.ttf";
+            String font = fontsFolder + "PTSerif-Regular.ttf";
             String encoding = "Identity-H";
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
@@ -341,7 +339,7 @@ namespace iText.Kernel.Pdf {
             String filename = destinationFolder + testName + ".pdf";
             String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
-            String font = fontsFolder + "abserif4_5.ttf";
+            String font = fontsFolder + "PTSerif-Regular.ttf";
             String encoding = "Identity-H";
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
             pdfDoc.FlushFonts();
@@ -480,6 +478,7 @@ namespace iText.Kernel.Pdf {
                 .Substring(pangramme.Length / 2)).EndText().Release();
             //There is only one just loaded and used document font.
             NUnit.Framework.Assert.AreEqual(1, pdfDoc.GetDocumentFonts().Count);
+            // TODO DEVSIX-9683 Replace abserif4_5.ttc in kernel
             AddPagesWithFonts(pdfDoc, fontsFolder + "abserif4_5.ttf", "WinAnsi", TextSetWithABC);
             pdfDoc.Close();
             //We cannot rely on font name for a document font, so we treat them as two different fonts.
@@ -543,6 +542,7 @@ namespace iText.Kernel.Pdf {
                 .Substring(pangramme.Length / 2)).EndText().Release();
             //There is only one just loaded and used document font.
             NUnit.Framework.Assert.AreEqual(1, pdfDoc.GetDocumentFonts().Count);
+            // TODO DEVSIX-9683 Replace abserif4_5.ttc in kernel
             AddPagesWithFonts(pdfDoc, fontsFolder + "abserif4_5.ttf", encoding, TextSetWithABC);
             pdfDoc.Close();
             //We cannot rely on font name for a document font, so we treat them as two different fonts.

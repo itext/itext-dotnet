@@ -33,10 +33,13 @@ using iText.Test;
 namespace iText.Kernel.Pdf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class EncodingTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/EncodingTest/";
 
-        public static readonly String outputFolder = TestUtil.GetOutputPath() + "/kernel/pdf/EncodingTest/";
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/fonts/";
+
+        private static readonly String outputFolder = TestUtil.GetOutputPath() + "/kernel/pdf/EncodingTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -53,7 +56,7 @@ namespace iText.Kernel.Pdf {
             String fileName = "surrogatePairTest.pdf";
             PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "DejaVuSans.ttf", PdfEncodings.IDENTITY_H);
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "DejaVuSans.ttf", PdfEncodings.IDENTITY_H);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(font, 72).ShowText("\uD835\uDD59\uD835\uDD56\uD835\uDD5D\uD835\uDD5D\uD835\uDD60\uD83D\uDE09\uD835\uDD68"
                  + "\uD835\uDD60\uD835\uDD63\uD835\uDD5D\uD835\uDD55").EndText().RestoreState();
@@ -68,7 +71,7 @@ namespace iText.Kernel.Pdf {
             String fileName = "customSimpleEncodingTimesRomanTest.pdf";
             PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "# simple 1 0020 041c 0456 0440 044a 0050 0065 0061 0063"
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoSans-Regular.ttf", "# simple 1 0020 041c 0456 0440 044a 0050 0065 0061 0063"
                 , PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             canvas.SaveState().BeginText().MoveText(36, 806).SetFontAndSize(font, 12)
@@ -117,12 +120,12 @@ namespace iText.Kernel.Pdf {
             String fileName = "notdefInTrueTypeFontTest.pdf";
             PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "# simple 32 0020 00C5 1987", PdfFontFactory.EmbeddingStrategy
-                .PREFER_EMBEDDED);
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoSans-Regular.ttf", "# simple 32 0020 00C5 1987"
+                , PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 36).ShowText("\u00C5 \u1987").EndText
                 ().RestoreState();
-            font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+            font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoSans-Regular.ttf", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
                 .PREFER_EMBEDDED);
             canvas.SaveState().BeginText().MoveText(36, 756).SetFontAndSize(font, 36).ShowText("\u1987").EndText().RestoreState
                 ();
@@ -136,7 +139,7 @@ namespace iText.Kernel.Pdf {
             String fileName = "notdefInType0Test.pdf";
             PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", PdfEncodings.IDENTITY_H);
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 36).ShowText("\u00C5 \u1987").EndText
                 ().RestoreState();
@@ -187,7 +190,7 @@ namespace iText.Kernel.Pdf {
             PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
             // TODO DEVSIX-9589 Create symbol font with cmap 3,0 for testing
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "Symbols1.ttf", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "Symbols1.ttf", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
                 .PREFER_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             StringBuilder str = new StringBuilder();
@@ -219,7 +222,7 @@ namespace iText.Kernel.Pdf {
             PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
             // TODO DEVSIX-9589 Create symbol font with cmap 3,0 for testing
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "Symbols1.ttf", PdfEncodings.IDENTITY_H);
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "Symbols1.ttf", PdfEncodings.IDENTITY_H);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             StringBuilder builder = new StringBuilder();
             for (int i = 32; i <= 100; i++) {
@@ -251,7 +254,7 @@ namespace iText.Kernel.Pdf {
             PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
             // TODO DEVSIX-9589 Create symbol font with cmap 3,0 for testing
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "Symbols1.ttf", PdfEncodings.IDENTITY_H);
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "Symbols1.ttf", PdfEncodings.IDENTITY_H);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             String line = "AABBCCDDEEFFGGHHIIJJ";
             canvas.SaveState().BeginText().SetFontAndSize(font, 36).MoveText(36, 786).ShowText(line).EndText().RestoreState

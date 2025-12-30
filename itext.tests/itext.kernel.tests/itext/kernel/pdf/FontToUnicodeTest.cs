@@ -34,10 +34,10 @@ using iText.Test;
 namespace iText.Kernel.Pdf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class FontToUnicodeTest : ExtendedITextTest {
-        public static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/fonts/";
+        private static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/fonts/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/FontToUnicodeTest/";
+        private static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/FontToUnicodeTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

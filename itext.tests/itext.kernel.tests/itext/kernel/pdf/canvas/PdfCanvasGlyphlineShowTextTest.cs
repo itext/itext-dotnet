@@ -33,13 +33,13 @@ using iText.Test;
 namespace iText.Kernel.Pdf.Canvas {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfCanvasGlyphlineShowTextTest : ExtendedITextTest {
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/canvas/PdfCanvasGlyphlineShowTextTest/";
+        private static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/canvas/PdfCanvasGlyphlineShowTextTest/";
 
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/canvas/PdfCanvasGlyphlineShowTextTest/";
 
-        public static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/fonts/";
+        private static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/fonts/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

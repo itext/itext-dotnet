@@ -53,7 +53,7 @@ namespace iText.Kernel.Pdf.Canvas {
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/canvas/PdfCanvasTest/";
 
         private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/fonts/";
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/fonts/";
 
         private const String AUTHOR = "iText Software";
 

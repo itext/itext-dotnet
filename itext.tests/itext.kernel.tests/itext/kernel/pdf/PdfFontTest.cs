@@ -41,23 +41,19 @@ using iText.Test.Attributes;
 namespace iText.Kernel.Pdf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfFontTest : ExtendedITextTest {
-        public const int PageCount = 1;
+        private const int PageCount = 1;
 
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfFontTest/";
 
-        public static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/fonts/";
+        private static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/fonts/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/PdfFontTest/";
+        private static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/PdfFontTest/";
 
-//\cond DO_NOT_DOCUMENT
-        internal const String author = "Alexander Chingarev";
-//\endcond
+        private const String author = "Alexander Chingarev";
 
-//\cond DO_NOT_DOCUMENT
-        internal const String creator = "iText";
-//\endcond
+        private const String creator = "iText";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -172,7 +168,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            String font = fontsFolder + "abserif4_5.ttf";
+            String font = fontsFolder + "PTSerif-Regular.ttf";
             PdfFont type0Font = PdfFontFactory.CreateFont(font, "Identity-H");
             //        type0Font.setSubset(false);
             NUnit.Framework.Assert.IsTrue(type0Font is PdfType0Font, "PdfType0Font expected");
@@ -480,7 +476,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            String font = fontsFolder + "abserif4_5.ttf";
+            String font = fontsFolder + "PTSerif-Regular.ttf";
             PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(font, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
@@ -511,7 +507,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            String font = fontsFolder + "abserif4_5.ttf";
+            String font = fontsFolder + "PTSerif-Regular.ttf";
             PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(font, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
                 .FORCE_NOT_EMBEDDED);
             NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
@@ -542,7 +538,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            String font = fontsFolder + "Puritan2.otf";
+            String font = fontsFolder + "Puritan-Regular.otf";
             PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(font, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             NUnit.Framework.Assert.IsTrue(pdfTrueTypeFont is PdfTrueTypeFont, "PdfTrueTypeFont expected");
@@ -578,7 +574,7 @@ namespace iText.Kernel.Pdf {
                 .PDF_2_0));
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
-            String font = fontsFolder + "Puritan2.otf";
+            String font = fontsFolder + "Puritan-Regular.otf";
             PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(font, PdfEncodings.IDENTITY_H);
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -609,7 +605,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            String font = fontsFolder + "Puritan2.otf";
+            String font = fontsFolder + "Puritan-Regular.otf";
             PdfFont pdfFont = PdfFontFactory.CreateFont(font, "Identity-H");
             NUnit.Framework.Assert.IsTrue(pdfFont is PdfType0Font, "PdfType0Font expected");
             pdfFont.SetSubset(true);
@@ -1054,21 +1050,24 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void AutoDetect3() {
-            byte[] otf = StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(fontsFolder + "Puritan2.otf"));
+            byte[] otf = StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(fontsFolder + "Puritan-Regular.otf"
+                ));
             NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(otf) is TrueTypeFont, "TrueType (OTF) font expected"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void AutoDetect4() {
-            byte[] ttf = StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(fontsFolder + "abserif4_5.ttf"));
+            byte[] ttf = StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(fontsFolder + "PTSerif-Regular.ttf"
+                ));
             NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(ttf) is TrueTypeFont, "TrueType (TTF) expected"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void AutoDetect5() {
-            byte[] ttf = StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(fontsFolder + "abserif4_5.ttf"));
+            byte[] ttf = StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(fontsFolder + "PTSerif-Regular.ttf"
+                ));
             NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(ttf) is TrueTypeFont, "TrueType (TTF) expected"
                 );
         }
@@ -1080,6 +1079,7 @@ namespace iText.Kernel.Pdf {
             String txt = "The quick brown fox";
             PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page = doc.AddNewPage();
+            // TODO DEVSIX-9682 Replace uming.ttc in kernel
             PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "uming.ttc,1");
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 680).SetFontAndSize(font, 12).ShowText(txt).EndText().RestoreState
@@ -1098,6 +1098,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
+            // TODO DEVSIX-9682 Replace uming.ttc in kernel
             String font = fontsFolder + "uming.ttc";
             PdfFont pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(font, 0, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED, false);
@@ -1133,6 +1134,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
+            // TODO DEVSIX-9682 Replace uming.ttc in kernel
             String font = fontsFolder + "uming.ttc";
             PdfFont pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(font, 0, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
                 .FORCE_NOT_EMBEDDED, false);
@@ -1352,6 +1354,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestCheckTTCSize() {
+            // TODO DEVSIX-9682 Replace uming.ttc in kernel
             TrueTypeCollection collection = new TrueTypeCollection(fontsFolder + "uming.ttc");
             NUnit.Framework.Assert.IsTrue(collection.GetTTCSize() == 4);
         }
@@ -1409,39 +1412,39 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void OtfByStringNames() {
-            FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontsFolder + "Puritan2.otf"
+            FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontsFolder + "Puritan-Regular.otf"
                 );
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFontName(), "Puritan2");
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), StringNormalizer.ToLowerCase("Puritan 2.0 Regular"
-                ));
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFamilyNameLowerCase(), StringNormalizer.ToLowerCase("Puritan 2.0"
-                ));
-            NUnit.Framework.Assert.AreEqual(descriptor.GetStyle(), "Normal");
+            NUnit.Framework.Assert.AreEqual("Puritan-Regular", descriptor.GetFontName());
+            NUnit.Framework.Assert.AreEqual(StringNormalizer.ToLowerCase("Puritan Regular"), descriptor.GetFullNameLowerCase
+                ());
+            NUnit.Framework.Assert.AreEqual(StringNormalizer.ToLowerCase("Puritan"), descriptor.GetFamilyNameLowerCase
+                ());
+            NUnit.Framework.Assert.AreEqual("Regular", descriptor.GetStyle());
             NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 400);
         }
 
         [NUnit.Framework.Test]
         public virtual void OtfByStreamNames() {
             FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(StreamUtil.InputStreamToArray
-                (FileUtil.GetInputStreamForFile(fontsFolder + "Puritan2.otf")));
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFontName(), "Puritan2");
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), StringNormalizer.ToLowerCase("Puritan 2.0 Regular"
-                ));
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFamilyNameLowerCase(), StringNormalizer.ToLowerCase("Puritan 2.0"
-                ));
-            NUnit.Framework.Assert.AreEqual(descriptor.GetStyle(), "Normal");
+                (FileUtil.GetInputStreamForFile(fontsFolder + "Puritan-Regular.otf")));
+            NUnit.Framework.Assert.AreEqual("Puritan-Regular", descriptor.GetFontName());
+            NUnit.Framework.Assert.AreEqual(StringNormalizer.ToLowerCase("Puritan Regular"), descriptor.GetFullNameLowerCase
+                ());
+            NUnit.Framework.Assert.AreEqual(StringNormalizer.ToLowerCase("Puritan"), descriptor.GetFamilyNameLowerCase
+                ());
+            NUnit.Framework.Assert.AreEqual("Regular", descriptor.GetStyle());
             NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 400);
         }
 
         [NUnit.Framework.Test]
         public virtual void TtfByStringNames() {
-            FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontsFolder + "abserif4_5.ttf"
+            FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontsFolder + "PTSerif-Regular.ttf"
                 );
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFontName(), "AboriginalSerif");
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), StringNormalizer.ToLowerCase("Aboriginal Serif"
+            NUnit.Framework.Assert.AreEqual("PTSerif-Regular", descriptor.GetFontName());
+            NUnit.Framework.Assert.AreEqual(StringNormalizer.ToLowerCase("Pt Serif"), descriptor.GetFullNameLowerCase(
                 ));
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFamilyNameLowerCase(), StringNormalizer.ToLowerCase("Aboriginal Serif"
-                ));
+            NUnit.Framework.Assert.AreEqual(StringNormalizer.ToLowerCase("Pt Serif"), descriptor.GetFamilyNameLowerCase
+                ());
             NUnit.Framework.Assert.AreEqual(descriptor.GetStyle(), "Regular");
             NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 400);
         }
@@ -1449,12 +1452,12 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void TtfByStreamNames() {
             FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(StreamUtil.InputStreamToArray
-                (FileUtil.GetInputStreamForFile(fontsFolder + "abserif4_5.ttf")));
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFontName(), "AboriginalSerif");
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), StringNormalizer.ToLowerCase("Aboriginal Serif"
+                (FileUtil.GetInputStreamForFile(fontsFolder + "PTSerif-Regular.ttf")));
+            NUnit.Framework.Assert.AreEqual("PTSerif-Regular", descriptor.GetFontName());
+            NUnit.Framework.Assert.AreEqual(StringNormalizer.ToLowerCase("Pt Serif"), descriptor.GetFullNameLowerCase(
                 ));
-            NUnit.Framework.Assert.AreEqual(descriptor.GetFamilyNameLowerCase(), StringNormalizer.ToLowerCase("Aboriginal Serif"
-                ));
+            NUnit.Framework.Assert.AreEqual(StringNormalizer.ToLowerCase("Pt Serif"), descriptor.GetFamilyNameLowerCase
+                ());
             NUnit.Framework.Assert.AreEqual(descriptor.GetStyle(), "Regular");
             NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 400);
         }
