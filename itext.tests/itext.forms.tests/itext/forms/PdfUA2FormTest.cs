@@ -46,6 +46,9 @@ namespace iText.Forms {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfUA2FormTest/";
 
+        public static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/forms/fonts/";
+
         public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/forms//PdfUA2FormTest/";
 
         [NUnit.Framework.OneTimeSetUp]
@@ -60,7 +63,7 @@ namespace iText.Forms {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 Document document = new Document(pdfDocument);
-                PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "NotoSans-Regular.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                     .FORCE_EMBEDDED);
                 document.SetFont(font);
                 CreateSimplePdfUA2Document(pdfDocument);
@@ -83,7 +86,7 @@ namespace iText.Forms {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 Document document = new Document(pdfDocument);
-                PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "NotoSans-Regular.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                     .FORCE_EMBEDDED);
                 document.SetFont(font);
                 CreateSimplePdfUA2Document(pdfDocument);
@@ -108,7 +111,7 @@ namespace iText.Forms {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 Document document = new Document(pdfDocument);
-                PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "NotoSans-Regular.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                     .FORCE_EMBEDDED);
                 document.SetFont(font);
                 CreateSimplePdfUA2Document(pdfDocument);
@@ -129,7 +132,7 @@ namespace iText.Forms {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 Document document = new Document(pdfDocument);
-                PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "NotoSans-Regular.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                     .FORCE_EMBEDDED);
                 document.SetFont(font);
                 CreateSimplePdfUA2Document(pdfDocument);
@@ -154,7 +157,7 @@ namespace iText.Forms {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 Document document = new Document(pdfDocument);
-                PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "NotoSans-Regular.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                     .FORCE_EMBEDDED);
                 document.SetFont(font);
                 CreateSimplePdfUA2Document(pdfDocument);

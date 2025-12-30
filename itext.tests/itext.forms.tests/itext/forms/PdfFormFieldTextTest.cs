@@ -33,9 +33,12 @@ using iText.Test;
 namespace iText.Forms {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfFormFieldTextTest : ExtendedITextTest {
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/forms/PdfFormFieldTextTest/";
+        private static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/forms/fonts/";
 
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String destinationFolder = TestUtil.GetOutputPath() + "/forms/PdfFormFieldTextTest/";
+
+        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfFormFieldTextTest/";
 
         private const String TEXT = "Some text in Russian \u0442\u0435\u043A\u0441\u0442 (text)";
@@ -81,7 +84,7 @@ namespace iText.Forms {
             String filename = "fontsResourcesHelvFontTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "drWithHelv.pdf"), new PdfWriter(destinationFolder
                  + filename));
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H);
+            PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H);
             font.SetSubset(false);
             PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, false);
             form.GetField("description").SetValue(TEXT, font, 12f);
@@ -108,7 +111,7 @@ namespace iText.Forms {
             String filename = "fontsResourcesHelvCourierNotoFontTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "drWithHelvAndCourier.pdf"), new PdfWriter
                 (destinationFolder + filename));
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H);
+            PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H);
             font.SetSubset(false);
             PdfFormField formField = PdfFormCreator.GetAcroForm(pdfDoc, false).GetField("description");
             formField.SetFont(font);

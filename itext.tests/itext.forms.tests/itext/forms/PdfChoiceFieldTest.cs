@@ -34,9 +34,12 @@ using iText.Test.Attributes;
 namespace iText.Forms {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfChoiceFieldTest : ExtendedITextTest {
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/forms/PdfChoiceFieldTest/";
+        private static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/forms/fonts/";
 
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String destinationFolder = TestUtil.GetOutputPath() + "/forms/PdfChoiceFieldTest/";
+
+        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfChoiceFieldTest/";
 
         [NUnit.Framework.OneTimeSetUp]
@@ -49,7 +52,7 @@ namespace iText.Forms {
             String outPdf = destinationFolder + "choiceFieldsWithUnicodeTest.pdf";
             String cmpPdf = sourceFolder + "cmp_choiceFieldsWithUnicodeTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "NotoSansCJKjp-Bold.otf", "Identity-H");
+            PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "NotoSansCJKjp-Bold.otf", "Identity-H");
             font.SetSubset(false);
             PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             pdfDoc.AddNewPage();

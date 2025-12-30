@@ -35,9 +35,12 @@ using iText.Test;
 namespace iText.Forms {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfFormFieldMultilineTextTest : ExtendedITextTest {
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/forms/PdfFormFieldMultilineTextTest/";
+        private static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/forms/fonts/";
 
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String destinationFolder = TestUtil.GetOutputPath() + "/forms/PdfFormFieldMultilineTextTest/";
+
+        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfFormFieldMultilineTextTest/";
 
         [NUnit.Framework.OneTimeSetUp]
@@ -190,8 +193,7 @@ namespace iText.Forms {
         public virtual void FormFieldFilledWithStringTest() {
             String value = "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "formFieldWithStringTest.pdf"));
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "NotoSansCJKtc-Light.otf", PdfEncodings.IDENTITY_H
-                );
+            PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "NotoSansCJKtc-Light.otf", PdfEncodings.IDENTITY_H);
             PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfFormField form = new TextFormFieldBuilder(pdfDoc, "field").SetWidgetRectangle(new Rectangle(59, 715, 127
                 , 69)).CreateMultilineText().SetValue("");
