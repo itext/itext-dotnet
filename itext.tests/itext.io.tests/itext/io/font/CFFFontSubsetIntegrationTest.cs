@@ -48,7 +48,7 @@ namespace iText.IO.Font {
 
         private const int JP_REGULAR_CFF_LENGTH = 4210891;
 
-        private static readonly String PURITAN_PATH = FONTS_FOLDER + "Puritan2.otf";
+        private static readonly String PURITAN_PATH = FONTS_FOLDER + "Puritan-Regular.otf";
 
         [NUnit.Framework.Test]
         public virtual void SubsetNotoSansCjkJpBoldNoUsedGlyphsTest() {
@@ -102,7 +102,7 @@ namespace iText.IO.Font {
             byte[] cffData = new TrueTypeFont(PURITAN_PATH).GetFontStreamBytes();
             byte[] cffSubsetBytes = new CFFFontSubset(cffData, glyphsUsed).Process();
             CFFFont result = new CFFFont(cffSubsetBytes);
-            int expectedCharsetLength = 255;
+            int expectedCharsetLength = 237;
             // skip over the format ID (1 byte) and the first SID (2 bytes)
             result.Seek(result.fonts[0].GetCharsetOffset() + 3);
             NUnit.Framework.Assert.AreEqual(expectedCharsetLength - 2, result.GetCard16());

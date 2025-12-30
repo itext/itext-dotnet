@@ -63,7 +63,7 @@ namespace iText.IO.Font {
             FontCache.ClearSavedFonts();
             FontProgramFactory.RegisterFontDirectory(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
                 .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/");
-            NUnit.Framework.Assert.AreEqual(43, FontProgramFactory.GetRegisteredFonts().Count);
+            NUnit.Framework.Assert.AreEqual(44, FontProgramFactory.GetRegisteredFonts().Count);
             NUnit.Framework.Assert.IsNull(FontCache.GetFont(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
                 .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSansBold.ttf"));
             NUnit.Framework.Assert.IsTrue(FontProgramFactory.GetRegisteredFonts().Contains("free sans lihavoitu"));

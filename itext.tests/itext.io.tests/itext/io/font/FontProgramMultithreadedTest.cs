@@ -33,8 +33,9 @@ namespace iText.IO.Font
     [NUnit.Framework.Category("IntegrationTest")]
     public class FontProgramMultithreadedTest : ExtendedITextTest
     {
-        private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf";
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+                    .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/";
+        private static readonly String FONT = FONTS_FOLDER + "NotoSans-Regular.ttf";
 
         private static readonly TrueTypeFont fp = (TrueTypeFont) FontProgramFactory.CreateFont(FONT);
 
@@ -57,7 +58,7 @@ namespace iText.IO.Font
             foreach (Test test in tests)
             {
                 NUnit.Framework.Assert.False(test.exceptionCaught, "Exception during font subsetting");
-                NUnit.Framework.Assert.AreEqual(2956, test.subsetSize);
+                NUnit.Framework.Assert.AreEqual(3680, test.subsetSize);
             }
         }
 

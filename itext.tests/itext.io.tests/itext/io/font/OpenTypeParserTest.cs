@@ -34,8 +34,10 @@ namespace iText.IO.Font {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/font/OpenTypeParserTest/";
 
-        private static readonly String FREESANS_FONT_PATH = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf";
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/";
+
+        private static readonly String NOTO_SANS_FONT_PATH = FONTS_FOLDER + "NotoSans-Regular.ttf";
 
         [NUnit.Framework.Test]
         public virtual void TryToReadFontSubsetWithoutGlyfTableTest() {
@@ -55,7 +57,7 @@ namespace iText.IO.Font {
 
         [NUnit.Framework.Test]
         public virtual void GetFlatGlyphsCompositeTest() {
-            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FREESANS_FONT_PATH));
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(NOTO_SANS_FONT_PATH));
             OpenTypeParser parser = new OpenTypeParser(fontBytes);
             parser.LoadTables(true);
             ICollection<int> usedGlyphs = new HashSet<int>();
@@ -65,8 +67,8 @@ namespace iText.IO.Font {
             NUnit.Framework.Assert.AreEqual(4, glyphs.Count);
             NUnit.Framework.Assert.AreEqual(137, glyphs[0]);
             NUnit.Framework.Assert.AreEqual(0, glyphs[1]);
-            NUnit.Framework.Assert.AreEqual(586, glyphs[2]);
-            NUnit.Framework.Assert.AreEqual(38, glyphs[3]);
+            NUnit.Framework.Assert.AreEqual(38, glyphs[2]);
+            NUnit.Framework.Assert.AreEqual(122, glyphs[3]);
         }
 
         [NUnit.Framework.Test]

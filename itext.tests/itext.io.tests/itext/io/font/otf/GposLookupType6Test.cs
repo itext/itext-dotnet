@@ -29,14 +29,14 @@ using iText.Test;
 namespace iText.IO.Font.Otf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class GposLookupType6Test : ExtendedITextTest {
-        private static readonly String RESOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/";
 
-        private static readonly String FREE_SANS_FONT_PATH = RESOURCE_FOLDER + "FreeSans.ttf";
+        private static readonly String NOTO_SANS_FONT_PATH = FONTS_FOLDER + "NotoSans-Regular.ttf";
 
         [NUnit.Framework.Test]
         public virtual void IdxEqualToEndLineGpos6Test() {
-            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(FREE_SANS_FONT_PATH);
+            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(NOTO_SANS_FONT_PATH);
             GlyphPositioningTableReader gposTableReader = fontProgram.GetGposTable();
             GposLookupType6 lookup = new GposLookupType6(gposTableReader, 0, new int[0]);
             IList<Glyph> glyphs = JavaUtil.ArraysAsList(new Glyph(fontProgram.GetGlyphByCode(445)), new Glyph(fontProgram
@@ -49,7 +49,7 @@ namespace iText.IO.Font.Otf {
 
         [NUnit.Framework.Test]
         public virtual void IdxSmallerThanEndLineGpos6Test() {
-            TrueTypeFont font = new TrueTypeFont(FREE_SANS_FONT_PATH);
+            TrueTypeFont font = new TrueTypeFont(NOTO_SANS_FONT_PATH);
             GlyphPositioningTableReader gposTableReader = font.GetGposTable();
             GposLookupType6 lookup = new GposLookupType6(gposTableReader, 0, new int[0]);
             IList<Glyph> glyphs = JavaUtil.ArraysAsList(new Glyph(font.GetGlyphByCode(174)), new Glyph(font.GetGlyphByCode

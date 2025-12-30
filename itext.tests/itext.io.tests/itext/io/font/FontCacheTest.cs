@@ -34,7 +34,7 @@ namespace iText.IO.Font {
 
         [NUnit.Framework.Test]
         public virtual void ClearFontCacheTest() {
-            String fontName = "FreeSans.ttf";
+            String fontName = "NotoSans-Regular.ttf";
             NUnit.Framework.Assert.IsNull(FontCache.GetFont(fontName));
             FontProgram fontProgram = new FontCacheTest.FontProgramMock();
             FontCache.SaveFont(fontProgram, fontName);
