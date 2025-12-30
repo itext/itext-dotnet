@@ -33,28 +33,28 @@ using iText.Test;
 namespace iText.Kernel.Pdf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class EncodingTest : ExtendedITextTest {
-        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/EncodingTest/";
 
         private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/fonts/";
 
-        private static readonly String outputFolder = TestUtil.GetOutputPath() + "/kernel/pdf/EncodingTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/pdf/EncodingTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(outputFolder);
+            CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.OneTimeTearDown]
         public static void AfterClass() {
-            CompareTool.Cleanup(outputFolder);
+            CompareTool.Cleanup(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void SurrogatePairTest() {
             String fileName = "surrogatePairTest.pdf";
-            PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + fileName);
             PdfDocument doc = new PdfDocument(writer);
             PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "DejaVuSans.ttf", PdfEncodings.IDENTITY_H);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
@@ -62,14 +62,14 @@ namespace iText.Kernel.Pdf {
                  + "\uD835\uDD60\uD835\uDD63\uD835\uDD5D\uD835\uDD55").EndText().RestoreState();
             canvas.Release();
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFolder + fileName, sourceFolder + "cmp_"
-                 + fileName, outputFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + fileName, SOURCE_FOLDER
+                 + "cmp_" + fileName, DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CustomSimpleEncodingTimesRomanTest() {
             String fileName = "customSimpleEncodingTimesRomanTest.pdf";
-            PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + fileName);
             PdfDocument doc = new PdfDocument(writer);
             PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoSans-Regular.ttf", "# simple 1 0020 041c 0456 0440 044a 0050 0065 0061 0063"
                 , PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED);
@@ -78,14 +78,14 @@ namespace iText.Kernel.Pdf {
                         // Міръ Peace
                         .ShowText("\u041C\u0456\u0440\u044A Peace").EndText().RestoreState();
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFolder + fileName, sourceFolder + "cmp_"
-                 + fileName, outputFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + fileName, SOURCE_FOLDER
+                 + "cmp_" + fileName, DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CustomFullEncodingTimesRomanTest() {
             String fileName = "customFullEncodingTimesRomanTest.pdf";
-            PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + fileName);
             PdfDocument doc = new PdfDocument(writer);
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.TIMES_ROMAN, "# full 'A' Aring 0041 'E' Egrave 0045 32 space 0020"
                 );
@@ -93,14 +93,14 @@ namespace iText.Kernel.Pdf {
             canvas.SaveState().BeginText().MoveText(36, 806).SetFontAndSize(font, 12).ShowText("A E").EndText().RestoreState
                 ();
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFolder + fileName, sourceFolder + "cmp_"
-                 + fileName, outputFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + fileName, SOURCE_FOLDER
+                 + "cmp_" + fileName, DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void NotdefInStandardFontTest() {
             String fileName = "notdefInStandardFontTest.pdf";
-            PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + fileName);
             PdfDocument doc = new PdfDocument(writer);
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA, "# full 'A' Aring 0041 'E' abc11 0045 32 space 0020"
                 );
@@ -111,14 +111,14 @@ namespace iText.Kernel.Pdf {
             canvas.SaveState().BeginText().MoveText(36, 756).SetFontAndSize(font, 36).ShowText("\u0188").EndText().RestoreState
                 ();
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFolder + fileName, sourceFolder + "cmp_"
-                 + fileName, outputFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + fileName, SOURCE_FOLDER
+                 + "cmp_" + fileName, DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void NotdefInTrueTypeFontTest() {
             String fileName = "notdefInTrueTypeFontTest.pdf";
-            PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + fileName);
             PdfDocument doc = new PdfDocument(writer);
             PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoSans-Regular.ttf", "# simple 32 0020 00C5 1987"
                 , PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED);
@@ -130,28 +130,28 @@ namespace iText.Kernel.Pdf {
             canvas.SaveState().BeginText().MoveText(36, 756).SetFontAndSize(font, 36).ShowText("\u1987").EndText().RestoreState
                 ();
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFolder + fileName, sourceFolder + "cmp_"
-                 + fileName, outputFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + fileName, SOURCE_FOLDER
+                 + "cmp_" + fileName, DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void NotdefInType0Test() {
             String fileName = "notdefInType0Test.pdf";
-            PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + fileName);
             PdfDocument doc = new PdfDocument(writer);
             PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 36).ShowText("\u00C5 \u1987").EndText
                 ().RestoreState();
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFolder + fileName, sourceFolder + "cmp_"
-                 + fileName, outputFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + fileName, SOURCE_FOLDER
+                 + "cmp_" + fileName, DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SymbolDefaultFontTest() {
             String fileName = "symbolDefaultFontTest.pdf";
-            PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + fileName);
             PdfDocument doc = new PdfDocument(writer);
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.SYMBOL);
             FillSymbolDefaultPage(font, doc.AddNewPage());
@@ -159,8 +159,8 @@ namespace iText.Kernel.Pdf {
             font = PdfFontFactory.CreateFont(StandardFonts.SYMBOL, PdfEncodings.WINANSI);
             FillSymbolDefaultPage(font, doc.AddNewPage());
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFolder + fileName, sourceFolder + "cmp_"
-                 + fileName, outputFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + fileName, SOURCE_FOLDER
+                 + "cmp_" + fileName, DESTINATION_FOLDER, "diff_"));
         }
 
         private void FillSymbolDefaultPage(PdfFont font, PdfPage page) {
@@ -187,7 +187,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void SymbolTrueTypeFontWinAnsiTest() {
             String fileName = "symbolTrueTypeFontWinAnsiTest.pdf";
-            PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + fileName);
             PdfDocument doc = new PdfDocument(writer);
             // TODO DEVSIX-9589 Create symbol font with cmap 3,0 for testing
             PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "Symbols1.ttf", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
@@ -212,14 +212,14 @@ namespace iText.Kernel.Pdf {
             canvas.BeginText().MoveText(36, 726).SetFontAndSize(font, 36).ShowText(str.ToString()).EndText().RestoreState
                 ();
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFolder + fileName, sourceFolder + "cmp_"
-                 + fileName, outputFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + fileName, SOURCE_FOLDER
+                 + "cmp_" + fileName, DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SymbolTrueTypeFontIdentityTest() {
             String fileName = "symbolTrueTypeFontIdentityTest.pdf";
-            PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + fileName);
             PdfDocument doc = new PdfDocument(writer);
             // TODO DEVSIX-9589 Create symbol font with cmap 3,0 for testing
             PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "Symbols1.ttf", PdfEncodings.IDENTITY_H);
@@ -244,14 +244,14 @@ namespace iText.Kernel.Pdf {
             canvas.SaveState().BeginText().SetFontAndSize(font, 36).MoveText(36, 766).ShowText(str.ToString()).EndText
                 ().RestoreState();
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFolder + fileName, sourceFolder + "cmp_"
-                 + fileName, outputFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + fileName, SOURCE_FOLDER
+                 + "cmp_" + fileName, DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void SymbolTrueTypeFontSameCharsIdentityTest() {
             String fileName = "symbolTrueTypeFontSameCharsIdentityTest.pdf";
-            PdfWriter writer = CompareTool.CreateTestPdfWriter(outputFolder + fileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + fileName);
             PdfDocument doc = new PdfDocument(writer);
             // TODO DEVSIX-9589 Create symbol font with cmap 3,0 for testing
             PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "Symbols1.ttf", PdfEncodings.IDENTITY_H);
@@ -260,13 +260,13 @@ namespace iText.Kernel.Pdf {
             canvas.SaveState().BeginText().SetFontAndSize(font, 36).MoveText(36, 786).ShowText(line).EndText().RestoreState
                 ();
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFolder + fileName, sourceFolder + "cmp_"
-                 + fileName, outputFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + fileName, SOURCE_FOLDER
+                 + "cmp_" + fileName, DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void EncodingStreamExtractionTest() {
-            String fileName = sourceFolder + "encodingStream01.pdf";
+            String fileName = SOURCE_FOLDER + "encodingStream01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(fileName));
             String extractedText = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1));
             NUnit.Framework.Assert.AreEqual("abc", extractedText);
@@ -274,7 +274,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void DifferentCodeSpaceRangeLengthsExtractionTest() {
-            String fileName = sourceFolder + "differentCodeSpaceRangeLengths01.pdf";
+            String fileName = SOURCE_FOLDER + "differentCodeSpaceRangeLengths01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(fileName));
             String extractedText = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1));
             NUnit.Framework.Assert.AreEqual("Hello\u7121\u540dworld\u6b98\u528d", extractedText);

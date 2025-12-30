@@ -33,31 +33,31 @@ using iText.Test;
 namespace iText.Kernel.Pdf.Canvas {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfCanvasGlyphlineShowTextTest : ExtendedITextTest {
-        private static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/canvas/PdfCanvasGlyphlineShowTextTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/pdf/canvas/PdfCanvasGlyphlineShowTextTest/";
 
-        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/canvas/PdfCanvasGlyphlineShowTextTest/";
 
-        private static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/fonts/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.OneTimeTearDown]
         public static void AfterClass() {
-            CompareTool.Cleanup(destinationFolder);
+            CompareTool.Cleanup(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void NotoSerifWithInvalidXYPlacementAnchorDeltaTest() {
-            String outPdf = destinationFolder + "notoSerifWithInvalidXYPlacementAnchorDeltaTest.pdf";
-            String cmpPdf = sourceFolder + "cmp_notoSerifWithInvalidXYPlacementAnchorDeltaTest.pdf";
+            String outPdf = DESTINATION_FOLDER + "notoSerifWithInvalidXYPlacementAnchorDeltaTest.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_notoSerifWithInvalidXYPlacementAnchorDeltaTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             PdfPage page = pdfDoc.AddNewPage();
-            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoSerif-Regular_v1.7.ttf", PdfEncodings.IDENTITY_H
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoSerif-Regular_v1.7.ttf", PdfEncodings.IDENTITY_H
                 );
             // ゙B̸̭̼ͣ̎̇
             IList<Glyph> glyphs = JavaUtil.ArraysAsList(font.GetGlyph((int)'\u0042'), ApplyGlyphParameters('\u0363', -
@@ -70,7 +70,7 @@ namespace iText.Kernel.Pdf.Canvas {
                 ();
             canvas.Release();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
 
         private Glyph ApplyGlyphParameters(char glyphUni, int anchorDelta, int xPlacement, int yPlacement, PdfFont

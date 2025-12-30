@@ -34,26 +34,26 @@ using iText.Test;
 namespace iText.Kernel.Pdf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class FontToUnicodeTest : ExtendedITextTest {
-        private static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/fonts/";
 
-        private static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/FontToUnicodeTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/pdf/FontToUnicodeTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.OneTimeTearDown]
         public static void AfterClass() {
-            CompareTool.Cleanup(destinationFolder);
+            CompareTool.Cleanup(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void SeveralUnicodesWithinOneGlyphTest() {
-            String outFileName = destinationFolder + "severalUnicodesWithinOneGlyphTest.pdf";
+            String outFileName = DESTINATION_FOLDER + "severalUnicodesWithinOneGlyphTest.pdf";
             PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
-            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoSansCJKjp-Bold.otf", PdfEncodings.IDENTITY_H);
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoSansCJKjp-Bold.otf", PdfEncodings.IDENTITY_H);
             IList<Glyph> glyphs = JavaCollectionsUtil.SingletonList(font.GetGlyph((int)'\u65E0'));
             GlyphLine glyphLine = new GlyphLine(glyphs);
             PdfCanvas canvas2 = new PdfCanvas(pdfDocument.AddNewPage());

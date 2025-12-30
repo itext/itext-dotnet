@@ -32,24 +32,24 @@ using iText.Test;
 namespace iText.Kernel.Pdf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfFontCacheTest : ExtendedITextTest {
-        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfFontCacheTest/";
 
-        private static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/fonts/";
 
-        private static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/PdfFontCacheTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/pdf/PdfFontCacheTest/";
 
         private const String pangramme = "Amazingly few discotheques provide jukeboxes " + "but it now while sayingly ABEFGHJKNOPQRSTUWYZ?";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.OneTimeTearDown]
         public static void AfterClass() {
-            CompareTool.Cleanup(destinationFolder);
+            CompareTool.Cleanup(DESTINATION_FOLDER);
         }
 
         private static readonly String[] TextSetHelloWorld = new String[] { "Hello World" };
@@ -64,22 +64,22 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithKozmin() {
             String testName = "DocumentWithKozmin";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
             AddPagesWithFonts(pdfDoc, "KozMinPro-Regular", "UniJIS-UCS2-H", TextSetChinese);
             AddPagesWithFonts(pdfDoc, "KozMinPro-Regular", "Adobe-Japan1-0", TextSetChinese);
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(2, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithHelveticaMixEncodings() {
             String testName = "DocumentWithHelveticaMixEncodings";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
             String font = StandardFonts.HELVETICA;
             String encoding = null;
@@ -87,15 +87,15 @@ namespace iText.Kernel.Pdf {
             AddPagesWithFonts(pdfDoc, font, "MacRoman", TextSetWithABC);
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(2, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithHelvetica() {
             String testName = "DocumentWithHelvetica";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
             String font = StandardFonts.HELVETICA;
             String encoding = null;
@@ -104,15 +104,15 @@ namespace iText.Kernel.Pdf {
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(1, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithHelveticaFlushed() {
             String testName = "DocumentWithHelveticaFlushed";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
             String font = StandardFonts.HELVETICA;
             String encoding = null;
@@ -124,15 +124,15 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
             //Flushed fonts cannot be reused.
             NUnit.Framework.Assert.AreEqual(3, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithTimesAndCustomEncoding() {
             String testName = "DocumentTimesAndCustomEncoding";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
             String font = StandardFonts.TIMES_ROMAN;
             String encoding = "# full 'A' Aring 0041 'E' Egrave 0045 32 space 0020";
@@ -142,15 +142,15 @@ namespace iText.Kernel.Pdf {
             AddPagesWithFonts(pdfDoc, font, encoding, AE);
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(1, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithCourierAndWinAnsiEncodings() {
             String testName = "DocumentCourierAndWinAnsiEncodings";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
             String font = StandardFonts.COURIER;
             PdfFontFactory.EmbeddingStrategy embeddingStrategy = PdfFontFactory.EmbeddingStrategy.PREFER_NOT_EMBEDDED;
@@ -161,94 +161,94 @@ namespace iText.Kernel.Pdf {
             AddPagesWithFonts(pdfDoc, font, "WinAnsiEncoding", embeddingStrategy, TextSetWithABC);
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(1, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithPTserifAndIdentityHEncodings() {
             String testName = "DocumentWithPTserifAndIdentityHEncodings";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
-            String font = fontsFolder + "PTSerif-Regular.ttf";
+            String font = FONTS_FOLDER + "PTSerif-Regular.ttf";
             //All those encodings actually the same Identity-H.
             AddPagesWithFonts(pdfDoc, font, null, TextSetWithABC);
             AddPagesWithFonts(pdfDoc, font, "", TextSetWithABC);
             AddPagesWithFonts(pdfDoc, font, PdfEncodings.IDENTITY_H, TextSetWithABC);
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(1, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithEmbeddedPTserifFirstWinAnsiThenIdentityHEncodings() {
             String testName = "DocumentWithEmbeddedPTserifFirstWinAnsiThenIdentityHEncodings";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
-            String font = fontsFolder + "PTSerif-Regular.ttf";
+            String font = FONTS_FOLDER + "PTSerif-Regular.ttf";
             AddPagesWithFonts(pdfDoc, font, PdfEncodings.WINANSI, TextSetWithABC);
             AddPagesWithFonts(pdfDoc, font, "", TextSetWithABC);
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(2, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithEmbeddedPTserifFirstIdentityHThenWinAnsiEncodings() {
             String testName = "DocumentWithEmbeddedPTserifFirstIdentityHThenWinAnsiEncodings";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
-            String font = fontsFolder + "PTSerif-Regular.ttf";
+            String font = FONTS_FOLDER + "PTSerif-Regular.ttf";
             AddPagesWithFonts(pdfDoc, font, "", TextSetWithABC);
             AddPagesWithFonts(pdfDoc, font, PdfEncodings.WINANSI, TextSetWithABC);
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(2, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithNotEmbeddedPTserifFirstWinAnsiThenIdentityHEncodings() {
             String testName = "DocumentWithNotEmbeddedPTserifFirstWinAnsiThenIdentityHEncodings";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
-            String font = fontsFolder + "PTSerif-Regular.ttf";
+            String font = FONTS_FOLDER + "PTSerif-Regular.ttf";
             PdfFontFactory.EmbeddingStrategy embeddingStrategy = PdfFontFactory.EmbeddingStrategy.PREFER_NOT_EMBEDDED;
             AddPagesWithFonts(pdfDoc, font, PdfEncodings.WINANSI, embeddingStrategy, TextSetWithABC);
             AddPagesWithFonts(pdfDoc, font, "", embeddingStrategy, TextSetWithABC);
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(2, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithNotEmbeddedPTserifFirstIdentityHThenWinAnsiEncodings() {
             String testName = "DocumentWithNotEmbeddedPTserifFirstIdentityHThenWinAnsiEncodings";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
-            String font = fontsFolder + "PTSerif-Regular.ttf";
+            String font = FONTS_FOLDER + "PTSerif-Regular.ttf";
             PdfFontFactory.EmbeddingStrategy embeddingStrategy = PdfFontFactory.EmbeddingStrategy.PREFER_NOT_EMBEDDED;
             AddPagesWithFonts(pdfDoc, font, "", embeddingStrategy, TextSetWithABC);
             AddPagesWithFonts(pdfDoc, font, PdfEncodings.WINANSI, embeddingStrategy, TextSetWithABC);
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(2, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithTimesBoldAndMacRomanEncodings() {
             String testName = "DocumentTimesBoldAndMacRomanEncodings";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
             String font = StandardFonts.TIMES_BOLD;
             //All those encodings actually the same MacRoman.
@@ -256,51 +256,51 @@ namespace iText.Kernel.Pdf {
             AddPagesWithFonts(pdfDoc, font, "MacRomanEncoding", TextSetWithABC);
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(1, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithTrueTypeAsType0DefaultEncoding() {
             String testName = "DocumentWithTrueTypeAsType0DefaultEncoding";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
-            String font = fontsFolder + "PTSerif-Regular.ttf";
+            String font = FONTS_FOLDER + "PTSerif-Regular.ttf";
             String encoding = null;
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(1, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithTrueTypeAsTrueType() {
             String testName = "DocumentWithTrueType";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
-            String font = fontsFolder + "PTSerif-Regular.ttf";
+            String font = FONTS_FOLDER + "PTSerif-Regular.ttf";
             String encoding = PdfEncodings.WINANSI;
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(1, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithTrueTypeFlushed() {
             String testName = "DocumentWithTrueTypeFlushed";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
-            String font = fontsFolder + "PTSerif-Regular.ttf";
+            String font = FONTS_FOLDER + "PTSerif-Regular.ttf";
             String encoding = null;
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
             pdfDoc.FlushFonts();
@@ -312,34 +312,34 @@ namespace iText.Kernel.Pdf {
             //For some reason Acrobat shows only one font in Properties.
             //RUPS shows 3 instances of the same font.
             NUnit.Framework.Assert.AreEqual(3, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithTrueTypeAsType0() {
             String testName = "DocumentWithTrueTypeAsType0";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
-            String font = fontsFolder + "PTSerif-Regular.ttf";
+            String font = FONTS_FOLDER + "PTSerif-Regular.ttf";
             String encoding = "Identity-H";
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(1, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithTrueTypeAsType0Flushed() {
             String testName = "DocumentWithTrueTypeAsType0Flushed";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
-            String font = fontsFolder + "PTSerif-Regular.ttf";
+            String font = FONTS_FOLDER + "PTSerif-Regular.ttf";
             String encoding = "Identity-H";
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetWithABC);
             pdfDoc.FlushFonts();
@@ -349,34 +349,34 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
             //Flushed fonts cannot be reused.
             NUnit.Framework.Assert.AreEqual(3, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithOpenTypeAsType0() {
             String testName = "DocumentWithOpenTypeAsType0";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
-            String font = fontsFolder + "NotoSansCJKjp-Bold.otf";
+            String font = FONTS_FOLDER + "NotoSansCJKjp-Bold.otf";
             String encoding = "Identity-H";
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetInternational);
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetInternational);
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetInternational);
             pdfDoc.Close();
             NUnit.Framework.Assert.AreEqual(1, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithOpenTypeAsType0Flushed() {
             String testName = "DocumentWithOpenTypeAsType0Flushed";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
-            String font = fontsFolder + "NotoSansCJKjp-Bold.otf";
+            String font = FONTS_FOLDER + "NotoSansCJKjp-Bold.otf";
             String encoding = "Identity-H";
             AddPagesWithFonts(pdfDoc, font, encoding, TextSetInternational);
             pdfDoc.FlushFonts();
@@ -386,16 +386,16 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
             //Flushed fonts cannot be reused.
             NUnit.Framework.Assert.AreEqual(3, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithHelveticaFromDocument() {
             String testName = "DocumentWithHelveticaFromDocument";
-            String input = sourceFolder + "DocumentWithHelvetica.pdf";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String input = SOURCE_FOLDER + "DocumentWithHelvetica.pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfReader reader = new PdfReader(input);
             PdfWriter writer = CompareTool.CreateTestPdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
                 );
@@ -419,16 +419,16 @@ namespace iText.Kernel.Pdf {
             //We cannot rely on font name for a document font, so we treat them as two different fonts.
             //However we're trying to detect standard fonts in this case, so it will work.
             NUnit.Framework.Assert.AreEqual(1, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithHelveticaFromDocumentWithWrongEncoding() {
             String testName = "DocumentWithHelveticaFromDocumentWithWrongEncoding";
-            String input = sourceFolder + "DocumentWithHelvetica.pdf";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String input = SOURCE_FOLDER + "DocumentWithHelvetica.pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfReader reader = new PdfReader(input);
             PdfWriter writer = CompareTool.CreateTestPdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
                 );
@@ -451,16 +451,16 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
             //Two different encodings were used -> two fonts are expected.
             NUnit.Framework.Assert.AreEqual(2, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithTrueTypeAboriginalFromDocument() {
             String testName = "DocumentWithTrueTypeAboriginalFromDocument";
-            String input = sourceFolder + "DocumentWithTrueTypeAboriginalSerif.pdf";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String input = SOURCE_FOLDER + "DocumentWithTrueTypeAboriginalSerif.pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfReader reader = new PdfReader(input);
             PdfWriter writer = CompareTool.CreateTestPdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
                 );
@@ -479,20 +479,20 @@ namespace iText.Kernel.Pdf {
             //There is only one just loaded and used document font.
             NUnit.Framework.Assert.AreEqual(1, pdfDoc.GetDocumentFonts().Count);
             // TODO DEVSIX-9683 Replace abserif4_5.ttc in kernel
-            AddPagesWithFonts(pdfDoc, fontsFolder + "abserif4_5.ttf", "WinAnsi", TextSetWithABC);
+            AddPagesWithFonts(pdfDoc, FONTS_FOLDER + "abserif4_5.ttf", "WinAnsi", TextSetWithABC);
             pdfDoc.Close();
             //We cannot rely on font name for a document font, so we treat them as two different fonts.
             NUnit.Framework.Assert.AreEqual(2, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithType1NotoFromDocument() {
             String testName = "DocumentWithType1NotoFromDocument";
-            String input = sourceFolder + "DocumentWithType1Noto.pdf";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String input = SOURCE_FOLDER + "DocumentWithType1Noto.pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfReader reader = new PdfReader(input);
             PdfWriter writer = CompareTool.CreateTestPdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
                 );
@@ -510,21 +510,21 @@ namespace iText.Kernel.Pdf {
                 .Substring(pangramme.Length / 2)).EndText().Release();
             //There is only one just loaded and used document font.
             NUnit.Framework.Assert.AreEqual(1, pdfDoc.GetDocumentFonts().Count);
-            AddPagesWithFonts(pdfDoc, fontsFolder + "NotoSansCJKjp-Bold.otf", encoding, PdfFontFactory.EmbeddingStrategy
+            AddPagesWithFonts(pdfDoc, FONTS_FOLDER + "NotoSansCJKjp-Bold.otf", encoding, PdfFontFactory.EmbeddingStrategy
                 .FORCE_NOT_EMBEDDED, TextSetWithABC);
             pdfDoc.Close();
             //We cannot rely on font name for a document font, so we treat them as two different fonts.
             NUnit.Framework.Assert.AreEqual(2, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithType0AboriginalFromDocument1() {
             String testName = "DocumentWithType0AboriginalFromDocument";
-            String input = sourceFolder + "DocumentWithType0AboriginalSerif.pdf";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String input = SOURCE_FOLDER + "DocumentWithType0AboriginalSerif.pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfReader reader = new PdfReader(input);
             PdfWriter writer = CompareTool.CreateTestPdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
                 );
@@ -543,20 +543,20 @@ namespace iText.Kernel.Pdf {
             //There is only one just loaded and used document font.
             NUnit.Framework.Assert.AreEqual(1, pdfDoc.GetDocumentFonts().Count);
             // TODO DEVSIX-9683 Replace abserif4_5.ttc in kernel
-            AddPagesWithFonts(pdfDoc, fontsFolder + "abserif4_5.ttf", encoding, TextSetWithABC);
+            AddPagesWithFonts(pdfDoc, FONTS_FOLDER + "abserif4_5.ttf", encoding, TextSetWithABC);
             pdfDoc.Close();
             //We cannot rely on font name for a document font, so we treat them as two different fonts.
             NUnit.Framework.Assert.AreEqual(2, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithType0NotoFromDocument1() {
             String testName = "DocumentWithType0NotoFromDocument";
-            String input = sourceFolder + "DocumentWithType0Noto.pdf";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String input = SOURCE_FOLDER + "DocumentWithType0Noto.pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfReader reader = new PdfReader(input);
             PdfWriter writer = CompareTool.CreateTestPdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
                 );
@@ -574,20 +574,20 @@ namespace iText.Kernel.Pdf {
                 .Substring(pangramme.Length / 2)).EndText().Release();
             //There is only one just loaded and used document font.
             NUnit.Framework.Assert.AreEqual(1, pdfDoc.GetDocumentFonts().Count);
-            AddPagesWithFonts(pdfDoc, fontsFolder + "NotoSansCJKjp-Bold.otf", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+            AddPagesWithFonts(pdfDoc, FONTS_FOLDER + "NotoSansCJKjp-Bold.otf", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
                 .PREFER_NOT_EMBEDDED, TextSetWithABC);
             pdfDoc.Close();
             //We cannot rely on font name for a document font, so we treat them as two different fonts.
             NUnit.Framework.Assert.AreEqual(2, CountPdfFonts(filename));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateDocumentWithType3Font() {
             String testName = "DocumentWithType3Font";
-            String filename = destinationFolder + testName + ".pdf";
-            String cmpFilename = sourceFolder + "cmp_" + testName + ".pdf";
+            String filename = DESTINATION_FOLDER + testName + ".pdf";
+            String cmpFilename = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
             PdfDocument pdfDoc = CreateDocument(filename);
             PdfType3Font type3Font = PdfFontFactory.CreateType3Font(pdfDoc, false);
             Type3Glyph type3Glyph = type3Font.AddGlyph('A', 600, 0, 0, 600, 700);
@@ -612,8 +612,8 @@ namespace iText.Kernel.Pdf {
             //PdfType3Font comparing returns false;
             NUnit.Framework.Assert.AreEqual(2, CountPdfFonts(filename));
             // reading and comparing text
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
-                "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, DESTINATION_FOLDER
+                , "diff_"));
         }
 
         private void AddPagesWithFonts(PdfDocument pdfDoc, String fontProgram, String fontEncoding, String[] text) {
