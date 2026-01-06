@@ -62,27 +62,6 @@ namespace iText.Kernel.Pdf {
 
         protected internal readonly StampingProperties properties;
 
-//\cond DO_NOT_DOCUMENT
-        /// <summary>List of indirect objects used in the document.</summary>
-        internal readonly PdfXrefTable xref = new PdfXrefTable();
-//\endcond
-
-        private readonly IDictionary<PdfIndirectReference, PdfFont> documentFonts = new Dictionary<PdfIndirectReference
-            , PdfFont>();
-
-        private readonly ICollection<IEventHandler> documentHandlers = new LinkedHashSet<IEventHandler>();
-
-        private readonly SequenceId documentId;
-
-        /// <summary>To be adjusted destinations.</summary>
-        /// <remarks>
-        /// To be adjusted destinations.
-        /// Key - originating page on the source document
-        /// Value - a hashmap of Parent pdf objects and destinations to be updated
-        /// </remarks>
-        private readonly IList<PdfDocument.DestinationMutationInfo> pendingDestinationMutations = new List<PdfDocument.DestinationMutationInfo
-            >();
-
         /// <summary>PdfWriter associated with the document.</summary>
         /// <remarks>
         /// PdfWriter associated with the document.
@@ -137,6 +116,11 @@ namespace iText.Kernel.Pdf {
         protected internal IPdfPageFactory pdfPageFactory = new PdfPageFactory();
 
 //\cond DO_NOT_DOCUMENT
+        /// <summary>List of indirect objects used in the document.</summary>
+        internal readonly PdfXrefTable xref = new PdfXrefTable();
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         /// <summary>Cache of already serialized objects from this document for smart mode.</summary>
         internal IDictionary<PdfIndirectReference, byte[]> serializedObjectsCache = new Dictionary<PdfIndirectReference
             , byte[]>();
@@ -146,6 +130,24 @@ namespace iText.Kernel.Pdf {
         /// <summary>Handler which will be used for decompression of pdf streams.</summary>
         internal MemoryLimitsAwareHandler memoryLimitsAwareHandler = null;
 //\endcond
+
+        private readonly IDictionary<PdfIndirectReference, PdfFont> documentFonts = new Dictionary<PdfIndirectReference
+            , PdfFont>();
+
+        private readonly ICollection<IEventHandler> documentHandlers = new LinkedHashSet<IEventHandler>();
+
+        private readonly SequenceId documentId;
+
+        /// <summary>To be adjusted destinations.</summary>
+        /// <remarks>
+        /// To be adjusted destinations.
+        /// Key - originating page on the source document
+        /// Value - a hashmap of Parent pdf objects and destinations to be updated
+        /// </remarks>
+        private readonly IList<PdfDocument.DestinationMutationInfo> pendingDestinationMutations = new List<PdfDocument.DestinationMutationInfo
+            >();
+
+        private readonly DIContainer diContainer = new DIContainer();
 
         /// <summary>Default page size.</summary>
         /// <remarks>
@@ -170,8 +172,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>XMP Metadata which is used to prevent bytes deserialization for a few times on the same bytes.</summary>
         private XMPMeta xmpMetadata = null;
-
-        private readonly DIContainer diContainer = new DIContainer();
 
         /// <summary>Open PDF document in reading mode.</summary>
         /// <param name="reader">PDF reader.</param>
@@ -1411,7 +1411,7 @@ namespace iText.Kernel.Pdf {
                 }
             }
             // It's important to copy tag structure after link annotations were copied, because object content items in tag
-            // structure are not copied in case if their's OBJ key is annotation and doesn't contain /P entry.
+            // structure are not copied in case if theirs OBJ key is annotation and doesn't contain /P entry.
             if (toDocument.IsTagged()) {
                 if (IsTagged()) {
                     try {
@@ -1635,8 +1635,8 @@ namespace iText.Kernel.Pdf {
             GetOutlines(false);
         }
 
-        /// <summary>This methods adds new name in the Dests NameTree.</summary>
-        /// <remarks>This methods adds new name in the Dests NameTree. It throws an exception, if the name already exists.
+        /// <summary>The method adds new name in the Dests NameTree.</summary>
+        /// <remarks>The method adds new name in the Dests NameTree. It throws an exception, if the name already exists.
         ///     </remarks>
         /// <param name="key">Name of the destination.</param>
         /// <param name="value">
@@ -1647,8 +1647,8 @@ namespace iText.Kernel.Pdf {
             AddNamedDestination(new PdfString(key), value);
         }
 
-        /// <summary>This methods adds new name in the Dests NameTree.</summary>
-        /// <remarks>This methods adds new name in the Dests NameTree. It throws an exception, if the name already exists.
+        /// <summary>The method adds new name in the Dests NameTree.</summary>
+        /// <remarks>The method adds new name in the Dests NameTree. It throws an exception, if the name already exists.
         ///     </remarks>
         /// <param name="key">Name of the destination.</param>
         /// <param name="value">
@@ -1663,8 +1663,8 @@ namespace iText.Kernel.Pdf {
             catalog.AddNamedDestination(key, value);
         }
 
-        /// <summary>Gets static copy of cross reference table.</summary>
-        /// <returns>a static copy of cross reference table</returns>
+        /// <summary>Gets static copy of cross-reference table.</summary>
+        /// <returns>a static copy of cross-reference table</returns>
         public virtual IList<PdfIndirectReference> ListIndirectReferences() {
             CheckClosingStatus();
             IList<PdfIndirectReference> indRefs = new List<PdfIndirectReference>(xref.Size());
@@ -1870,7 +1870,7 @@ namespace iText.Kernel.Pdf {
                 return null;
             }
             IDictionary<int?, PdfObject> pageLabels = catalog.GetPageLabelsTree(false).GetNumbers();
-            if (pageLabels.Count == 0) {
+            if (pageLabels.IsEmpty()) {
                 return null;
             }
             String[] labelStrings = new String[GetNumberOfPages()];
@@ -2551,6 +2551,7 @@ namespace iText.Kernel.Pdf {
 
         private void ResolveDestinations(iText.Kernel.Pdf.PdfDocument toDocument, IDictionary<PdfPage, PdfPage> page2page
             ) {
+            // Classical for loop is used to allow pendingDestinationMutations modification during iteration
             for (int i = 0; i < pendingDestinationMutations.Count; ++i) {
                 PdfDocument.DestinationMutationInfo mutation = pendingDestinationMutations[i];
                 PdfDestination copiedDest = null;
@@ -2570,8 +2571,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="toDocument">document where outlines should be copied</param>
         private void CopyOutlines(ICollection<PdfOutline> outlines, iText.Kernel.Pdf.PdfDocument toDocument, IDictionary
             <PdfPage, PdfPage> page2page) {
-            ICollection<PdfOutline> outlinesToCopy = new HashSet<PdfOutline>();
-            outlinesToCopy.AddAll(outlines);
+            ICollection<PdfOutline> outlinesToCopy = new HashSet<PdfOutline>(outlines);
             foreach (PdfOutline outline in outlines) {
                 GetAllOutlinesToCopy(outline, outlinesToCopy);
             }

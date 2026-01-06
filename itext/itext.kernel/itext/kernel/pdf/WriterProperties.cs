@@ -496,6 +496,7 @@ namespace iText.Kernel.Pdf {
         /// and does not change when the file is incrementally updated.
         /// To help ensure the uniqueness of file identifiers,
         /// it is recommended to be computed by means of a message digest algorithm such as MD5.
+        /// <para />
         /// iText will by default keep the existing initial id.
         /// But if you'd like you can set this id yourself using this setter.
         /// </remarks>

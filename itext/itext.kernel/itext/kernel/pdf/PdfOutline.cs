@@ -41,17 +41,17 @@ namespace iText.Kernel.Pdf {
         /// <summary>A flag for displaying the outline item’s text with bold font.</summary>
         public const int FLAG_BOLD = 2;
 
-        private IList<iText.Kernel.Pdf.PdfOutline> children = new List<iText.Kernel.Pdf.PdfOutline>();
+        private readonly IList<iText.Kernel.Pdf.PdfOutline> children = new List<iText.Kernel.Pdf.PdfOutline>();
 
         private String title;
 
-        private PdfDictionary content;
+        private readonly PdfDictionary content;
 
         private PdfDestination destination;
 
         private iText.Kernel.Pdf.PdfOutline parent;
 
-        private PdfDocument pdfDoc;
+        private readonly PdfDocument pdfDoc;
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>Create instance of document outline.</summary>
@@ -278,7 +278,7 @@ namespace iText.Kernel.Pdf {
                 content.Put(PdfName.Count, new PdfNumber(-1));
             }
             else {
-                if (children.Count > 0) {
+                if (!children.IsEmpty()) {
                     content.Put(PdfName.Count, new PdfNumber(children.Count));
                 }
                 else {
@@ -317,7 +317,7 @@ namespace iText.Kernel.Pdf {
             iText.Kernel.Pdf.PdfOutline outline = new iText.Kernel.Pdf.PdfOutline(title, dictionary, this);
             dictionary.Put(PdfName.Title, new PdfString(title, PdfEncodings.UNICODE_BIG));
             dictionary.Put(PdfName.Parent, content);
-            if (children.Count > 0) {
+            if (!children.IsEmpty()) {
                 if (position != 0) {
                     PdfDictionary prevContent = children[position - 1].GetContent();
                     dictionary.Put(PdfName.Prev, prevContent);

@@ -35,15 +35,15 @@ using iText.Kernel.XMP;
 namespace iText.Kernel.Pdf {
     /// <summary>Reads a PDF document.</summary>
     public class PdfReader : IDisposable {
-        /// <summary>The Logger instance.</summary>
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
-
         /// <summary>
         /// The default
         /// <see cref="StrictnessLevel"/>
         /// to be used.
         /// </summary>
         public static readonly PdfReader.StrictnessLevel DEFAULT_STRICTNESS_LEVEL = PdfReader.StrictnessLevel.LENIENT;
+
+        /// <summary>The Logger instance.</summary>
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
 
         private const String endstream1 = "endstream";
 
@@ -58,17 +58,6 @@ namespace iText.Kernel.Pdf {
         private static readonly byte[] endobj = ByteUtils.GetIsoBytes("endobj");
 
         protected internal static bool correctStreamLength = true;
-
-        private bool unethicalReading;
-
-        private bool memorySavingMode;
-
-        private PdfReader.StrictnessLevel strictnessLevel = DEFAULT_STRICTNESS_LEVEL;
-
-        //indicate nearest first Indirect reference object which includes current reading the object, using for PdfString decrypt
-        private PdfIndirectReference currentIndirectReference;
-
-        private PdfReader.XrefProcessor xrefProcessor = new PdfReader.XrefProcessor();
 
         protected internal PdfTokenizer tokens;
 
@@ -97,6 +86,17 @@ namespace iText.Kernel.Pdf {
         protected internal bool fixedXref = false;
 
         protected internal bool xrefStm = false;
+
+        private bool unethicalReading;
+
+        private bool memorySavingMode;
+
+        private PdfReader.StrictnessLevel strictnessLevel = DEFAULT_STRICTNESS_LEVEL;
+
+        //indicate nearest first Indirect reference object which includes current reading the object, using for PdfString decrypt
+        private PdfIndirectReference currentIndirectReference;
+
+        private PdfReader.XrefProcessor xrefProcessor = new PdfReader.XrefProcessor();
 
         private XMPMeta xmpMeta;
 
@@ -191,7 +191,7 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         /// <param name="unethicalReading">
         /// true to enable unethicalReading, false to disable it.
-        /// By default unethicalReading is disabled.
+        /// By default, unethicalReading is disabled.
         /// </param>
         /// <returns>
         /// this
@@ -207,7 +207,7 @@ namespace iText.Kernel.Pdf {
         /// <remarks>
         /// Defines if memory saving mode is enabled.
         /// <para />
-        /// By default memory saving mode is disabled for the sake of time–memory trade-off.
+        /// By default, memory saving mode is disabled for the sake of time–memory trade-off.
         /// <para />
         /// If memory saving mode is enabled, document processing might slow down, but reading will be less memory demanding.
         /// </remarks>
@@ -400,7 +400,7 @@ namespace iText.Kernel.Pdf {
                 return new byte[0];
             }
             RandomAccessFileOrArray file = tokens.GetSafeFile();
-            byte[] bytes = null;
+            byte[] bytes;
             try {
                 file.Seek(offset);
                 bytes = new byte[length];
@@ -885,7 +885,7 @@ namespace iText.Kernel.Pdf {
                         continue;
                     }
                     if (tokens.GetTokenType() == PdfTokenizer.TokenType.Number) {
-                        // This ensure that we don't even try to read as indirect reference token (two numbers and "R")
+                        // This ensures that we don't even try to read as indirect reference token (two numbers and "R")
                         // which are forbidden in object streams.
                         obj = new PdfNumber(tokens.GetByteContent());
                     }
@@ -1455,7 +1455,7 @@ namespace iText.Kernel.Pdf {
                             // if the pdf is linearized it is possible that the trailer has been read
                             // before the actual objects it refers to this causes the trailer to have
                             // objects in READING state that's why we keep track of the position  of the
-                            // trailer and then asign it when the whole pdf has been loaded
+                            // trailer and then assign it when the whole pdf has been loaded
                             trailerIndex = pos;
                         }
                         else {
@@ -1480,33 +1480,6 @@ namespace iText.Kernel.Pdf {
                 // in READING state when the pdf has been linearised now we can assign the trailer
                 // and it will have the right references
                 SetTrailerFromTrailerIndex(trailerIndex);
-            }
-        }
-
-        private bool IsCurrentObjectATrailer() {
-            try {
-                PdfDictionary dic = (PdfDictionary)ReadObject(false);
-                return dic.Get(PdfName.Root, false) != null;
-            }
-            catch (MemoryLimitsAwareException e) {
-                throw;
-            }
-            catch (Exception) {
-                return false;
-            }
-        }
-
-        private void SetTrailerFromTrailerIndex(long? trailerIndex) {
-            if (trailerIndex == null) {
-                throw new PdfException(KernelExceptionMessageConstant.TRAILER_NOT_FOUND);
-            }
-            tokens.Seek((long)trailerIndex);
-            PdfDictionary dic = (PdfDictionary)ReadObject(false);
-            if (dic.Get(PdfName.Root, false) != null) {
-                trailer = dic;
-            }
-            if (trailer == null) {
-                throw new PdfException(KernelExceptionMessageConstant.TRAILER_NOT_FOUND);
             }
         }
 
@@ -1540,6 +1513,33 @@ namespace iText.Kernel.Pdf {
             this.xrefProcessor = xrefProcessor;
         }
 //\endcond
+
+        private bool IsCurrentObjectATrailer() {
+            try {
+                PdfDictionary dic = (PdfDictionary)ReadObject(false);
+                return dic.Get(PdfName.Root, false) != null;
+            }
+            catch (MemoryLimitsAwareException e) {
+                throw;
+            }
+            catch (Exception) {
+                return false;
+            }
+        }
+
+        private void SetTrailerFromTrailerIndex(long? trailerIndex) {
+            if (trailerIndex == null) {
+                throw new PdfException(KernelExceptionMessageConstant.TRAILER_NOT_FOUND);
+            }
+            tokens.Seek((long)trailerIndex);
+            PdfDictionary dic = (PdfDictionary)ReadObject(false);
+            if (dic.Get(PdfName.Root, false) != null) {
+                trailer = dic;
+            }
+            if (trailer == null) {
+                throw new PdfException(KernelExceptionMessageConstant.TRAILER_NOT_FOUND);
+            }
+        }
 
         private void ProcessArrayReadError() {
             String error = MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_TOKEN, iText.Commons.Utils.JavaUtil.GetStringForBytes
@@ -1640,7 +1640,7 @@ namespace iText.Kernel.Pdf {
             long fileLength = tokens.Length();
             long start = pdfStream.GetOffset();
             bool calc = false;
-            int streamLength = 0;
+            int streamLength;
             PdfNumber pdfNumber = pdfStream.GetAsNumber(PdfName.Length);
             if (pdfNumber != null) {
                 streamLength = pdfNumber.IntValue();

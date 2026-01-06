@@ -68,22 +68,6 @@ namespace iText.Kernel.Pdf {
             return items;
         }
 
-        private static void NormalizeDestinations(IDictionary<PdfString, PdfObject> items) {
-            // normalise dest entries to arrays
-            // A separate collection for keys is used for auto porting to C#, because in C#
-            // it is impossible to change the collection which you iterate in for loop
-            ICollection<PdfString> keys = new HashSet<PdfString>(items.Keys);
-            foreach (PdfString key in keys) {
-                PdfArray arr = GetDestArray(items.Get(key));
-                if (arr == null) {
-                    items.JRemove(key);
-                }
-                else {
-                    items.Put(key, arr);
-                }
-            }
-        }
-
         private void InsertDestsEntriesFromCatalog(IDictionary<PdfString, PdfObject> items) {
             // make sure that destinations in the Catalog/Dests dictionary are listed
             // in the destination name tree (if that's what we're working on)
@@ -96,6 +80,22 @@ namespace iText.Kernel.Pdf {
                         continue;
                     }
                     items.Put(new PdfString(key.GetValue()), array);
+                }
+            }
+        }
+
+        private static void NormalizeDestinations(IDictionary<PdfString, PdfObject> items) {
+            // normalise dest entries to arrays
+            // A separate collection for keys is used for auto porting to C#, because in C#
+            // it is impossible to change the collection which you iterate in for loop
+            ICollection<PdfString> keys = new HashSet<PdfString>(items.Keys);
+            foreach (PdfString key in keys) {
+                PdfArray arr = GetDestArray(items.Get(key));
+                if (arr == null) {
+                    items.JRemove(key);
+                }
+                else {
+                    items.Put(key, arr);
                 }
             }
         }

@@ -43,14 +43,6 @@ using iText.Kernel.XMP.Options;
 
 namespace iText.Kernel.Pdf {
     public class PdfPage : PdfObjectWrapper<PdfDictionary> {
-        private PdfResources resources = null;
-
-        private int mcid = -1;
-
-//\cond DO_NOT_DOCUMENT
-        internal PdfPages parentPages;
-//\endcond
-
         private static readonly IList<PdfName> PAGE_EXCLUDED_KEYS = new List<PdfName>(JavaUtil.ArraysAsList(PdfName
             .Parent, PdfName.Annots, PdfName.StructParents, PdfName.B));
 
@@ -58,11 +50,13 @@ namespace iText.Kernel.Pdf {
         // See DEVSIX-191
         private static readonly IList<PdfName> XOBJECT_EXCLUDED_KEYS;
 
-        static PdfPage() {
-            XOBJECT_EXCLUDED_KEYS = new List<PdfName>(JavaUtil.ArraysAsList(PdfName.MediaBox, PdfName.CropBox, PdfName
-                .TrimBox, PdfName.Contents));
-            XOBJECT_EXCLUDED_KEYS.AddAll(PAGE_EXCLUDED_KEYS);
-        }
+//\cond DO_NOT_DOCUMENT
+        internal PdfPages parentPages;
+//\endcond
+
+        private PdfResources resources = null;
+
+        private int mcid = -1;
 
         /// <summary>Automatically rotate new content if the page has a rotation ( is disabled by default )</summary>
         private bool ignorePageRotationForContent = false;
@@ -72,6 +66,12 @@ namespace iText.Kernel.Pdf {
         /// <see cref="IsPageRotationInverseMatrixWritten()"/>.
         /// </summary>
         private bool pageRotationInverseMatrixWritten = false;
+
+        static PdfPage() {
+            XOBJECT_EXCLUDED_KEYS = new List<PdfName>(JavaUtil.ArraysAsList(PdfName.MediaBox, PdfName.CropBox, PdfName
+                .TrimBox, PdfName.Contents));
+            XOBJECT_EXCLUDED_KEYS.AddAll(PAGE_EXCLUDED_KEYS);
+        }
 
         protected internal PdfPage(PdfDictionary pdfObject)
             : base(pdfObject) {
@@ -643,7 +643,7 @@ namespace iText.Kernel.Pdf {
         /// finalized and are completely written to the output stream. This frees their memory but makes
         /// it impossible to modify or read data from them. Whenever there is an attempt to modify or to fetch
         /// flushed object inner contents an exception will be thrown. Flushing is only possible for objects in the writing
-        /// and stamping modes, also its possible to flush modified objects in append mode.
+        /// and stamping modes, also it's possible to flush modified objects in append mode.
         /// </remarks>
         /// <param name="flushResourcesContentStreams">
         /// if true all content streams that are rendered on this page (like form xObjects,
@@ -777,7 +777,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>
         /// the
         /// <see cref="iText.Kernel.Geom.Rectangle"/>
-        /// object specified by pages's CropBox, expressed in default user space units.
+        /// object specified by page's CropBox, expressed in default user space units.
         /// MediaBox by default.
         /// </returns>
         public virtual Rectangle GetCropBox() {
@@ -1594,6 +1594,10 @@ namespace iText.Kernel.Pdf {
             return afArray;
         }
 
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
+            return true;
+        }
+
 //\cond DO_NOT_DOCUMENT
         internal virtual void TryFlushPageTags() {
             try {
@@ -1658,57 +1662,6 @@ namespace iText.Kernel.Pdf {
             pageRotationInverseMatrixWritten = true;
         }
 //\endcond
-
-        protected internal override bool IsWrappedObjectMustBeIndirect() {
-            return true;
-        }
-
-        private static bool IsAnnotInvisible(PdfAnnotation annotation) {
-            PdfNumber f = annotation.GetPdfObject().GetAsNumber(PdfName.F);
-            if (f == null) {
-                return false;
-            }
-            int flags = f.IntValue();
-            return PdfCheckersUtil.CheckFlag(flags, PdfAnnotation.INVISIBLE) || (PdfCheckersUtil.CheckFlag(flags, PdfAnnotation
-                .NO_VIEW) && !PdfCheckersUtil.CheckFlag(flags, PdfAnnotation.TOGGLE_NO_VIEW));
-        }
-
-        private static bool IsReferenceAllowed(String role) {
-            // For these roles, Link is an allowed child, but Reference is not.
-            return !StandardRoles.DOCUMENT.Equals(role) && !StandardRoles.DOCUMENTFRAGMENT.Equals(role) && !StandardRoles
-                .ART.Equals(role) && !StandardRoles.SECT.Equals(role);
-        }
-
-        private void TagAnnotation(PdfAnnotation annotation) {
-            bool tagAdded = false;
-            bool presentInTagStructure = true;
-            bool isUA2 = IsPdfUA2Document();
-            TagTreePointer tagPointer = GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
-            if (isUA2 && IsAnnotInvisible(annotation)) {
-                if (PdfVersion.PDF_2_0.CompareTo(GetDocument().GetPdfVersion()) <= 0) {
-                    if (!StandardRoles.ARTIFACT.Equals(tagPointer.GetRole())) {
-                        tagPointer.AddTag(StandardRoles.ARTIFACT);
-                        tagAdded = true;
-                    }
-                }
-                else {
-                    presentInTagStructure = false;
-                }
-            }
-            else {
-                tagAdded = AddAnnotationTag(tagPointer, annotation);
-            }
-            if (presentInTagStructure) {
-                iText.Kernel.Pdf.PdfPage prevPage = tagPointer.GetCurrentPage();
-                tagPointer.SetPageForTagging(this).AddAnnotationTag(annotation);
-                if (prevPage != null) {
-                    tagPointer.SetPageForTagging(prevPage);
-                }
-            }
-            if (tagAdded) {
-                tagPointer.MoveToParent();
-            }
-        }
 
         private bool IsPdfUA2Document() {
             PdfUAConformance uaConformance = GetDocument().GetConformance().GetUAConformance();
@@ -1806,28 +1759,6 @@ namespace iText.Kernel.Pdf {
                 Put(PdfName.Annots, annots);
             }
             return annots;
-        }
-
-        private PdfObject GetInheritedValue(PdfName pdfName, int type) {
-            if (this.parentPages == null) {
-                this.parentPages = GetDocument().GetCatalog().GetPageTree().FindPageParent(this);
-            }
-            PdfObject val = GetInheritedValue(this.parentPages, pdfName);
-            return val != null && val.GetObjectType() == type ? val : null;
-        }
-
-        private static PdfObject GetInheritedValue(PdfPages parentPages, PdfName pdfName) {
-            if (parentPages != null) {
-                PdfDictionary parentDictionary = parentPages.GetPdfObject();
-                PdfObject value = parentDictionary.Get(pdfName);
-                if (value != null) {
-                    return value;
-                }
-                else {
-                    return GetInheritedValue(parentPages.GetParent(), pdfName);
-                }
-            }
-            return null;
         }
 
         private PdfStream NewContentStream(bool before) {
@@ -2004,6 +1935,75 @@ namespace iText.Kernel.Pdf {
                     newParent.Put(PdfName.Kids, new PdfArray());
                 }
                 newField.Put(PdfName.Parent, newParent);
+            }
+        }
+
+        private PdfObject GetInheritedValue(PdfName pdfName, int type) {
+            if (this.parentPages == null) {
+                this.parentPages = GetDocument().GetCatalog().GetPageTree().FindPageParent(this);
+            }
+            PdfObject val = GetInheritedValue(this.parentPages, pdfName);
+            return val != null && val.GetObjectType() == type ? val : null;
+        }
+
+        private static PdfObject GetInheritedValue(PdfPages parentPages, PdfName pdfName) {
+            if (parentPages != null) {
+                PdfDictionary parentDictionary = parentPages.GetPdfObject();
+                PdfObject value = parentDictionary.Get(pdfName);
+                if (value != null) {
+                    return value;
+                }
+                else {
+                    return GetInheritedValue(parentPages.GetParent(), pdfName);
+                }
+            }
+            return null;
+        }
+
+        private static bool IsAnnotInvisible(PdfAnnotation annotation) {
+            PdfNumber f = annotation.GetPdfObject().GetAsNumber(PdfName.F);
+            if (f == null) {
+                return false;
+            }
+            int flags = f.IntValue();
+            return PdfCheckersUtil.CheckFlag(flags, PdfAnnotation.INVISIBLE) || (PdfCheckersUtil.CheckFlag(flags, PdfAnnotation
+                .NO_VIEW) && !PdfCheckersUtil.CheckFlag(flags, PdfAnnotation.TOGGLE_NO_VIEW));
+        }
+
+        private static bool IsReferenceAllowed(String role) {
+            // For these roles, Link is an allowed child, but Reference is not.
+            return !StandardRoles.DOCUMENT.Equals(role) && !StandardRoles.DOCUMENTFRAGMENT.Equals(role) && !StandardRoles
+                .ART.Equals(role) && !StandardRoles.SECT.Equals(role);
+        }
+
+        private void TagAnnotation(PdfAnnotation annotation) {
+            bool tagAdded = false;
+            bool presentInTagStructure = true;
+            bool isUA2 = IsPdfUA2Document();
+            TagTreePointer tagPointer = GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
+            if (isUA2 && IsAnnotInvisible(annotation)) {
+                if (PdfVersion.PDF_2_0.CompareTo(GetDocument().GetPdfVersion()) <= 0) {
+                    if (!StandardRoles.ARTIFACT.Equals(tagPointer.GetRole())) {
+                        tagPointer.AddTag(StandardRoles.ARTIFACT);
+                        tagAdded = true;
+                    }
+                }
+                else {
+                    presentInTagStructure = false;
+                }
+            }
+            else {
+                tagAdded = AddAnnotationTag(tagPointer, annotation);
+            }
+            if (presentInTagStructure) {
+                iText.Kernel.Pdf.PdfPage prevPage = tagPointer.GetCurrentPage();
+                tagPointer.SetPageForTagging(this).AddAnnotationTag(annotation);
+                if (prevPage != null) {
+                    tagPointer.SetPageForTagging(prevPage);
+                }
+            }
+            if (tagAdded) {
+                tagPointer.MoveToParent();
             }
         }
     }

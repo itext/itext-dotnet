@@ -48,9 +48,9 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfVersion PDF_2_0 = CreatePdfVersion(2, 0);
 
-        private int major;
+        private readonly int major;
 
-        private int minor;
+        private readonly int minor;
 
         /// <summary>Creates a PdfVersion class.</summary>
         /// <param name="major">major version number</param>
@@ -58,21 +58,6 @@ namespace iText.Kernel.Pdf {
         private PdfVersion(int major, int minor) {
             this.major = major;
             this.minor = minor;
-        }
-
-        public override String ToString() {
-            return MessageFormatUtil.Format("PDF-{0}.{1}", major, minor);
-        }
-
-        /// <summary>Gets the PDF version in "X.Y" format.</summary>
-        /// <remarks>
-        /// Gets the PDF version in "X.Y" format. Use
-        /// <see cref="ToString()"/>
-        /// to get the version in "PDF-X.Y" format.
-        /// </remarks>
-        /// <returns>the string representation of the PDF version</returns>
-        public virtual PdfName ToPdfName() {
-            return new PdfName(MessageFormatUtil.Format("{0}.{1}", major, minor));
         }
 
         /// <summary>
@@ -105,6 +90,21 @@ namespace iText.Kernel.Pdf {
                 }
             }
             throw new ArgumentException("The provided pdf version was not found.");
+        }
+
+        public override String ToString() {
+            return MessageFormatUtil.Format("PDF-{0}.{1}", major, minor);
+        }
+
+        /// <summary>Gets the PDF version in "X.Y" format.</summary>
+        /// <remarks>
+        /// Gets the PDF version in "X.Y" format. Use
+        /// <see cref="ToString()"/>
+        /// to get the version in "PDF-X.Y" format.
+        /// </remarks>
+        /// <returns>the string representation of the PDF version</returns>
+        public virtual PdfName ToPdfName() {
+            return new PdfName(MessageFormatUtil.Format("{0}.{1}", major, minor));
         }
 
         public virtual int CompareTo(iText.Kernel.Pdf.PdfVersion o) {

@@ -55,31 +55,31 @@ namespace iText.Kernel.Pdf {
 
         private const String Sh = "Sh";
 
-        private IDictionary<PdfObject, PdfName> resourceToName = new Dictionary<PdfObject, PdfName>();
+        private readonly IDictionary<PdfObject, PdfName> resourceToName = new Dictionary<PdfObject, PdfName>();
 
-        private PdfResources.ResourceNameGenerator fontNamesGen = new PdfResources.ResourceNameGenerator(PdfName.Font
-            , F);
+        private readonly PdfResources.ResourceNameGenerator fontNamesGen = new PdfResources.ResourceNameGenerator(
+            PdfName.Font, F);
 
-        private PdfResources.ResourceNameGenerator imageNamesGen = new PdfResources.ResourceNameGenerator(PdfName.
-            XObject, Im);
+        private readonly PdfResources.ResourceNameGenerator imageNamesGen = new PdfResources.ResourceNameGenerator
+            (PdfName.XObject, Im);
 
-        private PdfResources.ResourceNameGenerator formNamesGen = new PdfResources.ResourceNameGenerator(PdfName.XObject
-            , Fm);
+        private readonly PdfResources.ResourceNameGenerator formNamesGen = new PdfResources.ResourceNameGenerator(
+            PdfName.XObject, Fm);
 
-        private PdfResources.ResourceNameGenerator egsNamesGen = new PdfResources.ResourceNameGenerator(PdfName.ExtGState
-            , Gs);
+        private readonly PdfResources.ResourceNameGenerator egsNamesGen = new PdfResources.ResourceNameGenerator(PdfName
+            .ExtGState, Gs);
 
-        private PdfResources.ResourceNameGenerator propNamesGen = new PdfResources.ResourceNameGenerator(PdfName.Properties
-            , Pr);
+        private readonly PdfResources.ResourceNameGenerator propNamesGen = new PdfResources.ResourceNameGenerator(
+            PdfName.Properties, Pr);
 
-        private PdfResources.ResourceNameGenerator csNamesGen = new PdfResources.ResourceNameGenerator(PdfName.ColorSpace
-            , Cs);
+        private readonly PdfResources.ResourceNameGenerator csNamesGen = new PdfResources.ResourceNameGenerator(PdfName
+            .ColorSpace, Cs);
 
-        private PdfResources.ResourceNameGenerator patternNamesGen = new PdfResources.ResourceNameGenerator(PdfName
-            .Pattern, P);
+        private readonly PdfResources.ResourceNameGenerator patternNamesGen = new PdfResources.ResourceNameGenerator
+            (PdfName.Pattern, P);
 
-        private PdfResources.ResourceNameGenerator shadingNamesGen = new PdfResources.ResourceNameGenerator(PdfName
-            .Shading, Sh);
+        private readonly PdfResources.ResourceNameGenerator shadingNamesGen = new PdfResources.ResourceNameGenerator
+            (PdfName.Shading, Sh);
 
         private bool readOnly = false;
 
@@ -373,18 +373,6 @@ namespace iText.Kernel.Pdf {
             return shading is PdfDictionary ? AbstractPdfShading.MakeShading((PdfDictionary)shading) : null;
         }
 
-        protected internal virtual bool IsReadOnly() {
-            return readOnly;
-        }
-
-        protected internal virtual void SetReadOnly(bool readOnly) {
-            this.readOnly = readOnly;
-        }
-
-        protected internal virtual bool IsModified() {
-            return isModified;
-        }
-
         /// <summary><inheritDoc/></summary>
         public override PdfObjectWrapper<PdfDictionary> SetModified() {
             this.isModified = true;
@@ -587,17 +575,21 @@ namespace iText.Kernel.Pdf {
             return null;
         }
 
+        protected internal virtual bool IsReadOnly() {
+            return readOnly;
+        }
+
+        protected internal virtual void SetReadOnly(bool readOnly) {
+            this.readOnly = readOnly;
+        }
+
+        protected internal virtual bool IsModified() {
+            return isModified;
+        }
+
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return false;
         }
-
-//\cond DO_NOT_DOCUMENT
-        internal virtual PdfName AddResource<T>(PdfObjectWrapper<T> resource, PdfResources.ResourceNameGenerator nameGen
-            )
-            where T : PdfObject {
-            return AddResource(resource.GetPdfObject(), nameGen);
-        }
-//\endcond
 
         protected internal virtual void AddResource(PdfObject resource, PdfName resType, PdfName resName) {
             if (resType.Equals(PdfName.XObject)) {
@@ -624,17 +616,6 @@ namespace iText.Kernel.Pdf {
             SetModified();
         }
 
-//\cond DO_NOT_DOCUMENT
-        internal virtual PdfName AddResource(PdfObject resource, PdfResources.ResourceNameGenerator nameGen) {
-            PdfName resName = GetResourceName(resource);
-            if (resName == null) {
-                resName = nameGen.Generate(this);
-                AddResource(resource, nameGen.GetResourceType(), resName);
-            }
-            return resName;
-        }
-//\endcond
-
         protected internal virtual void BuildResources(PdfDictionary dictionary) {
             foreach (PdfName resourceType in dictionary.KeySet()) {
                 if (GetPdfObject().Get(resourceType) == null) {
@@ -650,6 +631,25 @@ namespace iText.Kernel.Pdf {
                 }
             }
         }
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual PdfName AddResource<T>(PdfObjectWrapper<T> resource, PdfResources.ResourceNameGenerator nameGen
+            )
+            where T : PdfObject {
+            return AddResource(resource.GetPdfObject(), nameGen);
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual PdfName AddResource(PdfObject resource, PdfResources.ResourceNameGenerator nameGen) {
+            PdfName resName = GetResourceName(resource);
+            if (resName == null) {
+                resName = nameGen.Generate(this);
+                AddResource(resource, nameGen.GetResourceType(), resName);
+            }
+            return resName;
+        }
+//\endcond
 
         private void CheckAndResolveCircularReferences(PdfObject pdfObject) {
             // Consider the situation when an XObject references the resources of the first page.
@@ -680,11 +680,11 @@ namespace iText.Kernel.Pdf {
         /// The name consists of the following parts: prefix (literal) and number.
         /// </remarks>
         internal class ResourceNameGenerator {
-            private PdfName resourceType;
+            private readonly PdfName resourceType;
 
             private int counter;
 
-            private String prefix;
+            private readonly String prefix;
 
             /// <summary>
             /// Constructs an instance of

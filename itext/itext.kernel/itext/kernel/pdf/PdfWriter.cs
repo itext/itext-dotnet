@@ -77,8 +77,16 @@ namespace iText.Kernel.Pdf {
             : this(file.FullName) {
         }
 
-        /// <summary>Create a PdfWriter writing to the passed outputstream and with default writer properties.</summary>
-        /// <param name="os">Outputstream to write to.</param>
+        /// <summary>
+        /// Create a PdfWriter writing to the passed
+        /// <see cref="System.IO.Stream"/>
+        /// and with default writer properties.
+        /// </summary>
+        /// <param name="os">
+        /// 
+        /// <see cref="System.IO.Stream"/>
+        /// to write to.
+        /// </param>
         public PdfWriter(Stream os)
             : this(os, new WriterProperties()) {
         }
