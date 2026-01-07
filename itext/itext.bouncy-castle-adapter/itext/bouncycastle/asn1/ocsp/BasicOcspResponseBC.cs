@@ -130,9 +130,8 @@ namespace iText.Bouncycastle.Asn1.Ocsp {
                 .GetExtensionParsedValue(((DerObjectIdentifierBC)objectIdentifier).GetDerObjectIdentifier()));
         }
 
-        public IRespID GetResponderId()
-        {
-            return new RespIDBC(new X509NameBC(GetBasicOcspResponse().TbsResponseData.ResponderID.Name));
+        public IRespID GetResponderId() {
+            return new RespIDBC(GetBasicOcspResponse().TbsResponseData.ResponderID);
         }
 
         /// <summary><inheritDoc/></summary>

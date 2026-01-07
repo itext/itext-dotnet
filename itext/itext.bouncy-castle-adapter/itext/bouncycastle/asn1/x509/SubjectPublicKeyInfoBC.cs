@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using Org.BouncyCastle.Asn1.X509;
 using iText.Bouncycastle.Asn1;
+using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X509;
 
 namespace iText.Bouncycastle.Asn1.X509 {
@@ -55,6 +56,11 @@ namespace iText.Bouncycastle.Asn1.X509 {
         /// <summary><inheritDoc/></summary>
         public virtual IAlgorithmIdentifier GetAlgorithm() {
             return new AlgorithmIdentifierBC(GetSubjectPublicKeyInfo().AlgorithmID);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual IDerBitString GetPublicKeyData() {
+            return new DerBitStringBC(GetSubjectPublicKeyInfo().PublicKey);
         }
     }
 }

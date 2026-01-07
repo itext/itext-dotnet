@@ -38,7 +38,7 @@ namespace iText.Signatures.Testutils.Builder {
         private const String SIGN_ALG = "SHA256withRSA";
 
         private readonly String signatureAlgorithm;
-        private readonly IBasicOcspRespGenerator responseBuilder;
+        private IBasicOcspRespGenerator responseBuilder;
         private readonly IX509Certificate issuerCert;
         private readonly IPrivateKey issuerPrivateKey;
 
@@ -82,6 +82,10 @@ namespace iText.Signatures.Testutils.Builder {
 
         public IX509Certificate GetIssuerCert() {
             return issuerCert;
+        }
+
+        public void SetResponseBuilder(IBasicOcspRespGenerator responseBuilder) {
+            this.responseBuilder = responseBuilder;
         }
 
         public virtual void SetCertificateStatus(ICertStatus certificateStatus) {

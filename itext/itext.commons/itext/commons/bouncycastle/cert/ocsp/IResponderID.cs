@@ -33,7 +33,19 @@ namespace iText.Commons.Bouncycastle.Cert.Ocsp {
         /// <c>getName</c>
         /// method for the wrapped BasicOCSPResp object.
         /// </summary>
-        /// <returns>wrapped X500NAme.</returns>
+        /// <returns>wrapped X500NAme</returns>
         IX500Name GetName();
+
+        /// <summary>
+        /// Calls actual
+        /// <c>getKeyHash</c>
+        /// method for the wrapped BasicOCSPResp object.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <c>byte[]</c>
+        /// representing corresponding key hash
+        /// </returns>
+        byte[] GetKeyHash();
     }
 }

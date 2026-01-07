@@ -23,9 +23,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using Org.BouncyCastle.Ocsp;
 using iText.Bouncycastle.Asn1.X509;
+using iText.Bouncycastle.X509;
 using iText.Commons.Bouncycastle.Asn1.X500;
+using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace iText.Bouncycastle.Cert.Ocsp {
     /// <summary>
@@ -58,6 +61,21 @@ namespace iText.Bouncycastle.Cert.Ocsp {
         /// </param>
         public RespIDBC(IX500Name x500Name)
             : this(new RespID(((X509NameBC)x500Name).GetX509Name())) {
+        }
+
+        public RespIDBC(ResponderID responderId) {
+            this.respID = new RespID(responderId);
+        }
+        
+        /// <summary>
+        /// Creates new wrapper instance for
+        /// <see cref="Org.BouncyCastle.Ocsp.RespID"/>.
+        /// </summary>
+        /// <param name="certificate">X509Certificate wrapper to create
+        /// <see cref="Org.BouncyCastle.Ocsp.RespID"/>
+        /// </param>
+        public RespIDBC(IX509Certificate certificate) {
+            this.respID = new RespID(((X509CertificateBC) certificate).GetCertificate().GetPublicKey());
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>

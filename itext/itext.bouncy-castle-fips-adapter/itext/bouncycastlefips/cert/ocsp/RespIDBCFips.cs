@@ -22,10 +22,15 @@ Copyright (c) 1998-2026 Apryse Group NV
  */
 using System;
 using iText.Bouncycastlefips.Asn1.X500;
+using iText.Bouncycastlefips.Crypto;
 using iText.Commons.Bouncycastle.Asn1.X500;
+using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Utils;
+using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Ocsp;
+using Org.BouncyCastle.Asn1.Pkcs;
+using Org.BouncyCastle.Asn1.X509;
 
 namespace iText.Bouncycastlefips.Cert.Ocsp {
     /// <summary>
@@ -58,6 +63,22 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
         /// </param>
         public RespIDBCFips(IX500Name x500Name)
             : this(new ResponderID(((X500NameBCFips)x500Name).GetX500Name())) {
+        }
+        
+        /// <summary>
+        /// Creates new wrapper instance for
+        /// <see cref="Org.BouncyCastle.Ocsp.RespID"/>.
+        /// </summary>
+        /// <param name="certificate">X509Certificate wrapper to create
+        /// <see cref="Org.BouncyCastle.Ocsp.RespID"/>
+        /// </param>
+        public RespIDBCFips(IX509Certificate certificate) {
+            SubjectPublicKeyInfo info = new SubjectPublicKeyInfo(new AlgorithmIdentifier(
+                    PkcsObjectIdentifiers.RsaEncryption, DerNull.Instance),
+                ((PublicKeyBCFips) certificate.GetPublicKey()).GetPublicKey().GetEncoded());
+            byte[] key = info.PublicKeyData.GetBytes();
+            byte[] keyHash = new DigestBCFips("SHA1").Digest(key);
+            this.respID = new ResponderID(new DerOctetString(keyHash));
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>

@@ -901,6 +901,11 @@ namespace iText.Bouncycastle {
         public virtual IRespID CreateRespID(IX500Name x500Name) {
             return new RespIDBC(x500Name);
         }
+        
+        /// <summary><inheritDoc/></summary>
+        public virtual IRespID CreateRespID(IX509Certificate certificate) {
+            return new RespIDBC(certificate);
+        }
 
         /// <summary><inheritDoc/></summary>
         public virtual IBasicOcspRespGenerator CreateBasicOCSPRespBuilder(IRespID respID) {

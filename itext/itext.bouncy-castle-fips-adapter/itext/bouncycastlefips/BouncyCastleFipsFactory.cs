@@ -908,6 +908,11 @@ namespace iText.Bouncycastlefips {
         }
 
         /// <summary><inheritDoc/></summary>
+        public virtual IRespID CreateRespID(IX509Certificate certificate) {
+            return new RespIDBCFips(certificate);
+        }
+
+        /// <summary><inheritDoc/></summary>
         public virtual IBasicOcspRespGenerator CreateBasicOCSPRespBuilder(IRespID respID) {
             return new BasicOcspRespGeneratorBCFips(respID);
         }

@@ -1101,6 +1101,11 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="x500Name">X500 Name wrapper to create resp ID wrapper from</param>
         /// <returns>created resp ID wrapper</returns>
         IRespID CreateRespID(IX500Name x500Name);
+        
+        /// <summary>Creates resp ID wrapper from X509Certificate wrapper.</summary>
+        /// <param name="certificate">X509Certificate wrapper from which resp ID wrapper will be created</param>
+        /// <returns>created resp ID wrapper</returns>
+        IRespID CreateRespID(IX509Certificate certificate);
 
         /// <summary>Create basic OCSP Resp builder wrapper from resp ID wrapper.</summary>
         /// <param name="respID">resp ID wrapper to create basic OCSP Resp builder wrapper from</param>

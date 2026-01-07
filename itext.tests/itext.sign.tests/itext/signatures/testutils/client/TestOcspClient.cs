@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Crypto;
@@ -60,6 +61,28 @@ namespace iText.Signatures.Testutils.Client {
             return this;
         }
 
+        public virtual IBasicOcspResponse GetBasicOcspResp(IX509Certificate checkCert, IX509Certificate issuerCert
+            ) {
+            IBasicOcspResponse basicOCSPResp = null;
+            try {
+                ICertID id = SignTestPortUtil.GenerateCertificateId(issuerCert, checkCert.GetSerialNumber(), BOUNCY_CASTLE_FACTORY
+                    .CreateCertificateID().GetHashSha1());
+                TestOcspResponseBuilder builder = issuerIdToResponseBuilder.Get(issuerCert.GetSerialNumber().ToString(16));
+                if (builder == null) {
+                    throw new ArgumentException("This TestOcspClient instance is not capable of providing OCSP response for the given issuerCert:"
+                         + issuerCert.GetSubjectDN().ToString());
+                }
+                basicOCSPResp = builder.MakeOcspResponseObject(SignTestPortUtil.GenerateOcspRequestWithNonce(id).GetEncoded
+                    ());
+            }
+            catch (Exception e) {
+                if (e is Exception) {
+                    throw (Exception)e;
+                }
+            }
+            return basicOCSPResp;
+        }
+
         public virtual byte[] GetEncoded(IX509Certificate checkCert, IX509Certificate issuerCert, String url) {
             if (url != null && !String.IsNullOrEmpty(url)) {
                 // Treat as file path
@@ -70,23 +93,12 @@ namespace iText.Signatures.Testutils.Client {
                 }
             }
             // Sometimes we pass http url here in tests (though it's not used) so skipping any errors
-            byte[] bytes = null;
             try {
-                ICertID id = SignTestPortUtil.GenerateCertificateId(issuerCert, checkCert.GetSerialNumber(), BOUNCY_CASTLE_FACTORY
-                    .CreateCertificateID().GetHashSha1());
-                TestOcspResponseBuilder builder = issuerIdToResponseBuilder.Get(issuerCert.GetSerialNumber().ToString(16));
-                if (builder == null) {
-                    throw new ArgumentException("This TestOcspClient instance is not capable of providing OCSP response for the given issuerCert:"
-                         + issuerCert.GetSubjectDN().ToString());
-                }
-                bytes = builder.MakeOcspResponse(SignTestPortUtil.GenerateOcspRequestWithNonce(id).GetEncoded());
+                return GetBasicOcspResp(checkCert, issuerCert).GetEncoded();
             }
-            catch (Exception e) {
-                if (e is Exception) {
-                    throw (Exception)e;
-                }
+            catch (System.IO.IOException e) {
+                throw new Exception("Response encoding produced an exception.", e);
             }
-            return bytes;
         }
     }
 }

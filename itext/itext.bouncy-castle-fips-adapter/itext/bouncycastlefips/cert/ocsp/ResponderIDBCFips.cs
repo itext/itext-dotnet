@@ -51,6 +51,11 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
             return new X500NameBCFips(responderID.Name);
         }
 
+        /// <summary><inheritDoc/></summary>
+        public byte[] GetKeyHash() {
+            return responderID.GetKeyHash();
+        }
+
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped

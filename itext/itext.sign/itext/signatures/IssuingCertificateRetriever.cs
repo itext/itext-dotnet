@@ -28,10 +28,13 @@ using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
+using iText.Commons.Bouncycastle.Asn1.X500;
+using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 using iText.Commons.Utils.Collections;
 using iText.IO.Resolver.Resource;
+using iText.Kernel.Crypto;
 using iText.Signatures.Logs;
 using iText.Signatures.Validation;
 using iText.Signatures.Validation.Dataorigin;
@@ -278,8 +281,6 @@ namespace iText.Signatures {
         /// <returns>retrieved OCSP responder candidates or an empty set in case none were found.</returns>
         public virtual ICollection<IX509Certificate> RetrieveOCSPResponderByNameCertificate(IBasicOcspResponse ocspResp
             ) {
-            String name = FACTORY.CreateX500Name(FACTORY.CreateASN1Sequence(ocspResp.GetResponderId().ToASN1Primitive(
-                ).GetName().ToASN1Primitive())).GetName();
             // Look for the existence of an Authorized OCSP responder inside the cert chain in the ocsp response.
             IEnumerable<IX509Certificate> certs = SignUtils.GetCertsFromOcspResponse(ocspResp);
             IList<IX509Certificate> certList = new List<IX509Certificate>();
@@ -287,18 +288,26 @@ namespace iText.Signatures {
                 certList.Add(certificate);
             }
             AddKnownCertificates(certList, CertificateOrigin.OCSP_RESPONSE);
-            foreach (IX509Certificate cert in certs) {
-                try {
-                    if (name.Equals(cert.GetSubjectDN().ToString())) {
-                        return JavaCollectionsUtil.Singleton(cert);
-                    }
+            IX500Name x500Name = ocspResp.GetResponderId().ToASN1Primitive().GetName();
+            ICollection<IX509Certificate> responders = null;
+            if (!x500Name.IsNull()) {
+                responders = RetrieveOCSPResponderByName(certs, x500Name);
+            }
+            if (responders == null) {
+                byte[] keyHash = ocspResp.GetResponderId().ToASN1Primitive().GetKeyHash();
+                responders = RetrieveOCSPResponderByKeyHash(certs, keyHash);
+            }
+            // Certificate chain is not present in the response, or it does not contain the responder.
+            if (responders == null) {
+                if (x500Name.IsNull()) {
+                    responders = JavaCollectionsUtil.EmptySet<IX509Certificate>();
                 }
-                catch (Exception) {
+                else {
+                    responders = trustedCertificatesStore.GetKnownCertificates(FACTORY.CreateX500Name(FACTORY.CreateASN1Sequence
+                        (x500Name.ToASN1Primitive())).GetName());
                 }
             }
-            // Ignore.
-            // Certificate chain is not present in the response, or it does not contain the responder.
-            return trustedCertificatesStore.GetKnownCertificates(name);
+            return responders;
         }
 
         /// <summary><inheritDoc/></summary>
@@ -507,6 +516,41 @@ namespace iText.Signatures {
         /// <returns>a (possibly empty) collection of the certificates read from the given byte array.</returns>
         protected internal virtual ICollection<IX509Certificate> ParseCertificates(Stream certsData) {
             return SignUtils.ReadAllCerts(certsData);
+        }
+
+        private static ICollection<IX509Certificate> RetrieveOCSPResponderByKeyHash(IEnumerable<IX509Certificate> 
+            certs, byte[] keyHash) {
+            foreach (IX509Certificate cert in certs) {
+                try {
+                    ISubjectPublicKeyInfo publicKeyInfo = FACTORY.CreateSubjectPublicKeyInfo(cert.GetPublicKey());
+                    // According to RFC2560 hash algorithm is always SHA-1.
+                    byte[] publicKeyHash = DigestAlgorithms.Digest(new MemoryStream(publicKeyInfo.GetPublicKeyData().GetBytes(
+                        )), DigestAlgorithms.GetMessageDigest(DigestAlgorithms.SHA1));
+                    if (JavaUtil.ArraysEquals(publicKeyHash, keyHash)) {
+                        return JavaCollectionsUtil.Singleton(cert);
+                    }
+                }
+                catch (Exception) {
+                }
+            }
+            // Ignore.
+            return null;
+        }
+
+        private static ICollection<IX509Certificate> RetrieveOCSPResponderByName(IEnumerable<IX509Certificate> certs
+            , IX500Name x500Name) {
+            String name = FACTORY.CreateX500Name(FACTORY.CreateASN1Sequence(x500Name.ToASN1Primitive())).GetName();
+            foreach (IX509Certificate cert in certs) {
+                try {
+                    if (name.Equals(cert.GetSubjectDN().ToString())) {
+                        return JavaCollectionsUtil.Singleton(cert);
+                    }
+                }
+                catch (Exception) {
+                }
+            }
+            // Ignore.
+            return null;
         }
 
         private ICollection<IX509Certificate> ProcessCertificatesFromAIA(String url) {
