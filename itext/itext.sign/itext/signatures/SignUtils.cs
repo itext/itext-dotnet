@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-Copyright (c) 1998-2026 Apryse Group NV
+    Copyright (c) 1998-2026 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -93,43 +93,8 @@ namespace iText.Signatures {
             return externalDigest.GetMessageDigest(hashAlgorithm);
         }
         
-        internal static Stream GetHttpResponse(Uri urlt)
-        {
-            return GetHttpResponse(urlt, -1);
-        }
-
-        internal static Stream GetHttpResponse(Uri urlt, int connectionTimeout) {
-            HttpWebRequest con = (HttpWebRequest) WebRequest.Create(urlt);
-            if (connectionTimeout >= 0)
-            {
-                con.Timeout = connectionTimeout;
-            }
-            HttpWebResponse response = (HttpWebResponse) con.GetResponse();
-            if (response.StatusCode != HttpStatusCode.OK)
-                throw new PdfException(
-                    SignExceptionMessageConstant.INVALID_HTTP_RESPONSE).SetMessageParams(response.StatusCode);
-            return response.GetResponseStream();
-        }
-
         internal static ICertID GenerateCertificateId(IX509Certificate issuerCert, IBigInteger serialNumber, String hashAlgorithm) {
             return FACTORY.CreateCertificateID(hashAlgorithm, issuerCert, serialNumber);
-        }
-
-        internal static Stream GetHttpResponseForOcspRequest(byte[] request, Uri urlt) {
-            HttpWebRequest con = (HttpWebRequest) WebRequest.Create(urlt);
-            con.ContentLength = request.Length;
-            con.ContentType = "application/ocsp-request";
-            con.Accept = "application/ocsp-response";
-            con.Method = "POST";
-            Stream outp = con.GetRequestStream();
-            outp.Write(request, 0, request.Length);
-            outp.Dispose();
-            HttpWebResponse response = (HttpWebResponse) con.GetResponse();
-            if (response.StatusCode != HttpStatusCode.OK)
-                throw new PdfException(
-                    SignExceptionMessageConstant.INVALID_HTTP_RESPONSE).SetMessageParams(response.StatusCode);
-
-            return response.GetResponseStream();
         }
 
         internal static IOcspRequest GenerateOcspRequestWithNonce(ICertID id) {

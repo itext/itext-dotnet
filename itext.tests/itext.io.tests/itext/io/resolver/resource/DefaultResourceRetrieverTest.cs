@@ -20,11 +20,15 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-
 using System;
-using System.Net;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading;
 using iText.Commons.Utils;
+using iText.IO.Util;
 using iText.Test;
+using iText.Test.Attributes;
+using System.Net;
 
 namespace iText.IO.Resolver.Resource {
 //\cond DO_NOT_DOCUMENT
@@ -51,6 +55,69 @@ namespace iText.IO.Resolver.Resource {
             }
 
             NUnit.Framework.Assert.True(exceptionThrown);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ConnectTimeoutTest() {
+            DefaultResourceRetriever resourceRetriever = new DefaultResourceRetriever();
+            resourceRetriever.SetConnectTimeout(500);
+            NUnit.Framework.Assert.AreEqual(500, resourceRetriever.GetConnectTimeout());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ReadTimeoutTest() {
+            DefaultResourceRetriever resourceRetriever = new DefaultResourceRetriever();
+            resourceRetriever.SetReadTimeout(500);
+            NUnit.Framework.Assert.AreEqual(500, resourceRetriever.GetReadTimeout());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SetResourceByLimitTest() {
+            DefaultResourceRetriever resourceRetriever = new DefaultResourceRetriever();
+            resourceRetriever.SetResourceSizeByteLimit(1000);
+            NUnit.Framework.Assert.AreEqual(1000, resourceRetriever.GetResourceSizeByteLimit());
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT, Count = 2)]
+        public virtual void FilterOutFilteredResourcesTest() {
+            DefaultResourceRetriever resourceRetriever = new DefaultResourceRetrieverTest.FilteredResourceRetriever();
+            NUnit.Framework.Assert.IsFalse(resourceRetriever.UrlFilter(new Uri("https://example.com/resource")));
+            NUnit.Framework.Assert.IsNull(resourceRetriever.GetInputStreamByUrl(new Uri("https://example.com/resource"
+                )));
+            NUnit.Framework.Assert.IsNull(resourceRetriever.Get(new Uri("https://example.com/resource"), new byte[0], 
+                new Dictionary<String, String>(0)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LoadGetByteArrayByUrl() {
+            // Android-Conversion-Ignore-Test DEVSIX-6459 Some different random connect exceptions on Android
+            DefaultResourceRetriever resourceRetriever = new DefaultResourceRetriever();
+            byte[] data = resourceRetriever.GetByteArrayByUrl(new Uri("https://itextpdf.com/blog/itext-news-technical-notes/get-excited-itext-8-here"
+                ));
+            NUnit.Framework.Assert.IsNotNull(data);
+            NUnit.Framework.Assert.IsTrue(data.Length > 0);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LoadWithRequestAndHeaders() {
+            // Android-Conversion-Ignore-Test DEVSIX-6459 Some different random connect exceptions on Android
+            DefaultResourceRetriever resourceRetriever = new DefaultResourceRetriever();
+            IDictionary<String, String> headers = new Dictionary<String, String>(1);
+            headers.Put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+                );
+            Stream @is = resourceRetriever.Get(new Uri("https://itextpdf.com/blog/itext-news-technical-notes/get-excited-itext-8-here"
+                ), new byte[0], headers);
+            byte[] data = StreamUtil.InputStreamToArray(@is);
+            NUnit.Framework.Assert.IsNotNull(data);
+            NUnit.Framework.Assert.IsTrue(data.Length > 0);
+        }
+
+        private class FilteredResourceRetriever : DefaultResourceRetriever {
+            protected internal override bool UrlFilter(Uri url) {
+                return false;
+            }
+            // Filter all resources
         }
     }
 //\endcond

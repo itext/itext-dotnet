@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-Copyright (c) 1998-2026 Apryse Group NV
+    Copyright (c) 1998-2026 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -20,11 +20,15 @@ Copyright (c) 1998-2026 Apryse Group NV
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+using iText.IO.Exceptions;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using IOException = iText.IO.Exceptions.IOException;
 
 namespace iText.IO.Util {
     /// <summary>
@@ -34,6 +38,34 @@ namespace iText.IO.Util {
     public static class UrlUtil {
         private const int DEFAULT_CONNECT_TIMEOUT = 300000;
         private const int DEFAULT_READ_TIMEOUT = 300000;
+
+        private static string[] RestrictedHeaders = new string[] {
+            "Accept",
+            "Connection",
+            "Content-Length",
+            "Content-Type",
+            "Date",
+            "Expect",
+            "Host",
+            "If-Modified-Since",
+            "Keep-Alive",
+            "Referer",
+            "Transfer-Encoding",
+            "User-Agent"
+        };
+        private static Dictionary<string, PropertyInfo> HeaderProperties = new Dictionary<string, PropertyInfo>(StringComparer.OrdinalIgnoreCase);
+
+        static UrlUtil()
+        {
+            Type type = typeof(HttpWebRequest);
+            foreach (string header in RestrictedHeaders)
+            {
+                string propertyName = header.Replace("-", "");
+                PropertyInfo headerProperty = type.GetProperty(propertyName);
+                HeaderProperties[header] = headerProperty;
+            }
+        }
+
         /// <summary>This method makes a valid URL from a given filename.</summary>
         /// <param name="filename">a given filename</param>
         /// <returns>a valid URL</returns>
@@ -164,14 +196,63 @@ namespace iText.IO.Util {
         /// Gets the input stream of connection related to last redirected url. You should manually close input stream after
         /// calling this method to not hold any open resources.
         /// </summary>
-        /// <param name="url">an initial URL.</param>
+        /// <param name="url">an initial URL</param>
         /// <param name="connectTimeout">a connect timeout in milliseconds</param>
         /// <param name="readTimeout">a read timeout in milliseconds</param>
         /// 
-        /// <returns>an input stream of connection related to the last redirected url.</returns>
+        /// <returns>an input stream of connection related to the last redirected url</returns>
         public static Stream GetInputStreamOfFinalConnection(Uri url, int connectTimeout, int readTimeout)
         {
             return OpenStream(url, connectTimeout, readTimeout);
+        }
+
+        /// <summary>
+        /// Gets the input stream with the data from a provided URL by instantiating an HTTP connection to the URL.
+        /// </summary>
+        /// <param name="url">a URL to connect to</param>
+        /// <param name="request">data to send to the URL</param>
+        /// <param name="headers">HTTP headers to set for the outgoing connection</param>
+        /// <param name="connectTimeout">a connect timeout in milliseconds</param>
+        /// <param name="readTimeout">a read timeout in milliseconds</param>
+        /// 
+        /// <returns>the input stream with the retrieved data</returns>
+        public static Stream Get(Uri urlt, byte[] request, IDictionary<String, String> headers, int connectTimeout, int readTimeout) {
+            HttpWebRequest con = (HttpWebRequest) WebRequest.Create(urlt);
+            con.ContentLength = request.Length;
+            foreach (KeyValuePair<String, String> header in headers) {
+                con.SetRawHeader(header.Key, header.Value);
+            }
+            con.Method = "POST";
+            Stream outp = con.GetRequestStream();
+            outp.Write(request, 0, request.Length);
+            outp.Dispose();
+            HttpWebResponse response = (HttpWebResponse) con.GetResponse();
+            if (response.StatusCode != HttpStatusCode.OK)
+                throw new IOException(
+                    IoExceptionMessageConstant.INVALID_HTTP_RESPONSE).SetMessageParams(response.StatusCode);
+
+            return response.GetResponseStream();
+        }
+
+        private static void SetRawHeader(this HttpWebRequest request, string name, string value)
+        {
+            if (HeaderProperties.ContainsKey(name))
+            {
+                PropertyInfo property = HeaderProperties[name];
+                if (property.PropertyType == typeof(DateTime)) {
+                    property.SetValue(request, DateTime.Parse(value), null);
+                } else if (property.PropertyType == typeof(bool)) {
+                    property.SetValue(request, Boolean.Parse(value), null);
+                } else if (property.PropertyType == typeof(long)) {
+                    property.SetValue(request, Int64.Parse(value), null);
+                } else {
+                    property.SetValue(request, value, null);
+                }
+            }
+            else
+            {
+                request.Headers[name] = value;
+            }
         }
     }
 }
