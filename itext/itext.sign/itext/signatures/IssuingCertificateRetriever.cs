@@ -31,10 +31,10 @@ using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 using iText.Commons.Utils.Collections;
+using iText.IO.Resolver.Resource;
 using iText.Signatures.Logs;
 using iText.Signatures.Validation;
 using iText.Signatures.Validation.Dataorigin;
-using iText.StyledXmlParser.Resolver.Resource;
 
 namespace iText.Signatures {
     /// <summary>
@@ -55,7 +55,10 @@ namespace iText.Signatures {
         private readonly IDictionary<IX509Certificate, CertificateOrigin?> certificateOrigins = new Dictionary<IX509Certificate
             , CertificateOrigin?>();
 
-        private readonly IResourceRetriever resourceRetriever;
+        [Obsolete]
+        private readonly iText.StyledXmlParser.Resolver.Resource.IResourceRetriever resourceRetriever;
+
+        private IAdvancedResourceRetriever advancedResourceRetriever;
 
         /// <summary>
         /// Creates
@@ -63,7 +66,8 @@ namespace iText.Signatures {
         /// instance.
         /// </summary>
         public IssuingCertificateRetriever() {
-            this.resourceRetriever = new DefaultResourceRetriever();
+            this.resourceRetriever = null;
+            this.advancedResourceRetriever = new DefaultResourceRetriever();
         }
 
         /// <summary>
@@ -72,10 +76,13 @@ namespace iText.Signatures {
         /// instance.
         /// </summary>
         /// <param name="resourceRetriever">
-        /// an @{link IResourceRetriever} instance to use for performing http
-        /// requests.
+        /// an @{link com.itextpdf.styledxmlparser.resolver.resource.IResourceRetriever}
+        /// instance to use for performing http requests.
         /// </param>
-        public IssuingCertificateRetriever(IResourceRetriever resourceRetriever) {
+        [System.ObsoleteAttribute(@"in favour of WithResourceRetriever(iText.IO.Resolver.Resource.IAdvancedResourceRetriever)"
+            )]
+        public IssuingCertificateRetriever(iText.StyledXmlParser.Resolver.Resource.IResourceRetriever resourceRetriever
+            ) {
             this.resourceRetriever = resourceRetriever;
         }
 
@@ -163,6 +170,35 @@ namespace iText.Signatures {
                 result.Add(chain.ToArray(new IX509Certificate[0]));
             }
             return result;
+        }
+
+        /// <summary>Sets a resource retriever for this CA issuer certificates retriever.</summary>
+        /// <remarks>
+        /// Sets a resource retriever for this CA issuer certificates retriever.
+        /// <para />
+        /// This method allows you to provide a custom implementation of
+        /// <see cref="iText.IO.Resolver.Resource.IAdvancedResourceRetriever"/>
+        /// to be used
+        /// for fetching CA issuer certificates. By default,
+        /// <see cref="iText.IO.Resolver.Resource.DefaultResourceRetriever"/>
+        /// is used.
+        /// </remarks>
+        /// <param name="resourceRetriever">the custom resource retriever to be used for fetching CA issuer certificates
+        ///     </param>
+        /// <returns>
+        /// the current instance of
+        /// <see cref="IssuingCertificateRetriever"/>
+        /// </returns>
+        public virtual iText.Signatures.IssuingCertificateRetriever WithResourceRetriever(IAdvancedResourceRetriever
+             resourceRetriever) {
+            advancedResourceRetriever = resourceRetriever;
+            return this;
+        }
+
+        /// <summary>Gets the resource retriever currently being used in this CA issuer certificates retriever.</summary>
+        /// <returns>resource retriever</returns>
+        public virtual IAdvancedResourceRetriever GetResourceRetriever() {
+            return advancedResourceRetriever;
         }
 
         private IList<IList<IX509Certificate>> BuildCertificateChainsList(IX509Certificate[] certificates) {
@@ -458,7 +494,12 @@ namespace iText.Signatures {
         /// <see cref="System.IO.Stream"/>.
         /// </returns>
         protected internal virtual Stream GetIssuerCertByURI(String uri) {
-            return resourceRetriever.GetInputStreamByUrl(new Uri(uri));
+            if (advancedResourceRetriever == null) {
+                return resourceRetriever.GetInputStreamByUrl(new Uri(uri));
+            }
+            else {
+                return advancedResourceRetriever.GetInputStreamByUrl(new Uri(uri));
+            }
         }
 
         /// <summary>Parses certificates represented as byte array.</summary>

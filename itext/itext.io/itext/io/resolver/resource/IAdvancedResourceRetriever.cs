@@ -21,24 +21,25 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace iText.IO.Resolver.Resource {
-    /// <summary>Interface for classes that can retrieve data from resources by URL.</summary>
-    public interface IResourceRetriever {
+    /// <summary>Extended interface for classes that can retrieve data from resources by URL.</summary>
+    /// <remarks>
+    /// Extended interface for classes that can retrieve data from resources by URL.
+    /// An extra method with http headers and request data is added.
+    /// </remarks>
+    public interface IAdvancedResourceRetriever : IResourceRetriever {
         /// <summary>
         /// Gets the
         /// <see cref="System.IO.Stream"/>
         /// with the data from a provided URL by instantiating an HTTP connection to the URL.
         /// </summary>
         /// <param name="url">the source URL</param>
+        /// <param name="request">data to send to the URL</param>
+        /// <param name="headers">HTTP headers to set for the outgoing connection</param>
         /// <returns>the input stream with the retrieved data</returns>
-        Stream GetInputStreamByUrl(Uri url);
-
-        /// <summary>Gets the byte array with the data from a provided URL by instantiating an HTTP connection to the URL.
-        ///     </summary>
-        /// <param name="url">the source URL</param>
-        /// <returns>the byte array with the retrieved data</returns>
-        byte[] GetByteArrayByUrl(Uri url);
+        Stream Get(Uri url, byte[] request, IDictionary<String, String> headers);
     }
 }

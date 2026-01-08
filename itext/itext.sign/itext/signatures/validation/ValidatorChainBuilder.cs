@@ -24,13 +24,13 @@ using System;
 using System.Collections.Generic;
 using iText.Commons.Actions;
 using iText.Commons.Bouncycastle.Cert;
+using iText.IO.Resolver.Resource;
 using iText.Kernel.Pdf;
 using iText.Signatures;
 using iText.Signatures.Validation.Dataorigin;
 using iText.Signatures.Validation.Lotl;
 using iText.Signatures.Validation.Report.Pades;
 using iText.Signatures.Validation.Report.Xml;
-using iText.StyledXmlParser.Resolver.Resource;
 
 namespace iText.Signatures.Validation {
     /// <summary>A builder class to construct all necessary parts of a validation chain.</summary>
@@ -51,7 +51,10 @@ namespace iText.Signatures.Validation {
 
         private Func<CRLValidator> crlValidatorFactory;
 
-        private Func<IResourceRetriever> resourceRetrieverFactory;
+        [Obsolete]
+        private Func<iText.StyledXmlParser.Resolver.Resource.IResourceRetriever> resourceRetrieverFactory;
+
+        private Func<IAdvancedResourceRetriever> advancedResourceRetrieverFactory;
 
         private Func<DocumentRevisionsValidator> documentRevisionsValidatorFactory;
 
@@ -88,6 +91,9 @@ namespace iText.Signatures.Validation {
 
         private bool padesValidationRequested = false;
 
+        [Obsolete]
+        private bool deprecatedResourceRetrieverToUse = false;
+
         /// <summary>Creates a ValidatorChainBuilder using default implementations</summary>
         public ValidatorChainBuilder() {
             lotlTrustedStoreFactory = () => BuildLotlTrustedStore();
@@ -96,10 +102,12 @@ namespace iText.Signatures.Validation {
             revocationDataValidatorFactory = () => BuildRevocationDataValidator();
             ocspValidatorFactory = () => BuildOCSPValidator();
             crlValidatorFactory = () => BuildCRLValidator();
-            resourceRetrieverFactory = () => new DefaultResourceRetriever();
+            resourceRetrieverFactory = () => new iText.StyledXmlParser.Resolver.Resource.DefaultResourceRetriever();
+            advancedResourceRetrieverFactory = () => new DefaultResourceRetriever();
             documentRevisionsValidatorFactory = () => BuildDocumentRevisionsValidator();
-            ocspClientFactory = () => new OcspClientBouncyCastle();
-            crlClientFactory = () => new CrlClientOnline();
+            ocspClientFactory = () => new OcspClientBouncyCastle().WithResourceRetriever(advancedResourceRetrieverFactory
+                ());
+            crlClientFactory = () => new CrlClientOnline().WithResourceRetriever(advancedResourceRetrieverFactory());
             lotlServiceFactory = () => BuildLotlService();
             qualifiedValidator = new NullQualifiedValidator();
             eventManager = EventManager.CreateNewInstance();
@@ -139,7 +147,10 @@ namespace iText.Signatures.Validation {
         /// <see langword="false"/>
         /// otherwise
         /// </param>
-        /// <returns>current ValidatorChainBuilder.</returns>
+        /// <returns>
+        /// the current
+        /// <see cref="ValidatorChainBuilder"/>
+        /// </returns>
         public virtual iText.Signatures.Validation.ValidatorChainBuilder TrustEuropeanLotl(bool trustEuropeanLotl) {
             this.trustEuropeanLotl = trustEuropeanLotl;
             return this;
@@ -259,7 +270,10 @@ namespace iText.Signatures.Validation {
         /// for use in the validation chain.
         /// </summary>
         /// <param name="documentRevisionsValidatorFactory">the document revisions validator factory method to use</param>
-        /// <returns>the current ValidatorChainBuilder.</returns>
+        /// <returns>
+        /// the current
+        /// <see cref="ValidatorChainBuilder"/>
+        /// </returns>
         public virtual iText.Signatures.Validation.ValidatorChainBuilder WithDocumentRevisionsValidatorFactory(Func
             <DocumentRevisionsValidator> documentRevisionsValidatorFactory) {
             this.documentRevisionsValidatorFactory = documentRevisionsValidatorFactory;
@@ -272,7 +286,10 @@ namespace iText.Signatures.Validation {
         /// for use in the validation chain.
         /// </summary>
         /// <param name="crlValidatorFactory">the CRLValidatorFactory method to use</param>
-        /// <returns>the current ValidatorChainBuilder.</returns>
+        /// <returns>
+        /// the current
+        /// <see cref="ValidatorChainBuilder"/>
+        /// </returns>
         public virtual iText.Signatures.Validation.ValidatorChainBuilder WithCRLValidatorFactory(Func<CRLValidator
             > crlValidatorFactory) {
             this.crlValidatorFactory = crlValidatorFactory;
@@ -284,11 +301,55 @@ namespace iText.Signatures.Validation {
         /// <see cref="iText.StyledXmlParser.Resolver.Resource.IResourceRetriever"/>
         /// for use in the validation chain.
         /// </summary>
-        /// <param name="resourceRetrieverFactory">the ResourceRetrieverFactory method to use.</param>
-        /// <returns>the current ValidatorChainBuilder.</returns>
-        public virtual iText.Signatures.Validation.ValidatorChainBuilder WithResourceRetriever(Func<IResourceRetriever
+        /// <param name="resourceRetrieverFactory">the ResourceRetrieverFactory method to use</param>
+        /// <returns>
+        /// the current
+        /// <see cref="ValidatorChainBuilder"/>
+        /// </returns>
+        [System.ObsoleteAttribute(@"in favor of WithAdvancedResourceRetriever(System.Func{T})")]
+        public virtual iText.Signatures.Validation.ValidatorChainBuilder WithResourceRetriever(Func<iText.StyledXmlParser.Resolver.Resource.IResourceRetriever
             > resourceRetrieverFactory) {
             this.resourceRetrieverFactory = resourceRetrieverFactory;
+            deprecatedResourceRetrieverToUse = true;
+            return this;
+        }
+
+        /// <summary>
+        /// Use this factory method to create instances of
+        /// <see cref="iText.IO.Resolver.Resource.IAdvancedResourceRetriever"/>
+        /// for use in the validation chain.
+        /// </summary>
+        /// <remarks>
+        /// Use this factory method to create instances of
+        /// <see cref="iText.IO.Resolver.Resource.IAdvancedResourceRetriever"/>
+        /// for use in the validation chain.
+        /// <para />
+        /// Resource retriever created by this factory will be automatically used in the default CRL client,
+        /// default OCSP client and default CA issuer certificate retriever. If some custom client is set
+        /// and one needs to use their custom resource retriever for it, it's their responsibility to pass
+        /// custom resource retriever to their custom client.
+        /// <para />
+        /// Note that resource retriever created by this factory will <b>not</b> be used for
+        /// <see cref="iText.Signatures.Validation.Lotl.LotlService"/>
+        /// because
+        /// the global instance of
+        /// <see cref="iText.Signatures.Validation.Lotl.LotlService"/>
+        /// is used by default. If one needs to use their custom resource
+        /// retriever for
+        /// <see cref="iText.Signatures.Validation.Lotl.LotlService"/>
+        /// , they can pass it using
+        /// <see cref="iText.Signatures.Validation.Lotl.LotlService.WithCustomResourceRetriever(iText.IO.Resolver.Resource.IResourceRetriever)
+        ///     "/>
+        /// method.
+        /// </remarks>
+        /// <param name="resourceRetrieverFactory">the resource retriever factory method to use</param>
+        /// <returns>
+        /// the current
+        /// <see cref="ValidatorChainBuilder"/>
+        /// </returns>
+        public virtual iText.Signatures.Validation.ValidatorChainBuilder WithAdvancedResourceRetriever(Func<IAdvancedResourceRetriever
+            > resourceRetrieverFactory) {
+            this.advancedResourceRetrieverFactory = resourceRetrieverFactory;
             return this;
         }
 
@@ -298,7 +359,10 @@ namespace iText.Signatures.Validation {
         /// for use in the validation chain.
         /// </summary>
         /// <param name="ocspValidatorFactory">the OCSPValidatorFactory method to use</param>
-        /// <returns>the current ValidatorChainBuilder.</returns>
+        /// <returns>
+        /// the current
+        /// <see cref="ValidatorChainBuilder"/>
+        /// </returns>
         public virtual iText.Signatures.Validation.ValidatorChainBuilder WithOCSPValidatorFactory(Func<OCSPValidator
             > ocspValidatorFactory) {
             this.ocspValidatorFactory = ocspValidatorFactory;
@@ -311,7 +375,10 @@ namespace iText.Signatures.Validation {
         /// for use in the validation chain.
         /// </summary>
         /// <param name="revocationDataValidatorFactory">the RevocationDataValidator factory method to use</param>
-        /// <returns>the current ValidatorChainBuilder.</returns>
+        /// <returns>
+        /// the current
+        /// <see cref="ValidatorChainBuilder"/>
+        /// </returns>
         public virtual iText.Signatures.Validation.ValidatorChainBuilder WithRevocationDataValidatorFactory(Func<RevocationDataValidator
             > revocationDataValidatorFactory) {
             this.revocationDataValidatorFactory = revocationDataValidatorFactory;
@@ -324,7 +391,10 @@ namespace iText.Signatures.Validation {
         /// for use in the validation chain.
         /// </summary>
         /// <param name="certificateChainValidatorFactory">the CertificateChainValidator factory method to use</param>
-        /// <returns>the current ValidatorChainBuilder.</returns>
+        /// <returns>
+        /// the current
+        /// <see cref="ValidatorChainBuilder"/>
+        /// </returns>
         public virtual iText.Signatures.Validation.ValidatorChainBuilder WithCertificateChainValidatorFactory(Func
             <CertificateChainValidator> certificateChainValidatorFactory) {
             this.certificateChainValidatorFactory = certificateChainValidatorFactory;
@@ -337,7 +407,10 @@ namespace iText.Signatures.Validation {
         /// in the validation chain.
         /// </summary>
         /// <param name="properties">the SignatureValidationProperties instance to use</param>
-        /// <returns>the current ValidatorChainBuilder.</returns>
+        /// <returns>
+        /// the current
+        /// <see cref="ValidatorChainBuilder"/>
+        /// </returns>
         public virtual iText.Signatures.Validation.ValidatorChainBuilder WithSignatureValidationProperties(SignatureValidationProperties
              properties) {
             this.properties = properties;
@@ -350,7 +423,10 @@ namespace iText.Signatures.Validation {
         /// for use in the validation chain.
         /// </summary>
         /// <param name="certificateRetrieverFactory">the IssuingCertificateRetriever factory method to use</param>
-        /// <returns>the current ValidatorChainBuilder.</returns>
+        /// <returns>
+        /// the current
+        /// <see cref="ValidatorChainBuilder"/>
+        /// </returns>
         public virtual iText.Signatures.Validation.ValidatorChainBuilder WithIssuingCertificateRetrieverFactory(Func
             <IssuingCertificateRetriever> certificateRetrieverFactory) {
             this.certificateRetrieverFactory = certificateRetrieverFactory;
@@ -363,7 +439,10 @@ namespace iText.Signatures.Validation {
         /// for use in the validation chain.
         /// </summary>
         /// <param name="ocspClientFactory">the IOcspClient factory method to use</param>
-        /// <returns>the current ValidatorChainBuilder.</returns>
+        /// <returns>
+        /// the current
+        /// <see cref="ValidatorChainBuilder"/>
+        /// </returns>
         public virtual iText.Signatures.Validation.ValidatorChainBuilder WithOcspClient(Func<IOcspClientBouncyCastle
             > ocspClientFactory) {
             this.ocspClientFactory = ocspClientFactory;
@@ -376,7 +455,10 @@ namespace iText.Signatures.Validation {
         /// for use in the validation chain.
         /// </summary>
         /// <param name="crlClientFactory">the ICrlClient factory method to use</param>
-        /// <returns>the current ValidatorChainBuilder.</returns>
+        /// <returns>
+        /// the current
+        /// <see cref="ValidatorChainBuilder"/>
+        /// </returns>
         public virtual iText.Signatures.Validation.ValidatorChainBuilder WithCrlClient(Func<ICrlClient> crlClientFactory
             ) {
             this.crlClientFactory = crlClientFactory;
@@ -388,7 +470,10 @@ namespace iText.Signatures.Validation {
         /// <see cref="iText.Signatures.IssuingCertificateRetriever"/>.
         /// </summary>
         /// <param name="knownCertificates">the list of known certificates to add</param>
-        /// <returns>the current ValidatorChainBuilder.</returns>
+        /// <returns>
+        /// the current
+        /// <see cref="ValidatorChainBuilder"/>
+        /// </returns>
         public virtual iText.Signatures.Validation.ValidatorChainBuilder WithKnownCertificates(ICollection<IX509Certificate
             > knownCertificates) {
             this.knownCertificates = new List<IX509Certificate>(knownCertificates);
@@ -400,7 +485,10 @@ namespace iText.Signatures.Validation {
         /// <see cref="iText.Signatures.IssuingCertificateRetriever"/>.
         /// </summary>
         /// <param name="trustedCertificates">the list of trusted certificates to set</param>
-        /// <returns>the current ValidatorChainBuilder.</returns>
+        /// <returns>
+        /// the current
+        /// <see cref="ValidatorChainBuilder"/>
+        /// </returns>
         public virtual iText.Signatures.Validation.ValidatorChainBuilder WithTrustedCertificates(ICollection<IX509Certificate
             > trustedCertificates) {
             this.trustedCertificates = new List<IX509Certificate>(trustedCertificates);
@@ -418,7 +506,10 @@ namespace iText.Signatures.Validation {
         ///     "/>.
         /// </remarks>
         /// <param name="adESReportAggregator">the report aggregator to use</param>
-        /// <returns>the current ValidatorChainBuilder</returns>
+        /// <returns>
+        /// the current
+        /// <see cref="ValidatorChainBuilder"/>
+        /// </returns>
         [System.ObsoleteAttribute(@"This method will be removed in a later version, use WithAdESLevelReportGenerator(iText.Signatures.Validation.Report.Xml.XmlReportAggregator) instead."
             )]
         public virtual iText.Signatures.Validation.ValidatorChainBuilder WithAdESReportAggregator(AdESReportAggregator
@@ -439,7 +530,10 @@ namespace iText.Signatures.Validation {
         ///     "/>.
         /// </remarks>
         /// <param name="reportEventListener">the AdESReportEventListener to use</param>
-        /// <returns>the current ValidatorChainBuilder</returns>
+        /// <returns>
+        /// the current
+        /// <see cref="ValidatorChainBuilder"/>
+        /// </returns>
         public virtual iText.Signatures.Validation.ValidatorChainBuilder WithAdESLevelReportGenerator(XmlReportAggregator
              reportEventListener) {
             eventManager.Register(reportEventListener);
@@ -455,7 +549,10 @@ namespace iText.Signatures.Validation {
         /// objects will be registered.
         /// </remarks>
         /// <param name="reportGenerator">the PAdESLevelReportGenerator to use</param>
-        /// <returns>current ValidatorChainBuilder</returns>
+        /// <returns>
+        /// the current
+        /// <see cref="ValidatorChainBuilder"/>
+        /// </returns>
         public virtual iText.Signatures.Validation.ValidatorChainBuilder WithPAdESLevelReportGenerator(PAdESLevelReportGenerator
              reportGenerator) {
             padesValidationRequested = true;
@@ -496,9 +593,12 @@ namespace iText.Signatures.Validation {
         /// <param name="qualifiedValidator">
         /// 
         /// <see cref="iText.Signatures.Validation.Lotl.QualifiedValidator"/>
-        /// instance which performs the validation.
+        /// instance which performs the validation
         /// </param>
-        /// <returns>current ValidatorChainBuilder</returns>
+        /// <returns>
+        /// the current
+        /// <see cref="ValidatorChainBuilder"/>
+        /// </returns>
         public virtual iText.Signatures.Validation.ValidatorChainBuilder WithQualifiedValidator(QualifiedValidator
              qualifiedValidator) {
             this.qualifiedValidator = qualifiedValidator;
@@ -570,9 +670,10 @@ namespace iText.Signatures.Validation {
         /// <returns>
         /// the explicitly added or automatically created
         /// <see cref="iText.StyledXmlParser.Resolver.Resource.IResourceRetriever"/>
-        /// instance.
+        /// instance
         /// </returns>
-        public virtual IResourceRetriever GetResourceRetriever() {
+        [System.ObsoleteAttribute(@"as user should not normally need this getter")]
+        public virtual iText.StyledXmlParser.Resolver.Resource.IResourceRetriever GetResourceRetriever() {
             return resourceRetrieverFactory();
         }
 
@@ -793,15 +894,22 @@ namespace iText.Signatures.Validation {
         }
 
         private IssuingCertificateRetriever BuildIssuingCertificateRetriever() {
-            IssuingCertificateRetriever result = new IssuingCertificateRetriever(this.resourceRetrieverFactory());
+            IssuingCertificateRetriever certRetriever;
+            if (deprecatedResourceRetrieverToUse) {
+                certRetriever = new IssuingCertificateRetriever(this.resourceRetrieverFactory());
+            }
+            else {
+                certRetriever = new IssuingCertificateRetriever().WithResourceRetriever(advancedResourceRetrieverFactory()
+                    );
+            }
             if (trustedCertificates != null) {
-                result.SetTrustedCertificates(trustedCertificates);
+                certRetriever.SetTrustedCertificates(trustedCertificates);
             }
             if (knownCertificates != null) {
-                result.AddKnownCertificates(knownCertificates, CertificateOrigin.OTHER);
+                certRetriever.AddKnownCertificates(knownCertificates, CertificateOrigin.OTHER);
             }
-            result.AddKnownCertificates(lotlTrustedStoreFactory().GetCertificates(), CertificateOrigin.OTHER);
-            return result;
+            certRetriever.AddKnownCertificates(lotlTrustedStoreFactory().GetCertificates(), CertificateOrigin.OTHER);
+            return certRetriever;
         }
 
         private LotlTrustedStore BuildLotlTrustedStore() {

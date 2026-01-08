@@ -22,10 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using iText.StyledXmlParser.Resolver.Resource;
 
 namespace iText.Signatures.Validation.Mocks {
-    public class MockResourceRetriever : IResourceRetriever {
+    public class MockResourceRetriever : iText.StyledXmlParser.Resolver.Resource.IResourceRetriever {
         private Func<Uri, byte[]> getByteArrayByUrlHandler = (u) => null;
 
         private Func<Uri, Stream> getInputStreamByUrlHandler = (u) => null;

@@ -29,6 +29,7 @@ using iText.Commons;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
+using iText.IO.Resolver.Resource;
 
 namespace iText.Signatures {
     /// <summary>
@@ -46,7 +47,10 @@ namespace iText.Signatures {
         /// <summary>The URLs of the CRLs.</summary>
         protected internal IList<Uri> urls = new List<Uri>();
 
+        [Obsolete]
         private int connectionTimeout = -1;
+
+        private IAdvancedResourceRetriever resourceRetriever = new DefaultResourceRetriever();
 
         /// <summary>
         /// Creates a CrlClientOnline instance that will try to find
@@ -149,8 +153,37 @@ namespace iText.Signatures {
 
         /// <summary>Sets the connection timeout for the http client</summary>
         /// <param name="i">the timeout in milliseconds, a negative number means using the system connection timeout</param>
+        [System.ObsoleteAttribute(@"in favor of custom resource retriever")]
         public virtual void SetConnectionTimeout(int i) {
             connectionTimeout = i;
+        }
+
+        /// <summary>Sets a resource retriever for this CRL client.</summary>
+        /// <remarks>
+        /// Sets a resource retriever for this CRL client.
+        /// <para />
+        /// This method allows you to provide a custom implementation of
+        /// <see cref="iText.IO.Resolver.Resource.IAdvancedResourceRetriever"/>
+        /// to be used
+        /// for fetching CRL responses. By default,
+        /// <see cref="iText.IO.Resolver.Resource.DefaultResourceRetriever"/>
+        /// is used.
+        /// </remarks>
+        /// <param name="resourceRetriever">the custom resource retriever to be used for fetching CRL responses</param>
+        /// <returns>
+        /// the current instance of
+        /// <see cref="CrlClientOnline"/>
+        /// </returns>
+        public virtual iText.Signatures.CrlClientOnline WithResourceRetriever(IAdvancedResourceRetriever resourceRetriever
+            ) {
+            this.resourceRetriever = resourceRetriever;
+            return this;
+        }
+
+        /// <summary>Gets the resource retriever currently being used in this CRL client.</summary>
+        /// <returns>resource retriever</returns>
+        public virtual IAdvancedResourceRetriever GetResourceRetriever() {
+            return resourceRetriever;
         }
 
         /// <summary>
@@ -172,7 +205,10 @@ namespace iText.Signatures {
         /// <see cref="System.IO.Stream"/>
         /// </returns>
         protected internal virtual Stream GetCrlResponse(IX509Certificate cert, Uri urlt) {
-            return SignUtils.GetHttpResponse(urlt, connectionTimeout);
+            if (connectionTimeout > 0 && resourceRetriever is DefaultResourceRetriever) {
+                ((DefaultResourceRetriever)resourceRetriever).SetConnectTimeout(connectionTimeout);
+            }
+            return resourceRetriever.GetInputStreamByUrl(urlt);
         }
 
         /// <summary>Adds an URL to the list of CRL URLs</summary>

@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
@@ -35,7 +36,7 @@ namespace iText.IO.Resolver.Resource {
     /// interface, which can set a limit
     /// on the size of retrieved resources using input stream with a limit on the number of bytes read.
     /// </summary>
-    public class DefaultResourceRetriever : IResourceRetriever {
+    public class DefaultResourceRetriever : IAdvancedResourceRetriever {
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.IO.Resolver.Resource.DefaultResourceRetriever
             ));
 
@@ -152,12 +153,7 @@ namespace iText.IO.Resolver.Resource {
             return this;
         }
 
-        /// <summary>
-        /// Gets the input stream with current limit on the number of bytes read,
-        /// that connect with source URL for retrieving data from that connection.
-        /// </summary>
-        /// <param name="url">the source URL</param>
-        /// <returns>the limited input stream or null if the URL was filtered</returns>
+        /// <summary><inheritDoc/></summary>
         public virtual Stream GetInputStreamByUrl(Uri url) {
             if (UrlFilter(url)) {
                 return new LimitedInputStream(UrlUtil.GetInputStreamOfFinalConnection(url, connectTimeout, readTimeout), resourceSizeByteLimit
@@ -168,12 +164,7 @@ namespace iText.IO.Resolver.Resource {
             return null;
         }
 
-        /// <summary>Gets the byte array that are retrieved from the source URL.</summary>
-        /// <param name="url">the source URL</param>
-        /// <returns>
-        /// the byte array or null if the retrieving failed or the
-        /// URL was filtered or the resourceSizeByteLimit was violated
-        /// </returns>
+        /// <summary><inheritDoc/></summary>
         public virtual byte[] GetByteArrayByUrl(Uri url) {
             try {
                 using (Stream stream = GetInputStreamByUrl(url)) {
@@ -188,6 +179,17 @@ namespace iText.IO.Resolver.Resource {
                     , url, resourceSizeByteLimit));
                 return null;
             }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual Stream Get(Uri url, byte[] request, IDictionary<String, String> headers) {
+            if (UrlFilter(url)) {
+                return new LimitedInputStream(UrlUtil.Get(url, request, headers, connectTimeout, readTimeout), resourceSizeByteLimit
+                    );
+            }
+            LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT
+                , url));
+            return null;
         }
 
         /// <summary>Method for filtering resources by URL.</summary>

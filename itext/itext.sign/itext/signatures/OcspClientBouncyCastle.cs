@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using iText.Bouncycastleconnector;
@@ -30,7 +31,10 @@ using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Math;
+using iText.IO.Resolver.Resource;
 using iText.IO.Util;
+using iText.Kernel.Exceptions;
+using iText.Signatures.Exceptions;
 
 namespace iText.Signatures {
     /// <summary>OcspClient implementation using BouncyCastle.</summary>
@@ -41,6 +45,8 @@ namespace iText.Signatures {
         /// <summary>The Logger instance.</summary>
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.OcspClientBouncyCastle
             ));
+
+        private IAdvancedResourceRetriever resourceRetriever = new DefaultResourceRetriever();
 
         /// <summary>
         /// Creates new
@@ -97,6 +103,34 @@ namespace iText.Signatures {
             return null;
         }
 
+        /// <summary>Sets a resource retriever for this OCSP client.</summary>
+        /// <remarks>
+        /// Sets a resource retriever for this OCSP client.
+        /// <para />
+        /// This method allows you to provide a custom implementation of
+        /// <see cref="iText.IO.Resolver.Resource.IAdvancedResourceRetriever"/>
+        /// to be used
+        /// for fetching OCSP responses. By default,
+        /// <see cref="iText.IO.Resolver.Resource.DefaultResourceRetriever"/>
+        /// is used.
+        /// </remarks>
+        /// <param name="resourceRetriever">the custom resource retriever to be used for fetching OCSP responses</param>
+        /// <returns>
+        /// the current instance of
+        /// <see cref="OcspClientBouncyCastle"/>
+        /// </returns>
+        public virtual iText.Signatures.OcspClientBouncyCastle WithResourceRetriever(IAdvancedResourceRetriever resourceRetriever
+            ) {
+            this.resourceRetriever = resourceRetriever;
+            return this;
+        }
+
+        /// <summary>Gets the resource retriever currently being used in this OCSP client.</summary>
+        /// <returns>resource retriever</returns>
+        public virtual IAdvancedResourceRetriever GetResourceRetriever() {
+            return resourceRetriever;
+        }
+
         /// <summary>Generates an OCSP request using BouncyCastle.</summary>
         /// <param name="issuerCert">certificate of the issues</param>
         /// <param name="serialNumber">serial number</param>
@@ -135,35 +169,6 @@ namespace iText.Signatures {
             return null;
         }
 
-//\cond DO_NOT_DOCUMENT
-        /// <summary>Gets an OCSP response object using BouncyCastle.</summary>
-        /// <param name="checkCert">to certificate to check</param>
-        /// <param name="rootCert">the parent certificate</param>
-        /// <param name="url">
-        /// to get the verification. If it's null it will be taken
-        /// from the check cert or from other implementation specific source
-        /// </param>
-        /// <returns>
-        /// 
-        /// <see cref="iText.Commons.Bouncycastle.Asn1.Ocsp.IOcspResponse"/>
-        /// an OCSP response wrapper
-        /// </returns>
-        internal virtual IOcspResponse GetOcspResponse(IX509Certificate checkCert, IX509Certificate rootCert, String
-             url) {
-            if (checkCert == null || rootCert == null) {
-                return null;
-            }
-            if (url == null) {
-                url = CertificateUtil.GetOCSPURL(checkCert);
-            }
-            if (url == null) {
-                return null;
-            }
-            Stream @in = CreateRequestAndResponse(checkCert, rootCert, url);
-            return @in == null ? null : BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(StreamUtil.InputStreamToArray(@in));
-        }
-//\endcond
-
         /// <summary>
         /// Create OCSP request and get the response for this request, represented as
         /// <see cref="System.IO.Stream"/>.
@@ -193,7 +198,44 @@ namespace iText.Signatures {
             IOcspRequest request = GenerateOCSPRequest(rootCert, checkCert.GetSerialNumber());
             byte[] array = request.GetEncoded();
             Uri urlt = new Uri(url);
-            return SignUtils.GetHttpResponseForOcspRequest(array, urlt);
+            IDictionary<String, String> headers = new Dictionary<String, String>();
+            headers.Put("Content-Type", "application/ocsp-request");
+            headers.Put("Accept", "application/ocsp-response");
+            try {
+                return resourceRetriever.Get(urlt, array, headers);
+            }
+            catch (iText.IO.Exceptions.IOException e) {
+                throw new PdfException(SignExceptionMessageConstant.INVALID_HTTP_RESPONSE).SetMessageParams(e.Message);
+            }
         }
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Gets an OCSP response object using BouncyCastle.</summary>
+        /// <param name="checkCert">to certificate to check</param>
+        /// <param name="rootCert">the parent certificate</param>
+        /// <param name="url">
+        /// to get the verification. If it's null it will be taken
+        /// from the check cert or from other implementation specific source
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.Ocsp.IOcspResponse"/>
+        /// an OCSP response wrapper
+        /// </returns>
+        internal virtual IOcspResponse GetOcspResponse(IX509Certificate checkCert, IX509Certificate rootCert, String
+             url) {
+            if (checkCert == null || rootCert == null) {
+                return null;
+            }
+            if (url == null) {
+                url = CertificateUtil.GetOCSPURL(checkCert);
+            }
+            if (url == null) {
+                return null;
+            }
+            Stream @in = CreateRequestAndResponse(checkCert, rootCert, url);
+            return @in == null ? null : BOUNCY_CASTLE_FACTORY.CreateOCSPResponse(StreamUtil.InputStreamToArray(@in));
+        }
+//\endcond
     }
 }
