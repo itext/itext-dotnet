@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.IO;
-using Java.IO;
-using Java.Util.Concurrent.Atomic;
+using iText.Commons.Utils;
 
 namespace iText.IO.Source {
     /// <summary>
@@ -32,14 +31,15 @@ namespace iText.IO.Source {
     /// </summary>
     public class ASCIIHexOutputStream : FilterOutputStream, IFinishable {
         /// <summary>End Of Data marker.</summary>
-        private const byte EOD = '>';
+        private const byte EOD = (byte)'>';
 
         /// <summary>
         /// Array for mapping nibble values to the corresponding lowercase
         /// hexadecimal characters.
         /// </summary>
-        private static readonly byte[] CHAR_MAP = new byte[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a'
-            , 'b', 'c', 'd', 'e', 'f' };
+        private static readonly byte[] CHAR_MAP = new byte[] { (byte)'0', (byte)'1', (byte)'2', (byte)'3', (byte)'4'
+            , (byte)'5', (byte)'6', (byte)'7', (byte)'8', (byte)'9', (byte)'a', (byte)'b', (byte)'c', (byte)'d', (
+            byte)'e', (byte)'f' };
 
         /// <summary>Buffer for storing the output hex char pair.</summary>
         private readonly byte[] buffer = new byte[2];
@@ -49,7 +49,7 @@ namespace iText.IO.Source {
         /// <see cref="Finish()"/>
         /// has been called.
         /// </summary>
-        private readonly AtomicBoolean finished = new AtomicBoolean(false);
+        private bool finished = false;
 
         /// <summary>
         /// Creates a new
@@ -79,9 +79,10 @@ namespace iText.IO.Source {
 
         /// <summary><inheritDoc/></summary>
         public virtual void Finish() {
-            if (finished.GetAndSet(true)) {
+            if (finished) {
                 return;
             }
+            finished = true;
             @out.Write(EOD);
             Flush();
         }

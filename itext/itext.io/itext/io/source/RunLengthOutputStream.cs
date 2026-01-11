@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.IO;
-using Java.IO;
-using Java.Util.Concurrent.Atomic;
+using iText.Commons.Utils;
 
 namespace iText.IO.Source {
     /// <summary>
@@ -58,7 +57,7 @@ namespace iText.IO.Source {
         /// <see cref="Finish()"/>
         /// has been called.
         /// </summary>
-        private readonly AtomicBoolean finished = new AtomicBoolean(false);
+        private bool finished = false;
 
         /// <summary>
         /// Creates a new
@@ -126,9 +125,10 @@ namespace iText.IO.Source {
 
         /// <summary><inheritDoc/></summary>
         public virtual void Finish() {
-            if (finished.GetAndSet(true)) {
+            if (finished) {
                 return;
             }
+            finished = true;
             WritePending();
             @out.Write(EOD);
             Flush();

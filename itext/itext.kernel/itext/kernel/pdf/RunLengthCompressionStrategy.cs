@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -57,17 +57,57 @@ namespace iText.Kernel.Pdf {
         }
 
         // empty constructor
-        /// <summary><inheritDoc/></summary>
+        /// <summary>Returns the name of the compression filter.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="PdfName.RunLengthDecode"/>
+        /// representing the
+        /// <c>RunLengthDecode</c>
+        /// filter
+        /// </returns>
         public virtual PdfName GetFilterName() {
             return PdfName.RunLengthDecode;
         }
 
-        /// <summary><inheritDoc/></summary>
+        /// <summary>
+        /// Returns the decode parameters for the
+        /// <c>RunLengthDecode</c>
+        /// filter.
+        /// </summary>
+        /// <remarks>
+        /// Returns the decode parameters for the
+        /// <c>RunLengthDecode</c>
+        /// filter.
+        /// <para />
+        /// This implementation returns
+        /// <see langword="null"/>
+        /// as no special decode parameters
+        /// are required for standard run length compression.
+        /// </remarks>
+        /// <returns>
+        /// 
+        /// <see langword="null"/>
+        /// as no decode parameters are needed
+        /// </returns>
         public virtual PdfObject GetDecodeParams() {
             return null;
         }
 
-        /// <summary><inheritDoc/></summary>
+        /// <summary>Creates a new output stream with run length compression applied.</summary>
+        /// <remarks>
+        /// Creates a new output stream with run length compression applied.
+        /// <para />
+        /// This method wraps the original output stream in a
+        /// <see cref="iText.IO.Source.RunLengthOutputStream"/>
+        /// that applies run length compression.
+        /// </remarks>
+        /// <param name="original">the original output stream to wrap</param>
+        /// <param name="stream">the PDF stream containing compression configuration</param>
+        /// <returns>
+        /// a new
+        /// <see cref="iText.IO.Source.RunLengthOutputStream"/>
+        /// that compresses data using the run length algorithm
+        /// </returns>
         public virtual Stream CreateNewOutputStream(Stream original, PdfStream stream) {
             return new RunLengthOutputStream(original);
         }

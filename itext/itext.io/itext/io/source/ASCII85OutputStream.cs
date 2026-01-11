@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -21,8 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.IO;
-using Java.IO;
-using Java.Util.Concurrent.Atomic;
 using iText.Commons.Utils;
 
 namespace iText.IO.Source {
@@ -52,10 +50,10 @@ namespace iText.IO.Source {
         /// Marker written, when all input bytes are zero. Not used for partial
         /// blocks.
         /// </remarks>
-        private const byte ALL_ZEROS_MARKER = 'z';
+        private const byte ALL_ZEROS_MARKER = (byte)'z';
 
         /// <summary>End Of Data marker.</summary>
-        private static readonly byte[] EOD = new byte[] { '~', '>' };
+        private static readonly byte[] EOD = new byte[] { (byte)'~', (byte)'>' };
 
         /// <summary>Encoding block buffer.</summary>
         /// <remarks>Encoding block buffer. Reused for encoding output, when flushing.</remarks>
@@ -76,7 +74,7 @@ namespace iText.IO.Source {
         /// <see cref="Finish()"/>
         /// has been called.
         /// </summary>
-        private readonly AtomicBoolean finished = new AtomicBoolean(false);
+        private bool finished = false;
 
         /// <summary>
         /// Creates a new
@@ -105,9 +103,10 @@ namespace iText.IO.Source {
 
         /// <summary><inheritDoc/></summary>
         public virtual void Finish() {
-            if (finished.GetAndSet(true)) {
+            if (finished) {
                 return;
             }
+            finished = true;
             // Writing the remainder
             if (inputCursor > 0) {
                 if (inputOr == 0) {
