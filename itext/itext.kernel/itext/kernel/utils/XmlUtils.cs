@@ -20,6 +20,8 @@ Copyright (c) 1998-2026 Apryse Group NV
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -41,30 +43,78 @@ namespace iText.Kernel.Utils {
             XElement el1 = XElement.Load(XmlProcessorCreator.CreateSafeXmlReader(xml1));
             XElement el2 = XElement.Load(XmlProcessorCreator.CreateSafeXmlReader(xml2));
 
+            NormalizeTextNodes(el1);
+            NormalizeTextNodes(el2);
+            
             return XNode.DeepEquals(Normalize(el1), Normalize(el2));
         }
 
         public static XmlDocument InitNewXmlDocument() {
             return new XmlDocument();
         }
-
+        
         private static XElement Normalize(XElement element) {
-            if (element.HasElements) {
+            IEnumerable<XAttribute> attrs = element.Attributes()
+                .OrderBy(a => a.Name.ToString());
+
+            bool hasElements = element.Elements().Any();
+            bool hasTextNodes = element.Nodes().OfType<XText>().Any();
+
+            // Mixed content: keep text nodes and preserve node order
+            if (hasElements && hasTextNodes) {
                 return new XElement(
                     element.Name,
-                    element.Attributes()
-                        .OrderBy(a => a.Name.ToString()),
-                    element.Elements().OrderBy(a => a.Name.ToString())
-                        .Select(e => Normalize(e)));
+                    attrs,
+                    element.Nodes().Select(n => {
+                        if (n is XElement e)
+                        {
+                            return (object)Normalize(e);
+                        }
+                        if (n is XText t)
+                        {
+                            return (object)new XText(t.Value);
+                        }
+                        return (object)n; 
+                    })
+                );
+            }
+
+            if (hasElements) {
+                return new XElement(
+                    element.Name,
+                    attrs,
+                    element.Elements()
+                        .OrderBy(e => e.Name.ToString())
+                        .Select(e => Normalize(e))
+                );
             }
 
             if (element.IsEmpty) {
-                return new XElement(element.Name, element.Attributes()
-                    .OrderBy(a => a.Name.ToString()));
+                return new XElement(element.Name, attrs);
             }
 
-            return new XElement(element.Name, element.Attributes()
-                .OrderBy(a => a.Name.ToString()), element.Value);
+            return new XElement(element.Name, attrs, element.Value);
+        }
+
+        
+        private static void NormalizeTextNodes(XElement element) {
+            if (element == null) {
+                return;
+            }
+
+            List<XText> toRemove = element
+                .Nodes()
+                .OfType<XText>()
+                .Where(t => string.IsNullOrWhiteSpace(t.Value))
+                .ToList();
+
+            foreach (XText t in toRemove) {
+                t.Remove();
+            }
+
+            foreach (XElement child in element.Elements()) {
+                NormalizeTextNodes(child);
+            }
         }
     }
 }
