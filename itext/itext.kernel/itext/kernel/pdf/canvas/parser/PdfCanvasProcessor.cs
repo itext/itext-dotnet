@@ -45,6 +45,9 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
     public class PdfCanvasProcessor {
         public const String DEFAULT_OPERATOR = "DefaultOperator";
 
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Canvas.Parser.PdfCanvasProcessor
+            ));
+
         /// <summary>Listener that will be notified of render events</summary>
         protected internal readonly IEventListener eventListener;
 
@@ -685,13 +688,22 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private class TextSetTextMatrixOperator : IContentOperator {
             /// <summary><inheritDoc/></summary>
             public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
-                float a = ((PdfNumber)operands[0]).FloatValue();
-                float b = ((PdfNumber)operands[1]).FloatValue();
-                float c = ((PdfNumber)operands[2]).FloatValue();
-                float d = ((PdfNumber)operands[3]).FloatValue();
-                float e = ((PdfNumber)operands[4]).FloatValue();
-                float f = ((PdfNumber)operands[5]).FloatValue();
-                processor.textLineMatrix = new Matrix(a, b, c, d, e, f);
+                Matrix parsedMatrix;
+                if (operands.Count == 7) {
+                    float a = ((PdfNumber)operands[0]).FloatValue();
+                    float b = ((PdfNumber)operands[1]).FloatValue();
+                    float c = ((PdfNumber)operands[2]).FloatValue();
+                    float d = ((PdfNumber)operands[3]).FloatValue();
+                    float e = ((PdfNumber)operands[4]).FloatValue();
+                    float f = ((PdfNumber)operands[5]).FloatValue();
+                    parsedMatrix = new Matrix(a, b, c, d, e, f);
+                }
+                else {
+                    LOGGER.LogWarning(MessageFormatUtil.Format(KernelLogMessageConstant.UNABLE_TO_PARSE_OPERATOR_WRONG_NUMBER_OF_OPERANDS
+                        , @operator, JavaUtil.ArraysToString((Object[])operands.ToArray())));
+                    parsedMatrix = new Matrix();
+                }
+                processor.textLineMatrix = parsedMatrix;
                 processor.textMatrix = processor.textLineMatrix;
             }
         }
@@ -866,13 +878,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                     processor.GetGraphicsState().UpdateCtm(matrix);
                 }
                 catch (PdfException exception) {
-                    if (!(exception.InnerException is NoninvertibleTransformException)) {
-                        throw;
+                    if (exception.InnerException is NoninvertibleTransformException) {
+                        LOGGER.LogError(KernelLogMessageConstant.FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX);
                     }
                     else {
-                        ILogger logger = ITextLogManager.GetLogger(typeof(PdfCanvasProcessor));
-                        logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX
-                            ));
+                        throw;
                     }
                 }
             }
@@ -966,8 +976,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                     }
                 }
             }
-            ILogger logger = ITextLogManager.GetLogger(typeof(PdfCanvasProcessor));
-            logger.LogWarning(MessageFormatUtil.Format(KernelLogMessageConstant.UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE
+            LOGGER.LogWarning(MessageFormatUtil.Format(KernelLogMessageConstant.UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE
                 , JavaUtil.ArraysToString((Object[])operands.ToArray()), pdfColorSpace.GetPdfObject()));
             return null;
         }
@@ -1173,15 +1182,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 PdfName dictionaryName = ((PdfName)operand1);
                 PdfDictionary properties = resources.GetResource(PdfName.Properties);
                 if (null == properties) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(PdfCanvasProcessor));
-                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY
+                    LOGGER.LogWarning(MessageFormatUtil.Format(KernelLogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY
                         , PdfName.Properties));
                     return null;
                 }
                 PdfDictionary propertiesDictionary = properties.GetAsDictionary(dictionaryName);
                 if (null == propertiesDictionary) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(PdfCanvasProcessor));
-                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY
+                    LOGGER.LogWarning(MessageFormatUtil.Format(KernelLogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY
                         , dictionaryName));
                     return null;
                 }
@@ -1258,9 +1265,15 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <remarks>A handler that implements operator (M). For more information see Table 51 ISO-32000-1</remarks>
         private class SetMiterLimitOperator : IContentOperator {
             /// <summary><inheritDoc/></summary>
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral oper, IList<PdfObject> operands) {
-                float miterLimit = ((PdfNumber)operands[0]).FloatValue();
-                processor.GetGraphicsState().SetMiterLimit(miterLimit);
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
+                if (operands.Count == 2) {
+                    float miterLimit = ((PdfNumber)operands[0]).FloatValue();
+                    processor.GetGraphicsState().SetMiterLimit(miterLimit);
+                }
+                else {
+                    LOGGER.LogWarning(MessageFormatUtil.Format(KernelLogMessageConstant.UNABLE_TO_PARSE_OPERATOR_WRONG_NUMBER_OF_OPERANDS
+                        , @operator, JavaUtil.ArraysToString((Object[])operands.ToArray())));
+                }
             }
         }
 

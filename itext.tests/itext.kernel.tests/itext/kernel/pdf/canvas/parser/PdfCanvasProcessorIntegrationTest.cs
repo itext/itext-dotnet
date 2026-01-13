@@ -108,7 +108,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX, Count = 1)]
+        [LogMessage(KernelLogMessageConstant.FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX, Count = 1)]
         public virtual void TestNoninvertibleMatrix() {
             String fileName = "noninvertibleMatrix.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + fileName));
@@ -213,6 +213,54 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             PdfCanvasProcessor parser = new PdfCanvasProcessor(listener);
             parser.ProcessContent(document.GetPage(1).GetContentBytes(), document.GetPage(1).GetResources());
             NUnit.Framework.Assert.AreEqual(listener.GetResultantText(), "test 1\ntest 2");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.UNABLE_TO_PARSE_OPERATOR_WRONG_NUMBER_OF_OPERANDS)]
+        public virtual void SmallerNumberOfOperandsTmTest() {
+            SimpleTextExtractionStrategy listener = new SimpleTextExtractionStrategy();
+            PdfCanvasProcessor parser = new PdfCanvasProcessor(listener);
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInfo(SOURCE_FOLDER + "smallerNumberOfOperandsTm.pdf"
+                )))) {
+                parser.ProcessPageContent(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.AreEqual("ABCD", listener.GetResultantText());
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.UNABLE_TO_PARSE_OPERATOR_WRONG_NUMBER_OF_OPERANDS)]
+        public virtual void BiggerNumberOfOperandsTmTest() {
+            SimpleTextExtractionStrategy listener = new SimpleTextExtractionStrategy();
+            PdfCanvasProcessor parser = new PdfCanvasProcessor(listener);
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInfo(SOURCE_FOLDER + "biggerNumberOfOperandsTm.pdf"
+                )))) {
+                parser.ProcessPageContent(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.AreEqual("ABCD", listener.GetResultantText());
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.UNABLE_TO_PARSE_OPERATOR_WRONG_NUMBER_OF_OPERANDS)]
+        public virtual void SmallerNumberOfOperandsMTest() {
+            LocationTextExtractionStrategy listener = new LocationTextExtractionStrategy();
+            PdfCanvasProcessor parser = new PdfCanvasProcessor(listener);
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInfo(SOURCE_FOLDER + "smallerNumberOfOperandsM.pdf"
+                )))) {
+                parser.ProcessPageContent(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.AreEqual("ABCD", listener.GetResultantText());
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(KernelLogMessageConstant.UNABLE_TO_PARSE_OPERATOR_WRONG_NUMBER_OF_OPERANDS)]
+        public virtual void BiggerNumberOfOperandsMTest() {
+            LocationTextExtractionStrategy listener = new LocationTextExtractionStrategy();
+            PdfCanvasProcessor parser = new PdfCanvasProcessor(listener);
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(new FileInfo(SOURCE_FOLDER + "biggerNumberOfOperandsM.pdf"
+                )))) {
+                parser.ProcessPageContent(pdfDocument.GetPage(1));
+            }
+            NUnit.Framework.Assert.AreEqual("ABCD", listener.GetResultantText());
         }
 
         private class ColorParsingEventListener : IEventListener {

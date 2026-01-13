@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 using iText.Test;
 using iText.Test.Attributes;
@@ -32,7 +33,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/PdfTextExtractorTest/";
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY)]
+        [LogMessage(KernelLogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY)]
         public virtual void NoSpecifiedDictionaryInPropertiesTest() {
             String inFile = sourceFolder + "noSpecifiedDictionaryInProperties.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {
@@ -43,7 +44,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY)]
+        [LogMessage(KernelLogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY)]
         public virtual void NoPropertiesInResourcesTest() {
             String inFile = sourceFolder + "noPropertiesInResources.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFile))) {

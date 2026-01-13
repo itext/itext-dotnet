@@ -140,8 +140,10 @@ namespace iText.IO.Logs {
 
         public const String FAILED_TO_PARSE_ENCODING_STREAM = "Failed to parse encoding stream.";
 
-        public const String FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX = "Failed to process a transformation matrix which is noninvertible. Some content may be placed not as "
-             + "expected.";
+        [Obsolete]
+        public const String FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX = 
+                // replaced by com.itextpdf.kernel.logs.KernelLogMessageConstant#FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX
+                "Failed to process a transformation matrix which is noninvertible. Some content may be placed not as " + "expected.";
 
         public const String FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY = "Value \"{0}\" is not contained in /Opt array of field \"{1}\".";
 
@@ -270,7 +272,10 @@ namespace iText.IO.Logs {
 
         public const String PDF_READER_CLOSING_FAILED = "PdfReader closing failed due to the error occurred!";
 
-        public const String PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY = "The PDF contains a BDC operator which refers to a not existing Property dictionary: {0}.";
+        [Obsolete]
+        public const String PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY = 
+                // replaced by com.itextpdf.kernel.logs.KernelLogMessageConstant.PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY
+                "The PDF contains a BDC operator which refers to a not existing Property dictionary: {0}.";
 
         public const String PDF_WRITER_CLOSING_FAILED = "PdfWriter closing failed due to the error occurred!";
 
