@@ -185,7 +185,8 @@ namespace iText.Kernel.Pdf {
         /// 
         /// <see cref="PdfStream"/>
         /// object at specified index;
-        /// will return null in case page dictionary doesn't adhere to the specification, meaning that the document is an invalid PDF.
+        /// will return null in case page dictionary doesn't adhere to the specification, meaning that the document is an
+        /// invalid PDF.
         /// </returns>
         public virtual PdfStream GetContentStream(int index) {
             int count = GetContentStreamCount();
@@ -345,38 +346,6 @@ namespace iText.Kernel.Pdf {
             return GetResources(true);
         }
 
-//\cond DO_NOT_DOCUMENT
-        internal virtual PdfResources GetResources(bool initResourcesField) {
-            if (this.resources == null && initResourcesField) {
-                InitResources(true);
-            }
-            return this.resources;
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        internal virtual PdfDictionary InitResources(bool initResourcesField) {
-            bool readOnly = false;
-            PdfDictionary resources = GetPdfObject().GetAsDictionary(PdfName.Resources);
-            if (resources == null) {
-                resources = (PdfDictionary)GetInheritedValue(PdfName.Resources, PdfObject.DICTIONARY);
-                if (resources != null) {
-                    readOnly = true;
-                }
-            }
-            if (resources == null) {
-                resources = new PdfDictionary();
-                // not marking page as modified because of this change
-                GetPdfObject().Put(PdfName.Resources, resources);
-            }
-            if (initResourcesField) {
-                this.resources = new PdfResources(resources);
-                this.resources.SetReadOnly(readOnly);
-            }
-            return resources;
-        }
-//\endcond
-
         /// <summary>
         /// Sets
         /// <see cref="PdfResources"/>
@@ -395,26 +364,6 @@ namespace iText.Kernel.Pdf {
         public virtual iText.Kernel.Pdf.PdfPage SetResources(PdfResources pdfResources) {
             Put(PdfName.Resources, pdfResources.GetPdfObject());
             this.resources = pdfResources;
-            return this;
-        }
-
-        /// <summary>Sets the XMP Metadata.</summary>
-        /// <param name="xmpMetadata">
-        /// the
-        /// <c>byte[]</c>
-        /// of XMP Metadata to set.
-        /// </param>
-        /// <returns>
-        /// this
-        /// <see cref="PdfPage"/>
-        /// instance.
-        /// </returns>
-        public virtual iText.Kernel.Pdf.PdfPage SetXmpMetadata(byte[] xmpMetadata) {
-            PdfStream xmp = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
-            xmp.GetOutputStream().Write(xmpMetadata);
-            xmp.Put(PdfName.Type, PdfName.Metadata);
-            xmp.Put(PdfName.Subtype, PdfName.XML);
-            Put(PdfName.Metadata, xmp);
             return this;
         }
 
@@ -438,6 +387,36 @@ namespace iText.Kernel.Pdf {
             return SetXmpMetadata(XMPMetaFactory.SerializeToBuffer(xmpMeta, serializeOptions));
         }
 
+        /// <summary>Gets the XMP Metadata object.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="PdfStream"/>
+        /// object, that represent XMP Metadata.
+        /// </returns>
+        public virtual PdfStream GetXmpMetadata() {
+            return GetPdfObject().GetAsStream(PdfName.Metadata);
+        }
+
+        /// <summary>Sets the XMP Metadata.</summary>
+        /// <param name="xmpMetadata">
+        /// the
+        /// <c>byte[]</c>
+        /// of XMP Metadata to set.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Kernel.Pdf.PdfPage SetXmpMetadata(byte[] xmpMetadata) {
+            PdfStream xmp = (PdfStream)new PdfStream().MakeIndirect(GetDocument());
+            xmp.GetOutputStream().Write(xmpMetadata);
+            xmp.Put(PdfName.Type, PdfName.Metadata);
+            xmp.Put(PdfName.Subtype, PdfName.XML);
+            Put(PdfName.Metadata, xmp);
+            return this;
+        }
+
         /// <summary>Serializes XMP Metadata to byte array and sets it.</summary>
         /// <remarks>Serializes XMP Metadata to byte array and sets it. Uses padding equals to 2000.</remarks>
         /// <param name="xmpMeta">
@@ -454,16 +433,6 @@ namespace iText.Kernel.Pdf {
             SerializeOptions serializeOptions = new SerializeOptions();
             serializeOptions.SetPadding(2000);
             return SetXmpMetadata(xmpMeta, serializeOptions);
-        }
-
-        /// <summary>Gets the XMP Metadata object.</summary>
-        /// <returns>
-        /// 
-        /// <see cref="PdfStream"/>
-        /// object, that represent XMP Metadata.
-        /// </returns>
-        public virtual PdfStream GetXmpMetadata() {
-            return GetPdfObject().GetAsStream(PdfName.Metadata);
         }
 
         /// <summary>Copies page to the specified document.</summary>
@@ -619,7 +588,8 @@ namespace iText.Kernel.Pdf {
         /// <para />
         /// If the page belongs to the document which is tagged, page flushing also triggers flushing of the tags,
         /// which are considered to belong to the page. The logic that defines if the given tag (structure element) belongs
-        /// to the page is the following: if all the marked content references (dictionary or number references), that are the
+        /// to the page is the following: if all the marked content references (dictionary or number references), that are
+        /// the
         /// descendants of the given structure element, belong to the current page - the tag is considered
         /// to belong to the page. If tag has descendants from several pages - it is flushed, if all other pages except the
         /// current one are flushed.
@@ -628,16 +598,22 @@ namespace iText.Kernel.Pdf {
             Flush(false);
         }
 
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
+            return true;
+        }
+
         /// <summary>Flushes page dictionary, its content streams, annotations and thumb image.</summary>
         /// <remarks>
-        /// Flushes page dictionary, its content streams, annotations and thumb image. If <c>flushResourcesContentStreams</c> is true,
+        /// Flushes page dictionary, its content streams, annotations and thumb image. If
+        /// <c>flushResourcesContentStreams</c> is true,
         /// all content streams that are rendered on this page (like FormXObjects, annotation appearance streams, patterns)
         /// and also all images associated with this page will also be flushed.
         /// <para />
         /// For notes about tag structure flushing see
         /// <see cref="Flush()">PdfPage#flush() method</see>.
         /// <para />
-        /// If <c>PdfADocument</c> is used, flushing will be applied only if <c>flushResourcesContentStreams</c> is true.
+        /// If <c>PdfADocument</c> is used, flushing will be applied only if <c>flushResourcesContentStreams</c>
+        /// is true.
         /// <para />
         /// Be careful with handling document in which some of the pages are flushed. Keep in mind that flushed objects are
         /// finalized and are completely written to the output stream. This frees their memory but makes
@@ -646,8 +622,10 @@ namespace iText.Kernel.Pdf {
         /// and stamping modes, also it's possible to flush modified objects in append mode.
         /// </remarks>
         /// <param name="flushResourcesContentStreams">
-        /// if true all content streams that are rendered on this page (like form xObjects,
-        /// annotation appearance streams, patterns) and also all images associated with this page
+        /// if true all content streams that are rendered on this page (like form
+        /// xObjects,
+        /// annotation appearance streams, patterns) and also all images associated with
+        /// this page
         /// will be flushed.
         /// </param>
         public virtual void Flush(bool flushResourcesContentStreams) {
@@ -813,6 +791,23 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
+        /// Gets the
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// object specified by page's BleedBox, that define the region to which the
+        /// contents of the page shall be clipped when output in a production environment.
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// object specified by page's BleedBox, expressed in default user space units.
+        /// CropBox by default.
+        /// </returns>
+        public virtual Rectangle GetBleedBox() {
+            Rectangle bleedBox = GetPdfObject().GetAsRectangle(PdfName.BleedBox);
+            return bleedBox == null ? GetCropBox() : bleedBox;
+        }
+
+        /// <summary>
         /// Sets the BleedBox object, that defines the region to which the contents of the page shall be clipped
         /// when output in a production environment.
         /// </summary>
@@ -834,18 +829,18 @@ namespace iText.Kernel.Pdf {
         /// <summary>
         /// Gets the
         /// <see cref="iText.Kernel.Geom.Rectangle"/>
-        /// object specified by page's BleedBox, that define the region to which the
-        /// contents of the page shall be clipped when output in a production environment.
+        /// object specified by page's ArtBox, that define the extent of the page’s
+        /// meaningful content (including potential white space) as intended by the page’s creator.
         /// </summary>
         /// <returns>
         /// the
         /// <see cref="iText.Kernel.Geom.Rectangle"/>
-        /// object specified by page's BleedBox, expressed in default user space units.
+        /// object specified by page's ArtBox, expressed in default user space units.
         /// CropBox by default.
         /// </returns>
-        public virtual Rectangle GetBleedBox() {
-            Rectangle bleedBox = GetPdfObject().GetAsRectangle(PdfName.BleedBox);
-            return bleedBox == null ? GetCropBox() : bleedBox;
+        public virtual Rectangle GetArtBox() {
+            Rectangle artBox = GetPdfObject().GetAsRectangle(PdfName.ArtBox);
+            return artBox == null ? GetCropBox() : artBox;
         }
 
         /// <summary>
@@ -870,18 +865,18 @@ namespace iText.Kernel.Pdf {
         /// <summary>
         /// Gets the
         /// <see cref="iText.Kernel.Geom.Rectangle"/>
-        /// object specified by page's ArtBox, that define the extent of the page’s
-        /// meaningful content (including potential white space) as intended by the page’s creator.
+        /// object specified by page's TrimBox object,
+        /// that define the intended dimensions of the finished page after trimming.
         /// </summary>
         /// <returns>
         /// the
         /// <see cref="iText.Kernel.Geom.Rectangle"/>
-        /// object specified by page's ArtBox, expressed in default user space units.
+        /// object specified by page's TrimBox, expressed in default user space units.
         /// CropBox by default.
         /// </returns>
-        public virtual Rectangle GetArtBox() {
-            Rectangle artBox = GetPdfObject().GetAsRectangle(PdfName.ArtBox);
-            return artBox == null ? GetCropBox() : artBox;
+        public virtual Rectangle GetTrimBox() {
+            Rectangle trimBox = GetPdfObject().GetAsRectangle(PdfName.TrimBox);
+            return trimBox == null ? GetCropBox() : trimBox;
         }
 
         /// <summary>Sets the TrimBox object, that define the intended dimensions of the finished page after trimming.
@@ -899,23 +894,6 @@ namespace iText.Kernel.Pdf {
         public virtual iText.Kernel.Pdf.PdfPage SetTrimBox(Rectangle rectangle) {
             Put(PdfName.TrimBox, new PdfArray(rectangle));
             return this;
-        }
-
-        /// <summary>
-        /// Gets the
-        /// <see cref="iText.Kernel.Geom.Rectangle"/>
-        /// object specified by page's TrimBox object,
-        /// that define the intended dimensions of the finished page after trimming.
-        /// </summary>
-        /// <returns>
-        /// the
-        /// <see cref="iText.Kernel.Geom.Rectangle"/>
-        /// object specified by page's TrimBox, expressed in default user space units.
-        /// CropBox by default.
-        /// </returns>
-        public virtual Rectangle GetTrimBox() {
-            Rectangle trimBox = GetPdfObject().GetAsRectangle(PdfName.TrimBox);
-            return trimBox == null ? GetCropBox() : trimBox;
         }
 
         /// <summary>Get decoded bytes for the whole page content.</summary>
@@ -1092,7 +1070,8 @@ namespace iText.Kernel.Pdf {
         /// <param name="index">
         /// the index at which specified annotation will be added. If
         /// <c>-1</c>
-        /// then annotation will be added
+        /// then annotation will be
+        /// added
         /// to the end of array.
         /// </param>
         /// <param name="annotation">
@@ -1364,38 +1343,6 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
-        /// <summary>Sets a name specifying the tab order that shall be used for annotations on the page.</summary>
-        /// <remarks>
-        /// Sets a name specifying the tab order that shall be used for annotations on the page.
-        /// The possible values are
-        /// <see cref="PdfName.R"/>
-        /// (row order),
-        /// <see cref="PdfName.C"/>
-        /// (column order), and
-        /// <see cref="PdfName.S"/>
-        /// (structure order).
-        /// Beginning with PDF 2.0, the possible values also include
-        /// <see cref="PdfName.A"/>
-        /// (annotations array order) and
-        /// <see cref="PdfName.W"/>
-        /// (widget order).
-        /// See ISO 32000 12.5, "Annotations" for details.
-        /// </remarks>
-        /// <param name="tabOrder">
-        /// a
-        /// <see cref="PdfName"/>
-        /// specifying the annotations tab order. See method description for the allowed values.
-        /// </param>
-        /// <returns>
-        /// this
-        /// <see cref="PdfPage"/>
-        /// instance.
-        /// </returns>
-        public virtual iText.Kernel.Pdf.PdfPage SetTabOrder(PdfName tabOrder) {
-            Put(PdfName.Tabs, tabOrder);
-            return this;
-        }
-
         /// <summary>Gets a name specifying the tab order that shall be used for annotations on the page.</summary>
         /// <remarks>
         /// Gets a name specifying the tab order that shall be used for annotations on the page.
@@ -1422,6 +1369,50 @@ namespace iText.Kernel.Pdf {
             return GetPdfObject().GetAsName(PdfName.Tabs);
         }
 
+        /// <summary>Sets a name specifying the tab order that shall be used for annotations on the page.</summary>
+        /// <remarks>
+        /// Sets a name specifying the tab order that shall be used for annotations on the page.
+        /// The possible values are
+        /// <see cref="PdfName.R"/>
+        /// (row order),
+        /// <see cref="PdfName.C"/>
+        /// (column order), and
+        /// <see cref="PdfName.S"/>
+        /// (structure order).
+        /// Beginning with PDF 2.0, the possible values also include
+        /// <see cref="PdfName.A"/>
+        /// (annotations array order) and
+        /// <see cref="PdfName.W"/>
+        /// (widget order).
+        /// See ISO 32000 12.5, "Annotations" for details.
+        /// </remarks>
+        /// <param name="tabOrder">
+        /// a
+        /// <see cref="PdfName"/>
+        /// specifying the annotations tab order. See method description for the allowed
+        /// values.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Kernel.Pdf.PdfPage SetTabOrder(PdfName tabOrder) {
+            Put(PdfName.Tabs, tabOrder);
+            return this;
+        }
+
+        /// <summary>Sets a stream object that shall define the page’s thumbnail image.</summary>
+        /// <remarks>
+        /// Sets a stream object that shall define the page’s thumbnail image. Thumbnail images represent the contents of
+        /// its pages in miniature form
+        /// </remarks>
+        /// <returns>the thumbnail image, or <c>null</c> if it is not present</returns>
+        public virtual PdfImageXObject GetThumbnailImage() {
+            PdfStream thumbStream = GetPdfObject().GetAsStream(PdfName.Thumb);
+            return thumbStream != null ? new PdfImageXObject(thumbStream) : null;
+        }
+
         /// <summary>Sets a stream object that shall define the page’s thumbnail image.</summary>
         /// <remarks>
         /// Sets a stream object that shall define the page’s thumbnail image. Thumbnail images represent the contents of
@@ -1435,17 +1426,6 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage SetThumbnailImage(PdfImageXObject thumb) {
             return Put(PdfName.Thumb, thumb.GetPdfObject());
-        }
-
-        /// <summary>Sets a stream object that shall define the page’s thumbnail image.</summary>
-        /// <remarks>
-        /// Sets a stream object that shall define the page’s thumbnail image. Thumbnail images represent the contents of
-        /// its pages in miniature form
-        /// </remarks>
-        /// <returns>the thumbnail image, or <c>null</c> if it is not present</returns>
-        public virtual PdfImageXObject GetThumbnailImage() {
-            PdfStream thumbStream = GetPdfObject().GetAsStream(PdfName.Thumb);
-            return thumbStream != null ? new PdfImageXObject(thumbStream) : null;
         }
 
         /// <summary>
@@ -1594,9 +1574,37 @@ namespace iText.Kernel.Pdf {
             return afArray;
         }
 
-        protected internal override bool IsWrappedObjectMustBeIndirect() {
-            return true;
+//\cond DO_NOT_DOCUMENT
+        internal virtual PdfResources GetResources(bool initResourcesField) {
+            if (this.resources == null && initResourcesField) {
+                InitResources(true);
+            }
+            return this.resources;
         }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual PdfDictionary InitResources(bool initResourcesField) {
+            bool readOnly = false;
+            PdfDictionary resources = GetPdfObject().GetAsDictionary(PdfName.Resources);
+            if (resources == null) {
+                resources = (PdfDictionary)GetInheritedValue(PdfName.Resources, PdfObject.DICTIONARY);
+                if (resources != null) {
+                    readOnly = true;
+                }
+            }
+            if (resources == null) {
+                resources = new PdfDictionary();
+                // not marking page as modified because of this change
+                GetPdfObject().Put(PdfName.Resources, resources);
+            }
+            if (initResourcesField) {
+                this.resources = new PdfResources(resources);
+                this.resources.SetReadOnly(readOnly);
+            }
+            return resources;
+        }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         internal virtual void TryFlushPageTags() {
@@ -1946,36 +1954,6 @@ namespace iText.Kernel.Pdf {
             return val != null && val.GetObjectType() == type ? val : null;
         }
 
-        private static PdfObject GetInheritedValue(PdfPages parentPages, PdfName pdfName) {
-            if (parentPages != null) {
-                PdfDictionary parentDictionary = parentPages.GetPdfObject();
-                PdfObject value = parentDictionary.Get(pdfName);
-                if (value != null) {
-                    return value;
-                }
-                else {
-                    return GetInheritedValue(parentPages.GetParent(), pdfName);
-                }
-            }
-            return null;
-        }
-
-        private static bool IsAnnotInvisible(PdfAnnotation annotation) {
-            PdfNumber f = annotation.GetPdfObject().GetAsNumber(PdfName.F);
-            if (f == null) {
-                return false;
-            }
-            int flags = f.IntValue();
-            return PdfCheckersUtil.CheckFlag(flags, PdfAnnotation.INVISIBLE) || (PdfCheckersUtil.CheckFlag(flags, PdfAnnotation
-                .NO_VIEW) && !PdfCheckersUtil.CheckFlag(flags, PdfAnnotation.TOGGLE_NO_VIEW));
-        }
-
-        private static bool IsReferenceAllowed(String role) {
-            // For these roles, Link is an allowed child, but Reference is not.
-            return !StandardRoles.DOCUMENT.Equals(role) && !StandardRoles.DOCUMENTFRAGMENT.Equals(role) && !StandardRoles
-                .ART.Equals(role) && !StandardRoles.SECT.Equals(role);
-        }
-
         private void TagAnnotation(PdfAnnotation annotation) {
             bool tagAdded = false;
             bool presentInTagStructure = true;
@@ -2005,6 +1983,36 @@ namespace iText.Kernel.Pdf {
             if (tagAdded) {
                 tagPointer.MoveToParent();
             }
+        }
+
+        private static PdfObject GetInheritedValue(PdfPages parentPages, PdfName pdfName) {
+            if (parentPages != null) {
+                PdfDictionary parentDictionary = parentPages.GetPdfObject();
+                PdfObject value = parentDictionary.Get(pdfName);
+                if (value != null) {
+                    return value;
+                }
+                else {
+                    return GetInheritedValue(parentPages.GetParent(), pdfName);
+                }
+            }
+            return null;
+        }
+
+        private static bool IsAnnotInvisible(PdfAnnotation annotation) {
+            PdfNumber f = annotation.GetPdfObject().GetAsNumber(PdfName.F);
+            if (f == null) {
+                return false;
+            }
+            int flags = f.IntValue();
+            return PdfCheckersUtil.CheckFlag(flags, PdfAnnotation.INVISIBLE) || (PdfCheckersUtil.CheckFlag(flags, PdfAnnotation
+                .NO_VIEW) && !PdfCheckersUtil.CheckFlag(flags, PdfAnnotation.TOGGLE_NO_VIEW));
+        }
+
+        private static bool IsReferenceAllowed(String role) {
+            // For these roles, Link is an allowed child, but Reference is not.
+            return !StandardRoles.DOCUMENT.Equals(role) && !StandardRoles.DOCUMENTFRAGMENT.Equals(role) && !StandardRoles
+                .ART.Equals(role) && !StandardRoles.SECT.Equals(role);
         }
     }
 }
