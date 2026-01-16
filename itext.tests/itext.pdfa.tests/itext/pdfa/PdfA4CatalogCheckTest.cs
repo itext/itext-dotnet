@@ -40,23 +40,23 @@ namespace iText.Pdfa {
     // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfA4CatalogCheckTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
-        public static readonly String cmpFolder = sourceFolder + "cmp/PdfA4CatalogCheckTest/";
+        private static readonly String CMP_FOLDER = SOURCE_FOLDER + "cmp/PdfA4CatalogCheckTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/pdfa/PdfA4CatalogCheckTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfa/PdfA4CatalogCheckTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateSimpleDocTest() {
-            String outPdf = destinationFolder + "pdfA4_catalogCheck01.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA4_catalogCheck01.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
@@ -67,13 +67,13 @@ namespace iText.Pdfa {
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void CreateSimpleTaggedDocTest() {
-            String outPdf = destinationFolder + "pdfA4_tagged.pdf";
-            String cmpPdf = sourceFolder + "cmp/PdfA4CatalogCheckTest/cmp_pdfA4_tagged.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA4_tagged.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp/PdfA4CatalogCheckTest/cmp_pdfA4_tagged.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument pdfDoc = (PdfADocument)new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent(
                 "Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is)).SetTagged();
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             Document document = new Document(pdfDoc);
             document.SetFont(font);
@@ -83,7 +83,7 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.AreEqual(PdfVersion.PDF_2_0, pdfDoc.GetTagStructureContext().GetTagStructureTargetVersion
                 ());
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff"
                 ));
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
@@ -91,9 +91,9 @@ namespace iText.Pdfa {
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void InvalidCatalogVersionCheckTest() {
-            String outPdf = destinationFolder + "pdfA4_catalogCheck02.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA4_catalogCheck02.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
@@ -105,14 +105,14 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void EncryptInTrailerTest() {
-            String outPdf = destinationFolder + "pdfA4_catalogCheck03.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA4_catalogCheck03.pdf";
             byte[] userPassword = "user".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
             byte[] ownerPassword = "owner".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
             int permissions = EncryptionConstants.ALLOW_SCREENREADERS | EncryptionConstants.ALLOW_DEGRADED_PRINTING;
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption
                 (userPassword, ownerPassword, permissions, EncryptionConstants.ENCRYPTION_AES_256).SetFullCompressionMode
                 (false));
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
@@ -123,14 +123,14 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void EncryptedDocumentTest() {
-            String outPdf = destinationFolder + "pdfA4_encryptedDocument.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA4_encryptedDocument.pdf";
             byte[] userPassword = "user".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
             byte[] ownerPassword = "owner".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
             int permissions = EncryptionConstants.ALLOW_SCREENREADERS | EncryptionConstants.ALLOW_DEGRADED_PRINTING;
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption
                 (userPassword, ownerPassword, permissions, EncryptionConstants.ENCRYPTION_AES_256).SetFullCompressionMode
                 (true));
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
@@ -141,9 +141,9 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void AbsentPieceInfoTest() {
-            String outPdf = destinationFolder + "pdfA4_catalogCheck04.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA4_catalogCheck04.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
@@ -158,17 +158,17 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void ValidCatalogCheckTest() {
-            String outPdf = destinationFolder + "pdfA4_catalogCheck05.pdf";
-            String cmpPdf = sourceFolder + "cmp/PdfA4CatalogCheckTest/cmp_pdfA4_catalogCheck05.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA4_catalogCheck05.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp/PdfA4CatalogCheckTest/cmp_pdfA4_catalogCheck05.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
             doc.GetCatalog().Put(PdfName.PieceInfo, new PdfDictionary());
             doc.Close();
             // This is required to check if ModDate is inside Info dictionary
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
                 ));
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
@@ -176,9 +176,9 @@ namespace iText.Pdfa {
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void InvalidInfoTest() {
-            String outPdf = destinationFolder + "pdfA4_catalogCheck05Invalid.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA4_catalogCheck05Invalid.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
@@ -190,10 +190,10 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void InvalidInfoWithFullCompression() {
-            String outPdf = destinationFolder + "invalidInfoWithFillCompression.pdf";
+            String outPdf = DESTINATION_FOLDER + "invalidInfoWithFillCompression.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0).SetFullCompressionMode
                 (true));
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             using (PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", 
                 "", "http://www.color.org", "sRGB IEC61966-2.1", @is))) {
                 doc.AddNewPage();
@@ -204,9 +204,9 @@ namespace iText.Pdfa {
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void ReadValidDocumentTest() {
-            String outPdf = destinationFolder + "simplePdfA4_output01.pdf";
+            String outPdf = DESTINATION_FOLDER + "simplePdfA4_output01.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            PdfReader reader = new PdfReader(sourceFolder + "pdfs/simplePdfA4.pdf");
+            PdfReader reader = new PdfReader(SOURCE_FOLDER + "pdfs/simplePdfA4.pdf");
             PdfDocument document = new PdfADocument(reader, writer);
             document.Close();
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
@@ -215,9 +215,9 @@ namespace iText.Pdfa {
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void InvalidVersionInCatalogTest() {
-            String outPdf = destinationFolder + "pdfA4_catalogCheck06.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA4_catalogCheck06.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
@@ -229,9 +229,9 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void CorruptedVersionInCatalogTest() {
-            String outPdf = destinationFolder + "pdfA4_catalogCheck07.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA4_catalogCheck07.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
@@ -243,8 +243,8 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void ReadDocumentWithInvalidVersionTest() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "simplePdfA4_output02.pdf");
-            PdfReader reader = new PdfReader(sourceFolder + "pdfs/pdfA4WithInvalidVersion.pdf");
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "simplePdfA4_output02.pdf");
+            PdfReader reader = new PdfReader(SOURCE_FOLDER + "pdfs/pdfA4WithInvalidVersion.pdf");
             PdfDocument document = new PdfADocument(reader, writer);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => document.Close());
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.THE_FILE_HEADER_SHALL_CONTAIN_RIGHT_PDF_VERSION
@@ -255,7 +255,7 @@ namespace iText.Pdfa {
         public virtual void CheckReferenceXObject() {
             PdfWriter writer = new PdfWriter(new MemoryStream(), new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0
                 ));
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent);
@@ -275,7 +275,7 @@ namespace iText.Pdfa {
         public virtual void CheckOpiInXObject() {
             PdfWriter writer = new PdfWriter(new MemoryStream(), new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0
                 ));
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent);
@@ -293,10 +293,10 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void ValidFormXObjectTest() {
-            String outPdf = destinationFolder + "pdfA4_catalogCheck08.pdf";
-            String cmpPdf = sourceFolder + "cmp/PdfA4CatalogCheckTest/cmp_pdfA4_catalogCheck08.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA4_catalogCheck08.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp/PdfA4CatalogCheckTest/cmp_pdfA4_catalogCheck08.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent);
@@ -308,7 +308,7 @@ namespace iText.Pdfa {
             xObjCanvas.Rectangle(30, 30, 10, 10).Fill();
             canvas.AddXObjectFittedIntoRectangle(xObject, new Rectangle(300, 300));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_"
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
                 ));
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
@@ -319,7 +319,7 @@ namespace iText.Pdfa {
             PdfWriter writer = new PdfWriter(new PdfWriter(new MemoryStream()), new WriterProperties());
             PdfA4CatalogCheckTest.PdfDocumentCustomVersion doc = new PdfA4CatalogCheckTest.PdfDocumentCustomVersion(writer
                 , PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
-                , FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm")));
+                , FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm")));
             doc.SetPdfVersion(PdfVersion.PDF_1_7);
             doc.AddNewPage();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
@@ -332,7 +332,7 @@ namespace iText.Pdfa {
             PdfWriter writer = new PdfWriter(new PdfWriter(new MemoryStream()), new WriterProperties());
             PdfA4CatalogCheckTest.PdfDocumentCustomVersion doc = new PdfA4CatalogCheckTest.PdfDocumentCustomVersion(writer
                 , PdfAConformance.PDF_A_4F, new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
-                , FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm")));
+                , FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm")));
             doc.SetPdfVersion(PdfVersion.PDF_1_7);
             doc.AddNewPage();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
@@ -345,7 +345,7 @@ namespace iText.Pdfa {
             PdfWriter writer = new PdfWriter(new PdfWriter(new MemoryStream()), new WriterProperties());
             PdfA4CatalogCheckTest.PdfDocumentCustomVersion doc = new PdfA4CatalogCheckTest.PdfDocumentCustomVersion(writer
                 , PdfAConformance.PDF_A_4E, new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
-                , FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm")));
+                , FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm")));
             doc.SetPdfVersion(PdfVersion.PDF_1_7);
             doc.AddNewPage();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
@@ -358,7 +358,7 @@ namespace iText.Pdfa {
             PdfWriter writer = new PdfWriter(new PdfWriter(new MemoryStream()), new WriterProperties());
             PdfA4CatalogCheckTest.PdfDocumentCustomVersion doc = new PdfA4CatalogCheckTest.PdfDocumentCustomVersion(writer
                 , PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
-                , FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm")));
+                , FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm")));
             doc.SetPdfVersion(PdfVersion.PDF_1_6);
             doc.AddNewPage();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
@@ -371,7 +371,7 @@ namespace iText.Pdfa {
             PdfWriter writer = new PdfWriter(new PdfWriter(new MemoryStream()), new WriterProperties());
             PdfA4CatalogCheckTest.PdfDocumentCustomVersion doc = new PdfA4CatalogCheckTest.PdfDocumentCustomVersion(writer
                 , PdfAConformance.PDF_A_4F, new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
-                , FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm")));
+                , FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm")));
             doc.SetPdfVersion(PdfVersion.PDF_1_3);
             doc.AddNewPage();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
@@ -384,7 +384,7 @@ namespace iText.Pdfa {
             PdfWriter writer = new PdfWriter(new PdfWriter(new MemoryStream()), new WriterProperties());
             PdfA4CatalogCheckTest.PdfDocumentCustomVersion doc = new PdfA4CatalogCheckTest.PdfDocumentCustomVersion(writer
                 , PdfAConformance.PDF_A_4E, new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
-                , FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm")));
+                , FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm")));
             doc.SetPdfVersion(PdfVersion.PDF_1_7);
             doc.AddNewPage();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => doc.Close());
@@ -394,9 +394,9 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void DocumentWithEmptyStringLangEntryTest() {
-            String outPdf = destinationFolder + "documentWithEmptyStringLangEntry.pdf";
+            String outPdf = DESTINATION_FOLDER + "documentWithEmptyStringLangEntry.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
@@ -408,9 +408,9 @@ namespace iText.Pdfa {
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void DocumentWithInvalidLangEntryTest() {
-            String outPdf = destinationFolder + "documentWithInvalidLangEntry.pdf";
+            String outPdf = DESTINATION_FOLDER + "documentWithInvalidLangEntry.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             doc.AddNewPage();
