@@ -563,11 +563,30 @@ namespace iText.Pdfa.Checker {
         /// <summary>Attest content stream conformance with appropriate specification.</summary>
         /// <remarks>
         /// Attest content stream conformance with appropriate specification.
-        /// Throws PdfAConformanceException if any discrepancy was found
+        /// <para />
+        /// Throws
+        /// <see cref="iText.Pdfa.Exceptions.PdfAConformanceException"/>
+        /// if any discrepancy was found.
         /// </remarks>
         /// <param name="contentStream">is a content stream to validate</param>
         protected internal abstract void CheckContentStream(PdfStream contentStream);
 
+        /// <summary>Attest content stream conformance with appropriate specification.</summary>
+        /// <remarks>
+        /// Attest content stream conformance with appropriate specification.
+        /// <para />
+        /// Throws
+        /// <see cref="iText.Pdfa.Exceptions.PdfAConformanceException"/>
+        /// if any discrepancy was found.
+        /// </remarks>
+        /// <param name="contentStream">is a content stream to validate</param>
+        /// <param name="resources">the resources of the contentStream</param>
+        protected internal virtual void CheckContentStream(PdfStream contentStream, PdfResources resources) {
+        }
+
+        // Do nothing
+        // TODO DEVSIX-8808 iText Core related api breaks for the next major release
+        //  After major release the method must become abstract
         /// <summary>
         /// Verify the conformity of the operand of content stream with appropriate
         /// specification.
@@ -1047,7 +1066,7 @@ namespace iText.Pdfa.Checker {
             int contentStreamCount = page.GetContentStreamCount();
             for (int j = 0; j < contentStreamCount; ++j) {
                 PdfStream contentStream = page.GetContentStream(j);
-                CheckContentStream(contentStream);
+                CheckContentStream(contentStream, page.GetResources());
                 checkedObjects.Add(contentStream);
             }
         }

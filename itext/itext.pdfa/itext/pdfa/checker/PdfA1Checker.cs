@@ -323,11 +323,15 @@ namespace iText.Pdfa.Checker {
 
         // This check is irrelevant for the PdfA1 checker, so the body of the method is empty
         protected internal override void CheckContentStream(PdfStream contentStream) {
+            CheckContentStream(contentStream, null);
+        }
+
+        protected internal override void CheckContentStream(PdfStream contentStream, PdfResources resources) {
             if (IsFullCheckMode() || contentStream.IsModified()) {
                 byte[] contentBytes = contentStream.GetBytes();
                 PdfTokenizer tokenizer = new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource
                     (contentBytes)));
-                PdfCanvasParser parser = new PdfCanvasParser(tokenizer);
+                PdfCanvasParser parser = new PdfCanvasParser(tokenizer, resources);
                 IList<PdfObject> operands = new List<PdfObject>();
                 try {
                     while (parser.Parse(operands).Count > 0) {
@@ -414,8 +418,9 @@ namespace iText.Pdfa.Checker {
                 throw new PdfAConformanceException(PdfaExceptionMessageConstant.A_GROUP_OBJECT_WITH_AN_S_KEY_WITH_A_VALUE_OF_TRANSPARENCY_SHALL_NOT_BE_INCLUDED_IN_A_FORM_XOBJECT
                     );
             }
-            CheckResources(form.GetAsDictionary(PdfName.Resources), form);
-            CheckContentStream(form);
+            PdfDictionary resourcesDict = form.GetAsDictionary(PdfName.Resources);
+            CheckResources(resourcesDict, form);
+            CheckContentStream(form, resourcesDict == null ? new PdfResources() : new PdfResources(resourcesDict));
         }
 
         protected internal override void CheckLogicalStructure(PdfDictionary catalog) {

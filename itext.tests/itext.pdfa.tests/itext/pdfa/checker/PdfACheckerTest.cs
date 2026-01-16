@@ -131,6 +131,9 @@ namespace iText.Pdfa.Checker {
             protected internal override void CheckContentStream(PdfStream contentStream) {
             }
 
+            protected internal override void CheckContentStream(PdfStream contentStream, PdfResources resources) {
+            }
+
             protected internal override void CheckContentStreamObject(PdfObject @object) {
             }
 

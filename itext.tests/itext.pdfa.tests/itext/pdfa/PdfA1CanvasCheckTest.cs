@@ -101,5 +101,21 @@ namespace iText.Pdfa {
                     , e.Message);
             }
         }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckInlineImageTest() {
+            String outPdf = DESTINATION_FOLDER + "checkInlineImage.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_checkInlineImage.pdf";
+            Stream iccStream = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , iccStream);
+            PdfADocument pdfADocument = new PdfADocument(new PdfWriter(outPdf), PdfAConformance.PDF_A_1B, outputIntent
+                );
+            PdfDocument inlineImagePdf = new PdfDocument(new PdfReader(SOURCE_FOLDER + "inlineImage.pdf"));
+            inlineImagePdf.CopyPagesTo(1, inlineImagePdf.GetNumberOfPages(), pdfADocument);
+            inlineImagePdf.Close();
+            pdfADocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
+        }
     }
 }

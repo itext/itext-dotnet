@@ -963,8 +963,9 @@ namespace iText.Pdfa.Checker {
                     );
             }
             CheckTransparencyGroup(form, contentStream);
-            CheckResources(form.GetAsDictionary(PdfName.Resources), contentStream != null ? contentStream : form);
-            CheckContentStream(form);
+            PdfDictionary resourcesDict = form.GetAsDictionary(PdfName.Resources);
+            CheckResources(resourcesDict, contentStream != null ? contentStream : form);
+            CheckContentStream(form, resourcesDict == null ? new PdfResources() : new PdfResources(resourcesDict));
         }
 
         /// <summary>
