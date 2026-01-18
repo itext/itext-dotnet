@@ -1140,8 +1140,10 @@ namespace iText.Forms.Fields {
                 GetDocument().AddFont(GetFont());
             }
             else {
-                GetPdfObject().Remove(PdfName.DA);
-                SetModified();
+                if (GetFormType() != PdfName.Sig) {
+                    GetPdfObject().Remove(PdfName.DA);
+                    SetModified();
+                }
             }
         }
 

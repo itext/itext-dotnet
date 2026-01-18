@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
+using iText.Forms.Fields;
 using iText.Forms.Fields.Properties;
 using iText.Forms.Form.Element;
 using iText.Kernel.Crypto;
@@ -114,6 +115,43 @@ namespace iText.Signatures.Sign {
             Sign(srcFile, fieldName, outPdf, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1"
                 , "TestCity", null, true, false);
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outPdf, cmpPdf));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignFieldWithDAEntryTest() {
+            String srcFile = SOURCE_FOLDER + "signatureFieldWithDAEntry.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_signedFieldWithDAEntry.pdf";
+            String outPdf = DESTINATION_FOLDER + "signedFieldWithDAEntry.pdf";
+            String[] signatureFieldNames = new String[] { "signature1" };
+            Sign(srcFile, signatureFieldNames[0], outPdf, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard
+                .CADES, "reason1", "TestCity", null, false, true);
+            CompareDAEntry(outPdf, cmpPdf, signatureFieldNames);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignTwiceDocWithDAEntryTest() {
+            String srcFile = SOURCE_FOLDER + "signedOnceDocWithDAEntry.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_signedTwiceDocWithDAEntry.pdf";
+            String outPdf = DESTINATION_FOLDER + "signedTwiceDocWithDAEntry.pdf";
+            String[] signatureFieldNames = new String[] { "signature1", "signature2" };
+            Sign(srcFile, signatureFieldNames[1], outPdf, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard
+                .CADES, "reason2", "TestCity", null, false, true);
+            CompareDAEntry(outPdf, cmpPdf, signatureFieldNames);
+        }
+
+        private void CompareDAEntry(String outPdf, String cmpPdf, String[] signatureFieldNames) {
+            ITextTest.PrintOutCmpPdfNameAndDir(outPdf, cmpPdf);
+            using (PdfDocument outDoc = new PdfDocument(new PdfReader(outPdf))) {
+                using (PdfDocument cmpDoc = new PdfDocument(new PdfReader(cmpPdf))) {
+                    foreach (String signatureFieldName in signatureFieldNames) {
+                        String outDA = PdfFormCreator.GetAcroForm(outDoc, false).GetField(signatureFieldName).GetPdfObject().GetAsString
+                            (PdfName.DA).ToString();
+                        String cmpDA = PdfFormCreator.GetAcroForm(cmpDoc, false).GetField(signatureFieldName).GetPdfObject().GetAsString
+                            (PdfName.DA).ToString();
+                        NUnit.Framework.Assert.AreEqual(outDA, cmpDA);
+                    }
+                }
+            }
         }
 
         protected internal virtual void Sign(String src, String name, String dest, IX509Certificate[] chain, IPrivateKey
