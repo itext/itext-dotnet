@@ -430,7 +430,7 @@ namespace iText.Forms.Xfdf {
                 PdfPage page = pdfDoc.GetPage(i);
                 IList<PdfAnnotation> pdfAnnots = page.GetAnnotations();
                 foreach (PdfAnnotation pdfAnnot in pdfAnnots) {
-                    if (pdfAnnot.GetSubtype() == PdfName.Popup) {
+                    if (PdfName.Popup.Equals(pdfAnnot.GetSubtype())) {
                         AddPopup(pdfAnnot, annots, i);
                     }
                     else {

@@ -212,7 +212,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
         /// Otherwise, value is returned without modification
         /// </returns>
         private static PdfObject GetAlternateValue(PdfName key, PdfObject value) {
-            if (key == PdfName.Filter) {
+            if (PdfName.Filter.Equals(key)) {
                 if (value is PdfName) {
                     PdfName altValue = inlineImageFilterAbbreviationMap.Get((PdfName)value);
                     if (altValue != null) {
@@ -232,7 +232,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
                 }
             }
             else {
-                if (key == PdfName.ColorSpace && value is PdfName) {
+                if (PdfName.ColorSpace.Equals(key) && value is PdfName) {
                     PdfName altValue = inlineImageColorSpaceAbbreviationMap.Get((PdfName)value);
                     if (altValue != null) {
                         return altValue;

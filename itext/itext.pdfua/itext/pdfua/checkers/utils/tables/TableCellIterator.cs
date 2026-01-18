@@ -129,10 +129,10 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
         public int GetRow() {
             PdfName location = GetLocation();
             int row = currentCell.GetRow();
-            if (location == PdfName.TBody) {
+            if (PdfName.TBody.Equals(location)) {
                 row += this.GetAmountOfRowsHeader();
             }
-            if (location == PdfName.TFoot) {
+            if (PdfName.TFoot.Equals(location)) {
                 row += this.GetAmountOfRowsHeader();
                 row += this.GetAmountOfRowsBody();
             }

@@ -65,7 +65,7 @@ namespace iText.Kernel.Pdf {
             if (workRef.GetObjectType() == PdfObject.DICTIONARY) {
                 PdfDictionary dict = (PdfDictionary)workRef;
                 // a goto action
-                if (dict.GetAsName(PdfName.S) == PdfName.GoTo) {
+                if (PdfName.GoTo.Equals(dict.GetAsName(PdfName.S))) {
                     ProcessAction(newParent, name, dict);
                     return false;
                 }
