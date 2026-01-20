@@ -26,7 +26,7 @@ namespace iText.Signatures.Validation.Lotl {
     /// <summary>This class represents a country-specific TSL (Trusted List) location.</summary>
     /// <remarks>
     /// This class represents a country-specific TSL (Trusted List) location.
-    /// It contains the scheme territory and the TSL location URL.
+    /// It contains the scheme territory, the TSL location URL and MIME type.
     /// </remarks>
     public sealed class CountrySpecificLotl {
         private readonly String schemeTerritory;
@@ -35,13 +35,15 @@ namespace iText.Signatures.Validation.Lotl {
 
         private readonly String mimeType;
 
-//\cond DO_NOT_DOCUMENT
-        internal CountrySpecificLotl(String schemeTerritory, String tslLocation, String mimeType) {
+        /// <summary>Creates an instance of country specific LOTL location representation.</summary>
+        /// <param name="schemeTerritory">scheme territory of this country-specific TSL</param>
+        /// <param name="tslLocation">TSL location URL of this country-specific TSL</param>
+        /// <param name="mimeType">MIME type of the TSL location</param>
+        public CountrySpecificLotl(String schemeTerritory, String tslLocation, String mimeType) {
             this.schemeTerritory = schemeTerritory;
             this.tslLocation = tslLocation;
             this.mimeType = mimeType;
         }
-//\endcond
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>
@@ -57,19 +59,19 @@ namespace iText.Signatures.Validation.Lotl {
 //\endcond
 
         /// <summary>Returns the scheme territory of this country-specific TSL.</summary>
-        /// <returns>The scheme territory</returns>
+        /// <returns>the scheme territory</returns>
         public String GetSchemeTerritory() {
             return schemeTerritory;
         }
 
         /// <summary>Returns the TSL location URL of this country-specific TSL.</summary>
-        /// <returns>The TSL location URL</returns>
+        /// <returns>the TSL location URL</returns>
         public String GetTslLocation() {
             return tslLocation;
         }
 
         /// <summary>Returns the MIME type of the TSL location.</summary>
-        /// <returns>The MIME type of the TSL location</returns>
+        /// <returns>the MIME type of the TSL location</returns>
         public String GetMimeType() {
             return mimeType;
         }

@@ -56,6 +56,10 @@ namespace iText.Signatures.Logs {
 
         public const String COUNTRY_NOT_REQUIRED_BY_CONFIGURATION = "Country \"{0}\" is not required by " + "lotlFetchingProperties, and not be used when validating.";
 
+        public const String SCHEMA_NAMES_CONFIGURATION_PROPERTY_IGNORED = "LotlFetchingProperties#setCountryNames "
+             + "and LotlFetchingProperties#setCountryNamesToIgnore do not take effect for SingleFileLotlService and "
+             + "will be ignored.";
+
         private SignLogMessageConstant() {
         }
         // Private constructor will prevent the instantiation of this class directly

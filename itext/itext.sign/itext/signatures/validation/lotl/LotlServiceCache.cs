@@ -24,63 +24,63 @@ using System;
 using System.Collections.Generic;
 
 namespace iText.Signatures.Validation.Lotl {
-    /// <summary>Interface for caching Lotl (List of Trusted Lists) service results.</summary>
+    /// <summary>Interface for caching LOTL (List of Trusted Lists) service results.</summary>
     /// <remarks>
-    /// Interface for caching Lotl (List of Trusted Lists) service results.
-    /// It provides methods to set and get various Lotl-related data, including
-    /// European Lotl, country-specific Lotls, and pivot results.
+    /// Interface for caching LOTL (List of Trusted Lists) service results.
+    /// It provides methods to set and get various LOTL-related data, including
+    /// European LOTL, country-specific LOTLs, and pivot results.
     /// <para />
     /// Notice: If you do your own implementation of this interface,
     /// you should ensure that the cache is thread-safe and can handle concurrent access.
-    /// This is important because Lotl data can be accessed and modified by multiple threads
+    /// This is important because LOTL data can be accessed and modified by multiple threads
     /// simultaneously.
     /// You should also ensure that all the values are set atomically using
     /// <see cref="SetAllValues(Result, Result, Result, System.Collections.Generic.IDictionary{K, V})"/>
     /// method
-    /// to maintain consistency, So that you are not using outdated pivot results or country-specific Lotls with a changed
-    /// European Lotl.
+    /// to maintain consistency, So that you are not using outdated pivot results or country-specific LOTLs with a changed
+    /// European LOTL.
     /// </remarks>
     public interface LotlServiceCache {
         /// <summary>
-        /// Sets all values related to Lotl, including European Lotl, EU Journal certificates,
-        /// pivot results, and country-specific Lotls.
+        /// Sets all values related to LOTL, including European LOTL, EU Journal certificates,
+        /// pivot results, and country-specific LOTLs.
         /// </summary>
         /// <remarks>
-        /// Sets all values related to Lotl, including European Lotl, EU Journal certificates,
-        /// pivot results, and country-specific Lotls. This extra method is used for syncronized
+        /// Sets all values related to LOTL, including European LOTL, EU Journal certificates,
+        /// pivot results, and country-specific LOTLs. This extra method is used for syncronized
         /// updates to the cache, ensuring that all related data is set at once. This is useful
         /// in multithreaded environments where you want to ensure that all related data is consistent.
         /// </remarks>
-        /// <param name="lotlXml">the European Lotl result</param>
+        /// <param name="lotlXml">the European LOTL result</param>
         /// <param name="europeanResourceFetcherEUJournalCertificates">the EU Journal certificates</param>
         /// <param name="result">the pivot fetcher result</param>
-        /// <param name="countrySpecificResult">a map of country-specific Lotl results</param>
+        /// <param name="countrySpecificResult">a map of country-specific LOTL results</param>
         void SetAllValues(EuropeanLotlFetcher.Result lotlXml, EuropeanResourceFetcher.Result europeanResourceFetcherEUJournalCertificates
             , PivotFetcher.Result result, IDictionary<String, CountrySpecificLotlFetcher.Result> countrySpecificResult
             );
 
-        /// <summary>Gets the European Lotl result.</summary>
-        /// <returns>the European Lotl result</returns>
+        /// <summary>Gets the European LOTL result.</summary>
+        /// <returns>the European LOTL result</returns>
         PivotFetcher.Result GetPivotResult();
 
         /// <summary>Sets the pivot result.</summary>
         /// <param name="newResult">the new pivot result to set</param>
         void SetPivotResult(PivotFetcher.Result newResult);
 
-        /// <summary>Gets the country-specific Lotl results.</summary>
-        /// <returns>a map of country-specific Lotl results</returns>
+        /// <summary>Gets the country-specific LOTL results.</summary>
+        /// <returns>a map of country-specific LOTL results</returns>
         IDictionary<String, CountrySpecificLotlFetcher.Result> GetCountrySpecificLotls();
 
-        /// <summary>Sets the country-specific Lotl result for a specific country.</summary>
-        /// <param name="countrySpecificLotlResult">the country-specific Lotl result to set</param>
+        /// <summary>Sets the country-specific LOTL result for a specific country.</summary>
+        /// <param name="countrySpecificLotlResult">the country-specific LOTL result to set</param>
         void SetCountrySpecificLotlResult(CountrySpecificLotlFetcher.Result countrySpecificLotlResult);
 
-        /// <summary>Gets the European Lotl result.</summary>
-        /// <returns>the European Lotl result</returns>
+        /// <summary>Gets the European LOTL result.</summary>
+        /// <returns>the European LOTL result</returns>
         EuropeanLotlFetcher.Result GetLotlResult();
 
-        /// <summary>Sets the European Lotl result.</summary>
-        /// <param name="data">the European Lotl result to set</param>
+        /// <summary>Sets the European LOTL result.</summary>
+        /// <param name="data">the European LOTL result to set</param>
         void SetLotlResult(EuropeanLotlFetcher.Result data);
 
         /// <summary>Sets the result of the European Resource Fetcher.</summary>

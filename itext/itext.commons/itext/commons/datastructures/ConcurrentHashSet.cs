@@ -80,7 +80,7 @@ namespace iText.Commons.Datastructures
         /// <summary><inheritDoc/></summary>
         public void CopyTo(TElement[] array, int arrayIndex)
         {
-            throw new NotSupportedException(CommonsExceptionMessageConstant.UNSUPPORTED_OPERATION);
+            dictionary.Keys.CopyTo(array, arrayIndex);
         }
 
         /// <summary><inheritDoc/></summary>

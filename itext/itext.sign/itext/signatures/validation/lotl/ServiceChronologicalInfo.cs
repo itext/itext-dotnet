@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Commons.Utils;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -59,7 +60,10 @@ namespace iText.Signatures.Validation.Lotl {
 
         private readonly IList<QualifierExtension> qualifierExtensions = new List<QualifierExtension>();
 
-        private readonly String statusStartDateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+        private readonly IList<String> statusDateFormats = JavaUtil.ArraysAsList(
+            "yyyy-MM-dd'T'HH:mm:ss'Z'",
+            "yyyy-MM-dd'T'HH:mm:ss"
+        );
 
         private String serviceStatus;
 
@@ -139,8 +143,12 @@ namespace iText.Signatures.Validation.Lotl {
 
 //\cond DO_NOT_DOCUMENT
         internal virtual void SetServiceStatusStartingTime(String timeString) {
-            DateTime.TryParseExact(timeString, statusStartDateFormat, null,
-                            DateTimeStyles.None, out this.serviceStatusStartingTime);
+            foreach (String statusDateFormat in statusDateFormats) {
+                if (DateTime.TryParseExact(timeString, statusDateFormat, null,
+                                    DateTimeStyles.None, out this.serviceStatusStartingTime)) {
+                    break;
+                }
+            }
         }
 //\endcond
 

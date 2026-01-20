@@ -59,9 +59,6 @@ namespace iText.Signatures.Validation.Lotl {
              + "successful.";
 //\endcond
 
-        private readonly IList<CountryServiceContext> nationalTrustedCertificates = new List<CountryServiceContext
-            >();
-
         private readonly LotlService service;
 
         /// <summary>Constructs a LotlValidator with the specified ValidatorChainBuilder.</summary>
@@ -75,44 +72,20 @@ namespace iText.Signatures.Validation.Lotl {
         }
 
         /// <summary>Validates the List of Trusted Lists (Lotl) and retrieves national trusted certificates.</summary>
-        /// <returns>a ValidationReport containing the results of the validation</returns>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Signatures.Validation.Report.ValidationReport"/>
+        /// containing the results of the LOTL validation
+        /// </returns>
         public virtual ValidationReport Validate() {
-            ValidationReport report = new ValidationReport();
-            EuropeanLotlFetcher.Result lotl = service.GetLotlBytes();
-            if (!lotl.GetLocalReport().GetLogs().IsEmpty()) {
-                report.Merge(lotl.GetLocalReport());
-                return report;
-            }
-            EuropeanResourceFetcher.Result europeanResult = service.GetEUJournalCertificates();
-            report.Merge(europeanResult.GetLocalReport());
-            // get all the data from cache, if it is stale, exception will be thrown
-            // locked and pass to methods
-            PivotFetcher.Result result = service.GetAndValidatePivotFiles(lotl.GetLotlXml(), europeanResult.GetCertificates
-                (), europeanResult.GetCurrentlySupportedPublication());
-            report.Merge(result.GetLocalReport());
-            if (result.GetLocalReport().GetValidationResult() != ValidationReport.ValidationResult.VALID) {
-                return report;
-            }
-            IList<CountrySpecificLotlFetcher.Result> entries = service.GetCountrySpecificLotlFiles(lotl.GetLotlXml());
-            foreach (CountrySpecificLotlFetcher.Result countrySpecificResult in entries) {
-                // When cache was loaded without config it still contains all country specific Lotl files.
-                // So we need to filter them out if schema names were provided.
-                if (!this.service.GetLotlFetchingProperties().ShouldProcessCountry(countrySpecificResult.GetCountrySpecificLotl
-                    ().GetSchemeTerritory())) {
-                    continue;
-                }
-                report.Merge(countrySpecificResult.GetLocalReport());
-                this.nationalTrustedCertificates.AddAll(LotlTrustedStore.MapIServiceContextToCountry(countrySpecificResult
-                    .GetContexts()));
-            }
-            return report;
+            return this.service.GetValidationResult();
         }
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>Retrieves national trusted certificates.</summary>
-        /// <returns>the list of national trusted certificates</returns>
+        /// <returns>the list of the national trusted certificates</returns>
         internal virtual IList<IServiceContext> GetNationalTrustedCertificates() {
-            return new List<IServiceContext>(nationalTrustedCertificates);
+            return this.service.GetNationalTrustedCertificates();
         }
 //\endcond
     }

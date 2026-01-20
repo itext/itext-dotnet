@@ -145,5 +145,16 @@ namespace iText.Commons.Datastructures {
             anotherSet.Add("2");
             NUnit.Framework.Assert.AreNotEqual(set.GetHashCode(), JavaUtil.SetHashCode(anotherSet));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ToArrayTest() {
+            ConcurrentHashSet<String> set = new ConcurrentHashSet<String>();
+            set.Add("1");
+            set.Add("2");
+            Object[] arr = set.ToArray();
+            NUnit.Framework.Assert.AreEqual(2, arr.Length);
+            NUnit.Framework.Assert.IsTrue(arr[0].Equals("1") || arr[0].Equals("2"));
+            NUnit.Framework.Assert.IsTrue(arr[1].Equals("1") || arr[1].Equals("2"));
+        }
     }
 }

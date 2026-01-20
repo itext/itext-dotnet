@@ -488,7 +488,8 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.Test]
         public virtual void InfiniteRecursionForOCSPFromDSSTest() {
-            LotlService service = new LotlService(new LotlFetchingProperties(new RemoveOnFailingCountryData()));
+            LotlService service = new EuropeanLotlService(new LotlFetchingProperties(new RemoveOnFailingCountryData())
+                );
             service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
             service.WithLotlValidator(() => new LotlValidator(service));
             service.InitializeCache();
