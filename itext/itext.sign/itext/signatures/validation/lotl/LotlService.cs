@@ -50,6 +50,8 @@ namespace iText.Signatures.Validation.Lotl {
 
         private static readonly Object GLOBAL_SERVICE_LOCK = new Object();
 
+        private const String DEFAULT_USER_AGENT = "iText-lotl-retriever/1.0";
+
 //\cond DO_NOT_DOCUMENT
         // Global service
         internal static iText.Signatures.Validation.Lotl.LotlService GLOBAL_SERVICE;
@@ -72,7 +74,7 @@ namespace iText.Signatures.Validation.Lotl {
 
         private Timer cacheTimer = null;
 
-        private IResourceRetriever resourceRetriever = new LotlService.LoggableResourceRetriever();
+        private IResourceRetriever resourceRetriever;
 
         private Func<TrustedCertificatesStore, XmlSignatureValidator> xmlSignatureValidatorFactory;
 
@@ -97,6 +99,9 @@ namespace iText.Signatures.Validation.Lotl {
             this.xmlSignatureValidatorFactory = (trustedCertificatesStore) => BuildXmlSignatureValidator(trustedCertificatesStore
                 );
             this.lotlValidatorFactory = () => BuildLotlValidator();
+            this.resourceRetriever = new LotlService.LoggableResourceRetriever();
+            ((LotlService.LoggableResourceRetriever)this.resourceRetriever).SetRequestHeaders(JavaCollectionsUtil.SingletonMap
+                ("User-Agent", DEFAULT_USER_AGENT));
         }
 
         /// <summary>Initializes the global cache with the provided LotlFetchingProperties.</summary>
@@ -161,6 +166,10 @@ namespace iText.Signatures.Validation.Lotl {
         /// <see cref="iText.IO.Resolver.Resource.IResourceRetriever"/>
         /// to be used
         /// for fetching resources such as the Lotl XML, pivot files, and country-specific Lotls.
+        /// <para />
+        /// Multiple lotl endpoints require a userAgent header to be sent. This should be taken into account
+        /// when providing a custom
+        /// <see cref="iText.IO.Resolver.Resource.IResourceRetriever"/>.
         /// </remarks>
         /// <param name="resourceRetriever">the custom resource retriever to be used for fetching resources</param>
         /// <returns>

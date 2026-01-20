@@ -50,6 +50,8 @@ namespace iText.IO.Resolver.Resource {
 
         private int readTimeout;
 
+        private IDictionary<String, String> requestHeaders;
+
         /// <summary>
         /// Creates a new
         /// <see cref="DefaultResourceRetriever"/>
@@ -125,6 +127,18 @@ namespace iText.IO.Resolver.Resource {
             return this;
         }
 
+        /// <summary>Gets the request headers to use in the request.</summary>
+        /// <returns>the request headers to use in the request</returns>
+        public virtual IDictionary<String, String> GetRequestHeaders() {
+            return requestHeaders;
+        }
+
+        /// <summary>Sets the request headers to use in the request.</summary>
+        /// <param name="headers">the request headers to use in the request</param>
+        public virtual void SetRequestHeaders(IDictionary<String, String> headers) {
+            this.requestHeaders = headers;
+        }
+
         /// <summary>Gets the read timeout.</summary>
         /// <remarks>
         /// Gets the read timeout.
@@ -156,8 +170,8 @@ namespace iText.IO.Resolver.Resource {
         /// <summary><inheritDoc/></summary>
         public virtual Stream GetInputStreamByUrl(Uri url) {
             if (UrlFilter(url)) {
-                return new LimitedInputStream(UrlUtil.GetInputStreamOfFinalConnection(url, connectTimeout, readTimeout), resourceSizeByteLimit
-                    );
+                return new LimitedInputStream(UrlUtil.GetInputStreamOfFinalConnection(url, connectTimeout, readTimeout, requestHeaders
+                    ), resourceSizeByteLimit);
             }
             LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT
                 , url));
@@ -183,8 +197,15 @@ namespace iText.IO.Resolver.Resource {
 
         /// <summary><inheritDoc/></summary>
         public virtual Stream Get(Uri url, byte[] request, IDictionary<String, String> headers) {
+            Dictionary<String, String> finalHeaders = new Dictionary<String, String>();
+            if (requestHeaders != null) {
+                finalHeaders.AddAll(requestHeaders);
+            }
+            if (headers != null) {
+                finalHeaders.AddAll(headers);
+            }
             if (UrlFilter(url)) {
-                return new LimitedInputStream(UrlUtil.Get(url, request, headers, connectTimeout, readTimeout), resourceSizeByteLimit
+                return new LimitedInputStream(UrlUtil.Get(url, request, finalHeaders, connectTimeout, readTimeout), resourceSizeByteLimit
                     );
             }
             LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT

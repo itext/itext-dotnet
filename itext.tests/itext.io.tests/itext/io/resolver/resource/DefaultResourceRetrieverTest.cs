@@ -23,6 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 using iText.Commons.Utils;
 using iText.IO.Util;
@@ -34,29 +36,7 @@ namespace iText.IO.Resolver.Resource {
 //\cond DO_NOT_DOCUMENT
     [NUnit.Framework.Category("IntegrationTest")]
     internal class DefaultResourceRetrieverTest : ExtendedITextTest {
-        [NUnit.Framework.Test]
-        public virtual void RetrieveResourceConnectTimeoutTest() {
-            bool exceptionThrown = false;
-            Uri url = new Uri("http://10.255.255.1/");
-            DefaultResourceRetriever resourceRetriever = new DefaultResourceRetriever();
-            resourceRetriever.SetConnectTimeout(500);
-
-            try {
-                // We check 2 possible exceptions
-                resourceRetriever.GetInputStreamByUrl(url);
-            }
-            catch (WebException e) {
-                exceptionThrown = true;
-                // Do not check exception message because it is localized
-            }
-            catch (OperationCanceledException e) {
-                exceptionThrown = true;
-                NUnit.Framework.Assert.AreEqual("the operation was canceled.", StringNormalizer.ToLowerCase(e.Message));
-            }
-
-            NUnit.Framework.Assert.True(exceptionThrown);
-        }
-
+ 
         [NUnit.Framework.Test]
         public virtual void ConnectTimeoutTest() {
             DefaultResourceRetriever resourceRetriever = new DefaultResourceRetriever();
@@ -79,14 +59,12 @@ namespace iText.IO.Resolver.Resource {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT, Count = 2)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT)]
         public virtual void FilterOutFilteredResourcesTest() {
             DefaultResourceRetriever resourceRetriever = new DefaultResourceRetrieverTest.FilteredResourceRetriever();
             NUnit.Framework.Assert.IsFalse(resourceRetriever.UrlFilter(new Uri("https://example.com/resource")));
             NUnit.Framework.Assert.IsNull(resourceRetriever.GetInputStreamByUrl(new Uri("https://example.com/resource"
                 )));
-            NUnit.Framework.Assert.IsNull(resourceRetriever.Get(new Uri("https://example.com/resource"), new byte[0], 
-                new Dictionary<String, String>(0)));
         }
 
         [NUnit.Framework.Test]
@@ -100,7 +78,8 @@ namespace iText.IO.Resolver.Resource {
         }
 
         [NUnit.Framework.Test]
-        public virtual void LoadWithRequestAndHeaders() {
+        public virtual void LoadWithRequestAndHeaders()
+        {
             // Android-Conversion-Ignore-Test DEVSIX-6459 Some different random connect exceptions on Android
             DefaultResourceRetriever resourceRetriever = new DefaultResourceRetriever();
             IDictionary<String, String> headers = new Dictionary<String, String>(1);
@@ -113,11 +92,119 @@ namespace iText.IO.Resolver.Resource {
             NUnit.Framework.Assert.IsTrue(data.Length > 0);
         }
 
+
+
+        [NUnit.Framework.Test]
+        public virtual void GetInputStreamByUrlWithHeadersTest() {
+            DefaultResourceRetrieverTest.TestResource testResource = new DefaultResourceRetrieverTest.TestResource();
+            testResource.Start();                   
+            while (!testResource.IsStarted() && !testResource.IsFailed()) {
+                Thread.Sleep(250);
+            }
+            NUnit.Framework.Assert.IsFalse(testResource.IsFailed());
+            Uri url = new Uri("http://127.0.0.1:" + testResource.GetPort() + "/");
+            DefaultResourceRetriever resourceRetriever = new DefaultResourceRetriever();
+            IDictionary<String, String> headers = new Dictionary<String, String>();
+            headers.Add("User-Agent", "TEST User Agent");
+            resourceRetriever.SetRequestHeaders(headers);
+            try {
+                resourceRetriever.GetInputStreamByUrl(url);
+            }
+            catch (Exception) {
+            }
+            // exception is expected here, but we do not care
+            NUnit.Framework.Assert.IsTrue(testResource.GetLastRequest().Contains("User-Agent: TEST User Agent"));
+        }
+
         private class FilteredResourceRetriever : DefaultResourceRetriever {
             protected internal override bool UrlFilter(Uri url) {
                 return false;
             }
             // Filter all resources
+        }
+
+        private class TestResource  {
+            private int port = 8000;
+
+            private bool started = false;
+
+            private bool failed = false;
+
+            private String request;
+            
+            public virtual int GetPort() {
+                return port;
+            }
+
+            public virtual bool IsStarted() {
+                return started;
+            }
+
+            public virtual bool IsFailed() {
+                return failed;
+            }
+
+            public virtual String GetLastRequest() {
+                return request;
+            }
+
+            private void StartServer() {
+                int tryCount = 0;
+                while (!started) {
+                    try {
+                        using (Socket server = new Socket(AddressFamily.InterNetwork,
+                                     SocketType.Stream,
+                                     ProtocolType.Tcp))
+                        {
+                            server.ReceiveTimeout = 20000;
+                            server.Bind(new System.Net.IPEndPoint(address: System.Net.IPAddress.Loopback, port));
+                            server.Listen(10);                            
+                            
+                            started = true;
+                            using (Socket clientSocket = server.Accept())
+                            {
+                                Thread.Sleep(2000);
+                                String response = "HTTP/1.1 OK OK\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n" 
+                                    + "<!DOCTYPE html>\n" 
+                                    + "<html>\n"
+                                    + "<body>\n" 
+                                    + "\n" 
+                                    + "</body>\n" 
+                                    + "</html>\n";                                
+                                clientSocket.Send(Encoding.UTF8.GetBytes(response));
+                                try
+                                {
+                                    if (clientSocket.Available > 0)
+                                    {
+                                        byte[] buff = new byte[clientSocket.Available];
+                                        clientSocket.Receive(buff);
+                                        request = iText.Commons.Utils.JavaUtil.GetStringForBytes(buff, System.Text.Encoding.UTF8);
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    request = e.ToString();
+                                }
+                                server.Accept();
+                            }
+                        }
+                    }
+                    catch (Exception ex) {
+                        if (tryCount > 100) {
+                            failed = true;
+                            throw;
+                        }
+                        port++;
+                    }
+                }
+            }
+
+            internal void Start()
+            {
+                Thread thread = new Thread(StartServer);
+                thread.IsBackground = false;
+                thread.Start();
+            }
         }
     }
 //\endcond

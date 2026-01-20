@@ -21,6 +21,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 using iText.IO.Exceptions;
+using iText.Commons.Utils.Collections;
+using iText.IO.Codec.Brotli.Dec;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -96,9 +99,11 @@ namespace iText.IO.Util {
         /// <param name="url">an initial URL.</param>
         /// <param name="connectTimeout">a connect timeout in milliseconds</param>
         /// <param name="readTimeout">a read timeout in milliseconds</param>
+        /// <param name="requestHeaders">custom request headers</param>
         /// 
         /// <returns>an input stream of connection related to the last redirected url.</returns>
-        static Stream OpenStream(Uri url, int connectTimeout, int readTimeout)
+        static Stream OpenStream(Uri url, int connectTimeout, int readTimeout,
+            IDictionary<String, String> requestHeaders = null)
         {
             Stream isp;
             if (url.IsFile)
@@ -115,6 +120,12 @@ namespace iText.IO.Util {
                 req.Timeout = connectTimeout;
                 req.ReadWriteTimeout = readTimeout;
                 req.Credentials = CredentialCache.DefaultCredentials;
+                if (requestHeaders != null) {
+                    foreach(KeyValuePair<String, String> header in requestHeaders)
+                    {
+                        req.SetRawHeader(header.Key, header.Value);                        
+                    }                 
+                }
                 using (WebResponse res = req.GetResponse())
                 using (Stream rs = res.GetResponseStream())
                 {
@@ -199,11 +210,12 @@ namespace iText.IO.Util {
         /// <param name="url">an initial URL</param>
         /// <param name="connectTimeout">a connect timeout in milliseconds</param>
         /// <param name="readTimeout">a read timeout in milliseconds</param>
+        /// <param name="requestHeaders">custom request headers</param>
         /// 
         /// <returns>an input stream of connection related to the last redirected url</returns>
-        public static Stream GetInputStreamOfFinalConnection(Uri url, int connectTimeout, int readTimeout)
+        public static Stream GetInputStreamOfFinalConnection(Uri url, int connectTimeout, int readTimeout, IDictionary<string, string> requestHeaders = null)
         {
-            return OpenStream(url, connectTimeout, readTimeout);
+            return OpenStream(url, connectTimeout, readTimeout, requestHeaders);
         }
 
         /// <summary>

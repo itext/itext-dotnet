@@ -21,6 +21,7 @@ Copyright (c) 1998-2026 Apryse Group NV
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -57,6 +58,19 @@ namespace iText.IO.Util {
             Uri initialUrl = new Uri("http://itextpdf.com");
             Stream streamOfFinalConnectionOfInvalidUrl = UrlUtil.GetInputStreamOfFinalConnection(initialUrl);
             
+            NUnit.Framework.Assert.NotNull(streamOfFinalConnectionOfInvalidUrl);
+        }
+
+
+        // This test checks that when we pass valid url and trying get stream related to final redirected url, it would
+        // not be null.
+        [NUnit.Framework.Test]
+        public void getInputStreamOfFinalConnection2Test() 
+        {
+            Uri initialUrl = new Uri("http://itextpdf.com");
+            IDictionary<string, string> headers = new Dictionary<String, String>();
+            headers.Add("User-Agent", "TEST User Agent");
+            Stream streamOfFinalConnectionOfInvalidUrl = UrlUtil.GetInputStreamOfFinalConnection(initialUrl, 2000, 2000, headers);
             NUnit.Framework.Assert.NotNull(streamOfFinalConnectionOfInvalidUrl);
         }
 
