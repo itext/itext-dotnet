@@ -121,7 +121,7 @@ namespace iText.Signatures.Validation.Lotl {
         public override void SerializeCache(Stream outputStream) {
         }
 
-        // TODO: DEVSIX-9626
+        // TODO: DEVSIX-9720 - Implement cache serialization/deserialization
         /// <summary><inheritDoc/></summary>
         public override ValidationReport GetValidationResult() {
             return this.report;
