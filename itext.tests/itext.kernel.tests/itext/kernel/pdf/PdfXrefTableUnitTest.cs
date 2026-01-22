@@ -54,6 +54,24 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void XrefSizeLimitIsNotAppliedAfterReadingCompletedTest() {
+            MemoryLimitsAwareHandler memoryLimitsAwareHandler = new MemoryLimitsAwareHandler();
+            memoryLimitsAwareHandler.SetMaxNumberOfElementsInXrefStructure(5);
+            PdfXrefTable xrefTable = new PdfXrefTable(5, memoryLimitsAwareHandler);
+            // Simulate that original document xref reading/building has finished (stamping scenario).
+            xrefTable.MarkReadingCompleted();
+            // After reading is completed, growing xref due to new content must not be blocked by the limit.
+            NUnit.Framework.Assert.DoesNotThrow(() => xrefTable.SetCapacity(100));
+            // Also ensure adding new refs beyond the original limit doesn't throw.
+            NUnit.Framework.Assert.DoesNotThrow(() => {
+                for (int i = 1; i <= 50; i++) {
+                    xrefTable.Add(new PdfIndirectReference(null, i));
+                }
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CheckNumberOfIndirectObjectsWithRandomNumbersTest() {
             PdfXrefTable table = new PdfXrefTable();
             int numberOfReferences = 10;

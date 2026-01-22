@@ -633,7 +633,7 @@ namespace iText.Kernel.Pdf {
         }
 
         private void ExtendXref(int capacity) {
-            if (this.memoryLimitsAwareHandler != null) {
+            if (this.memoryLimitsAwareHandler != null && !readingCompleted) {
                 this.memoryLimitsAwareHandler.CheckIfXrefStructureExceedsTheLimit(capacity);
             }
             PdfIndirectReference[] newXref = new PdfIndirectReference[capacity];

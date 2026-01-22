@@ -51,13 +51,13 @@ namespace iText.Kernel.Pdf {
             LogLevel = LogLevelConstants.ERROR)]
         public virtual void OpenInvalidDocWithHugeRefTest() {
             String inputFile = SOURCE_FOLDER + "invalidDocWithHugeRef.pdf";
-            MemoryLimitsAwareHandler memoryLimitsAwareHandler = new _MemoryLimitsAwareHandler_69();
+            MemoryLimitsAwareHandler memoryLimitsAwareHandler = new _MemoryLimitsAwareHandler_70();
             NUnit.Framework.Assert.DoesNotThrow(() => new PdfDocument(new PdfReader(inputFile, new ReaderProperties().
                 SetMemoryLimitsAwareHandler(memoryLimitsAwareHandler))));
         }
 
-        private sealed class _MemoryLimitsAwareHandler_69 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_69() {
+        private sealed class _MemoryLimitsAwareHandler_70 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_70() {
             }
 
             public override void CheckIfXrefStructureExceedsTheLimit(int requestedCapacity) {
@@ -83,6 +83,31 @@ namespace iText.Kernel.Pdf {
                 ), new PdfWriter(outputStream)));
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XREF_STRUCTURE_SIZE_EXCEEDED_THE_LIMIT, e.Message
                 );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StampingModeDoesNotApplyXrefSizeLimitToNewContentTest() {
+            // Phase 1: create a small valid base PDF in memory.
+            MemoryStream baseBaos = new MemoryStream();
+            using (PdfDocument baseDoc = new PdfDocument(new PdfWriter(baseBaos))) {
+                baseDoc.AddNewPage();
+            }
+            // Phase 2: open in stamping mode with a strict xref limit for the ORIGINAL content.
+            MemoryLimitsAwareHandler handler = new MemoryLimitsAwareHandler();
+            handler.SetMaxNumberOfElementsInXrefStructure(30);
+            byte[] baseBytes = baseBaos.ToArray();
+            MemoryStream stampedBaos = new MemoryStream();
+            NUnit.Framework.Assert.DoesNotThrow(() => {
+                using (PdfDocument stampingDoc = new PdfDocument(new PdfReader(new MemoryStream(baseBytes), new ReaderProperties
+                    ().SetMemoryLimitsAwareHandler(handler)), new PdfWriter(stampedBaos))) {
+                    // Phase 3: add a lot of new content that will force xref growth beyond the configured limit.
+                    // The xref size limit should NOT be applied to newly added content in stamping mode.
+                    for (int i = 0; i < 200; i++) {
+                        stampingDoc.AddNewPage();
+                    }
+                }
+            }
+            );
         }
 
         [NUnit.Framework.Test]
