@@ -86,8 +86,22 @@ namespace iText.Commons.Utils {
             return new SingletonDictionary<TKey,TValue>(key, value);
         }
 
+        public static void Sort<T>(IList<T> list, Func<T, T, int> comparer) {
+            if (list is List<T> concreteList)
+            {
+                concreteList.Sort((x, y) => comparer(x, y));
+                return;
+            }
+
+            // Fallback below
+            var temp = list.ToList();
+            temp.Sort((x, y) => comparer(x, y));
+            for (int i = 0; i < temp.Count; i++)
+                list[i] = temp[i];
+        }
+        
         public static void Sort<T>(IList<T> list) {
-            Sort(list, null);
+            Sort(list, (IComparer<T>) null);
         }
 
         public static void Sort<T>(IList<T> list, IComparer<T> comparer) {
@@ -101,7 +115,7 @@ namespace iText.Commons.Utils {
         }
 
         public static void Sort(IList<String> list) {
-            Sort(list, null);
+            Sort(list, (IComparer<String>) null);
         }
 
         public static void Sort(IList<String> list, IComparer<String> comparer) {
