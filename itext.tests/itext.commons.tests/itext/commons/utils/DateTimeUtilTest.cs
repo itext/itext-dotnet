@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-Copyright (c) 1998-2026 Apryse Group NV
+    Copyright (c) 1998-2026 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -21,6 +21,7 @@ Copyright (c) 1998-2026 Apryse Group NV
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 using System;
+using System.Threading;
 using iText.Test;
 using NUnit.Framework;
 
@@ -79,6 +80,39 @@ namespace iText.Commons.Utils {
             long offset = DateTimeUtil.GetCurrentTimeZoneOffset(date);
             
             Assert.AreEqual(1588636800000d - offset, relativeTime, ZERO_DELTA);
+        }
+
+        [Test]
+        public void serializeDateToISO8601Test()
+        {
+            DateTime localDateTime = new DateTime(2000, 1, 11, 12, 13, 14, 0);
+            String actualString = DateTimeUtil.SerializeDateToISO8601(localDateTime);
+            Assert.AreEqual("2000-01-11T12:13:14", actualString);
+        }
+
+        [Test]
+        public void ofEpochSecondUTCTest()
+        {
+            long timeInSeconds = 1000000000;
+            DateTime actualTime = DateTimeUtil.OfEpochSecondUTC(timeInSeconds);
+            Assert.AreEqual(2001, actualTime.Year);
+            Assert.AreEqual(9, actualTime.Month);
+            Assert.AreEqual(9, actualTime.Day);
+            Assert.AreEqual(1, actualTime.Hour);
+            Assert.AreEqual(46, actualTime.Minute);
+            Assert.AreEqual(40, actualTime.Second);
+        }
+
+        [Test]
+        public void getLocalDateTimeTest()
+        {
+            DateTime expectedTime = DateTime.Now;
+            Thread.Sleep(10);
+            DateTime actualTime = DateTimeUtil.GetCurrentTime();
+            Assert.AreEqual(expectedTime.Year, actualTime.Year);
+            Assert.AreEqual(expectedTime.Month, actualTime.Month);
+            Assert.AreEqual(expectedTime.Day, actualTime.Day);
+            Assert.IsTrue(expectedTime.CompareTo(actualTime) < 0);
         }
     }
 }

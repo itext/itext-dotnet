@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-Copyright (c) 1998-2026 Apryse Group NV
+    Copyright (c) 1998-2026 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -44,6 +44,16 @@ namespace iText.Commons.Utils {
         }
 
         /// <summary>
+        /// Gets the LocalDateTime from UTC seconds from the epoch.
+        /// </summary>
+        /// <param name="epochSecond">the UTC milliseconds from the epoch</param>
+        /// <returns>local time from UTC seconds</returns>
+        public static DateTime OfEpochSecondUTC(long epochSecond)
+        {
+            return GetInitial().AddSeconds(epochSecond);
+        }
+
+        /// <summary>
         /// Gets the calendar date and time of a day.
         /// </summary>
         /// <param name="dateTime">the date to be returned as calendar</param>
@@ -67,7 +77,7 @@ namespace iText.Commons.Utils {
         public static DateTime GetCurrentUtcTime() {
             return DateTime.UtcNow;
         }
-        
+
         /// <summary>
         /// Defines if date is in past.
         /// </summary>
@@ -206,7 +216,17 @@ namespace iText.Commons.Utils {
         public static DateTime CreateUtcDateTime(int year, int month, int day, int hour, int minute, int second) {
             return new DateTime(year, month + 1, day, hour, minute, second, DateTimeKind.Utc);
         }
-        
+
+        /// <summary>
+        /// Serialize time using format YYYY-MM-DDTHH-MM-SS
+        /// </summary>
+        /// <param name="dateTime">local time to be converted</param>
+        /// <returns>serialized time</returns>
+        public static String SerializeDateToISO8601(DateTime dateTime)
+        {
+            return dateTime.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
+        }
+
         private static DateTime GetInitial() {
             return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         }
