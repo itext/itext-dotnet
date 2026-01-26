@@ -962,7 +962,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                                                         );
                                                     if (patternName is PdfName) {
                                                         PdfPattern pattern = resources.GetPattern((PdfName)patternName);
-                                                        if (pattern is PdfPattern.Tiling && !((PdfPattern.Tiling)pattern).IsColored()) {
+                                                        if (pattern is PdfPattern.Tiling) {
+                                                            if (((PdfPattern.Tiling)pattern).IsColored()) {
+                                                                return new PatternColor(pattern);
+                                                            }
                                                             return new PatternColor((PdfPattern.Tiling)pattern, underlyingCs, GetColorants(underlyingOperands));
                                                         }
                                                     }

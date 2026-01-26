@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using iText.IO.Source;
-using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Logs;
@@ -132,22 +131,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                     ());
                 PdfPage page = pdfDocument.GetFirstPage();
                 NUnit.Framework.Assert.Catch(typeof(OutOfMemoryException), () => processor.ProcessPageContent(page));
-            }
-        }
-
-        [NUnit.Framework.Test]
-        [LogMessage(KernelLogMessageConstant.UNABLE_TO_PARSE_COLOR_WITHIN_COLORSPACE)]
-        public virtual void PatternColorParsingNotValidPdfTest() {
-            String inputFile = SOURCE_FOLDER + "patternColorParsingNotValidPdfTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputFile));
-            for (int i = 1; i <= pdfDocument.GetNumberOfPages(); ++i) {
-                PdfPage page = pdfDocument.GetPage(i);
-                PdfCanvasProcessorIntegrationTest.ColorParsingEventListener colorParsingEventListener = new PdfCanvasProcessorIntegrationTest.ColorParsingEventListener
-                    ();
-                PdfCanvasProcessor processor = new PdfCanvasProcessor(colorParsingEventListener);
-                processor.ProcessPageContent(page);
-                Color renderInfo = colorParsingEventListener.GetEncounteredPath().GetFillColor();
-                NUnit.Framework.Assert.IsNull(renderInfo);
             }
         }
 
@@ -261,6 +244,32 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 parser.ProcessPageContent(pdfDocument.GetPage(1));
             }
             NUnit.Framework.Assert.AreEqual("ABCD", listener.GetResultantText());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ColoredPatternTest() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "coloredPatternParsingTest.pdf"));
+            PdfCanvasProcessorIntegrationTest.ColorParsingEventListener listener = new PdfCanvasProcessorIntegrationTest.ColorParsingEventListener
+                ();
+            PdfCanvasProcessor parser = new PdfCanvasProcessor(listener);
+            NUnit.Framework.Assert.DoesNotThrow(() => parser.ProcessPageContent(pdfDoc.GetFirstPage()));
+            pdfDoc.Close();
+            PathRenderInfo renderInfo = listener.GetEncounteredPath();
+            PdfColorSpace colorSpace = renderInfo.GetGraphicsState().GetFillColor().GetColorSpace();
+            NUnit.Framework.Assert.AreEqual("Pattern", colorSpace.GetName().GetValue());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UnColoredPatternTest() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "unColoredPatternParsingTest.pdf"));
+            PdfCanvasProcessorIntegrationTest.ColorParsingEventListener listener = new PdfCanvasProcessorIntegrationTest.ColorParsingEventListener
+                ();
+            PdfCanvasProcessor parser = new PdfCanvasProcessor(listener);
+            NUnit.Framework.Assert.DoesNotThrow(() => parser.ProcessPageContent(pdfDoc.GetFirstPage()));
+            pdfDoc.Close();
+            PathRenderInfo renderInfo = listener.GetEncounteredPath();
+            PdfColorSpace colorSpace = renderInfo.GetGraphicsState().GetFillColor().GetColorSpace();
+            NUnit.Framework.Assert.AreEqual("UncoloredTilingPattern", colorSpace.GetName().GetValue());
         }
 
         private class ColorParsingEventListener : IEventListener {
