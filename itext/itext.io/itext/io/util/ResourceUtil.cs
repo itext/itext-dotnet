@@ -182,7 +182,8 @@ namespace iText.IO.Util {
             return istr;
         }
 
-        private static void LoadITextResourceAssemblies() {
+        private static void LoadITextResourceAssemblies()
+        {
 #if !NETSTANDARD2_0
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().Where( a=> !a.IsDynamic).ToList();
             List<string> loadedPaths = new List<string>();
@@ -199,46 +200,62 @@ namespace iText.IO.Util {
                     // such as anonymously hosted dynamicmethods assembly for example
                 }
             }
-
-            var referencedPaths = Directory.GetFiles(FileUtil.GetBaseDirectory(), "*.dll");
-            var toLoad = referencedPaths.Where(referencePath => !loadedPaths.Any(loadedPath => loadedPath.Equals(referencePath, StringComparison.OrdinalIgnoreCase))).ToList();
-            foreach (String path in toLoad)
+            try
             {
-                try {
-                    AssemblyName name = AssemblyName.GetAssemblyName(path);
-                    if (iTextResourceAssemblyNames.Contains(name.Name) && !loadedAssemblies.Any(assembly => assembly.GetName().Name.Equals(name.Name))) {
-                        loadedAssemblies.Add(AppDomain.CurrentDomain.Load(name));
-                    }
-                }
-                catch
-                {
-                }
-            }
-#else
-            string runtimeId = RuntimeEnvironment.GetRuntimeIdentifier();
-            List<AssemblyName> loadedAssemblies = null;
-            try {
-                loadedAssemblies = DependencyContext.Default?.GetRuntimeAssemblyNames(runtimeId).ToList();
-            } catch { }
-            if (loadedAssemblies == null) {
-                loadedAssemblies = new List<AssemblyName>();
-            }
-
-            if (!String.IsNullOrEmpty(FileUtil.GetBaseDirectory())) {
                 var referencedPaths = Directory.GetFiles(FileUtil.GetBaseDirectory(), "*.dll");
-                foreach (String path in referencedPaths)
+                var toLoad = referencedPaths.Where(referencePath => !loadedPaths.Any(loadedPath => loadedPath.Equals(referencePath, StringComparison.OrdinalIgnoreCase))).ToList();
+                foreach (String path in toLoad)
                 {
                     try
                     {
-                        AssemblyName name = AssemblyLoadContextUtil.GetAssemblyName(path);
-                        if (iTextResourceAssemblyNames.Contains(name.Name) && !loadedAssemblies.Any(assembly => assembly.Name.Equals(name.Name))) {
-                            Assembly newAssembly = AssemblyLoadContextUtil.LoadFromDefaultContextAssemblyPath(path);
-                            loadedAssemblies.Add(newAssembly.GetName());
+                        AssemblyName name = AssemblyName.GetAssemblyName(path);
+                        if (iTextResourceAssemblyNames.Contains(name.Name) && !loadedAssemblies.Any(assembly => assembly.GetName().Name.Equals(name.Name)))
+                        {
+                            loadedAssemblies.Add(AppDomain.CurrentDomain.Load(name));
                         }
                     }
                     catch
                     {
                     }
+                }
+            }
+            catch { }
+#else
+            string runtimeId = RuntimeEnvironment.GetRuntimeIdentifier();
+            List<AssemblyName> loadedAssemblies = null;
+            try
+            {
+                loadedAssemblies = DependencyContext.Default?.GetRuntimeAssemblyNames(runtimeId).ToList();
+            }
+            catch { }
+            if (loadedAssemblies == null)
+            {
+                loadedAssemblies = new List<AssemblyName>();
+            }
+
+            if (FileUtil.GetBaseDirectory() != null)
+            {
+                try
+                {
+                    var referencedPaths = Directory.GetFiles(FileUtil.GetBaseDirectory(), "*.dll");
+                    foreach (String path in referencedPaths)
+                    {
+                        try
+                        {
+                            AssemblyName name = AssemblyLoadContextUtil.GetAssemblyName(path);
+                            if (iTextResourceAssemblyNames.Contains(name.Name) && !loadedAssemblies.Any(assembly => assembly.Name.Equals(name.Name)))
+                            {
+                                Assembly newAssembly = AssemblyLoadContextUtil.LoadFromDefaultContextAssemblyPath(path);
+                                loadedAssemblies.Add(newAssembly.GetName());
+                            }
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+                catch
+                {
                 }
             }
 #endif
