@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.Commons.Utils;
 using iText.StyledXmlParser.Node;
 
 namespace iText.StyledXmlParser.Css.Selector.Item {
@@ -51,18 +50,7 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         /// <param name="node">the child node</param>
         /// <returns>the sibling nodes</returns>
         internal virtual IList<INode> GetAllSiblings(INode node) {
-            INode parentElement = node.ParentNode();
-            if (parentElement != null) {
-                IList<INode> childrenUnmodifiable = parentElement.ChildNodes();
-                IList<INode> children = new List<INode>(childrenUnmodifiable.Count);
-                foreach (INode iNode in childrenUnmodifiable) {
-                    if (iNode is IElementNode) {
-                        children.Add(iNode);
-                    }
-                }
-                return children;
-            }
-            return JavaCollectionsUtil.EmptyList<INode>();
+            return CssSelectorItemTraversalUtil.GetElementSiblings(node);
         }
 //\endcond
 
@@ -71,18 +59,7 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         /// <param name="node">the child node</param>
         /// <returns>the sibling nodes with the type of a child node</returns>
         internal virtual IList<INode> GetAllSiblingsOfNodeType(INode node) {
-            INode parentElement = node.ParentNode();
-            if (parentElement != null) {
-                IList<INode> childrenUnmodifiable = parentElement.ChildNodes();
-                IList<INode> children = new List<INode>(childrenUnmodifiable.Count);
-                foreach (INode iNode in childrenUnmodifiable) {
-                    if (iNode is IElementNode && ((IElementNode)iNode).Name().Equals(((IElementNode)node).Name())) {
-                        children.Add(iNode);
-                    }
-                }
-                return children;
-            }
-            return JavaCollectionsUtil.EmptyList<INode>();
+            return CssSelectorItemTraversalUtil.GetElementSiblingsOfSameType(node);
         }
 //\endcond
     }

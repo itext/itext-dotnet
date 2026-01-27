@@ -22,10 +22,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using iText.Commons.Datastructures;
 using iText.Commons.Utils;
+using iText.StyledXmlParser.Css.Selector;
 using iText.StyledXmlParser.Css.Selector.Item;
+using iText.StyledXmlParser.Css.Util;
 using iText.StyledXmlParser.Exceptions;
 
 namespace iText.StyledXmlParser.Css.Parse {
@@ -52,6 +55,23 @@ namespace iText.StyledXmlParser.Css.Parse {
 
         // Utility class, no instances allowed.
         /// <summary>
+        /// Parses a comma-separated list of CSS selectors from a string and returns a list of
+        /// <see cref="iText.StyledXmlParser.Css.Selector.ICssSelector"/>
+        /// objects that represent the selectors.
+        /// </summary>
+        /// <param name="arguments">the string containing a comma-separated list of CSS selectors</param>
+        /// <returns>
+        /// a list of
+        /// <see cref="iText.StyledXmlParser.Css.Selector.ICssSelector"/>
+        /// objects representing the parsed selectors
+        /// </returns>
+        public static IList<ICssSelector> ParseCommaSeparatedSelectors(String arguments) {
+            return SplitByTopLevelComma(arguments).Where((part) => !String.IsNullOrEmpty(part)).Select((part) => (ICssSelector
+                )new CssSelector(iText.StyledXmlParser.Css.Parse.CssSelectorParser.ParseSelectorItems(part, true))).ToList
+                ();
+        }
+
+        /// <summary>
         /// Parses the given CSS selector string into a list of
         /// <see cref="iText.StyledXmlParser.Css.Selector.Item.ICssSelectorItem"/>
         /// objects.
@@ -70,6 +90,36 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// objects representing the components of the parsed selector
         /// </returns>
         public static IList<ICssSelectorItem> ParseSelectorItems(String selector) {
+            return ParseSelectorItems(selector, false);
+        }
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Parses the given CSS selector string into a list of
+        /// <see cref="iText.StyledXmlParser.Css.Selector.Item.ICssSelectorItem"/>
+        /// objects, with an option
+        /// to allow a relative selector at the beginning.
+        /// </summary>
+        /// <remarks>
+        /// Parses the given CSS selector string into a list of
+        /// <see cref="iText.StyledXmlParser.Css.Selector.Item.ICssSelectorItem"/>
+        /// objects, with an option
+        /// to allow a relative selector at the beginning. This method processes the selector character
+        /// by character, handling state transitions and escaped sequences to properly parse the structure.
+        /// </remarks>
+        /// <param name="selector">the CSS selector string to be parsed</param>
+        /// <param name="allowRelativeSelectorAtStart">
+        /// a boolean flag indicating whether a relative selector
+        /// is allowed at the start of the selector string
+        /// </param>
+        /// <returns>
+        /// a list of
+        /// <see cref="iText.StyledXmlParser.Css.Selector.Item.ICssSelectorItem"/>
+        /// objects representing the parsed components
+        /// of the CSS selector
+        /// </returns>
+        internal static IList<ICssSelectorItem> ParseSelectorItems(String selector, bool allowRelativeSelectorAtStart
+            ) {
             IList<ICssSelectorItem> selectorItems = new List<ICssSelectorItem>();
             CssSelectorParser.State state = new CssSelectorParser.NoneState();
             for (int i = 0; i < selector.Length; ++i) {
@@ -86,7 +136,7 @@ namespace iText.StyledXmlParser.Css.Parse {
                     nextState = TrySwitchToTagState(state);
                 }
                 else {
-                    nextState = TrySwitchState(state, c);
+                    nextState = TrySwitchState(state, c, allowRelativeSelectorAtStart);
                 }
                 if (state != nextState) {
                     state.Process(selectorItems);
@@ -97,6 +147,21 @@ namespace iText.StyledXmlParser.Css.Parse {
             state.Process(selectorItems);
             return selectorItems;
         }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Splits a string by top-level commas, ignoring commas inside parentheses or quoted strings.</summary>
+        /// <remarks>
+        /// Splits a string by top-level commas, ignoring commas inside parentheses or quoted strings.
+        /// This handles escape sequences for quotes correctly.
+        /// </remarks>
+        /// <param name="input">the string to split</param>
+        /// <returns>a list of string parts split by top-level commas</returns>
+        internal static IList<String> SplitByTopLevelComma(String input) {
+            return CssUtils.SplitString(input, ',', new EscapeGroup('(', ')'), new EscapeGroup('"'), new EscapeGroup('\''
+                ));
+        }
+//\endcond
 
         /// <summary>Processes a possible escape sequence in the given source string, starting from the specified index.
         ///     </summary>
@@ -196,7 +261,8 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// the new state after evaluating the character; if no switch is performed,
         /// the original state is returned
         /// </returns>
-        private static CssSelectorParser.State TrySwitchState(CssSelectorParser.State state, char c) {
+        private static CssSelectorParser.State TrySwitchState(CssSelectorParser.State state, char c, bool allowRelativeSelectorAtStart
+            ) {
             if (!state.IsReadyForSwitch(c)) {
                 return state;
             }
@@ -223,7 +289,7 @@ namespace iText.StyledXmlParser.Css.Parse {
                 case '~':
                 case ',':
                 case '|': {
-                    return new CssSelectorParser.SeparatorState();
+                    return new CssSelectorParser.SeparatorState(allowRelativeSelectorAtStart);
                 }
 
                 case '*': {
@@ -342,16 +408,38 @@ namespace iText.StyledXmlParser.Css.Parse {
         private sealed class SeparatorState : CssSelectorParser.State {
             private char data = '\0';
 
+            private readonly bool allowRelativeSelectorAtStart;
+
+            public SeparatorState(bool allowRelativeSelectorAtStart) {
+                this.allowRelativeSelectorAtStart = allowRelativeSelectorAtStart;
+            }
+
             public bool IsReadyForSwitch(char c) {
-                return true;
+                if (data != '\0' && data != ' ' && iText.IO.Util.TextUtil.IsWhiteSpace(c)) {
+                    return false;
+                }
+                //If we already captured a descendant separator (' '), collapse multiple whitespace chars.
+                return data != ' ' || !iText.IO.Util.TextUtil.IsWhiteSpace(c);
             }
 
             public void AddChar(char c, bool isEscaped) {
-                if (data != '\0') {
-                    throw new ArgumentException(MessageFormatUtil.Format(StyledXmlParserExceptionMessage.INVALID_SELECTOR_STRING
-                        , "" + data + c));
+                if (data == '\0') {
+                    // Normalize any whitespace separator to ' ' for consistent downstream behavior.
+                    if (!isEscaped && iText.IO.Util.TextUtil.IsWhiteSpace(c)) {
+                        data = ' ';
+                    }
+                    else {
+                        data = c;
+                    }
+                    return;
                 }
-                data = c;
+                // If we stayed in this state to consume whitespace (see isReadyForSwitch),
+                // treat it as insignificant and ignore it.
+                if (!isEscaped && iText.IO.Util.TextUtil.IsWhiteSpace(c)) {
+                    return;
+                }
+                throw new ArgumentException(MessageFormatUtil.Format(StyledXmlParserExceptionMessage.INVALID_SELECTOR_STRING
+                    , "" + data + c));
             }
 
             /// <summary>
@@ -375,6 +463,11 @@ namespace iText.StyledXmlParser.Css.Parse {
             /// </param>
             public void Process(IList<ICssSelectorItem> selectorItems) {
                 if (selectorItems.IsEmpty()) {
+                    // Allow relative selectors at the start only when explicitly enabled (e.g. inside :has()).
+                    if (allowRelativeSelectorAtStart && IsCombinator(data)) {
+                        selectorItems.Add(new CssSeparatorSelectorItem(data));
+                        return;
+                    }
                     throw new ArgumentException(MessageFormatUtil.Format(StyledXmlParserExceptionMessage.INVALID_SELECTOR_STRING
                         , data));
                 }
@@ -394,6 +487,10 @@ namespace iText.StyledXmlParser.Css.Parse {
                 else {
                     selectorItems.Add(curItem);
                 }
+            }
+
+            private static bool IsCombinator(char c) {
+                return c == '+' || c == '>' || c == '~';
             }
         }
 

@@ -57,7 +57,38 @@ namespace iText.StyledXmlParser.Css.Selector {
         * @see com.itextpdf.styledxmlparser.css.selector.ICssSelector#matches(com.itextpdf.styledxmlparser.html.node.INode)
         */
         public override bool Matches(INode element) {
-            return Matches(element, selectorItems.Count - 1);
+            return Matches(element, selectorItems.Count - 1, null);
+        }
+
+        /// <summary>
+        /// Checks if the node matches this selector, but limits ancestor traversal so that it never
+        /// goes above the provided
+        /// <paramref name="scope"/>
+        /// node.
+        /// </summary>
+        /// <remarks>
+        /// Checks if the node matches this selector, but limits ancestor traversal so that it never
+        /// goes above the provided
+        /// <paramref name="scope"/>
+        /// node.
+        /// <para />
+        /// This is primarily used to implement
+        /// <c>:has(...)</c>
+        /// correctly: when matching a candidate
+        /// descendant against an argument selector, ancestor combinators must not escape the
+        /// <c>:has()</c>
+        /// scope element.
+        /// </remarks>
+        /// <param name="element">the element to match</param>
+        /// <param name="scope">
+        /// the scope boundary (inclusive). If
+        /// <see langword="null"/>
+        /// , behaves like
+        /// <see cref="Matches(iText.StyledXmlParser.Node.INode)"/>.
+        /// </param>
+        /// <returns>true if the element matches within the given scope, false otherwise</returns>
+        public virtual bool MatchesWithinScope(INode element, INode scope) {
+            return Matches(element, selectorItems.Count - 1, scope);
         }
 
         /// <summary>Checks if the node not matches all the selectors.</summary>
@@ -66,7 +97,7 @@ namespace iText.StyledXmlParser.Css.Selector {
         public virtual bool NotMatches(INode element) {
             int counter = 0;
             while (counter != selectorItems.Count) {
-                bool matches = Matches(element, selectorItems.Count - counter - 1);
+                bool matches = Matches(element, selectorItems.Count - counter - 1, null);
                 if (matches) {
                     return false;
                 }
@@ -80,8 +111,13 @@ namespace iText.StyledXmlParser.Css.Selector {
         /// <summary>Checks if a node matches the selector.</summary>
         /// <param name="element">the node</param>
         /// <param name="lastSelectorItemInd">the index of the last selector</param>
+        /// <param name="scope">
+        /// the boundary scope node (inclusive) for ancestor traversal, or
+        /// <see langword="null"/>
+        /// for unbounded
+        /// </param>
         /// <returns>true, if there's a match</returns>
-        private bool Matches(INode element, int lastSelectorItemInd) {
+        private bool Matches(INode element, int lastSelectorItemInd, INode scope) {
             if (!(element is IElementNode)) {
                 return false;
             }
@@ -103,17 +139,20 @@ namespace iText.StyledXmlParser.Css.Selector {
                     char separator = ((CssSeparatorSelectorItem)currentItem).GetSeparator();
                     switch (separator) {
                         case '>': {
-                            return Matches(element.ParentNode(), i - 1);
+                            return Matches(element.ParentNode(), i - 1, scope);
                         }
 
                         case ' ': {
                             INode parent = element.ParentNode();
                             while (parent != null) {
-                                bool parentMatches = Matches(parent, i - 1);
+                                bool parentMatches = Matches(parent, i - 1, scope);
                                 if (parentMatches) {
                                     return true;
                                 }
                                 else {
+                                    if (scope != null && parent == scope) {
+                                        break;
+                                    }
                                     parent = parent.ParentNode();
                                 }
                             }
@@ -125,7 +164,7 @@ namespace iText.StyledXmlParser.Css.Selector {
                             if (parent != null) {
                                 int indexOfElement = parent.ChildNodes().IndexOf(element);
                                 for (int j = indexOfElement - 1; j >= 0; j--) {
-                                    if (Matches(parent.ChildNodes()[j], i - 1)) {
+                                    if (Matches(parent.ChildNodes()[j], i - 1, scope)) {
                                         return true;
                                     }
                                 }
@@ -145,7 +184,7 @@ namespace iText.StyledXmlParser.Css.Selector {
                                     }
                                 }
                                 if (previousElement != null) {
-                                    return indexOfElement > 0 && Matches(previousElement, i - 1);
+                                    return indexOfElement > 0 && Matches(previousElement, i - 1, scope);
                                 }
                             }
                             return false;

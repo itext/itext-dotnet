@@ -21,7 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using iText.StyledXmlParser.Css;
+using iText.StyledXmlParser.Css.Parse;
 using iText.StyledXmlParser.Css.Selector;
 using iText.StyledXmlParser.Node;
 
@@ -141,14 +143,12 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
                     return new CssPseudoClassNthLastOfTypeSelectorItem(arguments);
                 }
 
+                case CommonCssConstants.HAS: {
+                    return CreateHasSelectorItem(arguments);
+                }
+
                 case CommonCssConstants.NOT: {
-                    CssSelector selector = new CssSelector(arguments);
-                    foreach (ICssSelectorItem item in selector.GetSelectorItems()) {
-                        if (item is CssPseudoClassNotSelectorItem || item is CssPseudoElementSelectorItem) {
-                            return null;
-                        }
-                    }
-                    return new CssPseudoClassNotSelectorItem(selector);
+                    return CreateNotSelectorItem(arguments);
                 }
 
                 case CommonCssConstants.ROOT: {
@@ -189,6 +189,31 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
                     return null;
                 }
             }
+        }
+
+        private static CssPseudoClassNotSelectorItem CreateNotSelectorItem(String arguments) {
+            CssSelector selector = new CssSelector(arguments);
+            foreach (ICssSelectorItem item in selector.GetSelectorItems()) {
+                if (item is CssPseudoClassNotSelectorItem || item is CssPseudoElementSelectorItem) {
+                    return null;
+                }
+            }
+            return new CssPseudoClassNotSelectorItem(selector);
+        }
+
+        private static CssPseudoClassHasSelectorItem CreateHasSelectorItem(String arguments) {
+            IList<ICssSelector> hasSelectors = CssSelectorParser.ParseCommaSeparatedSelectors(arguments);
+            foreach (ICssSelector hasSelector in hasSelectors) {
+                if (hasSelector is CssSelector) {
+                    foreach (ICssSelectorItem item in ((CssSelector)hasSelector).GetSelectorItems()) {
+                        // Pseudo-elements are restricted as they don't make sense in :has() context.
+                        if (item is CssPseudoElementSelectorItem || item is CssPseudoClassHasSelectorItem) {
+                            return null;
+                        }
+                    }
+                }
+            }
+            return new CssPseudoClassHasSelectorItem(hasSelectors, arguments);
         }
 
         /* (non-Javadoc)

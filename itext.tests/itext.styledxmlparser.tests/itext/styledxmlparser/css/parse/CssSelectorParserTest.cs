@@ -23,9 +23,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
+using iText.StyledXmlParser.Css.Selector;
 using iText.StyledXmlParser.Css.Selector.Item;
 using iText.StyledXmlParser.Exceptions;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.StyledXmlParser.Css.Parse {
     [NUnit.Framework.Category("UnitTest")]
@@ -194,7 +196,7 @@ namespace iText.StyledXmlParser.Css.Parse {
 
         [NUnit.Framework.Test]
         public virtual void SeparatorAtStartTest() {
-            String selector = "+test";
+            String selector = "+ test";
             NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => CssSelectorParser.ParseSelectorItems(selector
                 ));
         }
@@ -308,6 +310,68 @@ namespace iText.StyledXmlParser.Css.Parse {
             NUnit.Framework.Assert.AreEqual("dd", parsedSelector[0].ToString());
             NUnit.Framework.Assert.IsTrue(parsedSelector[1] is CssPseudoClassSelectorItem);
             NUnit.Framework.Assert.AreEqual(":nth-last-of-type(EvEn)", parsedSelector[1].ToString());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DescendantCombinatorCollapsesMultipleSpacesTest() {
+            String selector = "ul.my-things   li";
+            IList<ICssSelectorItem> parsedSelector = CssSelectorParser.ParseSelectorItems(selector);
+            NUnit.Framework.Assert.AreEqual(4, parsedSelector.Count);
+            NUnit.Framework.Assert.IsTrue(parsedSelector[0] is CssTagSelectorItem);
+            NUnit.Framework.Assert.AreEqual("ul", parsedSelector[0].ToString());
+            NUnit.Framework.Assert.IsTrue(parsedSelector[1] is CssClassSelectorItem);
+            NUnit.Framework.Assert.AreEqual(".my-things", parsedSelector[1].ToString());
+            NUnit.Framework.Assert.IsTrue(parsedSelector[2] is CssSeparatorSelectorItem);
+            // Multiple spaces must be treated as a single descendant combinator
+            NUnit.Framework.Assert.AreEqual(" ", parsedSelector[2].ToString());
+            NUnit.Framework.Assert.IsTrue(parsedSelector[3] is CssTagSelectorItem);
+            NUnit.Framework.Assert.AreEqual("li", parsedSelector[3].ToString());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseCommaSeparatedSelectorsNullInputTest() {
+            IList<ICssSelector> selectors = CssSelectorParser.ParseCommaSeparatedSelectors(null);
+            NUnit.Framework.Assert.IsNotNull(selectors);
+            NUnit.Framework.Assert.IsTrue(selectors.IsEmpty());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseCommaSeparatedSelectorsOnlyCommasTest() {
+            IList<ICssSelector> selectors = CssSelectorParser.ParseCommaSeparatedSelectors(",,,");
+            NUnit.Framework.Assert.IsNotNull(selectors);
+            NUnit.Framework.Assert.IsTrue(selectors.IsEmpty());
+        }
+
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INCORRECT_CHARACTER_SEQUENCE)]
+        [NUnit.Framework.Test]
+        public virtual void ParseCommaSeparatedSelectorsMalformedParenthesisDoesNotCrashTest() {
+            IList<ICssSelector> selectors = CssSelectorParser.ParseCommaSeparatedSelectors("a),b,c");
+            NUnit.Framework.Assert.AreEqual(3, selectors.Count);
+            NUnit.Framework.Assert.AreEqual("a)", selectors[0].ToString());
+            NUnit.Framework.Assert.AreEqual("b", selectors[1].ToString());
+            NUnit.Framework.Assert.AreEqual("c", selectors[2].ToString());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseCommaSeparatedSelectorsBackslashBeforeCommaDoesNotCrashTest() {
+            IList<ICssSelector> selectors = CssSelectorParser.ParseCommaSeparatedSelectors("\\,a");
+            NUnit.Framework.Assert.AreEqual(2, selectors.Count);
+            NUnit.Framework.Assert.AreEqual("\uFFFD", selectors[0].ToString());
+            NUnit.Framework.Assert.AreEqual("a", selectors[1].ToString());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WhitespaceAfterChildCombinatorIsIgnoredTest() {
+            // SeparatorState consumes whitespace following a non-space combinator without creating extra items.
+            String selector = "a>\n\t  b";
+            IList<ICssSelectorItem> parsedSelector = CssSelectorParser.ParseSelectorItems(selector);
+            NUnit.Framework.Assert.AreEqual(3, parsedSelector.Count);
+            NUnit.Framework.Assert.IsTrue(parsedSelector[0] is CssTagSelectorItem);
+            NUnit.Framework.Assert.AreEqual("a", parsedSelector[0].ToString());
+            NUnit.Framework.Assert.IsTrue(parsedSelector[1] is CssSeparatorSelectorItem);
+            NUnit.Framework.Assert.AreEqual(" > ", parsedSelector[1].ToString());
+            NUnit.Framework.Assert.IsTrue(parsedSelector[2] is CssTagSelectorItem);
+            NUnit.Framework.Assert.AreEqual("b", parsedSelector[2].ToString());
         }
     }
 }
