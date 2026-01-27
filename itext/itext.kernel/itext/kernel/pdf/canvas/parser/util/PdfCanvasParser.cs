@@ -80,8 +80,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
                 ls.Add(ob);
                 if (tokeniser.GetTokenType() == PdfTokenizer.TokenType.Other) {
                     if ("BI".Equals(ob.ToString())) {
-                        PdfStream inlineImageAsStream = InlineImageParsingUtils.Parse(this, currentResources.GetResource(PdfName.ColorSpace
-                            ));
+                        var resource = currentResources.GetResource(PdfName.ColorSpace);
+                        PdfStream inlineImageAsStream = InlineImageParsingUtils.Parse(this, resource);
                         ls.Clear();
                         ls.Add(inlineImageAsStream);
                         ls.Add(new PdfLiteral("EI"));
