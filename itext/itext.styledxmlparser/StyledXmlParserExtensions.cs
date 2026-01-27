@@ -29,6 +29,7 @@ using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup.Helper;
 using System.Reflection;
 using iText.Commons.Utils;
+using System.Collections.ObjectModel;
 //\cond DO_NOT_DOCUMENT
 internal static class StyledXmlParserExtensions {
     public static String Name(this Encoding e) {
@@ -230,6 +231,10 @@ internal static class StyledXmlParserExtensions {
     }
 
     public static List<T> SubList<T>(this IList<T> list, int fromIndex, int toIndex) {
+        if (list is ReadOnlyCollection<T>) {
+            List<T> copy = new List<T>(list);
+            return copy.GetRange(fromIndex, toIndex - fromIndex);
+        }
         return ((List<T>) list).GetRange(fromIndex, toIndex - fromIndex);
     }
 
