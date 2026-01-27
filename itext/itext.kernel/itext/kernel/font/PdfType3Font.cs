@@ -484,6 +484,11 @@ namespace iText.Kernel.Font {
             GetPdfObject().Put(PdfName.CharProcs, charProcs);
         }
 
+        public virtual void FlushFontData_SuffixAction()
+        {
+
+        }
+
         private void FlushFontData() {
             if (((Type3Font)GetFontProgram()).GetNumberOfGlyphs() < 1) {
                 throw new PdfException(KernelExceptionMessageConstant.NO_GLYPHS_DEFINED_FOR_TYPE_3_FONT);
@@ -499,10 +504,13 @@ namespace iText.Kernel.Font {
             GetPdfObject().Put(PdfName.FontBBox, new PdfArray(fontBBoxDouble));
             String fontName = fontProgram.GetFontNames().GetFontName();
             base.FlushFontData(fontName, PdfName.Type3);
+            FlushFontData_SuffixAction();
             MakeObjectIndirect(GetPdfObject().Get(PdfName.Widths));
             //BaseFont is not listed as key in Type 3 font specification.
             GetPdfObject().Remove(PdfName.BaseFont);
         }
+
+
 
         private double[] ReadWidths(PdfDictionary fontDictionary) {
             PdfArray pdfWidths = fontDictionary.GetAsArray(PdfName.Widths);

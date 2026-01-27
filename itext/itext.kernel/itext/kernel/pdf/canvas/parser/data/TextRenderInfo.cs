@@ -97,7 +97,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <returns>the text to render</returns>
         public virtual String GetText() {
             CheckGraphicsState();
-            if (text == null) {
+            if (text == null || text == "") {
                 GlyphLine gl = gs.GetFont().DecodeIntoGlyphLine(@string);
                 if (!IsReversedChars()) {
                     text = gl.ToUnicodeString(gl.GetStart(), gl.GetEnd());

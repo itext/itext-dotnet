@@ -72,7 +72,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// </remarks>
         public static double? floatMultiplier;
 
-        private double approximatedFloatMultiplier = Math.Pow(10, 14);
+        private double approximatedFloatMultiplier = Math.Pow(10, 10);
 
         /// <summary>
         /// Creates new

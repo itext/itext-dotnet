@@ -398,6 +398,14 @@ namespace iText.Kernel.Pdf {
             byte[] bytes = stream.GetBytes(false);
             try {
                 outputStream.Write(bytes);
+                if (stream.outputStream != null)
+                {
+                    var localHighPrecision = stream.outputStream.GetLocalHighPrecision();
+                    if (localHighPrecision is bool localHighPrecision2)
+                    {
+                        outputStream.SetLocalHighPrecision(localHighPrecision2);
+                    }
+                }
             }
             catch (System.IO.IOException ioe) {
                 throw new PdfException(KernelExceptionMessageConstant.CANNOT_COPY_OBJECT_CONTENT, ioe, stream);
