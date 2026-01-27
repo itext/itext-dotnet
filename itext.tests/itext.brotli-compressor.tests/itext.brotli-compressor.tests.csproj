@@ -39,6 +39,9 @@
       <ProjectReference Include="..\..\itext\itext.brotli-compressor\itext.brotli-compressor.csproj" />
       <ProjectReference Include="..\..\itext\itext.layout\itext.layout.csproj" />
       <ProjectReference Include="..\..\itext\itext.pdftest\itext.pdftest.csproj" />
+      <ProjectReference Include="..\..\itext\itext.forms\itext.forms.csproj" />
+      <ProjectReference Include="..\..\itext\itext.sign\itext.sign.csproj" />
+      <ProjectReference Include="..\..\itext\itext.bouncy-castle-adapter\itext.bouncy-castle-adapter.csproj" />
     </ItemGroup>
 
 </Project>

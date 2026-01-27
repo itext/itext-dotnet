@@ -23,19 +23,33 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Bouncycastle.Crypto;
+using iText.Bouncycastle.X509;
+using iText.Bouncycastleconnector;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
+using iText.Forms;
+using iText.Forms.Fields;
 using iText.IO.Image;
 using iText.IO.Source;
+using iText.Kernel.Colors;
+using iText.Kernel.Crypto;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Filters;
 using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Element;
+using iText.Signatures;
 using iText.Test;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Pkcs;
+using Org.BouncyCastle.X509;
 
 namespace iText.Brotlicompressor {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -49,6 +63,8 @@ namespace iText.Brotlicompressor {
 
         private const int streamCount = 10;
 
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+        
         [NUnit.Framework.OneTimeSetUp]
         public static void SetUp() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
@@ -84,6 +100,31 @@ namespace iText.Brotlicompressor {
                 page.GetPdfObject().Put(PdfName.Contents, contents);
             }
             ), fileName);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BrotliContentStreamFullCompressionTest() {
+            String resultPath = DESTINATION_FOLDER + "brotliCSFullComp.pdf";
+            DocumentProperties props = CreateBrotliProperties();
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(resultPath, new WriterProperties().SetFullCompressionMode
+                (true)), props)) {
+                PdfPage page = pdfDoc.AddNewPage();
+                PdfStream pdfStream = new PdfStream(testString.GetBytes(System.Text.Encoding.UTF8), CompressionConstants.BEST_COMPRESSION
+                    );
+                pdfStream.MakeIndirect(pdfDoc);
+                PdfArray contents = new PdfArray();
+                contents.Add(pdfStream.GetIndirectReference());
+                page.GetPdfObject().Put(PdfName.Contents, contents);
+            }
+            using (PdfDocument resDoc = new PdfDocument(new PdfReader(resultPath), props)) {
+                int numberOfPages = resDoc.GetNumberOfPages();
+                NUnit.Framework.Assert.AreEqual(1, numberOfPages);
+                PdfPage firstPage = resDoc.GetFirstPage();
+                PdfStream firstContentStream = firstPage.GetFirstContentStream();
+                NUnit.Framework.Assert.AreEqual(testString, iText.Commons.Utils.JavaUtil.GetStringForBytes(firstContentStream
+                    .GetBytes()));
+                NUnit.Framework.Assert.AreEqual(PdfName.BrotliDecode, firstContentStream.GetAsName(PdfName.Filter));
+            }
         }
 
         [NUnit.Framework.Test]
@@ -387,6 +428,135 @@ namespace iText.Brotlicompressor {
                 canvas.AddImageFittedIntoRectangle(imageData, new Rectangle(36, 460, 100, 14.16f), true);
             }
             , fileName);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextFieldBrotliTest() {
+            String fileName = "textField.pdf";
+            RunTest((pdfDoc) => {
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
+                Rectangle rect = new Rectangle(210, 490, 150, 22);
+                PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "fieldName").SetWidgetRectangle(rect).CreateText
+                    ();
+                field.SetValue("test value");
+                form.AddField(field);
+            }
+            , fileName);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ChoiceFieldBrotliTest() {
+            String fileName = "choiceField.pdf";
+            RunTest((pdfDoc) => {
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
+                Rectangle rect = new Rectangle(210, 490, 150, 20);
+                String[] options = new String[] { "Val 1", "Val 2", "Val 3" };
+                PdfChoiceFormField choice = new ChoiceFormFieldBuilder(pdfDoc, "choiceField").SetWidgetRectangle(rect).SetOptions
+                    (options).CreateComboBox();
+                choice.SetValue("Val 1", true);
+                form.AddField(choice);
+            }
+            , fileName);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RadioButtonBrotliTest() {
+            String fileName = "radioButton.pdf";
+            RunTest((pdfDoc) => {
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
+                Rectangle rect1 = new Rectangle(36, 700, 20, 20);
+                String formFieldName = "TestFieldName";
+                RadioFormFieldBuilder builder = new RadioFormFieldBuilder(pdfDoc, formFieldName);
+                PdfButtonFormField group = builder.CreateRadioGroup();
+                group.SetValue("radio value", true);
+                group.AddKid(builder.CreateRadioButton("1", rect1));
+                form.AddField(group);
+            }
+            , fileName);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PushButtonBrotliTest() {
+            String fileName = "pushButton.pdf";
+            RunTest((pdfDoc) => {
+                PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
+                String itext = "itextpdf";
+                PdfButtonFormField button = new PushButtonFormFieldBuilder(pdfDoc, itext).SetWidgetRectangle(new Rectangle
+                    (36, 500, 200, 200)).SetCaption(itext).CreatePushButton();
+                button.SetFontSize(0);
+                button.SetValue(itext);
+                button.GetFirstFormAnnotation().SetBorderWidth(10).SetBorderColor(ColorConstants.GREEN).SetBackgroundColor
+                    (ColorConstants.GRAY).SetVisibility(PdfFormAnnotation.VISIBLE);
+                form.AddField(button);
+            }
+            , fileName);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SimpleSignatureDocumentBrotliTest() {
+            String fileName = "signatureUnsignedBrotli.pdf";
+            RunTest((pdfDoc) => {
+                PdfFormField formField = new SignatureFormFieldBuilder(pdfDoc, "fieldName").CreateSignature();
+                PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDoc, true);
+                acroForm.AddField(formField);
+            }
+            , fileName);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignedSimpleDocumentBrotliTest() {
+            String unsigned = DESTINATION_FOLDER + "unsigned.pdf";
+            String signed = DESTINATION_FOLDER + "signedDocumentBrotli.pdf";
+            char[] password = "testpassphrase".ToCharArray();
+            
+
+            Pkcs12Store pk12 = new Pkcs12StoreBuilder().Build();
+            pk12.Load(new FileStream(SOURCE_FOLDER
+                  + "certificate.p12", FileMode.Open, FileAccess.Read), password);
+            string alias = null;
+            foreach (var a in pk12.Aliases)
+            {
+                alias = ((string) a);
+                if (pk12.IsKeyEntry(alias))
+                    break;
+            }
+
+            ICipherParameters pk = pk12.GetKey(alias).Key;
+            X509CertificateEntry[] ce = pk12.GetCertificateChain(alias);
+            X509Certificate[] chain = new X509Certificate[ce.Length];
+            for (int k = 0; k < ce.Length; ++k)
+            {
+                chain[k] = ce[k].Certificate;
+            }
+
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(unsigned, new WriterProperties().SetCompressionLevel
+                (CompressionConstants.DEFAULT_COMPRESSION)), CreateBrotliProperties())) {
+                pdfDoc.GetDiContainer().Register(typeof(IStreamCompressionStrategy), new BrotliStreamCompressionStrategy()
+                    );
+                pdfDoc.AddNewPage();
+            }
+            StampingProperties props = new StampingProperties().UseAppendMode();
+            props.RegisterDependency(typeof(IStreamCompressionStrategy), new BrotliStreamCompressionStrategy());
+            PdfSigner signer = new PdfSigner(new PdfReader(unsigned), FileUtil.GetFileOutputStream(signed), props);
+            signer.SetSignerProperties(new SignerProperties().SetFieldName("Signature1").SetPageNumber(1).SetPageRect(
+                new Rectangle(36, 648, 200, 100)).SetCertificationLevel(AccessPermissions.UNSPECIFIED));
+            IExternalSignature pks = new PrivateKeySignature(new PrivateKeyBC(pk), DigestAlgorithms.SHA256);
+            IX509Certificate[] certificateWrappers = new IX509Certificate[chain.Length];
+            for (int i = 0; i < certificateWrappers.Length; ++i) {
+                certificateWrappers[i] = new X509CertificateBC(chain[i]);
+            }
+            signer.SignDetached(pks, certificateWrappers, null, null, null, 0, PdfSigner.CryptoStandard
+                .CADES);
+            using (PdfDocument pdfDoc_1 = new PdfDocument(new PdfReader(signed))) {
+                PdfAnnotation signatureAnnot = pdfDoc_1.GetPage(1).GetAnnotations()[0];
+                PdfDictionary signatureObject = signatureAnnot.GetPdfObject();
+                Assert.AreEqual(PdfName.Widget, signatureAnnot.GetSubtype());
+                Assert.AreEqual(new PdfString("Signature1"), signatureAnnot.GetTitle());
+                Assert.AreEqual(PdfName.Sig, signatureObject.GetAsName(PdfName.FT));
+                SignatureUtil sigUtil = new SignatureUtil(pdfDoc_1);
+                PdfPKCS7 signature1 = sigUtil.ReadSignatureData("Signature1");
+                Assert.IsTrue(signature1.VerifySignatureIntegrityAndAuthenticity());
+            }
         }
 
         [NUnit.Framework.Test]

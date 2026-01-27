@@ -56,6 +56,7 @@ namespace iText.Kernel.Pdf {
             this.appendMode = other.appendMode;
             this.preserveEncryption = other.preserveEncryption;
             this.disableMac = other.disableMac;
+            this.dependencies = other.dependencies;
         }
 
 //\cond DO_NOT_DOCUMENT
