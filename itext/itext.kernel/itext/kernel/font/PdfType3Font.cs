@@ -123,7 +123,7 @@ namespace iText.Kernel.Font {
 //\cond DO_NOT_DOCUMENT
         /// <summary>Creates a Type 3 font based on an existing font dictionary, which must be an indirect object.</summary>
         /// <param name="fontDictionary">a dictionary of type <c>/Font</c>, must have an indirect reference.</param>
-        internal PdfType3Font(PdfDictionary fontDictionary)
+        public PdfType3Font(PdfDictionary fontDictionary)
             : base(fontDictionary) {
             subset = true;
             embedded = true;
@@ -430,7 +430,7 @@ namespace iText.Kernel.Font {
             return -1;
         }
 
-        private void AddGlyphsFromCharProcs(PdfDictionary charProcsDic, int[] widths) {
+        public void AddGlyphsFromCharProcs(PdfDictionary charProcsDic, int[] widths) {
             if (charProcsDic == null) {
                 return;
             }

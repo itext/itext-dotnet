@@ -572,7 +572,7 @@ namespace iText.Kernel.Font {
         /// , otherwise
         /// <c>tree</c>
         /// </returns>
-        internal virtual bool MakeObjectIndirect(PdfObject obj) {
+        public virtual bool MakeObjectIndirect(PdfObject obj) {
             if (GetPdfObject().GetIndirectReference() != null) {
                 obj.MakeIndirect(GetPdfObject().GetIndirectReference().GetDocument());
                 return true;

@@ -830,7 +830,7 @@ namespace iText.Kernel.Pdf {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal virtual PdfDictionary FillAndGetOcPropertiesDictionary() {
+        public virtual PdfDictionary FillAndGetOcPropertiesDictionary() {
             if (ocProperties != null) {
                 ocProperties.FillDictionary(false);
                 GetPdfObject().Put(PdfName.OCProperties, ocProperties.GetPdfObject());

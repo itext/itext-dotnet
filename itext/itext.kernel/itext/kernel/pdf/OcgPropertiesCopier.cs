@@ -32,7 +32,7 @@ using iText.Kernel.Pdf.Layer;
 
 namespace iText.Kernel.Pdf {
 //\cond DO_NOT_DOCUMENT
-    internal sealed class OcgPropertiesCopier {
+    public sealed class OcgPropertiesCopier {
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.OcgPropertiesCopier
             ));
 
