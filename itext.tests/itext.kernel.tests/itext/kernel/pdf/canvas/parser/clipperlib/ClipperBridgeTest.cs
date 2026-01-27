@@ -49,6 +49,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
             Path rectanglePath = new Path();
             rectanglePath.AddSubpath(rectangleSubpath);
             Clipper clipper = new Clipper();
+
             ClipperBridge clipperBridge = new ClipperBridge(squarePath, rectanglePath);
             clipperBridge.AddPath(clipper, squarePath, PolyType.SUBJECT);
             clipperBridge.AddPath(clipper, rectanglePath, PolyType.CLIP);

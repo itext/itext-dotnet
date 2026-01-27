@@ -78,7 +78,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             if (clippingPath == null || clippingPath.IsEmpty()) {
                 return;
             }
-            Path pathCopy = new Path(path);
+            Path pathCopy = iText.Kernel.Geom.ShapeTransformUtil.TransformPath(new Path(path), GetCtm(), true);
             pathCopy.CloseAllSubpaths();
             Clipper clipper = new Clipper();
             ClipperBridge clipperBridge = new ClipperBridge(clippingPath, pathCopy);

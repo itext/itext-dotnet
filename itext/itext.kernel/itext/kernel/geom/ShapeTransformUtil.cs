@@ -59,28 +59,28 @@ namespace iText.Kernel.Geom {
         /// <param name="path">the source path for transformation</param>
         /// <param name="ctm">the transformation matrix</param>
         /// <returns>the new transformed path</returns>
-        public static Path TransformPath(Path path, Matrix ctm) {
+        public static Path TransformPath(Path path, Matrix ctm, bool isInverse = false) {
             Path newPath = new Path();
             foreach (Subpath subpath in path.GetSubpaths()) {
-                Subpath transformedSubpath = TransformSubpath(subpath, ctm);
+                Subpath transformedSubpath = TransformSubpath(subpath, ctm, isInverse);
                 newPath.AddSubpath(transformedSubpath);
             }
             return newPath;
         }
 
-        private static Subpath TransformSubpath(Subpath subpath, Matrix ctm) {
+        private static Subpath TransformSubpath(Subpath subpath, Matrix ctm, bool isInverse) {
             Subpath newSubpath = new Subpath();
-            newSubpath.SetClosed(subpath.IsClosed());
             foreach (IShape segment in subpath.GetSegments()) {
-                IShape transformedSegment = TransformSegment(segment, ctm);
+                IShape transformedSegment = TransformSegment(segment, ctm, isInverse);
                 newSubpath.AddSegment(transformedSegment);
             }
+            newSubpath.SetClosed(subpath.IsClosed());
             return newSubpath;
         }
 
-        private static IShape TransformSegment(IShape segment, Matrix ctm) {
+        private static IShape TransformSegment(IShape segment, Matrix ctm, bool isInverse = false) {
             IList<Point> basePoints = segment.GetBasePoints();
-            Point[] newBasePoints = TransformPoints(ctm, basePoints.ToArray(new Point[basePoints.Count]));
+            Point[] newBasePoints = TransformPoints(ctm, isInverse, basePoints.ToArray(new Point[basePoints.Count]));
             IShape newSegment;
             if (segment is BezierCurve) {
                 newSegment = new BezierCurve(JavaUtil.ArraysAsList(newBasePoints));
@@ -91,13 +91,28 @@ namespace iText.Kernel.Geom {
             return newSegment;
         }
 
-        private static Point[] TransformPoints(Matrix ctm, params Point[] points) {
+        private static Point[] TransformPoints(Matrix ctm, bool isInverse, params Point[] points) {
             try {
                 AffineTransform t = new AffineTransform(ctm.Get(Matrix.I11), ctm.Get(Matrix.I12), ctm.Get(Matrix.I21), ctm
                     .Get(Matrix.I22), ctm.Get(Matrix.I31), ctm.Get(Matrix.I32));
                 t = t.CreateInverse();
                 Point[] newPoints = new Point[points.Length];
-                t.Transform(points, 0, newPoints, 0, points.Length);
+
+                if (isInverse)
+                {
+                    for (int i = 0; i < points.Length; i++)
+                    {
+                        var point = new Point();
+                        t.InverseTransform(points[i], point);
+                        newPoints[i] = point;
+                    }
+
+                }
+                else
+                {
+                    t.Transform(points, 0, newPoints, 0, points.Length);
+                }
+
                 return newPoints;
             }
             catch (NoninvertibleTransformException e) {
