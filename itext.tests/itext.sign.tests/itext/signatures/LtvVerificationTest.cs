@@ -25,6 +25,8 @@ using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Utils;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;
@@ -152,19 +154,23 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
         public virtual void ExceptionWhenValidateNonExistentSigNameTest() {
-            //TODO DEVSIX-5696 Sign: NPE is thrown because no such a signature
             LtvVerification testVerification = Setup();
-            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => testVerification.AddVerification("nonExistentSigName"
-                , null, null, null));
+            String signatureName = "nonExistentSigName";
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => testVerification.AddVerification
+                (signatureName, null, null, null));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(SignExceptionMessageConstant.NO_SIGNATURE_WITH_THAT_NAME
+                , signatureName), exception.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void ExceptionWhenValidateParticularNonExistentSigNameTest() {
-            //TODO DEVSIX-5696 Sign: NPE is thrown because no such a signature
             LtvVerification testVerification = Setup();
-            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => testVerification.AddVerification("nonExistentSigName"
-                , null, null, LtvVerification.CertificateOption.SIGNING_CERTIFICATE, LtvVerification.Level.OCSP_CRL, LtvVerification.CertificateInclusion
-                .YES));
+            String signatureName = "nonExistentSigName";
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => testVerification.AddVerification
+                (signatureName, null, null, LtvVerification.CertificateOption.SIGNING_CERTIFICATE, LtvVerification.Level
+                .OCSP_CRL, LtvVerification.CertificateInclusion.YES));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(SignExceptionMessageConstant.NO_SIGNATURE_WITH_THAT_NAME
+                , signatureName), exception.Message);
         }
 
         [NUnit.Framework.Test]

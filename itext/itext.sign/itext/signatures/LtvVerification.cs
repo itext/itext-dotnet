@@ -197,6 +197,7 @@ namespace iText.Signatures {
             if (used) {
                 throw new InvalidOperationException(SignExceptionMessageConstant.VERIFICATION_ALREADY_OUTPUT);
             }
+            CheckSignatureExists(signatureName);
             PdfPKCS7 pk = sgnUtil.ReadSignatureData(signatureName);
             LOGGER.LogInformation("Adding verification for " + signatureName);
             IX509Certificate[] certificateChain = pk.GetCertificates();
@@ -235,6 +236,7 @@ namespace iText.Signatures {
             if (used) {
                 throw new InvalidOperationException(SignExceptionMessageConstant.VERIFICATION_ALREADY_OUTPUT);
             }
+            CheckSignatureExists(signatureName);
             LtvVerification.ValidationData vd = new LtvVerification.ValidationData();
             if (ocsps != null) {
                 foreach (byte[] ocsp in ocsps) {
@@ -307,6 +309,14 @@ namespace iText.Signatures {
             return null;
         }
 //\endcond
+
+        private void CheckSignatureExists(String signatureName) {
+            PdfSignature sig = sgnUtil.GetSignature(signatureName);
+            if (sig == null) {
+                throw new PdfException(MessageFormatUtil.Format(SignExceptionMessageConstant.NO_SIGNATURE_WITH_THAT_NAME, 
+                    signatureName));
+            }
+        }
 
         private void AddRevocationDataForChain(IX509Certificate signingCert, IX509Certificate[] certChain, IOcspClient
              ocsp, ICrlClient crl, LtvVerification.Level level, LtvVerification.CertificateInclusion certInclude, 

@@ -215,6 +215,8 @@ namespace iText.Signatures.Exceptions {
 
         public const String SIGNATURE_NAME_NOT_PROVIDED = "Signature validation name needs to be provided with QualifiedValidator#startSignatureValidation method.";
 
+        public const String NO_SIGNATURE_WITH_THAT_NAME = "Signature field with {0} name was not found in the document.";
+
         private SignExceptionMessageConstant() {
         }
         // Private constructor will prevent the instantiation of this class directly
