@@ -211,7 +211,8 @@ namespace iText.IO.Source {
         public virtual void WriteDoubleIOExceptionTest() {
             NUnit.Framework.Assert.That(() =>  {
                 //the data is random
-                double num = 55.55d;
+                //double num = 55.55d;
+                double num = -5.380469883675687E-05;
                 using (Stream bytes = IO_EXCEPTION_OUTPUT_STREAM) {
                     using (HighPrecisionOutputStream<ByteArrayOutputStream> stream = new HighPrecisionOutputStream<ByteArrayOutputStream>(bytes)) {
                         stream.WriteDouble(num);

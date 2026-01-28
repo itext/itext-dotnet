@@ -54,9 +54,9 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
 
         public override void UpdateCtm(Matrix newCtm) {
             base.UpdateCtm(newCtm);
-            if (clippingPath != null) {
-                TransformClippingPath(newCtm);
-            }
+            //if (clippingPath != null) {
+            //    TransformClippingPath(newCtm);
+            //}
         }
 
         /// <summary>Intersects the current clipping path with the given path.</summary>
