@@ -327,5 +327,13 @@ namespace iText.Kernel.Geom {
             affineTransform.InverseTransform(src, 1, dest, 1, 2);
             iText.Test.TestUtil.AreEqual(expected, dest, 0);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void GetMatrixNoArgumentTest() {
+            float[] expected = new float[] { 0f, 1f, 2f, 3f, 4f, 5f };
+            AffineTransform affineTransform = new AffineTransform(expected);
+            float[] result = affineTransform.GetMatrix();
+            iText.Test.TestUtil.AreEqual(expected, result, 0);
+        }
     }
 }

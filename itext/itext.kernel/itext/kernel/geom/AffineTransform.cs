@@ -420,6 +420,22 @@ namespace iText.Kernel.Geom {
         }
 
         /// <summary>
+        /// Gets an array filled with the values of this
+        /// <see cref="AffineTransform"/>
+        /// instance.
+        /// </summary>
+        /// <returns>
+        /// an array filled with the values of this
+        /// <see cref="AffineTransform"/>
+        /// instance.
+        /// </returns>
+        public virtual float[] GetMatrix() {
+            float[] matrix = new float[6];
+            GetMatrix(matrix);
+            return matrix;
+        }
+
+        /// <summary>
         /// Fills the matrix parameter with the values of this
         /// <see cref="AffineTransform"/>
         /// instance.
