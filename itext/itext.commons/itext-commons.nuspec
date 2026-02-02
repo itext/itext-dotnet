@@ -23,7 +23,7 @@
         <dependency id="Microsoft.Extensions.Logging" version="5.0.0" />
       </group>
       <group targetFramework="netstandard2.0">
-        <dependency id="System.Text.Json" version="9.0.4" />
+        <dependency id="System.Text.Json" version="10.0.2" />
         <!--TODO DEVSIX-7184: Bump Microsoft.Extensions.Logging when targeting netcoreapp3.1-->
         <dependency id="Microsoft.Extensions.Logging" version="5.0.0" />
       </group>

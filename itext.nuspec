@@ -29,7 +29,7 @@
         <dependency id="System.Diagnostics.Process" version="4.3.0" />
         <dependency id="System.Globalization.Extensions" version="4.3.0" />
         <dependency id="System.Runtime.Loader" version="4.3.0" />
-        <dependency id="Microsoft.Extensions.DependencyModel" version="1.1.0" />
+        <dependency id="Microsoft.Extensions.DependencyModel" version="10.0.2" />
         <dependency id="System.Text.Encoding.CodePages" version="4.3.0" />
         <dependency id="System.Collections.NonGeneric" version="4.3.0" />
         <dependency id="System.Runtime.Serialization.Formatters" version="4.3.0" />

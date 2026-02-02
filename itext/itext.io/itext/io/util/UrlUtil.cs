@@ -23,7 +23,6 @@
 using iText.IO.Exceptions;
 using iText.Commons.Utils.Collections;
 using iText.IO.Codec.Brotli.Dec;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
