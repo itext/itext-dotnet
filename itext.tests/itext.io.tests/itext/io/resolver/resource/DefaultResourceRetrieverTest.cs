@@ -101,6 +101,7 @@ namespace iText.IO.Resolver.Resource {
             while (!testResource.IsStarted() && !testResource.IsFailed()) {
                 Thread.Sleep(250);
             }
+            NUnit.Framework.Assert.IsNull(testResource.GetException());
             NUnit.Framework.Assert.IsFalse(testResource.IsFailed());
             Uri url = new Uri("http://127.0.0.1:" + testResource.GetPort() + "/");
             DefaultResourceRetriever resourceRetriever = new DefaultResourceRetriever();
@@ -111,8 +112,49 @@ namespace iText.IO.Resolver.Resource {
                 resourceRetriever.GetInputStreamByUrl(url);
             }
             catch (Exception) {
+                // exception is expected here, but we do not care
             }
-            // exception is expected here, but we do not care
+            while (testResource.GetException() == null && testResource.GetLastRequest() == null)
+            {
+                Thread.Sleep(100);
+            }
+            NUnit.Framework.Assert.IsNull(testResource.GetException());
+            NUnit.Framework.Assert.IsTrue(testResource.GetLastRequest().Contains("User-Agent: TEST User Agent"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LoadWithRequestAndMixedHeadersTest()
+        {
+            DefaultResourceRetrieverTest.TestResource testResource = new DefaultResourceRetrieverTest.TestResource();
+            testResource.Start();
+            while (!testResource.IsStarted() && !testResource.IsFailed())
+            {
+                Thread.Sleep(250);
+            }
+            NUnit.Framework.Assert.IsNull(testResource.GetException());
+            NUnit.Framework.Assert.IsFalse(testResource.IsFailed());
+            Uri url = new Uri("http://127.0.0.1:" + testResource.GetPort() + "/");
+            DefaultResourceRetriever resourceRetriever = new DefaultResourceRetriever();
+            IDictionary<String, String> headers = new Dictionary<String, String>();
+            headers.Add("User-Agent", "TEST User Agent");
+            headers.Add("TEST-HEADER", "DEFAULT test header");
+            resourceRetriever.SetRequestHeaders(headers);
+
+            var getHeaders = new Dictionary<String, String>();
+            getHeaders.Add("User-Agent", "TEST User Agent");
+            try
+            {
+                resourceRetriever.GetInputStreamByUrl(url);
+            }
+            catch (Exception)
+            {
+                // exception is expected here, but we do not care
+            }
+            while (testResource.GetException() == null && testResource.GetLastRequest() == null)
+            {
+                Thread.Sleep(100);
+            }
+            NUnit.Framework.Assert.IsNull(testResource.GetException());
             NUnit.Framework.Assert.IsTrue(testResource.GetLastRequest().Contains("User-Agent: TEST User Agent"));
         }
 
@@ -131,7 +173,19 @@ namespace iText.IO.Resolver.Resource {
             private bool failed = false;
 
             private String request;
-            
+            private Exception exception;
+            private int responseWaitTime;
+
+            public TestResource(int responseWaitTime)
+            {
+                this.responseWaitTime = responseWaitTime;
+            }
+
+            public TestResource()
+            {
+                this.responseWaitTime = 0;
+            }
+
             public virtual int GetPort() {
                 return port;
             }
@@ -148,6 +202,10 @@ namespace iText.IO.Resolver.Resource {
                 return request;
             }
 
+            public virtual Exception GetException() {
+                return exception;
+            }   
+
             private void StartServer() {
                 int tryCount = 0;
                 while (!started) {
@@ -163,7 +221,10 @@ namespace iText.IO.Resolver.Resource {
                             started = true;
                             using (Socket clientSocket = server.Accept())
                             {
-                                Thread.Sleep(2000);
+                                if (responseWaitTime > 0)
+                                {
+                                    Thread.Sleep(responseWaitTime);
+                                }
                                 String response = "HTTP/1.1 OK OK\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n" 
                                     + "<!DOCTYPE html>\n" 
                                     + "<html>\n"
@@ -174,24 +235,39 @@ namespace iText.IO.Resolver.Resource {
                                 clientSocket.Send(Encoding.UTF8.GetBytes(response));
                                 try
                                 {
-                                    if (clientSocket.Available > 0)
+                                    int attempt = 0;
+                                    while (attempt < 10 && request == null)
                                     {
-                                        byte[] buff = new byte[clientSocket.Available];
-                                        clientSocket.Receive(buff);
-                                        request = iText.Commons.Utils.JavaUtil.GetStringForBytes(buff, System.Text.Encoding.UTF8);
+                                        attempt++;
+                                        if (clientSocket.Available > 0)
+                                        {
+                                            byte[] buff = new byte[clientSocket.Available];
+                                            clientSocket.Receive(buff);
+                                            request = iText.Commons.Utils.JavaUtil.GetStringForBytes(buff, System.Text.Encoding.UTF8);
+                                        }
+                                        else
+                                        {
+                                            Thread.Sleep(100);
+                                        }
+                                    }
+
+                                    if (request == null)
+                                    {
+                                        exception = new InvalidOperationException("No request data available");
                                     }
                                 }
                                 catch (Exception e)
                                 {
+                                    exception = e;
                                     request = e.ToString();
-                                }
-                                server.Accept();
+                                }                                
                             }
                         }
                     }
                     catch (Exception ex) {
                         if (tryCount > 100) {
                             failed = true;
+                            exception = ex;
                             throw;
                         }
                         port++;
