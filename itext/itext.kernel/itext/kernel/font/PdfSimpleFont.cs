@@ -35,8 +35,10 @@ using iText.Kernel.Pdf;
 namespace iText.Kernel.Font {
     public abstract class PdfSimpleFont<T> : PdfFont
         where T : FontProgram {
+        [Obsolete]
         protected internal FontEncoding fontEncoding;
 
+        // Make private
         /// <summary>Forces the output of the width array.</summary>
         /// <remarks>Forces the output of the width array. Only matters for the 14 built-in fonts.</remarks>
         protected internal bool forceWidthsOutput = false;
@@ -44,11 +46,6 @@ namespace iText.Kernel.Font {
         /// <summary>The array used with single byte encodings.</summary>
         protected internal byte[] usedGlyphs = new byte[PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE + 1];
 
-        /// <summary>Currently only exists for the fonts that are parsed from the document.</summary>
-        /// <remarks>
-        /// Currently only exists for the fonts that are parsed from the document.
-        /// In the future, we might provide possibility to add custom mappings after a font has been created from a font file.
-        /// </remarks>
         protected internal CMapToUnicode toUnicode;
 
         protected internal PdfSimpleFont(PdfDictionary fontDictionary)
@@ -151,6 +148,19 @@ namespace iText.Kernel.Font {
         /// </returns>
         public virtual FontEncoding GetFontEncoding() {
             return fontEncoding;
+        }
+
+        /// <summary>Set the font encoding.</summary>
+        /// <param name="fontEncoding">
+        /// the
+        /// <see cref="iText.IO.Font.FontEncoding"/>
+        /// to set
+        /// </param>
+        public void SetFontEncoding(FontEncoding fontEncoding) {
+            this.fontEncoding = fontEncoding;
+            if (toUnicode == null && fontEncoding != null && !fontEncoding.IsFontSpecific()) {
+                this.toUnicode = CMapToUnicode.CreateToUnicodeCmap(this.fontEncoding);
+            }
         }
 
         /// <summary>Get the mapping of character codes to unicode values based on /ToUnicode entry of font dictionary.

@@ -753,8 +753,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 float size = ((PdfNumber)operands[1]).FloatValue();
                 PdfDictionary fontsDictionary = processor.GetResources().GetResource(PdfName.Font);
                 PdfDictionary fontDict = fontsDictionary.GetAsDictionary(fontResourceName);
-                PdfFont font = null;
-                font = processor.GetFont(fontDict);
+                PdfFont font = processor.GetFont(fontDict);
                 processor.GetGraphicsState().SetFont(font);
                 processor.GetGraphicsState().SetFontSize(size);
             }

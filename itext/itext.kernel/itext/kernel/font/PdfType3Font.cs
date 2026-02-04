@@ -101,7 +101,7 @@ namespace iText.Kernel.Font {
             subset = true;
             embedded = true;
             fontProgram = new Type3Font(colorized);
-            fontEncoding = FontEncoding.CreateEmptyFontEncoding();
+            SetFontEncoding(FontEncoding.CreateEmptyFontEncoding());
             SetGlyphSpaceNormalizationFactor(1.0f);
         }
 //\endcond
@@ -128,7 +128,7 @@ namespace iText.Kernel.Font {
             subset = true;
             embedded = true;
             fontProgram = new Type3Font(false);
-            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUnicode);
+            SetFontEncoding(DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUnicode));
             double[] fontMatrixArray = ReadFontMatrix();
             double[] fontBBoxRect = ReadFontBBox();
             double[] widthsArray = ReadWidths(fontDictionary);
@@ -271,7 +271,7 @@ namespace iText.Kernel.Font {
             int code = GetFirstEmptyCode();
             glyph = new Type3Glyph(GetDocument(), wx, llx, lly, urx, ury, ((Type3Font)GetFontProgram()).IsColorized());
             ((Type3Font)GetFontProgram()).AddGlyph(code, c, wx, new int[] { llx, lly, urx, ury }, glyph);
-            fontEncoding.AddSymbol(code, c);
+            GetFontEncoding().AddSymbol(code, c);
             if (!((Type3Font)GetFontProgram()).IsColorized()) {
                 if (fontProgram.CountOfGlyphs() == 0) {
                     fontProgram.GetFontMetrics().SetBbox(llx, lly, urx, ury);
@@ -289,8 +289,8 @@ namespace iText.Kernel.Font {
         }
 
         public override Glyph GetGlyph(int unicode) {
-            if (fontEncoding.CanEncode(unicode) || unicode < 33) {
-                Glyph glyph = GetFontProgram().GetGlyph(fontEncoding.GetUnicodeDifference(unicode));
+            if (GetFontEncoding().CanEncode(unicode) || unicode < 33) {
+                Glyph glyph = GetFontProgram().GetGlyph(GetFontEncoding().GetUnicodeDifference(unicode));
                 if (glyph == null && (glyph = notdefGlyphs.Get(unicode)) == null) {
                     // Handle special layout characters like sfthyphen (00AD).
                     // This glyphs will be skipped while converting to bytes
@@ -303,8 +303,8 @@ namespace iText.Kernel.Font {
         }
 
         public override bool ContainsGlyph(int unicode) {
-            return (fontEncoding.CanEncode(unicode) || unicode < 33) && GetFontProgram().GetGlyph(fontEncoding.GetUnicodeDifference
-                (unicode)) != null;
+            return (GetFontEncoding().CanEncode(unicode) || unicode < 33) && GetFontProgram().GetGlyph(GetFontEncoding
+                ().GetUnicodeDifference(unicode)) != null;
         }
 
         public override void Flush() {
@@ -336,7 +336,7 @@ namespace iText.Kernel.Font {
                 // reset both flags
                 flags &= ~(FontDescriptorFlags.SYMBOLIC | FontDescriptorFlags.NONSYMBOLIC);
                 // set fontSpecific based on font encoding
-                flags |= fontEncoding.IsFontSpecific() ? FontDescriptorFlags.SYMBOLIC : FontDescriptorFlags.NONSYMBOLIC;
+                flags |= GetFontEncoding().IsFontSpecific() ? FontDescriptorFlags.SYMBOLIC : FontDescriptorFlags.NONSYMBOLIC;
                 fontDescriptor.Put(PdfName.Flags, new PdfNumber(flags));
                 return fontDescriptor;
             }
@@ -402,10 +402,10 @@ namespace iText.Kernel.Font {
                     else {
                         // Skip glyphs with id greater than 255
                         String glyphName = ((PdfName)obj).GetValue();
-                        int unicode = fontEncoding.GetUnicode(currentNumber);
+                        int unicode = GetFontEncoding().GetUnicode(currentNumber);
                         if (GetFontProgram().GetGlyphByCode(currentNumber) == null && charProcsDic.ContainsKey(new PdfName(glyphName
                             ))) {
-                            fontEncoding.SetDifference(currentNumber, glyphName);
+                            GetFontEncoding().SetDifference(currentNumber, glyphName);
                             ((Type3Font)GetFontProgram()).AddGlyph(currentNumber, unicode, widths[currentNumber], null, new Type3Glyph
                                 (charProcsDic.GetAsStream(new PdfName(glyphName)), GetDocument()));
                         }
@@ -423,7 +423,7 @@ namespace iText.Kernel.Font {
         private int GetFirstEmptyCode() {
             int startFrom = 1;
             for (int i = startFrom; i <= PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE; i++) {
-                if (!fontEncoding.CanDecode(i) && fontProgram.GetGlyphByCode(i) == null) {
+                if (!GetFontEncoding().CanDecode(i) && fontProgram.GetGlyphByCode(i) == null) {
                     return i;
                 }
             }
@@ -446,8 +446,8 @@ namespace iText.Kernel.Font {
             foreach (PdfName glyphName in charProcsDic.KeySet()) {
                 int unicode = AdobeGlyphList.NameToUnicode(glyphName.GetValue());
                 int code = -1;
-                if (fontEncoding.CanEncode(unicode)) {
-                    code = fontEncoding.ConvertToByte(unicode);
+                if (GetFontEncoding().CanEncode(unicode)) {
+                    code = GetFontEncoding().ConvertToByte(unicode);
                 }
                 else {
                     if (unicodeToCode != null && unicodeToCode.ContainsKey(unicode)) {
@@ -468,14 +468,14 @@ namespace iText.Kernel.Font {
             PdfDictionary charProcs = new PdfDictionary();
             for (int i = 0; i <= PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE; i++) {
                 Type3Glyph glyph = null;
-                if (fontEncoding.CanDecode(i)) {
-                    glyph = GetType3Glyph(fontEncoding.GetUnicode(i));
+                if (GetFontEncoding().CanDecode(i)) {
+                    glyph = GetType3Glyph(GetFontEncoding().GetUnicode(i));
                 }
                 if (glyph == null) {
                     glyph = ((Type3Font)GetFontProgram()).GetType3GlyphByCode(i);
                 }
                 if (glyph != null) {
-                    charProcs.Put(new PdfName(fontEncoding.GetDifference(i)), glyph.GetContentStream());
+                    charProcs.Put(new PdfName(GetFontEncoding().GetDifference(i)), glyph.GetContentStream());
                     glyph.GetContentStream().Flush();
                 }
             }

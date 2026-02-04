@@ -237,7 +237,7 @@ namespace iText.Kernel.Font {
 
         private class TestSimpleFont : PdfSimpleFont<FontProgram> {
             public TestSimpleFont(FontEncoding fontEncoding) {
-                this.fontEncoding = fontEncoding;
+                SetFontEncoding(fontEncoding);
                 SetFontProgram(FontProgramFactory.CreateFont(StandardFonts.HELVETICA));
             }
 

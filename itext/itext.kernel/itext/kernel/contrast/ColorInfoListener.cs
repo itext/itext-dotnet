@@ -83,19 +83,19 @@ namespace iText.Kernel.Contrast {
                 if (checkForIndividualCharacters) {
                     foreach (TextRenderInfo characterRenderInfo in re.GetCharacterRenderInfos()) {
                         Path p = BuildPathFromTextRenderInfo(characterRenderInfo);
-                        String text = GetCorrectValue(characterRenderInfo.GetPdfString(), characterRenderInfo.GetText());
+                        String text = characterRenderInfo.GetText();
                         //skip empty text render infos
                         if (text == null || String.IsNullOrEmpty(text) || String.IsNullOrEmpty(text.Trim())) {
                             continue;
                         }
-                        TextColorInfo contrastInformationRenderInfo = new TextColorInfo(text, GetCorrectValue(re.GetPdfString(), re
-                            .GetText()), characterRenderInfo.GetFillColor(), p, characterRenderInfo.GetFontSize());
+                        TextColorInfo contrastInformationRenderInfo = new TextColorInfo(text, re.GetText(), characterRenderInfo.GetFillColor
+                            (), p, characterRenderInfo.GetFontSize());
                         renderInfoList.Add(contrastInformationRenderInfo);
                     }
                 }
                 else {
                     Path p = BuildPathFromTextRenderInfo(re);
-                    String text = GetCorrectValue(re.GetPdfString(), re.GetText());
+                    String text = re.GetText();
                     if (text == null || String.IsNullOrEmpty(text) || String.IsNullOrEmpty(text.Trim())) {
                         return;
                     }
@@ -154,14 +154,6 @@ namespace iText.Kernel.Contrast {
             subpath.SetClosed(true);
             path.AddSubpath(subpath);
             return path;
-        }
-
-        private static String GetCorrectValue(PdfString pdfString, String text) {
-            String textPdfString = pdfString.ToString();
-            if (!text.Equals(textPdfString)) {
-                return textPdfString;
-            }
-            return text;
         }
 
         /// <summary>Flattens a Bezier curve into a series of line segments for geometric calculations.</summary>

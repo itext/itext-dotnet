@@ -38,10 +38,10 @@ namespace iText.Kernel.Font {
             }
             if (encoding != null && StringNormalizer.ToLowerCase(FontEncoding.FONT_SPECIFIC).Equals(StringNormalizer.ToLowerCase
                 (encoding))) {
-                fontEncoding = FontEncoding.CreateFontSpecificEncoding();
+                SetFontEncoding(FontEncoding.CreateFontSpecificEncoding());
             }
             else {
-                fontEncoding = FontEncoding.CreateFontEncoding(encoding);
+                SetFontEncoding(FontEncoding.CreateFontEncoding(encoding));
             }
         }
 //\endcond
@@ -56,8 +56,8 @@ namespace iText.Kernel.Font {
         internal PdfType1Font(PdfDictionary fontDictionary)
             : base(fontDictionary) {
             newFont = false;
-            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUnicode);
-            fontProgram = DocType1Font.CreateFontProgram(fontDictionary, fontEncoding, toUnicode);
+            SetFontEncoding(DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUnicode));
+            fontProgram = DocType1Font.CreateFontProgram(fontDictionary, GetFontEncoding(), toUnicode);
             if (fontProgram is IDocFontProgram) {
                 embedded = ((IDocFontProgram)fontProgram).GetFontFile() != null;
             }
@@ -85,13 +85,13 @@ namespace iText.Kernel.Font {
         }
 
         public override Glyph GetGlyph(int unicode) {
-            if (fontEncoding.CanEncode(unicode)) {
+            if (GetFontEncoding().CanEncode(unicode)) {
                 Glyph glyph;
-                if (fontEncoding.IsFontSpecific()) {
+                if (GetFontEncoding().IsFontSpecific()) {
                     glyph = GetFontProgram().GetGlyphByCode(unicode);
                 }
                 else {
-                    glyph = GetFontProgram().GetGlyph(fontEncoding.GetUnicodeDifference(unicode));
+                    glyph = GetFontProgram().GetGlyph(GetFontEncoding().GetUnicodeDifference(unicode));
                     if (glyph == null && (glyph = notdefGlyphs.Get(unicode)) == null) {
                         // Handle special layout characters like sfthyphen (00AD).
                         // This glyphs will be skipped while converting to bytes
@@ -105,12 +105,12 @@ namespace iText.Kernel.Font {
         }
 
         public override bool ContainsGlyph(int unicode) {
-            if (fontEncoding.CanEncode(unicode)) {
-                if (fontEncoding.IsFontSpecific()) {
+            if (GetFontEncoding().CanEncode(unicode)) {
+                if (GetFontEncoding().IsFontSpecific()) {
                     return GetFontProgram().GetGlyphByCode(unicode) != null;
                 }
                 else {
-                    return GetFontProgram().GetGlyph(fontEncoding.GetUnicodeDifference(unicode)) != null;
+                    return GetFontProgram().GetGlyph(GetFontEncoding().GetUnicodeDifference(unicode)) != null;
                 }
             }
             else {

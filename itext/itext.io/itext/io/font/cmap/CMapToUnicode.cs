@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
+using iText.IO.Font;
 using iText.IO.Util;
 
 namespace iText.IO.Font.Cmap {
@@ -33,17 +34,20 @@ namespace iText.IO.Font.Cmap {
         public static readonly iText.IO.Font.Cmap.CMapToUnicode EMPTY_CMAP = new iText.IO.Font.Cmap.CMapToUnicode(
             true);
 
+        private const String CMAP_TO_UNICODE_CREATE_TO_UNICODE_CMAP_IS_NOT_SUPPORTED_FOR_FONT_SPECIFIC_ENCODING = 
+            "CMapToUnicode#createToUnicodeCmap is not supported for font specific encoding";
+
         private readonly IDictionary<int, char[]> byteMappings;
 
         private readonly IList<byte[]> codeSpaceRanges = new List<byte[]>();
 
-        private CMapToUnicode(bool emptyCMap) {
-            byteMappings = JavaCollectionsUtil.EmptyMap<int, char[]>();
-        }
-
         /// <summary>Creates a new instance of CMap.</summary>
         public CMapToUnicode() {
             byteMappings = new Dictionary<int, char[]>();
+        }
+
+        private CMapToUnicode(bool emptyCMap) {
+            byteMappings = JavaCollectionsUtil.EmptyMap<int, char[]>();
         }
 
         public static iText.IO.Font.Cmap.CMapToUnicode GetIdentity() {
@@ -55,17 +59,43 @@ namespace iText.IO.Font.Cmap {
             return uni;
         }
 
+        /// <summary>Creates a ToUnicode CMap from the given font encoding.</summary>
+        /// <param name="fontEncoding">the font encoding</param>
+        /// <returns>the ToUnicode CMap</returns>
+        public static iText.IO.Font.Cmap.CMapToUnicode CreateToUnicodeCmap(FontEncoding fontEncoding) {
+            // For now we throw here though in future it may change
+            if (fontEncoding.IsFontSpecific()) {
+                throw new ArgumentException(CMAP_TO_UNICODE_CREATE_TO_UNICODE_CMAP_IS_NOT_SUPPORTED_FOR_FONT_SPECIFIC_ENCODING
+                    );
+            }
+            iText.IO.Font.Cmap.CMapToUnicode toUnicodeCmap = new iText.IO.Font.Cmap.CMapToUnicode();
+            // 256 is max for any FontEncoding
+            for (int code = 0; code < 256; code++) {
+                int unicode = fontEncoding.GetUnicode(code);
+                if (unicode != -1) {
+                    toUnicodeCmap.AddChar(code, new char[] { (char)unicode });
+                }
+            }
+            return toUnicodeCmap;
+        }
+
         /// <summary>This will tell if this cmap has any two byte mappings.</summary>
-        /// <returns>true If there are any two byte mappings, false otherwise.</returns>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// If there are any two byte mappings,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public virtual bool HasByteMappings() {
             return byteMappings.Count != 0;
         }
 
         /// <summary>This will perform a lookup into the map.</summary>
-        /// <param name="code">The code used to lookup.</param>
-        /// <param name="offset">The offset into the byte array.</param>
-        /// <param name="length">The length of the data we are getting.</param>
-        /// <returns>The string that matches the lookup.</returns>
+        /// <param name="code">the code used to lookup</param>
+        /// <param name="offset">the offset into the byte array</param>
+        /// <param name="length">the length of the data we are getting</param>
+        /// <returns>the string that matches the lookup</returns>
         public virtual char[] Lookup(byte[] code, int offset, int length) {
             char[] result = null;
             int key;
@@ -131,23 +161,6 @@ namespace iText.IO.Font.Cmap {
         }
 
 //\cond DO_NOT_DOCUMENT
-        internal override void AddCodeSpaceRange(byte[] low, byte[] high) {
-            codeSpaceRanges.Add(low);
-            codeSpaceRanges.Add(high);
-        }
-//\endcond
-
-        private int ConvertToInt(char[] s) {
-            int value = 0;
-            for (int i = 0; i < s.Length - 1; i++) {
-                value += s[i];
-                value <<= 8;
-            }
-            value += s[s.Length - 1];
-            return value;
-        }
-
-//\cond DO_NOT_DOCUMENT
         internal virtual void AddChar(int cid, char[] uni) {
             byteMappings.Put(cid, uni);
         }
@@ -172,17 +185,21 @@ namespace iText.IO.Font.Cmap {
         }
 //\endcond
 
-        private char[] CreateCharsFromSingleBytes(byte[] bytes) {
-            if (bytes.Length == 1) {
-                return new char[] { (char)(bytes[0] & 0xff) };
+//\cond DO_NOT_DOCUMENT
+        internal override void AddCodeSpaceRange(byte[] low, byte[] high) {
+            codeSpaceRanges.Add(low);
+            codeSpaceRanges.Add(high);
+        }
+//\endcond
+
+        private int ConvertToInt(char[] s) {
+            int value = 0;
+            for (int i = 0; i < s.Length - 1; i++) {
+                value += s[i];
+                value <<= 8;
             }
-            else {
-                char[] chars = new char[bytes.Length];
-                for (int i = 0; i < bytes.Length; i++) {
-                    chars[i] = (char)(bytes[i] & 0xff);
-                }
-                return chars;
-            }
+            value += s[s.Length - 1];
+            return value;
         }
 
         private char[] CreateCharsFromDoubleBytes(byte[] bytes) {

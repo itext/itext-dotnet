@@ -51,10 +51,10 @@ namespace iText.Kernel.Font {
             }
             if (encoding != null && StringNormalizer.ToLowerCase(FontEncoding.FONT_SPECIFIC).Equals(StringNormalizer.ToLowerCase
                 (encoding))) {
-                fontEncoding = FontEncoding.CreateFontSpecificEncoding();
+                SetFontEncoding(FontEncoding.CreateFontSpecificEncoding());
             }
             else {
-                fontEncoding = FontEncoding.CreateFontEncoding(encoding);
+                SetFontEncoding(FontEncoding.CreateFontEncoding(encoding));
             }
         }
 //\endcond
@@ -64,7 +64,7 @@ namespace iText.Kernel.Font {
             : base(fontDictionary) {
             newFont = false;
             subset = false;
-            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUnicode);
+            SetFontEncoding(DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUnicode));
             PdfName baseFontName = fontDictionary.GetAsName(PdfName.BaseFont);
             // Section 9.6.3 (ISO-32000-1): A TrueType font dictionary may contain the same entries as a Type 1 font
             // dictionary (see Table 111), with these differences...
@@ -82,15 +82,15 @@ namespace iText.Kernel.Font {
                 }
             }
             else {
-                fontProgram = DocTrueTypeFont.CreateFontProgram(fontDictionary, fontEncoding, toUnicode);
+                fontProgram = DocTrueTypeFont.CreateFontProgram(fontDictionary, GetFontEncoding(), toUnicode);
             }
             embedded = fontProgram is IDocFontProgram && ((IDocFontProgram)fontProgram).GetFontFile() != null;
         }
 //\endcond
 
         public override Glyph GetGlyph(int unicode) {
-            if (fontEncoding.CanEncode(unicode)) {
-                Glyph glyph = GetFontProgram().GetGlyph(fontEncoding.GetUnicodeDifference(unicode));
+            if (GetFontEncoding().CanEncode(unicode)) {
+                Glyph glyph = GetFontProgram().GetGlyph(GetFontEncoding().GetUnicodeDifference(unicode));
                 if (glyph == null && (glyph = notdefGlyphs.Get(unicode)) == null) {
                     Glyph notdef = GetFontProgram().GetGlyphByCode(0);
                     if (notdef != null) {
@@ -104,12 +104,12 @@ namespace iText.Kernel.Font {
         }
 
         public override bool ContainsGlyph(int unicode) {
-            if (fontEncoding.IsFontSpecific()) {
+            if (GetFontEncoding().IsFontSpecific()) {
                 return fontProgram.GetGlyphByCode(unicode) != null;
             }
             else {
-                return fontEncoding.CanEncode(unicode) && GetFontProgram().GetGlyph(fontEncoding.GetUnicodeDifference(unicode
-                    )) != null;
+                return GetFontEncoding().CanEncode(unicode) && GetFontProgram().GetGlyph(GetFontEncoding().GetUnicodeDifference
+                    (unicode)) != null;
             }
         }
 
@@ -167,7 +167,7 @@ namespace iText.Kernel.Font {
                         SortedSet<int> glyphs = new SortedSet<int>();
                         for (int k = 0; k < usedGlyphs.Length; k++) {
                             if (usedGlyphs[k] != 0) {
-                                int uni = fontEncoding.GetUnicode(k);
+                                int uni = GetFontEncoding().GetUnicode(k);
                                 Glyph glyph = uni > -1 ? fontProgram.GetGlyph(uni) : fontProgram.GetGlyphByCode(k);
                                 if (glyph != null) {
                                     glyphs.Add(glyph.GetCode());
