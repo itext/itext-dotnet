@@ -22,17 +22,25 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Json;
 using iText.Commons.Utils;
+using iText.Signatures;
 
 namespace iText.Signatures.Validation.Lotl {
     /// <summary>Class representing TSPService entry in a country specific Trusted List.</summary>
-    public class CountryServiceContext : IServiceContext {
-        private readonly IList<IX509Certificate> certificates = new List<IX509Certificate>();
+    public class CountryServiceContext : IServiceContext, IJsonSerializable {
+        private const String JSON_KEY_CERTIFICATES = "certificates";
+
+        private const String JSON_KEY_SERVICE_TYPE = "serviceType";
+
+        private const String JSON_KEY_SERVICE_CHRONOLOGICAL_INFOS = "serviceChronologicalInfos";
+
+        private IList<IX509Certificate> certificates = new List<IX509Certificate>();
 
         //It is expected that service statuses are ordered starting from the newest one.
-        private readonly IList<ServiceChronologicalInfo> serviceChronologicalInfos = new List<ServiceChronologicalInfo
-            >();
+        private IList<ServiceChronologicalInfo> serviceChronologicalInfos = new List<ServiceChronologicalInfo>();
 
         private String serviceType;
 
@@ -131,6 +139,59 @@ namespace iText.Signatures.Validation.Lotl {
         /// </returns>
         public virtual ServiceChronologicalInfo GetCurrentChronologicalInfo() {
             return serviceChronologicalInfos[0];
+        }
+
+        /// <summary>
+        /// <inheritDoc/>.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        public virtual JsonValue ToJson() {
+            JsonObject jsonObject = new JsonObject();
+            JsonArray certificatesJson = new JsonArray();
+            foreach (IX509Certificate certificate in certificates) {
+                certificatesJson.Add(SignJsonSerializerHelper.SerializeCertificate(certificate));
+            }
+            jsonObject.Add(JSON_KEY_CERTIFICATES, certificatesJson);
+            jsonObject.Add(JSON_KEY_SERVICE_CHRONOLOGICAL_INFOS, new JsonArray(serviceChronologicalInfos.Select((serviceChronologicalInfo
+                ) => serviceChronologicalInfo.ToJson()).ToList()));
+            jsonObject.Add(JSON_KEY_SERVICE_TYPE, new JsonString(serviceType));
+            return jsonObject;
+        }
+
+        /// <summary>
+        /// Deserializes
+        /// <see cref="iText.Commons.Json.JsonValue"/>
+        /// into
+        /// <see cref="CountryServiceContext"/>.
+        /// </summary>
+        /// <param name="jsonValue">
+        /// 
+        /// <see cref="iText.Commons.Json.JsonValue"/>
+        /// to deserialize
+        /// </param>
+        /// <returns>
+        /// deserialized
+        /// <see cref="CountryServiceContext"/>
+        /// </returns>
+        public static iText.Signatures.Validation.Lotl.CountryServiceContext FromJson(JsonValue jsonValue) {
+            JsonObject countryServiceContextJson = (JsonObject)jsonValue;
+            JsonArray certificatesJson = (JsonArray)countryServiceContextJson.GetField(JSON_KEY_CERTIFICATES);
+            IList<IX509Certificate> certificatesFromJson = certificatesJson.GetValues().Select((certificateJson) => SignJsonSerializerHelper
+                .DeserializeCertificate(certificateJson)).ToList();
+            iText.Signatures.Validation.Lotl.CountryServiceContext countryServiceContextFromJson = new iText.Signatures.Validation.Lotl.CountryServiceContext
+                ();
+            countryServiceContextFromJson.certificates = certificatesFromJson;
+            JsonArray serviceChronologicalInfosJson = (JsonArray)countryServiceContextJson.GetField(JSON_KEY_SERVICE_CHRONOLOGICAL_INFOS
+                );
+            countryServiceContextFromJson.serviceChronologicalInfos = serviceChronologicalInfosJson.GetValues().Select
+                ((serviceChronologicalInfoJson) => ServiceChronologicalInfo.FromJson(serviceChronologicalInfoJson)).ToList
+                ();
+            countryServiceContextFromJson.serviceType = ((JsonString)countryServiceContextJson.GetField(JSON_KEY_SERVICE_TYPE
+                )).GetValue();
+            return countryServiceContextFromJson;
         }
 
 //\cond DO_NOT_DOCUMENT

@@ -20,12 +20,18 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Json;
+using iText.Signatures;
 
 namespace iText.Signatures.Validation.Lotl {
 //\cond DO_NOT_DOCUMENT
-    internal class SimpleServiceContext : IServiceContext {
+    internal class SimpleServiceContext : IServiceContext, IJsonSerializable {
+        private const String JSON_KEY_CERTIFICATES = "certificates";
+
         private IList<IX509Certificate> certificates;
 
 //\cond DO_NOT_DOCUMENT
@@ -41,6 +47,49 @@ namespace iText.Signatures.Validation.Lotl {
             certificates.Add(certificate);
         }
 //\endcond
+
+        /// <summary>
+        /// <inheritDoc/>.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        public virtual JsonValue ToJson() {
+            JsonObject jsonObject = new JsonObject();
+            JsonArray certificatesJson = new JsonArray();
+            foreach (IX509Certificate certificate in certificates) {
+                certificatesJson.Add(SignJsonSerializerHelper.SerializeCertificate(certificate));
+            }
+            jsonObject.Add(JSON_KEY_CERTIFICATES, certificatesJson);
+            return jsonObject;
+        }
+
+        /// <summary>
+        /// Deserializes
+        /// <see cref="iText.Commons.Json.JsonValue"/>
+        /// into
+        /// <see cref="SimpleServiceContext"/>.
+        /// </summary>
+        /// <param name="jsonValue">
+        /// 
+        /// <see cref="iText.Commons.Json.JsonValue"/>
+        /// to deserialize
+        /// </param>
+        /// <returns>
+        /// deserialized
+        /// <see cref="SimpleServiceContext"/>
+        /// </returns>
+        public static iText.Signatures.Validation.Lotl.SimpleServiceContext FromJson(JsonValue jsonValue) {
+            JsonObject simpleServiceContextJson = (JsonObject)jsonValue;
+            JsonArray certificatesJson = (JsonArray)simpleServiceContextJson.GetField(JSON_KEY_CERTIFICATES);
+            IList<IX509Certificate> certificatesFromJson = certificatesJson.GetValues().Select((certificateJson) => SignJsonSerializerHelper
+                .DeserializeCertificate(certificateJson)).ToList();
+            iText.Signatures.Validation.Lotl.SimpleServiceContext simpleServiceContextFromJson = new iText.Signatures.Validation.Lotl.SimpleServiceContext
+                ();
+            simpleServiceContextFromJson.certificates = certificatesFromJson;
+            return simpleServiceContextFromJson;
+        }
 
         public virtual IList<IX509Certificate> GetCertificates() {
             return new List<IX509Certificate>(certificates);

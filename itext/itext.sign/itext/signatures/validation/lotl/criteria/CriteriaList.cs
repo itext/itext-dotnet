@@ -23,10 +23,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Json;
+using iText.Signatures;
 
 namespace iText.Signatures.Validation.Lotl.Criteria {
     /// <summary>Criteria List which holds other Criteria or other Criteria Lists.</summary>
-    public class CriteriaList : iText.Signatures.Validation.Lotl.Criteria.Criteria {
+    public class CriteriaList : iText.Signatures.Validation.Lotl.Criteria.Criteria, IJsonSerializable {
         private readonly IList<iText.Signatures.Validation.Lotl.Criteria.Criteria> criterias = new List<iText.Signatures.Validation.Lotl.Criteria.Criteria
             >();
 
@@ -102,6 +104,36 @@ namespace iText.Signatures.Validation.Lotl.Criteria {
                     return false;
                 }
             }
+        }
+
+        /// <summary>
+        /// <inheritDoc/>.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        public virtual JsonValue ToJson() {
+            return SignJsonSerializerHelper.SerializeCriteriaList(this);
+        }
+
+        /// <summary>
+        /// Deserializes
+        /// <see cref="iText.Commons.Json.JsonValue"/>
+        /// into
+        /// <see cref="CriteriaList"/>.
+        /// </summary>
+        /// <param name="jsonValue">
+        /// 
+        /// <see cref="iText.Commons.Json.JsonValue"/>
+        /// to deserialize
+        /// </param>
+        /// <returns>
+        /// deserialized
+        /// <see cref="CriteriaList"/>
+        /// </returns>
+        public static iText.Signatures.Validation.Lotl.Criteria.CriteriaList FromJson(JsonValue jsonValue) {
+            return SignJsonSerializerHelper.DeserializeCriteriaList((JsonObject)jsonValue);
         }
     }
 }

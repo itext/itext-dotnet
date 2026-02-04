@@ -22,6 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Json;
+using iText.Signatures;
 
 namespace iText.Signatures.Validation.Report {
     /// <summary>Report item to be used for single certificate related failure or log message.</summary>
@@ -102,6 +104,44 @@ namespace iText.Signatures.Validation.Report {
         /// </returns>
         public virtual IX509Certificate GetCertificate() {
             return certificate;
+        }
+
+        /// <summary>
+        /// <inheritDoc/>.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        public override JsonValue ToJson() {
+            JsonObject reportItemJson = (JsonObject)base.ToJson();
+            reportItemJson.Add("certificate", SignJsonSerializerHelper.SerializeCertificate(certificate));
+            return reportItemJson;
+        }
+
+        /// <summary>
+        /// Deserializes
+        /// <see cref="iText.Commons.Json.JsonValue"/>
+        /// into
+        /// <see cref="CertificateReportItem"/>.
+        /// </summary>
+        /// <param name="jsonValue">
+        /// 
+        /// <see cref="iText.Commons.Json.JsonValue"/>
+        /// to deserialize
+        /// </param>
+        /// <returns>
+        /// deserialized
+        /// <see cref="CertificateReportItem"/>
+        /// </returns>
+        public static iText.Signatures.Validation.Report.CertificateReportItem FromJson(JsonValue jsonValue) {
+            ReportItem reportItemFromJson = ReportItem.FromJson(jsonValue);
+            JsonObject certificateReportItemJson = (JsonObject)jsonValue;
+            JsonObject certificateJson = (JsonObject)certificateReportItemJson.GetField("certificate");
+            IX509Certificate certificateFromJson = SignJsonSerializerHelper.DeserializeCertificate(certificateJson);
+            return new iText.Signatures.Validation.Report.CertificateReportItem(certificateFromJson, reportItemFromJson
+                .GetCheckName(), reportItemFromJson.GetMessage(), reportItemFromJson.GetExceptionCause(), reportItemFromJson
+                .GetStatus());
         }
 
         /// <summary><inheritDoc/></summary>

@@ -22,13 +22,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Json;
 using iText.Commons.Utils;
 using iText.Signatures.Validation.Lotl.Criteria;
 
 namespace iText.Signatures.Validation.Lotl {
     /// <summary>Class representing Qualifications entry from a country specific Trusted List.</summary>
-    public class QualifierExtension {
+    public class QualifierExtension : IJsonSerializable {
+        private const String JSON_KEY_QUALIFIERS = "qualifiers";
+
+        private const String JSON_KEY_CRITERIA_LIST = "criteriaList";
+
         private readonly IList<String> qualifiers = new List<String>();
 
         private CriteriaList criteriaList;
@@ -78,5 +84,54 @@ namespace iText.Signatures.Validation.Lotl {
             this.qualifiers.Add(qualifier);
         }
 //\endcond
+
+        /// <summary>
+        /// <inheritDoc/>.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        public virtual JsonValue ToJson() {
+            JsonObject qualifiersJson = new JsonObject();
+            qualifiersJson.Add(JSON_KEY_QUALIFIERS, new JsonArray(GetQualifiers().Select((qualifier) => (JsonValue)new 
+                JsonString(qualifier)).ToList()));
+            if (GetCriteriaList() != null) {
+                qualifiersJson.Add(JSON_KEY_CRITERIA_LIST, GetCriteriaList().ToJson());
+            }
+            return qualifiersJson;
+        }
+
+        /// <summary>
+        /// Deserializes
+        /// <see cref="iText.Commons.Json.JsonValue"/>
+        /// into
+        /// <see cref="QualifierExtension"/>.
+        /// </summary>
+        /// <param name="jsonValue">
+        /// 
+        /// <see cref="iText.Commons.Json.JsonValue"/>
+        /// to deserialize
+        /// </param>
+        /// <returns>
+        /// deserialized
+        /// <see cref="QualifierExtension"/>
+        /// </returns>
+        public static iText.Signatures.Validation.Lotl.QualifierExtension FromJson(JsonValue jsonValue) {
+            iText.Signatures.Validation.Lotl.QualifierExtension qualifierExtensionFromJson = new iText.Signatures.Validation.Lotl.QualifierExtension
+                ();
+            JsonObject qualifierExtensionJsonObject = (JsonObject)jsonValue;
+            JsonArray qualifiersArray = (JsonArray)qualifierExtensionJsonObject.GetField(JSON_KEY_QUALIFIERS);
+            IList<String> qualifiersFromJson = qualifiersArray.GetValues().Select((qualifierJson) => ((JsonString)qualifierJson
+                ).GetValue()).ToList();
+            foreach (String qualifierFromJson in qualifiersFromJson) {
+                qualifierExtensionFromJson.AddQualifier(qualifierFromJson);
+            }
+            JsonObject criteriaListJson = (JsonObject)qualifierExtensionJsonObject.GetField(JSON_KEY_CRITERIA_LIST);
+            if (criteriaListJson != null) {
+                qualifierExtensionFromJson.SetCriteriaList(CriteriaList.FromJson(criteriaListJson));
+            }
+            return qualifierExtensionFromJson;
+        }
     }
 }

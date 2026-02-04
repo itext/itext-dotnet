@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Json;
 using iText.Commons.Utils;
 using iText.IO.Resolver.Resource;
 using iText.Signatures.Exceptions;
@@ -140,7 +141,17 @@ namespace iText.Signatures.Validation.Lotl {
         }
 
         /// <summary>Represents the result of fetching and validating country-specific LOTLs.</summary>
-        public class Result {
+        public class Result : IJsonSerializable {
+            private const String JSON_KEY_SERVICE_TYPE = "serviceType";
+
+            private const String JSON_KEY_SERVICE_CHRONOLOGICAL_INFOS = "serviceChronologicalInfos";
+
+            private const String JSON_KEY_LOCAL_REPORT = "localReport";
+
+            private const String JSON_KEY_CONTEXTS = "contexts";
+
+            private const String JSON_KEY_COUNTRY_SPECIFIC_LOTL = "countrySpecificLotl";
+
             private ValidationReport localReport;
 
             private IList<IServiceContext> contexts;
@@ -201,6 +212,73 @@ namespace iText.Signatures.Validation.Lotl {
             /// <returns>a string representing the unique identifier for the country-specific LOTL</returns>
             public virtual String CreateUniqueIdentifier() {
                 return countrySpecificLotl.GetSchemeTerritory() + "_" + countrySpecificLotl.GetTslLocation();
+            }
+
+            /// <summary>
+            /// <inheritDoc/>.
+            /// </summary>
+            /// <returns>
+            /// 
+            /// <inheritDoc/>
+            /// </returns>
+            public virtual JsonValue ToJson() {
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.Add(JSON_KEY_LOCAL_REPORT, localReport.ToJson());
+                JsonArray contextsJson = new JsonArray();
+                foreach (IServiceContext serviceContext in contexts) {
+                    if (serviceContext is SimpleServiceContext) {
+                        contextsJson.Add(((SimpleServiceContext)serviceContext).ToJson());
+                    }
+                    else {
+                        if (serviceContext is CountryServiceContext) {
+                            contextsJson.Add(((CountryServiceContext)serviceContext).ToJson());
+                        }
+                    }
+                }
+                jsonObject.Add(JSON_KEY_CONTEXTS, contextsJson);
+                jsonObject.Add(JSON_KEY_COUNTRY_SPECIFIC_LOTL, countrySpecificLotl.ToJson());
+                return jsonObject;
+            }
+
+            /// <summary>
+            /// Deserializes
+            /// <see cref="iText.Commons.Json.JsonValue"/>
+            /// into
+            /// <see cref="Result"/>.
+            /// </summary>
+            /// <param name="jsonValue">
+            /// 
+            /// <see cref="iText.Commons.Json.JsonValue"/>
+            /// to deserialize
+            /// </param>
+            /// <returns>
+            /// deserialized
+            /// <see cref="Result"/>
+            /// </returns>
+            public static CountrySpecificLotlFetcher.Result FromJson(JsonValue jsonValue) {
+                JsonObject countrySpecificLotlFetcherResultJson = (JsonObject)jsonValue;
+                JsonObject localReportJson = (JsonObject)countrySpecificLotlFetcherResultJson.GetField(JSON_KEY_LOCAL_REPORT
+                    );
+                ValidationReport validationReportFromJson = ValidationReport.FromJson(localReportJson);
+                JsonArray contextsJson = (JsonArray)countrySpecificLotlFetcherResultJson.GetField(JSON_KEY_CONTEXTS);
+                IList<IServiceContext> serviceContextsFromJson = new List<IServiceContext>();
+                foreach (JsonValue contextJson in contextsJson.GetValues()) {
+                    JsonObject contextJsonObject = (JsonObject)contextJson;
+                    if (contextJsonObject.GetField(JSON_KEY_SERVICE_CHRONOLOGICAL_INFOS) != null || contextJsonObject.GetField
+                        (JSON_KEY_SERVICE_TYPE) != null) {
+                        serviceContextsFromJson.Add(CountryServiceContext.FromJson(contextJson));
+                    }
+                    else {
+                        serviceContextsFromJson.Add(SimpleServiceContext.FromJson(contextJson));
+                    }
+                }
+                CountrySpecificLotl countrySpecificLotlFromJson = CountrySpecificLotl.FromJson(countrySpecificLotlFetcherResultJson
+                    .GetField(JSON_KEY_COUNTRY_SPECIFIC_LOTL));
+                CountrySpecificLotlFetcher.Result resultFromJson = new CountrySpecificLotlFetcher.Result();
+                resultFromJson.localReport = validationReportFromJson;
+                resultFromJson.contexts = serviceContextsFromJson;
+                resultFromJson.countrySpecificLotl = countrySpecificLotlFromJson;
+                return resultFromJson;
             }
         }
 

@@ -128,6 +128,26 @@ namespace iText.Commons.Utils {
         }
 
         /// <summary>
+        /// Parses passing date with specified format.
+        /// </summary>
+        /// <param name="date">the date to be parsed</param>
+        /// <param name="format">the format of parsing the date</param>
+        /// <returns>parsed date</returns>
+        public static DateTime ParseToLocalDateTime(String date, String format) {
+            return Parse(date, format);
+        }
+
+        /// <summary>
+        /// Parses date time according to specified format.
+        /// </summary>
+        /// <param name="dateTime">date time to parse</param>
+        /// <param name="format">parsing format</param>
+        /// <returns>parse date time as string</returns>
+        public static String ParseLocalDateTime(DateTime dateTime, String format) {
+            return dateTime.ToString(format, CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
         /// Format passing date with default yyyy-MM-dd pattern.
         /// </summary>
         /// <param name="date">the date to be formatted</param>

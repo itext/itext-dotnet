@@ -22,7 +22,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Json;
+using iText.Signatures;
 using iText.Signatures.Validation;
 using iText.Signatures.Validation.Report;
 
@@ -33,6 +36,12 @@ namespace iText.Signatures.Validation.Lotl {
     /// It reads the PEM certificates and returns them in a structured result.
     /// </remarks>
     public class EuropeanResourceFetcher {
+        private const String JSON_KEY_CERTIFICATES = "certificates";
+
+        private const String JSON_KEY_LOCAL_REPORT = "localReport";
+
+        private const String JSON_KEY_CURRENTLY_SUPPORTED_PUBLICATION = "currentlySupportedPublication";
+
         /// <summary>Default constructor for EuropeanResourceFetcher.</summary>
         /// <remarks>
         /// Default constructor for EuropeanResourceFetcher.
@@ -59,8 +68,8 @@ namespace iText.Signatures.Validation.Lotl {
         /// Represents the result of fetching European Union Journal certificates.
         /// Contains a list of report items and a list of certificates.
         /// </remarks>
-        public class Result {
-            private readonly ValidationReport localReport;
+        public class Result : IJsonSerializable {
+            private ValidationReport localReport;
 
             private IList<IX509Certificate> certificates;
 
@@ -111,6 +120,54 @@ namespace iText.Signatures.Validation.Lotl {
             /// </param>
             public virtual void SetCurrentlySupportedPublication(String currentlySuppostedPublication) {
                 this.currentlySupportedPublication = currentlySuppostedPublication;
+            }
+
+            /// <summary>
+            /// <inheritDoc/>.
+            /// </summary>
+            /// <returns>
+            /// 
+            /// <inheritDoc/>
+            /// </returns>
+            public virtual JsonValue ToJson() {
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.Add(JSON_KEY_LOCAL_REPORT, localReport.ToJson());
+                JsonArray certificatesJson = new JsonArray(certificates.Select((certificate) => SignJsonSerializerHelper.SerializeCertificate
+                    (certificate)).ToList());
+                jsonObject.Add(JSON_KEY_CERTIFICATES, certificatesJson);
+                jsonObject.Add(JSON_KEY_CURRENTLY_SUPPORTED_PUBLICATION, new JsonString(currentlySupportedPublication));
+                return jsonObject;
+            }
+
+            /// <summary>
+            /// Deserializes
+            /// <see cref="iText.Commons.Json.JsonValue"/>
+            /// into
+            /// <see cref="Result"/>.
+            /// </summary>
+            /// <param name="jsonValue">
+            /// 
+            /// <see cref="iText.Commons.Json.JsonValue"/>
+            /// to deserialize
+            /// </param>
+            /// <returns>
+            /// deserialized
+            /// <see cref="Result"/>
+            /// </returns>
+            public static EuropeanResourceFetcher.Result FromJson(JsonValue jsonValue) {
+                JsonObject europeanResourceFetcherResultJson = (JsonObject)jsonValue;
+                JsonObject localReportJson = (JsonObject)europeanResourceFetcherResultJson.GetField(JSON_KEY_LOCAL_REPORT);
+                ValidationReport validationReportFromJson = ValidationReport.FromJson(localReportJson);
+                JsonArray certificatesJson = (JsonArray)europeanResourceFetcherResultJson.GetField(JSON_KEY_CERTIFICATES);
+                IList<IX509Certificate> certificatesFromJson = certificatesJson.GetValues().Select((certificateJson) => SignJsonSerializerHelper
+                    .DeserializeCertificate(certificateJson)).ToList();
+                String currentlySupportedPublicationFromJson = ((JsonString)europeanResourceFetcherResultJson.GetField(JSON_KEY_CURRENTLY_SUPPORTED_PUBLICATION
+                    )).GetValue();
+                EuropeanResourceFetcher.Result resultFromJson = new EuropeanResourceFetcher.Result();
+                resultFromJson.localReport = validationReportFromJson;
+                resultFromJson.certificates = certificatesFromJson;
+                resultFromJson.currentlySupportedPublication = currentlySupportedPublicationFromJson;
+                return resultFromJson;
             }
         }
     }

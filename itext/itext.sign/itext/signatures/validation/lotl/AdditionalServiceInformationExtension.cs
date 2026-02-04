@@ -22,10 +22,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Json;
 
 namespace iText.Signatures.Validation.Lotl {
     /// <summary>Wrapper class for additional service information extension.</summary>
-    public class AdditionalServiceInformationExtension {
+    public class AdditionalServiceInformationExtension : IJsonSerializable {
 //\cond DO_NOT_DOCUMENT
         internal const String FOR_E_SIGNATURES = "http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForeSignatures";
 //\endcond
@@ -37,6 +38,8 @@ namespace iText.Signatures.Validation.Lotl {
 //\cond DO_NOT_DOCUMENT
         internal const String FOR_WSA = "http://uri.etsi.org/TrstSvc/TrustedList/SvcInfoExt/ForWebSiteAuthentication";
 //\endcond
+
+        private const String JSON_KEY_URI = "uri";
 
         private static readonly ICollection<String> INVALID_SCOPES = new HashSet<String>();
 
@@ -83,5 +86,39 @@ namespace iText.Signatures.Validation.Lotl {
             return !INVALID_SCOPES.Contains(uri);
         }
 //\endcond
+
+        /// <summary>
+        /// <inheritDoc/>.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        public virtual JsonValue ToJson() {
+            JsonObject extensionJson = new JsonObject();
+            extensionJson.Add(JSON_KEY_URI, new JsonString(GetUri()));
+            return extensionJson;
+        }
+
+        /// <summary>
+        /// Deserializes
+        /// <see cref="iText.Commons.Json.JsonValue"/>
+        /// into
+        /// <see cref="AdditionalServiceInformationExtension"/>.
+        /// </summary>
+        /// <param name="jsonValue">
+        /// 
+        /// <see cref="iText.Commons.Json.JsonValue"/>
+        /// to deserialize
+        /// </param>
+        /// <returns>
+        /// deserialized
+        /// <see cref="AdditionalServiceInformationExtension"/>
+        /// </returns>
+        public static iText.Signatures.Validation.Lotl.AdditionalServiceInformationExtension FromJson(JsonValue jsonValue
+            ) {
+            return new iText.Signatures.Validation.Lotl.AdditionalServiceInformationExtension(((JsonString)((JsonObject
+                )jsonValue).GetField(JSON_KEY_URI)).GetValue());
+        }
     }
 }

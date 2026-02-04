@@ -27,6 +27,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Json;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Signatures.Exceptions;
@@ -143,7 +144,11 @@ namespace iText.Signatures.Validation.Lotl {
         }
 
         /// <summary>Result class encapsulates the result of the pivot fetching and validation process.</summary>
-        public class Result {
+        public class Result : IJsonSerializable {
+            private const String JSON_KEY_LOCAL_REPORT = "localReport";
+
+            private const String JSON_KEY_PIVOT_URLS = "pivotUrls";
+
             private ValidationReport localReport = new ValidationReport();
 
             private IList<String> pivotsUrlList = new List<String>();
@@ -186,6 +191,49 @@ namespace iText.Signatures.Validation.Lotl {
             /// <returns>a string representing the unique identifier</returns>
             public virtual String GenerateUniqueIdentifier() {
                 return String.Join("_", pivotsUrlList);
+            }
+
+            /// <summary>
+            /// <inheritDoc/>.
+            /// </summary>
+            /// <returns>
+            /// 
+            /// <inheritDoc/>
+            /// </returns>
+            public virtual JsonValue ToJson() {
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.Add(JSON_KEY_LOCAL_REPORT, localReport.ToJson());
+                jsonObject.Add(JSON_KEY_PIVOT_URLS, new JsonArray(pivotsUrlList.Select((pivotUrl) => (JsonValue)new JsonString
+                    (pivotUrl)).ToList()));
+                return jsonObject;
+            }
+
+            /// <summary>
+            /// Deserializes
+            /// <see cref="iText.Commons.Json.JsonValue"/>
+            /// into
+            /// <see cref="Result"/>.
+            /// </summary>
+            /// <param name="jsonValue">
+            /// 
+            /// <see cref="iText.Commons.Json.JsonValue"/>
+            /// to deserialize
+            /// </param>
+            /// <returns>
+            /// deserialized
+            /// <see cref="Result"/>
+            /// </returns>
+            public static PivotFetcher.Result FromJson(JsonValue jsonValue) {
+                JsonObject pivotFetcherResultJson = (JsonObject)jsonValue;
+                JsonObject localReportJson = (JsonObject)pivotFetcherResultJson.GetField(JSON_KEY_LOCAL_REPORT);
+                ValidationReport validationReportFromJson = ValidationReport.FromJson(localReportJson);
+                JsonArray urlsJson = (JsonArray)pivotFetcherResultJson.GetField(JSON_KEY_PIVOT_URLS);
+                IList<String> pivotsUrlListFromJson = urlsJson.GetValues().Select((urlJson) => ((JsonString)urlJson).GetValue
+                    ()).ToList();
+                PivotFetcher.Result resultFromJson = new PivotFetcher.Result();
+                resultFromJson.localReport = validationReportFromJson;
+                resultFromJson.pivotsUrlList = pivotsUrlListFromJson;
+                return resultFromJson;
             }
         }
     }

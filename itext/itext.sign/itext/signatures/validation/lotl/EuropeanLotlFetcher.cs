@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Json;
 using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Signatures.Exceptions;
@@ -68,8 +69,12 @@ namespace iText.Signatures.Validation.Lotl {
         }
 
         /// <summary>Represents the result of fetching the List of Trusted Lists (Lotl).</summary>
-        public class Result {
-            private readonly ValidationReport localReport = new ValidationReport();
+        public class Result : IJsonSerializable {
+            private const String JSON_KEY_LOCAL_REPORT = "localReport";
+
+            private const String JSON_KEY_LOTL_XML = "lotlXml";
+
+            private ValidationReport localReport = new ValidationReport();
 
             private byte[] lotlXml;
 
@@ -119,6 +124,47 @@ namespace iText.Signatures.Validation.Lotl {
             /// </returns>
             public virtual ValidationReport GetLocalReport() {
                 return localReport;
+            }
+
+            /// <summary>
+            /// <inheritDoc/>.
+            /// </summary>
+            /// <returns>
+            /// 
+            /// <inheritDoc/>
+            /// </returns>
+            public virtual JsonValue ToJson() {
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.Add(JSON_KEY_LOCAL_REPORT, localReport.ToJson());
+                String base64Encoded = Convert.ToBase64String(lotlXml);
+                jsonObject.Add(JSON_KEY_LOTL_XML, new JsonString(base64Encoded));
+                return jsonObject;
+            }
+
+            /// <summary>
+            /// Deserializes
+            /// <see cref="iText.Commons.Json.JsonValue"/>
+            /// into
+            /// <see cref="Result"/>.
+            /// </summary>
+            /// <param name="jsonValue">
+            /// 
+            /// <see cref="iText.Commons.Json.JsonValue"/>
+            /// to deserialize
+            /// </param>
+            /// <returns>
+            /// deserialized
+            /// <see cref="Result"/>
+            /// </returns>
+            public static EuropeanLotlFetcher.Result FromJson(JsonValue jsonValue) {
+                JsonObject europeanLotlFetcherResultJson = (JsonObject)jsonValue;
+                JsonObject localReportJson = (JsonObject)europeanLotlFetcherResultJson.GetField(JSON_KEY_LOCAL_REPORT);
+                ValidationReport validationReportFromJson = ValidationReport.FromJson(localReportJson);
+                String base64Encoded = ((JsonString)europeanLotlFetcherResultJson.GetField(JSON_KEY_LOTL_XML)).GetValue();
+                byte[] lotlXmlFromJson = Convert.FromBase64String(base64Encoded);
+                EuropeanLotlFetcher.Result resultFromJson = new EuropeanLotlFetcher.Result(lotlXmlFromJson);
+                resultFromJson.localReport = validationReportFromJson;
+                return resultFromJson;
             }
 
 //\cond DO_NOT_DOCUMENT

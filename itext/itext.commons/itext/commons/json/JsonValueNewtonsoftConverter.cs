@@ -145,7 +145,8 @@ namespace iText.Commons.Json {
             var settings = new JsonSerializerSettings
             {
                 Formatting = Formatting.None,
-                NullValueHandling = NullValueHandling.Include
+                NullValueHandling = NullValueHandling.Include,
+                DateParseHandling = DateParseHandling.None
             };
 
             settings.Converters.Add(new JsonValueConverter());

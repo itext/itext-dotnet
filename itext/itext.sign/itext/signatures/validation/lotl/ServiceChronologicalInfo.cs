@@ -20,15 +20,16 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using iText.Commons.Utils;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
+using iText.Commons.Json;
+using iText.Commons.Utils;
+using iText.Signatures;
 
 namespace iText.Signatures.Validation.Lotl {
     /// <summary>Class representing ServiceHistory entry in a country specific Trusted List.</summary>
-    public class ServiceChronologicalInfo {
+    public class ServiceChronologicalInfo : IJsonSerializable {
 //\cond DO_NOT_DOCUMENT
         internal const String GRANTED = "http://uri.etsi.org/TrstSvc/TrustedList/Svcstatus/granted";
 //\endcond
@@ -55,15 +56,21 @@ namespace iText.Signatures.Validation.Lotl {
 
         private static readonly ICollection<String> VALID_STATUSES = new HashSet<String>();
 
+        private const String JSON_KEY_QUALIFIER_EXTENSIONS = "qualifierExtensions";
+
+        private const String JSON_KEY_SERVICE_EXTENSIONS = "serviceExtensions";
+
+        private const String JSON_KEY_SERVICE_STATUS = "serviceStatus";
+
+        private const String JSON_KEY_SERVICE_STATUS_STARTING_TIME = "serviceStatusStartingTime";
+
         private readonly IList<AdditionalServiceInformationExtension> serviceExtensions = new List<AdditionalServiceInformationExtension
             >();
 
         private readonly IList<QualifierExtension> qualifierExtensions = new List<QualifierExtension>();
 
-        private readonly IList<String> statusDateFormats = JavaUtil.ArraysAsList(
-            "yyyy-MM-dd'T'HH:mm:ss'Z'",
-            "yyyy-MM-dd'T'HH:mm:ss"
-        );
+        private static readonly IList<String> statusDateFormats = JavaUtil.ArraysAsList("yyyy-MM-dd'T'HH:mm:ss'Z'"
+            , "yyyy-MM-dd'T'HH:mm:ss");
 
         private String serviceStatus;
 
@@ -85,6 +92,7 @@ namespace iText.Signatures.Validation.Lotl {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
+        // empty constructor
         internal ServiceChronologicalInfo(String serviceStatus, DateTime serviceStatusStartingTime) {
             this.serviceStatus = serviceStatus;
             this.serviceStatusStartingTime = serviceStatusStartingTime;
@@ -129,6 +137,98 @@ namespace iText.Signatures.Validation.Lotl {
             return qualifierExtensions;
         }
 
+        /// <summary>
+        /// <inheritDoc/>.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        public virtual JsonValue ToJson() {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.Add(JSON_KEY_SERVICE_STATUS, new JsonString(GetServiceStatus()));
+            if (GetServiceStatusStartingTime() != TimestampConstants.UNDEFINED_TIMESTAMP_DATE) {
+                foreach (String formattingPattern in statusDateFormats) {
+                    try {
+                        jsonObject.Add(JSON_KEY_SERVICE_STATUS_STARTING_TIME, new JsonString(DateTimeUtil.ParseLocalDateTime(GetServiceStatusStartingTime
+                            (), formattingPattern)));
+                    }
+                    catch (Exception) {
+                    }
+                }
+            }
+            else {
+                // Try other format
+                jsonObject.Add(JSON_KEY_SERVICE_STATUS_STARTING_TIME, JsonNull.JSON_NULL);
+            }
+            if (GetServiceExtensions() != null) {
+                IList<JsonValue> jsonExtensionValues = GetServiceExtensions().Select((extension) => extension.ToJson()).ToList
+                    ();
+                jsonObject.Add(JSON_KEY_SERVICE_EXTENSIONS, new JsonArray(jsonExtensionValues));
+            }
+            else {
+                jsonObject.Add(JSON_KEY_SERVICE_EXTENSIONS, JsonNull.JSON_NULL);
+            }
+            JsonArray qualifierExtensionsJson = new JsonArray(GetQualifierExtensions().Select((qualifierExtension) => 
+                qualifierExtension.ToJson()).ToList());
+            jsonObject.Add(JSON_KEY_QUALIFIER_EXTENSIONS, qualifierExtensionsJson);
+            return jsonObject;
+        }
+
+        /// <summary>
+        /// Deserializes
+        /// <see cref="iText.Commons.Json.JsonValue"/>
+        /// into
+        /// <see cref="ServiceChronologicalInfo"/>.
+        /// </summary>
+        /// <param name="jsonValue">
+        /// 
+        /// <see cref="iText.Commons.Json.JsonValue"/>
+        /// to deserialize
+        /// </param>
+        /// <returns>
+        /// deserialized
+        /// <see cref="ServiceChronologicalInfo"/>
+        /// </returns>
+        public static iText.Signatures.Validation.Lotl.ServiceChronologicalInfo FromJson(JsonValue jsonValue) {
+            JsonObject serviceChronologicalInfoJson = (JsonObject)jsonValue;
+            String serviceStatusFromJson = ((JsonString)serviceChronologicalInfoJson.GetField(JSON_KEY_SERVICE_STATUS)
+                ).GetValue();
+            JsonValue serviceStatusStartingTimeJson = serviceChronologicalInfoJson.GetField(JSON_KEY_SERVICE_STATUS_STARTING_TIME
+                );
+            DateTime serviceStatusStartingTimeFromJson = (DateTime)TimestampConstants.UNDEFINED_TIMESTAMP_DATE;
+            if (JsonNull.JSON_NULL != serviceStatusStartingTimeJson) {
+                foreach (String formattingPattern in statusDateFormats) {
+                    try {
+                        serviceStatusStartingTimeFromJson = DateTimeUtil.ParseToLocalDateTime(((JsonString)serviceStatusStartingTimeJson
+                            ).GetValue(), formattingPattern);
+                    }
+                    catch (Exception) {
+                    }
+                }
+            }
+            // Try other format
+            iText.Signatures.Validation.Lotl.ServiceChronologicalInfo serviceChronologicalInfoFromJson = new iText.Signatures.Validation.Lotl.ServiceChronologicalInfo
+                (serviceStatusFromJson, serviceStatusStartingTimeFromJson);
+            JsonValue serviceExtensionsJson = serviceChronologicalInfoJson.GetField(JSON_KEY_SERVICE_EXTENSIONS);
+            if (JsonNull.JSON_NULL != serviceExtensionsJson) {
+                IList<AdditionalServiceInformationExtension> serviceExtensionsFromJson = ((JsonArray)serviceExtensionsJson
+                    ).GetValues().Select((serviceExtensionJson) => AdditionalServiceInformationExtension.FromJson(serviceExtensionJson
+                    )).ToList();
+                foreach (AdditionalServiceInformationExtension informationExtensionFromJson in serviceExtensionsFromJson) {
+                    serviceChronologicalInfoFromJson.AddServiceExtension(informationExtensionFromJson);
+                }
+            }
+            JsonArray qualifierExtensionsJson = (JsonArray)serviceChronologicalInfoJson.GetField(JSON_KEY_QUALIFIER_EXTENSIONS
+                );
+            IList<QualifierExtension> qualifierExtensionsFromJson = qualifierExtensionsJson.GetValues().Select((qualifierExtensionJson
+                ) => QualifierExtension.FromJson(qualifierExtensionJson)).ToList();
+            foreach (QualifierExtension qualifierExtensionFromJson in qualifierExtensionsFromJson) {
+                serviceChronologicalInfoFromJson.AddQualifierExtension(qualifierExtensionFromJson);
+            }
+            return serviceChronologicalInfoFromJson;
+        }
+
 //\cond DO_NOT_DOCUMENT
         internal static bool IsStatusValid(String status) {
             return VALID_STATUSES.Contains(status);
@@ -144,15 +244,18 @@ namespace iText.Signatures.Validation.Lotl {
 //\cond DO_NOT_DOCUMENT
         internal virtual void SetServiceStatusStartingTime(String timeString) {
             foreach (String statusDateFormat in statusDateFormats) {
-                if (DateTime.TryParseExact(timeString, statusDateFormat, null,
-                                    DateTimeStyles.None, out this.serviceStatusStartingTime)) {
-                    break;
+                try {
+                    this.serviceStatusStartingTime = DateTimeUtil.ParseToLocalDateTime(timeString, statusDateFormat);
+                    return;
+                }
+                catch (Exception) {
                 }
             }
         }
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
+        //try next format
         internal virtual void SetServiceStatusStartingTime(DateTime serviceStatusStartingTime) {
             this.serviceStatusStartingTime = serviceStatusStartingTime;
         }

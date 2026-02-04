@@ -21,10 +21,19 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Json;
 
 namespace iText.Signatures.Validation.Report {
     /// <summary>Report item to be used for single failure or log message.</summary>
-    public class ReportItem {
+    public class ReportItem : IJsonSerializable {
+        private const String JSON_KEY_REPORT_ITEM_CHECKNAME = "checkName";
+
+        private const String JSON_KEY_REPORT_ITEM_MESSAGE = "message";
+
+        private const String JSON_KEY_REPORT_CAUSE = "exceptionCause";
+
+        private const String JSON_KEY_REPORT_STATUS = "status";
+
         private readonly String checkName;
 
         private readonly String message;
@@ -165,6 +174,72 @@ namespace iText.Signatures.Validation.Report {
         public virtual iText.Signatures.Validation.Report.ReportItem SetStatus(ReportItem.ReportItemStatus status) {
             this.status = status;
             return this;
+        }
+
+        /// <summary>
+        /// <inheritDoc/>.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        public virtual JsonValue ToJson() {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.Add(JSON_KEY_REPORT_ITEM_CHECKNAME, new JsonString(checkName));
+            jsonObject.Add(JSON_KEY_REPORT_ITEM_MESSAGE, new JsonString(message));
+            jsonObject.Add(JSON_KEY_REPORT_CAUSE, cause == null ? (JsonValue)JsonNull.JSON_NULL : new JsonString(cause
+                .Message));
+            jsonObject.Add(JSON_KEY_REPORT_STATUS, new JsonString(status.ToString()));
+            return jsonObject;
+        }
+
+        /// <summary>
+        /// Deserializes
+        /// <see cref="iText.Commons.Json.JsonValue"/>
+        /// into
+        /// <see cref="ReportItem"/>.
+        /// </summary>
+        /// <param name="jsonValue">
+        /// 
+        /// <see cref="iText.Commons.Json.JsonValue"/>
+        /// to deserialize
+        /// </param>
+        /// <returns>
+        /// deserialized
+        /// <see cref="ReportItem"/>
+        /// </returns>
+        public static iText.Signatures.Validation.Report.ReportItem FromJson(JsonValue jsonValue) {
+            JsonObject reportItemJson = (JsonObject)jsonValue;
+            JsonString checkNameJson = (JsonString)reportItemJson.GetField(JSON_KEY_REPORT_ITEM_CHECKNAME);
+            JsonString messageJson = (JsonString)reportItemJson.GetField(JSON_KEY_REPORT_ITEM_MESSAGE);
+            JsonValue exceptionCauseJson = reportItemJson.GetField(JSON_KEY_REPORT_CAUSE);
+            Exception exceptionCauseFromJson = null;
+            if (exceptionCauseJson is JsonString) {
+                exceptionCauseFromJson = new Exception(((JsonString)exceptionCauseJson).GetValue());
+            }
+            else {
+                if (exceptionCauseJson is JsonObject) {
+                    JsonValue exceptionMessage = ((JsonObject)exceptionCauseJson).GetField(JSON_KEY_REPORT_ITEM_MESSAGE);
+                    if (exceptionMessage is JsonString) {
+                        exceptionCauseFromJson = new Exception(((JsonString)exceptionMessage).GetValue());
+                    }
+                }
+            }
+            JsonString statusJson = (JsonString)reportItemJson.GetField(JSON_KEY_REPORT_STATUS);
+            ReportItem.ReportItemStatus statusFromJson = ReportItem.ReportItemStatus.INVALID;
+            switch (statusJson.GetValue()) {
+                case "INFO": {
+                    statusFromJson = ReportItem.ReportItemStatus.INFO;
+                    break;
+                }
+
+                case "INDETERMINATE": {
+                    statusFromJson = ReportItem.ReportItemStatus.INDETERMINATE;
+                    break;
+                }
+            }
+            return new iText.Signatures.Validation.Report.ReportItem(checkNameJson.GetValue(), messageJson.GetValue(), 
+                exceptionCauseFromJson, statusFromJson);
         }
 
         /// <summary><inheritDoc/></summary>

@@ -243,12 +243,12 @@ namespace iText.Signatures.Validation.Lotl {
         /// <summary>Serializes the current state of the cache to the provided output stream.</summary>
         /// <param name="outputStream">the output stream to which the cache will be serialized.</param>
         public override void SerializeCache(Stream outputStream) {
-            if (cache is InMemoryLotlServiceCache) {
+            try {
                 InMemoryLotlServiceCache inMemoryCache = (InMemoryLotlServiceCache)cache;
                 inMemoryCache.GetAllData().Serialize(outputStream);
             }
-            else {
-                throw new PdfException(SignExceptionMessageConstant.CACHE_CANNOT_BE_SERIALIZED);
+            catch (Exception e) {
+                throw new PdfException(SignExceptionMessageConstant.CACHE_CANNOT_BE_SERIALIZED, e);
             }
         }
 

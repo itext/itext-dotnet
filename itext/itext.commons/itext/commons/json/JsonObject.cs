@@ -56,6 +56,20 @@ namespace iText.Commons.Json {
             return new LinkedDictionary<String, JsonValue>(fields);
         }
 
+        /// <summary>Gets particular json object field.</summary>
+        /// <param name="fieldName">
+        /// 
+        /// <see cref="System.String"/>
+        /// name of the field
+        /// </param>
+        /// <returns>
+        /// field as
+        /// <see cref="JsonValue"/>
+        /// </returns>
+        public JsonValue GetField(String fieldName) {
+            return fields.Get(fieldName);
+        }
+
         /// <summary>Adds a new field into json object.</summary>
         /// <param name="key">a key to add into json object fields</param>
         /// <param name="value">
