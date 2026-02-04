@@ -93,7 +93,7 @@ namespace iText.Kernel.Pdf {
         }
 
         public override String ToString() {
-            return MessageFormatUtil.Format("PDF-{0}.{1}", major, minor);
+            return "PDF-" + major + "." + minor;
         }
 
         /// <summary>Gets the PDF version in "X.Y" format.</summary>
@@ -104,7 +104,7 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         /// <returns>the string representation of the PDF version</returns>
         public virtual PdfName ToPdfName() {
-            return new PdfName(MessageFormatUtil.Format("{0}.{1}", major, minor));
+            return new PdfName(major + "." + minor);
         }
 
         public virtual int CompareTo(iText.Kernel.Pdf.PdfVersion o) {
