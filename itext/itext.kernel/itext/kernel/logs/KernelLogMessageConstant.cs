@@ -102,11 +102,21 @@ namespace iText.Kernel.Logs {
 
         public const String MEMORYLIMITAWAREHANDLER_OVERRIDE_CREATENEWINSTANCE_METHOD = "MemoryLimitsAwareHandler#createNewInstance method must be overriden.";
 
-        public const String FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX = "Failed to process a transformation matrix which is noninvertible. Some content may be placed not as expected.";
+        public const String FAILED_TO_PROCESS_A_TRANSFORMATION_MATRIX = "Failed to process a transformation matrix which is noninvertible. Some content may be placed not as "
+             + "expected.";
 
         public const String PDF_REFERS_TO_NOT_EXISTING_PROPERTY_DICTIONARY = "The PDF contains a BDC operator which refers to a not existing Property dictionary: {0}.";
 
         public const String UNABLE_TO_PARSE_OPERATOR_WRONG_NUMBER_OF_OPERANDS = "Unable to parse operator '{0}', wrong number of operands {1}";
+
+        public const String PAGE_IS_FLUSHED_NO_CONTRAST = "Page content is flushed and cannot be processed for " +
+             "contrast analysis.";
+
+        public const String UNSUPPORTED_COLOR_SPACE_CONTRAST = "Unsupported color space for contrast calculation: "
+             + "{0}";
+
+        public const String BOTH_WCAG_AA_AND_AAA_COMPLIANCE_CHECKS_DISABLED = "Both WCAG AA and AAA compliance " +
+             "checks are disabled. No contrast checks will be performed.";
 
         private KernelLogMessageConstant() {
         }

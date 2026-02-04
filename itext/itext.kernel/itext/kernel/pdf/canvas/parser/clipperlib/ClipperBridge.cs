@@ -458,8 +458,12 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// </param>
         /// <returns>true if polygon path was successfully added, false otherwise.</returns>
         public bool AddPolygonToClipper(Clipper clipper, Point[] polyVertices, PolyType polyType) {
-            return clipper.AddPath(new List<IntPoint>(ConvertToLongPoints(new List<Point>(JavaUtil.ArraysAsList(polyVertices
-                )))), polyType, true);
+            IList<IntPoint> convertedPoints = new List<IntPoint>(polyVertices.Length);
+            foreach (Point point in polyVertices) {
+                convertedPoints.Add(new IntPoint(GetFloatMultiplier() * point.GetX(), GetFloatMultiplier() * point.GetY())
+                    );
+            }
+            return clipper.AddPath(new List<IntPoint>(convertedPoints), polyType, true);
         }
 
         /// <summary>

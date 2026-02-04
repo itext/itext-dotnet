@@ -32,6 +32,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Extgstate;
+using iText.Kernel.Pdf.Layer;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -663,6 +664,145 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(1, pdfDocument.GetCatalog().GetPageTree().GetParents()[0].GetCount());
             // TODO DEVSIX-5575 remove expected exception and add proper assertions
             NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => pdfDocument.Close());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LayerOnAndOffStateTest() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfPage page = pdfDocument.AddNewPage();
+            // Create a layer that is ON
+            PdfLayer layerOn = new PdfLayer("LayerOn", pdfDocument);
+            layerOn.SetOn(true);
+            // Create a layer that is OFF
+            PdfLayer layerOff = new PdfLayer("LayerOff", pdfDocument);
+            layerOff.SetOn(false);
+            PdfCanvas canvas = new PdfCanvas(page);
+            // Add content to the ON layer
+            canvas.BeginLayer(layerOn);
+            canvas.SetFillColor(ColorConstants.RED);
+            canvas.Rectangle(100, 100, 200, 200);
+            canvas.Fill();
+            canvas.EndLayer();
+            // Add content to the OFF layer
+            canvas.BeginLayer(layerOff);
+            canvas.SetFillColor(ColorConstants.BLUE);
+            canvas.Rectangle(350, 100, 200, 200);
+            canvas.Fill();
+            canvas.EndLayer();
+            // Verify layer states before closing
+            NUnit.Framework.Assert.IsTrue(layerOn.IsOn(), "LayerOn should be ON");
+            NUnit.Framework.Assert.IsFalse(layerOff.IsOn(), "LayerOff should be OFF");
+            pdfDocument.Close();
+        }
+
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-9719 ")]
+        public virtual void LayerOnAndOffStatePersistenceTest() {
+            String filename = DESTINATION_FOLDER + "layerStatePersistence.pdf";
+            // Create document with layers
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(filename));
+            PdfPage page = pdfDocument.AddNewPage();
+            // Create a layer that is ON
+            PdfLayer layerOn = new PdfLayer("LayerOn", pdfDocument);
+            layerOn.SetOn(true);
+            // Create a layer that is OFF
+            PdfLayer layerOff = new PdfLayer("LayerOff", pdfDocument);
+            layerOff.SetOn(false);
+            PdfCanvas canvas = new PdfCanvas(page);
+            // Add content to the ON layer
+            canvas.BeginLayer(layerOn);
+            canvas.SetFillColor(ColorConstants.RED);
+            canvas.Rectangle(100, 100, 200, 200);
+            canvas.Fill();
+            canvas.EndLayer();
+            // Add content to the OFF layer
+            canvas.BeginLayer(layerOff);
+            canvas.SetFillColor(ColorConstants.BLUE);
+            canvas.Rectangle(350, 100, 200, 200);
+            canvas.Fill();
+            canvas.EndLayer();
+            // Verify layer states before closing
+            NUnit.Framework.Assert.IsTrue(layerOn.IsOn(), "LayerOn should be ON before close");
+            NUnit.Framework.Assert.IsFalse(layerOff.IsOn(), "LayerOff should be OFF before close");
+            pdfDocument.Close();
+            // Reopen the document and verify layer states are persisted
+            PdfDocument reopenedDoc = new PdfDocument(new PdfReader(filename));
+            NUnit.Framework.Assert.AreEqual(2, reopenedDoc.GetPage(1).GetPdfLayers().Count);
+            // Find the layers by name and verify their states
+            PdfLayer reopenedLayerOn = null;
+            PdfLayer reopenedLayerOff = null;
+            foreach (PdfLayer layer in reopenedDoc.GetPage(1).GetPdfLayers()) {
+                String layerName = layer.GetPdfObject().GetAsString(PdfName.Name).GetValue();
+                if ("LayerOn".Equals(layerName)) {
+                    reopenedLayerOn = layer;
+                }
+                else {
+                    if ("LayerOff".Equals(layerName)) {
+                        reopenedLayerOff = layer;
+                    }
+                }
+            }
+            NUnit.Framework.Assert.IsNotNull(reopenedLayerOn, "LayerOn should exist after reopening");
+            NUnit.Framework.Assert.IsNotNull(reopenedLayerOff, "LayerOff should exist after reopening");
+            NUnit.Framework.Assert.IsTrue(reopenedLayerOn.IsOn(), "LayerOn should be ON after reopening");
+            NUnit.Framework.Assert.IsFalse(reopenedLayerOff.IsOn(), "LayerOff should be OFF after reopening");
+            reopenedDoc.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LayerOnAndOffStatePersistenceViaOCPropertiesTest() {
+            String filename = DESTINATION_FOLDER + "layerStatePersistenceViaOCProperties.pdf";
+            // Create document with layers
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(filename));
+            PdfPage page = pdfDocument.AddNewPage();
+            // Create a layer that is ON
+            PdfLayer layerOn = new PdfLayer("LayerOn", pdfDocument);
+            layerOn.SetOn(true);
+            // Create a layer that is OFF
+            PdfLayer layerOff = new PdfLayer("LayerOff", pdfDocument);
+            layerOff.SetOn(false);
+            PdfCanvas canvas = new PdfCanvas(page);
+            // Add content to the ON layer
+            canvas.BeginLayer(layerOn);
+            canvas.SetFillColor(ColorConstants.RED);
+            canvas.Rectangle(100, 100, 200, 200);
+            canvas.Fill();
+            canvas.EndLayer();
+            // Add content to the OFF layer
+            canvas.BeginLayer(layerOff);
+            canvas.SetFillColor(ColorConstants.BLUE);
+            canvas.Rectangle(350, 100, 200, 200);
+            canvas.Fill();
+            canvas.EndLayer();
+            // Verify layer states before closing
+            NUnit.Framework.Assert.IsTrue(layerOn.IsOn(), "LayerOn should be ON before close");
+            NUnit.Framework.Assert.IsFalse(layerOff.IsOn(), "LayerOff should be OFF before close");
+            pdfDocument.Close();
+            // Reopen the document and verify layer states are persisted via OCProperties
+            PdfDocument reopenedDoc = new PdfDocument(new PdfReader(filename));
+            PdfOCProperties ocProperties = reopenedDoc.GetCatalog().GetOCProperties(false);
+            NUnit.Framework.Assert.IsNotNull(ocProperties, "OCProperties should exist after reopening");
+            IList<PdfLayer> layers = ocProperties.GetLayers();
+            NUnit.Framework.Assert.AreEqual(2, layers.Count, "Should have 2 layers");
+            // Find the layers by name and verify their states
+            PdfLayer reopenedLayerOn = null;
+            PdfLayer reopenedLayerOff = null;
+            foreach (PdfLayer layer in layers) {
+                String layerName = layer.GetPdfObject().GetAsString(PdfName.Name).GetValue();
+                if ("LayerOn".Equals(layerName)) {
+                    reopenedLayerOn = layer;
+                }
+                else {
+                    if ("LayerOff".Equals(layerName)) {
+                        reopenedLayerOff = layer;
+                    }
+                }
+            }
+            NUnit.Framework.Assert.IsNotNull(reopenedLayerOn, "LayerOn should be found after reopening");
+            NUnit.Framework.Assert.IsNotNull(reopenedLayerOff, "LayerOff should be found after reopening");
+            NUnit.Framework.Assert.IsTrue(reopenedLayerOn.IsOn(), "LayerOn should still be ON after reopening");
+            NUnit.Framework.Assert.IsFalse(reopenedLayerOff.IsOn(), "LayerOff should still be OFF after reopening");
+            reopenedDoc.Close();
         }
 
         private static void FindAndAssertNullPages(PdfDocument pdfDocument, ICollection<int> nullPages) {

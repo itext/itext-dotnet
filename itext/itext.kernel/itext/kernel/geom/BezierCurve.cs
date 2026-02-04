@@ -98,14 +98,44 @@ namespace iText.Kernel.Geom {
             points.Add(controlPoints[0]);
             RecursiveApproximation(controlPoints[0].GetX(), controlPoints[0].GetY(), controlPoints[1].GetX(), controlPoints
                 [1].GetY(), controlPoints[2].GetX(), controlPoints[2].GetY(), controlPoints[3].GetX(), controlPoints[3
-                ].GetY(), points);
+                ].GetY(), points, curveCollinearityEpsilon, distanceToleranceSquare, distanceToleranceManhattan);
+            points.Add(controlPoints[controlPoints.Count - 1]);
+            return points;
+        }
+
+        /// <summary>
+        /// You can adjust precision of the approximation by varying the following
+        /// parameters:
+        /// <see cref="curveCollinearityEpsilon"/>
+        /// ,
+        /// <see cref="distanceToleranceSquare"/>
+        /// ,
+        /// <see cref="distanceToleranceManhattan"/>.
+        /// </summary>
+        /// <param name="curveCollinearityEpsilon">Epsilon for curve collinearity.</param>
+        /// <param name="distanceToleranceSquare">Distance tolerance square.</param>
+        /// <param name="distanceToleranceManhattan">Distance tolerance Manhattan.</param>
+        /// <returns>
+        /// 
+        /// <see cref="System.Collections.IList{E}"/>
+        /// containing points of piecewise linear approximation
+        /// for this bezier curve.
+        /// </returns>
+        public virtual IList<Point> GetPiecewiseLinearApproximation(double curveCollinearityEpsilon, double distanceToleranceSquare
+            , double distanceToleranceManhattan) {
+            IList<Point> points = new List<Point>();
+            points.Add(controlPoints[0]);
+            RecursiveApproximation(controlPoints[0].GetX(), controlPoints[0].GetY(), controlPoints[1].GetX(), controlPoints
+                [1].GetY(), controlPoints[2].GetX(), controlPoints[2].GetY(), controlPoints[3].GetX(), controlPoints[3
+                ].GetY(), points, curveCollinearityEpsilon, distanceToleranceSquare, distanceToleranceManhattan);
             points.Add(controlPoints[controlPoints.Count - 1]);
             return points;
         }
 
         // Based on the De Casteljau's algorithm
-        private void RecursiveApproximation(double x1, double y1, double x2, double y2, double x3, double y3, double
-             x4, double y4, IList<Point> points) {
+        private static void RecursiveApproximation(double x1, double y1, double x2, double y2, double x3, double y3
+            , double x4, double y4, IList<Point> points, double curveCollinearityEpsilon, double distanceToleranceSquare
+            , double distanceToleranceManhattan) {
             // Subdivision using the De Casteljau's algorithm (t = 0.5)
             double x12 = (x1 + x2) / 2;
             double y12 = (y1 + y2) / 2;
@@ -143,8 +173,10 @@ namespace iText.Kernel.Geom {
                     return;
                 }
             }
-            RecursiveApproximation(x1, y1, x12, y12, x123, y123, x1234, y1234, points);
-            RecursiveApproximation(x1234, y1234, x234, y234, x34, y34, x4, y4, points);
+            RecursiveApproximation(x1, y1, x12, y12, x123, y123, x1234, y1234, points, curveCollinearityEpsilon, distanceToleranceSquare
+                , distanceToleranceManhattan);
+            RecursiveApproximation(x1234, y1234, x234, y234, x34, y34, x4, y4, points, curveCollinearityEpsilon, distanceToleranceSquare
+                , distanceToleranceManhattan);
         }
     }
 }

@@ -144,6 +144,12 @@ namespace iText.Kernel.Pdf.Layer {
             return parentLayers == null ? null : new List<iText.Kernel.Pdf.Layer.PdfLayer>(parentLayers);
         }
 
+        /// <summary>Gets the name of the layer to be displayed in the Layers panel.</summary>
+        /// <returns>the name of the layer.</returns>
+        public virtual PdfString GetName() {
+            return GetPdfObject().GetAsString(PdfName.Name);
+        }
+
         /// <summary>Sets the name of the layer to be displayed in the Layers panel.</summary>
         /// <param name="name">the name of the layer.</param>
         public virtual void SetName(String name) {
@@ -452,6 +458,20 @@ namespace iText.Kernel.Pdf.Layer {
             return childLayers == null ? null : new List<iText.Kernel.Pdf.Layer.PdfLayer>(childLayers);
         }
 
+        /// <summary>Creates a title layer without registering it in PdfOCProperties.</summary>
+        /// <param name="title">the title of the layer</param>
+        /// <param name="document">the document this title layer belongs to</param>
+        /// <returns>the created layer</returns>
+        protected internal static iText.Kernel.Pdf.Layer.PdfLayer CreateTitleSilent(String title, PdfDocument document
+            ) {
+            if (title == null) {
+                throw new ArgumentException("Invalid title argument");
+            }
+            iText.Kernel.Pdf.Layer.PdfLayer layer = new iText.Kernel.Pdf.Layer.PdfLayer(document);
+            layer.title = title;
+            return layer;
+        }
+
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;
         }
@@ -468,20 +488,6 @@ namespace iText.Kernel.Pdf.Layer {
         /// </returns>
         protected internal virtual PdfDocument GetDocument() {
             return GetPdfObject().GetIndirectReference().GetDocument();
-        }
-
-        /// <summary>Creates a title layer without registering it in PdfOCProperties.</summary>
-        /// <param name="title">the title of the layer</param>
-        /// <param name="document">the document this title layer belongs to</param>
-        /// <returns>the created layer</returns>
-        protected internal static iText.Kernel.Pdf.Layer.PdfLayer CreateTitleSilent(String title, PdfDocument document
-            ) {
-            if (title == null) {
-                throw new ArgumentException("Invalid title argument");
-            }
-            iText.Kernel.Pdf.Layer.PdfLayer layer = new iText.Kernel.Pdf.Layer.PdfLayer(document);
-            layer.title = title;
-            return layer;
         }
 
         /// <summary>Gets the /Usage dictionary, creating a new one if necessary.</summary>

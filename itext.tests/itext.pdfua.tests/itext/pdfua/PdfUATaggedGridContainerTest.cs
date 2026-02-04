@@ -120,7 +120,7 @@ namespace iText.Pdfua {
                 document.SetFont(font);
                 document.Add(new Paragraph("Validate Grid Container with Background"));
                 GridContainer gridContainer0 = CreateGridBoxWithText();
-                gridContainer0.SetBackgroundColor(ColorConstants.RED);
+                gridContainer0.SetBackgroundColor(ColorConstants.PINK);
                 document.Add(gridContainer0);
             }
             );

@@ -210,7 +210,7 @@ namespace iText.Pdfua.Checkers {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 GlyphLine glyphLine = font.CreateGlyphLine("Hello World!");
                 canvas.SaveState().OpenTag(new CanvasTag(PdfName.Artifact)).SetFontAndSize(font, 12).BeginText().MoveText(
-                    200, 200).SetColor(ColorConstants.RED, true).ShowText(glyphLine).EndText().CloseTag().RestoreState();
+                    200, 200).SetColor(ColorConstants.BLUE, true).ShowText(glyphLine).EndText().CloseTag().RestoreState();
             }
             );
             framework.AssertBothValid("01_005_TextGlyphLineContentIsArtifact", pdfUAConformance);
@@ -227,7 +227,7 @@ namespace iText.Pdfua.Checkers {
                 TagTreePointer tagPointer = new TagTreePointer(pdfDoc).SetPageForTagging(pdfDoc.GetFirstPage()).AddTag(StandardRoles
                     .H1);
                 canvas.SaveState().OpenTag(tagPointer.GetTagReference()).SetFontAndSize(font, 12).BeginText().MoveText(200
-                    , 200).SetColor(ColorConstants.RED, true).ShowText(glyphLine).EndText().CloseTag().RestoreState();
+                    , 200).SetColor(ColorConstants.BLUE, true).ShowText(glyphLine).EndText().CloseTag().RestoreState();
             }
             );
             framework.AssertBothValid("01_005_TextGlyphLineContentIsContentCorrect", pdfUAConformance);
@@ -241,7 +241,7 @@ namespace iText.Pdfua.Checkers {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 GlyphLine glyphLine = font.CreateGlyphLine("Hello World!");
                 canvas.SaveState().OpenTag(new CanvasTag(PdfName.Artifact)).SetFontAndSize(font, 12).BeginMarkedContent(PdfName
-                    .P).BeginText().MoveText(200, 200).SetColor(ColorConstants.RED, true).ShowText(glyphLine).EndMarkedContent
+                    .P).BeginText().MoveText(200, 200).SetColor(ColorConstants.BLUE, true).ShowText(glyphLine).EndMarkedContent
                     ().EndText().CloseTag().RestoreState();
             }
             );
@@ -256,7 +256,7 @@ namespace iText.Pdfua.Checkers {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 GlyphLine glyphLine = font.CreateGlyphLine("Hello World!");
                 canvas.SaveState().OpenTag(new CanvasTag(PdfName.Artifact)).SetFontAndSize(font, 12).BeginMarkedContent(PdfName
-                    .P).OpenTag(new CanvasTag(PdfName.Artifact)).BeginText().MoveText(200, 200).SetColor(ColorConstants.RED
+                    .P).OpenTag(new CanvasTag(PdfName.Artifact)).BeginText().MoveText(200, 200).SetColor(ColorConstants.BLUE
                     , true).ShowText(glyphLine).CloseTag().EndMarkedContent().EndText().CloseTag().RestoreState();
             }
             );
@@ -284,6 +284,7 @@ namespace iText.Pdfua.Checkers {
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 canvas.SetColor(ColorConstants.RED, true).SetLineWidth(2);
+                canvas.MoveTo(0, 0);
                 canvas.LineTo(200, 200);
             }
             );
@@ -311,6 +312,7 @@ namespace iText.Pdfua.Checkers {
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
                 canvas.OpenTag(new CanvasTag(PdfName.P)).SetColor(ColorConstants.RED, true).SetLineWidth(2);
+                canvas.MoveTo(0, 0);
                 canvas.LineTo(200, 200);
                 canvas.LineTo(300, 200);
             }

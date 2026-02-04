@@ -645,8 +645,8 @@ namespace iText.Kernel.Pdf {
                     Put(PdfName.Resources, resources.GetPdfObject());
                 }
             }
+            GetDocument().CheckIsoConformance(new PdfPageValidationContext(this));
             if (flushResourcesContentStreams) {
-                GetDocument().CheckIsoConformance(new PdfPageValidationContext(this));
                 FlushResourcesContentStreams();
             }
             PdfArray annots = GetAnnots(false);

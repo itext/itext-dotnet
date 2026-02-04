@@ -2356,7 +2356,7 @@ namespace iText.Kernel.Pdf {
             return xmpMeta;
         }
 
-        /// <summary>List all newly added or loaded fonts</summary>
+        /// <summary>List all newly added or loaded fonts.</summary>
         /// <returns>
         /// List of
         /// <see cref="iText.Kernel.Font.PdfFont"/>.
