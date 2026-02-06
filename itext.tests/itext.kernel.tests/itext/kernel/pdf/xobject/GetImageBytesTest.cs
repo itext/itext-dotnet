@@ -893,6 +893,11 @@ namespace iText.Kernel.Pdf.Xobject {
         }
 
         [NUnit.Framework.Test]
+        public virtual void OneColorPalletIndexedTest() {
+            TestFile("oneColorPalette.pdf", "Im1", "png");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void Separation1bitDeviceCMYKTest() {
             TestFile("separation1bitDeviceCMYK.pdf", "Im0", "png");
         }
