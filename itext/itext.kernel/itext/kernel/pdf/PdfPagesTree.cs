@@ -305,26 +305,16 @@ namespace iText.Kernel.Pdf {
             }
             if (root == null) {
                 while (parents.Count != 1) {
-                    IList<PdfPages> nextParents = new List<PdfPages>();
-                    //dynamicLeafSize helps to avoid PdfPages leaf with only one page
-                    int dynamicLeafSize = leafSize;
-                    PdfPages current = null;
-                    for (int i = 0; i < parents.Count; i++) {
-                        PdfPages pages = parents[i];
-                        int pageCount = pages.GetCount();
-                        if (i % dynamicLeafSize == 0) {
-                            if (pageCount <= 1) {
-                                dynamicLeafSize++;
-                            }
-                            else {
-                                current = new PdfPages(-1, document);
-                                nextParents.Add(current);
-                                dynamicLeafSize = leafSize;
-                            }
+                    IList<PdfPages> newParents = new List<PdfPages>();
+                    PdfPages currentNewParent = null;
+                    foreach (PdfPages parent in parents) {
+                        if (currentNewParent == null || currentNewParent.GetKids().Size() >= leafSize) {
+                            currentNewParent = new PdfPages(-1, document);
+                            newParents.Add(currentNewParent);
                         }
-                        current.AddPages(pages);
+                        currentNewParent.AddPages(parent);
                     }
-                    parents = nextParents;
+                    parents = newParents;
                 }
                 root = parents[0];
             }

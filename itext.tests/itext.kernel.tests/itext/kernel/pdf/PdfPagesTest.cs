@@ -662,8 +662,7 @@ namespace iText.Kernel.Pdf {
             }
             NUnit.Framework.Assert.AreEqual(2, pdfDocument.GetCatalog().GetPageTree().GetParents().Count);
             NUnit.Framework.Assert.AreEqual(1, pdfDocument.GetCatalog().GetPageTree().GetParents()[0].GetCount());
-            // TODO DEVSIX-5575 remove expected exception and add proper assertions
-            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => pdfDocument.Close());
+            NUnit.Framework.Assert.DoesNotThrow(() => pdfDocument.Close());
         }
 
         [NUnit.Framework.Test]
