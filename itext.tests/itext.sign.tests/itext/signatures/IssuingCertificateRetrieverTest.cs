@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using NUnit.Framework;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
@@ -45,6 +46,31 @@ namespace iText.Signatures {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
         private static readonly char[] PASSWORD = "testpassphrase".ToCharArray();
+
+        [NUnit.Framework.Test]
+#if !NETSTANDARD2_0
+        [NUnit.Framework.Timeout(10)]
+#endif // !NETSTANDARD2_0
+        public virtual void InfiniteloopTest() {
+            IssuingCertificateRetriever issuingCertificateRetriever = new IssuingCertificateRetriever();
+            IX509Certificate[] cert = PemFileHelper.ReadFirstChain(CERTS_SRC + "crossSigned/sign.cert.pem");
+            // the order of the known certificates is important,
+            // changing it can make the test succeed without fix
+            // the cross signed certificates that create the loop
+            // must come first
+            IX509Certificate[] knownCerts = new IX509Certificate[6];
+            knownCerts[0] = PemFileHelper.ReadFirstChain(CERTS_SRC + "crossSigned/sign.cert.pem")[0];
+            knownCerts[5] = PemFileHelper.ReadFirstChain(CERTS_SRC + "crossSigned/ca1.cert.pem")[0];
+            knownCerts[4] = PemFileHelper.ReadFirstChain(CERTS_SRC + "crossSigned/ca2a.cert.pem")[0];
+            knownCerts[3] = PemFileHelper.ReadFirstChain(CERTS_SRC + "crossSigned/ca2b.cert.pem")[0];
+            knownCerts[2] = PemFileHelper.ReadFirstChain(CERTS_SRC + "crossSigned/ca3a.cert.pem")[0];
+            knownCerts[1] = PemFileHelper.ReadFirstChain(CERTS_SRC + "crossSigned/ca3b.cert.pem")[0];
+            issuingCertificateRetriever.AddKnownCertificates(JavaUtil.ArraysAsList(knownCerts));
+            // An endless loop does not throw an exception, but it is caught the @Timeout annotation
+            IX509Certificate[] result = issuingCertificateRetriever.RetrieveMissingCertificates(cert);
+            NUnit.Framework.Assert.IsNotNull(result);
+            NUnit.Framework.Assert.IsTrue(result.Length > 1);
+        }
 
         [NUnit.Framework.Test]
         public virtual void TestResourceRetrieverUsage() {

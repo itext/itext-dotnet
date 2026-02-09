@@ -132,6 +132,9 @@ namespace iText.Signatures {
                             return fullChain.ToArray(new IX509Certificate[0]);
                         }
                     }
+                    if (fullChain.Contains(issuer)) {
+                        return fullChain.ToArray(new IX509Certificate[0]);
+                    }
                     fullChain.Add(issuer);
                 }
                 lastAddedCert = (IX509Certificate)fullChain[fullChain.Count - 1];
@@ -206,7 +209,7 @@ namespace iText.Signatures {
 
         private IList<IList<IX509Certificate>> BuildCertificateChainsList(IX509Certificate[] certificates) {
             IList<IList<IX509Certificate>> allChains = new List<IList<IX509Certificate>>(BuildCertificateChainsList(certificates
-                [certificates.Length - 1]));
+                [certificates.Length - 1], null));
             foreach (IList<IX509Certificate> issuerChain in allChains) {
                 for (int i = certificates.Length - 2; i >= 0; --i) {
                     issuerChain.Add(certificates[i]);
@@ -215,7 +218,19 @@ namespace iText.Signatures {
             return allChains;
         }
 
-        private IList<IList<IX509Certificate>> BuildCertificateChainsList(IX509Certificate certificate) {
+        private IList<IList<IX509Certificate>> BuildCertificateChainsList(IX509Certificate certificate, HashSet<IX509Certificate
+            > prevProcessed) {
+            HashSet<IX509Certificate> processed;
+            if (prevProcessed == null) {
+                processed = new HashSet<IX509Certificate>();
+            }
+            else {
+                processed = prevProcessed;
+            }
+            if (!processed.Add(certificate)) {
+                //certificate is already being processed
+                return new List<IList<IX509Certificate>>();
+            }
             if (CertificateUtil.IsSelfSigned(certificate)) {
                 IList<IList<IX509Certificate>> singleChain = new List<IList<IX509Certificate>>();
                 IList<IX509Certificate> chain = new List<IX509Certificate>();
@@ -243,7 +258,8 @@ namespace iText.Signatures {
                 return singleChain;
             }
             foreach (IX509Certificate possibleIssuer in possibleIssuers) {
-                IList<IList<IX509Certificate>> issuerChains = BuildCertificateChainsList((IX509Certificate)possibleIssuer);
+                IList<IList<IX509Certificate>> issuerChains = BuildCertificateChainsList((IX509Certificate)possibleIssuer, 
+                    processed);
                 foreach (IList<IX509Certificate> issuerChain in issuerChains) {
                     issuerChain.Add(certificate);
                     allChains.Add(issuerChain);

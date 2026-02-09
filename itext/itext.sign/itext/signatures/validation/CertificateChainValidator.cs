@@ -324,7 +324,8 @@ namespace iText.Signatures.Validation {
             }
             // We need to sort certificates to process them starting from those, better suited for PAdES validation.
             issuerCertificates = issuerCertificates.Sorted((issuer1, issuer2) => JavaUtil.IntegerCompare((int)(certificateRetriever
-                .GetCertificateOrigin(issuer1)), (int)(certificateRetriever.GetCertificateOrigin(issuer2)))).ToList();
+                .GetCertificateOrigin(issuer1)), (int)(certificateRetriever.GetCertificateOrigin(issuer2)))).Where((c) =>
+                 !previousCertificates.Contains(c)).ToList();
             ValidationReport[] candidateReports = new ValidationReport[issuerCertificates.Count];
             for (int i = 0; i < issuerCertificates.Count; i++) {
                 candidateReports[i] = new ValidationReport();

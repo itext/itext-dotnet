@@ -76,6 +76,26 @@ namespace iText.Signatures.Validation {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CrossSignedChainTest() {
+            MockRevocationDataValidator mockRevocationDataValidator = new MockRevocationDataValidator();
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties properties = new SignatureValidationProperties();
+            String chainName = CERTS_SRC + "crossSigned/chain.pem";
+            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
+            IX509Certificate signingCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "crossSigned/sign.cert.pem"
+                )[0];
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "crossSigned/r2.cert.pem"
+                )[0];
+            ValidatorChainBuilder validatorChainBuilder = SetUpValidatorChain(certificateRetriever, properties, mockRevocationDataValidator
+                );
+            CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
+            certificateRetriever.AddKnownCertificates(JavaUtil.ArraysAsList(certificateChain));
+            certificateRetriever.SetTrustedCertificates(JavaCollectionsUtil.SingletonList<IX509Certificate>(rootCert));
+            NUnit.Framework.Assert.DoesNotThrow(() => validator.ValidateCertificate(baseContext, signingCert, TimeTestUtil
+                .TEST_DATE_TIME));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ValidNumericBasicConstraintsTest() {
             MockRevocationDataValidator mockRevocationDataValidator = new MockRevocationDataValidator();
             IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
@@ -137,7 +157,7 @@ namespace iText.Signatures.Validation {
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate signingCert = (IX509Certificate)certificateChain[0];
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
-            IssuingCertificateRetriever customRetriever = new _IssuingCertificateRetriever_192();
+            IssuingCertificateRetriever customRetriever = new _IssuingCertificateRetriever_216();
             ValidatorChainBuilder validatorChainBuilder = SetUpValidatorChain(certificateRetriever, properties, mockRevocationDataValidator
                 );
             validatorChainBuilder.WithIssuingCertificateRetrieverFactory(() => customRetriever);
@@ -150,8 +170,8 @@ namespace iText.Signatures.Validation {
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
         }
 
-        private sealed class _IssuingCertificateRetriever_192 : IssuingCertificateRetriever {
-            public _IssuingCertificateRetriever_192() {
+        private sealed class _IssuingCertificateRetriever_216 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_216() {
             }
 
             protected internal override Stream GetIssuerCertByURI(String uri) {
@@ -170,7 +190,7 @@ namespace iText.Signatures.Validation {
             IX509Certificate signingCert = (IX509Certificate)certificateChain[0];
             IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
-            IssuingCertificateRetriever customRetriever = new _IssuingCertificateRetriever_220();
+            IssuingCertificateRetriever customRetriever = new _IssuingCertificateRetriever_244();
             ValidatorChainBuilder validatorChainBuilder = SetUpValidatorChain(certificateRetriever, properties, mockRevocationDataValidator
                 );
             validatorChainBuilder.WithIssuingCertificateRetrieverFactory(() => customRetriever);
@@ -185,8 +205,8 @@ namespace iText.Signatures.Validation {
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
         }
 
-        private sealed class _IssuingCertificateRetriever_220 : IssuingCertificateRetriever {
-            public _IssuingCertificateRetriever_220() {
+        private sealed class _IssuingCertificateRetriever_244 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_244() {
             }
 
             protected internal override Stream GetIssuerCertByURI(String uri) {
