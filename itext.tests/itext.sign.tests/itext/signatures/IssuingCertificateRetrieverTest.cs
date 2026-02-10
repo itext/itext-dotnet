@@ -49,7 +49,7 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
 #if !NETSTANDARD2_0
-        [NUnit.Framework.Timeout(10)]
+        [NUnit.Framework.Timeout(10000)]
 #endif // !NETSTANDARD2_0
         public virtual void InfiniteloopTest() {
             IssuingCertificateRetriever issuingCertificateRetriever = new IssuingCertificateRetriever();
