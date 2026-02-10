@@ -30,6 +30,9 @@ using iText.Test;
 namespace iText.IO.Font {
     [NUnit.Framework.Category("UnitTest")]
     public class FontProgramTest : ExtendedITextTest {
+        private static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/";
+
         private const String notExistingFont = "some-font.ttf";
 
         [NUnit.Framework.SetUp]
@@ -61,18 +64,17 @@ namespace iText.IO.Font {
             FontProgramFactory.ClearRegisteredFonts();
             FontProgramFactory.ClearRegisteredFontFamilies();
             FontCache.ClearSavedFonts();
-            FontProgramFactory.RegisterFontDirectory(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/");
-            NUnit.Framework.Assert.AreEqual(44, FontProgramFactory.GetRegisteredFonts().Count);
+            FontProgramFactory.RegisterFontDirectory(FONT_FOLDER);
+            NUnit.Framework.Assert.AreEqual(52, FontProgramFactory.GetRegisteredFonts().Count);
             NUnit.Framework.Assert.IsNull(FontCache.GetFont(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-                .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSansBold.ttf"));
-            NUnit.Framework.Assert.IsTrue(FontProgramFactory.GetRegisteredFonts().Contains("free sans lihavoitu"));
+                .CurrentContext.TestDirectory) + "/resources/itext/io/font/FreeSansBold.ttf"));
+            NUnit.Framework.Assert.IsTrue(FontProgramFactory.GetRegisteredFonts().Contains("free sans bold"));
         }
 
         [NUnit.Framework.Test]
         public virtual void RegisterDirectoryType1Test() {
             FontProgramFactory.RegisterFontDirectory(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-                .CurrentContext.TestDirectory) + "/resources/itext/io/font/type1/");
+                .CurrentContext.TestDirectory) + "/resources/itext/io/");
             FontProgram computerModern = FontProgramFactory.CreateRegisteredFont("computer modern");
             FontProgram cmr10 = FontProgramFactory.CreateRegisteredFont("cmr10");
             NUnit.Framework.Assert.IsNull(computerModern);
@@ -82,7 +84,7 @@ namespace iText.IO.Font {
         [NUnit.Framework.Test]
         public virtual void RegisterDirectoryType1RecursivelyTest() {
             FontProgramFactory.RegisterFontDirectoryRecursively(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-                .CurrentContext.TestDirectory) + "/resources/itext/io/font/type1/");
+                .CurrentContext.TestDirectory) + "/resources/itext/io/");
             FontProgram computerModern = FontProgramFactory.CreateRegisteredFont("computer modern");
             FontProgram cmr10 = FontProgramFactory.CreateRegisteredFont("cmr10");
             NUnit.Framework.Assert.IsNotNull(computerModern);

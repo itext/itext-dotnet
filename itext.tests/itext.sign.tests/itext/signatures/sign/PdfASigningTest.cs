@@ -78,8 +78,8 @@ namespace iText.Signatures.Sign {
             String dest = destinationFolder + fileName;
             int x = 36;
             int y = 548;
-            int w = 200;
-            int h = 100;
+            int w = 300;
+            int h = 200;
             Rectangle rect = new Rectangle(x, y, w, h);
             String fieldName = "Signature1";
             Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1", "TestCity"
@@ -89,7 +89,7 @@ namespace iText.Signatures.Sign {
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(dest, sourceFolder + "cmp_" + fileName
                 ));
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + fileName, destinationFolder
-                , "diff_", GetTestMap(new Rectangle(27, 550, 195, 40))));
+                , "diff_", GetTestMap(new Rectangle(27, 620, 195, 40))));
         }
 
         [NUnit.Framework.Test]
@@ -126,7 +126,7 @@ namespace iText.Signatures.Sign {
             String srcFile = sourceFolder + "simplePdfA4Document.pdf";
             String cmpPdf = sourceFolder + "cmp_signPdfCades.pdf";
             String outPdf = destinationFolder + "signPdfCades.pdf";
-            Rectangle rect = new Rectangle(30, 200, 200, 100);
+            Rectangle rect = new Rectangle(30, 200, 300, 200);
             String fieldName = "Signature1";
             Sign(srcFile, fieldName, outPdf, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1"
                 , "TestCity", rect, false, true, AccessPermissions.UNSPECIFIED, 12f);

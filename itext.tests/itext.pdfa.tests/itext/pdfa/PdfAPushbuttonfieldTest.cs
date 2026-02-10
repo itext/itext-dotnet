@@ -36,27 +36,30 @@ namespace iText.Pdfa {
     // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfAPushbuttonfieldTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
-        public static readonly String cmpFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String CMP_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/cmp/PdfAPushbuttonfieldTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/pdfa/PdfAPushbuttonfieldTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfa/PdfAPushbuttonfieldTest/";
+
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/fonts/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void PdfA1bButtonAppearanceTest() {
             String name = "pdfA1b_ButtonAppearanceTest";
-            String outPath = destinationFolder + name + ".pdf";
-            String cmpPath = cmpFolder + "cmp_" + name + ".pdf";
+            String outPath = DESTINATION_FOLDER + name + ".pdf";
+            String cmpPath = CMP_FOLDER + "cmp_" + name + ".pdf";
             String diff = "diff_" + name + "_";
             PdfWriter writer = new PdfWriter(outPath);
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_1B, outputIntent);
@@ -65,14 +68,14 @@ namespace iText.Pdfa {
             doc.AddNewPage();
             PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             Rectangle rect = new Rectangle(36, 626, 100, 40);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfFormField button = new PushButtonFormFieldBuilder(doc, "push button").SetWidgetRectangle(rect).SetCaption
                 ("push").SetConformance(PdfConformance.PDF_A_1B).CreatePushButton();
             button.SetFont(font).SetFontSize(12);
             form.AddField(button);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, DESTINATION_FOLDER, diff
                 ));
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPath));
         }
@@ -81,11 +84,11 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void PdfA1bButtonAppearanceRegenerateTest() {
             String name = "pdfA1b_ButtonAppearanceRegenerateTest";
-            String outPath = destinationFolder + name + ".pdf";
-            String cmpPath = cmpFolder + "cmp_" + name + ".pdf";
+            String outPath = DESTINATION_FOLDER + name + ".pdf";
+            String cmpPath = CMP_FOLDER + "cmp_" + name + ".pdf";
             String diff = "diff_" + name + "_";
             PdfWriter writer = new PdfWriter(outPath);
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_1B, outputIntent);
@@ -94,7 +97,7 @@ namespace iText.Pdfa {
             doc.AddNewPage();
             PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             Rectangle rect = new Rectangle(36, 626, 100, 40);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfFormField button = new PushButtonFormFieldBuilder(doc, "push button").SetWidgetRectangle(rect).SetCaption
                 ("push").SetConformance(PdfConformance.PDF_A_1B).CreatePushButton();
@@ -102,7 +105,7 @@ namespace iText.Pdfa {
             button.RegenerateField();
             form.AddField(button);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, DESTINATION_FOLDER, diff
                 ));
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPath));
         }
@@ -111,11 +114,11 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void PdfA1bButtonAppearanceSetValueTest() {
             String name = "pdfA1b_ButtonAppearanceSetValueTest";
-            String outPath = destinationFolder + name + ".pdf";
-            String cmpPath = cmpFolder + "cmp_" + name + ".pdf";
+            String outPath = DESTINATION_FOLDER + name + ".pdf";
+            String cmpPath = CMP_FOLDER + "cmp_" + name + ".pdf";
             String diff = "diff_" + name + "_";
             PdfWriter writer = new PdfWriter(outPath);
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_1B, outputIntent);
@@ -124,7 +127,7 @@ namespace iText.Pdfa {
             doc.AddNewPage();
             PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             Rectangle rect = new Rectangle(36, 626, 100, 40);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfFormField button = new PushButtonFormFieldBuilder(doc, "push button").SetWidgetRectangle(rect).SetCaption
                 ("push").SetConformance(PdfConformance.PDF_A_1B).CreatePushButton();
@@ -132,7 +135,7 @@ namespace iText.Pdfa {
             button.SetValue("button");
             form.AddField(button);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, destinationFolder, diff
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPath, cmpPath, DESTINATION_FOLDER, diff
                 ));
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPath));
         }

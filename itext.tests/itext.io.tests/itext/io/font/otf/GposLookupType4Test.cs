@@ -29,13 +29,12 @@ using iText.Test;
 namespace iText.IO.Font.Otf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class GposLookupType4Test : ExtendedITextTest {
-        private static readonly String RESOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/GposLookupType4Test/";
+        private static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/";
 
         [NUnit.Framework.Test]
         public virtual void VerifyMarkToBaseAttachment() {
-            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(RESOURCE_FOLDER + "Padauk-Regular.ttf"
-                );
+            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(FONT_FOLDER + "Padauk-Regular.ttf");
             GlyphPositioningTableReader gposTableReader = fontProgram.GetGposTable();
             GposLookupType4 lookup = (GposLookupType4)gposTableReader.GetLookupTable(192);
             IList<Glyph> glyphs = JavaUtil.ArraysAsList(new Glyph(fontProgram.GetGlyphByCode(163)), new Glyph(fontProgram

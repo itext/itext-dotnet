@@ -47,6 +47,9 @@ namespace iText.Pdfa {
 
         private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfa/PdfA2GraphicsCheckTest/";
 
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/fonts/";
+
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
@@ -89,8 +92,8 @@ namespace iText.Pdfa {
                 canvas.GetResources().SetDefaultRgb(calRgb);
                 canvas.GetResources().SetDefaultGray(calGray);
                 String shortText = "text";
-                PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.
-                    PREFER_EMBEDDED);
+                PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                    );
                 canvas.SetFontAndSize(font, 12);
                 canvas.SetFillColor(ColorConstants.RED).BeginText().ShowText(shortText).EndText();
                 canvas.SetFillColor(DeviceGray.GRAY).BeginText().ShowText(shortText).EndText();
@@ -152,8 +155,8 @@ namespace iText.Pdfa {
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_2B, outputIntent);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             String shortText = "text";
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.
-                PREFER_EMBEDDED);
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                );
             canvas.SetFontAndSize(font, 12);
             canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.CLIP);
             canvas.SetFillColor(ColorConstants.RED).BeginText().ShowText(shortText).EndText();
@@ -177,8 +180,8 @@ namespace iText.Pdfa {
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_2B, outputIntent);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             String shortText = "text";
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.
-                PREFER_EMBEDDED);
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                );
             canvas.SetFontAndSize(font, 12);
             canvas.SetStrokeColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f));
             canvas.SetFillColor(ColorConstants.RED);
@@ -200,8 +203,8 @@ namespace iText.Pdfa {
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_2B, outputIntent);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             String shortText = "text";
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.
-                PREFER_EMBEDDED);
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                );
             canvas.SetFontAndSize(font, 12);
             canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.STROKE);
             canvas.SetFillColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f)).BeginText().ShowText(shortText).EndText();
@@ -218,7 +221,7 @@ namespace iText.Pdfa {
         public virtual void DefaultTextColorCheckTest() {
             String outPdf = DESTINATION_FOLDER + "defaultColorCheck.pdf";
             PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf), PdfAConformance.PDF_A_2B, null);
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfPage page = pdfDocument.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -235,7 +238,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "defaultColorCheckInvisibleText.pdf";
             String cmpPdf = CMP_FOLDER + "cmp_pdfA2b_defaultColorCheckInvisibleText.pdf";
             PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf), PdfAConformance.PDF_A_2B, null);
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfPage page = pdfDocument.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);

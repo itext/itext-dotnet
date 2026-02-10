@@ -47,6 +47,9 @@ namespace iText.Pdfa {
 
         private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfa/PdfA4CatalogCheckTest/";
 
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/fonts/";
+
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
@@ -73,7 +76,7 @@ namespace iText.Pdfa {
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument pdfDoc = (PdfADocument)new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent(
                 "Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is)).SetTagged();
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             Document document = new Document(pdfDoc);
             document.SetFont(font);

@@ -33,8 +33,8 @@ using iText.Test;
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfTextExtractorEncodingsTest : ExtendedITextTest {
-        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/layout/PdfTextExtractorEncodingsTest/";
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/";
 
         /// <summary>Basic Latin characters, with Unicode values less than 128</summary>
         private const String TEXT1 = "AZaz09*!";
@@ -82,7 +82,7 @@ namespace iText.Layout {
 
         protected internal static PdfFont GetTTFont(String encoding, PdfFontFactory.EmbeddingStrategy embeddingStrategy
             ) {
-            return PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", encoding, embeddingStrategy);
+            return PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", encoding, embeddingStrategy);
         }
 
         private static byte[] CreatePdf(PdfFont font) {

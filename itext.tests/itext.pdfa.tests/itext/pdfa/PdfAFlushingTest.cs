@@ -41,27 +41,30 @@ namespace iText.Pdfa {
     // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfAFlushingTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/pdfa/PdfAFlushingTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfa/PdfAFlushingTest/";
+
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/fonts/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         [LogMessage(PdfALogMessageConstant.PDFA_OBJECT_FLUSHING_WAS_NOT_PERFORMED)]
         public virtual void FlushingTest01() {
-            String outPdf = destinationFolder + "pdfA1b_flushingTest01.pdf";
-            String cmpPdf = sourceFolder + "cmp/PdfAFlushingTest/cmp_pdfA1b_flushingTest01.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA1b_flushingTest01.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp/PdfAFlushingTest/cmp_pdfA1b_flushingTest01.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_1B, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
-            PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
+            PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "Desert.jpg"));
             imageXObject.MakeIndirect(doc);
             canvas.AddXObjectFittedIntoRectangle(imageXObject, new Rectangle(30, 300, 300, 300));
             imageXObject.Flush();
@@ -75,14 +78,14 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         [LogMessage(PdfALogMessageConstant.PDFA_PAGE_FLUSHING_WAS_NOT_PERFORMED)]
         public virtual void FlushingTest02() {
-            String outPdf = destinationFolder + "pdfA2b_flushingTest02.pdf";
-            String cmpPdf = sourceFolder + "cmp/PdfAFlushingTest/cmp_pdfA2b_flushingTest02.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA2b_flushingTest02.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp/PdfAFlushingTest/cmp_pdfA2b_flushingTest02.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_2B, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
-            PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
+            PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "Desert.jpg"));
             imageXObject.MakeIndirect(doc);
             canvas.AddXObjectFittedIntoRectangle(imageXObject, new Rectangle(30, 300, 300, 300));
             PdfPage lastPage = doc.GetLastPage();
@@ -96,14 +99,14 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void FlushingTest03() {
-            String outPdf = destinationFolder + "pdfA3b_flushingTest03.pdf";
-            String cmpPdf = sourceFolder + "cmp/PdfAFlushingTest/cmp_pdfA3b_flushingTest03.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA3b_flushingTest03.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp/PdfAFlushingTest/cmp_pdfA3b_flushingTest03.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_3B, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
-            PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
+            PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "Desert.jpg"));
             canvas.AddXObjectFittedIntoRectangle(imageXObject, new Rectangle(30, 300, 300, 300));
             PdfPage lastPage = doc.GetLastPage();
             lastPage.Flush(true);
@@ -119,13 +122,13 @@ namespace iText.Pdfa {
         [LogMessage(PdfALogMessageConstant.PDFA_OBJECT_FLUSHING_WAS_NOT_PERFORMED, LogLevel = LogLevelConstants.WARN
             )]
         public virtual void TryToFlushFontTest() {
-            String outPdf = destinationFolder + "tryToFlushFontTest.pdf";
-            String cmpPdf = sourceFolder + "cmp_tryToFlushFontTest.pdf";
+            String outPdf = DESTINATION_FOLDER + "tryToFlushFontTest.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp/PdfAFlushingTest/cmp_tryToFlushFontTest.pdf";
             PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument pdfDoc = (PdfADocument)new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent(
                 "Custom", "", "http://www.color.org", "sRGB IEC61966-2.1", @is)).SetTagged();
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             font.MakeIndirect(pdfDoc);
             Document document = new Document(pdfDoc);
@@ -138,7 +141,7 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.AreEqual(PdfVersion.PDF_2_0, pdfDoc.GetTagStructureContext().GetTagStructureTargetVersion
                 ());
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff"
                 ));
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
@@ -147,10 +150,10 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         [LogMessage(PdfALogMessageConstant.PDFA_OBJECT_FLUSHING_WAS_NOT_PERFORMED)]
         public virtual void AddUnusedStreamObjectsTest() {
-            String outPdf = destinationFolder + "pdfA1b_docWithUnusedObjects_3.pdf";
-            String cmpPdf = sourceFolder + "cmp/PdfAFlushingTest/cmp_pdfA1b_docWithUnusedObjects_3.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA1b_docWithUnusedObjects_3.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp/PdfAFlushingTest/cmp_pdfA1b_docWithUnusedObjects_3.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformance.PDF_A_1B, new PdfOutputIntent("Custom"
                 , "", "http://www.color.org", "sRGB IEC61966-2.1", @is));
             pdfDocument.AddNewPage();
@@ -171,7 +174,7 @@ namespace iText.Pdfa {
         }
 
         private void CompareResult(String outFile, String cmpFile) {
-            String differences = new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder, "diff_");
+            String differences = new CompareTool().CompareByContent(outFile, cmpFile, DESTINATION_FOLDER, "diff_");
             if (differences != null) {
                 NUnit.Framework.Assert.Fail(differences);
             }

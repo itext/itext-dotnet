@@ -34,10 +34,13 @@ using iText.Test;
 namespace iText.Pdfa {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfALongStringTest : ExtendedITextTest {
-        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
-        private static readonly String destinationFolder = TestUtil.GetOutputPath() + "/pdfa/PdfALongStringTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfa/PdfALongStringTest/";
+
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/fonts/";
 
         private const String LOREM_IPSUM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis condimentum, tortor sit amet fermentum pharetra, sem felis finibus enim, vel consectetur nunc justo at nisi. In hac habitasse platea dictumst. Donec quis suscipit eros. Nam urna purus, scelerisque in placerat in, convallis vel sapien. Suspendisse sed lacus sit amet orci ornare vulputate. In hac habitasse platea dictumst. Ut eu aliquet felis, at consectetur neque.";
 
@@ -45,14 +48,14 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void RunTest() {
             String file = "pdfALongString.pdf";
-            String filename = destinationFolder + file;
-            using (Stream icm = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm")) {
+            String filename = DESTINATION_FOLDER + file;
+            using (Stream icm = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm")) {
                 using (Stream fos = FileUtil.GetFileOutputStream(filename)) {
                     Document document = new Document(new PdfADocument(new PdfWriter(fos), PdfAConformance.PDF_A_3U, new PdfOutputIntent
                         ("Custom", "", "http://www.color.org", "sRGB ICC preference", icm)));
@@ -60,8 +63,8 @@ namespace iText.Pdfa {
                     while (stringBuilder.Length < STRING_LENGTH_LIMIT) {
                         stringBuilder.Append(stringBuilder.ToString());
                     }
-                    PdfFontFactory.Register(sourceFolder + "FreeSans.ttf", sourceFolder + "FreeSans.ttf");
-                    PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                    PdfFontFactory.Register(FONTS_FOLDER + "FreeSans.ttf", FONTS_FOLDER + "FreeSans.ttf");
+                    PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
                         );
                     Paragraph p = new Paragraph(stringBuilder.ToString());
                     p.SetMinWidth(1e6f);

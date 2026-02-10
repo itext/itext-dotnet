@@ -37,24 +37,24 @@ using iText.Test;
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
     public class TextWritingTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/TextWritingTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/layout/TextWritingTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/TextWritingTest/";
 
-        public static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void TextRiseTest01() {
             // CountryChunks example
-            String outFileName = destinationFolder + "textRiseTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_textRiseTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "textRiseTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_textRiseTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
@@ -66,14 +66,14 @@ namespace iText.Layout {
                 document.Add(p);
             }
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TextRenderingModeTest01() {
-            String outFileName = destinationFolder + "textRenderingModeTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_textRenderingModeTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "textRenderingModeTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_textRenderingModeTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Text text1 = new Text("This is a fill and stroke text").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
@@ -92,14 +92,14 @@ namespace iText.Layout {
             text4.SetDashPattern(new float[] { 0.5f, 1f }, 0f);
             document.Add(new Paragraph(text4));
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TextStrokeTest() {
-            String outFileName = destinationFolder + "textStrokeTest.pdf";
-            String cmpFileName = sourceFolder + "cmp_textStrokeTest.pdf";
+            String outFileName = DESTINATION_FOLDER + "textStrokeTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_textStrokeTest.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     Text text1 = new Text("Red stroke text via color setter").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
@@ -121,14 +121,14 @@ namespace iText.Layout {
                     document.Add(new Paragraph().Add(text5));
                 }
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void TextFillStrokeTest() {
-            String outFileName = destinationFolder + "textFillStrokeTest.pdf";
-            String cmpFileName = sourceFolder + "cmp_textFillStrokeTest.pdf";
+            String outFileName = DESTINATION_FOLDER + "textFillStrokeTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_textFillStrokeTest.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     Text text1 = new Text("Pink text with null stroke color (so font color is used)").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
@@ -145,14 +145,14 @@ namespace iText.Layout {
                     document.Add(new Paragraph().Add(text3));
                 }
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void LeadingTest01() {
-            String outFileName = destinationFolder + "leadingTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_leadingTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "leadingTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_leadingTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p1 = new Paragraph("first, leading of 150").SetFixedLeading(150);
@@ -163,28 +163,28 @@ namespace iText.Layout {
             p3.Add(new Text("third, leading of 20")).SetFixedLeading(20);
             document.Add(p3);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void LeadingTest02() {
-            String outFileName = destinationFolder + "leadingTest02.pdf";
-            String cmpFileName = sourceFolder + "cmp_leadingTest02.pdf";
+            String outFileName = DESTINATION_FOLDER + "leadingTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_leadingTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p1 = new Paragraph().Add(new Text("Abdgsdfds ffs f dds").SetFontSize(60)).Add(new Text("fsd f dsf ds fds f ds"
                 ).SetFontSize(22)).SetMultipliedLeading(1);
             document.Add(p1);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void FirstLineIndentTest01() {
-            String outFileName = destinationFolder + "firstLineIndentTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_firstLineIndentTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "firstLineIndentTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_firstLineIndentTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.SetProperty(Property.FIRST_LINE_INDENT, 25);
@@ -211,14 +211,14 @@ namespace iText.Layout {
                  + "\n" + "An epilogue describes the lives of the surviving characters and the effects of Voldemort's death on the wizarding world."
                 ));
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CharSpacingTest01() {
-            String outFileName = destinationFolder + "charSpacingTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_charSpacingTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "charSpacingTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_charSpacingTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
@@ -232,14 +232,14 @@ namespace iText.Layout {
             p.SetCharacterSpacing(4);
             document.Add(p);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void WordSpacingTest01() {
-            String outFileName = destinationFolder + "wordSpacingTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_wordSpacingTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "wordSpacingTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_wordSpacingTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
@@ -255,14 +255,14 @@ namespace iText.Layout {
             p.SetWordSpacing(15);
             document.Add(p);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void FontStyleSimulationTest01() {
-            String outFileName = destinationFolder + "fontStyleSimulationTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_fontStyleSimulationTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "fontStyleSimulationTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_fontStyleSimulationTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("I'm underlined").SetUnderline());
@@ -275,14 +275,14 @@ namespace iText.Layout {
                  + "such a long description will cause me to occupy two lines").SetBackgroundColor(ColorConstants.GREEN
                 )).SimulateItalic().SimulateBold().SetUnderline().SetLineThrough());
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void BigWordTest01() {
-            String outFileName = destinationFolder + "bigWordTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_bigWordTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "bigWordTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_bigWordTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Paragraph p = new Paragraph();
@@ -312,14 +312,14 @@ namespace iText.Layout {
             p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
             doc.Add(p);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void UnderlineTest() {
-            String outFileName = destinationFolder + "underline.pdf";
-            String cmpFileName = sourceFolder + "cmp_underline.pdf";
+            String outFileName = DESTINATION_FOLDER + "underline.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_underline.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p = new Paragraph("Text");
@@ -328,14 +328,14 @@ namespace iText.Layout {
             p.SetUnderline(1, 10);
             document.Add(p);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void StrokedUnderlineTest() {
-            String outFileName = destinationFolder + "strokedUnderline.pdf";
-            String cmpFileName = sourceFolder + "cmp_strokedUnderline.pdf";
+            String outFileName = DESTINATION_FOLDER + "strokedUnderline.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_strokedUnderline.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     Paragraph p = new Paragraph("Yellow text with pink stroked dashed underline.").SetFontSize(45).SetFontColor
@@ -365,15 +365,15 @@ namespace iText.Layout {
                     document.Add(p4);
                 }
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }
 
         [NUnit.Framework.Test]
         public virtual void LineThroughTest() {
             //TODO: update after DEVSIX-2623 fix
-            String outFileName = destinationFolder + "lineThrough.pdf";
-            String cmpFileName = sourceFolder + "cmp_lineThrough.pdf";
+            String outFileName = DESTINATION_FOLDER + "lineThrough.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_lineThrough.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Text textUp = new Text("textRise10f_with_lineThrough");
@@ -386,7 +386,7 @@ namespace iText.Layout {
             n.Add(textUp).Add(textDown);
             document.Add(n);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff_"));
         }
 
@@ -399,8 +399,8 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void LeadingAndFloatInTextTest() {
             // TODO: update cmp file after fixing DEVSIX-4604
-            String outFileName = destinationFolder + "leadingAndFloatInText.pdf";
-            String cmpFileName = sourceFolder + "cmp_leadingAndFloatInText.pdf";
+            String outFileName = DESTINATION_FOLDER + "leadingAndFloatInText.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_leadingAndFloatInText.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p = new Paragraph().SetFixedLeading(30).SetBorder(new SolidBorder(ColorConstants.RED, 2));
@@ -410,14 +410,14 @@ namespace iText.Layout {
             p.Add(text);
             document.Add(p);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 ));
         }
 
         [NUnit.Framework.Test]
         public virtual void TextWrappingEpsilonTest() {
-            String outFileName = destinationFolder + "textWrappingEpsilon.pdf";
-            String cmpFileName = sourceFolder + "cmp_textWrappingEpsilon.pdf";
+            String outFileName = DESTINATION_FOLDER + "textWrappingEpsilon.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_textWrappingEpsilon.pdf";
             PdfWriter writer = new PdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document document = new Document(pdfDoc);
@@ -425,7 +425,7 @@ namespace iText.Layout {
             document.SetLeftMargin(250.0F);
             document.SetRightMargin(238.727F);
             pdfDoc.SetDefaultPageSize(PageSize.LETTER);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "../fonts/Open_Sans/OpenSans-Regular.ttf");
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "OpenSans-Regular.ttf");
             String text1 = "First line of some text ";
             String text2 = "Second line of some text";
             Text text = new Text(text1);
@@ -441,7 +441,7 @@ namespace iText.Layout {
             document.Add(paragraph);
             document.Close();
             writer.Dispose();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 ));
         }
     }

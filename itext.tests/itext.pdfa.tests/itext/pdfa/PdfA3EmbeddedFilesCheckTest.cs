@@ -33,29 +33,32 @@ using iText.Test;
 namespace iText.Pdfa {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfA3EmbeddedFilesCheckTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
-        public static readonly String cmpFolder = sourceFolder + "cmp/PdfA3EmbeddedFilesCheckTest/";
+        private static readonly String CMP_FOLDER = SOURCE_FOLDER + "cmp/PdfA3EmbeddedFilesCheckTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/pdfa/PdfA3EmbeddedFilesCheckTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfa/PdfA3EmbeddedFilesCheckTest/";
+
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/fonts/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void FileSpecCheckTest01() {
-            String outPdf = destinationFolder + "pdfA3b_fileSpecCheckTest01.pdf";
-            String cmpPdf = cmpFolder + "cmp_pdfA3b_fileSpecCheckTest01.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA3b_fileSpecCheckTest01.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA3b_fileSpecCheckTest01.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
             PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformance.PDF_A_3B, outputIntent);
             PdfPage page = pdfDocument.AddNewPage();
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText("Hello World!").EndText
@@ -72,15 +75,15 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void FileSpecCheckTest02() {
-            String outPdf = destinationFolder + "pdfA3b_fileSpecCheckTest02.pdf";
-            String cmpPdf = cmpFolder + "cmp_pdfA3b_fileSpecCheckTest02.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA3b_fileSpecCheckTest02.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA3b_fileSpecCheckTest02.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
             PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformance.PDF_A_3B, outputIntent);
             PdfPage page = pdfDocument.AddNewPage();
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText("Hello World!").EndText
@@ -97,15 +100,15 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void FileSpecCheckTest03() {
-            String outPdf = destinationFolder + "pdfA3b_fileSpecCheckTest03.pdf";
-            String cmpPdf = cmpFolder + "cmp_pdfA3b_fileSpecCheckTest03.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA3b_fileSpecCheckTest03.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA3b_fileSpecCheckTest03.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
             PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformance.PDF_A_3B, outputIntent);
             PdfPage page = pdfDocument.AddNewPage();
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText("Hello World!").EndText
@@ -119,15 +122,15 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void FileSpecCheckTest04() {
-            String outPdf = destinationFolder + "pdfA3b_fileSpecCheckTest04.pdf";
-            String cmpPdf = cmpFolder + "cmp_pdfA3b_fileSpecCheckTest04.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA3b_fileSpecCheckTest04.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA3b_fileSpecCheckTest04.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
             PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformance.PDF_A_3B, outputIntent);
             PdfPage page = pdfDocument.AddNewPage();
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 36).ShowText("Hello World!").EndText
@@ -143,7 +146,7 @@ namespace iText.Pdfa {
         }
 
         private void CompareResult(String outPdf, String cmpPdf) {
-            String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            String result = new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_");
             if (result != null) {
                 NUnit.Framework.Assert.Fail(result);
             }

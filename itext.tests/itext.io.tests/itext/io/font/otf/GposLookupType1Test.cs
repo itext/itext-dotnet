@@ -29,12 +29,12 @@ using iText.Test;
 namespace iText.IO.Font.Otf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class GposLookupType1Test : ExtendedITextTest {
-        private static readonly String RESOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/GposLookupType1Test/";
+        private static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/";
 
         [NUnit.Framework.Test]
         public virtual void VerifyXAdvanceIsAppliedSubFormat1() {
-            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(RESOURCE_FOLDER + "NotoSansMyanmar-Regular.ttf"
+            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(FONT_FOLDER + "NotoSansMyanmar-Regular.ttf"
                 );
             GlyphPositioningTableReader gposTableReader = fontProgram.GetGposTable();
             GposLookupType1 lookup = (GposLookupType1)gposTableReader.GetLookupTable(29);
@@ -49,7 +49,7 @@ namespace iText.IO.Font.Otf {
 
         [NUnit.Framework.Test]
         public virtual void VerifyPositionIsNotAppliedForIrrelevantGlyphSubFormat1() {
-            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(RESOURCE_FOLDER + "NotoSansMyanmar-Regular.ttf"
+            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(FONT_FOLDER + "NotoSansMyanmar-Regular.ttf"
                 );
             GlyphPositioningTableReader gposTableReader = fontProgram.GetGposTable();
             GposLookupType1 lookup = (GposLookupType1)gposTableReader.GetLookupTable(29);
@@ -64,7 +64,7 @@ namespace iText.IO.Font.Otf {
 
         [NUnit.Framework.Test]
         public virtual void VerifyDifferentXAdvanceIsAppliedSubFormat2() {
-            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(RESOURCE_FOLDER + "NotoSansMyanmar-Regular.ttf"
+            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(FONT_FOLDER + "NotoSansMyanmar-Regular.ttf"
                 );
             GlyphPositioningTableReader gposTableReader = fontProgram.GetGposTable();
             GposLookupType1 lookup = (GposLookupType1)gposTableReader.GetLookupTable(16);

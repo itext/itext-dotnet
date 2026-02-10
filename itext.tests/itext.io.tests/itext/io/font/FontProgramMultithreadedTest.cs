@@ -34,7 +34,7 @@ namespace iText.IO.Font
     public class FontProgramMultithreadedTest : ExtendedITextTest
     {
         private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-                    .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/";
+                    .CurrentContext.TestDirectory) + "/resources/itext/io/font/";
         private static readonly String FONT = FONTS_FOLDER + "NotoSans-Regular.ttf";
 
         private static readonly TrueTypeFont fp = (TrueTypeFont) FontProgramFactory.CreateFont(FONT);

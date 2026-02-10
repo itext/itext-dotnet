@@ -83,8 +83,8 @@ namespace iText.Layout.Font.Selectorstrategy {
             fontProvider.GetFontSet().AddFont(FONTS_FOLDER + "FreeSans.ttf", null, "FontAlias", new RangeBuilder(100, 
                 102).Create());
             // 'x', 'y' and 'z' are in that interval
-            fontProvider.GetFontSet().AddFont(FONTS_FOLDER + "Puritan2.otf", null, "FontAlias", new RangeBuilder(120, 
-                122).Create());
+            fontProvider.GetFontSet().AddFont(FONTS_FOLDER + "Puritan-Regular.ttf", null, "FontAlias", new RangeBuilder
+                (120, 122).Create());
             fontProvider.SetFontSelectorStrategyFactory(factory);
             IList<String> fontFamilies = new List<String>();
             fontFamilies.Add("random");

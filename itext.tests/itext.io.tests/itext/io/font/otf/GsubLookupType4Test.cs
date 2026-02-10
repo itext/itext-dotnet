@@ -29,13 +29,12 @@ using iText.Test;
 namespace iText.IO.Font.Otf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class GsubLookupType4Test : ExtendedITextTest {
-        private static readonly String RESOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/GsubLookupType4Test/";
+        private static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/";
 
         [NUnit.Framework.Test]
         public virtual void TestNoIndexOutOfBound() {
-            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(RESOURCE_FOLDER + "DejaVuSansMono.ttf"
-                );
+            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(FONT_FOLDER + "DejaVuSansMono.ttf");
             GlyphSubstitutionTableReader gsubTableReader = fontProgram.GetGsubTable();
             IList<Glyph> glyphs = JavaUtil.ArraysAsList(new Glyph(1, 1, 1), new Glyph(1, 1, 1), new Glyph(1, 1, 1), new 
                 Glyph(1, 1, 1), new Glyph(1, 1, 1), new Glyph(1, 1, 1));
@@ -48,8 +47,7 @@ namespace iText.IO.Font.Otf {
 
         [NUnit.Framework.Test]
         public virtual void NoTransformationTest() {
-            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(RESOURCE_FOLDER + "DejaVuSansMono.ttf"
-                );
+            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(FONT_FOLDER + "DejaVuSansMono.ttf");
             GlyphSubstitutionTableReader gsubTableReader = fontProgram.GetGsubTable();
             IList<Glyph> glyphs = JavaUtil.ArraysAsList(new Glyph(1, 1, 1), new Glyph(1, 1, 1), new Glyph(1, 1, 1), new 
                 Glyph(1, 1, 1), new Glyph(1, 1, 1), new Glyph(1, 1, 1));

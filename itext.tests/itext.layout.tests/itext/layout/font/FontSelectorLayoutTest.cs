@@ -58,7 +58,7 @@ namespace iText.Layout.Font {
                 ));
             sel.GetFontSet().AddFont(StandardFonts.TIMES_ROMAN);
             sel.GetFontSet().AddFont(StandardFonts.COURIER);
-            sel.GetFontSet().AddFont(fontsFolder + "Puritan2.otf", PdfEncodings.IDENTITY_H, "Puritan2");
+            sel.GetFontSet().AddFont(fontsFolder + "Puritan-Regular.ttf", PdfEncodings.IDENTITY_H, "Puritan-Regular");
             sel.GetFontSet().AddFont(fontsFolder + "NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H, "NotoSans");
             sel.GetFontSet().AddFont(fontsFolder + "FreeSans.ttf", PdfEncodings.IDENTITY_H, "FreeSans");
             document.SetFontProvider(sel);
@@ -66,7 +66,7 @@ namespace iText.Layout.Font {
             document.Add(CreateParagraph("For Standard font COURIER: ", StandardFonts.COURIER));
             document.Add(CreateParagraph("For FreeSans: ", ("FreeSans")));
             document.Add(CreateParagraph("For NotoSans: ", ("NotoSans")));
-            document.Add(CreateParagraph("For Puritan2: ", ("Puritan2")));
+            document.Add(CreateParagraph("For Puritan-Regular: ", ("Puritan-Regular")));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diffPrefix"));

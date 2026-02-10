@@ -33,11 +33,11 @@ namespace iText.IO.Font.Otf {
             .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/OpenTypeFontTableReaderTest/";
 
         private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/sharedFontsResourceFiles/";
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/";
 
         private static readonly String CJK_JP_BOLD_PATH = FONTS_FOLDER + "NotoSansCJKjp-Bold.otf";
 
-        private static readonly String SANS_MYANMAR_REGULAR_PATH = RESOURCE_FOLDER + "NotoSansMyanmar-Regular.ttf";
+        private static readonly String SANS_MYANMAR_REGULAR_PATH = FONTS_FOLDER + "NotoSansMyanmar-Regular.ttf";
 
         [NUnit.Framework.Test]
         public virtual void TestFetchLangSysByTag() {

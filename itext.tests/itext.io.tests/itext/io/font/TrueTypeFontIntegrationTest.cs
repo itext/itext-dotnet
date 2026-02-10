@@ -30,15 +30,12 @@ using iText.Test;
 namespace iText.IO.Font {
     [NUnit.Framework.Category("IntegrationTest")]
     public class TrueTypeFontIntegrationTest : ExtendedITextTest {
-        private static readonly String SHARED_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/sharedFontsResourceFiles/";
-
-        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/TrueTypeFontIntegrationTest/";
+        private static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/";
 
         [NUnit.Framework.Test]
         public virtual void SimpleSubsetTest() {
-            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SHARED_FOLDER + "NotoSans-Regular.ttf"));
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONT_FOLDER + "NotoSans-Regular.ttf"));
             TrueTypeFont font = FontProgramFactory.CreateTrueTypeFont(fontBytes, false);
             ICollection<int> usedGlyphs = new HashSet<int>();
             // these GIDs correspond to ABC
@@ -47,7 +44,7 @@ namespace iText.IO.Font {
             usedGlyphs.Add(38);
             byte[] subsetFontBytes = font.GetSubset(usedGlyphs, true);
             TrueTypeFont subsetFont = FontProgramFactory.CreateTrueTypeFont(subsetFontBytes, true);
-            NUnit.Framework.Assert.AreEqual(3271, font.bBoxes.Length);
+            NUnit.Framework.Assert.AreEqual(4702, font.bBoxes.Length);
             NUnit.Framework.Assert.AreEqual(39, subsetFont.bBoxes.Length);
             NUnit.Framework.Assert.IsNotNull(subsetFont.bBoxes[36]);
             NUnit.Framework.Assert.IsNull(subsetFont.bBoxes[35]);
@@ -55,7 +52,7 @@ namespace iText.IO.Font {
 
         [NUnit.Framework.Test]
         public virtual void SimpleSubsetWithoutTableSubsetTest() {
-            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SHARED_FOLDER + "NotoSans-Regular.ttf"));
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONT_FOLDER + "NotoSans-Regular.ttf"));
             TrueTypeFont font = FontProgramFactory.CreateTrueTypeFont(fontBytes, false);
             ICollection<int> usedGlyphs = new HashSet<int>();
             // these GIDs correspond to ABC
@@ -64,7 +61,7 @@ namespace iText.IO.Font {
             usedGlyphs.Add(38);
             byte[] subsetFontBytes = font.GetSubset(usedGlyphs, false);
             TrueTypeFont subsetFont = FontProgramFactory.CreateTrueTypeFont(subsetFontBytes, false);
-            NUnit.Framework.Assert.AreEqual(3271, font.bBoxes.Length);
+            NUnit.Framework.Assert.AreEqual(4702, font.bBoxes.Length);
             NUnit.Framework.Assert.AreEqual(39, subsetFont.bBoxes.Length);
             NUnit.Framework.Assert.IsNotNull(subsetFont.bBoxes[36]);
             NUnit.Framework.Assert.IsNull(subsetFont.bBoxes[35]);
@@ -72,10 +69,10 @@ namespace iText.IO.Font {
 
         [NUnit.Framework.Test]
         public virtual void SimpleSubsetMergeTest() {
-            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset1.ttf"));
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONT_FOLDER + "subset1.ttf"));
             // Subset for XBC
             TrueTypeFont subset1 = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
-            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset2.ttf"));
+            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONT_FOLDER + "subset2.ttf"));
             // Subset for ABC
             TrueTypeFont subset2 = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
             IDictionary<TrueTypeFont, ICollection<int>> toMerge = new Dictionary<TrueTypeFont, ICollection<int>>();
@@ -99,11 +96,11 @@ namespace iText.IO.Font {
         public virtual void NoCommonCmapPdfTrueTypeMergeTest() {
             // subsets are created using fonttools Python lib with the following command
             // fonttools subset ./NotoSans-Regular.ttf --text="ABC" --retain-gids --layout-features='*' --notdef-glyph --output-file=subset_abc.ttf
-            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_abc.ttf"));
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONT_FOLDER + "subset_abc.ttf"));
             TrueTypeFont subsetAbc = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
-            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_def.ttf"));
+            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONT_FOLDER + "subset_def.ttf"));
             TrueTypeFont subsetDef = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
-            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_xyz.ttf"));
+            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONT_FOLDER + "subset_xyz.ttf"));
             TrueTypeFont subsetXyz = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
             IDictionary<TrueTypeFont, ICollection<int>> toMerge = new Dictionary<TrueTypeFont, ICollection<int>>();
             ICollection<int> usedGlyphs = new HashSet<int>();
@@ -133,13 +130,13 @@ namespace iText.IO.Font {
         public virtual void CommonCmapPdfTrueTypeMergeTest() {
             // subsets are created using fonttools Python lib with the following command
             // fonttools subset ./NotoSans-Regular.ttf --text="ABC" --retain-gids --layout-features='*' --notdef-glyph --output-file=subset_abc.ttf
-            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_abc.ttf"));
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONT_FOLDER + "subset_abc.ttf"));
             TrueTypeFont subsetAbc = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
-            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_abc_def_xyz.ttf"));
+            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONT_FOLDER + "subset_abc_def_xyz.ttf"));
             TrueTypeFont subsetAbcDefXyz = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
-            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_def.ttf"));
+            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONT_FOLDER + "subset_def.ttf"));
             TrueTypeFont subsetDef = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
-            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_xyz.ttf"));
+            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONT_FOLDER + "subset_xyz.ttf"));
             TrueTypeFont subsetXyz = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
             IDictionary<TrueTypeFont, ICollection<int>> toMerge = new Dictionary<TrueTypeFont, ICollection<int>>();
             ICollection<int> usedGlyphs = new HashSet<int>();
@@ -181,11 +178,11 @@ namespace iText.IO.Font {
         public virtual void NoCommonCmapPdfType0MergeTest() {
             // subsets are created using fonttools Python lib with the following command
             // fonttools subset ./NotoSans-Regular.ttf --text="ABC" --retain-gids --layout-features='*' --notdef-glyph --output-file=subset_abc.ttf
-            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_abc.ttf"));
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONT_FOLDER + "subset_abc.ttf"));
             TrueTypeFont subsetAbc = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
-            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_def.ttf"));
+            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONT_FOLDER + "subset_def.ttf"));
             TrueTypeFont subsetDef = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
-            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_xyz.ttf"));
+            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONT_FOLDER + "subset_xyz.ttf"));
             TrueTypeFont subsetXyz = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
             IDictionary<TrueTypeFont, ICollection<int>> toMerge = new Dictionary<TrueTypeFont, ICollection<int>>();
             ICollection<int> usedGlyphs = new HashSet<int>();
@@ -222,11 +219,11 @@ namespace iText.IO.Font {
         public virtual void NoCommonCmapUnknownPdfTypeMergeTest() {
             // subsets are created using fonttools Python lib with the following command
             // fonttools subset ./NotoSans-Regular.ttf --text="ABC" --retain-gids --layout-features='*' --notdef-glyph --output-file=subset_abc.ttf
-            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_abc.ttf"));
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONT_FOLDER + "subset_abc.ttf"));
             TrueTypeFont subsetAbc = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
-            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_def.ttf"));
+            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONT_FOLDER + "subset_def.ttf"));
             TrueTypeFont subsetDef = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
-            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subset_xyz.ttf"));
+            fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONT_FOLDER + "subset_xyz.ttf"));
             TrueTypeFont subsetXyz = FontProgramFactory.CreateTrueTypeFont(fontBytes, true);
             IDictionary<TrueTypeFont, ICollection<int>> toMerge = new Dictionary<TrueTypeFont, ICollection<int>>();
             ICollection<int> usedGlyphs = new HashSet<int>();
@@ -254,7 +251,7 @@ namespace iText.IO.Font {
 
         [NUnit.Framework.Test]
         public virtual void TryToReadFontSubsetWithoutGlyfTableTest() {
-            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subsetWithoutGlyfTable.ttf"));
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONT_FOLDER + "subsetWithoutGlyfTable.ttf"));
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => FontProgramFactory
                 .CreateTrueTypeFont(fontBytes, true));
             String exp = MessageFormatUtil.Format(IoExceptionMessageConstant.TABLE_DOES_NOT_EXIST, "glyf");
@@ -263,13 +260,13 @@ namespace iText.IO.Font {
 
         [NUnit.Framework.Test]
         public virtual void ReadFontSubsetWithoutOs2TableTest() {
-            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subsetWithoutOsTable.ttf"));
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONT_FOLDER + "subsetWithoutOsTable.ttf"));
             NUnit.Framework.Assert.DoesNotThrow(() => FontProgramFactory.CreateTrueTypeFont(fontBytes, true));
         }
 
         [NUnit.Framework.Test]
         public virtual void TryToReadFontSubsetWithoutOs2TableTest() {
-            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subsetWithoutOsTable.ttf"));
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONT_FOLDER + "subsetWithoutOsTable.ttf"));
             Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => FontProgramFactory
                 .CreateTrueTypeFont(fontBytes, false));
             String exp = MessageFormatUtil.Format(IoExceptionMessageConstant.TABLE_DOES_NOT_EXIST, "os/2");

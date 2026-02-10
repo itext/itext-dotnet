@@ -31,7 +31,7 @@ namespace iText.IO.Font.Otf {
     [NUnit.Framework.Category("UnitTest")]
     public class GlyphLineTest : ExtendedITextTest {
         private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/";
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/";
 
         private static readonly String NOTO_SANS_FONT_PATH = FONTS_FOLDER + "NotoSans-Regular.ttf";
 

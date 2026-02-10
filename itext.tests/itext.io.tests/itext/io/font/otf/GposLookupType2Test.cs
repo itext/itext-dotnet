@@ -29,10 +29,10 @@ using iText.Test;
 namespace iText.IO.Font.Otf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class GposLookupType2Test : ExtendedITextTest {
-        private static readonly String RESOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/GposLookupType2Test/";
+        private static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/";
 
-        private static readonly String DEJAVU_FONT_PATH = RESOURCE_FOLDER + "DejaVuSans.ttf";
+        private static readonly String DEJAVU_FONT_PATH = FONT_FOLDER + "DejaVuSans.ttf";
 
         [NUnit.Framework.Test]
         public virtual void IdxEqualToEndLineGpos2Test() {

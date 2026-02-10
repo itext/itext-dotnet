@@ -38,24 +38,27 @@ using iText.Test;
 namespace iText.Pdfa {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfATransparencyCheckTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
-        public static readonly String cmpFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String CMP_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/cmp/PdfATransparencyCheckTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/pdfa/PdfATransparencyCheckTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfa/PdfATransparencyCheckTest/";
+
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/fonts/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void TextTransparencyNoOutputIntentTest() {
             PdfWriter writer = new PdfWriter(new MemoryStream());
             PdfDocument pdfDocument = new PdfADocument(writer, PdfAConformance.PDF_A_3B, null);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfPage page1 = pdfDocument.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
@@ -72,10 +75,10 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void TransparentTextWithGroupColorSpaceTest() {
-            String outPdf = destinationFolder + "transparencyAndCS.pdf";
-            String cmpPdf = cmpFolder + "cmp_transparencyAndCS.pdf";
+            String outPdf = DESTINATION_FOLDER + "transparencyAndCS.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_transparencyAndCS.pdf";
             PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf), PdfAConformance.PDF_A_3B, null);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfPage page = pdfDocument.AddNewPage();
             page.GetResources().SetDefaultGray(new PdfCieBasedCs.CalGray(GetCalGrayArray()));
@@ -108,8 +111,8 @@ namespace iText.Pdfa {
             PdfCanvas canvas = new PdfCanvas(page);
             page.GetResources().SetDefaultRgb(new PdfCieBasedCs.CalRgb(new float[] { 0.3f, 0.4f, 0.5f }));
             canvas.SaveState();
-            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(sourceFolder + "itext.png"), new Rectangle(0, 0
-                , page.GetPageSize().GetWidth() / 2, page.GetPageSize().GetHeight() / 2), false);
+            canvas.AddImageFittedIntoRectangle(ImageDataFactory.Create(SOURCE_FOLDER + "itext.png"), new Rectangle(0, 
+                0, page.GetPageSize().GetWidth() / 2, page.GetPageSize().GetHeight() / 2), false);
             canvas.RestoreState();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDoc.Close());
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE
@@ -151,11 +154,11 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void TestTransparencyObjectsAbsence() {
-            String outPdf = destinationFolder + "transparencyObjectsAbsence.pdf";
-            String cmpPdf = cmpFolder + "cmp_transparencyObjectsAbsence.pdf";
+            String outPdf = DESTINATION_FOLDER + "transparencyObjectsAbsence.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_transparencyObjectsAbsence.pdf";
             PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf), PdfAConformance.PDF_A_3B, null);
             PdfPage page = pdfDocument.AddNewPage();
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(page);
             page.GetResources().SetDefaultGray(new PdfCieBasedCs.CalGray(GetCalGrayArray()));
@@ -169,7 +172,7 @@ namespace iText.Pdfa {
         }
 
         private void CompareResult(String outPdf, String cmpPdf) {
-            String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            String result = new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_");
             if (result != null) {
                 NUnit.Framework.Assert.Fail(result);
             }

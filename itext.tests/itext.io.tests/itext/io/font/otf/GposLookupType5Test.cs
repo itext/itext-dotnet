@@ -29,12 +29,12 @@ using iText.Test;
 namespace iText.IO.Font.Otf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class GposLookupType5Test : ExtendedITextTest {
-        private static readonly String RESOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/GposLookupType5Test/";
+        private static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/";
 
         [NUnit.Framework.Test]
         public virtual void VerifyMarkToBaseAttachment() {
-            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(RESOURCE_FOLDER + "NotoSansKhmer-Regular.ttf"
+            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(FONT_FOLDER + "NotoSansKhmer-Regular.ttf"
                 );
             GlyphPositioningTableReader gposTableReader = fontProgram.GetGposTable();
             GposLookupType5 lookup = (GposLookupType5)gposTableReader.GetLookupTable(25);
@@ -55,7 +55,7 @@ namespace iText.IO.Font.Otf {
             // TODO on completion of DEVSIX-3732 this test will probably have to be refactored
             //  since we will have to emulate previous substitutions and populate the substitution info
             //  to the glyph line so that mark is attached to the correct component of a ligature
-            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(RESOURCE_FOLDER + "NotoNaskhArabic-Regular.ttf"
+            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(FONT_FOLDER + "NotoNaskhArabic-Regular.ttf"
                 );
             GlyphLine glyphLine = new GlyphLine(JavaUtil.ArraysAsList(fontProgram.GetGlyphByCode(513), fontProgram.GetGlyphByCode
                 (75)));
@@ -72,7 +72,7 @@ namespace iText.IO.Font.Otf {
 
         [NUnit.Framework.Test]
         public virtual void TestThatNoTransformationsAppliedForNonRelevantGlyphs() {
-            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(RESOURCE_FOLDER + "NotoNaskhArabic-Regular.ttf"
+            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(FONT_FOLDER + "NotoNaskhArabic-Regular.ttf"
                 );
             GlyphLine glyphLine = new GlyphLine(JavaUtil.ArraysAsList(fontProgram.GetGlyph('1'), fontProgram.GetGlyphByCode
                 (75)));
@@ -89,7 +89,7 @@ namespace iText.IO.Font.Otf {
 
         [NUnit.Framework.Test]
         public virtual void IdxBiggerThanLineEndTest() {
-            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(RESOURCE_FOLDER + "NotoNaskhArabic-Regular.ttf"
+            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(FONT_FOLDER + "NotoNaskhArabic-Regular.ttf"
                 );
             GlyphLine glyphLine = new GlyphLine(JavaCollectionsUtil.SingletonList(fontProgram.GetGlyph(203)));
             GlyphPositioningTableReader gposTableReader = fontProgram.GetGposTable();

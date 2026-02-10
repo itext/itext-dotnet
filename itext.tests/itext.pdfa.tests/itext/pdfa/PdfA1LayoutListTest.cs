@@ -34,29 +34,32 @@ using iText.Test;
 namespace iText.Pdfa {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfA1LayoutListTest : ExtendedITextTest {
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/pdfa/PdfA1LayoutListTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfa/PdfA1LayoutListTest/";
 
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
-        public static readonly String cmpFolder = sourceFolder + "cmp/PdfA1LayoutListTest/";
+        private static readonly String CMP_FOLDER = SOURCE_FOLDER + "cmp/PdfA1LayoutListTest/";
+
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/fonts/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void ListTest01() {
-            String outPdf = destinationFolder + "pdfA1b_listTest01.pdf";
-            String cmpPdf = cmpFolder + "cmp_pdfA1b_listTest01.pdf";
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            String outPdf = DESTINATION_FOLDER + "pdfA1b_listTest01.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA1b_listTest01.pdf";
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
             PdfADocument pdfDocument = new PdfADocument(new PdfWriter(outPdf), PdfAConformance.PDF_A_1B, outputIntent);
             Document doc = new Document(pdfDocument);
             pdfDocument.SetTagged();
-            PdfFont textfont = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+            PdfFont textfont = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             textfont.SetSubset(true);
             List list = new List();
@@ -66,7 +69,7 @@ namespace iText.Pdfa {
             listItem.SetFont(textfont);
             doc.Add(list);
             doc.Close();
-            String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            String result = new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_");
             if (result != null) {
                 NUnit.Framework.Assert.Fail(result);
             }

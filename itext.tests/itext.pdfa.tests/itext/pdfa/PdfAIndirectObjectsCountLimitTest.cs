@@ -36,13 +36,16 @@ using iText.Test;
 namespace iText.Pdfa {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfAIndirectObjectsCountLimitTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
+
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/fonts/";
 
         [NUnit.Framework.Test]
         public virtual void ValidAmountOfIndirectObjectsTest() {
-            PdfA1Checker testChecker = new _PdfA1Checker_58(PdfAConformance.PDF_A_1B);
-            using (Stream icm = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm")) {
+            PdfA1Checker testChecker = new _PdfA1Checker_59(PdfAConformance.PDF_A_1B);
+            using (Stream icm = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm")) {
                 using (Stream fos = new MemoryStream()) {
                     using (Document document = new Document(new PdfADocument(new PdfWriter(fos), PdfAConformance.PDF_A_1B, GetOutputIntent
                         (icm)))) {
@@ -56,8 +59,8 @@ namespace iText.Pdfa {
             }
         }
 
-        private sealed class _PdfA1Checker_58 : PdfA1Checker {
-            public _PdfA1Checker_58(PdfAConformance baseArg1)
+        private sealed class _PdfA1Checker_59 : PdfA1Checker {
+            public _PdfA1Checker_59(PdfAConformance baseArg1)
                 : base(baseArg1) {
             }
 
@@ -70,8 +73,8 @@ namespace iText.Pdfa {
         // limit per "mock specification" conformance exception shouldn't be thrown
         [NUnit.Framework.Test]
         public virtual void InvalidAmountOfIndirectObjectsTest() {
-            PdfA1Checker testChecker = new _PdfA1Checker_85(PdfAConformance.PDF_A_1B);
-            using (Stream icm = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm")) {
+            PdfA1Checker testChecker = new _PdfA1Checker_86(PdfAConformance.PDF_A_1B);
+            using (Stream icm = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm")) {
                 using (Stream fos = new MemoryStream()) {
                     Document document = new Document(new PdfADocument(new PdfWriter(fos), PdfAConformance.PDF_A_1B, GetOutputIntent
                         (icm)));
@@ -90,8 +93,8 @@ namespace iText.Pdfa {
             }
         }
 
-        private sealed class _PdfA1Checker_85 : PdfA1Checker {
-            public _PdfA1Checker_85(PdfAConformance baseArg1)
+        private sealed class _PdfA1Checker_86 : PdfA1Checker {
+            public _PdfA1Checker_86(PdfAConformance baseArg1)
                 : base(baseArg1) {
             }
 
@@ -102,8 +105,8 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void InvalidAmountOfIndirectObjectsAppendModeTest() {
-            PdfA1Checker testChecker = new _PdfA1Checker_115(PdfAConformance.PDF_A_1B);
-            using (Stream fis = FileUtil.GetInputStreamForFile(sourceFolder + "pdfs/pdfa10IndirectObjects.pdf")) {
+            PdfA1Checker testChecker = new _PdfA1Checker_116(PdfAConformance.PDF_A_1B);
+            using (Stream fis = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "pdfs/pdfa10IndirectObjects.pdf")) {
                 using (Stream fos = new MemoryStream()) {
                     PdfADocument pdfa = new PdfADocument(new PdfReader(fis), new PdfWriter(fos), new StampingProperties().UseAppendMode
                         ());
@@ -120,8 +123,8 @@ namespace iText.Pdfa {
             }
         }
 
-        private sealed class _PdfA1Checker_115 : PdfA1Checker {
-            public _PdfA1Checker_115(PdfAConformance baseArg1)
+        private sealed class _PdfA1Checker_116 : PdfA1Checker {
+            public _PdfA1Checker_116(PdfAConformance baseArg1)
                 : base(baseArg1) {
             }
 
@@ -131,8 +134,8 @@ namespace iText.Pdfa {
         }
 
         private Paragraph BuildContent() {
-            PdfFontFactory.Register(sourceFolder + "FreeSans.ttf", sourceFolder + "FreeSans.ttf");
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+            PdfFontFactory.Register(FONTS_FOLDER + "FreeSans.ttf", FONTS_FOLDER + "FreeSans.ttf");
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
                 .PREFER_EMBEDDED);
             Paragraph p = new Paragraph(Guid.NewGuid().ToString());
             p.SetMinWidth(1e6f);

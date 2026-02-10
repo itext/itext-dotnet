@@ -59,8 +59,8 @@ namespace iText.Layout {
             FontProvider sel = new FontProvider();
             NUnit.Framework.Assert.IsTrue(sel.AddFont(FONTS_FOLDER + "NotoSans-Regular.ttf"));
             NUnit.Framework.Assert.IsTrue(sel.AddFont(FONTS_FOLDER + "FreeSans.ttf"));
-            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(FONTS_FOLDER + "Puritan2.otf", PdfEncodings.IDENTITY_H
-                , "Puritan42"));
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(FONTS_FOLDER + "Puritan-Regular.ttf", PdfEncodings.
+                IDENTITY_H, "Puritan42"));
             String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
             Document doc = new Document(pdfDoc);
@@ -80,7 +80,7 @@ namespace iText.Layout {
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             FontProvider sel = new FontProvider();
-            NUnit.Framework.Assert.IsTrue(sel.AddFont(FONTS_FOLDER + "Puritan2.otf"));
+            NUnit.Framework.Assert.IsTrue(sel.AddFont(FONTS_FOLDER + "Puritan-Regular.ttf"));
             NUnit.Framework.Assert.IsTrue(sel.AddFont(FONTS_FOLDER + "NotoSans-Regular.ttf"));
             NUnit.Framework.Assert.IsTrue(sel.AddFont(FONTS_FOLDER + "FreeSans.ttf"));
             String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
@@ -104,7 +104,7 @@ namespace iText.Layout {
             FontProvider sel = new FontProvider();
             NUnit.Framework.Assert.IsTrue(sel.AddFont(FONTS_FOLDER + "FreeSans.ttf"));
             NUnit.Framework.Assert.IsTrue(sel.AddFont(FONTS_FOLDER + "NotoSans-Regular.ttf"));
-            NUnit.Framework.Assert.IsTrue(sel.AddFont(FONTS_FOLDER + "Puritan2.otf"));
+            NUnit.Framework.Assert.IsTrue(sel.AddFont(FONTS_FOLDER + "Puritan-Regular.ttf"));
             String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
             Document doc = new Document(pdfDoc);
@@ -126,7 +126,7 @@ namespace iText.Layout {
             FontProvider sel = new FontProvider();
             NUnit.Framework.Assert.IsTrue(sel.AddFont(FONTS_FOLDER + "FreeSans.ttf"));
             NUnit.Framework.Assert.IsTrue(sel.AddFont(FONTS_FOLDER + "NotoSans-Regular.ttf"));
-            NUnit.Framework.Assert.IsTrue(sel.AddFont(FONTS_FOLDER + "Puritan2.otf"));
+            NUnit.Framework.Assert.IsTrue(sel.AddFont(FONTS_FOLDER + "Puritan-Regular.ttf"));
             String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
             Document doc = new Document(pdfDoc);
@@ -150,7 +150,7 @@ namespace iText.Layout {
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             FontProvider sel = new FontProvider();
-            NUnit.Framework.Assert.IsTrue(sel.AddFont(FONTS_FOLDER + "Puritan2.otf"));
+            NUnit.Framework.Assert.IsTrue(sel.AddFont(FONTS_FOLDER + "Puritan-Regular.ttf"));
             String s = "Hello мир!";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
             Document doc = new Document(pdfDoc);
@@ -264,9 +264,9 @@ namespace iText.Layout {
             FontProvider sel = new FontProvider();
             NUnit.Framework.Assert.IsTrue(sel.AddFont(FONTS_FOLDER + "NotoSans-Regular.ttf"));
             NUnit.Framework.Assert.IsTrue(sel.AddFont(FONTS_FOLDER + "FreeSans.ttf"));
-            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(FONTS_FOLDER + "Puritan2.otf", PdfEncodings.IDENTITY_H
-                , "Puritan42"));
-            ICollection<FontInfo> fonts = sel.GetFontSet().Get("puritan2");
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(FONTS_FOLDER + "Puritan-Regular.ttf", PdfEncodings.
+                IDENTITY_H, "Puritan42"));
+            ICollection<FontInfo> fonts = sel.GetFontSet().Get("Puritan-Regular");
             NUnit.Framework.Assert.IsTrue(fonts.Count != 0, "Puritan not found!");
             FontInfo puritan = GetFirst(fonts);
             NUnit.Framework.Assert.IsFalse(sel.GetFontSet().AddFont(puritan, "Puritan42"), "Replace existed font");
@@ -275,12 +275,12 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("Noto Sans"), "NotoSans not found!");
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("FreeSans"), "FreeSans not found!");
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("Free Sans"), "FreeSans not found!");
-            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("puritan 2.0 regular"), "Puritan 2.0 not found!");
-            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("puritan2"), "Puritan 2.0 not found!");
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("Puritan-Regular"), "Puritan-Regular not found!");
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("Puritan Regular"), "Puritan not found!");
             NUnit.Framework.Assert.IsFalse(sel.GetFontSet().Contains("puritan42"), "Puritan42 found!");
-            NUnit.Framework.Assert.AreEqual(puritan, GetFirst(sel.GetFontSet().Get("puritan 2.0 regular")), "Puritan 2.0 not found!"
+            NUnit.Framework.Assert.AreEqual(puritan, GetFirst(sel.GetFontSet().Get("Puritan-Regular")), "Puritan-Regular not found!"
                 );
-            NUnit.Framework.Assert.AreEqual(puritan, GetFirst(sel.GetFontSet().Get("puritan2")), "Puritan 2.0 not found!"
+            NUnit.Framework.Assert.AreEqual(puritan, GetFirst(sel.GetFontSet().Get("Puritan-Regular")), "Puritan-regular not found!"
                 );
             NUnit.Framework.Assert.IsTrue(GetFirst(sel.GetFontSet().Get("puritan42")) == null, "Puritan42 found!");
         }
@@ -290,9 +290,9 @@ namespace iText.Layout {
             FontProvider sel = new FontProvider();
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(FONTS_FOLDER + "NotoSans-Regular.ttf"));
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(FONTS_FOLDER + "FreeSans.ttf"));
-            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(FONTS_FOLDER + "Puritan2.otf", PdfEncodings.IDENTITY_H
-                , "Puritan42"));
-            ICollection<FontInfo> fonts = sel.GetFontSet().Get("puritan2");
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(FONTS_FOLDER + "Puritan-Regular.ttf", PdfEncodings.
+                IDENTITY_H, "Puritan42"));
+            ICollection<FontInfo> fonts = sel.GetFontSet().Get("Puritan-Regular");
             NUnit.Framework.Assert.IsTrue(fonts.Count != 0, "Puritan not found!");
             FontInfo puritan = GetFirst(fonts);
             fonts = sel.GetFontSet().Get("NotoSans");
@@ -305,8 +305,8 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("Noto Sans"), "NotoSans not found!");
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("FreeSans"), "FreeSans not found!");
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("Free Sans"), "FreeSans not found!");
-            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("puritan 2.0 regular"), "Puritan 2.0 not found!");
-            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("puritan2"), "Puritan 2.0 not found!");
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("Puritan-Regular"), "Puritan-Regular not found!");
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("Puritan Regular"), "Puritan Regular not found!");
             NUnit.Framework.Assert.IsFalse(sel.GetFontSet().Contains("puritan42"), "Puritan42 found!");
             NUnit.Framework.Assert.AreEqual(notoSans, GetFirst(sel.GetFontSet().Get("NotoSans")), "NotoSans not found!"
                 );
@@ -316,9 +316,9 @@ namespace iText.Layout {
                 );
             NUnit.Framework.Assert.AreEqual(freeSans, GetFirst(sel.GetFontSet().Get("Free Sans")), "FreeSans not found!"
                 );
-            NUnit.Framework.Assert.AreEqual(puritan, GetFirst(sel.GetFontSet().Get("puritan 2.0 regular")), "Puritan 2.0 not found!"
+            NUnit.Framework.Assert.AreEqual(puritan, GetFirst(sel.GetFontSet().Get("Puritan-Regular")), "Puritan-Regular not found!"
                 );
-            NUnit.Framework.Assert.AreEqual(puritan, GetFirst(sel.GetFontSet().Get("puritan2")), "Puritan 2.0 not found!"
+            NUnit.Framework.Assert.AreEqual(puritan, GetFirst(sel.GetFontSet().Get("Puritan Regular")), "Puritan-regular not found!"
                 );
             NUnit.Framework.Assert.IsTrue(GetFirst(sel.GetFontSet().Get("puritan42")) == null, "Puritan42 found!");
         }
@@ -334,7 +334,7 @@ namespace iText.Layout {
             IDictionary<String, String> aliasToFontName = new LinkedDictionary<String, String>();
             aliasToFontName.Put(cyrillicAlias, "NotoSans-Regular.ttf");
             aliasToFontName.Put(greekAlias, "FreeSans.ttf");
-            aliasToFontName.Put(japaneseAlias, "Puritan2.otf");
+            aliasToFontName.Put(japaneseAlias, "Puritan-Regular.ttf");
             FontProvider provider = new FontProvider();
             foreach (KeyValuePair<String, String> e in aliasToFontName) {
                 provider.GetFontSet().AddFont(FONTS_FOLDER + e.Value, PdfEncodings.IDENTITY_H, e.Key);
@@ -363,7 +363,8 @@ namespace iText.Layout {
             String japaneseAlias = "\u30D5\u30A9\u30F3\u30C83";
             FontProvider provider = new FontProvider();
             provider.AddFont(FONTS_FOLDER + "NotoSans-Regular.ttf");
-            provider.GetFontSet().AddFont(FONTS_FOLDER + "Puritan2.otf", PdfEncodings.IDENTITY_H, japaneseAlias);
+            provider.GetFontSet().AddFont(FONTS_FOLDER + "Puritan-Regular.ttf", PdfEncodings.IDENTITY_H, japaneseAlias
+                );
             provider.AddFont(FONTS_FOLDER + "FreeSans.ttf");
             String s = "Hello world!";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
@@ -463,8 +464,8 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(FONTS_FOLDER + "FreeSans.ttf", null, "FontAlias", new 
                 RangeBuilder(100, 102).Create()));
             // 'x', 'y' and 'z' are in that interval
-            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(FONTS_FOLDER + "Puritan2.otf", null, "FontAlias", new 
-                RangeBuilder(120, 122).Create()));
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(FONTS_FOLDER + "Puritan-Regular.ttf", null, "FontAlias"
+                , new RangeBuilder(120, 122).Create()));
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
@@ -856,9 +857,9 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             FontProvider sel = new FontProvider();
-            sel.GetFontSet().AddFont(FONTS_FOLDER + "Open_Sans/" + "OpenSans-Bold.ttf");
-            sel.GetFontSet().AddFont(FONTS_FOLDER + "Open_Sans/" + "OpenSans-ExtraBold.ttf");
-            sel.GetFontSet().AddFont(FONTS_FOLDER + "Open_Sans/" + "OpenSans-SemiBold.ttf");
+            sel.GetFontSet().AddFont(FONTS_FOLDER + "OpenSans-Bold.ttf");
+            sel.GetFontSet().AddFont(FONTS_FOLDER + "OpenSans-ExtraBold.ttf");
+            sel.GetFontSet().AddFont(FONTS_FOLDER + "OpenSans-SemiBold.ttf");
             doc.SetFontProvider(sel);
             Div div = new Div().SetFontFamily("OpenSans");
             Paragraph paragraph1 = new Paragraph("Hello, OpenSansExtraBold! ");
@@ -881,8 +882,8 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             FontProvider sel = new FontProvider();
-            sel.GetFontSet().AddFont(FONTS_FOLDER + "Open_Sans/" + "OpenSans-Regular.ttf");
-            sel.GetFontSet().AddFont(FONTS_FOLDER + "Open_Sans/" + "OpenSans-Light.ttf");
+            sel.GetFontSet().AddFont(FONTS_FOLDER + "OpenSans-Regular.ttf");
+            sel.GetFontSet().AddFont(FONTS_FOLDER + "OpenSans-Light.ttf");
             doc.SetFontProvider(sel);
             Div div = new Div().SetFontFamily("OpenSans");
             Paragraph paragraph1 = new Paragraph("Hello, OpenSansRegular! ");
@@ -898,10 +899,9 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void OpenSansOutOfBoldFontWeightTest() {
-            String openSansFolder = "Open_Sans/";
             FontSet set = new FontSet();
-            set.AddFont(FONTS_FOLDER + openSansFolder + "OpenSans-Bold.ttf");
-            set.AddFont(FONTS_FOLDER + openSansFolder + "OpenSans-ExtraBold.ttf");
+            set.AddFont(FONTS_FOLDER + "OpenSans-Bold.ttf");
+            set.AddFont(FONTS_FOLDER + "OpenSans-ExtraBold.ttf");
             IList<String> fontFamilies = new List<String>();
             fontFamilies.Add("OpenSans");
             FontCharacteristics fc = new FontCharacteristics();
@@ -912,10 +912,9 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void OpenSansOutOfMixedFontWeightTest() {
-            String openSansFolder = "Open_Sans/";
             FontSet set = new FontSet();
-            set.AddFont(FONTS_FOLDER + openSansFolder + "OpenSans-Light.ttf");
-            set.AddFont(FONTS_FOLDER + openSansFolder + "OpenSans-SemiBold.ttf");
+            set.AddFont(FONTS_FOLDER + "OpenSans-Light.ttf");
+            set.AddFont(FONTS_FOLDER + "OpenSans-SemiBold.ttf");
             IList<String> fontFamilies = new List<String>();
             fontFamilies.Add("OpenSans");
             FontCharacteristics fc = new FontCharacteristics();
@@ -931,10 +930,9 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void OpenSansOutOfNotBoldFontWeightTest() {
             // TODO: DEVSIX-2120 Currently light and regular fonts have the same score. When fixed update assertion to "OpenSans-Regular"
-            String openSansFolder = "Open_Sans/";
             FontSet set = new FontSet();
-            set.AddFont(FONTS_FOLDER + openSansFolder + "OpenSans-Light.ttf");
-            set.AddFont(FONTS_FOLDER + openSansFolder + "OpenSans-Regular.ttf");
+            set.AddFont(FONTS_FOLDER + "OpenSans-Light.ttf");
+            set.AddFont(FONTS_FOLDER + "OpenSans-Regular.ttf");
             IList<String> fontFamilies = new List<String>();
             fontFamilies.Add("OpenSans");
             FontCharacteristics fc = new FontCharacteristics();
@@ -961,10 +959,10 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void Family2UsedToSortFontsTest() {
             FontSet set = new FontSet();
-            set.AddFont(FONTS_FOLDER + "Lato/Lato-Black.ttf");
-            set.AddFont(FONTS_FOLDER + "Lato/Lato-Regular.ttf");
-            set.AddFont(FONTS_FOLDER + "Lato/Lato-Italic.ttf");
-            set.AddFont(FONTS_FOLDER + "Lato/Lato-Hairline.ttf");
+            set.AddFont(FONTS_FOLDER + "Lato-Black.ttf");
+            set.AddFont(FONTS_FOLDER + "Lato-Regular.ttf");
+            set.AddFont(FONTS_FOLDER + "Lato-Italic.ttf");
+            set.AddFont(FONTS_FOLDER + "Lato-Hairline.ttf");
             IList<String> fontFamilies = new List<String>();
             fontFamilies.Add("Lato Hairline");
             FontCharacteristics fc = new FontCharacteristics();
@@ -1081,16 +1079,16 @@ namespace iText.Layout {
         private static FontSet GetOpenSansFontSet() {
             String openSansFolder = "Open_Sans/";
             FontSet set = new FontSet();
-            set.AddFont(FONTS_FOLDER + openSansFolder + "OpenSans-Bold.ttf");
-            set.AddFont(FONTS_FOLDER + openSansFolder + "OpenSans-BoldItalic.ttf");
-            set.AddFont(FONTS_FOLDER + openSansFolder + "OpenSans-ExtraBold.ttf");
-            set.AddFont(FONTS_FOLDER + openSansFolder + "OpenSans-ExtraBoldItalic.ttf");
-            set.AddFont(FONTS_FOLDER + openSansFolder + "OpenSans-Light.ttf");
-            set.AddFont(FONTS_FOLDER + openSansFolder + "OpenSans-LightItalic.ttf");
-            set.AddFont(FONTS_FOLDER + openSansFolder + "OpenSans-Regular.ttf");
-            set.AddFont(FONTS_FOLDER + openSansFolder + "OpenSans-Italic.ttf");
-            set.AddFont(FONTS_FOLDER + openSansFolder + "OpenSans-SemiBold.ttf");
-            set.AddFont(FONTS_FOLDER + openSansFolder + "OpenSans-SemiBoldItalic.ttf");
+            set.AddFont(FONTS_FOLDER + "OpenSans-Bold.ttf");
+            set.AddFont(FONTS_FOLDER + "OpenSans-BoldItalic.ttf");
+            set.AddFont(FONTS_FOLDER + "OpenSans-ExtraBold.ttf");
+            set.AddFont(FONTS_FOLDER + "OpenSans-ExtraBoldItalic.ttf");
+            set.AddFont(FONTS_FOLDER + "OpenSans-Light.ttf");
+            set.AddFont(FONTS_FOLDER + "OpenSans-LightItalic.ttf");
+            set.AddFont(FONTS_FOLDER + "OpenSans-Regular.ttf");
+            set.AddFont(FONTS_FOLDER + "OpenSans-Italic.ttf");
+            set.AddFont(FONTS_FOLDER + "OpenSans-SemiBold.ttf");
+            set.AddFont(FONTS_FOLDER + "OpenSans-SemiBoldItalic.ttf");
             return set;
         }
 

@@ -26,24 +26,24 @@ using iText.Test;
 namespace iText.IO.Font {
     [NUnit.Framework.Category("UnitTest")]
     public class MonospaceFontTest : ExtendedITextTest {
-        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/MonospaceFontTest/";
+        private static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/";
 
         [NUnit.Framework.Test]
         public virtual void OpenMono() {
-            TrueTypeFont font = new TrueTypeFont(sourceFolder + "DejaVuSansMono.ttf");
+            TrueTypeFont font = new TrueTypeFont(FONT_FOLDER + "DejaVuSansMono.ttf");
             NUnit.Framework.Assert.IsNotNull(font.GetGlyph('A'));
         }
 
         [NUnit.Framework.Test]
         public virtual void OpenSans() {
-            TrueTypeFont font = new TrueTypeFont(sourceFolder + "DejaVuSans.ttf");
+            TrueTypeFont font = new TrueTypeFont(FONT_FOLDER + "DejaVuSans.ttf");
             NUnit.Framework.Assert.IsNotNull(font.GetGlyph('A'));
         }
 
         [NUnit.Framework.Test]
         public virtual void OpenSerif() {
-            TrueTypeFont font = new TrueTypeFont(sourceFolder + "DejaVuSerif.ttf");
+            TrueTypeFont font = new TrueTypeFont(FONT_FOLDER + "DejaVuSerif.ttf");
             NUnit.Framework.Assert.IsNotNull(font.GetGlyph('A'));
         }
     }

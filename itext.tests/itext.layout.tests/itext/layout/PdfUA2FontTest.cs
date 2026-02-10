@@ -49,13 +49,13 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void CheckPuritan2WithUTF8Test() {
-            String outFile = DESTINATION_FOLDER + "puritan2WithUTF8Test.pdf";
-            String cmpFile = SOURCE_FOLDER + "cmp_puritan2WithUTF8Test.pdf";
+        public virtual void CheckPuritanWithUTF8Test() {
+            String outFile = DESTINATION_FOLDER + "puritanWithUTF8Test.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_puritanWithUTF8Test.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 Document document = new Document(pdfDocument);
-                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "Puritan2.otf", PdfEncodings.UTF8, PdfFontFactory.EmbeddingStrategy
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "Puritan-Regular.otf", PdfEncodings.UTF8, PdfFontFactory.EmbeddingStrategy
                     .FORCE_EMBEDDED);
                 document.SetFont(font);
                 CreateSimplePdfUA2Document(pdfDocument);
@@ -106,8 +106,8 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 Document document = new Document(pdfDocument);
-                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "Open_Sans/OpenSans-Regular.ttf", PdfEncodings.WINANSI
-                    , PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "OpenSans-Regular.ttf", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                    .FORCE_EMBEDDED);
                 document.SetFont(font);
                 CreateSimplePdfUA2Document(pdfDocument);
                 Paragraph paragraph = new Paragraph("Simple paragraph");

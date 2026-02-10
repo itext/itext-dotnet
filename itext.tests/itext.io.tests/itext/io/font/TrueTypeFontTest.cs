@@ -29,14 +29,14 @@ using iText.Test;
 namespace iText.IO.Font {
     [NUnit.Framework.Category("UnitTest")]
     public class TrueTypeFontTest : ExtendedITextTest {
-        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/sharedFontsResourceFiles/";
+        private static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/";
 
         [NUnit.Framework.Test]
         public virtual void NotoSansJpCmapTest() {
             // 信
             char jpChar = '\u4FE1';
-            FontProgram fontProgram = FontProgramFactory.CreateFont(SOURCE_FOLDER + "NotoSansJP-Regular_charsetDataFormat0.otf"
+            FontProgram fontProgram = FontProgramFactory.CreateFont(FONT_FOLDER + "NotoSansJP-Regular_charsetDataFormat0.otf"
                 );
             Glyph glyph = fontProgram.GetGlyph(jpChar);
             NUnit.Framework.Assert.AreEqual(new char[] { jpChar }, glyph.GetUnicodeChars());
@@ -48,7 +48,7 @@ namespace iText.IO.Font {
         public virtual void NotoSansScCmapTest() {
             // 易
             char chChar = '\u6613';
-            FontProgram fontProgram = FontProgramFactory.CreateFont(SOURCE_FOLDER + "NotoSansSC-Regular.otf");
+            FontProgram fontProgram = FontProgramFactory.CreateFont(FONT_FOLDER + "NotoSansSC-Regular.otf");
             Glyph glyph = fontProgram.GetGlyph(chChar);
             NUnit.Framework.Assert.AreEqual(new char[] { chChar }, glyph.GetUnicodeChars());
             NUnit.Framework.Assert.AreEqual(26131, glyph.GetUnicode());
@@ -59,7 +59,7 @@ namespace iText.IO.Font {
         public virtual void NotoSansTcCmapTest() {
             // 易
             char chChar = '\u6613';
-            FontProgram fontProgram = FontProgramFactory.CreateFont(SOURCE_FOLDER + "NotoSansTC-Regular.otf");
+            FontProgram fontProgram = FontProgramFactory.CreateFont(FONT_FOLDER + "NotoSansTC-Regular.otf");
             Glyph glyph = fontProgram.GetGlyph(chChar);
             NUnit.Framework.Assert.AreEqual(new char[] { chChar }, glyph.GetUnicodeChars());
             NUnit.Framework.Assert.AreEqual(26131, glyph.GetUnicode());
@@ -72,7 +72,7 @@ namespace iText.IO.Font {
             char chChar = '\u6613';
             int charCidInFont = 20292;
             int charGidInFont = 14890;
-            TrueTypeFont trueTypeFontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(SOURCE_FOLDER + "NotoSansSC-Regular.otf"
+            TrueTypeFont trueTypeFontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(FONT_FOLDER + "NotoSansSC-Regular.otf"
                 );
             HashSet<int> glyphs = new HashSet<int>(JavaCollectionsUtil.SingletonList(charCidInFont));
             ICollection<int> actualResult = trueTypeFontProgram.MapGlyphsCidsToGids(glyphs);
@@ -82,21 +82,21 @@ namespace iText.IO.Font {
 
         [NUnit.Framework.Test]
         public virtual void CmapPlatform0PlatEnc3Format4Test() {
-            FontProgram fontProgram = FontProgramFactory.CreateFont(SOURCE_FOLDER + "glyphs.ttf");
+            FontProgram fontProgram = FontProgramFactory.CreateFont(FONT_FOLDER + "glyphs.ttf");
             CheckCmapTableEntry(fontProgram, 'f', 2);
             CheckCmapTableEntry(fontProgram, 'i', 3);
         }
 
         [NUnit.Framework.Test]
         public virtual void CmapPlatform0PlatEnc3Format6Test() {
-            FontProgram fontProgram = FontProgramFactory.CreateFont(SOURCE_FOLDER + "glyphs-fmt-6.ttf");
+            FontProgram fontProgram = FontProgramFactory.CreateFont(FONT_FOLDER + "glyphs-fmt-6.ttf");
             CheckCmapTableEntry(fontProgram, 'f', 2);
             CheckCmapTableEntry(fontProgram, 'i', 3);
         }
 
         [NUnit.Framework.Test]
         public virtual void CheckSxHeightTtfTest() {
-            FontProgram fontProgram = FontProgramFactory.CreateFont(SOURCE_FOLDER + "glyphs-fmt-6.ttf");
+            FontProgram fontProgram = FontProgramFactory.CreateFont(FONT_FOLDER + "glyphs-fmt-6.ttf");
             FontMetrics metrics = fontProgram.GetFontMetrics();
             int xHeight = metrics.GetXHeight();
             NUnit.Framework.Assert.AreEqual(536, xHeight);
@@ -104,7 +104,7 @@ namespace iText.IO.Font {
 
         [NUnit.Framework.Test]
         public virtual void ContainsCmapTest() {
-            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(SOURCE_FOLDER + "glyphs-fmt-6.ttf");
+            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(FONT_FOLDER + "glyphs-fmt-6.ttf");
             NUnit.Framework.Assert.AreEqual(1, fontProgram.GetNumberOfCmaps());
             NUnit.Framework.Assert.IsTrue(fontProgram.IsCmapPresent(0, 3));
             NUnit.Framework.Assert.IsFalse(fontProgram.IsCmapPresent(1, 0));
@@ -112,7 +112,7 @@ namespace iText.IO.Font {
 
         [NUnit.Framework.Test]
         public virtual void UpdateUsedGlyphsSetTest() {
-            TrueTypeFont trueTypeFontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(SOURCE_FOLDER + "NotoSansSC-Regular.otf"
+            TrueTypeFont trueTypeFontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(FONT_FOLDER + "NotoSansSC-Regular.otf"
                 );
             SortedSet<int> usedGlyphs = new SortedSet<int>();
             trueTypeFontProgram.UpdateUsedGlyphs(usedGlyphs, true, null);
@@ -128,7 +128,7 @@ namespace iText.IO.Font {
 
         [NUnit.Framework.Test]
         public virtual void UpdateUsedGlyphsMapTest() {
-            TrueTypeFont trueTypeFontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(SOURCE_FOLDER + "NotoSansSC-Regular.otf"
+            TrueTypeFont trueTypeFontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(FONT_FOLDER + "NotoSansSC-Regular.otf"
                 );
             IDictionary<int, Glyph> usedGlyphs = new Dictionary<int, Glyph>();
             trueTypeFontProgram.UpdateUsedGlyphs(usedGlyphs, true, null);

@@ -99,7 +99,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void CustomFontProvider() {
-            String fileName = "customFontProvider.pdf";
+            String fileName = "customFontProvider";
             String outFileName = destinationFolder + fileName + ".pdf";
             String cmpFileName = sourceFolder + "cmp_" + fileName + ".pdf";
             FontProvider fontProvider = new FontProvider();
@@ -121,7 +121,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void CustomFontProvider2() {
-            String fileName = "customFontProvider2.pdf";
+            String fileName = "customFontProvider2";
             String outFileName = destinationFolder + fileName + ".pdf";
             String cmpFileName = sourceFolder + "cmp_" + fileName + ".pdf";
             FontProvider fontProvider = new FontProvider();

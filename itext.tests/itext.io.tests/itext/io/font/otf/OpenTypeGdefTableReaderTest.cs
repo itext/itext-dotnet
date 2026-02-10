@@ -28,7 +28,7 @@ namespace iText.IO.Font.Otf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class OpenTypeGdefTableReaderTest : ExtendedITextTest {
         private static readonly String RESOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/OpenTypeGdefTableReaderTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/";
 
         [NUnit.Framework.Test]
         public virtual void TestLookupFlagWithMarkAttachmentTypeAndMarkGlyphWithoutMarkAttachmentClass() {

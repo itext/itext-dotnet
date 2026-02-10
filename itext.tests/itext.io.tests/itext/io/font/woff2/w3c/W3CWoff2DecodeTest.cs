@@ -28,10 +28,10 @@ using iText.Test;
 
 namespace iText.IO.Font.Woff2.W3c {
     public abstract class W3CWoff2DecodeTest : Woff2DecodeTest {
-        private static readonly String baseSourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/woff2/w3c/";
+        private static readonly String W3C_FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/w3c/";
 
-        private static readonly String baseDestinationFolder = TestUtil.GetOutputPath() + "/io/font/woff2/w3c/";
+        private static readonly String W3C_DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/io/font/w3c/";
 
         protected internal abstract String GetFontName();
 
@@ -54,13 +54,13 @@ namespace iText.IO.Font.Woff2.W3c {
 
         private String GetDestinationFolder() {
             String localPackage = StringNormalizer.ToLowerCase(GetLocalPackage());
-            return baseDestinationFolder + localPackage + System.IO.Path.DirectorySeparatorChar + GetTestClassName() +
-                 System.IO.Path.DirectorySeparatorChar;
+            return W3C_DESTINATION_FOLDER + localPackage + System.IO.Path.DirectorySeparatorChar + GetTestClassName() 
+                + System.IO.Path.DirectorySeparatorChar;
         }
 
         private String GetSourceFolder() {
             String localPackage = StringNormalizer.ToLowerCase(GetLocalPackage());
-            return baseSourceFolder + localPackage + System.IO.Path.DirectorySeparatorChar;
+            return W3C_FONT_FOLDER + localPackage + System.IO.Path.DirectorySeparatorChar;
         }
 
         private String GetTestClassName() {

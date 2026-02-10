@@ -27,13 +27,13 @@ using iText.Test;
 namespace iText.IO.Font {
     [NUnit.Framework.Category("UnitTest")]
     public class CFFFontTest : ExtendedITextTest {
-        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/sharedFontsResourceFiles/";
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/";
 
         [NUnit.Framework.Test]
         public virtual void SeekTest() {
             RandomAccessFileOrArray raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource
-                (SOURCE_FOLDER + "NotoSansCJKjp-Bold.otf"));
+                (FONTS_FOLDER + "NotoSansCJKjp-Bold.otf"));
             int offsetToCff = 259880;
             int cffLength = 16023217;
             byte[] cff = new byte[cffLength];
@@ -59,7 +59,7 @@ namespace iText.IO.Font {
         [NUnit.Framework.Test]
         public virtual void GetPositionTest() {
             RandomAccessFileOrArray raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource
-                (SOURCE_FOLDER + "NotoSansCJKjp-Bold.otf"));
+                (FONTS_FOLDER + "NotoSansCJKjp-Bold.otf"));
             int offsetToCff = 259880;
             int cffLength = 16023217;
             byte[] cff = new byte[cffLength];

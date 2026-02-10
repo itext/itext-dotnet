@@ -38,7 +38,7 @@ namespace iText.Svg.Css {
         public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/css/FontAttributesTest/";
 
         public static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/svg/css/fonts/";
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/fonts/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

@@ -30,11 +30,8 @@ using iText.Test;
 namespace iText.IO.Font {
     [NUnit.Framework.Category("IntegrationTest")]
     public class CFFFontSubsetIntegrationTest : ExtendedITextTest {
-        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/CFFFontSubsetIntegrationTest/";
-
         private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/sharedFontsResourceFiles/";
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/";
 
         private static readonly String CJK_JP_BOLD_PATH = FONTS_FOLDER + "NotoSansCJKjp-Bold.otf";
 
@@ -52,7 +49,7 @@ namespace iText.IO.Font {
 
         [NUnit.Framework.Test]
         public virtual void SubsetNotoSansCjkJpBoldNoUsedGlyphsTest() {
-            String cmpCff = SOURCE_FOLDER + "subsetNotoSansCJKjpBoldNoUsedGlyphs.cff";
+            String cmpCff = FONTS_FOLDER + "subsetNotoSansCJKjpBoldNoUsedGlyphs.cff";
             ICollection<int> glyphsUsed = JavaCollectionsUtil.EmptySet<int>();
             byte[] cffSubsetBytes = SubsetNotoSansCjkJpBoldCff(CJK_JP_BOLD_PATH, CJK_JP_BOLD_CFF_OFFSET, CJK_JP_BOLD_CFF_LENGTH
                 , glyphsUsed);
@@ -64,7 +61,7 @@ namespace iText.IO.Font {
 
         [NUnit.Framework.Test]
         public virtual void SubsetNotoSansCjkJpBoldTwoUsedGlyphsTest() {
-            String cmpCff = SOURCE_FOLDER + "subsetNotoSansCJKjpBoldTwoUsedGlyphs.cff";
+            String cmpCff = FONTS_FOLDER + "subsetNotoSansCJKjpBoldTwoUsedGlyphs.cff";
             // In this case cid == gid for given characters.
             // \u20eab "𠺫"
             int glyphCid1 = 59715;
@@ -89,7 +86,7 @@ namespace iText.IO.Font {
                 , glyphsUsed);
             int expectedSubsetLength = 121796;
             NUnit.Framework.Assert.AreEqual(expectedSubsetLength, cffSubsetBytes.Length);
-            byte[] cmpBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subsetNotoSansJPRegularOneUsedGlyph.cff"
+            byte[] cmpBytes = File.ReadAllBytes(System.IO.Path.Combine(FONTS_FOLDER + "subsetNotoSansJPRegularOneUsedGlyph.cff"
                 ));
             NUnit.Framework.Assert.AreEqual(cmpBytes, cffSubsetBytes);
         }

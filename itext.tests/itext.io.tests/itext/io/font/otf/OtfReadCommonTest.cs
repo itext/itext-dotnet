@@ -31,9 +31,6 @@ namespace iText.IO.Font.Otf {
         private static readonly String RESOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/OtfReadCommonTest/";
 
-        private static readonly String RESOURCE_FOLDER_2 = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf" + "/GposLookupType7Test/";
-
         [NUnit.Framework.Test]
         public virtual void TestReadCoverageFormat1() {
             // Based on Example 5 from the specification

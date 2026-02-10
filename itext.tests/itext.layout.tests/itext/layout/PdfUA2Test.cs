@@ -223,7 +223,7 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void CheckTableOfContentsTest() {
             String outFile = DESTINATION_FOLDER + "tableOfContentsTest.pdf";
-            String cmpFile = SOURCE_FOLDER + "cmp_tableOfContentsTestTest.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_tableOfContentsTest.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 Document document = new Document(pdfDocument);

@@ -29,13 +29,12 @@ using iText.Test;
 namespace iText.IO.Font.Otf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class GsubLookupType6Test : ExtendedITextTest {
-        private static readonly String RESOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/GsubLookupType6Test/";
+        private static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/";
 
         [NUnit.Framework.Test]
         public virtual void TestSubstitutionApplied() {
-            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(RESOURCE_FOLDER + "Padauk-Regular.ttf"
-                );
+            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(FONT_FOLDER + "Padauk-Regular.ttf");
             GlyphSubstitutionTableReader gsubTableReader = fontProgram.GetGsubTable();
             IList<Glyph> glyphs = JavaUtil.ArraysAsList(fontProgram.GetGlyphByCode(233), fontProgram.GetGlyphByCode(167
                 ), fontProgram.GetGlyphByCode(207), fontProgram.GetGlyphByCode(149), fontProgram.GetGlyphByCode(207), 
@@ -49,8 +48,7 @@ namespace iText.IO.Font.Otf {
 
         [NUnit.Framework.Test]
         public virtual void TestSubstitutionNotApplied() {
-            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(RESOURCE_FOLDER + "Padauk-Regular.ttf"
-                );
+            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(FONT_FOLDER + "Padauk-Regular.ttf");
             GlyphSubstitutionTableReader gsubTableReader = fontProgram.GetGsubTable();
             IList<Glyph> glyphs = JavaUtil.ArraysAsList(fontProgram.GetGlyphByCode(233), fontProgram.GetGlyphByCode(167
                 ), fontProgram.GetGlyphByCode(207), fontProgram.GetGlyphByCode(149), fontProgram.GetGlyphByCode(207), 

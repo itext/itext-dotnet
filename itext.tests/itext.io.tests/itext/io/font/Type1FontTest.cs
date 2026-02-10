@@ -27,7 +27,7 @@ namespace iText.IO.Font {
     [NUnit.Framework.Category("UnitTest")]
     public class Type1FontTest : ExtendedITextTest {
         public static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/type1/testPackage/";
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/TestPackage/";
 
         [NUnit.Framework.Test]
         public virtual void FillUsingEncodingTest() {

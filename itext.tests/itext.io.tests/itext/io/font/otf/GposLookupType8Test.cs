@@ -29,13 +29,12 @@ using iText.Test;
 namespace iText.IO.Font.Otf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class GposLookupType8Test : ExtendedITextTest {
-        private static readonly String RESOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/GposLookupType8Test/";
+        private static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/";
 
         [NUnit.Framework.Test]
         public virtual void VerifyXAdvanceIsAppliedForContextualPositioning() {
-            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(RESOURCE_FOLDER + "Padauk-Regular.ttf"
-                );
+            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(FONT_FOLDER + "Padauk-Regular.ttf");
             GlyphPositioningTableReader gposTableReader = fontProgram.GetGposTable();
             IList<Glyph> glyphs = JavaUtil.ArraysAsList(fontProgram.GetGlyphByCode(233), fontProgram.GetGlyphByCode(163
                 ), fontProgram.GetGlyphByCode(158), fontProgram.GetGlyphByCode(227));
@@ -48,7 +47,7 @@ namespace iText.IO.Font.Otf {
 
         [NUnit.Framework.Test]
         public virtual void VerifyXAdvanceIsAppliedForPosTableLookup8Format2() {
-            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(RESOURCE_FOLDER + "NotoSansMyanmar-Regular.ttf"
+            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(FONT_FOLDER + "NotoSansMyanmar-Regular.ttf"
                 );
             GlyphPositioningTableReader gposTableReader = fontProgram.GetGposTable();
             IList<Glyph> glyphs = JavaUtil.ArraysAsList(fontProgram.GetGlyphByCode(29), fontProgram.GetGlyphByCode(26)
@@ -64,8 +63,7 @@ namespace iText.IO.Font.Otf {
 
         [NUnit.Framework.Test]
         public virtual void VerifyXAdvanceIsNotAppliedForUnsatisfiedContextualPositioning() {
-            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(RESOURCE_FOLDER + "Padauk-Regular.ttf"
-                );
+            TrueTypeFont fontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(FONT_FOLDER + "Padauk-Regular.ttf");
             GlyphPositioningTableReader gposTableReader = fontProgram.GetGposTable();
             IList<Glyph> glyphs = JavaUtil.ArraysAsList(fontProgram.GetGlyphByCode(233), fontProgram.GetGlyphByCode(163
                 ), fontProgram.GetGlyphByCode(158), fontProgram.GetGlyphByCode(233));

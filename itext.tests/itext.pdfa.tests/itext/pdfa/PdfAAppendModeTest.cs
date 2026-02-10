@@ -33,30 +33,33 @@ namespace iText.Pdfa {
     // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfAAppendModeTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
-        public const String testDirName = "PdfAAppendModeTest/";
+        private const String TEST_DIR_NAME = "PdfAAppendModeTest/";
 
-        public static readonly String cmpFolder = sourceFolder + "cmp/" + testDirName;
+        private static readonly String CMP_FOLDER = SOURCE_FOLDER + "cmp/" + TEST_DIR_NAME;
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/pdfa/" + testDirName;
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfa/" + TEST_DIR_NAME;
+
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/fonts/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void AddPageInAppendModeTest() {
-            String inputFile = destinationFolder + "in_addPageInAppendModeTest.pdf";
-            String outputFile = destinationFolder + "out_addPageInAppendModeTest.pdf";
-            String cmpFile = cmpFolder + "cmp_addPageInAppendModeTest.pdf";
+            String inputFile = DESTINATION_FOLDER + "in_addPageInAppendModeTest.pdf";
+            String outputFile = DESTINATION_FOLDER + "out_addPageInAppendModeTest.pdf";
+            String cmpFile = CMP_FOLDER + "cmp_addPageInAppendModeTest.pdf";
             CreateInputPdfADocument(inputFile);
             PdfDocument pdfADocument = new PdfADocument(new PdfReader(inputFile), new PdfWriter(outputFile), new StampingProperties
                 ().UseAppendMode());
             PdfCanvas canvas = new PdfCanvas(pdfADocument.AddNewPage());
-            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf"
+            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf"
                 , PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED), 16).ShowText("This page 2").EndText().RestoreState
                 ();
             canvas.Release();
@@ -65,19 +68,19 @@ namespace iText.Pdfa {
             // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outputFile));
             // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFile, cmpFile, destinationFolder, "diff_"
-                ));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFile, cmpFile, DESTINATION_FOLDER, 
+                "diff_"));
         }
 
         private static void CreateInputPdfADocument(String docName) {
             PdfWriter writer = new PdfWriter(docName);
             PdfADocument pdfDoc = new PdfADocument(writer, PdfAConformance.PDF_A_1A, new PdfOutputIntent("Custom", "", 
-                "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm"
+                "http://www.color.org", "sRGB IEC61966-2.1", FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm"
                 )));
             pdfDoc.SetTagged();
             pdfDoc.GetCatalog().SetLang(new PdfString("en-US"));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
-            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf"
+            canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf"
                 , PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED), 16).ShowText("This page 1").EndText().RestoreState
                 ();
             canvas.Release();
