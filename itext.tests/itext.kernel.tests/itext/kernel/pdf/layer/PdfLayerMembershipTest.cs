@@ -22,7 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using iText.IO.Font.Constants;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -32,19 +34,19 @@ using iText.Test;
 namespace iText.Kernel.Pdf.Layer {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfLayerMembershipTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/layer/PdfLayerMembershipTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/kernel/pdf/layer/PdfLayerMembershipTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/pdf/layer/PdfLayerMembershipTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.OneTimeTearDown]
         public static void AfterClass() {
-            CompareTool.Cleanup(destinationFolder);
+            CompareTool.Cleanup(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
@@ -52,8 +54,8 @@ namespace iText.Kernel.Pdf.Layer {
             String srcPdf = "sourceWithDifferentLayers.pdf";
             String destPdf = "enabledVisibilityPolicyAllOnTest.pdf";
             String cmpPdf = "cmp_" + destPdf;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), CompareTool.CreateTestPdfWriter
-                (destinationFolder + destPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + srcPdf), CompareTool.CreateTestPdfWriter
+                (DESTINATION_FOLDER + destPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.GetFirstPage());
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 18);
             IList<PdfLayer> allLayers = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
@@ -63,8 +65,8 @@ namespace iText.Kernel.Pdf.Layer {
             layerMembershipAllOn.SetVisibilityPolicy(PdfName.AllOn);
             PdfLayerTestUtils.AddTextInsideLayer(layerMembershipAllOn, canvas, "visibilityPolicyAllOnTest", 200, 500);
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destPdf, sourceFolder
-                 + cmpPdf, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + destPdf, SOURCE_FOLDER
+                 + cmpPdf, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
@@ -72,8 +74,8 @@ namespace iText.Kernel.Pdf.Layer {
             String srcPdf = "sourceWithDifferentLayers.pdf";
             String destPdf = "disabledVisibilityPolicyAllOnTest.pdf";
             String cmpPdf = "cmp_" + destPdf;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), CompareTool.CreateTestPdfWriter
-                (destinationFolder + destPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + srcPdf), CompareTool.CreateTestPdfWriter
+                (DESTINATION_FOLDER + destPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.GetFirstPage());
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 18);
             IList<PdfLayer> allLayers = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
@@ -83,8 +85,8 @@ namespace iText.Kernel.Pdf.Layer {
             layerMembershipAllOn.SetVisibilityPolicy(PdfName.AllOn);
             PdfLayerTestUtils.AddTextInsideLayer(layerMembershipAllOn, canvas, "visibilityPolicyAllOnTest", 200, 500);
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destPdf, sourceFolder
-                 + cmpPdf, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + destPdf, SOURCE_FOLDER
+                 + cmpPdf, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
@@ -92,8 +94,8 @@ namespace iText.Kernel.Pdf.Layer {
             String srcPdf = "sourceWithDifferentLayers.pdf";
             String destPdf = "enabledVisibilityPolicyAllOffTest.pdf";
             String cmpPdf = "cmp_" + destPdf;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), CompareTool.CreateTestPdfWriter
-                (destinationFolder + destPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + srcPdf), CompareTool.CreateTestPdfWriter
+                (DESTINATION_FOLDER + destPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.GetFirstPage());
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 18);
             IList<PdfLayer> allLayers = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
@@ -104,8 +106,8 @@ namespace iText.Kernel.Pdf.Layer {
             PdfLayerTestUtils.AddTextInsideLayer(layerMembershipAllOff, canvas, "visibilityPolicyAllOffTest", 200, 500
                 );
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destPdf, sourceFolder
-                 + cmpPdf, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + destPdf, SOURCE_FOLDER
+                 + cmpPdf, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
@@ -113,8 +115,8 @@ namespace iText.Kernel.Pdf.Layer {
             String srcPdf = "sourceWithDifferentLayers.pdf";
             String destPdf = "disabledVisibilityPolicyAllOffTest.pdf";
             String cmpPdf = "cmp_" + destPdf;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), CompareTool.CreateTestPdfWriter
-                (destinationFolder + destPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + srcPdf), CompareTool.CreateTestPdfWriter
+                (DESTINATION_FOLDER + destPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.GetFirstPage());
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 18);
             IList<PdfLayer> allLayers = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
@@ -125,8 +127,8 @@ namespace iText.Kernel.Pdf.Layer {
             PdfLayerTestUtils.AddTextInsideLayer(layerMembershipAllOff, canvas, "visibilityPolicyAllOffTest", 200, 500
                 );
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destPdf, sourceFolder
-                 + cmpPdf, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + destPdf, SOURCE_FOLDER
+                 + cmpPdf, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
@@ -134,8 +136,8 @@ namespace iText.Kernel.Pdf.Layer {
             String srcPdf = "sourceWithDifferentLayers.pdf";
             String destPdf = "enabledVisibilityPolicyAnyOnTest.pdf";
             String cmpPdf = "cmp_" + destPdf;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), CompareTool.CreateTestPdfWriter
-                (destinationFolder + destPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + srcPdf), CompareTool.CreateTestPdfWriter
+                (DESTINATION_FOLDER + destPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.GetFirstPage());
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 18);
             IList<PdfLayer> allLayers = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
@@ -145,8 +147,8 @@ namespace iText.Kernel.Pdf.Layer {
             layerMembershipAnyOn.SetVisibilityPolicy(PdfName.AnyOn);
             PdfLayerTestUtils.AddTextInsideLayer(layerMembershipAnyOn, canvas, "visibilityPolicyAnyOnTest", 200, 500);
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destPdf, sourceFolder
-                 + cmpPdf, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + destPdf, SOURCE_FOLDER
+                 + cmpPdf, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
@@ -154,8 +156,8 @@ namespace iText.Kernel.Pdf.Layer {
             String srcPdf = "sourceWithDifferentLayers.pdf";
             String destPdf = "disabledVisibilityPolicyAnyOnTest.pdf";
             String cmpPdf = "cmp_" + destPdf;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), CompareTool.CreateTestPdfWriter
-                (destinationFolder + destPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + srcPdf), CompareTool.CreateTestPdfWriter
+                (DESTINATION_FOLDER + destPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.GetFirstPage());
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 18);
             IList<PdfLayer> allLayers = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
@@ -165,8 +167,8 @@ namespace iText.Kernel.Pdf.Layer {
             layerMembershipAnyOn.SetVisibilityPolicy(PdfName.AnyOn);
             PdfLayerTestUtils.AddTextInsideLayer(layerMembershipAnyOn, canvas, "visibilityPolicyAnyOnTest", 200, 500);
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destPdf, sourceFolder
-                 + cmpPdf, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + destPdf, SOURCE_FOLDER
+                 + cmpPdf, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
@@ -174,8 +176,8 @@ namespace iText.Kernel.Pdf.Layer {
             String srcPdf = "sourceWithDifferentLayers.pdf";
             String destPdf = "enabledVisibilityPolicyAnyOffTest.pdf";
             String cmpPdf = "cmp_" + destPdf;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), CompareTool.CreateTestPdfWriter
-                (destinationFolder + destPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + srcPdf), CompareTool.CreateTestPdfWriter
+                (DESTINATION_FOLDER + destPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.GetFirstPage());
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 18);
             IList<PdfLayer> allLayers = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
@@ -185,8 +187,8 @@ namespace iText.Kernel.Pdf.Layer {
             layerMembershipAnyOn.SetVisibilityPolicy(PdfName.AnyOff);
             PdfLayerTestUtils.AddTextInsideLayer(layerMembershipAnyOn, canvas, "visibilityPolicyAnyOffTest", 200, 500);
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destPdf, sourceFolder
-                 + cmpPdf, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + destPdf, SOURCE_FOLDER
+                 + cmpPdf, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
@@ -194,8 +196,8 @@ namespace iText.Kernel.Pdf.Layer {
             String srcPdf = "sourceWithDifferentLayers.pdf";
             String destPdf = "disabledVisibilityPolicyAnyOffTest.pdf";
             String cmpPdf = "cmp_" + destPdf;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), CompareTool.CreateTestPdfWriter
-                (destinationFolder + destPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + srcPdf), CompareTool.CreateTestPdfWriter
+                (DESTINATION_FOLDER + destPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.GetFirstPage());
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 18);
             IList<PdfLayer> allLayers = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
@@ -205,8 +207,8 @@ namespace iText.Kernel.Pdf.Layer {
             layerMembershipAnyOn.SetVisibilityPolicy(PdfName.AnyOff);
             PdfLayerTestUtils.AddTextInsideLayer(layerMembershipAnyOn, canvas, "visibilityPolicyAnyOffTest", 200, 500);
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destPdf, sourceFolder
-                 + cmpPdf, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + destPdf, SOURCE_FOLDER
+                 + cmpPdf, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
@@ -214,8 +216,8 @@ namespace iText.Kernel.Pdf.Layer {
             String srcPdf = "sourceWithDifferentLayers.pdf";
             String destPdf = "enabledVisualExpressionTest01.pdf";
             String cmpPdf = "cmp_" + destPdf;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), CompareTool.CreateTestPdfWriter
-                (destinationFolder + destPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + srcPdf), CompareTool.CreateTestPdfWriter
+                (DESTINATION_FOLDER + destPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.GetFirstPage());
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 18);
             IList<PdfLayer> allLayers = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
@@ -235,8 +237,8 @@ namespace iText.Kernel.Pdf.Layer {
             layerMembershipAnyOn.SetVisibilityExpression(expression);
             PdfLayerTestUtils.AddTextInsideLayer(layerMembershipAnyOn, canvas, "visualExpressionTest01", 200, 500);
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destPdf, sourceFolder
-                 + cmpPdf, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + destPdf, SOURCE_FOLDER
+                 + cmpPdf, DESTINATION_FOLDER));
         }
 
         [NUnit.Framework.Test]
@@ -244,8 +246,8 @@ namespace iText.Kernel.Pdf.Layer {
             String srcPdf = "sourceWithDifferentLayers.pdf";
             String destPdf = "disabledVisualExpressionTest01.pdf";
             String cmpPdf = "cmp_" + destPdf;
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + srcPdf), CompareTool.CreateTestPdfWriter
-                (destinationFolder + destPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + srcPdf), CompareTool.CreateTestPdfWriter
+                (DESTINATION_FOLDER + destPdf));
             PdfCanvas canvas = new PdfCanvas(pdfDoc.GetFirstPage());
             canvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 18);
             IList<PdfLayer> allLayers = pdfDoc.GetCatalog().GetOCProperties(true).GetLayers();
@@ -265,8 +267,73 @@ namespace iText.Kernel.Pdf.Layer {
             layerMembershipAnyOn.SetVisibilityExpression(expression);
             PdfLayerTestUtils.AddTextInsideLayer(layerMembershipAnyOn, canvas, "visualExpressionTest01", 200, 500);
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + destPdf, sourceFolder
-                 + cmpPdf, destinationFolder));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + destPdf, SOURCE_FOLDER
+                 + cmpPdf, DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LayerPropertiesPersistenceTest() {
+            String filename = DESTINATION_FOLDER + "layerPropertiesPersistence.pdf";
+            // Create document with layers
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(filename));
+            PdfPage page = pdfDocument.AddNewPage();
+            // Create a layer that is ON
+            PdfLayer layerOn = new PdfLayer("LayerOn", pdfDocument);
+            layerOn.SetOn(true);
+            layerOn.SetOnPanel(true);
+            layerOn.SetLocked(true);
+            PdfLayer childLayer = new PdfLayer("ChildLayer", pdfDocument);
+            childLayer.SetOn(false);
+            layerOn.AddChild(childLayer);
+            // Create a layer that is OFF
+            PdfLayer layerOff = new PdfLayer("LayerOff", pdfDocument);
+            layerOff.SetOn(false);
+            layerOff.SetOnPanel(false);
+            layerOff.SetLocked(true);
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.BeginLayer(layerOn);
+            canvas.SetFillColor(ColorConstants.RED);
+            canvas.Rectangle(100, 100, 200, 200);
+            canvas.Fill();
+            canvas.EndLayer();
+            canvas.BeginLayer(layerOff);
+            canvas.SetFillColor(ColorConstants.BLUE);
+            canvas.Rectangle(350, 100, 200, 200);
+            canvas.Fill();
+            canvas.EndLayer();
+            pdfDocument.Close();
+            // Reopen the document and verify layer states are persisted
+            PdfDocument reopenedDoc = new PdfDocument(new PdfReader(filename), new PdfWriter(new MemoryStream()));
+            NUnit.Framework.Assert.AreEqual(2, reopenedDoc.GetPage(1).GetPdfLayers().Count);
+            PdfLayerMembership reopenedLayerMembership = new PdfLayerMembership(reopenedDoc);
+            foreach (PdfLayer layer in reopenedDoc.GetCatalog().GetOCProperties(false).GetLayers()) {
+                reopenedLayerMembership.AddLayer(layer);
+            }
+            // Find the layers by name and verify their states
+            PdfLayer reopenedLayerOn = null;
+            PdfLayer reopenedLayerOff = null;
+            foreach (PdfLayer layer in reopenedLayerMembership.GetLayers()) {
+                String layerName = layer.GetPdfObject().GetAsString(PdfName.Name).GetValue();
+                if ("LayerOn".Equals(layerName)) {
+                    reopenedLayerOn = layer;
+                }
+                else {
+                    if ("LayerOff".Equals(layerName)) {
+                        reopenedLayerOff = layer;
+                    }
+                }
+            }
+            NUnit.Framework.Assert.IsNotNull(reopenedLayerOn, "LayerOn should exist after reopening");
+            NUnit.Framework.Assert.IsNotNull(reopenedLayerOff, "LayerOff should exist after reopening");
+            NUnit.Framework.Assert.IsTrue(reopenedLayerOn.IsOn());
+            NUnit.Framework.Assert.IsTrue(reopenedLayerOn.IsOnPanel());
+            NUnit.Framework.Assert.IsTrue(reopenedLayerOn.IsLocked());
+            NUnit.Framework.Assert.AreEqual(1, reopenedLayerOn.GetChildren().Count);
+            NUnit.Framework.Assert.IsFalse(reopenedLayerOn.GetChildren()[0].IsOn());
+            NUnit.Framework.Assert.IsFalse(reopenedLayerOff.IsOn());
+            NUnit.Framework.Assert.IsFalse(reopenedLayerOff.IsOnPanel());
+            NUnit.Framework.Assert.IsTrue(reopenedLayerOff.IsLocked());
+            reopenedDoc.Close();
         }
     }
 }

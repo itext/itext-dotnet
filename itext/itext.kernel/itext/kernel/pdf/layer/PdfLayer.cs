@@ -66,8 +66,12 @@ namespace iText.Kernel.Pdf.Layer {
 
         /// <summary>Creates a new layer by existing dictionary, which must be an indirect object.</summary>
         /// <param name="layerDictionary">the layer dictionary, must have an indirect reference.</param>
+        [System.ObsoleteAttribute(@"PdfLayer shall not be created from iText.Kernel.Pdf.PdfDictionary , since some of the properties are not part of that dictionary. Instead, already existing layers shall be accessed through PdfOCProperties.GetLayers() ."
+            )]
         public PdfLayer(PdfDictionary layerDictionary)
-            : base(layerDictionary) {
+            : base(
+                        // Make package-private on next major release.
+                        layerDictionary) {
             SetForbidRelease();
             EnsureObjectIsAddedToDocument(layerDictionary);
         }

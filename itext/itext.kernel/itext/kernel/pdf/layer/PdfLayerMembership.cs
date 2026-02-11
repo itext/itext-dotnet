@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Layer {
@@ -74,17 +75,34 @@ namespace iText.Kernel.Pdf.Layer {
         /// </returns>
         public virtual ICollection<PdfLayer> GetLayers() {
             PdfObject layers = GetPdfObject().Get(PdfName.OCGs);
+            IList<PdfLayer> allLayers = GetDocument().GetCatalog().GetOCProperties(false).GetLayers();
             if (layers is PdfDictionary) {
-                IList<PdfLayer> list = new List<PdfLayer>();
-                list.Add(new PdfLayer((PdfDictionary)((PdfDictionary)layers).MakeIndirect(GetDocument())));
-                return list;
+                foreach (PdfLayer layer in allLayers) {
+                    if (layer.GetPdfObject().GetIndirectReference().Equals(layers.GetIndirectReference())) {
+                        return JavaCollectionsUtil.Singleton(layer);
+                    }
+                }
+                // This logic should only be triggered if layer is not in the document yet.
+                return JavaCollectionsUtil.SingletonList(new PdfLayer((PdfDictionary)layers.MakeIndirect(GetDocument())));
             }
             else {
                 if (layers is PdfArray) {
                     IList<PdfLayer> layerList = new List<PdfLayer>();
                     for (int ind = 0; ind < ((PdfArray)layers).Size(); ind++) {
-                        layerList.Add(new PdfLayer(((PdfArray)(((PdfArray)layers).MakeIndirect(GetDocument()))).GetAsDictionary(ind
-                            )));
+                        bool layerFound = false;
+                        foreach (PdfLayer layer in allLayers) {
+                            if (layer.GetPdfObject().GetIndirectReference().Equals(((PdfArray)layers).Get(ind).GetIndirectReference())
+                                ) {
+                                layerList.Add(layer);
+                                layerFound = true;
+                                break;
+                            }
+                        }
+                        if (layerFound) {
+                            continue;
+                        }
+                        // This logic should only be triggered if layer is not in the document yet.
+                        layerList.Add(new PdfLayer(((PdfArray)layers.MakeIndirect(GetDocument())).GetAsDictionary(ind)));
                     }
                     return layerList;
                 }

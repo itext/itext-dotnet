@@ -82,7 +82,6 @@ namespace iText.Kernel.Contrast {
     /// <seealso cref="OverlappingArea"/>
     /// <seealso cref="ColorContrastCalculator"/>
     public class ContrastAnalyzer {
-        //TODO DEVSIX-9719 Improve layer handling in contrast analysis
         //TODO DEVSIX-9718 Improve clip path handling in contrast analysis
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Contrast.ContrastAnalyzer
             ));

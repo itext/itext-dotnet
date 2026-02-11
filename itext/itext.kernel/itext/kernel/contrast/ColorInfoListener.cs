@@ -26,9 +26,11 @@ using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Data;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
+using iText.Kernel.Pdf.Layer;
 
 namespace iText.Kernel.Contrast {
 //\cond DO_NOT_DOCUMENT
@@ -133,7 +135,21 @@ namespace iText.Kernel.Contrast {
         /// skipped
         /// </returns>
         private bool CheckIfLayerAndNeedsToBeIncluded(PathRenderInfo pathRenderInfo, PdfPage page) {
-            //TODO DEVSIX-9719 if should be implemented when the ticket is fixed
+            foreach (CanvasTag canvasTag in pathRenderInfo.GetCanvasTagHierarchy()) {
+                // Check if it's a layer tag
+                PdfDictionary dict = canvasTag.GetProperties();
+                if (dict != null && PdfName.OCG.Equals(dict.GetAsName(PdfName.Type))) {
+                    // We need to check if the layer is visible or not
+                    PdfString layerName = dict.GetAsString(PdfName.Name);
+                    foreach (PdfLayer pdfLayer in page.GetPdfLayers()) {
+                        PdfDictionary layerDict = pdfLayer.GetPdfObject();
+                        PdfString layerDictName = layerDict.GetAsString(PdfName.Name);
+                        if (layerDictName != null && layerDictName.Equals(layerName)) {
+                            return pdfLayer.IsOn();
+                        }
+                    }
+                }
+            }
             return true;
         }
 

@@ -294,7 +294,6 @@ namespace iText.Kernel.Contrast {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-9719 should pass without changes after fixing layering issue")]
         public virtual void WhiteTextOnOrangeBackGroundWithLayerOff() {
             PdfDocument dummyDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
             PdfPage page = dummyDoc.AddNewPage();
