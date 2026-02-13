@@ -43,6 +43,10 @@ using iText.Layout.Tagging;
 namespace iText.Layout.Renderer {
     /// <summary>Represents a renderer for block elements.</summary>
     public abstract class BlockRenderer : AbstractRenderer {
+        // Use that value so that layout is independent of whether we are in the bottom of the page or in the
+        // top of the page
+        private const float POSITIONED_CHILDREN_LAYOUT_MIN_HEIGHT = 1000F;
+
         /// <summary>Creates a BlockRenderer from its corresponding layout object.</summary>
         /// <param name="modelElement">
         /// the
@@ -362,20 +366,7 @@ namespace iText.Layout.Renderer {
                 UpdateHeightsOnSplit(usedHeight, wasHeightClipped, splitRenderer_1, overflowRenderer_1, includeFloatsInOccupiedArea
                     );
             }
-            if (!positionedRenderers.IsEmpty()) {
-                foreach (IRenderer childPositionedRenderer in positionedRenderers) {
-                    Rectangle fullBbox = occupiedArea.GetBBox().Clone();
-                    // Use that value so that layout is independent of whether we are in the bottom of the page or in the
-                    // top of the page
-                    float layoutMinHeight = 1000;
-                    fullBbox.MoveDown(layoutMinHeight).SetHeight(layoutMinHeight + fullBbox.GetHeight());
-                    LayoutArea parentArea = new LayoutArea(occupiedArea.GetPageNumber(), occupiedArea.GetBBox().Clone());
-                    ApplyPaddings(parentArea.GetBBox(), paddings, true);
-                    PreparePositionedRendererAndAreaForLayout(childPositionedRenderer, fullBbox, parentArea.GetBBox());
-                    childPositionedRenderer.Layout(new PositionedLayoutContext(new LayoutArea(occupiedArea.GetPageNumber(), fullBbox
-                        ), parentArea));
-                }
-            }
+            LayoutPositionedChildrenIfAny(this, paddings);
             if (isPositioned) {
                 CorrectFixedLayout();
             }
@@ -598,6 +589,16 @@ namespace iText.Layout.Renderer {
                 overflowRenderer.AddChildRenderer(childResult.GetOverflowRenderer());
             }
             overflowRenderer.childRenderers.AddAll(childRenderers.SubList(childPos + 1, childRenderers.Count));
+            // Keep absolutely positioned descendants anchored to the FIRST fragment.
+            // If the first fragment is actually NOTHING, then the overflow is the first placed fragment.
+            if (!this.positionedRenderers.IsEmpty()) {
+                AbstractRenderer positionedRenderersNewParent = layoutStatus == LayoutResult.NOTHING ? overflowRenderer : 
+                    splitRenderer;
+                positionedRenderersNewParent.positionedRenderers = new List<IRenderer>(this.positionedRenderers);
+                foreach (IRenderer positionedChild in positionedRenderersNewParent.positionedRenderers) {
+                    positionedChild.SetParent(positionedRenderersNewParent);
+                }
+            }
             if (layoutStatus != LayoutResult.NOTHING) {
                 ContinuousContainer.ClearPropertiesFromOverFlowRenderer(overflowRenderer);
             }
@@ -850,6 +851,8 @@ namespace iText.Layout.Renderer {
                     ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                     ApplyMargins(occupiedArea.GetBBox(), true);
                     CorrectFixedLayout();
+                    // Ensure positioned children are laid out for the split part before returning early.
+                    LayoutPositionedChildrenIfAny(splitRenderer, paddings);
                     LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
                         (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
                     if (wasHeightClipped) {
@@ -873,9 +876,6 @@ namespace iText.Layout.Renderer {
                         , waitingFloatsSplitRenderers, waitingOverflowFloatRenderers);
                     AbstractRenderer splitRenderer = splitAndOverflowRenderers[0];
                     AbstractRenderer overflowRenderer = splitAndOverflowRenderers[1];
-                    if (IsRelativePosition() && !positionedRenderers.IsEmpty()) {
-                        overflowRenderer.positionedRenderers = new List<IRenderer>(positionedRenderers);
-                    }
                     UpdateHeightsOnSplit(wasHeightClipped, splitRenderer, overflowRenderer);
                     if (keepTogether) {
                         splitRenderer = null;
@@ -887,6 +887,8 @@ namespace iText.Layout.Renderer {
                     ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                     ApplyMargins(occupiedArea.GetBBox(), true);
                     ApplyAbsolutePositionIfNeeded(layoutContext);
+                    // Ensure positioned children are laid out (if any exists) for the split part before returning early.
+                    LayoutPositionedChildrenIfAny(splitRenderer, paddings);
                     if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) || wasHeightClipped) {
                         LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
                             (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
@@ -1143,6 +1145,32 @@ namespace iText.Layout.Renderer {
                 else {
                     canvas.RestoreState().EndVariableText();
                 }
+            }
+        }
+
+        /// <summary>Layout positioned children for the specified renderer instance.</summary>
+        /// <remarks>
+        /// Layout positioned children for the specified renderer instance.
+        /// This is needed because some split/overflow code steps return early from layout(),
+        /// skipping the normal positioned-children layout step at the end of layout().
+        /// </remarks>
+        /// <param name="parent">renderer which positioned children to layout</param>
+        /// <param name="paddings">current renderer paddings to apply</param>
+        private static void LayoutPositionedChildrenIfAny(AbstractRenderer parent, UnitValue[] paddings) {
+            if (parent == null || parent.positionedRenderers == null || parent.positionedRenderers.IsEmpty() || parent
+                .occupiedArea == null) {
+                return;
+            }
+            foreach (IRenderer childPositionedRenderer in parent.positionedRenderers) {
+                Rectangle fullBbox = parent.occupiedArea.GetBBox().Clone();
+                fullBbox.MoveDown(POSITIONED_CHILDREN_LAYOUT_MIN_HEIGHT).SetHeight(POSITIONED_CHILDREN_LAYOUT_MIN_HEIGHT +
+                     fullBbox.GetHeight());
+                LayoutArea parentArea = new LayoutArea(parent.occupiedArea.GetPageNumber(), parent.occupiedArea.GetBBox().
+                    Clone());
+                parent.ApplyPaddings(parentArea.GetBBox(), paddings, true);
+                parent.PreparePositionedRendererAndAreaForLayout(childPositionedRenderer, fullBbox, parentArea.GetBBox());
+                childPositionedRenderer.Layout(new PositionedLayoutContext(new LayoutArea(parent.occupiedArea.GetPageNumber
+                    (), fullBbox), parentArea));
             }
         }
     }

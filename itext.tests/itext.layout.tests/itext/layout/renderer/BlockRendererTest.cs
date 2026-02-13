@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.Text;
 using iText.IO.Font.Constants;
 using iText.IO.Source;
 using iText.Kernel.Colors;
@@ -203,6 +204,41 @@ namespace iText.Layout.Renderer {
             parentWrongParentTreeDiv.Add(wrongParentTreeDiv);
             doc.Add(parentWrongParentTreeDiv);
             doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER)
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AbsolutePositionedChildIsNotDroppedWhenParentSplitsTest() {
+            String cmpFileName = SOURCE_FOLDER + "cmp_absolutePositionedChildIsNotDroppedWhenParentSplits.pdf";
+            String outFile = DESTINATION_FOLDER + "absolutePositionedChildIsNotDroppedWhenParentSplits.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile))) {
+                using (Document doc = new Document(pdfDoc)) {
+                    Div tocEntry = new Div();
+                    tocEntry.SetProperty(Property.POSITION, LayoutPosition.RELATIVE);
+                    Div counter = new Div().Add(new Paragraph("1"));
+                    counter.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+                    counter.SetWidth(40);
+                    Div icons = new Div().Add(new Paragraph("Page 27"));
+                    icons.SetProperty(Property.POSITION, LayoutPosition.ABSOLUTE);
+                    icons.SetProperty(Property.RIGHT, 6f);
+                    icons.SetProperty(Property.TOP, 6f);
+                    String strToFill = "Very long agenda item title intended to force a split across pages. ";
+                    int iterations = 70;
+                    StringBuilder longText = new StringBuilder(iterations * strToFill.Length);
+                    for (int i = 0; i < iterations; ++i) {
+                        longText.Append(strToFill);
+                    }
+                    Paragraph title = new Paragraph(longText.ToString());
+                    title.SetMarginLeft(45);
+                    tocEntry.Add(counter);
+                    tocEntry.Add(title);
+                    tocEntry.Add(icons);
+                    doc.Add(tocEntry);
+                    // Add a control element after
+                    doc.Add(new Paragraph("Control"));
+                }
+            }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, DESTINATION_FOLDER)
                 );
         }
