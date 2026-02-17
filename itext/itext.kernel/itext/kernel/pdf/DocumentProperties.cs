@@ -38,11 +38,9 @@ namespace iText.Kernel.Pdf {
     /// Needs to be passed at document initialization.
     /// </remarks>
     public class DocumentProperties {
-        protected internal IMetaInfo metaInfo = null;
+        private readonly IDictionary<Type, Func<Object>> dependencies = new Dictionary<Type, Func<Object>>();
 
-//\cond DO_NOT_DOCUMENT
-        internal Dictionary<Type, Object> dependencies = new Dictionary<Type, Object>();
-//\endcond
+        protected internal IMetaInfo metaInfo = null;
 
         /// <summary>Default constructor, use provided setters for configuration options.</summary>
         public DocumentProperties() {
@@ -52,6 +50,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="other">the base for new class instance</param>
         public DocumentProperties(iText.Kernel.Pdf.DocumentProperties other) {
             this.metaInfo = other.metaInfo;
+            this.dependencies.AddAll(other.dependencies);
         }
 
         /// <summary>Sets document meta info.</summary>
@@ -80,15 +79,53 @@ namespace iText.Kernel.Pdf {
         /// <see cref="DocumentProperties"/>
         /// instance
         /// </returns>
+        [System.ObsoleteAttribute(@"in favor of RegisterDependency(System.Type{T}, System.Func{T})")]
         public virtual iText.Kernel.Pdf.DocumentProperties RegisterDependency(Type clazz, Object instance) {
-            if (clazz == null) {
-                throw new ArgumentException(KernelExceptionMessageConstant.TYPE_SHOULD_NOT_BE_NULL);
-            }
             if (instance == null) {
                 throw new ArgumentException(KernelExceptionMessageConstant.INSTANCE_SHOULD_NOT_BE_NULL);
             }
-            dependencies.Put(clazz, instance);
+            RegisterDependency(clazz, () => instance);
             return this;
         }
+
+        /// <summary>Register custom dependency for the document.</summary>
+        /// <param name="clazz">type of the dependency</param>
+        /// <param name="instanceSupplier">the instance of the supplier for the dependency</param>
+        /// <returns>
+        /// this
+        /// <see cref="DocumentProperties"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.DocumentProperties RegisterDependency(Type clazz, Func<Object> instanceSupplier
+            ) {
+            if (clazz == null) {
+                throw new ArgumentException(KernelExceptionMessageConstant.TYPE_SHOULD_NOT_BE_NULL);
+            }
+            if (instanceSupplier == null) {
+                throw new ArgumentException(KernelExceptionMessageConstant.INSTANCE_SUPPLIER_SHOULD_NOT_BE_NULL);
+            }
+            dependencies.Put(clazz, instanceSupplier);
+            return this;
+        }
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Get all registered dependencies classes.</summary>
+        /// <returns>the set of registered dependencies classes</returns>
+        internal virtual ICollection<Type> GetRegisteredDependenciesClasses() {
+            return dependencies.Keys;
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Get specific registered dependency supplier.</summary>
+        /// <param name="clazz">the dependency class to return supplier for</param>
+        /// <returns>
+        /// registered supplier for the dependency.
+        /// May return {code null} if no dependency supplier has been registered for specified class.
+        /// </returns>
+        internal virtual Func<Object> GetDependencySupplier(Type clazz) {
+            return dependencies.Get(clazz);
+        }
+//\endcond
     }
 }

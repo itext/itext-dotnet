@@ -86,7 +86,7 @@ namespace iText.Kernel.Pdf {
             ) {
             String resultPath = DESTINATION_FOLDER + "stamped" + compressionName + "Streams.pdf";
             StampingProperties props = new StampingProperties();
-            props.RegisterDependency(typeof(IStreamCompressionStrategy), strategy);
+            props.RegisterDependency(typeof(IStreamCompressionStrategy), () => strategy);
             int streamCount = 3;
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + compressionName + "ContentStream.pdf"
                 ), new PdfWriter(resultPath), props)) {
@@ -118,7 +118,7 @@ namespace iText.Kernel.Pdf {
              secondStrategy, String testName) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             StampingProperties props = new StampingProperties();
-            props.RegisterDependency(typeof(IStreamCompressionStrategy), firstStrategy);
+            props.RegisterDependency(typeof(IStreamCompressionStrategy), () => firstStrategy);
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(baos), props)) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
@@ -191,7 +191,7 @@ namespace iText.Kernel.Pdf {
             ) {
             DocumentProperties docProps = new DocumentProperties();
             if (strategy != null) {
-                docProps.RegisterDependency(typeof(IStreamCompressionStrategy), strategy);
+                docProps.RegisterDependency(typeof(IStreamCompressionStrategy), () => strategy);
             }
             WriterProperties writerProps = new WriterProperties().SetCompressionLevel(compressionLevel);
             using (PdfDocument doc = new PdfDocument(new PdfWriter(os, writerProps), docProps)) {

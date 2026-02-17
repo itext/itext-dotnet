@@ -56,7 +56,6 @@ namespace iText.Kernel.Pdf {
             this.appendMode = other.appendMode;
             this.preserveEncryption = other.preserveEncryption;
             this.disableMac = other.disableMac;
-            this.dependencies = other.dependencies;
         }
 
 //\cond DO_NOT_DOCUMENT
@@ -68,7 +67,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="documentProperties">the base for new class instance</param>
         internal StampingProperties(DocumentProperties documentProperties)
             : base(documentProperties) {
-            this.dependencies = documentProperties.dependencies;
         }
 //\endcond
 

@@ -320,7 +320,7 @@ namespace iText.Kernel.Mac {
             String outputFileName = DESTINATION_FOLDER + fileName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
             StampingProperties stampingProperties = new StampingProperties();
-            stampingProperties.RegisterDependency(typeof(IMacContainerLocator), new _StandaloneMacContainerLocator_360
+            stampingProperties.RegisterDependency(typeof(IMacContainerLocator), () => new _StandaloneMacContainerLocator_360
                 ());
             // do nothing
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "macProtectionStrippedTest.pdf", 
@@ -345,7 +345,7 @@ namespace iText.Kernel.Mac {
             String outputFileName = DESTINATION_FOLDER + fileName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
             StampingProperties stampingProperties = new StampingProperties();
-            stampingProperties.RegisterDependency(typeof(IMacContainerLocator), new _StandaloneMacContainerLocator_384
+            stampingProperties.RegisterDependency(typeof(IMacContainerLocator), () => new _StandaloneMacContainerLocator_384
                 ());
             // do nothing
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "thirdPartyMacProtectedDocumentTampered.pdf"

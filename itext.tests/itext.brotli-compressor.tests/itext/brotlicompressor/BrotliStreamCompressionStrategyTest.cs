@@ -131,7 +131,7 @@ namespace iText.Brotlicompressor {
         public virtual void AddBrotliStreamsToFlateStampingModeTest() {
             String resultPath = DESTINATION_FOLDER + "stampedBrotliStreams.pdf";
             StampingProperties props = new StampingProperties();
-            props.RegisterDependency(typeof(IStreamCompressionStrategy), new BrotliStreamCompressionStrategy());
+            props.RegisterDependency(typeof(IStreamCompressionStrategy), () => new BrotliStreamCompressionStrategy());
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "flateBase.pdf"), new PdfWriter(
                 resultPath), props)) {
                 PdfPage page = pdfDoc.AddNewPage();
@@ -162,7 +162,7 @@ namespace iText.Brotlicompressor {
         public virtual void AddBrotliStreamsStampingModeTest() {
             String resultPath = DESTINATION_FOLDER + "stampedBrotliStreams2.pdf";
             StampingProperties props = new StampingProperties();
-            props.RegisterDependency(typeof(IStreamCompressionStrategy), new BrotliStreamCompressionStrategy());
+            props.RegisterDependency(typeof(IStreamCompressionStrategy), () => new BrotliStreamCompressionStrategy());
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "brotliBase.pdf"), new PdfWriter
                 (resultPath), props)) {
                 PdfPage page = pdfDoc.AddNewPage();
@@ -189,7 +189,7 @@ namespace iText.Brotlicompressor {
         public virtual void ReplaceFlateContentStreamWithBrotliTest() {
             String resultPath = DESTINATION_FOLDER + "replacedContentStream.pdf";
             StampingProperties props = new StampingProperties();
-            props.RegisterDependency(typeof(IStreamCompressionStrategy), new BrotliStreamCompressionStrategy());
+            props.RegisterDependency(typeof(IStreamCompressionStrategy), () => new BrotliStreamCompressionStrategy());
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "flateBase.pdf"), new PdfWriter(
                 resultPath), props)) {
                 PdfPage page = pdfDoc.GetFirstPage();
@@ -210,7 +210,7 @@ namespace iText.Brotlicompressor {
         public virtual void ReadAndDecodeStreamsTest() {
             String sourcePdf = SOURCE_FOLDER + "mixedStreamFiltersDocument.pdf";
             StampingProperties props = new StampingProperties();
-            props.RegisterDependency(typeof(IStreamCompressionStrategy), new BrotliStreamCompressionStrategy());
+            props.RegisterDependency(typeof(IStreamCompressionStrategy), () => new BrotliStreamCompressionStrategy());
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourcePdf))) {
                 int numberOfPages = pdfDoc.GetNumberOfPages();
                 for (int i = 2; i <= numberOfPages; i++) {
@@ -264,7 +264,7 @@ namespace iText.Brotlicompressor {
             byte[] dictionaryBytes = "custom dictionary for Brotli".GetBytes(System.Text.Encoding.UTF8);
             byte[] contentBytes = "The quick brown fox jumps over the lazy dog.".GetBytes(System.Text.Encoding.UTF8);
             DocumentProperties props = new DocumentProperties();
-            props.RegisterDependency(typeof(IStreamCompressionStrategy), new BrotliStreamCompressionStrategy());
+            props.RegisterDependency(typeof(IStreamCompressionStrategy), () => new BrotliStreamCompressionStrategy());
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(resultPath), props)) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfStream dictStream = new PdfStream(dictionaryBytes);
@@ -536,7 +536,7 @@ namespace iText.Brotlicompressor {
                 pdfDoc.AddNewPage();
             }
             StampingProperties props = new StampingProperties().UseAppendMode();
-            props.RegisterDependency(typeof(IStreamCompressionStrategy), new BrotliStreamCompressionStrategy());
+            props.RegisterDependency(typeof(IStreamCompressionStrategy), () => new BrotliStreamCompressionStrategy());
             PdfSigner signer = new PdfSigner(new PdfReader(unsigned), FileUtil.GetFileOutputStream(signed), props);
             signer.SetSignerProperties(new SignerProperties().SetFieldName("Signature1").SetPageNumber(1).SetPageRect(
                 new Rectangle(36, 648, 200, 100)).SetCertificationLevel(AccessPermissions.UNSPECIFIED));
@@ -693,7 +693,7 @@ namespace iText.Brotlicompressor {
 
         private DocumentProperties CreateBrotliProperties() {
             DocumentProperties props = new DocumentProperties();
-            props.RegisterDependency(typeof(IStreamCompressionStrategy), new BrotliStreamCompressionStrategy());
+            props.RegisterDependency(typeof(IStreamCompressionStrategy), () => new BrotliStreamCompressionStrategy());
             return props;
         }
 

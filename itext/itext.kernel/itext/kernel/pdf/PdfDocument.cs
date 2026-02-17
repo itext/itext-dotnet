@@ -2150,8 +2150,8 @@ namespace iText.Kernel.Pdf {
         /// </param>
         protected internal virtual void Open(PdfVersion newPdfVersion) {
             if (properties != null) {
-                foreach (Type aClass in properties.dependencies.Keys) {
-                    diContainer.Register(aClass, properties.dependencies.Get(aClass));
+                foreach (Type aClass in properties.GetRegisteredDependenciesClasses()) {
+                    diContainer.Register(aClass, properties.GetDependencySupplier(aClass)());
                 }
             }
             this.fingerPrint = new FingerPrint();

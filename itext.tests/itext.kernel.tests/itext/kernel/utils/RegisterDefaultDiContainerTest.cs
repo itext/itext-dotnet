@@ -53,7 +53,7 @@ namespace iText.Kernel.Utils {
         [NUnit.Framework.Test]
         public virtual void TestWithSettingDocumentProps() {
             DocumentProperties documentProperties = new DocumentProperties();
-            documentProperties.RegisterDependency(typeof(IPageTreeListFactory), new RegisterDefaultDiContainerTest.IPageTreeTestImpl
+            documentProperties.RegisterDependency(typeof(IPageTreeListFactory), () => new RegisterDefaultDiContainerTest.IPageTreeTestImpl
                 ());
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()), documentProperties);
             NUnit.Framework.Assert.IsTrue(pdfDocument.GetDiContainer().GetInstance<IPageTreeListFactory>() is RegisterDefaultDiContainerTest.IPageTreeTestImpl
@@ -72,9 +72,9 @@ namespace iText.Kernel.Utils {
         [NUnit.Framework.Test]
         public virtual void DocumentPropsSetWithNullType() {
             DocumentProperties documentProperties = new DocumentProperties();
-            Object dummyObject = new Object();
+            Func<Object> dummySupplier = () => new Object();
             NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => {
-                documentProperties.RegisterDependency(null, dummyObject);
+                documentProperties.RegisterDependency(null, dummySupplier);
             }
             );
         }

@@ -320,6 +320,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String INSTANCE_SHOULD_NOT_BE_NULL = "Instance should not be null";
 
+        public const String INSTANCE_SUPPLIER_SHOULD_NOT_BE_NULL = "Instance supplier should not be null";
+
         public const String INVALID_CROSS_REFERENCE_ENTRY_IN_THIS_XREF_SUBSECTION = "Invalid cross reference entry "
              + "in this xref subsection.";
 

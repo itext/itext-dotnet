@@ -183,7 +183,7 @@ namespace iText.Signatures {
         /// </param>
         public PdfSigner(PdfReader reader, Stream outputStream, String path, StampingProperties properties) {
             StampingProperties localProps = new StampingProperties(properties).PreserveEncryption();
-            localProps.RegisterDependency(typeof(IMacContainerLocator), new SignatureMacContainerLocator());
+            localProps.RegisterDependency(typeof(IMacContainerLocator), () => new SignatureMacContainerLocator());
             if (path == null) {
                 this.temporaryOS = new MemoryStream();
                 this.document = InitDocument(reader, new PdfWriter(temporaryOS), localProps);
@@ -1499,7 +1499,7 @@ namespace iText.Signatures {
 
             public virtual void Apply(PdfSigner.ISignatureDataProvider signatureDataProvider) {
                 StampingProperties properties = new StampingProperties().PreserveEncryption();
-                properties.RegisterDependency(typeof(IMacContainerLocator), new SignatureMacContainerLocator());
+                properties.RegisterDependency(typeof(IMacContainerLocator), () => new SignatureMacContainerLocator());
                 // This IdleOutputStream writer does nothing and only required to be able to apply MAC if needed.
                 using (PdfWriter dummyWriter = new PdfWriter(new IdleOutputStream())) {
                     if (document == null) {
