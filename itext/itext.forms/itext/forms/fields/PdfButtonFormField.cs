@@ -241,7 +241,7 @@ namespace iText.Forms.Fields {
         /// <see cref="PdfButtonFormField"/>
         /// </returns>
         public virtual iText.Forms.Fields.PdfButtonFormField SetImage(String image) {
-            Stream @is = FileUtil.GetInputStreamForFile(image);
+            using Stream @is = FileUtil.GetInputStreamForFile(image);
             String str = Convert.ToBase64String(StreamUtil.InputStreamToArray(@is));
             return (iText.Forms.Fields.PdfButtonFormField)SetValue(str);
         }
