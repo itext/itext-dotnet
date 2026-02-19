@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
@@ -70,6 +71,50 @@ namespace iText.Signatures {
             IX509Certificate[] result = issuingCertificateRetriever.RetrieveMissingCertificates(cert);
             NUnit.Framework.Assert.IsNotNull(result);
             NUnit.Framework.Assert.IsTrue(result.Length > 1);
+        }
+
+        [NUnit.Framework.Test]
+#if !NETSTANDARD2_0
+        [NUnit.Framework.Timeout(10000)]
+#endif // !NETSTANDARD2_0
+        public virtual void CertificateWithMultipleRootsTest() {
+            IssuingCertificateRetriever issuingCertificateRetriever = new IssuingCertificateRetriever();
+            IX509Certificate[] intialChain = PemFileHelper.ReadFirstChain(CERTS_SRC + "crossSigned/sign.cert.pem");
+            IList<IX509Certificate> certificates = new List<IX509Certificate>();
+            certificates.Add(PemFileHelper.ReadFirstChain(CERTS_SRC + "crossSigned/ca1.cert.pem")[0]);
+            certificates.Add(PemFileHelper.ReadFirstChain(CERTS_SRC + "crossSigned/ca2a.cert.pem")[0]);
+            certificates.Add(PemFileHelper.ReadFirstChain(CERTS_SRC + "crossSigned/ca2b.cert.pem")[0]);
+            certificates.Add(PemFileHelper.ReadFirstChain(CERTS_SRC + "crossSigned/ca3a.cert.pem")[0]);
+            certificates.Add(PemFileHelper.ReadFirstChain(CERTS_SRC + "crossSigned/ca3b.cert.pem")[0]);
+            certificates.Add(PemFileHelper.ReadFirstChain(CERTS_SRC + "crossSigned/ca4.cert.pem")[0]);
+            certificates.Add(PemFileHelper.ReadFirstChain(CERTS_SRC + "crossSigned/ca5.cert.pem")[0]);
+            certificates.Add(PemFileHelper.ReadFirstChain(CERTS_SRC + "crossSigned/r1.cert.pem")[0]);
+            certificates.Add(PemFileHelper.ReadFirstChain(CERTS_SRC + "crossSigned/r2.cert.pem")[0]);
+            issuingCertificateRetriever.AddKnownCertificates(certificates);
+            IX509Certificate[] result = issuingCertificateRetriever.RetrieveMissingCertificates(intialChain);
+            NUnit.Framework.Assert.IsNotNull(result);
+            NUnit.Framework.Assert.AreEqual(9, result.Length);
+            NUnit.Framework.Assert.IsTrue(JavaUtil.ArraysToEnumerable(result).Any((c) => ((IX509Certificate)c).GetSubjectDN
+                ().ToString().Contains("CN=iTextTestSign")));
+            NUnit.Framework.Assert.IsTrue(JavaUtil.ArraysToEnumerable(result).Any((c) => ((IX509Certificate)c).GetSubjectDN
+                ().ToString().Contains("CN=iTextTestIntermediate1")));
+            NUnit.Framework.Assert.IsTrue(JavaUtil.ArraysToEnumerable(result).Any((c) => ((IX509Certificate)c).GetSubjectDN
+                ().ToString().Contains("CN=iTextTestIntermediate2") && ((IX509Certificate)c).GetIssuerDN().ToString().
+                Contains("CN=iTextTestIntermediate5")));
+            NUnit.Framework.Assert.IsTrue(JavaUtil.ArraysToEnumerable(result).Any((c) => ((IX509Certificate)c).GetSubjectDN
+                ().ToString().Contains("CN=iTextTestIntermediate2") && ((IX509Certificate)c).GetIssuerDN().ToString().
+                Contains("CN=iTextTestIntermediate3")));
+            NUnit.Framework.Assert.IsTrue(JavaUtil.ArraysToEnumerable(result).Any((c) => ((IX509Certificate)c).GetSubjectDN
+                ().ToString().Contains("CN=iTextTestIntermediate3") && ((IX509Certificate)c).GetIssuerDN().ToString().
+                Contains("CN=iTextTestIntermediate4")));
+            NUnit.Framework.Assert.IsTrue(JavaUtil.ArraysToEnumerable(result).Any((c) => ((IX509Certificate)c).GetSubjectDN
+                ().ToString().Contains("CN=iTextTestIntermediate4")));
+            NUnit.Framework.Assert.IsTrue(JavaUtil.ArraysToEnumerable(result).Any((c) => ((IX509Certificate)c).GetSubjectDN
+                ().ToString().Contains("CN=iTextTestIntermediate5")));
+            NUnit.Framework.Assert.IsTrue(JavaUtil.ArraysToEnumerable(result).Any((c) => ((IX509Certificate)c).GetSubjectDN
+                ().ToString().Contains("CN=iTextTestRoot1")));
+            NUnit.Framework.Assert.IsTrue(JavaUtil.ArraysToEnumerable(result).Any((c) => ((IX509Certificate)c).GetSubjectDN
+                ().ToString().Contains("CN=iTextTestRoot2")));
         }
 
         [NUnit.Framework.Test]

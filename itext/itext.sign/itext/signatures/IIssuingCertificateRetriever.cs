@@ -29,12 +29,14 @@ namespace iText.Signatures {
     /// order to support certificate chains with missing certificates and getting CRL response issuer certificates.
     /// </summary>
     public interface IIssuingCertificateRetriever {
-        /// <summary>Retrieves missing certificates in chain using certificate Authority Information Access (AIA) Extension.
-        ///     </summary>
+        /// <summary>
+        /// Retrieves all possible chains using certificate Authority Information Access (AIA) Extension, known certificates
+        /// and trust anchors.
+        /// </summary>
         /// <param name="chain">certificate chain to restore with at least signing certificate.</param>
         /// <returns>
-        /// full chain of trust or maximum chain that could be restored in case missing certificates cannot be
-        /// retrieved from AIA extension.
+        /// all possible chains of trust or maximum chains that could be restored in case missing certificates cannot
+        /// be retrieved from AIA extension, known certificates and trust anchors.
         /// </returns>
         IX509Certificate[] RetrieveMissingCertificates(IX509Certificate[] chain);
 
