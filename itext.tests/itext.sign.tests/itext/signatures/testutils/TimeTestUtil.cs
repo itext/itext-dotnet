@@ -24,15 +24,6 @@ using System;
 
 namespace iText.Signatures.Testutils {
     public class TimeTestUtil {
-        private const int MILLIS_IN_DAY = 86_400_000;
-
-        // This method is used to trim the hours of the day, so that two dates could be compared
-        // with a day accuracy. We need such a method since in .NET the signing DateTime extracted
-        // from the signature depends on the current time zone set on the machine.
-        // TODO DEVSIX-5812 Remove the method
-        public static long GetFullDaysMillis(double millis) {
-            return (long)millis / MILLIS_IN_DAY;
-        }
 
         /// <summary>A date time value to be used in test instead of current date time to get consistent results</summary>
         public static DateTime TEST_DATE_TIME = new DateTime(2000, 2, 14, 14, 14, 2, DateTimeKind.Utc);

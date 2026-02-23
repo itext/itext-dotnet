@@ -143,11 +143,10 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsNotNull(timeStampTokenInfo);
             // The number corresponds to 3 September, 2021 13:32:33.
             double expectedMillis = (double)1630675953000L;
-            NUnit.Framework.Assert.AreEqual(TimeTestUtil.GetFullDaysMillis(expectedMillis), TimeTestUtil.GetFullDaysMillis
-                (DateTimeUtil.GetUtcMillisFromEpoch(DateTimeUtil.GetCalendar(timeStampTokenInfo.GetGenTime()))), EPS);
-            NUnit.Framework.Assert.AreEqual(TimeTestUtil.GetFullDaysMillis(expectedMillis), TimeTestUtil.GetFullDaysMillis
-                (DateTimeUtil.GetUtcMillisFromEpoch(DateTimeUtil.GetCalendar(pkcs7.GetOcsp().GetProducedAtDate()))), EPS
-                );
+            NUnit.Framework.Assert.AreEqual(expectedMillis, DateTimeUtil.GetUtcMillisFromEpoch(DateTimeUtil.GetCalendar
+                (timeStampTokenInfo.GetGenTime())), EPS);
+            NUnit.Framework.Assert.AreEqual(expectedMillis, DateTimeUtil.GetUtcMillisFromEpoch(DateTimeUtil.GetCalendar
+                (pkcs7.GetOcsp().GetProducedAtDate())), EPS);
         }
 
         [NUnit.Framework.Test]

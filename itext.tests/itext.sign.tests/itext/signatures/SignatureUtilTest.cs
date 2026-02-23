@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
-using iText.Signatures.Testutils;
 using iText.Test;
 
 namespace iText.Signatures {
@@ -215,8 +214,8 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.AreEqual("TestCity", pkcs7.GetLocation());
             // The number corresponds to 18 May, 2021 17:23:59.
             double expectedMillis = (double)1621347839000L;
-            NUnit.Framework.Assert.AreEqual(TimeTestUtil.GetFullDaysMillis(expectedMillis), TimeTestUtil.GetFullDaysMillis
-                (DateTimeUtil.GetUtcMillisFromEpoch(pkcs7.GetSignDate())), EPS);
+            NUnit.Framework.Assert.AreEqual(expectedMillis, DateTimeUtil.GetUtcMillisFromEpoch(pkcs7.GetSignDate()), EPS
+                );
         }
 
         [NUnit.Framework.Test]
@@ -232,8 +231,8 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.AreEqual("TestCity", pkcs7.GetLocation());
             // The number corresponds to 18 May, 2021 11:28:40.
             double expectedMillis = (double)1621326520000L;
-            NUnit.Framework.Assert.AreEqual(TimeTestUtil.GetFullDaysMillis(expectedMillis), TimeTestUtil.GetFullDaysMillis
-                (DateTimeUtil.GetUtcMillisFromEpoch(pkcs7.GetSignDate())), EPS);
+            NUnit.Framework.Assert.AreEqual(expectedMillis, DateTimeUtil.GetUtcMillisFromEpoch(pkcs7.GetSignDate()), EPS
+                );
         }
 
         [NUnit.Framework.Test]
