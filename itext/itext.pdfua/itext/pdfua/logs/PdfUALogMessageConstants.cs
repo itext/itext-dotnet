@@ -32,6 +32,8 @@ namespace iText.Pdfua.Logs {
 
         public const String PDF_TO_PDF_UA_CONVERSION_IS_NOT_SUPPORTED = "PDF to PDF/UA conversion is not supported.";
 
+        public const String PDF_TO_WTPDF_CONVERSION_IS_NOT_SUPPORTED = "PDF to WellTagged PDF conversion is not supported.";
+
         public const String WRITER_PROPERTIES_PDF_VERSION_WAS_OVERRIDDEN = "Pdf version from writer properties isn't compatible with specified PDF/UA conformance, it was overridden to {0} version.";
 
         private PdfUALogMessageConstants() {

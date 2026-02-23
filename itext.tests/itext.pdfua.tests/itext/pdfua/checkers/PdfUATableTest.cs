@@ -1026,8 +1026,7 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-//\cond DO_NOT_DOCUMENT
-        internal class TableBuilder : UaValidationTestFramework.Generator<IBlockElement> {
+        public class TableBuilder : UaValidationTestFramework.Generator<IBlockElement> {
             private readonly int amountOfColumns;
 
             private readonly IList<UaValidationTestFramework.Generator<Cell>> headerCells = new List<UaValidationTestFramework.Generator
@@ -1039,11 +1038,9 @@ namespace iText.Pdfua.Checkers {
             private readonly IList<UaValidationTestFramework.Generator<Cell>> footerCells = new List<UaValidationTestFramework.Generator
                 <Cell>>();
 
-//\cond DO_NOT_DOCUMENT
-            internal TableBuilder(int amountOfColumns) {
+            public TableBuilder(int amountOfColumns) {
                 this.amountOfColumns = amountOfColumns;
             }
-//\endcond
 
             public virtual PdfUATableTest.TableBuilder AddHeaderCell(UaValidationTestFramework.Generator<Cell> sup) {
                 this.headerCells.Add(sup);
@@ -1074,10 +1071,8 @@ namespace iText.Pdfua.Checkers {
                 return table;
             }
         }
-//\endcond
 
-//\cond DO_NOT_DOCUMENT
-        internal class DataCellSupplier : UaValidationTestFramework.Generator<Cell> {
+        public class DataCellSupplier : UaValidationTestFramework.Generator<Cell> {
             private readonly String content;
 
             private readonly int colspan;
@@ -1112,7 +1107,6 @@ namespace iText.Pdfua.Checkers {
                 }
             }
         }
-//\endcond
 
 //\cond DO_NOT_DOCUMENT
         internal class InternalPdfStructureAttributes : PdfStructureAttributes {
@@ -1128,8 +1122,7 @@ namespace iText.Pdfua.Checkers {
         }
 //\endcond
 
-//\cond DO_NOT_DOCUMENT
-        internal class HeaderCellSupplier : UaValidationTestFramework.Generator<Cell> {
+        public class HeaderCellSupplier : UaValidationTestFramework.Generator<Cell> {
             private readonly String id;
 
             private readonly String content;
@@ -1167,7 +1160,6 @@ namespace iText.Pdfua.Checkers {
                 }
             }
         }
-//\endcond
 
         private static PdfFont GetFont() {
             try {

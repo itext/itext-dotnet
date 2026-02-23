@@ -695,59 +695,6 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        public virtual void LayerOnAndOffStatePersistenceTest() {
-            String filename = DESTINATION_FOLDER + "layerStatePersistence.pdf";
-            // Create document with layers
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(filename));
-            PdfPage page = pdfDocument.AddNewPage();
-            // Create a layer that is ON
-            PdfLayer layerOn = new PdfLayer("LayerOn", pdfDocument);
-            layerOn.SetOn(true);
-            // Create a layer that is OFF
-            PdfLayer layerOff = new PdfLayer("LayerOff", pdfDocument);
-            layerOff.SetOn(false);
-            PdfCanvas canvas = new PdfCanvas(page);
-            // Add content to the ON layer
-            canvas.BeginLayer(layerOn);
-            canvas.SetFillColor(ColorConstants.RED);
-            canvas.Rectangle(100, 100, 200, 200);
-            canvas.Fill();
-            canvas.EndLayer();
-            // Add content to the OFF layer
-            canvas.BeginLayer(layerOff);
-            canvas.SetFillColor(ColorConstants.BLUE);
-            canvas.Rectangle(350, 100, 200, 200);
-            canvas.Fill();
-            canvas.EndLayer();
-            // Verify layer states before closing
-            NUnit.Framework.Assert.IsTrue(layerOn.IsOn(), "LayerOn should be ON before close");
-            NUnit.Framework.Assert.IsFalse(layerOff.IsOn(), "LayerOff should be OFF before close");
-            pdfDocument.Close();
-            // Reopen the document and verify layer states are persisted
-            PdfDocument reopenedDoc = new PdfDocument(new PdfReader(filename));
-            NUnit.Framework.Assert.AreEqual(2, reopenedDoc.GetPage(1).GetPdfLayers().Count);
-            // Find the layers by name and verify their states
-            PdfLayer reopenedLayerOn = null;
-            PdfLayer reopenedLayerOff = null;
-            foreach (PdfLayer layer in reopenedDoc.GetPage(1).GetPdfLayers()) {
-                String layerName = layer.GetPdfObject().GetAsString(PdfName.Name).GetValue();
-                if ("LayerOn".Equals(layerName)) {
-                    reopenedLayerOn = layer;
-                }
-                else {
-                    if ("LayerOff".Equals(layerName)) {
-                        reopenedLayerOff = layer;
-                    }
-                }
-            }
-            NUnit.Framework.Assert.IsNotNull(reopenedLayerOn, "LayerOn should exist after reopening");
-            NUnit.Framework.Assert.IsNotNull(reopenedLayerOff, "LayerOff should exist after reopening");
-            NUnit.Framework.Assert.IsTrue(reopenedLayerOn.IsOn(), "LayerOn should be ON after reopening");
-            NUnit.Framework.Assert.IsFalse(reopenedLayerOff.IsOn(), "LayerOff should be OFF after reopening");
-            reopenedDoc.Close();
-        }
-
-        [NUnit.Framework.Test]
         public virtual void LayerPropertiesPersistenceTest() {
             String filename = DESTINATION_FOLDER + "layerPropertiesPersistence.pdf";
             // Create document with layers

@@ -2197,9 +2197,10 @@ namespace iText.Kernel.Pdf {
                 }
                 xref.InitFreeReferencesList(this);
                 if (writer != null) {
-                    if (writer.properties.addPdfAXmpMetadata != null || writer.properties.addPdfUaXmpMetadata != null) {
+                    if (writer.properties.addPdfAXmpMetadata != null || writer.properties.addPdfUaXmpMetadata != null || writer
+                        .properties.addWtpdfXmpMetadata != null) {
                         pdfConformance = new PdfConformance(writer.properties.addPdfAXmpMetadata, writer.properties.addPdfUaXmpMetadata
-                            );
+                            , writer.properties.addWtpdfXmpMetadata);
                     }
                     EnableByteArrayWritingMode();
                     if (reader != null && reader.HasXrefStm() && writer.properties.isFullCompression == null) {

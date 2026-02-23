@@ -44,6 +44,8 @@ namespace iText.Kernel.Pdf {
 
         protected internal PdfUAConformance addPdfUaXmpMetadata = null;
 
+        protected internal WellTaggedPdfConformance? addWtpdfXmpMetadata = null;
+
         protected internal PdfVersion pdfVersion;
 
         protected internal EncryptionProperties encryptionProperties;
@@ -159,6 +161,33 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual iText.Kernel.Pdf.WriterProperties AddPdfUaXmpMetadata(PdfUAConformance uaConformance) {
             this.addPdfUaXmpMetadata = uaConformance;
+            AddXmpMetadata();
+            return this;
+        }
+
+        /// <summary>Adds Well Tagged PDF XMP metadata to the PDF document.</summary>
+        /// <remarks>
+        /// Adds Well Tagged PDF XMP metadata to the PDF document.
+        /// <para />
+        /// This method calls
+        /// <see cref="AddXmpMetadata()"/>
+        /// implicitly.
+        /// <para />
+        /// NOTE: Calling this method only affects the XMP metadata, but doesn't enable any additional checks that the
+        /// created document meets all Well Tagged PDF requirements.
+        /// When using this method make sure you are familiar with Well Tagged PDF
+        /// document requirements.
+        /// If you are not sure, use dedicated iText PDF/UA module to create valid Well Tagged PDF documents.
+        /// </remarks>
+        /// <param name="wtpdfConformance">the Well Tagged PDF conformance which will be added to XMP metadata</param>
+        /// <returns>
+        /// this
+        /// <see cref="WriterProperties"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.WriterProperties AddWtpdfXmpMetadata(WellTaggedPdfConformance? wtpdfConformance
+            ) {
+            this.addWtpdfXmpMetadata = wtpdfConformance;
             AddXmpMetadata();
             return this;
         }

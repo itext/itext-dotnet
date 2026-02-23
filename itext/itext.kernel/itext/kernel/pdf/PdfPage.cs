@@ -1672,17 +1672,25 @@ namespace iText.Kernel.Pdf {
         }
 //\endcond
 
-        private bool IsPdfUA2Document() {
+        private bool IsPdfUA2OrWellTaggedDocument() {
             PdfUAConformance uaConformance = GetDocument().GetConformance().GetUAConformance();
-            if (uaConformance == null) {
+            WellTaggedPdfConformance? wtpdfConformance = GetDocument().GetConformance().GetWtpdfConformance();
+            PdfConformance parsedConformance;
+            if (uaConformance == null || wtpdfConformance == null) {
                 try {
-                    uaConformance = PdfConformance.GetConformance(GetDocument().GetXmpMetadata()).GetUAConformance();
+                    parsedConformance = PdfConformance.GetConformance(GetDocument().GetXmpMetadata());
                 }
                 catch (XMPException) {
                     return false;
                 }
+                if (uaConformance == null) {
+                    uaConformance = parsedConformance.GetUAConformance();
+                }
+                if (wtpdfConformance == null) {
+                    wtpdfConformance = parsedConformance.GetWtpdfConformance();
+                }
             }
-            return PdfUAConformance.PDF_UA_2 == uaConformance;
+            return PdfUAConformance.PDF_UA_2 == uaConformance || WellTaggedPdfConformance.FOR_ACCESSIBILITY == wtpdfConformance;
         }
 
         private void CheckIsoConformanceForAnnotation(PdfAnnotation annotation) {
@@ -1958,9 +1966,9 @@ namespace iText.Kernel.Pdf {
         private void TagAnnotation(PdfAnnotation annotation) {
             bool tagAdded = false;
             bool presentInTagStructure = true;
-            bool isUA2 = IsPdfUA2Document();
+            bool isUA2OrWellTagged = IsPdfUA2OrWellTaggedDocument();
             TagTreePointer tagPointer = GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
-            if (isUA2 && IsAnnotInvisible(annotation)) {
+            if (isUA2OrWellTagged && IsAnnotInvisible(annotation)) {
                 if (PdfVersion.PDF_2_0.CompareTo(GetDocument().GetPdfVersion()) <= 0) {
                     if (!StandardRoles.ARTIFACT.Equals(tagPointer.GetRole())) {
                         tagPointer.AddTag(StandardRoles.ARTIFACT);

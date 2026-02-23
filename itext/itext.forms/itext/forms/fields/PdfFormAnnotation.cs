@@ -1067,7 +1067,7 @@ namespace iText.Forms.Fields {
             iText.Layout.Canvas canvasOff = new iText.Layout.Canvas(xObjectOff, GetDocument());
             SetMetaInfoToCanvas(canvasOff);
             canvasOff.Add(formFieldElement);
-            if (GetPdfConformance() == null || !GetPdfConformance().IsPdfAOrUa()) {
+            if (GetPdfConformance() == null || !GetPdfConformance().IsPdfAOrUaOrWtpdf()) {
                 xObjectOff.GetResources().AddFont(GetDocument(), GetFont());
             }
             normalAppearance.Put(new PdfName(OFF_STATE_VALUE), xObjectOff.GetPdfObject());

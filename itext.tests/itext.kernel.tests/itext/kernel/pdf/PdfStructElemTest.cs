@@ -631,6 +631,20 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
+        public virtual void AddAnnotationTaggedAsArtifactInWtpdfTest() {
+            using (PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "addAnnotationTaggedAsArtifactInWtpdf.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0).AddWtpdfXmpMetadata(WellTaggedPdfConformance
+                .FOR_ACCESSIBILITY)))) {
+                document.SetTagged();
+                PdfPage page = document.AddNewPage();
+                PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(80, 508, 40, 18));
+                linkAnnotation.SetFlag(PdfAnnotation.INVISIBLE);
+                page.AddAnnotation(linkAnnotation);
+            }
+            CompareResult("addAnnotationTaggedAsArtifactInWtpdf.pdf", "cmp_addAnnotationTaggedAsArtifact.pdf");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void AddNotTaggedAnnotationTest() {
             using (PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "addNotTaggedAnnotation.pdf"
                 , new WriterProperties().SetPdfVersion(PdfVersion.PDF_1_7).AddPdfUaXmpMetadata(PdfUAConformance.PDF_UA_2

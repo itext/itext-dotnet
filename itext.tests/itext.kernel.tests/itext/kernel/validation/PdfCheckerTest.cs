@@ -145,6 +145,40 @@ namespace iText.Kernel.Validation {
         }
 
         [NUnit.Framework.Test]
+        public virtual void InvalidWtpdfMetadataTest() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().
+                SetPdfVersion(PdfVersion.PDF_2_0)))) {
+                pdfDocument.AddNewPage();
+                PdfCatalog catalog = pdfDocument.GetCatalog();
+                byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "invalidWtpdfMetadata.xmp"));
+                PdfStream metadata = new PdfStream(bytes);
+                catalog.Put(PdfName.Metadata, metadata);
+                catalog.Put(PdfName.Type, PdfName.Metadata);
+                catalog.Put(PdfName.Subtype, PdfName.XML);
+                Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfCheckersUtil.CheckMetadata(catalog
+                    .GetPdfObject(), PdfConformance.WELL_TAGGED_PDF_FOR_ACCESSIBILITY, EXCEPTION_SUPPLIER));
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_WTPDF_METADATA
+                    , e.Message);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ValidWtpdfMetadataTest() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().
+                SetPdfVersion(PdfVersion.PDF_2_0)))) {
+                pdfDocument.AddNewPage();
+                PdfCatalog catalog = pdfDocument.GetCatalog();
+                byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "validWtpdfMetadata.xmp"));
+                PdfStream metadata = new PdfStream(bytes);
+                catalog.Put(PdfName.Metadata, metadata);
+                catalog.Put(PdfName.Type, PdfName.Metadata);
+                catalog.Put(PdfName.Subtype, PdfName.XML);
+                NUnit.Framework.Assert.DoesNotThrow(() => PdfCheckersUtil.CheckMetadata(catalog.GetPdfObject(), PdfConformance
+                    .WELL_TAGGED_PDF_FOR_ACCESSIBILITY, EXCEPTION_SUPPLIER));
+            }
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ValidMetadataUA2Test() {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().
                 SetPdfVersion(PdfVersion.PDF_2_0)))) {

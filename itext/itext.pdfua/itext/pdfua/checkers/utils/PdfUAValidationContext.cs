@@ -148,7 +148,12 @@ namespace iText.Pdfua.Checkers.Utils {
         /// value
         /// </returns>
         public virtual PdfUAConformance GetUAConformance() {
-            return this.pdfDocument.GetConformance().GetUAConformance();
+            PdfUAConformance uaConformance = this.pdfDocument.GetConformance().GetUAConformance();
+            if (uaConformance == null) {
+                // In case of WTPDF being set, checkers should behave as if UA-2 is set.
+                return this.pdfDocument.GetConformance().GetWtpdfConformance() == null ? null : PdfUAConformance.PDF_UA_2;
+            }
+            return uaConformance;
         }
     }
 }

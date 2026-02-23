@@ -58,6 +58,23 @@ namespace iText.Test.Pdfa {
         
         // If this is set to true, we will validate the output of the server and the cli to be the same byte for byte
         private static bool VERIFY_SAME_OUTPUT = false;
+        
+        private readonly String specification;
+
+        /// <summary>
+        /// Creates new instance of VetaPdfValidator.
+        /// </summary>
+        public VeraPdfValidator() {
+            this.specification = null;
+        }
+
+        /// <summary>
+        /// Creates new instance of VeraPdfValidator with a required specification.
+        /// </summary>
+        /// <param name="specification">specification, which will be used in validation</param>
+        public VeraPdfValidator(String specification) {
+            this.specification = specification;
+        }
 
         private static string GetBaseUri() {
             return "http://localhost:" + GetPort() + "/api/";
@@ -94,7 +111,7 @@ namespace iText.Test.Pdfa {
 
         private void StartServer() {
             string command = "java -jar " + TestContext.CurrentContext.TestDirectory +
-                             "\\lib\\VeraPdf\\VeraPdfValidatorApp.jar server " + GetPort();
+                             "\\lib\\VeraPdf\\VeraPdfValidatorApp.jar server " + GetPort() + " " + specification;
             Process p = new Process();
 
 
@@ -176,10 +193,10 @@ namespace iText.Test.Pdfa {
             p.StartInfo = new ProcessStartInfo("cmd", "/c " + command);
         }
 
-        private static string RunCli(string dest) {
+        private string RunCli(string dest) {
             string command = "java -jar " + TestContext.CurrentContext.TestDirectory +
                              "\\lib\\VeraPdf\\VeraPdfValidatorApp.jar cli " +
-                             Convert.ToBase64String(Encoding.UTF8.GetBytes(dest));
+                             Convert.ToBase64String(Encoding.UTF8.GetBytes(dest)) + " " + specification;
 
             Process p = new Process();
             SetCorrectExecutor(p, command);

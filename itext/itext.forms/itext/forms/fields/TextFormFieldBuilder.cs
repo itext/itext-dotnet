@@ -57,7 +57,7 @@ namespace iText.Forms.Fields {
             }
             else {
                 PdfWidgetAnnotation annotation = new PdfWidgetAnnotation(GetWidgetRectangle());
-                if (null != GetConformance() && GetConformance().IsPdfAOrUa()) {
+                if (null != GetConformance() && GetConformance().IsPdfAOrUaOrWtpdf()) {
                     annotation.SetFlag(PdfAnnotation.PRINT);
                 }
                 field = PdfFormCreator.CreateTextFormField(annotation, GetDocument());

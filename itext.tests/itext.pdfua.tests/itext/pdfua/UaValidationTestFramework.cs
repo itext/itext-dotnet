@@ -92,17 +92,6 @@ namespace iText.Pdfua {
             }
         }
 
-        public virtual void AssertITextValid(String fileName, PdfUAConformance pdfUAConformance) {
-            Exception e = CheckErrorLayout("itext_" + fileName + GetUAConformance(pdfUAConformance) + ".pdf", pdfUAConformance
-                );
-            if (e == null) {
-                return;
-            }
-            String sb = "No exception expected but was: " + e.GetType().FullName + " \n" + "Message: \n" + e.Message +
-                 '\n' + "StackTrace:\n" + PrintStackTrace(e) + '\n';
-            NUnit.Framework.Assert.Fail(sb);
-        }
-
         public virtual void AssertBothValid(String fileName, PdfUAConformance pdfUAConformance) {
             Exception e = CheckErrorLayout("itext_" + fileName + GetUAConformance(pdfUAConformance) + ".pdf", pdfUAConformance
                 );
@@ -142,10 +131,6 @@ namespace iText.Pdfua {
             this.afterGeneratorHook.Add(action);
         }
 
-        public virtual void AssertVeraPdfFail(String filename, PdfUAConformance pdfUAConformance) {
-            VeraPdfResult("vera_" + filename + GetUAConformance(pdfUAConformance) + ".pdf", true, pdfUAConformance);
-        }
-
         public virtual void AssertOnlyVeraPdfFail(String filename, PdfUAConformance pdfUAConformance) {
             VeraPdfResult("vera_" + filename + GetUAConformance(pdfUAConformance) + ".pdf", true, pdfUAConformance);
             Exception e = CheckErrorLayout("itext_" + filename + GetUAConformance(pdfUAConformance) + ".pdf", pdfUAConformance
@@ -169,6 +154,44 @@ namespace iText.Pdfua {
             AssertVeraPdfValid(filename, pdfUAConformance);
         }
 
+        // Android-Conversion-Skip-Block-Start (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
+        protected internal virtual VeraPdfValidator GetVerapdfValidator() {
+            return new VeraPdfValidator();
+        }
+
+        // Android-Conversion-Skip-Block-End
+        protected internal virtual PdfDocument CreatePdfDocument(String filename, PdfUAConformance pdfUAConformance
+            ) {
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                return new PdfUATestPdfDocument(new PdfWriter(filename));
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    return new PdfUA2TestPdfDocument(new PdfWriter(filename, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0
+                        )));
+                }
+                else {
+                    throw new ArgumentException("Unsupported PdfUAConformance: " + pdfUAConformance);
+                }
+            }
+        }
+
+        protected internal virtual PdfDocument CreatePdfDocument(String inputFile, String outputFile, PdfUAConformance
+             pdfUAConformance) {
+            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+                return new PdfUATestPdfDocument(new PdfReader(inputFile), new PdfWriter(outputFile));
+            }
+            else {
+                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                    return new PdfUA2TestPdfDocument(new PdfReader(inputFile), new PdfWriter(outputFile, new WriterProperties(
+                        ).SetPdfVersion(PdfVersion.PDF_2_0)));
+                }
+                else {
+                    throw new ArgumentException("Unsupported PdfUAConformance: " + pdfUAConformance);
+                }
+            }
+        }
+
         private String VeraPdfResult(String filename, bool failureExpected, PdfUAConformance pdfUAConformance) {
             String outfile = UrlUtil.GetNormalizedFileUriString(destinationFolder + filename);
             System.Console.Out.WriteLine(outfile);
@@ -185,7 +208,7 @@ namespace iText.Pdfua {
                     pdfDocumentConsumer(pdfDoc);
                 }
             }
-            VeraPdfValidator validator = new VeraPdfValidator();
+            VeraPdfValidator validator = GetVerapdfValidator();
             // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
             String validate = null;
             if (failureExpected) {
@@ -250,37 +273,6 @@ namespace iText.Pdfua {
 
         private static String PrintStackTrace(Exception e) {
             return e.ToString();
-        }
-
-        private static PdfDocument CreatePdfDocument(String filename, PdfUAConformance pdfUAConformance) {
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                return new PdfUATestPdfDocument(new PdfWriter(filename));
-            }
-            else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    return new PdfUA2TestPdfDocument(new PdfWriter(filename, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0
-                        )));
-                }
-                else {
-                    throw new ArgumentException("Unsupported PdfUAConformance: " + pdfUAConformance);
-                }
-            }
-        }
-
-        private static PdfDocument CreatePdfDocument(String inputFile, String outputFile, PdfUAConformance pdfUAConformance
-            ) {
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                return new PdfUATestPdfDocument(new PdfReader(inputFile), new PdfWriter(outputFile));
-            }
-            else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    return new PdfUA2TestPdfDocument(new PdfReader(inputFile), new PdfWriter(outputFile, new WriterProperties(
-                        ).SetPdfVersion(PdfVersion.PDF_2_0)));
-                }
-                else {
-                    throw new ArgumentException("Unsupported PdfUAConformance: " + pdfUAConformance);
-                }
-            }
         }
 
         public interface Generator<IBlockElement> {

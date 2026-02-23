@@ -71,7 +71,7 @@ namespace iText.Forms.Fields {
             PdfName appearancePdfName = new PdfName(appearanceName);
             PdfWidgetAnnotation annotation = new PdfWidgetAnnotation(widgetRectangle);
             annotation.SetAppearanceState(appearancePdfName);
-            if (GetConformance() != null && GetConformance().IsPdfAOrUa()) {
+            if (GetConformance() != null && GetConformance().IsPdfAOrUaOrWtpdf()) {
                 annotation.SetFlag(PdfAnnotation.PRINT);
             }
             PdfFormAnnotation radio = PdfFormCreator.CreateFormAnnotation(annotation, GetDocument());

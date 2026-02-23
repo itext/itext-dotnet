@@ -98,6 +98,10 @@ namespace iText.Kernel.XMP {
 
         public const String NS_PDFUA_ID = "http://www.aiim.org/pdfua/ns/id/";
 
+        public const String NS_WTPDF_ACCESSIBILITY_ID = "http://pdfa.org/declarations/wtpdf#accessibility1.0";
+
+        public const String NS_DECLARATIONS = "http://pdfa.org/declarations/";
+
         public const String NS_PDFA_EXTENSION = "http://www.aiim.org/pdfa/ns/extension/";
 
         /// <summary>The XML namespace for the Photoshop custom schema.</summary>
@@ -227,6 +231,10 @@ namespace iText.Kernel.XMP {
 
         /// <summary>XMP meta tag version old</summary>
         public const String TAG_XAPMETA = "xapmeta";
+
+        public const String DECLARATIONS = "pdfd:declarations";
+
+        public const String CONFORMS_TO = "pdfd:conformsTo";
 
         /// <summary>Part, 1, 2, or 3</summary>
         public const String PART = "part";

@@ -94,7 +94,7 @@ namespace iText.Forms.Form.Renderer {
             // html rendering is PDFA compliant this means we don't have to check if its PDFA.
             ICheckBoxRenderingStrategy renderingStrategy;
             PdfConformance conformance = this.GetProperty<PdfConformance>(FormProperty.FORM_CONFORMANCE_LEVEL);
-            bool isConformantPdfDocument = conformance != null && conformance.IsPdfAOrUa();
+            bool isConformantPdfDocument = conformance != null && conformance.IsPdfAOrUaOrWtpdf();
             if (GetRenderingMode() == RenderingMode.HTML_MODE) {
                 renderingStrategy = new HtmlCheckBoxRenderingStrategy();
             }

@@ -690,6 +690,8 @@ namespace iText.Kernel.Exceptions {
         public const String XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART = "XMP metadata header shall"
              + " contain version identifier pdfaid:part with value {0} instead of {1}.";
 
+        public const String XMP_METADATA_HEADER_SHALL_CONTAIN_WTPDF_METADATA = "XMP metadata header shall" + " contain declaration for Well Tagged PDF For Accessibility.";
+
         public const String XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_REV = "XMP metadata header shall"
              + " contain version identifier pdfaid:rev with four digit integer value";
 

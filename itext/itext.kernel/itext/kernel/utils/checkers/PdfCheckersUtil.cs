@@ -116,22 +116,42 @@ namespace iText.Kernel.Utils.Checkers {
                 }
                 XMPMeta metadata = XMPMetaFactory.Parse(new MemoryStream(xmpMetadata.GetBytes()));
                 String NS_ID = conformance.IsPdfA() ? XMPConst.NS_PDFA_ID : XMPConst.NS_PDFUA_ID;
-                XMPProperty actualPart = metadata.GetProperty(NS_ID, XMPConst.PART);
-                String expectedPart = conformance.IsPdfA() ? conformance.GetAConformance().GetPart() : conformance.GetUAConformance
-                    ().GetPart();
-                if (actualPart == null || !expectedPart.Equals(actualPart.GetValue())) {
-                    throw exceptionSupplier.Invoke(MessageFormatUtil.Format(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART
-                        , expectedPart, (actualPart != null && String.IsNullOrEmpty(actualPart.GetValue())) ? null : actualPart
-                        ));
+                if (conformance.IsPdfAOrUa()) {
+                    XMPProperty actualPart = metadata.GetProperty(NS_ID, XMPConst.PART);
+                    String expectedPart = conformance.IsPdfA() ? conformance.GetAConformance().GetPart() : conformance.GetUAConformance
+                        ().GetPart();
+                    if (actualPart == null || !expectedPart.Equals(actualPart.GetValue())) {
+                        throw exceptionSupplier.Invoke(MessageFormatUtil.Format(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART
+                            , expectedPart, (actualPart != null && String.IsNullOrEmpty(actualPart.GetValue())) ? null : actualPart
+                            ));
+                    }
+                    XMPProperty rev = metadata.GetProperty(NS_ID, XMPConst.REV);
+                    if (rev == null || !IsValidXmpRevision(rev.GetValue())) {
+                        throw exceptionSupplier.Invoke(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_REV
+                            );
+                    }
                 }
-                XMPProperty rev = metadata.GetProperty(NS_ID, XMPConst.REV);
-                if (rev == null || !IsValidXmpRevision(rev.GetValue())) {
-                    throw exceptionSupplier.Invoke(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_REV
-                        );
-                }
+                CheckWellTaggedMetadata(metadata, conformance, exceptionSupplier);
             }
             catch (XMPException) {
                 throw exceptionSupplier.Invoke(KernelExceptionMessageConstant.INVALID_METADATA_VALUE);
+            }
+        }
+
+        private static void CheckWellTaggedMetadata(XMPMeta metadata, PdfConformance conformance, Func<String, PdfException
+            > exceptionSupplier) {
+            if (WellTaggedPdfConformance.FOR_ACCESSIBILITY == conformance.GetWtpdfConformance()) {
+                XMPProperty wtpdfProperty = null;
+                try {
+                    wtpdfProperty = metadata.GetProperty(XMPConst.NS_DECLARATIONS, XMPConst.DECLARATIONS + "/[1]/" + XMPConst.
+                        CONFORMS_TO);
+                }
+                catch (Exception) {
+                }
+                if (wtpdfProperty == null || !XMPConst.NS_WTPDF_ACCESSIBILITY_ID.Equals(wtpdfProperty.GetValue())) {
+                    throw exceptionSupplier.Invoke(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_WTPDF_METADATA
+                        );
+                }
             }
         }
 

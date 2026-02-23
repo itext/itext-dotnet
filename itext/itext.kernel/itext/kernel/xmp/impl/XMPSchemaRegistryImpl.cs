@@ -223,6 +223,7 @@ namespace iText.Kernel.XMP.Impl
 			RegisterNamespace(NS_PDFA_ID, "pdfaid");
 			RegisterNamespace(NS_PDFUA_ID, "pdfuaid");
 			RegisterNamespace(NS_PDFA_EXTENSION, "pdfaExtension");
+			RegisterNamespace(NS_DECLARATIONS, "pdfd");
 			RegisterNamespace(NS_PHOTOSHOP, "photoshop");
 			RegisterNamespace(NS_PSALBUM, "album");
 			RegisterNamespace(NS_EXIF, "exif");
