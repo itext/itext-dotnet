@@ -85,6 +85,11 @@ namespace iText.Forms {
             IList<PdfAnnotation> annots = toPage.GetAnnotations();
             try {
                 foreach (PdfAnnotation annot in annots) {
+                    if (annot.GetSubtype() == null) {
+                        logger.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.ANNOTATION_WITHOUT_SUBTYPE_NOT_COPIED, 
+                            annot.GetPdfObject().GetIndirectReference()));
+                        continue;
+                    }
                     if (!annot.GetSubtype().Equals(PdfName.Widget)) {
                         continue;
                     }

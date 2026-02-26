@@ -78,6 +78,8 @@ namespace iText.Forms.Logs {
         public const String DUPLICATE_EXPORT_VALUE = "More than one option with the same value. This is an invalid"
              + " state.";
 
+        public const String ANNOTATION_WITHOUT_SUBTYPE_NOT_COPIED = "Encountered an annotation without " + "a Subtype property: {0}. If there is a corresponding Acroform field, it will not be copied";
+
         private FormsLogMessageConstants() {
         }
     }
