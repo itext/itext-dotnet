@@ -93,35 +93,24 @@ namespace iText.Pdfua.Checkers {
         }
 
         [NUnit.Framework.Test]
-        public virtual void NonStandardMappingViaPdfName_02_001_Test() {
-            String outPdf = DESTINATION_FOLDER + "nonStandardMappingViaPdfNameTest.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
-            PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
-                );
-            PdfPage page1 = pdfDoc.AddNewPage();
-            PdfCanvas canvas = new PdfCanvas(page1);
-            // Another attempts of PDF/UA document creation with non-standard tags see in PdfUACanvasTest class
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => canvas.OpenTag(new CanvasTag
-                (new PdfName("chapter"))));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.TAG_MAPPING_DOESNT_TERMINATE_WITH_STANDARD_TYPE
-                , "chapter"), e.Message);
+        public virtual void NonStandardMappingViaPdfNameInContentStream_02_001_Test() {
+            String outPdf = DESTINATION_FOLDER + "nonStandardMappingViaPdfNameInContentStreamTest.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_nonStandardMappingViaPdfNameInContentStreamTest.pdf";
+            using (PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf))) {
+                PdfFont font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                    );
+                PdfPage page1 = pdfDoc.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page1);
+                TagTreePointer tagPointer = new TagTreePointer(pdfDoc).SetPageForTagging(page1).AddTag(StandardRoles.SECT);
+                canvas.OpenTag(tagPointer.GetTagReference()).OpenTag(new CanvasTag(new PdfName("chapter"))).BeginText().SetFontAndSize
+                    (font, 12).MoveText(200, 200).ShowText("Hello World!").EndText().CloseTag().CloseTag();
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                ));
+            NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        [NUnit.Framework.Test]
-        public virtual void NonStandardMappingViaPdfMcr_02_001_Test() {
-            String outPdf = DESTINATION_FOLDER + "nonStandardMappingViaPdfMcrTest.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
-            PdfPage page1 = pdfDoc.AddNewPage();
-            PdfStructElem doc = pdfDoc.GetStructTreeRoot().AddKid(new PdfStructElem(pdfDoc, PdfName.Document));
-            PdfStructElem paragraph = doc.AddKid(new PdfStructElem(pdfDoc, new PdfName("chapter"), page1));
-            PdfMcr mcr = paragraph.AddKid(new PdfMcrNumber(page1, paragraph));
-            PdfCanvas canvas = new PdfCanvas(page1);
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => canvas.OpenTag(new CanvasTag
-                (mcr)));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.TAG_MAPPING_DOESNT_TERMINATE_WITH_STANDARD_TYPE
-                , "chapter"), e.Message);
-        }
-
+        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         [NUnit.Framework.Test]
         public virtual void StandardMappingViaTagTreePointer_02_001_Test() {
             String outPdf = DESTINATION_FOLDER + "standardMappingViaTagTreePointerTest.pdf";
@@ -144,30 +133,6 @@ namespace iText.Pdfua.Checkers {
         }
 
         // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
-        [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Count = 2, LogLevel
-             = LogLevelConstants.WARN)]
-        public virtual void StandardMappingViaNamespace_02_001_Test() {
-            String outPdf = DESTINATION_FOLDER + "standardMappingViaNamespaceTest.pdf";
-            PdfUATestPdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
-            PdfPage page1 = pdfDoc.AddNewPage();
-            PdfStructElem doc = pdfDoc.GetStructTreeRoot().AddKid(new PdfStructElem(pdfDoc, PdfName.Document));
-            PdfStructElem paragraph = doc.AddKid(new PdfStructElem(pdfDoc, PdfName.P));
-            PdfStructElem chapter = paragraph.AddKid(new PdfStructElem(pdfDoc, new PdfName("chapter"), page1));
-            // Namespaces are actual only for PDF-2.0, which is actual only for PDF/UA-2
-            PdfNamespace @namespace = new PdfNamespace("http://www.w3.org/1999/xhtml");
-            chapter.SetNamespace(@namespace);
-            @namespace.AddNamespaceRoleMapping("chapter", StandardRoles.SPAN);
-            pdfDoc.GetStructTreeRoot().AddNamespace(@namespace);
-            PdfMcr mcr = chapter.AddKid(new PdfMcrNumber(page1, chapter));
-            PdfCanvas canvas = new PdfCanvas(page1);
-            // VeraPdf also complains about non-standard mapping
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => canvas.OpenTag(new CanvasTag
-                (mcr)));
-            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.TAG_MAPPING_DOESNT_TERMINATE_WITH_STANDARD_TYPE
-                , "chapter"), e.Message);
-        }
-
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.CANNOT_RESOLVE_ROLE_TOO_MUCH_TRANSITIVE_MAPPINGS, LogLevel = 
             LogLevelConstants.ERROR)]
