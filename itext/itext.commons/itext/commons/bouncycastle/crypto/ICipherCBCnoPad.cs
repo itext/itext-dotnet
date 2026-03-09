@@ -30,5 +30,11 @@ namespace iText.Commons.Bouncycastle.Crypto {
         /// <param name="inpLen">Input data length</param>
         /// <returns>Processed bytes</returns>
         byte[] ProcessBlock(byte[] inp, int inpOff, int inpLen);
+
+        /// <summary>
+        /// Finishes a multiple-part encryption or decryption operation, depending on how this cipher was initialized.
+        /// </summary>
+        /// <returns>Processed bytes</returns>
+        byte[] DoFinal();
     }
 }

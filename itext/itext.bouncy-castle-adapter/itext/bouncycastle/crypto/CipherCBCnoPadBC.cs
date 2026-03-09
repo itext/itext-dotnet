@@ -73,6 +73,11 @@ namespace iText.Bouncycastle.Crypto {
             }
             return outp;
         }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual byte[] DoFinal() {
+            return new byte[0];
+        }
         
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
         public override bool Equals(Object o) {

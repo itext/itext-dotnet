@@ -64,5 +64,12 @@ namespace iText.Kernel.Crypto {
         public virtual byte[] ProcessBlock(byte[] inp, int inpOff, int inpLen) {
             return cipher.ProcessBlock(inp, inpOff, inpLen);
         }
+
+        /// <summary>Finishes a multiple-part encryption or decryption operation, depending on how this cipher was initialized.
+        /// </summary>
+        /// <returns>byte array with the result</returns>
+        public virtual byte[] DoFinal() {
+            return cipher.DoFinal();
+        }
     }
 }

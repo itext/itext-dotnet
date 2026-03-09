@@ -75,6 +75,12 @@ namespace iText.Bouncycastlefips.Crypto.Modes {
         }
 
         /// <summary><inheritDoc/></summary>
+        public virtual byte[] ProcessBytes(byte[] inputBuff, int inOff, int len) {
+            cipher.Stream.Write(inputBuff, inOff, len);
+            return GetBytes();
+        }
+
+        /// <summary><inheritDoc/></summary>
         public virtual int GetOutputSize(int i) {
             return cipher.GetMaxOutputSize(i);
         }
@@ -84,6 +90,12 @@ namespace iText.Bouncycastlefips.Crypto.Modes {
             cipher.Stream.Close();
             byte[] encMac = GetBytes();
             Array.Copy(encMac, 0, plainText, i, encMac.Length);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual byte[] DoFinal() {
+            cipher.Stream.Close();
+            return GetBytes();
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
