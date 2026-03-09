@@ -177,7 +177,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 // Algorithm 8.2
                 hash = ComputeHash(userPassword, userValAndKeySalt, 8, 8);
                 AESCipherCBCnoPad ac = new AESCipherCBCnoPad(true, hash);
-                ueKey = ac.ProcessBlock(nextObjectKey, 0, nextObjectKey.Length);
+                ueKey = ac.ProcessFullBlock(nextObjectKey, 0, nextObjectKey.Length);
                 // Algorithm 9.1
                 hash = ComputeHash(ownerPassword, ownerValAndKeySalt, 0, 8, userKey);
                 ownerKey = JavaUtil.ArraysCopyOf(hash, 48);
@@ -185,7 +185,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 // Algorithm 9.2
                 hash = ComputeHash(ownerPassword, ownerValAndKeySalt, 8, 8, userKey);
                 ac = new AESCipherCBCnoPad(true, hash);
-                oeKey = ac.ProcessBlock(nextObjectKey, 0, nextObjectKey.Length);
+                oeKey = ac.ProcessFullBlock(nextObjectKey, 0, nextObjectKey.Length);
                 // Algorithm 10
                 aes256Perms = GetAes256Perms(permissions, encryptMetadata);
                 this.permissions = permissions;
@@ -215,7 +215,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             permsp[10] = (byte)'d';
             permsp[11] = (byte)'b';
             ac = new AESCipherCBCnoPad(true, nextObjectKey);
-            aes256Perms = ac.ProcessBlock(permsp, 0, permsp.Length);
+            aes256Perms = ac.ProcessFullBlock(permsp, 0, permsp.Length);
             return aes256Perms;
         }
 
@@ -245,7 +245,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 if (usedOwnerPassword) {
                     hash = ComputeHash(password, oValue, KEY_SALT_OFFSET, SALT_LENGTH, uValue);
                     AESCipherCBCnoPad ac = new AESCipherCBCnoPad(false, hash);
-                    nextObjectKey = ac.ProcessBlock(oeValue, 0, oeValue.Length);
+                    nextObjectKey = ac.ProcessFullBlock(oeValue, 0, oeValue.Length);
                 }
                 else {
                     hash = ComputeHash(password, uValue, VALIDATION_SALT_OFFSET, SALT_LENGTH);
@@ -254,11 +254,11 @@ namespace iText.Kernel.Crypto.Securityhandler {
                     }
                     hash = ComputeHash(password, uValue, KEY_SALT_OFFSET, SALT_LENGTH);
                     AESCipherCBCnoPad ac = new AESCipherCBCnoPad(false, hash);
-                    nextObjectKey = ac.ProcessBlock(ueValue, 0, ueValue.Length);
+                    nextObjectKey = ac.ProcessFullBlock(ueValue, 0, ueValue.Length);
                 }
                 nextObjectKeySize = 32;
                 AESCipherCBCnoPad ac_1 = new AESCipherCBCnoPad(false, nextObjectKey);
-                byte[] decPerms = ac_1.ProcessBlock(perms, 0, perms.Length);
+                byte[] decPerms = ac_1.ProcessFullBlock(perms, 0, perms.Length);
                 if (decPerms[9] != (byte)'a' || decPerms[10] != (byte)'d' || decPerms[11] != (byte)'b') {
                     throw new BadPasswordException(KernelExceptionMessageConstant.BAD_USER_PASSWORD);
                 }
@@ -323,7 +323,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                     // b)
                     AESCipherCBCnoPad cipher = new AESCipherCBCnoPad(true, JavaUtil.ArraysCopyOf(k, 16), JavaUtil.ArraysCopyOfRange
                         (k, 16, 32));
-                    byte[] e = cipher.ProcessBlock(k1, 0, k1.Length);
+                    byte[] e = cipher.ProcessFullBlock(k1, 0, k1.Length);
                     // c)
                     IMessageDigest md = null;
                     IBigInteger i_1 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateBigInteger(1, 
@@ -364,17 +364,17 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return k;
         }
 
-        private byte[] TruncateArray(byte[] array) {
-            if (array.Length == 48) {
-                return array;
+        private static byte[] TruncateArray(byte[] byteArray) {
+            if (byteArray.Length == 48) {
+                return byteArray;
             }
-            for (int i = 48; i < array.Length; ++i) {
-                if (array[i] != 0) {
+            for (int i = 48; i < byteArray.Length; ++i) {
+                if (byteArray[i] != 0) {
                     throw new PdfException(KernelExceptionMessageConstant.BAD_PASSWORD_HASH);
                 }
             }
             byte[] truncated = new byte[48];
-            Array.Copy(array, 0, truncated, 0, 48);
+            Array.Copy(byteArray, 0, truncated, 0, 48);
             return truncated;
         }
     }

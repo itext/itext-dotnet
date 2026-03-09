@@ -50,6 +50,16 @@ namespace iText.Commons.Bouncycastle.Crypto.Modes {
         void ProcessBytes(byte[] input, int inputOffset, int len, byte[] output, int outOffset);
 
         /// <summary>
+        /// Perform a multiple-part encryption or decryption operation (depending on how this cipher was initialized),
+        /// processing another data part.
+        /// </summary>
+        /// <param name="input">the input buffer</param>
+        /// <param name="inputOffset">the offset in input where the input starts</param>
+        /// <param name="len">the input length</param>
+        /// <returns>byte array with the result</returns>
+        byte[] ProcessBytes(byte[] input, int inputOffset, int len);
+
+        /// <summary>
         /// Returns the length in bytes that an output buffer would need to be in order to hold the result of
         /// the next doFinal operation, given the input length (in bytes).
         /// </summary>
@@ -67,5 +77,15 @@ namespace iText.Commons.Bouncycastle.Crypto.Modes {
         /// <param name="plainText">the buffer for the result</param>
         /// <param name="i">the offset in output where the result is stored</param>
         void DoFinal(byte[] plainText, int i);
+
+        /// <summary>Finishes a multiple-part encryption or decryption operation, depending on how this cipher was initialized.
+        ///     </summary>
+        /// <remarks>
+        /// Finishes a multiple-part encryption or decryption operation, depending on how this cipher was initialized.
+        /// Input data that may have been buffered during a previous update operation is processed, also
+        /// the authentication tag is appended in the case of encryption, or verified in the case of decryption.
+        /// </remarks>
+        /// <returns>byte array with the result</returns>
+        byte[] DoFinal();
     }
 }

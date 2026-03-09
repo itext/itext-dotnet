@@ -72,6 +72,13 @@ namespace iText.Bouncycastle.Crypto.Modes {
         }
 
         /// <summary><inheritDoc/></summary>
+        public virtual byte[] ProcessBytes(byte[] input, int inputOffset, int len) {
+            byte[] output = new byte[GetUpdateOutputSize(len)];
+            ProcessBytes(input, inputOffset, len, output, 0);
+            return output;
+        }
+
+        /// <summary><inheritDoc/></summary>
         public virtual int GetOutputSize(int len) {
             return cipher.GetOutputSize(len);
         }
@@ -84,6 +91,13 @@ namespace iText.Bouncycastle.Crypto.Modes {
             catch (InvalidCipherTextException e) {
                 throw new ArgumentException(e.Message, e);
             }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual byte[] DoFinal() {
+            byte[] plainText = new byte[GetOutputSize(0)];
+            DoFinal(plainText, 0);
+            return plainText;
         }
 
         /// <summary><inheritDoc/></summary>
