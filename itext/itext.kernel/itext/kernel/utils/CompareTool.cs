@@ -72,6 +72,10 @@ namespace iText.Kernel.Utils {
 
         private const String IGNORED_AREAS_PREFIX = "ignored_areas_";
 
+        private const String OUT_PDF_LOG_PREFIX = "Out pdf: ";
+
+        private const String CMP_PDF_LOG_PREFIX = "Cmp pdf: ";
+
         private const String VERSION_REGEXP = "(\\d+\\.)+\\d+(-SNAPSHOT)?";
 
         private const String VERSION_REPLACEMENT = "<version>";
@@ -473,76 +477,185 @@ namespace iText.Kernel.Utils {
             return outProps;
         }
 
-        /// <summary>Compares two documents visually.</summary>
+        /// <summary>Compares two PDF documents visually using external tools (Ghostscript and ImageMagick).</summary>
         /// <remarks>
-        /// Compares two documents visually. For the comparison two external tools are used: Ghostscript and ImageMagick.
+        /// Compares two PDF documents visually using external tools (Ghostscript and ImageMagick).
+        /// <para />
+        /// During comparison an image file is created for each page of both documents in the directory specified by
+        /// <paramref name="outPath"/>
+        /// . Then the corresponding page images are compared. If a page differs visually, a difference image
+        /// with marked changes is created.
+        /// <para />
         /// For more info about needed configuration for visual comparison process see
         /// <see cref="CompareTool"/>
         /// class description.
-        /// <para />
-        /// Note, that this method uses
-        /// <see cref="iText.IO.Util.ImageMagickHelper"/>
-        /// and
-        /// <see cref="iText.IO.Util.GhostscriptHelper"/>
-        /// classes and therefore may
-        /// create temporary files and directories.
-        /// <para />
-        /// During comparison for every page of the two documents an image file will be created in the folder specified by
-        /// outPath parameter. Then those page images will be compared and if there are any differences for some pages,
-        /// another image file will be created with marked differences on it.
         /// </remarks>
-        /// <param name="outPdf">the absolute path to the output file, which is to be compared to cmp-file.</param>
-        /// <param name="cmpPdf">the absolute path to the cmp-file, which is to be compared to output file.</param>
-        /// <param name="outPath">the absolute path to the folder, which will be used to store image files for visual comparison.
-        ///     </param>
+        /// <param name="outPdf">the absolute path to the output PDF file to compare.</param>
+        /// <param name="cmpPdf">the absolute path to the reference (cmp) PDF file.</param>
+        /// <param name="outPath">
+        /// the absolute path to the directory used to store generated page images and diff
+        /// images.
+        /// </param>
         /// <param name="differenceImagePrefix">file name prefix for image files with marked differences if there is any.
         ///     </param>
-        /// <returns>string containing list of the pages that are visually different, or null if there are no visual differences.
-        ///     </returns>
+        /// <returns>
+        /// a string containing a list of page numbers that are visually different, or
+        /// <see langword="null"/>
+        /// if there are
+        /// no visual differences.
+        /// </returns>
         public virtual String CompareVisually(String outPdf, String cmpPdf, String outPath, String differenceImagePrefix
             ) {
             return CompareVisually(outPdf, cmpPdf, outPath, differenceImagePrefix, null);
         }
 
-        /// <summary>Compares two documents visually.</summary>
+        /// <summary>Compares two PDF documents visually using external tools (Ghostscript and ImageMagick).</summary>
         /// <remarks>
-        /// Compares two documents visually. For the comparison two external tools are used: Ghostscript and ImageMagick.
+        /// Compares two PDF documents visually using external tools (Ghostscript and ImageMagick).
+        /// <para />
+        /// It is possible to ignore certain areas of the document pages during visual comparison (for example, dynamically
+        /// generated dates or timestamps). Ignored areas are provided as a map with one-based page numbers as keys and lists
+        /// of rectangles to ignore as values. For pages with ignored areas, temporary PDF documents may be created with
+        /// masked regions prior to performing visual comparison.
+        /// <para />
+        /// During comparison an image file is created for each page of both documents in the directory specified by
+        /// <paramref name="outPath"/>
+        /// . Then the corresponding page images are compared. If a page differs visually, a difference image
+        /// with marked changes is created.
+        /// <para />
         /// For more info about needed configuration for visual comparison process see
         /// <see cref="CompareTool"/>
         /// class description.
-        /// <para />
-        /// Note, that this method uses
-        /// <see cref="iText.IO.Util.ImageMagickHelper"/>
-        /// and
-        /// <see cref="iText.IO.Util.GhostscriptHelper"/>
-        /// classes and therefore may
-        /// create temporary files and directories.
-        /// <para />
-        /// During comparison for every page of two documents an image file will be created in the folder specified by
-        /// outPath parameter. Then those page images will be compared and if there are any differences for some pages,
-        /// another image file will be created with marked differences on it.
-        /// <para />
-        /// It is possible to ignore certain areas of the document pages during visual comparison. This is useful for example
-        /// in case if documents should be the same except certain page area with date on it. In this case, in the folder
-        /// specified by the outPath, new pdf documents will be created with the black rectangles at the specified ignored
-        /// areas, and visual comparison will be performed on these new documents.
         /// </remarks>
-        /// <param name="outPdf">the absolute path to the output file, which is to be compared to cmp-file.</param>
-        /// <param name="cmpPdf">the absolute path to the cmp-file, which is to be compared to output file.</param>
-        /// <param name="outPath">the absolute path to the folder, which will be used to store image files for visual comparison.
+        /// <param name="outPdf">the absolute path to the output PDF file to compare.</param>
+        /// <param name="cmpPdf">the absolute path to the reference (cmp) PDF file.</param>
+        /// <param name="outPath">
+        /// the absolute path to the directory used to store generated page images and diff
+        /// images.
+        /// </param>
+        /// <param name="differenceImagePrefix">file name prefix for image files with marked differences if there is any.
+        ///     </param>
+        /// <param name="ignoredAreas">
+        /// a map with one-based page numbers as keys and lists of ignored rectangles as values;
+        /// may be
+        /// <see langword="null"/>
+        /// if no areas should be ignored.
+        /// </param>
+        /// <returns>
+        /// a string containing a list of page numbers that are visually different, or
+        /// <see langword="null"/>
+        /// if there are no
+        /// visual differences.
+        /// </returns>
+        public virtual String CompareVisually(String outPdf, String cmpPdf, String outPath, String differenceImagePrefix
+            , IDictionary<int, IList<Rectangle>> ignoredAreas) {
+            return CompareVisually(outPdf, cmpPdf, outPath, differenceImagePrefix, ignoredAreas, 0);
+        }
+
+        /// <summary>
+        /// Compares two PDF documents visually using external tools (Ghostscript and ImageMagick) with a given ImageMagick
+        /// <c>fuzz</c>
+        /// value.
+        /// </summary>
+        /// <remarks>
+        /// Compares two PDF documents visually using external tools (Ghostscript and ImageMagick) with a given ImageMagick
+        /// <c>fuzz</c>
+        /// value.
+        /// <para />
+        /// During comparison an image file is created for each page of both documents in the directory specified by
+        /// <paramref name="outPath"/>
+        /// . Then the corresponding page images are compared. If a page differs visually, a difference image
+        /// with marked changes is created.
+        /// <para />
+        /// For more info about needed configuration for visual comparison process see
+        /// <see cref="CompareTool"/>
+        /// class description.
+        /// </remarks>
+        /// <param name="outPdf">the absolute path to the output PDF file to compare.</param>
+        /// <param name="cmpPdf">the absolute path to the reference (cmp) PDF file.</param>
+        /// <param name="outPath">the absolute path to the directory used to store generated page images and diff images.
+        ///     </param>
+        /// <param name="fuzzValue">
+        /// ImageMagick fuzz value used for visual comparison; allows a tolerance for small color
+        /// differences. The value is interpreted as a percentage. For example,
+        /// <c>1</c>
+        /// corresponds
+        /// to a 1% allowed color tolerance. If
+        /// <c>0</c>
+        /// , the default ImageMagick behavior/configuration
+        /// is used.
+        /// </param>
+        /// <returns>
+        /// a string containing a list of page numbers that are visually different, or
+        /// <see langword="null"/>
+        /// if there are no
+        /// visual differences.
+        /// </returns>
+        public virtual String CompareVisually(String outPdf, String cmpPdf, String outPath, double fuzzValue) {
+            return CompareVisually(outPdf, cmpPdf, outPath, null, null, fuzzValue);
+        }
+
+        /// <summary>
+        /// Compares two PDF documents visually using external tools (Ghostscript and ImageMagick) with optional ignored
+        /// areas and a given ImageMagick
+        /// <c>fuzz</c>
+        /// value.
+        /// </summary>
+        /// <remarks>
+        /// Compares two PDF documents visually using external tools (Ghostscript and ImageMagick) with optional ignored
+        /// areas and a given ImageMagick
+        /// <c>fuzz</c>
+        /// value.
+        /// <para />
+        /// It is possible to ignore certain areas of the document pages during visual comparison (for example, dynamically
+        /// generated dates or timestamps). Ignored areas are provided as a map with one-based page numbers as keys and lists
+        /// of rectangles to ignore as values. For pages with ignored areas, temporary PDF documents may be created with
+        /// masked regions prior to performing visual comparison.
+        /// <para />
+        /// During comparison an image file is created for each page of both documents in the directory specified by
+        /// <paramref name="outPath"/>
+        /// . Then the corresponding page images are compared. If a page differs visually, a difference image
+        /// with marked changes is created.
+        /// <para />
+        /// For more info about needed configuration for visual comparison process see
+        /// <see cref="CompareTool"/>
+        /// class
+        /// description.
+        /// </remarks>
+        /// <param name="outPdf">the absolute path to the output PDF file to compare.</param>
+        /// <param name="cmpPdf">the absolute path to the reference (cmp) PDF file.</param>
+        /// <param name="outPath">the absolute path to the directory used to store generated page images and diff images.
         ///     </param>
         /// <param name="differenceImagePrefix">file name prefix for image files with marked differences if there is any.
         ///     </param>
-        /// <param name="ignoredAreas">a map with one-based page numbers as keys and lists of ignored rectangles as values.
-        ///     </param>
-        /// <returns>string containing list of the pages that are visually different, or null if there are no visual differences.
-        ///     </returns>
+        /// <param name="ignoredAreas">
+        /// a map with one-based page numbers as keys and lists of ignored rectangles as values;
+        /// may be
+        /// <see langword="null"/>
+        /// if no areas should be ignored.
+        /// </param>
+        /// <param name="fuzzValue">
+        /// ImageMagick fuzz value used for visual comparison; allows a tolerance for small color
+        /// differences. The value is interpreted as a percentage. For example,
+        /// <c>1</c>
+        /// corresponds
+        /// to a 1% allowed color tolerance. If
+        /// <c>0</c>
+        /// , the default ImageMagick behavior/configuration
+        /// is used.
+        /// </param>
+        /// <returns>
+        /// a string containing a list of page numbers that are visually different, or
+        /// <see langword="null"/>
+        /// if there are no
+        /// visual differences.
+        /// </returns>
         public virtual String CompareVisually(String outPdf, String cmpPdf, String outPath, String differenceImagePrefix
-            , IDictionary<int, IList<Rectangle>> ignoredAreas) {
+            , IDictionary<int, IList<Rectangle>> ignoredAreas, double fuzzValue) {
             Init(outPdf, cmpPdf);
-            System.Console.Out.WriteLine("Out pdf: " + UrlUtil.GetNormalizedFileUriString(outPdf));
-            System.Console.Out.WriteLine("Cmp pdf: " + UrlUtil.GetNormalizedFileUriString(cmpPdf) + "\n");
-            return CompareVisually(outPath, differenceImagePrefix, ignoredAreas);
+            System.Console.Out.WriteLine(OUT_PDF_LOG_PREFIX + UrlUtil.GetNormalizedFileUriString(outPdf));
+            System.Console.Out.WriteLine(CMP_PDF_LOG_PREFIX + UrlUtil.GetNormalizedFileUriString(cmpPdf) + "\n");
+            return CompareVisually(outPath, differenceImagePrefix, ignoredAreas, null, fuzzValue);
         }
 
         /// <summary>
@@ -714,8 +827,8 @@ namespace iText.Kernel.Utils {
         public virtual String CompareByContent(String outPdf, String cmpPdf, String outPath, String differenceImagePrefix
             , IDictionary<int, IList<Rectangle>> ignoredAreas, byte[] outPass, byte[] cmpPass) {
             Init(outPdf, cmpPdf);
-            System.Console.Out.WriteLine("Out pdf: " + UrlUtil.GetNormalizedFileUriString(outPdf));
-            System.Console.Out.WriteLine("Cmp pdf: " + UrlUtil.GetNormalizedFileUriString(cmpPdf) + "\n");
+            System.Console.Out.WriteLine(OUT_PDF_LOG_PREFIX + UrlUtil.GetNormalizedFileUriString(outPdf));
+            System.Console.Out.WriteLine(CMP_PDF_LOG_PREFIX + UrlUtil.GetNormalizedFileUriString(cmpPdf) + "\n");
             SetPassword(outPass, cmpPass);
             return CompareByContent(outPath, differenceImagePrefix, ignoredAreas);
         }
@@ -1219,17 +1332,12 @@ namespace iText.Kernel.Utils {
                 GetOutReaderProperties().SetPassword(outPass);
             }
             if (cmpPass != null) {
-                GetCmpReaderProperties().SetPassword(outPass);
+                GetCmpReaderProperties().SetPassword(cmpPass);
             }
         }
 
         private String CompareVisually(String outPath, String differenceImagePrefix, IDictionary<int, IList<Rectangle
-            >> ignoredAreas) {
-            return CompareVisually(outPath, differenceImagePrefix, ignoredAreas, null);
-        }
-
-        private String CompareVisually(String outPath, String differenceImagePrefix, IDictionary<int, IList<Rectangle
-            >> ignoredAreas, IList<int> equalPages) {
+            >> ignoredAreas, IList<int> equalPages, double fuzzValue) {
             if (!outPath.EndsWith("/")) {
                 outPath = outPath + "/";
             }
@@ -1255,10 +1363,11 @@ namespace iText.Kernel.Utils {
             }
             ghostscriptHelper.RunGhostScriptImageGeneration(outPdf, outPath, outImage);
             ghostscriptHelper.RunGhostScriptImageGeneration(cmpPdf, outPath, cmpImage);
-            return CompareImagesOfPdfs(outPath, differenceImagePrefix, equalPages);
+            return CompareImagesOfPdfs(outPath, differenceImagePrefix, equalPages, fuzzValue);
         }
 
-        private String CompareImagesOfPdfs(String outPath, String differenceImagePrefix, IList<int> equalPages) {
+        private String CompareImagesOfPdfs(String outPath, String differenceImagePrefix, IList<int> equalPages, double
+             fuzzValue) {
             FileInfo[] imageFiles = FileUtil.ListFilesInDirectoryByFilter(outPath, new CompareTool.PngFileFilter(outPdfName
                 ));
             FileInfo[] cmpImageFiles = FileUtil.ListFilesInDirectoryByFilter(outPath, new CompareTool.CmpPngFileFilter
@@ -1292,28 +1401,41 @@ namespace iText.Kernel.Utils {
                 if (equalPages != null && equalPages.Contains(i)) {
                     continue;
                 }
-                System.Console.Out.WriteLine("Comparing page " + JavaUtil.IntegerToString(i + 1) + ": " + UrlUtil.GetNormalizedFileUriString
-                    (imageFiles[i].Name) + " ...");
-                System.Console.Out.WriteLine("Comparing page " + JavaUtil.IntegerToString(i + 1) + ": " + UrlUtil.GetNormalizedFileUriString
-                    (imageFiles[i].Name) + " ...");
+                System.Console.Out.WriteLine("Comparing page " + (i + 1) + ": " + UrlUtil.GetNormalizedFileUriString(imageFiles
+                    [i].FullName) + " ...");
+                System.Console.Out.WriteLine("Against page " + (i + 1) + ": " + UrlUtil.GetNormalizedFileUriString(cmpImageFiles
+                    [i].FullName) + " ...");
                 Stream is1 = FileUtil.GetInputStreamForFile(imageFiles[i].FullName);
                 Stream is2 = FileUtil.GetInputStreamForFile(cmpImageFiles[i].FullName);
                 bool cmpResult = CompareStreams(is1, is2);
                 is1.Dispose();
                 is2.Dispose();
                 if (!cmpResult) {
-                    differentPagesFail = "Page is different!";
-                    diffPages.Add(i + 1);
+                    bool pageIsEqualVisually = false;
                     if (compareExecIsOk) {
                         String diffName = outPath + differenceImagePrefix + JavaUtil.IntegerToString(i + 1) + ".png";
-                        if (!imageMagickHelper.RunImageMagickImageCompare(imageFiles[i].FullName, cmpImageFiles[i].FullName, diffName
-                            )) {
+                        pageIsEqualVisually = imageMagickHelper.RunImageMagickImageCompare(imageFiles[i].FullName, cmpImageFiles[i
+                            ].FullName, diffName, Convert.ToString(fuzzValue, System.Globalization.CultureInfo.InvariantCulture));
+                        if (!pageIsEqualVisually) {
+                            differentPagesFail = "Page is different!";
+                            if (fuzzValue != 0) {
+                                differentPagesFail += " With fuzziness set to " + fuzzValue;
+                            }
+                            diffPages.Add(i + 1);
                             FileInfo diffFile = new FileInfo(diffName);
                             differentPagesFail += "\nPlease, examine " + FILE_PROTOCOL + UrlUtil.ToNormalizedURI(diffFile).AbsolutePath
                                  + " for more details.";
+                            System.Console.Out.WriteLine(differentPagesFail);
+                        }
+                        else {
+                            System.Console.Out.WriteLine(" done." + (fuzzValue == 0 ? "" : " With fuzziness set to " + fuzzValue));
                         }
                     }
-                    System.Console.Out.WriteLine(differentPagesFail);
+                    else {
+                        differentPagesFail = "Page is different!";
+                        diffPages.Add(i + 1);
+                        System.Console.Out.WriteLine(differentPagesFail);
+                    }
                 }
                 else {
                     System.Console.Out.WriteLine(" done.");
@@ -1522,7 +1644,7 @@ namespace iText.Kernel.Utils {
             String compareByContentReport = "Compare by content report:\n" + compareByFailContentReason;
             System.Console.Out.WriteLine(compareByContentReport);
             System.Console.Out.Flush();
-            String message = CompareVisually(outPath, differenceImagePrefix, ignoredAreas, equalPages);
+            String message = CompareVisually(outPath, differenceImagePrefix, ignoredAreas, equalPages, 0);
             if (message == null || message.Length == 0) {
                 return "Compare by content fails. No visual differences";
             }

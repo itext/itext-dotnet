@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Exceptions;
@@ -259,7 +260,7 @@ namespace iText.Kernel.Utils {
         [NUnit.Framework.Test]
         public virtual void ConvertDocInfoToStringsTest() {
             String inPdf = sourceFolder + "test.pdf";
-            CompareTool compareTool = new _T1503941261(this);
+            CompareTool compareTool = new _T1539206859(this);
             using (PdfReader reader = new PdfReader(inPdf, compareTool.GetOutReaderProperties())) {
                 using (PdfDocument doc = new PdfDocument(reader)) {
                     String[] docInfo = compareTool.ConvertDocInfoToStrings(doc.GetDocumentInfo());
@@ -273,12 +274,12 @@ namespace iText.Kernel.Utils {
         }
 
 //\cond DO_NOT_DOCUMENT
-        internal class _T1503941261 : CompareTool {
+        internal class _T1539206859 : CompareTool {
             protected internal override String[] ConvertDocInfoToStrings(PdfDocumentInfo info) {
                 return base.ConvertDocInfoToStrings(info);
             }
 
-            internal _T1503941261(CompareToolTest _enclosing) {
+            internal _T1539206859(CompareToolTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -369,6 +370,31 @@ namespace iText.Kernel.Utils {
             String xmlReport = iText.Commons.Utils.JavaUtil.GetStringForBytes(File.ReadAllBytes(System.IO.Path.Combine
                 (destinationFolder + "basefont_absence.report.xml")));
             NUnit.Framework.Assert.IsTrue(xmlReport.Contains("PdfDictionary /BaseFont entry: Expected: /Helvetica-Bold+ASAFAS. Found: null"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CompareVisuallyWithFuzzValueTest() {
+            String outPdf = sourceFolder + "fuzz.pdf";
+            String cmpPdf = sourceFolder + "cmp_fuzz.pdf";
+            String outPath = destinationFolder + "compareVisuallyWithFuzzValueTest/";
+            CompareTool compareTool = new CompareTool();
+            NUnit.Framework.Assert.IsNotNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, 0));
+            NUnit.Framework.Assert.IsNotNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, 10));
+            NUnit.Framework.Assert.IsNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, 15));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CompareVisuallyWithFuzzAndIgnoredAreasTest() {
+            String outPdf = sourceFolder + "fuzzAndIgnoredAreas.pdf";
+            String cmpPdf = sourceFolder + "cmp_fuzzAndIgnoredAreas.pdf";
+            String outPath = destinationFolder + "compareVisuallyWithFuzzValueTest/";
+            IDictionary<int, IList<Rectangle>> ignoredAreas = new Dictionary<int, IList<Rectangle>>();
+            ignoredAreas.Put(1, JavaUtil.ArraysAsList(new Rectangle(300, 0, 295, 842)));
+            CompareTool compareTool = new CompareTool();
+            NUnit.Framework.Assert.IsNotNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, 0));
+            NUnit.Framework.Assert.IsNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, 0.8));
+            NUnit.Framework.Assert.IsNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, null, ignoredAreas, 0.4
                 ));
         }
     }

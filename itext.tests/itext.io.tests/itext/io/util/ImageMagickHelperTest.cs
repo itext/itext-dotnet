@@ -264,16 +264,13 @@ namespace iText.IO.Util {
             try {
                 using (MemoryStream baos = new MemoryStream()) {
                     System.Console.SetOut(new FormattingStreamWriter(baos));
-                    bool result = imageMagickHelper.RunImageMagickImageCompare(image, image, diff, "1");
-                    NUnit.Framework.Assert.IsTrue(result);
+                    ImageMagickCompareResult result = imageMagickHelper.RunImageMagickImageCompareAndGetResult(image, image, diff
+                        , "1");
+                    NUnit.Framework.Assert.IsTrue(result.IsComparingResultSuccessful());
                     NUnit.Framework.Assert.IsTrue(FileUtil.FileExists(diff));
                     System.Console.Out.Flush();
                     String output = iText.Commons.Utils.JavaUtil.GetStringForBytes(baos.ToArray()).Trim();
-                    // This check is implemented in such a peculiar way because of .NET autoporting
-                    NUnit.Framework.Assert.AreEqual('0', output[output.Length - 1]);
-                    if (output.Length > 1) {
-                        NUnit.Framework.Assert.IsFalse(char.IsDigit(output[output.Length - 2]));
-                    }
+                    NUnit.Framework.Assert.AreEqual(0L, result.GetDiffPixels());
                 }
             }
             catch (Exception) {
