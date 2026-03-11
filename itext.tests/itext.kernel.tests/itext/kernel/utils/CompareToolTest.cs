@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Exceptions;
@@ -338,6 +339,31 @@ namespace iText.Kernel.Utils {
             NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => CompareTool.Cleanup(null));
             CompareTool.Cleanup(destinationFolder + "cleanupTest");
             NUnit.Framework.Assert.IsNull(MemoryFirstPdfWriter.Get(destinationFolder + "cleanupTest/cleanupTest.pdf"));
+        }
+        
+        [NUnit.Framework.Test]
+        public virtual void CompareVisuallyWithFuzzValueTest() {
+            String outPdf = sourceFolder + "fuzz.pdf";
+            String cmpPdf = sourceFolder + "cmp_fuzz.pdf";
+            String outPath = destinationFolder + "compareVisuallyWithFuzzValueTest/";
+            CompareTool compareTool = new CompareTool();
+            NUnit.Framework.Assert.IsNotNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, 0));
+            NUnit.Framework.Assert.IsNotNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, 3));
+            NUnit.Framework.Assert.IsNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, 15));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CompareVisuallyWithFuzzAndIgnoredAreasTest() {
+            String outPdf = sourceFolder + "fuzzAndIgnoredAreas.pdf";
+            String cmpPdf = sourceFolder + "cmp_fuzzAndIgnoredAreas.pdf";
+            String outPath = destinationFolder + "compareVisuallyWithFuzzValueTest/";
+            IDictionary<int, IList<Rectangle>> ignoredAreas = new Dictionary<int, IList<Rectangle>>();
+            ignoredAreas.Put(1, JavaUtil.ArraysAsList(new Rectangle(300, 0, 295, 842)));
+            CompareTool compareTool = new CompareTool();
+            NUnit.Framework.Assert.IsNotNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, 0));
+            NUnit.Framework.Assert.IsNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, 0.8));
+            NUnit.Framework.Assert.IsNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, null, ignoredAreas, 0.4
+            ));
         }
     }
 }
