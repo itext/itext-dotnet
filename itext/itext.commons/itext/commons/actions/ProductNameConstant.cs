@@ -43,13 +43,17 @@ namespace iText.Commons.Actions {
         public const String PDF_OCR_TESSERACT4 = "pdfOcr-tesseract4";
 
         /// <summary>pdfocr-onnxtr constant.</summary>
+        [System.ObsoleteAttribute(@"in favour of PDF_OCR_ONNX")]
         public const String PDF_OCR_ONNXTR = "pdfOcr-onnxtr";
+
+        /// <summary>pdfocr-onnx constant.</summary>
+        public const String PDF_OCR_ONNX = "pdfOcr-onnx";
 
         /// <summary>set of product names.</summary>
         public static readonly ICollection<String> PRODUCT_NAMES = JavaCollectionsUtil.UnmodifiableSet(new HashSet
             <String>(JavaUtil.ArraysAsList(iText.Commons.Actions.ProductNameConstant.ITEXT_CORE, iText.Commons.Actions.ProductNameConstant
             .PDF_HTML, iText.Commons.Actions.ProductNameConstant.PDF_SWEEP, iText.Commons.Actions.ProductNameConstant
-            .PDF_OCR_TESSERACT4, iText.Commons.Actions.ProductNameConstant.PDF_OCR_ONNXTR)));
+            .PDF_OCR_TESSERACT4, iText.Commons.Actions.ProductNameConstant.PDF_OCR_ONNX)));
 
         private ProductNameConstant() {
         }

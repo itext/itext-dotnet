@@ -46,7 +46,7 @@ namespace iText.Commons.Actions.Contexts {
             local.RegisterGenericContext(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_OCR_TESSERACT4), JavaCollectionsUtil
                 .Singleton(ProductNameConstant.PDF_OCR_TESSERACT4));
             local.RegisterGenericContext(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_OCR_ONNX), JavaCollectionsUtil
-                .Singleton(ProductNameConstant.PDF_OCR_ONNXTR));
+                .Singleton(ProductNameConstant.PDF_OCR_ONNX));
             INSTANCE = local;
         }
 
