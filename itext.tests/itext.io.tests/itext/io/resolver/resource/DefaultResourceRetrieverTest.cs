@@ -78,7 +78,6 @@ namespace iText.IO.Resolver.Resource {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("TODO DEVSIX-9797 Investigate 403 response in tests with requests to itextpdf.com")]
         public virtual void LoadWithRequestAndHeaders()
         {
             // Android-Conversion-Ignore-Test DEVSIX-6459 Some different random connect exceptions on Android
@@ -92,8 +91,6 @@ namespace iText.IO.Resolver.Resource {
             NUnit.Framework.Assert.IsNotNull(data);
             NUnit.Framework.Assert.IsTrue(data.Length > 0);
         }
-
-
 
         [NUnit.Framework.Test]
         public virtual void GetInputStreamByUrlWithHeadersTest() {
