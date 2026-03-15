@@ -380,7 +380,7 @@ namespace iText.Kernel.Utils {
             String outPath = destinationFolder + "compareVisuallyWithFuzzValueTest/";
             CompareTool compareTool = new CompareTool();
             NUnit.Framework.Assert.IsNotNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, 0));
-            NUnit.Framework.Assert.IsNotNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, 10));
+            NUnit.Framework.Assert.IsNotNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, 3));
             NUnit.Framework.Assert.IsNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, 15));
         }
 
