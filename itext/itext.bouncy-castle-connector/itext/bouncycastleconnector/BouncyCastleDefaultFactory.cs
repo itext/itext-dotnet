@@ -33,6 +33,7 @@ using iText.Commons.Bouncycastle.Asn1.Esf;
 using iText.Commons.Bouncycastle.Asn1.Ess;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.Pkcs;
+using iText.Commons.Bouncycastle.Asn1.Pkix;
 using iText.Commons.Bouncycastle.Asn1.Tsp;
 using iText.Commons.Bouncycastle.Asn1.Util;
 using iText.Commons.Bouncycastle.Asn1.X500;
@@ -402,6 +403,10 @@ namespace iText.Bouncycastleconnector {
         }
 
         public IGeneralName CreateGeneralName() {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
+
+        public IGeneralName CreateGeneralName(IAsn1Encodable encodable) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
@@ -776,6 +781,14 @@ namespace iText.Bouncycastleconnector {
         }
 
         public List<IQCStatement> ParseQcStatement(byte[] qcStatementsExtensionValue) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
+
+        public IPKIXConstraintValidator CreateNameConstraintValidator() {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
+
+        public INameConstraints CreateNameConstraints(IAsn1Object primitive) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
     }

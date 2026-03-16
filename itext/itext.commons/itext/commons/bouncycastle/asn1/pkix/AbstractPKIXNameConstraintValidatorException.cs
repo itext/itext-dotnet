@@ -21,20 +21,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Commons.Bouncycastle.Asn1;
 
-namespace iText.Commons.Bouncycastle.Asn1.X500 {
+namespace iText.Commons.Bouncycastle.Asn1.Pkix {
     /// <summary>
-    /// This interface represents the wrapper for X500Name that provides the ability
+    /// This abstract class represents the wrapper for PKIXNameConstraintValidatorException that provides the ability
     /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
-    public interface IX500Name : IAsn1Encodable {
-        /// <summary>Gets the RFC2253 name.</summary>
-        /// <returns>the RFC2253 name</returns>
-        String GetName();
-
-        /// <summary>Gets byte array representation of a wrapped X500Name.</summary>
-        /// <returns>byte array representation of a wrapped X500Name</returns>
-        byte[] GetEncoded();
+    public abstract class AbstractPKIXNameConstraintValidatorException : Exception {
     }
 }

@@ -37,6 +37,10 @@ namespace iText.Signatures.Validation {
     /// <remarks>
     /// A builder class to construct all necessary parts of a validation chain.
     /// The builder can be reused to create multiple instances of a validator.
+    /// <para />
+    /// Same instance of
+    /// <see cref="ValidatorChainBuilder"/>
+    /// shall not be used in multithreaded environment.
     /// </remarks>
     public class ValidatorChainBuilder {
         private SignatureValidationProperties properties = new SignatureValidationProperties();

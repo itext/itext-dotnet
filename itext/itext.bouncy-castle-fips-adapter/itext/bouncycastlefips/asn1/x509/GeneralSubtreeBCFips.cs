@@ -20,58 +20,36 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-
-using iText.Commons.Bouncycastle.Asn1.X500;
 using Org.BouncyCastle.Asn1.X509;
+using iText.Bouncycastlefips.Asn1;
+using iText.Commons.Bouncycastle.Asn1.X509;
 
-namespace iText.Bouncycastle.Asn1.X509 {
+namespace iText.Bouncycastlefips.Asn1.X509 {
     /// <summary>
     /// Wrapper class for
-    /// <see cref="Org.BouncyCastle.Asn1.X509.X509Name"/>.
+    /// <see cref="Org.BouncyCastle.Asn1.X509.GeneralSubtree"/>.
     /// </summary>
-    public class X509NameBC : Asn1EncodableBC, IX500Name {
+    public class GeneralSubtreeBCFips : Asn1EncodableBCFips, IGeneralSubtree {
         /// <summary>
         /// Creates new wrapper instance for
-        /// <see cref="Org.BouncyCastle.Asn1.X509.X509Name"/>.
+        /// <see cref="Org.BouncyCastle.Asn1.X509.GeneralSubtree"/>.
         /// </summary>
-        /// <param name="x500Name">
+        /// <param name="subtree">
         /// 
-        /// <see cref="Org.BouncyCastle.Asn1.X509.X509Name"/>
+        /// <see cref="Org.BouncyCastle.Asn1.X509.GeneralSubtree"/>
         /// to be wrapped
         /// </param>
-        public X509NameBC(X509Name x500Name)
-            : base(x500Name) {
+        public GeneralSubtreeBCFips(GeneralSubtree subtree)
+            : base(subtree) {
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped
-        /// <see cref="Org.BouncyCastle.Asn1.X509.X509Name"/>.
+        /// <see cref="Org.BouncyCastle.Asn1.X509.GeneralSubtree"/>
         /// </returns>
-        public virtual X509Name GetX509Name() {
-            return (X509Name)GetEncodable();
-        }
-
-        public string GetName() {
-            return GetX509Name().ToString();
-        }
-
-        public byte[] GetEncoded() {
-            return GetX509Name().GetEncoded();
-        }
-
-        public override bool Equals(object o)
-        {
-            if (this == o)
-            {
-                return true;
-            }
-            if (o == null || !this.GetType().IsAssignableFrom(o.GetType()))
-            {
-                return false;
-            }
-            X509NameBC that = (X509NameBC)o;
-            return GetX509Name().Equivalent(that.GetX509Name());
+        public virtual GeneralSubtree GetGeneralSubtree() {
+            return (GeneralSubtree)GetEncodable();
         }
     }
 }

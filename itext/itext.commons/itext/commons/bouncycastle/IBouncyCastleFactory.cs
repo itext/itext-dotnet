@@ -31,6 +31,7 @@ using iText.Commons.Bouncycastle.Asn1.Esf;
 using iText.Commons.Bouncycastle.Asn1.Ess;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.Pkcs;
+using iText.Commons.Bouncycastle.Asn1.Pkix;
 using iText.Commons.Bouncycastle.Asn1.Tsp;
 using iText.Commons.Bouncycastle.Asn1.Util;
 using iText.Commons.Bouncycastle.Asn1.X500;
@@ -795,6 +796,13 @@ namespace iText.Commons.Bouncycastle {
         /// <summary>Create general name wrapper without parameters.</summary>
         /// <returns>created general name wrapper</returns>
         IGeneralName CreateGeneralName();
+        
+        /// <summary>
+        /// Creates General Name wrapper from the provided ASN1 Encodable wrapper.
+        /// </summary>
+        /// <param name="encodable">ASN1 Encodable wrapper</param>
+        /// <returns>General Name wrapper</returns>
+        IGeneralName CreateGeneralName(IAsn1Encodable encodable);
 
         /// <summary>Create other hash alg and value wrapper from algorithm identifier wrapper and ASN1 Octet string wrapper.
         ///     </summary>
@@ -1758,5 +1766,18 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="qcStatementsExtensionValue">certificate QC Statements Extension value as byte array</param>
         /// <returns>list of IQCStatement</returns>
         List<IQCStatement> ParseQcStatement(byte[] qcStatementsExtensionValue);
+
+        /// <summary>
+        /// Creates name constraint validator wrapper.
+        /// </summary>
+        /// <returns>name constraint validator wrapper</returns>
+        IPKIXConstraintValidator CreateNameConstraintValidator();
+
+        /// <summary>
+        /// Creates name constraints wrapper out of ASN1 Object wrapper.
+        /// </summary>
+        /// <param name="primitive">ASN1 Object wrapper from which name constraints wrapper is created</param>
+        /// <returns>name constraints wrapper</returns>
+        INameConstraints CreateNameConstraints(IAsn1Object primitive);
     }
 }

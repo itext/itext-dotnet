@@ -57,6 +57,10 @@ namespace iText.Bouncycastlefips.Asn1.X500 {
         {
             return GetX500Name().ToString();
         }
+        
+        public byte[] GetEncoded() {
+            return GetX500Name().GetEncoded();
+        }
 
         public override bool Equals(object o)
         {

@@ -55,6 +55,7 @@ using iText.Bouncycastle.Crypto.Modes;
 using iText.Bouncycastle.Math;
 using iText.Bouncycastle.Openssl;
 using iText.Bouncycastle.Operator;
+using iText.Bouncycastle.Pkix;
 using iText.Bouncycastle.Security;
 using iText.Bouncycastle.Tsp;
 using iText.Bouncycastle.X509;
@@ -65,6 +66,7 @@ using iText.Commons.Bouncycastle.Asn1.Esf;
 using iText.Commons.Bouncycastle.Asn1.Ess;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.Pkcs;
+using iText.Commons.Bouncycastle.Asn1.Pkix;
 using iText.Commons.Bouncycastle.Asn1.Tsp;
 using iText.Commons.Bouncycastle.Asn1.Util;
 using iText.Commons.Bouncycastle.Asn1.X500;
@@ -92,8 +94,10 @@ using Org.BouncyCastle.Crypto.Modes;
 using Org.BouncyCastle.Crypto.Operators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.OpenSsl;
+using Org.BouncyCastle.Pkix;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Security.Certificates;
+using CertStatus = Org.BouncyCastle.Asn1.Ocsp.CertStatus;
 using ContentInfo = Org.BouncyCastle.Asn1.Cms.ContentInfo;
 using ICipher = iText.Commons.Bouncycastle.Crypto.ICipher;
 using IDigest = iText.Commons.Bouncycastle.Crypto.IDigest;
@@ -694,6 +698,11 @@ namespace iText.Bouncycastle {
         /// <summary><inheritDoc/></summary>
         public virtual IGeneralName CreateGeneralName() {
             return GeneralNameBC.GetInstance();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IGeneralName CreateGeneralName(IAsn1Encodable encodable) {
+            return new GeneralNameBC(GeneralName.GetInstance(((Asn1EncodableBC) encodable).GetEncodable()));
         }
 
         /// <summary><inheritDoc/></summary>
@@ -1306,6 +1315,16 @@ namespace iText.Bouncycastle {
             }
 
             return qcStatements;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IPKIXConstraintValidator CreateNameConstraintValidator() {
+            return new PKIXNameConstraintValidatorBC(new PkixNameConstraintValidator());
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public INameConstraints CreateNameConstraints(IAsn1Object primitive) {
+            return new NameConstraintsBC(NameConstraints.GetInstance(((Asn1ObjectBC) primitive).GetPrimitive()));
         }
 
         //\cond DO_NOT_DOCUMENT
