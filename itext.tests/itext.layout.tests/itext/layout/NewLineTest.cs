@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Text;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -75,15 +76,39 @@ namespace iText.Layout {
             Test("\r\n\r\n", "rnrn.pdf");
         }
 
+        [NUnit.Framework.Test]
+        public virtual void DotAfterNTest() {
+            Test("\n", "0123", ".com", "ndot.pdf");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DotAfterRNTest() {
+            Test("\r\n", "0123", ".com", "rndot.pdf");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DotAfterNRTest() {
+            Test("\n\r", "0123", ".com", "nrdot.pdf");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DotAfterRTest() {
+            Test("\r", "0123", ".com", "rdot.pdf");
+        }
+
         private void Test(String newlineCharacters, String fileName) {
+            Test(newlineCharacters, "This line is before.", "This line is after.", fileName);
+        }
+
+        private void Test(String newlineCharacters, String pre, String post, String fileName) {
             String outFileName = destinationFolder + fileName;
             String cmpFileName = sourceFolder + "cmp_" + fileName;
             String diffPrefix = "diff_" + fileName + "_";
             PdfDocument pdf = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName), new WriterProperties
                 ().SetCompressionLevel(0)));
             Document document = new Document(pdf);
-            Paragraph paragraph = new Paragraph().Add("This line is before." + newlineCharacters + "This line is after."
-                );
+            Paragraph paragraph = new Paragraph().Add(new StringBuilder(pre).Append(newlineCharacters).Append(post).ToString
+                ());
             document.Add(paragraph);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
