@@ -235,10 +235,10 @@ namespace iText.Kernel.Contrast {
                         continue;
                     }
                     // Only check compliance levels that are enabled
-                    bool isCompliantAAA = !checkWcagAAA || WCagChecker.IsTextWcagAAACompliant(textContrastInformation.GetFontSize
-                        (), overlappingArea.GetContrastRatio());
-                    bool isCompliantAA = isCompliantAAA && (!checkWcagAA || WCagChecker.IsTextWcagAACompliant(textContrastInformation
-                        .GetFontSize(), overlappingArea.GetContrastRatio()));
+                    bool isCompliantAAA = WCagChecker.IsTextWcagAAACompliant(textContrastInformation.GetFontSize(), overlappingArea
+                        .GetContrastRatio());
+                    bool isCompliantAA = WCagChecker.IsTextWcagAACompliant(textContrastInformation.GetFontSize(), overlappingArea
+                        .GetContrastRatio());
                     // Report only if at least one enabled check fails
                     if (!isCompliantAA || !isCompliantAAA) {
                         String message = GenerateMessage(isCompliantAAA, isCompliantAA, contrastResult, overlappingArea.GetContrastRatio

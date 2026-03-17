@@ -128,15 +128,15 @@ namespace iText.Kernel.Contrast {
         [NUnit.Framework.Test]
         public virtual void TestValidateWithNonPdfPageContext() {
             ColorContrastChecker checker = new ColorContrastChecker(false, false);
-            IValidationContext context = new _IValidationContext_142();
+            IValidationContext context = new _IValidationContext_143();
             NUnit.Framework.Assert.DoesNotThrow(() => {
                 checker.Validate(context);
             }
             );
         }
 
-        private sealed class _IValidationContext_142 : IValidationContext {
-            public _IValidationContext_142() {
+        private sealed class _IValidationContext_143 : IValidationContext {
+            public _IValidationContext_143() {
             }
 
             public ValidationType GetType() {
@@ -440,8 +440,30 @@ namespace iText.Kernel.Contrast {
             ColorContrastChecker checker = new ColorContrastChecker(false, true);
             PdfPageValidationContext context = new PdfPageValidationContext(page);
             // Should throw exception for low contrast with small font
-            NUnit.Framework.Assert.Catch(typeof(PdfException), () => checker.Validate(context));
-            pdfDoc.Close();
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => checker.Validate(context));
+            NUnit.Framework.Assert.IsTrue(e.Message.Contains("It is not WCAG AA compliant. It is not WCAG AAA compliant. "
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TestValidateWithSmallFontAndAAContrastPassAAAFails() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
+            PdfPage page = pdfDoc.AddNewPage();
+            // Small font with insufficient contrast
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.BeginText();
+            canvas.SetColor(new DeviceRgb(160, 90, 90), true);
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(), 8);
+            // Small font
+            canvas.MoveText(100, 100);
+            canvas.ShowText("Test");
+            canvas.EndText();
+            ColorContrastChecker checker = new ColorContrastChecker(false, true);
+            PdfPageValidationContext context = new PdfPageValidationContext(page);
+            // Should throw exception for low contrast with small font
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => checker.Validate(context));
+            NUnit.Framework.Assert.IsTrue(e.Message.Contains(" It is not WCAG AAA compliant. "));
+            NUnit.Framework.Assert.IsFalse(e.Message.Contains(" It is not WCAG AA compliant. "));
         }
 
         [NUnit.Framework.Test]
@@ -501,7 +523,6 @@ namespace iText.Kernel.Contrast {
             ColorContrastChecker checker = new ColorContrastChecker(true, true);
             PdfPageValidationContext context = new PdfPageValidationContext(page);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => checker.Validate(context));
-            System.Console.Out.WriteLine(e.Message);
             NUnit.Framework.Assert.IsTrue(e.Message.Contains("parent text: 'Test'"));
         }
 
@@ -550,7 +571,6 @@ namespace iText.Kernel.Contrast {
             canvas.MoveText(100, 80);
             canvas.ShowText("Test");
             canvas.EndText();
-            PdfPageValidationContext context = new PdfPageValidationContext(page);
             Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDoc.Close());
             NUnit.Framework.Assert.IsTrue(exception.Message.Contains("WCAG AAA compliant"));
             NUnit.Framework.Assert.IsFalse(exception.Message.Contains("WCAG AA compliant"));
