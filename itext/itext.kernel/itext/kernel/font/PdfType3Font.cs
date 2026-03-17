@@ -358,8 +358,7 @@ namespace iText.Kernel.Font {
                     widths[i] = 0;
                 }
                 else {
-                    int uni = GetFontEncoding().GetUnicode(k);
-                    Glyph glyph = uni > -1 ? GetGlyph(uni) : GetFontProgram().GetGlyphByCode(k);
+                    Glyph glyph = GetFontProgram().GetGlyphByCode(k);
                     widths[i] = glyph != null ? glyph.GetWidth() : 0;
                 }
             }
@@ -467,13 +466,7 @@ namespace iText.Kernel.Font {
             }
             PdfDictionary charProcs = new PdfDictionary();
             for (int i = 0; i <= PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE; i++) {
-                Type3Glyph glyph = null;
-                if (GetFontEncoding().CanDecode(i)) {
-                    glyph = GetType3Glyph(GetFontEncoding().GetUnicode(i));
-                }
-                if (glyph == null) {
-                    glyph = ((Type3Font)GetFontProgram()).GetType3GlyphByCode(i);
-                }
+                Type3Glyph glyph = ((Type3Font)GetFontProgram()).GetType3GlyphByCode(i);
                 if (glyph != null) {
                     charProcs.Put(new PdfName(GetFontEncoding().GetDifference(i)), glyph.GetContentStream());
                     glyph.GetContentStream().Flush();

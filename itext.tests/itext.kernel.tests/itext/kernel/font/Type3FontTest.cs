@@ -57,7 +57,7 @@ namespace iText.Kernel.Font {
             Type3Font font = new Type3Font(false);
             font.AddGlyph(1, 1, 600, null, null);
             font.AddGlyph(2, 1, 600, null, null);
-            NUnit.Framework.Assert.AreEqual(1, font.GetNumberOfGlyphs());
+            NUnit.Framework.Assert.AreEqual(2, font.GetNumberOfGlyphs());
             NUnit.Framework.Assert.AreEqual(2, font.GetGlyph(1).GetCode());
         }
 

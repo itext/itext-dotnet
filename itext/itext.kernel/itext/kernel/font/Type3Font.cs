@@ -34,11 +34,7 @@ namespace iText.Kernel.Font {
     /// Note, an instance of Type3Font can not be reused for multiple pdf documents.
     /// </remarks>
     public class Type3Font : FontProgram {
-        private readonly IDictionary<int, Type3Glyph> type3Glyphs = new Dictionary<int, Type3Glyph>();
-
-        /// <summary>Stores glyphs without associated unicode.</summary>
-        private readonly IDictionary<int, Type3Glyph> type3GlyphsWithoutUnicode = new Dictionary<int, Type3Glyph>(
-            );
+        private readonly IDictionary<int, Type3Glyph> codeToType3Glyphs = new Dictionary<int, Type3Glyph>();
 
         private bool colorized = false;
 
@@ -65,7 +61,8 @@ namespace iText.Kernel.Font {
         /// if this font does not contain glyph for the unicode
         /// </returns>
         public virtual Type3Glyph GetType3Glyph(int unicode) {
-            return type3Glyphs.Get(unicode);
+            Glyph glyph = unicodeToGlyph.Get(unicode);
+            return glyph == null ? null : codeToType3Glyphs.Get(glyph.GetCode());
         }
 
         /// <summary>Returns a glyph by its code.</summary>
@@ -79,11 +76,7 @@ namespace iText.Kernel.Font {
         /// if this font does not contain glyph for the code
         /// </returns>
         public virtual Type3Glyph GetType3GlyphByCode(int code) {
-            Type3Glyph glyph = type3GlyphsWithoutUnicode.Get(code);
-            if (glyph == null && codeToGlyph.Get(code) != null) {
-                glyph = type3Glyphs.Get(codeToGlyph.Get(code).GetUnicode());
-            }
-            return glyph;
+            return codeToType3Glyphs.Get(code);
         }
 
         public override int GetPdfFontFlags() {
@@ -105,9 +98,7 @@ namespace iText.Kernel.Font {
         /// <summary>Returns number of glyphs for this font.</summary>
         /// <remarks>
         /// Returns number of glyphs for this font.
-        /// Its also count glyphs without unicode.
-        /// See
-        /// <see cref="type3GlyphsWithoutUnicode"/>.
+        /// Counts glyphs independent on whether the glyph has unicode mapping or not.
         /// </remarks>
         /// <returns>
         /// 
@@ -115,7 +106,7 @@ namespace iText.Kernel.Font {
         /// number off all glyphs
         /// </returns>
         public virtual int GetNumberOfGlyphs() {
-            return type3Glyphs.Count + type3GlyphsWithoutUnicode.Count;
+            return codeToType3Glyphs.Count;
         }
 
         /// <summary>Sets the PostScript name of the font.</summary>
@@ -200,12 +191,9 @@ namespace iText.Kernel.Font {
             }
             Glyph glyph = new Glyph(code, width, unicode, bbox);
             codeToGlyph.Put(code, glyph);
-            if (unicode < 0) {
-                type3GlyphsWithoutUnicode.Put(code, type3Glyph);
-            }
-            else {
+            codeToType3Glyphs.Put(code, type3Glyph);
+            if (unicode >= 0) {
                 unicodeToGlyph.Put(unicode, glyph);
-                type3Glyphs.Put(unicode, type3Glyph);
             }
             RecalculateAverageWidth();
         }
@@ -216,13 +204,10 @@ namespace iText.Kernel.Font {
             if (removed == null) {
                 return;
             }
+            codeToType3Glyphs.JRemove(glyphCode);
             int unicode = removed.GetUnicode();
-            if (unicode < 0) {
-                type3GlyphsWithoutUnicode.JRemove(glyphCode);
-            }
-            else {
+            if (unicode >= 0) {
                 unicodeToGlyph.JRemove(unicode);
-                type3Glyphs.JRemove(unicode);
             }
         }
 

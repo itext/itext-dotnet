@@ -1242,9 +1242,10 @@ namespace iText.Pdfa.Checker {
 
         private void CheckType3FontGlyphs(PdfType3Font font, PdfStream contentStream) {
             for (int i = 0; i <= PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE; ++i) {
-                FontEncoding fontEncoding = font.GetFontEncoding();
-                if (fontEncoding.CanDecode(i)) {
-                    Type3Glyph type3Glyph = font.GetType3Glyph(fontEncoding.GetUnicode(i));
+                FontProgram fontProgram = font.GetFontProgram();
+                if (fontProgram is Type3Font) {
+                    Type3Font type3Font = (Type3Font)fontProgram;
+                    Type3Glyph type3Glyph = type3Font.GetType3GlyphByCode(i);
                     if (type3Glyph != null) {
                         CheckFormXObject(type3Glyph.GetContentStream(), contentStream);
                     }
