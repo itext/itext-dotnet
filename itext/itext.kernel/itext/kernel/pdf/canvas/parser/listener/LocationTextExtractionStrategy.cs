@@ -45,8 +45,9 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
 
         private TextRenderInfo lastTextRenderInfo;
 
-        private string elementSeparator = "";
-        private string newLine = "\n";
+        private String outputChunkSeparator = " ";
+
+        private String outputNewline = "\n";
 
         /// <summary>Creates a new text extraction renderer.</summary>
         public LocationTextExtractionStrategy()
@@ -61,16 +62,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         /// <param name="strat">the custom strategy</param>
         public LocationTextExtractionStrategy(LocationTextExtractionStrategy.ITextChunkLocationStrategy strat) {
             tclStrat = strat;
-        }
-
-        /// <summary>
-        /// Sets the string values used to separate elements and lines when formatting output.
-        /// </summary>
-        /// <param name="elementSeparator">The string to use as a separator between elements. Cannot be null.</param>
-        /// <param name="newLine">The string to use to represent a new line. Cannot be null.</param>
-        public void SetSeparators(string elementSeparator, string newLine) {
-            this.elementSeparator = elementSeparator; 
-            this.newLine = newLine;
         }
 
         /// <summary>
@@ -105,6 +96,30 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         public virtual iText.Kernel.Pdf.Canvas.Parser.Listener.LocationTextExtractionStrategy SetRightToLeftRunDirection
             (bool rightToLeftRunDirection) {
             this.rightToLeftRunDirection = rightToLeftRunDirection;
+            return this;
+        }
+
+        /// <summary>Sets the string value used to separate chunks when formatting output.</summary>
+        /// <param name="outputChunkSeparator">
+        /// the string that will be used as a separator between chunks. Must not be
+        /// <see langword="null"/>
+        /// </param>
+        /// <returns>this object</returns>
+        public virtual iText.Kernel.Pdf.Canvas.Parser.Listener.LocationTextExtractionStrategy SetOutputChunkSeparator
+            (String outputChunkSeparator) {
+            this.outputChunkSeparator = outputChunkSeparator;
+            return this;
+        }
+
+        /// <summary>Sets the string value used to separate lines when formatting output.</summary>
+        /// <param name="outputNewline">
+        /// the string that will be used to represent a new line. Must not be
+        /// <see langword="null"/>
+        /// </param>
+        /// <returns>this object</returns>
+        public virtual iText.Kernel.Pdf.Canvas.Parser.Listener.LocationTextExtractionStrategy SetOutputNewline(String
+             outputNewline) {
+            this.outputNewline = outputNewline;
             return this;
         }
 
@@ -179,12 +194,12 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                         // we only insert a blank space if the trailing character of the previous string wasn't a space, and the leading character of the current string isn't a space
                         if (IsChunkAtWordBoundary(chunk, lastChunk) && !StartsWithSpace(chunk.text) && !EndsWithSpace(lastChunk.text
                             )) {
-                            sb.Append(elementSeparator);
+                            sb.Append(outputChunkSeparator);
                         }
                         sb.Append(chunk.text);
                     }
                     else {
-                        sb.Append(newLine);
+                        sb.Append(outputNewline);
                         sb.Append(chunk.text);
                     }
                 }
