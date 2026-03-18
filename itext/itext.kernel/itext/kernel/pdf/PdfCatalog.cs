@@ -795,9 +795,15 @@ namespace iText.Kernel.Pdf {
             }
             else {
                 if (dest.IsString() || dest.IsName()) {
+                    PdfString srcDestName;
+                    if (dest.IsName()) {
+                        srcDestName = new PdfString(((PdfName)dest).GetValue());
+                    }
+                    else {
+                        srcDestName = new PdfString(((PdfString)dest).GetValueBytes());
+                    }
                     PdfNameTree destsTree = GetNameTree(PdfName.Dests);
                     IDictionary<PdfString, PdfObject> dests = destsTree.GetNames();
-                    PdfString srcDestName = dest.IsString() ? (PdfString)dest : new PdfString(((PdfName)dest).GetValue());
                     PdfArray srcDestArray = (PdfArray)dests.Get(srcDestName);
                     if (srcDestArray != null) {
                         PdfObject pageObject = srcDestArray.Get(0);

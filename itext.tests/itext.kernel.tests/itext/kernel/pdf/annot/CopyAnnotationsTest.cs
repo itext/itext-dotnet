@@ -195,6 +195,20 @@ namespace iText.Kernel.Pdf.Annot {
             NUnit.Framework.Assert.IsTrue(annotations.IsEmpty(), "Annotation is copied");
         }
 
+        [NUnit.Framework.Test]
+        public virtual void NamedIndirectDestTest() {
+            String outFile = DESTINATION_FOLDER + "namedIndirectDest.pdf";
+            String inFile = SOURCE_FOLDER + "namedIndirectDest.pdf";
+            using (PdfDocument @out = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile))) {
+                using (PdfDocument input = new PdfDocument(new PdfReader(inFile))) {
+                    input.CopyPagesTo(1, 1, @out);
+                }
+            }
+            IList<PdfAnnotation> annotations = GetAnnotationsFromPdf(outFile, 1);
+            NUnit.Framework.Assert.IsFalse(annotations.IsEmpty());
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, inFile, DESTINATION_FOLDER));
+        }
+
         private IList<PdfAnnotation> GetAnnotationsFromPdf(String outFilePath, int pageNumber) {
             IList<PdfAnnotation> annotations;
             using (PdfDocument result = new PdfDocument(CompareTool.CreateOutputReader(outFilePath))) {
