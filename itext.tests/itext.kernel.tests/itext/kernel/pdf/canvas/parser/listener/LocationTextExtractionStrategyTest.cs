@@ -23,10 +23,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
+using iText.Test;
 
 namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
     [NUnit.Framework.Category("IntegrationTest")]
-    public class LocationTextExtractionStrategyTest {
+    public class LocationTextExtractionStrategyTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/canvas/parser/listener" + "/LocationTextExtractionStrategyTest/";
 
