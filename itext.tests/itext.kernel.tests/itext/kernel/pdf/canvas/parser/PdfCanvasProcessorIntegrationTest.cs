@@ -256,7 +256,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             pdfDoc.Close();
             PathRenderInfo renderInfo = listener.GetEncounteredPath();
             PdfColorSpace colorSpace = renderInfo.GetGraphicsState().GetFillColor().GetColorSpace();
-            NUnit.Framework.Assert.AreEqual("Pattern", colorSpace.GetName().GetValue());
+            NUnit.Framework.Assert.AreEqual("Pattern", colorSpace.GetColorspaceName().GetValue());
         }
 
         [NUnit.Framework.Test]
@@ -269,7 +269,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             pdfDoc.Close();
             PathRenderInfo renderInfo = listener.GetEncounteredPath();
             PdfColorSpace colorSpace = renderInfo.GetGraphicsState().GetFillColor().GetColorSpace();
-            NUnit.Framework.Assert.AreEqual("UncoloredTilingPattern", colorSpace.GetName().GetValue());
+            NUnit.Framework.Assert.AreEqual("UncoloredTilingPattern", colorSpace.GetColorspaceName().GetValue());
         }
 
         private class ColorParsingEventListener : IEventListener {

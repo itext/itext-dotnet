@@ -92,7 +92,7 @@ namespace iText.Kernel.Pdf.Xobject {
         public virtual byte[] GetProcessedImageData(byte[] intialBytes) {
             if (channels > 1 && colorDepth != 8 && colorDepth != 16) {
                 throw new iText.IO.Exceptions.IOException(KernelExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_COLORSPACE
-                    ).SetMessageParams(colorDepth, sourceColorSpace.GetName());
+                    ).SetMessageParams(colorDepth, sourceColorSpace.GetColorspaceName());
             }
             byte[] data = PdfReader.DecodeBytes(intialBytes, imageXObject.GetPdfObject());
             if (decodeArray != null && !IsNeutralDecodeArray(decodeArray)) {
@@ -219,13 +219,14 @@ namespace iText.Kernel.Pdf.Xobject {
                             if (properties.IsApplyTintTransformations()) {
                                 colorTransformations.Add(separationCs.GetTintTransformation());
                                 targetColorSpace = separationCs.GetBaseCs();
-                                if (targetColorSpace.GetName() != PdfName.DeviceRGB && targetColorSpace.GetName() != PdfName.CalRGB) {
+                                if (targetColorSpace.GetColorspaceName() != PdfName.DeviceRGB && targetColorSpace.GetColorspaceName() != PdfName
+                                    .CalRGB) {
                                     throw new NotSupportedException(KernelExceptionMessageConstant.GET_IMAGEBYTES_FOR_SEPARATION_COLOR_ONLY_SUPPORTS_RGB
                                         );
                                 }
                                 if (colorDepth < 8) {
                                     throw new iText.IO.Exceptions.IOException(KernelExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_SEPARATION_ALTERNATE_COLORSPACE
-                                        ).SetMessageParams(colorDepth, targetColorSpace.GetName());
+                                        ).SetMessageParams(colorDepth, targetColorSpace.GetColorspaceName());
                                 }
                             }
                             else {

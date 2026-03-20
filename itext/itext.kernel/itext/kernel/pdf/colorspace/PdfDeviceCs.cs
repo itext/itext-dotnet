@@ -42,7 +42,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             }
 
             /// <summary><inheritDoc/></summary>
-            public override PdfName GetName() {
+            public override PdfName GetColorspaceName() {
                 return PdfName.DeviceGray;
             }
         }
@@ -57,7 +57,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             }
 
             /// <summary><inheritDoc/></summary>
-            public override PdfName GetName() {
+            public override PdfName GetColorspaceName() {
                 return PdfName.DeviceRGB;
             }
         }
@@ -72,7 +72,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             }
 
             /// <summary><inheritDoc/></summary>
-            public override PdfName GetName() {
+            public override PdfName GetColorspaceName() {
                 return PdfName.DeviceCMYK;
             }
         }
