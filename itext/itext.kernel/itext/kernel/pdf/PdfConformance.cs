@@ -73,6 +73,9 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfConformance WELL_TAGGED_PDF_FOR_ACCESSIBILITY = new iText.Kernel.Pdf.PdfConformance
             (WellTaggedPdfConformance.FOR_ACCESSIBILITY);
 
+        public static readonly iText.Kernel.Pdf.PdfConformance WELL_TAGGED_PDF_FOR_REUSE = new iText.Kernel.Pdf.PdfConformance
+            (WellTaggedPdfConformance.FOR_REUSE);
+
         public static readonly iText.Kernel.Pdf.PdfConformance PDF_NONE_CONFORMANCE = new iText.Kernel.Pdf.PdfConformance
             ();
 
@@ -324,8 +327,15 @@ namespace iText.Kernel.Pdf {
             }
             catch (Exception) {
             }
-            if (wtpdfProperty != null && XMPConst.NS_WTPDF_ACCESSIBILITY_ID.Equals(wtpdfProperty.GetValue())) {
-                wellTaggedPdfConformance = WellTaggedPdfConformance.FOR_ACCESSIBILITY;
+            if (wtpdfProperty != null) {
+                if (XMPConst.NS_WTPDF_ACCESSIBILITY_ID.Equals(wtpdfProperty.GetValue())) {
+                    wellTaggedPdfConformance = WellTaggedPdfConformance.FOR_ACCESSIBILITY;
+                }
+                else {
+                    if (XMPConst.NS_WTPDF_REUSE_ID.Equals(wtpdfProperty.GetValue())) {
+                        wellTaggedPdfConformance = WellTaggedPdfConformance.FOR_REUSE;
+                    }
+                }
             }
             return new iText.Kernel.Pdf.PdfConformance(aLevel, uaLevel, wellTaggedPdfConformance);
         }
@@ -351,12 +361,18 @@ namespace iText.Kernel.Pdf {
                     xmpMeta.SetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.REV, 2024);
                 }
             }
-            if (conformance.GetWtpdfConformance() == WellTaggedPdfConformance.FOR_ACCESSIBILITY || conformance.GetUAConformance
-                () == PdfUAConformance.PDF_UA_2) {
-                if (xmpMeta.GetProperty(XMPConst.NS_DECLARATIONS, XMPConst.DECLARATIONS + "/[1]/" + XMPConst.CONFORMS_TO) 
-                    == null) {
-                    XMPMeta wtpdfMeta = XMPMetaFactory.ParseFromString(WELL_TAGGED_SCHEMA);
+            if (xmpMeta.GetProperty(XMPConst.NS_DECLARATIONS, XMPConst.DECLARATIONS + "/[1]/" + XMPConst.CONFORMS_TO) 
+                == null) {
+                if (conformance.GetWtpdfConformance() == WellTaggedPdfConformance.FOR_ACCESSIBILITY || conformance.GetUAConformance
+                    () == PdfUAConformance.PDF_UA_2) {
+                    XMPMeta wtpdfMeta = XMPMetaFactory.ParseFromString(WELL_TAGGED_FOR_ACCESSIBILITY_SCHEMA);
                     XMPUtils.AppendProperties(wtpdfMeta, xmpMeta, true, false, true);
+                }
+                else {
+                    if (conformance.GetWtpdfConformance() == WellTaggedPdfConformance.FOR_REUSE) {
+                        XMPMeta wtpdfMeta = XMPMetaFactory.ParseFromString(WELL_TAGGED_FOR_REUSE_SCHEMA);
+                        XMPUtils.AppendProperties(wtpdfMeta, xmpMeta, true, false, true);
+                    }
                 }
             }
             if (conformance.IsPdfA()) {
@@ -458,9 +474,16 @@ namespace iText.Kernel.Pdf {
             return null;
         }
 
-        private const String WELL_TAGGED_SCHEMA = " <x:xmpmeta xmlns:x=\"adobe:ns:meta/\">\n" + "  <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n"
+        private const String WELL_TAGGED_FOR_ACCESSIBILITY_SCHEMA = " <x:xmpmeta xmlns:x=\"adobe:ns:meta/\">\n" + 
+            "  <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n" + "   <rdf:Description rdf:about=\"\" xmlns:pdfd=\"http://pdfa.org/declarations/\">\n"
+             + "    <pdfd:declarations>\n" + "     <rdf:Bag>\n" + "      <rdf:li rdf:parseType=\"Resource\">\n" + 
+            "       <pdfd:conformsTo>http://pdfa.org/declarations/wtpdf#accessibility1.0</pdfd:conformsTo>\n" + "      </rdf:li>\n"
+             + "     </rdf:Bag>\n" + "    </pdfd:declarations>\n" + "   </rdf:Description>\n" + "  </rdf:RDF>\n" +
+             " </x:xmpmeta>";
+
+        private const String WELL_TAGGED_FOR_REUSE_SCHEMA = " <x:xmpmeta xmlns:x=\"adobe:ns:meta/\">\n" + "  <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n"
              + "   <rdf:Description rdf:about=\"\" xmlns:pdfd=\"http://pdfa.org/declarations/\">\n" + "    <pdfd:declarations>\n"
-             + "     <rdf:Bag>\n" + "      <rdf:li rdf:parseType=\"Resource\">\n" + "       <pdfd:conformsTo>http://pdfa.org/declarations/wtpdf#accessibility1.0</pdfd:conformsTo>\n"
+             + "     <rdf:Bag>\n" + "      <rdf:li rdf:parseType=\"Resource\">\n" + "       <pdfd:conformsTo>http://pdfa.org/declarations/wtpdf#reuse1.0</pdfd:conformsTo>\n"
              + "      </rdf:li>\n" + "     </rdf:Bag>\n" + "    </pdfd:declarations>\n" + "   </rdf:Description>\n"
              + "  </rdf:RDF>\n" + " </x:xmpmeta>";
 

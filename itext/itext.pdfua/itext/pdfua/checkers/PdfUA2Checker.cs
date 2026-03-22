@@ -74,6 +74,14 @@ namespace iText.Pdfua.Checkers {
             this.context = new PdfUAValidationContext(this.pdfDocument);
         }
 
+        protected internal virtual PdfUAValidationContext GetUAValidationContext() {
+            return context;
+        }
+
+        protected internal virtual PdfDocument GetPdfDocument() {
+            return pdfDocument;
+        }
+
         public override void Validate(IValidationContext context) {
             switch (context.GetType()) {
                 case ValidationType.PDF_DOCUMENT: {
@@ -127,7 +135,7 @@ namespace iText.Pdfua.Checkers {
 
                 case ValidationType.ANNOTATION: {
                     PdfAnnotationContext annotationContext = (PdfAnnotationContext)context;
-                    PdfUA2AnnotationChecker.CheckAnnotation(annotationContext.GetAnnotation(), this.context);
+                    new PdfUA2AnnotationChecker().CheckAnnotation(annotationContext.GetAnnotation(), this.context);
                     break;
                 }
 
@@ -221,7 +229,7 @@ namespace iText.Pdfua.Checkers {
         }
 //\endcond
 
-        private void CheckPdfObject(PdfObject obj) {
+        protected internal virtual void CheckPdfObject(PdfObject obj) {
             switch (obj.GetObjectType()) {
                 case PdfObject.STRING: {
                     PdfUA2StringChecker.CheckPdfString((PdfString)obj);
@@ -265,7 +273,7 @@ namespace iText.Pdfua.Checkers {
         /// <see cref="iText.Kernel.Pdf.PdfCatalog"/>
         /// document catalog dictionary to check
         /// </param>
-        private void CheckCatalog(PdfCatalog catalog) {
+        protected internal virtual void CheckCatalog(PdfCatalog catalog) {
             CheckLang(catalog);
             CheckMetadata(catalog);
             CheckViewerPreferences(catalog);
@@ -280,12 +288,12 @@ namespace iText.Pdfua.Checkers {
         /// <see cref="iText.Kernel.Pdf.PdfCatalog"/>
         /// to check form fields present in the acroform
         /// </param>
-        private void CheckFormFieldsAndAnnotations(PdfCatalog catalog) {
+        protected internal virtual void CheckFormFieldsAndAnnotations(PdfCatalog catalog) {
             PdfUA2FormChecker formChecker = new PdfUA2FormChecker(context);
             formChecker.CheckFormFields(catalog.GetPdfObject().GetAsDictionary(PdfName.AcroForm));
             formChecker.CheckWidgetAnnotations(this.pdfDocument);
             PdfUA2LinkChecker.CheckLinkAnnotations(this.pdfDocument);
-            PdfUA2AnnotationChecker.CheckAnnotations(this.pdfDocument);
+            new PdfUA2AnnotationChecker().CheckAnnotations(this.pdfDocument);
         }
 
         /// <summary>Validates structure tree root dictionary against PDF/UA-2 standard.</summary>
@@ -301,7 +309,7 @@ namespace iText.Pdfua.Checkers {
         /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructTreeRoot"/>
         /// structure tree root dictionary to check
         /// </param>
-        private void CheckStructureTreeRoot(PdfStructTreeRoot structTreeRoot) {
+        protected internal virtual void CheckStructureTreeRoot(PdfStructTreeRoot structTreeRoot) {
             IList<PdfNamespace> namespaces = structTreeRoot.GetNamespaces();
             foreach (PdfNamespace @namespace in namespaces) {
                 PdfDictionary roleMap = @namespace.GetNamespaceRoleMap();
@@ -329,6 +337,25 @@ namespace iText.Pdfua.Checkers {
                     }
                 }
             }
+            CreateTagTreeIterator(structTreeRoot).Traverse();
+        }
+
+        /// <summary>
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.Tagutils.TagTreeIterator"/>
+        /// responsible for validation of tag tree elements.
+        /// </summary>
+        /// <param name="structTreeRoot">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructTreeRoot"/>
+        /// to be validated
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Tagutils.TagTreeIterator"/>
+        /// responsible for validation of tag tree elements
+        /// </returns>
+        protected internal virtual TagTreeIterator CreateTagTreeIterator(PdfStructTreeRoot structTreeRoot) {
             TagTreeIterator tagTreeIterator = new TagTreeIterator(structTreeRoot);
             tagTreeIterator.AddHandler(new GraphicsCheckUtil.GraphicsHandler(context));
             tagTreeIterator.AddHandler(new PdfUA2HeadingsChecker.PdfUA2HeadingHandler(context));
@@ -340,7 +367,7 @@ namespace iText.Pdfua.Checkers {
             tagTreeIterator.AddHandler(new PdfUA2TableOfContentsChecker.PdfUA2TableOfContentsHandler(context));
             tagTreeIterator.AddHandler(new PdfUA2FormulaChecker.PdfUA2FormulaTagHandler(context));
             tagTreeIterator.AddHandler(new PdfUA2LinkChecker.PdfUA2LinkAnnotationHandler(context, pdfDocument));
-            tagTreeIterator.Traverse();
+            return tagTreeIterator;
         }
     }
 }

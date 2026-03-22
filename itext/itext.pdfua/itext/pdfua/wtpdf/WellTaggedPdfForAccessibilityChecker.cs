@@ -28,14 +28,15 @@ using iText.Pdfua.Exceptions;
 
 namespace iText.Pdfua.Wtpdf {
     /// <summary>The class defines the requirements of the Well Tagged PDF standard.</summary>
-    public class WellTaggedPdfChecker : PdfUA2Checker {
+    public class WellTaggedPdfForAccessibilityChecker : PdfUA2Checker {
         /// <summary>
         /// Creates
-        /// <see cref="WellTaggedPdfChecker"/>
-        /// instance with PDF document which will be validated against WTPDF standard.
+        /// <see cref="WellTaggedPdfForAccessibilityChecker"/>
+        /// instance,
+        /// which will be validated against WTPDF For Accessibility standard.
         /// </summary>
         /// <param name="pdfDocument">the document to validate</param>
-        public WellTaggedPdfChecker(PdfDocument pdfDocument)
+        public WellTaggedPdfForAccessibilityChecker(PdfDocument pdfDocument)
             : base(pdfDocument) {
         }
 

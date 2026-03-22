@@ -29,6 +29,8 @@ namespace iText.Kernel.Pdf {
     /// </remarks>
     public enum WellTaggedPdfConformance {
         /// <summary>Well Tagged PDF Document conformance level 'for accessibility'.</summary>
-        FOR_ACCESSIBILITY
+        FOR_ACCESSIBILITY,
+        /// <summary>Well Tagged PDF Document conformance level 'for reuse'.</summary>
+        FOR_REUSE
     }
 }

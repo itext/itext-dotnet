@@ -38,7 +38,7 @@ using iText.Pdfua.Exceptions;
 
 namespace iText.Pdfua.Checkers.Utils.Ua2 {
     /// <summary>Class that provides methods for checking PDF/UA-2 compliance of annotations.</summary>
-    public sealed class PdfUA2AnnotationChecker {
+    public class PdfUA2AnnotationChecker {
         private static readonly ICollection<PdfName> markupAnnotationTypes = new HashSet<PdfName>(JavaUtil.ArraysAsList
             (PdfName.Text, PdfName.FreeText, PdfName.Line, PdfName.Square, PdfName.Circle, PdfName.Polygon, PdfName
             .PolyLine, PdfName.Highlight, PdfName.Underline, PdfName.Squiggly, PdfName.StrikeOut, PdfName.Caret, PdfName
@@ -48,7 +48,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
         /// Creates a new instance of the
         /// <see cref="PdfUA2AnnotationChecker"/>.
         /// </summary>
-        private PdfUA2AnnotationChecker() {
+        public PdfUA2AnnotationChecker() {
         }
 
         // Empty constructor.
@@ -58,7 +58,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to check annotations for
         /// </param>
-        public static void CheckAnnotations(PdfDocument pdfDocument) {
+        public virtual void CheckAnnotations(PdfDocument pdfDocument) {
             int amountOfPages = pdfDocument.GetNumberOfPages();
             for (int i = 1; i <= amountOfPages; ++i) {
                 PdfPage page = pdfDocument.GetPage(i);
@@ -90,7 +90,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
         /// <c>StructParent</c>
         /// value
         /// </param>
-        public static void CheckAnnotation(PdfDictionary annotation, PdfUAValidationContext context) {
+        public virtual void CheckAnnotation(PdfDictionary annotation, PdfUAValidationContext context) {
             PdfStructElem parent = null;
             if (annotation.GetAsNumber(PdfName.StructParent) != null) {
                 int structParentIndex = annotation.GetAsNumber(PdfName.StructParent).IntValue();
@@ -107,7 +107,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
         /// <summary>Checks PDF/UA-2 compliance of the annotation.</summary>
         /// <param name="annotation">the annotation dictionary to check</param>
         /// <param name="parent">the parent structure element</param>
-        internal static void CheckAnnotation(PdfDictionary annotation, PdfStructElem parent) {
+        internal virtual void CheckAnnotation(PdfDictionary annotation, PdfStructElem parent) {
             if (parent != null) {
                 PdfString alt = parent.GetAlt();
                 PdfString contents = annotation.GetAsString(PdfName.Contents);
@@ -135,13 +135,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
                         );
                 }
             }
-            if (PdfName.Ink.Equals(subtype) || PdfName.Screen.Equals(subtype) || PdfName._3D.Equals(subtype) || PdfName
-                .RichMedia.Equals(subtype)) {
-                PdfString contents = annotation.GetAsString(PdfName.Contents);
-                if (contents == null || String.IsNullOrEmpty(contents.GetValue())) {
-                    throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.ANNOT_CONTENTS_IS_NULL_OR_EMPTY);
-                }
-            }
+            CheckRequiredContentsEntry(subtype, annotation);
             if (PdfName.Popup.Equals(subtype) && parent != null) {
                 throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.POPUP_ANNOTATIONS_ARE_NOT_ALLOWED);
             }
@@ -165,6 +159,16 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             }
         }
 //\endcond
+
+        protected internal virtual void CheckRequiredContentsEntry(PdfName subtype, PdfDictionary annotation) {
+            if (PdfName.Ink.Equals(subtype) || PdfName.Screen.Equals(subtype) || PdfName._3D.Equals(subtype) || PdfName
+                .RichMedia.Equals(subtype)) {
+                PdfString contents = annotation.GetAsString(PdfName.Contents);
+                if (contents == null || String.IsNullOrEmpty(contents.GetValue())) {
+                    throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.ANNOT_CONTENTS_IS_NULL_OR_EMPTY);
+                }
+            }
+        }
 
         /// <summary>Checks the PDF/UA-2 8.9.2.3 Markup annotations requirements.</summary>
         /// <param name="annotation">the markup annotations</param>
@@ -227,6 +231,8 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
 
         /// <summary>Handler for checking annotation elements in the tag tree.</summary>
         public class PdfUA2AnnotationHandler : ContextAwareTagTreeIteratorHandler {
+            protected internal PdfUA2AnnotationChecker checker;
+
             /// <summary>
             /// Creates a new instance of the
             /// <see cref="PdfUA2AnnotationHandler"/>.
@@ -234,6 +240,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             /// <param name="context">the validation context</param>
             public PdfUA2AnnotationHandler(PdfUAValidationContext context)
                 : base(context) {
+                checker = new PdfUA2AnnotationChecker();
             }
 
             public override bool Accept(IStructureNode node) {
@@ -249,7 +256,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
                     return;
                 }
                 PdfStructElem parent = (PdfStructElem)elem.GetParent();
-                CheckAnnotation(annotObj, parent);
+                checker.CheckAnnotation(annotObj, parent);
             }
         }
     }

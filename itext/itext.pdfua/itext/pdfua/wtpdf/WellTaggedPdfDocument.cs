@@ -58,7 +58,7 @@ namespace iText.Pdfua.Wtpdf {
             this.pdfConformance = new PdfConformance(config.GetConformance());
             SetupWtpdfConfiguration(config);
             ValidationContainer validationContainer = new ValidationContainer();
-            IList<IValidationChecker> checkers = CreateCheckers();
+            IList<IValidationChecker> checkers = CreateCheckers(config.GetConformance());
             foreach (IValidationChecker checker in checkers) {
                 validationContainer.AddChecker(checker);
             }
@@ -89,7 +89,7 @@ namespace iText.Pdfua.Wtpdf {
             }
             SetupWtpdfConfiguration(config);
             ValidationContainer validationContainer = new ValidationContainer();
-            IList<IValidationChecker> checkers = CreateCheckers();
+            IList<IValidationChecker> checkers = CreateCheckers(config.GetConformance());
             foreach (IValidationChecker checker in checkers) {
                 validationContainer.AddChecker(checker);
             }
@@ -109,10 +109,17 @@ namespace iText.Pdfua.Wtpdf {
         /// If you want to enable/disable specific checks, you can override the implementation.
         /// </remarks>
         /// <returns>list of Well Tagged related checkers</returns>
-        protected internal virtual IList<IValidationChecker> CreateCheckers() {
+        protected internal virtual IList<IValidationChecker> CreateCheckers(WellTaggedPdfConformance? conformance) {
             IList<IValidationChecker> checkers = new List<IValidationChecker>();
             ColorContrastChecker contrastChecker = new ColorContrastChecker(false, false);
-            checkers.Add(new WellTaggedPdfChecker(this));
+            if (WellTaggedPdfConformance.FOR_REUSE == conformance) {
+                checkers.Add(new WellTaggedPdfForReuseChecker(this));
+            }
+            else {
+                if (WellTaggedPdfConformance.FOR_ACCESSIBILITY == conformance) {
+                    checkers.Add(new WellTaggedPdfForAccessibilityChecker(this));
+                }
+            }
             checkers.Add(new Pdf20Checker(this));
             checkers.Add(contrastChecker);
             return checkers;
@@ -138,10 +145,10 @@ namespace iText.Pdfua.Wtpdf {
             return writer;
         }
 
-        private static WellTaggedPdfChecker GetWtpdfChecker(IList<IValidationChecker> checkers) {
+        private static WellTaggedPdfForAccessibilityChecker GetWtpdfChecker(IList<IValidationChecker> checkers) {
             foreach (IValidationChecker checker in checkers) {
-                if (checker is WellTaggedPdfChecker) {
-                    return (WellTaggedPdfChecker)checker;
+                if (checker is WellTaggedPdfForAccessibilityChecker) {
+                    return (WellTaggedPdfForAccessibilityChecker)checker;
                 }
             }
             return null;

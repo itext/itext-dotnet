@@ -140,17 +140,25 @@ namespace iText.Kernel.Utils.Checkers {
 
         private static void CheckWellTaggedMetadata(XMPMeta metadata, PdfConformance conformance, Func<String, PdfException
             > exceptionSupplier) {
+            XMPProperty wtpdfProperty = null;
+            try {
+                wtpdfProperty = metadata.GetProperty(XMPConst.NS_DECLARATIONS, XMPConst.DECLARATIONS + "/[1]/" + XMPConst.
+                    CONFORMS_TO);
+            }
+            catch (Exception) {
+            }
             if (WellTaggedPdfConformance.FOR_ACCESSIBILITY == conformance.GetWtpdfConformance()) {
-                XMPProperty wtpdfProperty = null;
-                try {
-                    wtpdfProperty = metadata.GetProperty(XMPConst.NS_DECLARATIONS, XMPConst.DECLARATIONS + "/[1]/" + XMPConst.
-                        CONFORMS_TO);
-                }
-                catch (Exception) {
-                }
                 if (wtpdfProperty == null || !XMPConst.NS_WTPDF_ACCESSIBILITY_ID.Equals(wtpdfProperty.GetValue())) {
-                    throw exceptionSupplier.Invoke(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_WTPDF_METADATA
+                    throw exceptionSupplier.Invoke(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_WTPDF_ACCESSIBILITY_METADATA
                         );
+                }
+            }
+            else {
+                if (WellTaggedPdfConformance.FOR_REUSE == conformance.GetWtpdfConformance()) {
+                    if (wtpdfProperty == null || !XMPConst.NS_WTPDF_REUSE_ID.Equals(wtpdfProperty.GetValue())) {
+                        throw exceptionSupplier.Invoke(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_WTPDF_REUSE_METADATA
+                            );
+                    }
                 }
             }
         }

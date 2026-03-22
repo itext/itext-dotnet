@@ -157,7 +157,7 @@ namespace iText.Kernel.Validation {
                 catalog.Put(PdfName.Subtype, PdfName.XML);
                 Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfCheckersUtil.CheckMetadata(catalog
                     .GetPdfObject(), PdfConformance.WELL_TAGGED_PDF_FOR_ACCESSIBILITY, EXCEPTION_SUPPLIER));
-                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_WTPDF_METADATA
+                NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_WTPDF_ACCESSIBILITY_METADATA
                     , e.Message);
             }
         }
