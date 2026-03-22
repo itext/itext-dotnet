@@ -228,11 +228,13 @@ namespace iText.Signatures {
             }
             IList<IList<IX509Certificate>> allChains = new List<IList<IX509Certificate>>();
             // Get missing certificates using AIA Extensions
-            String url = CertificateUtil.GetIssuerCertURL(certificate);
-            if (processedUrls.Add(url)) {
-                ICollection<IX509Certificate> certificatesFromAIA = ProcessCertificatesFromAIA(url);
-                if (certificatesFromAIA != null) {
-                    AddKnownCertificates(certificatesFromAIA, CertificateOrigin.OTHER);
+            IList<String> urls = CertificateUtil.GetIssuerCertURLs(certificate);
+            foreach (String url in urls) {
+                if (processedUrls.Add(url)) {
+                    ICollection<IX509Certificate> certificatesFromAIA = ProcessCertificatesFromAIA(url);
+                    if (certificatesFromAIA != null) {
+                        AddKnownCertificates(certificatesFromAIA, CertificateOrigin.OTHER);
+                    }
                 }
             }
             ICollection<IX509Certificate> possibleIssuers = trustedCertificatesStore.GetKnownCertificates(certificate.
@@ -353,10 +355,12 @@ namespace iText.Signatures {
             // Nothing special for the indirect CRLs.
             // AIA Extension
             List<IX509Certificate[]> matches = new List<IX509Certificate[]>();
-            String url = CertificateUtil.GetIssuerCertURL(crl);
-            IList<IX509Certificate> certificatesFromAIA = (IList<IX509Certificate>)ProcessCertificatesFromAIA(url);
-            if (certificatesFromAIA != null) {
-                AddKnownCertificates(certificatesFromAIA, CertificateOrigin.OTHER);
+            IList<String> urls = CertificateUtil.GetIssuerCertURLs(crl);
+            foreach (String url in urls) {
+                IList<IX509Certificate> certificatesFromAIA = (IList<IX509Certificate>)ProcessCertificatesFromAIA(url);
+                if (certificatesFromAIA != null) {
+                    AddKnownCertificates(certificatesFromAIA, CertificateOrigin.OTHER);
+                }
             }
             // Retrieve Issuer from the certificate store
             ICollection<IX509Certificate> issuers = trustedCertificatesStore.GetKnownCertificates(((IX509Crl)crl).GetIssuerDN

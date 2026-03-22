@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using iText.Bouncycastleconnector;
@@ -30,12 +31,14 @@ using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
+using iText.Signatures.Logs;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Builder;
 using iText.Signatures.Testutils.Client;
 using iText.Signatures.Validation;
 using iText.Signatures.Validation.Mocks;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Signatures {
 //\cond DO_NOT_DOCUMENT
@@ -43,6 +46,9 @@ namespace iText.Signatures {
     internal class IssuingCertificateRetrieverTest : ExtendedITextTest {
         private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
+
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/IssuingCertificateRetrieverTest/";
 
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
@@ -153,6 +159,53 @@ namespace iText.Signatures {
                 (ocspResponse);
             NUnit.Framework.Assert.AreEqual(1, retrievers.Count);
             NUnit.Framework.Assert.IsTrue(retrievers.Contains(cert));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SignLogMessageConstant.UNABLE_TO_PARSE_AIA_CERT, Count = 3)]
+        public virtual void MultipleAiaExtensionsCertificateTest() {
+            IX509Certificate multipleAiaCert = (IX509Certificate)PemFileHelper.ReadFirstChain(SOURCE_FOLDER + "multiple_aia_cert.pem"
+                )[0];
+            int[] counter = new int[] { 0 };
+            IssuingCertificateRetriever issuingCertificateRetriever = new _IssuingCertificateRetriever_186(counter);
+            issuingCertificateRetriever.RetrieveIssuerCertificate(multipleAiaCert);
+            NUnit.Framework.Assert.AreEqual(3, counter[0]);
+        }
+
+        private sealed class _IssuingCertificateRetriever_186 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_186(int[] counter) {
+                this.counter = counter;
+            }
+
+            protected internal override Stream GetIssuerCertByURI(String uri) {
+                ++counter[0];
+                return null;
+            }
+
+            private readonly int[] counter;
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SignLogMessageConstant.UNABLE_TO_PARSE_AIA_CERT, Count = 3)]
+        public virtual void MultipleAiaExtensionsCrlTest() {
+            byte[] crlBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "multiple_aia.crl"));
+            int[] counter = new int[] { 0 };
+            IssuingCertificateRetriever issuingCertificateRetriever = new _IssuingCertificateRetriever_204(counter);
+            issuingCertificateRetriever.GetCrlIssuerCertificates(CertificateUtil.ParseCrlFromBytes(crlBytes));
+            NUnit.Framework.Assert.AreEqual(3, counter[0]);
+        }
+
+        private sealed class _IssuingCertificateRetriever_204 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_204(int[] counter) {
+                this.counter = counter;
+            }
+
+            protected internal override Stream GetIssuerCertByURI(String uri) {
+                ++counter[0];
+                return null;
+            }
+
+            private readonly int[] counter;
         }
     }
 //\endcond

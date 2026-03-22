@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Signatures.Testutils;
 using iText.Test;
@@ -31,6 +32,9 @@ namespace iText.Signatures {
     public class CertificateUtilTest : ExtendedITextTest {
         private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
+
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/CertificateUtilTest/";
 
         [NUnit.Framework.Test]
         public virtual void GetTSAURLAdobeExtensionTest() {
@@ -64,6 +68,21 @@ namespace iText.Signatures {
             IX509Certificate tsaCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "rootRsa.pem")[0];
             IList<IX509Crl> crls = CertificateUtil.GetCRLs(tsaCert);
             NUnit.Framework.Assert.IsTrue(crls.IsEmpty());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetCertificateIssuerMultipleIssuersTest() {
+            IX509Certificate multipleIssuersCert = (IX509Certificate)PemFileHelper.ReadFirstChain(SOURCE_FOLDER + "multiple_aia_cert.pem"
+                )[0];
+            String url = CertificateUtil.GetIssuerCertURL(multipleIssuersCert);
+            NUnit.Framework.Assert.AreEqual("location1", url);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetCrlIssuerMultipleIssuersTest() {
+            byte[] crlBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "multiple_aia.crl"));
+            String url = CertificateUtil.GetIssuerCertURL(CertificateUtil.ParseCrlFromBytes(crlBytes));
+            NUnit.Framework.Assert.AreEqual("http:location1", url);
         }
     }
 }
