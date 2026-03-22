@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Layout;
@@ -47,13 +48,13 @@ namespace iText.Pdfua {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
-        public static IList<PdfUAConformance> Data() {
+        public static IList<PdfConformance> Data() {
             return UaValidationTestFramework.GetConformanceList();
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void SimpleBorderBoxSizingTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void SimpleBorderBoxSizingTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font = LoadFont();
@@ -70,12 +71,12 @@ namespace iText.Pdfua {
                 document.Add(gridContainer1);
             }
             );
-            framework.AssertBothValid("border", pdfUAConformance);
+            framework.AssertBothValid("border");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void SimpleMarginTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void SimpleMarginTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font = LoadFont();
@@ -89,12 +90,12 @@ namespace iText.Pdfua {
                 document.Add(gridContainer0);
             }
             );
-            framework.AssertBothValid("margin", pdfUAConformance);
+            framework.AssertBothValid("margin");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void SimplePaddingTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void SimplePaddingTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font = LoadFont();
@@ -108,12 +109,12 @@ namespace iText.Pdfua {
                 document.Add(gridContainer0);
             }
             );
-            framework.AssertBothValid("padding", pdfUAConformance);
+            framework.AssertBothValid("padding");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void SimpleBackgroundTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void SimpleBackgroundTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font = LoadFont();
@@ -124,12 +125,12 @@ namespace iText.Pdfua {
                 document.Add(gridContainer0);
             }
             );
-            framework.AssertBothValid("background", pdfUAConformance);
+            framework.AssertBothValid("background");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void EmptyGridContainerTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void EmptyGridContainerTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 GridContainer gridContainer0 = new GridContainer();
@@ -141,7 +142,7 @@ namespace iText.Pdfua {
                 document.Add(gridContainer0);
             }
             );
-            framework.AssertBothValid("emptyGridContainer", pdfUAConformance);
+            framework.AssertBothValid("emptyGridContainer");
         }
 
         private GridContainer CreateGridBoxWithText() {
@@ -202,7 +203,7 @@ namespace iText.Pdfua {
                     );
             }
             catch (System.IO.IOException e) {
-                throw new Exception(e.Message);
+                throw new PdfException(e.Message);
             }
         }
     }

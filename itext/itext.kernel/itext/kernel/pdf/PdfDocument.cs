@@ -927,8 +927,7 @@ namespace iText.Kernel.Pdf {
                     // The following 2 operators prevent the possible inconsistency between root and info
                     // entries existing in the trailer object and corresponding fields. This inconsistency
                     // may appear when user gets trailer and explicitly sets new root or info dictionaries.
-                    PdfAConformance pdfAConformance = this.GetConformance().GetAConformance();
-                    if (pdfAConformance != null && "4".Equals(pdfAConformance.GetPart())) {
+                    if (pdfConformance.IsPdfA() && "4".Equals(pdfConformance.GetAConformance().GetPart())) {
                         if (this.GetCatalog().GetPdfObject().Get(PdfName.PieceInfo) != null) {
                             // Leave only ModDate as required by 6.1.3 File trailer of pdf/a-4 spec
                             GetDocumentInfo().RemoveCreationDate();
@@ -2197,10 +2196,10 @@ namespace iText.Kernel.Pdf {
                 }
                 xref.InitFreeReferencesList(this);
                 if (writer != null) {
-                    if (writer.properties.addPdfAXmpMetadata != null || writer.properties.addPdfUaXmpMetadata != null || writer
-                        .properties.addWtpdfXmpMetadata != null) {
-                        pdfConformance = new PdfConformance(writer.properties.addPdfAXmpMetadata, writer.properties.addPdfUaXmpMetadata
-                            , writer.properties.addWtpdfXmpMetadata);
+                    //if the writer requested a specific pdf flavour then we need to overwrite the pdfconformance
+                    //so that we append the correct xmp metadata on the closing of the document of the requested flavor
+                    if (writer.properties.GetPdfConformance().ConformsToAny()) {
+                        pdfConformance = writer.properties.GetPdfConformance();
                     }
                     EnableByteArrayWritingMode();
                     if (reader != null && reader.HasXrefStm() && writer.properties.isFullCompression == null) {
@@ -2353,7 +2352,7 @@ namespace iText.Kernel.Pdf {
         protected internal virtual XMPMeta UpdateDefaultXmpMetadata() {
             XMPMeta xmpMeta = GetXmpMetadata(true);
             XmpMetaInfoConverter.AppendDocumentInfoToMetadata(GetDocumentInfo(), xmpMeta);
-            PdfConformance.SetConformanceToXmp(xmpMeta, pdfConformance);
+            pdfConformance.SetConformanceToXmp(xmpMeta);
             return xmpMeta;
         }
 

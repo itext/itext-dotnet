@@ -52,7 +52,7 @@ namespace iText.Forms.Fields {
             }
             else {
                 PdfWidgetAnnotation annotation = new PdfWidgetAnnotation(GetWidgetRectangle());
-                if (GetConformance() != null && GetConformance().IsPdfAOrUaOrWtpdf()) {
+                if (GetConformance() != null && GetConformance().ConformsToAny()) {
                     annotation.SetFlag(PdfAnnotation.PRINT);
                 }
                 signatureFormField = PdfFormCreator.CreateSignatureFormField(annotation, GetDocument());

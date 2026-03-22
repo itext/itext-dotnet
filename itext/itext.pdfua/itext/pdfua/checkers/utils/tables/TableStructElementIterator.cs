@@ -58,8 +58,8 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
         /// <see cref="TableStructElementIterator"/>
         /// instance.
         /// </summary>
-        /// <param name="tableStructElem">the root table struct element.</param>
-        /// <param name="context">the validation context.</param>
+        /// <param name="tableStructElem">the root table struct element</param>
+        /// <param name="context">the validation context</param>
         public TableStructElementIterator(PdfStructElem tableStructElem, PdfUAValidationContext context) {
             this.context = context;
             FlattenElements(tableStructElem);

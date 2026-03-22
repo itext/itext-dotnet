@@ -41,7 +41,6 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Layout {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfUA2AnnotationsTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -133,7 +132,6 @@ namespace iText.Layout {
             new VeraPdfValidator().ValidateFailure(outFile);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void PdfUA2RubberStampAnnotationsTest() {
             String outFile = DESTINATION_FOLDER + "pdfuaRubberstampAnnotationTest.pdf";
@@ -199,7 +197,6 @@ namespace iText.Layout {
             new VeraPdfValidator().ValidateFailure(outFile);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void PdfUA2InkAnnotationsTest() {
             String outFile = DESTINATION_FOLDER + "pdfuaInkAnnotationTest.pdf";
@@ -230,7 +227,6 @@ namespace iText.Layout {
             new VeraPdfValidator().ValidateFailure(outFile);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void PdfUA2RedactionAnnotationsTest() {
             String outFile = DESTINATION_FOLDER + "pdfuaRedactionAnnotationTest.pdf";
@@ -292,7 +288,6 @@ namespace iText.Layout {
             new VeraPdfValidator().ValidateFailure(outFile);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void PdfUA2RichMediaAnnotationsTest() {
             String outFile = DESTINATION_FOLDER + "pdfuaRichMediaAnnotationTest.pdf";
@@ -323,7 +318,6 @@ namespace iText.Layout {
             new VeraPdfValidator().ValidateFailure(outFile);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void PdfUA2ContentsRCTheSameTest() {
             String outFile = DESTINATION_FOLDER + "pdfuaRcContentAnnotationTest.pdf";
@@ -358,7 +352,6 @@ namespace iText.Layout {
             new VeraPdfValidator().ValidateFailure(outFile);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void PdfUA2NotAllowedSoundAnnotationTest() {
             String outFile = DESTINATION_FOLDER + "pdfua2SoundAnnotationTest.pdf";
@@ -372,7 +365,6 @@ namespace iText.Layout {
             new VeraPdfValidator().ValidateFailure(outFile);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void PdfUA2AltContentDiffAnnotationTest() {
             String outFile = DESTINATION_FOLDER + "pdfua2ArtifactsAnnotationTest.pdf";
@@ -391,7 +383,6 @@ namespace iText.Layout {
             new VeraPdfValidator().ValidateFailure(outFile);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void PdfUA2TabAnnotationsTest() {
             String outFile = DESTINATION_FOLDER + "pdfuaMultipleAnnotsTabAnnotationTest.pdf";
@@ -432,7 +423,6 @@ namespace iText.Layout {
             new VeraPdfValidator().ValidateFailure(outFile);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void AnnotationNoViewButNoArtifactTest() {
             String outFile = DESTINATION_FOLDER + "pdfuaNoViewAnnotationTest.pdf";
@@ -451,7 +441,6 @@ namespace iText.Layout {
             new VeraPdfValidator().ValidateFailure(outFile);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         private void CreateSimplePdfUA2Document(PdfDocument pdfDocument) {
             byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "simplePdfUA2.xmp"));
             XMPMeta xmpMeta = XMPMetaFactory.Parse(new MemoryStream(bytes));
@@ -465,7 +454,6 @@ namespace iText.Layout {
 
         private void CompareAndValidate(String outPdf, String cmpPdf) {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
-            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_");
             if (result != null) {
                 NUnit.Framework.Assert.Fail(result);

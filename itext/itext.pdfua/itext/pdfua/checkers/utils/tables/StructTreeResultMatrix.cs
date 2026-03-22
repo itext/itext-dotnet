@@ -35,8 +35,8 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
         /// <see cref="StructTreeResultMatrix"/>
         /// instance.
         /// </summary>
-        /// <param name="elem">a table structure element.</param>
-        /// <param name="context">The validation context.</param>
+        /// <param name="elem">a table structure element</param>
+        /// <param name="context">The validation context</param>
         public StructTreeResultMatrix(PdfStructElem elem, PdfUAValidationContext context)
             : base(new TableStructElementIterator(elem, context), context.GetUAConformance()) {
         }

@@ -53,64 +53,58 @@ namespace iText.Pdfua.Checkers {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
-        public static IList<PdfUAConformance> Data() {
+        public static IList<PdfConformance> Data() {
             return UaValidationTestFramework.GetConformanceList();
         }
 
-        public static Object[] RoleData() {
-            return new Object[] { new Object[] { StandardRoles.FORM, StandardRoles.FORM, 
-                        // Parent role, child role, expected exception
-                        false }, new Object[] { StandardRoles.H1, StandardRoles.H1, true }, new Object[] { StandardRoles.P, StandardRoles
-                .P, false }, new Object[] { StandardRoles.DIV, StandardRoles.P, false } };
+        public static IList<Object[]> RoleData() {
+            IList<Object[]> data = new List<Object[]>();
+            foreach (PdfConformance pdfConformance in UaValidationTestFramework.GetConformanceList()) {
+                foreach (Object o in new Object[] { new Object[] { StandardRoles.FORM, StandardRoles.FORM, 
+                                // Parent role, child role, expected exception
+                                false }, new Object[] { StandardRoles.H1, StandardRoles.H1, true }, new Object[] { StandardRoles.P, StandardRoles
+                    .P, false }, new Object[] { StandardRoles.DIV, StandardRoles.P, false } }) {
+                    Object[] roles = (Object[])o;
+                    data.Add(new Object[] { pdfConformance, roles[0], roles[1], roles[2] });
+                }
+            }
+            return data;
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void SimpleParagraphTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void SimpleParagraphTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font = LoadFont();
                 Document doc = new Document(pdfDoc);
                 doc.Add(new Paragraph("Simple layout PDF UA test").SetFont(font));
             }
             );
-            framework.AssertBothValid("simpleParagraph", pdfUAConformance);
+            framework.AssertBothValid("simpleParagraph");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void SimpleParagraphWithUnderlineTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void SimpleParagraphWithUnderlineTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font = LoadFont();
                 Document doc = new Document(pdfDoc);
                 doc.Add(new Paragraph("Simple layout PDF UA with underline test").SetFont(font).SetUnderline());
             }
             );
-            framework.AssertBothValid("simpleParagraphWithUnderline", pdfUAConformance);
+            framework.AssertBothValid("simpleParagraphWithUnderline");
         }
 
         [NUnit.Framework.TestCaseSource("RoleData")]
-        public virtual void TestOfIllegalRelations(String parentRole, String childRole, bool expectException) {
+        public virtual void TestOfIllegalRelations(PdfConformance conformance, String parentRole, String childRole
+            , bool expectException) {
+            if (conformance.GetUAConformance() == PdfUAConformance.PDF_UA_1) {
+                return;
+            }
             //expectException should take into account repair mechanism
             // in example P:P will be replaced as P:Span so no exceptions should be thrown
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_127(parentRole, childRole));
-            if (expectException) {
-                framework.AssertBothFail("testOfIllegalRelation_" + parentRole + "_" + childRole, false, PdfUAConformance.
-                    PDF_UA_2);
-            }
-            else {
-                framework.AssertBothValid("testOfIllegalRelation_" + parentRole + "_" + childRole, PdfUAConformance.PDF_UA_2
-                    );
-            }
-        }
-
-        private sealed class _Generator_127 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_127(String parentRole, String childRole) {
-                this.parentRole = parentRole;
-                this.childRole = childRole;
-            }
-
-            public IBlockElement Generate() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((document) => {
                 Div div1 = new Div();
                 div1.GetAccessibilityProperties().SetRole(parentRole);
                 Div div2 = new Div();
@@ -118,15 +112,18 @@ namespace iText.Pdfua.Checkers {
                 div1.Add(div2);
                 return div1;
             }
-
-            private readonly String parentRole;
-
-            private readonly String childRole;
+            );
+            if (expectException) {
+                framework.AssertBothFail("testOfIllegalRelation_" + parentRole + "_" + childRole, false);
+            }
+            else {
+                framework.AssertBothValid("testOfIllegalRelation_" + parentRole + "_" + childRole);
+            }
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void SimpleBorderTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void SimpleBorderTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfPage page = pdfDocument.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
@@ -135,12 +132,12 @@ namespace iText.Pdfua.Checkers {
                 canvas.CloseTag();
             }
             );
-            framework.AssertBothValid("simpleBorder", pdfUAConformance);
+            framework.AssertBothValid("simpleBorder");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void SimpleTableTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void SimpleTableTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 Document doc = new Document(pdfDocument);
                 PdfFont font = LoadFont();
@@ -149,13 +146,16 @@ namespace iText.Pdfua.Checkers {
                 doc.Add(table);
             }
             );
-            framework.AssertBothValid("simpleTable", pdfUAConformance);
+            framework.AssertBothValid("simpleTable");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void SimpleParagraphBadContrastThrowsWcagAAAU(PdfUAConformance pdfUAConformance) {
-            PdfDocument pdfDoc = new _PdfUADocument_184(new PdfWriter(new MemoryStream()), new PdfUAConfig(pdfUAConformance
-                , "Hello", "en-US"));
+        public virtual void SimpleParagraphBadContrastThrowsWcagAAAU(PdfConformance conformance) {
+            if (!conformance.IsPdfUA()) {
+                return;
+            }
+            PdfDocument pdfDoc = new _PdfUADocument_189(new PdfWriter(new MemoryStream()), new PdfUAConfig(conformance
+                .GetUAConformance(), "Hello", "en-US"));
             PdfFont font = LoadFont();
             Document doc = new Document(pdfDoc);
             Paragraph p = new Paragraph("Simple layout PDF UA test").SetFont(font);
@@ -169,12 +169,12 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.IsTrue(e.Message.Contains("has contrast ratio: 5"));
         }
 
-        private sealed class _PdfUADocument_184 : PdfUADocument {
-            public _PdfUADocument_184(PdfWriter baseArg1, PdfUAConfig baseArg2)
+        private sealed class _PdfUADocument_189 : PdfUADocument {
+            public _PdfUADocument_189(PdfWriter baseArg1, PdfUAConfig baseArg2)
                 : base(baseArg1, baseArg2) {
             }
 
-            protected internal override IList<IValidationChecker> CreateCheckers(PdfUAConformance uaConformance) {
+            protected internal override IList<IValidationChecker> CreateCheckers(PdfUAConformance conformance) {
                 ColorContrastChecker contrastChecker = new ColorContrastChecker(false, true);
                 contrastChecker.SetCheckWcagAA(false);
                 IList<IValidationChecker> validationCheckers = new List<IValidationChecker>();
@@ -184,9 +184,12 @@ namespace iText.Pdfua.Checkers {
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void SimpleParagraphBadContrastThrowsWcagAA(PdfUAConformance pdfUAConformance) {
-            PdfDocument pdfDoc = new _PdfUADocument_210(new PdfWriter(new MemoryStream()), new PdfUAConfig(pdfUAConformance
-                , "Hello", "en-US"));
+        public virtual void SimpleParagraphBadContrastThrowsWcagAA(PdfConformance conformance) {
+            if (!conformance.IsPdfUA()) {
+                return;
+            }
+            PdfUADocument pdfDoc = new _PdfUADocument_218(new PdfWriter(new MemoryStream()), new PdfUAConfig(conformance
+                .GetUAConformance(), "Hello", "en-US"));
             PdfFont font = LoadFont();
             Document doc = new Document(pdfDoc);
             Paragraph p = new Paragraph("Simple layout PDF UA test").SetFont(font);
@@ -201,8 +204,8 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.IsTrue(e.Message.Contains("has contrast ratio: 2"));
         }
 
-        private sealed class _PdfUADocument_210 : PdfUADocument {
-            public _PdfUADocument_210(PdfWriter baseArg1, PdfUAConfig baseArg2)
+        private sealed class _PdfUADocument_218 : PdfUADocument {
+            public _PdfUADocument_218(PdfWriter baseArg1, PdfUAConfig baseArg2)
                 : base(baseArg1, baseArg2) {
             }
 
@@ -219,8 +222,8 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         [LogMessage("Page 1: Text: 'Simple layout PDF UA test', with font size: {0} pt " + "has contrast ratio: {1}. It is not WCAG AAA compliant. "
             , Count = 2)]
-        public virtual void SimpleParagraphBadContrastLogsByDefaultTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void SimpleParagraphBadContrastLogsByDefaultTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font = LoadFont();
                 Document doc = new Document(pdfDoc);
@@ -229,7 +232,7 @@ namespace iText.Pdfua.Checkers {
                 doc.Add(p);
             }
             );
-            framework.AssertBothValid("simpleParagraphAbc", pdfUAConformance);
+            framework.AssertBothValid("simpleParagraphAbc");
         }
 
         private static PdfFont LoadFont() {
@@ -238,7 +241,7 @@ namespace iText.Pdfua.Checkers {
                     );
             }
             catch (System.IO.IOException e) {
-                throw new Exception(e.Message);
+                throw new PdfException(e.Message);
             }
         }
     }

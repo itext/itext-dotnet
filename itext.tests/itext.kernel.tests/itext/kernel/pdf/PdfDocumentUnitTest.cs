@@ -244,7 +244,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void GetPdfAConformanceLevelInitializationTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "pdfWithMetadata.pdf"));
-            NUnit.Framework.Assert.IsTrue(pdfDocument.reader.GetPdfConformance().IsPdfAOrUa());
+            NUnit.Framework.Assert.IsTrue(pdfDocument.reader.GetPdfConformance().IsPdfA());
             pdfDocument.Close();
         }
 

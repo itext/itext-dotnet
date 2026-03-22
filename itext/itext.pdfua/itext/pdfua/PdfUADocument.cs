@@ -44,16 +44,16 @@ namespace iText.Pdfua {
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Pdfua.PdfUADocument));
 
         /// <summary>Creates a PdfUADocument instance.</summary>
-        /// <param name="writer">The writer to write the PDF document.</param>
-        /// <param name="config">The configuration for the PDF/UA document.</param>
+        /// <param name="writer">The writer to write the PDF document</param>
+        /// <param name="config">The configuration for the PDF/UA document</param>
         public PdfUADocument(PdfWriter writer, PdfUAConfig config)
             : this(writer, new DocumentProperties(), config) {
         }
 
         /// <summary>Creates a PdfUADocument instance.</summary>
-        /// <param name="writer">The writer to write the PDF document.</param>
-        /// <param name="properties">The properties for the PDF document.</param>
-        /// <param name="config">The configuration for the PDF/UA document.</param>
+        /// <param name="writer">The writer to write the PDF document</param>
+        /// <param name="properties">The properties for the PDF document</param>
+        /// <param name="config">The configuration for the PDF/UA document</param>
         public PdfUADocument(PdfWriter writer, DocumentProperties properties, PdfUAConfig config)
             : base(ConfigureWriterProperties(writer, config.GetConformance()), properties) {
             this.pdfConformance = new PdfConformance(config.GetConformance());
@@ -70,18 +70,18 @@ namespace iText.Pdfua {
         }
 
         /// <summary>Creates a PdfUADocument instance.</summary>
-        /// <param name="reader">The reader to read the PDF document.</param>
-        /// <param name="writer">The writer to write the PDF document.</param>
-        /// <param name="config">The configuration for the PDF/UA document.</param>
+        /// <param name="reader">The reader to read the PDF document</param>
+        /// <param name="writer">The writer to write the PDF document</param>
+        /// <param name="config">The configuration for the PDF/UA document</param>
         public PdfUADocument(PdfReader reader, PdfWriter writer, PdfUAConfig config)
             : this(reader, writer, new StampingProperties(), config) {
         }
 
         /// <summary>Creates a PdfUADocument instance.</summary>
-        /// <param name="reader">The reader to read the PDF document.</param>
-        /// <param name="writer">The writer to write the PDF document.</param>
-        /// <param name="properties">The properties for the PDF document.</param>
-        /// <param name="config">The configuration for the PDF/UA document.</param>
+        /// <param name="reader">The reader to read the PDF document</param>
+        /// <param name="writer">The writer to write the PDF document</param>
+        /// <param name="properties">The properties for the PDF document</param>
+        /// <param name="config">The configuration for the PDF/UA document</param>
         public PdfUADocument(PdfReader reader, PdfWriter writer, StampingProperties properties, PdfUAConfig config
             )
             : base(reader, writer, properties) {

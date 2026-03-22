@@ -57,7 +57,7 @@ namespace iText.Forms.Form.Renderer {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             SelectFieldListBoxRenderer renderer = new SelectFieldListBoxRenderer(new ListBoxField("", 1, false));
             NUnit.Framework.Assert.IsNotNull(renderer.GetConformance(pdfDocument));
-            NUnit.Framework.Assert.IsFalse(renderer.GetConformance(pdfDocument).IsPdfAOrUa());
+            NUnit.Framework.Assert.IsFalse(renderer.GetConformance(pdfDocument).ConformsToAny());
         }
 
         [NUnit.Framework.Test]

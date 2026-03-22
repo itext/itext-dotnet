@@ -57,7 +57,7 @@ namespace iText.Pdfua.Checkers.Utils {
             /// <see cref="FormulaTagHandler"/>
             /// instance.
             /// </summary>
-            /// <param name="context">The validation context.</param>
+            /// <param name="context">The validation context</param>
             public FormulaTagHandler(PdfUAValidationContext context)
                 : base(context) {
             }

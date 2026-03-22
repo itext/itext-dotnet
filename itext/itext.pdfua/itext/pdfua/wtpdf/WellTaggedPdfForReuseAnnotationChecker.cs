@@ -5,6 +5,10 @@ using iText.Pdfua.Checkers.Utils.Ua2;
 using iText.Pdfua.Exceptions;
 
 namespace iText.Pdfua.Wtpdf {
+    /// <summary>
+    /// A specialized annotation checker for well-tagged PDFs intended for reuse, which extends the standard
+    /// PdfUA2AnnotationChecker to enforce additional requirements specific to this specification.
+    /// </summary>
     public class WellTaggedPdfForReuseAnnotationChecker : PdfUA2AnnotationChecker {
         /// <summary>
         /// Creates a new instance of the

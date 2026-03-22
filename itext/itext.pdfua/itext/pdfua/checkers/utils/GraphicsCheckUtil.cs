@@ -37,7 +37,7 @@ namespace iText.Pdfua.Checkers.Utils {
         /// <see cref="GraphicsCheckUtil"/>
         /// instance.
         /// </summary>
-        /// <param name="context">The validation context.</param>
+        /// <param name="context">The validation context</param>
         public GraphicsCheckUtil(PdfUAValidationContext context) {
             this.context = context;
         }

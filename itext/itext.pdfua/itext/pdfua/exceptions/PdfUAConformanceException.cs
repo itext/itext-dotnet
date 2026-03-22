@@ -33,8 +33,8 @@ namespace iText.Pdfua.Exceptions {
         }
 
         /// <summary>Creates a PdfUAConformanceException.</summary>
-        /// <param name="message">the detail message.</param>
-        /// <param name="cause">the cause.</param>
+        /// <param name="message">the detail message</param>
+        /// <param name="cause">the cause</param>
         public PdfUAConformanceException(String message, Exception cause)
             : base(message, cause) {
         }

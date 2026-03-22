@@ -21,12 +21,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Pdfua.Wtpdf {
     /// <summary>Class that holds the configuration for the Well Tagged PDF document.</summary>
     public class WellTaggedPdfConfig {
-        private readonly WellTaggedPdfConformance? conformance;
+        private readonly IList<WellTaggedPdfConformance> conformance = new List<WellTaggedPdfConformance>();
 
         private readonly String title;
 
@@ -36,8 +38,24 @@ namespace iText.Pdfua.Wtpdf {
         /// <param name="conformance">the conformance of the Well Tagged PDF document</param>
         /// <param name="title">the title of the Well Tagged PDF document</param>
         /// <param name="language">the language of the Well Tagged PDF document</param>
-        public WellTaggedPdfConfig(WellTaggedPdfConformance? conformance, String title, String language) {
-            this.conformance = conformance;
+        public WellTaggedPdfConfig(WellTaggedPdfConformance conformance, String title, String language) {
+            if (conformance == null) {
+                throw new PdfException("Conformance cannot be null");
+            }
+            this.conformance.Add(conformance);
+            this.title = title;
+            this.language = language;
+        }
+
+        /// <summary>Creates a new WellTaggedPdfConfig instance.</summary>
+        /// <param name="conformanceList">the conformance of the Well Tagged PDF document</param>
+        /// <param name="title">the title of the Well Tagged PDF document</param>
+        /// <param name="language">the language of the Well Tagged PDF document</param>
+        public WellTaggedPdfConfig(IList<WellTaggedPdfConformance> conformanceList, String title, String language) {
+            if (conformanceList == null || conformanceList.IsEmpty()) {
+                throw new PdfException("Conformance list cannot be null or empty");
+            }
+            this.conformance.AddAll(conformanceList);
             this.title = title;
             this.language = language;
         }
@@ -45,20 +63,20 @@ namespace iText.Pdfua.Wtpdf {
         /// <summary>Gets the Well Tagged PDF conformance.</summary>
         /// <returns>
         /// The
-        /// <see cref="iText.Kernel.Pdf.WellTaggedPdfConformance?"/>.
+        /// <see cref="iText.Kernel.Pdf.PdfConformance"/>
         /// </returns>
-        public virtual WellTaggedPdfConformance? GetConformance() {
-            return conformance;
+        public virtual IList<WellTaggedPdfConformance> GetConformance() {
+            return new List<WellTaggedPdfConformance>(conformance);
         }
 
         /// <summary>Gets the title.</summary>
-        /// <returns>The title.</returns>
+        /// <returns>The title</returns>
         public virtual String GetTitle() {
             return title;
         }
 
         /// <summary>Gets the language.</summary>
-        /// <returns>The language.</returns>
+        /// <returns>The language</returns>
         public virtual String GetLanguage() {
             return language;
         }

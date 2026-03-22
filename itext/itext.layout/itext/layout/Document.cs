@@ -294,7 +294,7 @@ namespace iText.Layout {
         public override T1 GetDefaultProperty<T1>(int property) {
             switch (property) {
                 case Property.FONT: {
-                    if (GetPdfDocument().GetConformance().IsPdfAOrUaOrWtpdf()) {
+                    if (GetPdfDocument().GetConformance() != null && GetPdfDocument().GetConformance().ConformsToAny()) {
                         return (T1)(Object)GetPdfDocument().GetDefaultFont();
                     }
                     return base.GetDefaultProperty<T1>(property);

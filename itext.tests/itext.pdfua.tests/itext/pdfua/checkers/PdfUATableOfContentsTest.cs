@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.IO.Font;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
@@ -47,15 +48,15 @@ namespace iText.Pdfua.Checkers {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
-        public static IList<PdfUAConformance> TestSources() {
+        public static IList<PdfConformance> TestSources() {
             return UaValidationTestFramework.GetConformanceList();
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Ignore = true
             )]
-        public virtual void CheckTableOfContentsTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void CheckTableOfContentsTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 Document document = new Document(pdfDocument);
                 PdfFont font = GetFont();
@@ -82,82 +83,80 @@ namespace iText.Pdfua.Checkers {
                 document.Add(tocDiv);
             }
             );
-            framework.AssertBothValid("tableOfContentsTest", pdfUAConformance);
+            framework.AssertBothValid("tableOfContentsTest");
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Ignore = true
             )]
-        public virtual void CheckTableOfContentsWithReferenceChildTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void CheckTableOfContentsWithReferenceChildTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 AddTableOfContentsWithRefInChild(pdfDocument, StandardRoles.REFERENCE);
             }
             );
-            framework.AssertBothValid("checkTableOfContentsWithReferenceChildTest", pdfUAConformance);
+            framework.AssertBothValid("checkTableOfContentsWithReferenceChildTest");
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Ignore = true
             )]
-        public virtual void CheckTableOfContentsWithRefOnDivChildTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void CheckTableOfContentsWithRefOnDivChildTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 AddTableOfContentsWithRefInChild(pdfDocument, StandardRoles.DIV);
             }
             );
-            framework.AssertBothValid("checkTableOfContentsWithRefOnDivChildTest", pdfUAConformance);
+            framework.AssertBothValid("checkTableOfContentsWithRefOnDivChildTest");
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Ignore = true
             )]
-        public virtual void CheckTableOfContentsWithRefOnArtifactChildTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void CheckTableOfContentsWithRefOnArtifactChildTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 AddTableOfContentsWithRefInChild(pdfDocument, StandardRoles.ARTIFACT);
             }
             );
-            if (PdfUAConformance.PDF_UA_1 == pdfUAConformance) {
-                framework.AssertBothValid("checkTableOfContentsWithRefOnArtifactChildTest", pdfUAConformance);
+            if (PdfUAConformance.PDF_UA_1 == conformance.GetUAConformance()) {
+                framework.AssertBothValid("checkTableOfContentsWithRefOnArtifactChildTest");
             }
             else {
-                if (PdfUAConformance.PDF_UA_2 == pdfUAConformance) {
-                    framework.AssertBothFail("checkTableOfContentsWithRefOnArtifactChildTest", PdfUAExceptionMessageConstants.
-                        TOCI_SHALL_IDENTIFY_REF, pdfUAConformance);
-                }
+                framework.AssertBothFail("checkTableOfContentsWithRefOnArtifactChildTest", PdfUAExceptionMessageConstants.
+                    TOCI_SHALL_IDENTIFY_REF);
             }
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Ignore = true
             )]
-        public virtual void CheckTableOfContentsWithRefOnGrandchildTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void CheckTableOfContentsWithRefOnGrandchildTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 AddTableOfContentsWithRefInGrandchild(pdfDocument, StandardRoles.REFERENCE);
             }
             );
-            framework.AssertBothValid("checkTableOfContentsWithRefOnGrandchildTest", pdfUAConformance);
+            framework.AssertBothValid("checkTableOfContentsWithRefOnGrandchildTest");
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Ignore = true
             )]
-        public virtual void CheckTableOfContentsWithRefOnGrandchildTest2(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void CheckTableOfContentsWithRefOnGrandchildTest2(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 AddTableOfContentsWithRefInGrandchild(pdfDocument, StandardRoles.P);
             }
             );
-            framework.AssertBothValid("checkTableOfContentsWithRefOnGrandchildTest2", pdfUAConformance);
+            framework.AssertBothValid("checkTableOfContentsWithRefOnGrandchildTest2");
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Ignore = true
             )]
-        public virtual void CheckTableOfContentsNoRefTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void CheckTableOfContentsNoRefTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 Document document = new Document(pdfDocument);
                 PdfFont font = GetFont();
@@ -176,22 +175,20 @@ namespace iText.Pdfua.Checkers {
                 document.Add(tocDiv);
             }
             );
-            if (PdfUAConformance.PDF_UA_1 == pdfUAConformance) {
-                framework.AssertBothValid("checkTableOfContentsNoRefTest", pdfUAConformance);
+            if (PdfUAConformance.PDF_UA_1 == conformance.GetUAConformance()) {
+                framework.AssertBothValid("checkTableOfContentsNoRefTest");
             }
             else {
-                if (PdfUAConformance.PDF_UA_2 == pdfUAConformance) {
-                    framework.AssertBothFail("checkTableOfContentsNoRefTest", PdfUAExceptionMessageConstants.TOCI_SHALL_IDENTIFY_REF
-                        , pdfUAConformance);
-                }
+                framework.AssertBothFail("checkTableOfContentsNoRefTest", PdfUAExceptionMessageConstants.TOCI_SHALL_IDENTIFY_REF
+                    );
             }
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Ignore = true
             )]
-        public virtual void CheckInvalidStructureTableOfContentsTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void CheckInvalidStructureTableOfContentsTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 Document document = new Document(pdfDocument);
                 PdfFont font = GetFont();
@@ -210,7 +207,7 @@ namespace iText.Pdfua.Checkers {
                 document.Add(tocTitle);
             }
             );
-            framework.AssertBothValid("invalidStructureTableOfContentsTest", pdfUAConformance);
+            framework.AssertBothValid("invalidStructureTableOfContentsTest");
         }
 
         private static void AddTableOfContentsWithRefInChild(PdfDocument pdfDocument, String childRole) {
@@ -280,8 +277,8 @@ namespace iText.Pdfua.Checkers {
                 font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
                     );
             }
-            catch (System.IO.IOException) {
-                throw new Exception();
+            catch (System.IO.IOException e) {
+                throw new PdfException(e);
             }
             return font;
         }

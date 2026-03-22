@@ -43,22 +43,22 @@ namespace iText.Pdfua.Wtpdf {
             ));
 
         /// <summary>Creates a WellTaggedPdfDocument instance.</summary>
-        /// <param name="writer">The writer to write the PDF document.</param>
-        /// <param name="config">The configuration for the Well Tagged document.</param>
+        /// <param name="writer">The writer to write the PDF document</param>
+        /// <param name="config">The configuration for the Well Tagged document</param>
         public WellTaggedPdfDocument(PdfWriter writer, WellTaggedPdfConfig config)
             : this(writer, new DocumentProperties(), config) {
         }
 
         /// <summary>Creates a WellTaggedPdfDocument instance.</summary>
-        /// <param name="writer">The writer to write the PDF document.</param>
-        /// <param name="properties">The properties for the PDF document.</param>
-        /// <param name="config">The configuration for the Well Tagged document.</param>
+        /// <param name="writer">The writer to write the PDF document</param>
+        /// <param name="properties">The properties for the PDF document</param>
+        /// <param name="config">The configuration for the Well Tagged document</param>
         public WellTaggedPdfDocument(PdfWriter writer, DocumentProperties properties, WellTaggedPdfConfig config)
             : base(ConfigureWriterProperties(writer, config.GetConformance()), properties) {
             this.pdfConformance = new PdfConformance(config.GetConformance());
             SetupWtpdfConfiguration(config);
             ValidationContainer validationContainer = new ValidationContainer();
-            IList<IValidationChecker> checkers = CreateCheckers(config.GetConformance());
+            IList<IValidationChecker> checkers = CreateCheckers(this.pdfConformance);
             foreach (IValidationChecker checker in checkers) {
                 validationContainer.AddChecker(checker);
             }
@@ -69,18 +69,18 @@ namespace iText.Pdfua.Wtpdf {
         }
 
         /// <summary>Creates a WellTaggedPdfDocument instance.</summary>
-        /// <param name="reader">The reader to read the PDF document.</param>
-        /// <param name="writer">The writer to write the PDF document.</param>
-        /// <param name="config">The configuration for the Well Tagged document.</param>
+        /// <param name="reader">The reader to read the PDF document</param>
+        /// <param name="writer">The writer to write the PDF document</param>
+        /// <param name="config">The configuration for the Well Tagged document</param>
         public WellTaggedPdfDocument(PdfReader reader, PdfWriter writer, WellTaggedPdfConfig config)
             : this(reader, writer, new StampingProperties(), config) {
         }
 
         /// <summary>Creates a WellTaggedPdfDocument instance.</summary>
-        /// <param name="reader">The reader to read the PDF document.</param>
-        /// <param name="writer">The writer to write the PDF document.</param>
-        /// <param name="properties">The properties for the PDF document.</param>
-        /// <param name="config">The configuration for the Well Tagged document.</param>
+        /// <param name="reader">The reader to read the PDF document</param>
+        /// <param name="writer">The writer to write the PDF document</param>
+        /// <param name="properties">The properties for the PDF document</param>
+        /// <param name="config">The configuration for the Well Tagged document</param>
         public WellTaggedPdfDocument(PdfReader reader, PdfWriter writer, StampingProperties properties, WellTaggedPdfConfig
              config)
             : base(reader, writer, properties) {
@@ -89,7 +89,7 @@ namespace iText.Pdfua.Wtpdf {
             }
             SetupWtpdfConfiguration(config);
             ValidationContainer validationContainer = new ValidationContainer();
-            IList<IValidationChecker> checkers = CreateCheckers(config.GetConformance());
+            IList<IValidationChecker> checkers = CreateCheckers(new PdfConformance(config.GetConformance()));
             foreach (IValidationChecker checker in checkers) {
                 validationContainer.AddChecker(checker);
             }
@@ -108,15 +108,16 @@ namespace iText.Pdfua.Wtpdf {
         /// for Well Tagged conformance.
         /// If you want to enable/disable specific checks, you can override the implementation.
         /// </remarks>
+        /// <param name="conformance">the Well Tagged PDF conformance for which the checkers should be created</param>
         /// <returns>list of Well Tagged related checkers</returns>
-        protected internal virtual IList<IValidationChecker> CreateCheckers(WellTaggedPdfConformance? conformance) {
+        protected internal virtual IList<IValidationChecker> CreateCheckers(PdfConformance conformance) {
             IList<IValidationChecker> checkers = new List<IValidationChecker>();
             ColorContrastChecker contrastChecker = new ColorContrastChecker(false, false);
-            if (WellTaggedPdfConformance.FOR_REUSE == conformance) {
+            if (conformance.ConformsTo(WellTaggedPdfConformance.FOR_REUSE)) {
                 checkers.Add(new WellTaggedPdfForReuseChecker(this));
             }
             else {
-                if (WellTaggedPdfConformance.FOR_ACCESSIBILITY == conformance) {
+                if (conformance.ConformsTo(WellTaggedPdfConformance.FOR_ACCESSIBILITY)) {
                     checkers.Add(new WellTaggedPdfForAccessibilityChecker(this));
                 }
             }
@@ -134,7 +135,7 @@ namespace iText.Pdfua.Wtpdf {
             info.SetTitle(config.GetTitle());
         }
 
-        private static PdfWriter ConfigureWriterProperties(PdfWriter writer, WellTaggedPdfConformance? wtpdfConformance
+        private static PdfWriter ConfigureWriterProperties(PdfWriter writer, IList<WellTaggedPdfConformance> wtpdfConformance
             ) {
             writer.GetProperties().AddWtpdfXmpMetadata(wtpdfConformance);
             if (writer.GetPdfVersion() != null && !PdfVersion.PDF_2_0.Equals(writer.GetPdfVersion())) {

@@ -74,14 +74,6 @@ namespace iText.Pdfua.Checkers {
             this.context = new PdfUAValidationContext(this.pdfDocument);
         }
 
-        protected internal virtual PdfUAValidationContext GetUAValidationContext() {
-            return context;
-        }
-
-        protected internal virtual PdfDocument GetPdfDocument() {
-            return pdfDocument;
-        }
-
         public override void Validate(IValidationContext context) {
             switch (context.GetType()) {
                 case ValidationType.PDF_DOCUMENT: {
@@ -135,7 +127,7 @@ namespace iText.Pdfua.Checkers {
 
                 case ValidationType.ANNOTATION: {
                     PdfAnnotationContext annotationContext = (PdfAnnotationContext)context;
-                    new PdfUA2AnnotationChecker().CheckAnnotation(annotationContext.GetAnnotation(), this.context);
+                    new PdfUA2AnnotationChecker().CheckSingleAnnotation(annotationContext.GetAnnotation(), this.context);
                     break;
                 }
 
@@ -149,6 +141,19 @@ namespace iText.Pdfua.Checkers {
 
         public override bool IsPdfObjectReadyToFlush(PdfObject @object) {
             return false;
+        }
+
+        /// <summary>Gets the PDF/UA validation context which contains common information and utilities used for PDF/UA validation.
+        ///     </summary>
+        /// <returns>the PDF/UA validation context</returns>
+        protected internal virtual PdfUAValidationContext GetUAValidationContext() {
+            return context;
+        }
+
+        /// <summary>Gets the PDF document being validated.</summary>
+        /// <returns>the PDF document being validated</returns>
+        protected internal virtual PdfDocument GetPdfDocument() {
+            return pdfDocument;
         }
 
         /// <summary>
@@ -197,38 +202,15 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-//\cond DO_NOT_DOCUMENT
         /// <summary>
-        /// For all non-symbolic TrueType fonts used for rendering, the embedded TrueType font program shall contain
-        /// at least the Microsoft Unicode (3, 1 – Platform ID = 3, Encoding ID = 1),
-        /// or the Macintosh Roman (1, 0 – Platform ID = 1, Encoding ID = 0) “cmap” subtable.
+        /// Checks that the given PDF object and all its descendant objects recursively (if any) are compliant with PDF/UA-2
+        /// standard.
         /// </summary>
-        /// <param name="fontProgram">the embedded TrueType font program to check</param>
-        internal override void CheckNonSymbolicCmapSubtable(TrueTypeFont fontProgram) {
-            if (!fontProgram.IsCmapPresent(3, 1) && !fontProgram.IsCmapPresent(1, 0)) {
-                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.NON_SYMBOLIC_TTF_SHALL_CONTAIN_MAC_ROMAN_OR_MICROSOFT_UNI_CMAP
-                    );
-            }
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        /// <summary>Checks cmap entries present in the embedded TrueType font program of the symbolic TrueType font.</summary>
         /// <remarks>
-        /// Checks cmap entries present in the embedded TrueType font program of the symbolic TrueType font.
-        /// <para />
-        /// The “cmap” subtable in the embedded font program shall either contain the Microsoft Symbol
-        /// (3, 0 – Platform ID = 3, Encoding ID = 0) or the Mac Roman (1, 0 – Platform ID = 1, Encoding ID = 1) encoding.
+        /// Checks that the given PDF object and all its descendant objects recursively (if any) are compliant with PDF/UA-2
+        /// standard. The check is performed on all objects except for indirect objects.
         /// </remarks>
-        /// <param name="fontProgram">the embedded TrueType font program to check</param>
-        internal override void CheckSymbolicCmapSubtable(TrueTypeFont fontProgram) {
-            if (!fontProgram.IsCmapPresent(3, 0) && !fontProgram.IsCmapPresent(1, 0)) {
-                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.SYMBOLIC_TTF_SHALL_CONTAIN_MAC_ROMAN_OR_MICROSOFT_SYMBOL_CMAP
-                    );
-            }
-        }
-//\endcond
-
+        /// <param name="obj">the PDF object to check</param>
         protected internal virtual void CheckPdfObject(PdfObject obj) {
             switch (obj.GetObjectType()) {
                 case PdfObject.STRING: {
@@ -245,24 +227,6 @@ namespace iText.Pdfua.Checkers {
                 case PdfObject.STREAM: {
                     CheckDictionaryRecursively((PdfDictionary)obj);
                     break;
-                }
-            }
-        }
-
-        private void CheckArrayRecursively(PdfArray array) {
-            for (int i = 0; i < array.Size(); i++) {
-                PdfObject @object = array.Get(i, false);
-                if (@object != null && !@object.IsIndirect()) {
-                    CheckPdfObject(@object);
-                }
-            }
-        }
-
-        private void CheckDictionaryRecursively(PdfDictionary dictionary) {
-            foreach (PdfName name in dictionary.KeySet()) {
-                PdfObject @object = dictionary.Get(name, false);
-                if (@object != null && !@object.IsIndirect()) {
-                    CheckPdfObject(@object);
                 }
             }
         }
@@ -293,7 +257,7 @@ namespace iText.Pdfua.Checkers {
             formChecker.CheckFormFields(catalog.GetPdfObject().GetAsDictionary(PdfName.AcroForm));
             formChecker.CheckWidgetAnnotations(this.pdfDocument);
             PdfUA2LinkChecker.CheckLinkAnnotations(this.pdfDocument);
-            new PdfUA2AnnotationChecker().CheckAnnotations(this.pdfDocument);
+            new PdfUA2AnnotationChecker().CheckAllAnnotations(this.pdfDocument);
         }
 
         /// <summary>Validates structure tree root dictionary against PDF/UA-2 standard.</summary>
@@ -368,6 +332,56 @@ namespace iText.Pdfua.Checkers {
             tagTreeIterator.AddHandler(new PdfUA2FormulaChecker.PdfUA2FormulaTagHandler(context));
             tagTreeIterator.AddHandler(new PdfUA2LinkChecker.PdfUA2LinkAnnotationHandler(context, pdfDocument));
             return tagTreeIterator;
+        }
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// For all non-symbolic TrueType fonts used for rendering, the embedded TrueType font program shall contain
+        /// at least the Microsoft Unicode (3, 1 – Platform ID = 3, Encoding ID = 1),
+        /// or the Macintosh Roman (1, 0 – Platform ID = 1, Encoding ID = 0) “cmap” subtable.
+        /// </summary>
+        /// <param name="fontProgram">the embedded TrueType font program to check</param>
+        internal override void CheckNonSymbolicCmapSubtable(TrueTypeFont fontProgram) {
+            if (!fontProgram.IsCmapPresent(3, 1) && !fontProgram.IsCmapPresent(1, 0)) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.NON_SYMBOLIC_TTF_SHALL_CONTAIN_MAC_ROMAN_OR_MICROSOFT_UNI_CMAP
+                    );
+            }
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Checks cmap entries present in the embedded TrueType font program of the symbolic TrueType font.</summary>
+        /// <remarks>
+        /// Checks cmap entries present in the embedded TrueType font program of the symbolic TrueType font.
+        /// <para />
+        /// The “cmap” subtable in the embedded font program shall either contain the Microsoft Symbol
+        /// (3, 0 – Platform ID = 3, Encoding ID = 0) or the Mac Roman (1, 0 – Platform ID = 1, Encoding ID = 1) encoding.
+        /// </remarks>
+        /// <param name="fontProgram">the embedded TrueType font program to check</param>
+        internal override void CheckSymbolicCmapSubtable(TrueTypeFont fontProgram) {
+            if (!fontProgram.IsCmapPresent(3, 0) && !fontProgram.IsCmapPresent(1, 0)) {
+                throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.SYMBOLIC_TTF_SHALL_CONTAIN_MAC_ROMAN_OR_MICROSOFT_SYMBOL_CMAP
+                    );
+            }
+        }
+//\endcond
+
+        private void CheckArrayRecursively(PdfArray array) {
+            for (int i = 0; i < array.Size(); i++) {
+                PdfObject @object = array.Get(i, false);
+                if (@object != null && !@object.IsIndirect()) {
+                    CheckPdfObject(@object);
+                }
+            }
+        }
+
+        private void CheckDictionaryRecursively(PdfDictionary dictionary) {
+            foreach (PdfName name in dictionary.KeySet()) {
+                PdfObject @object = dictionary.Get(name, false);
+                if (@object != null && !@object.IsIndirect()) {
+                    CheckPdfObject(@object);
+                }
+            }
         }
     }
 }

@@ -2065,7 +2065,9 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void GetPdfConformanceNoMetadataTest() {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(new MemoryStream(CreatePdfDocumentForTest())));
-            NUnit.Framework.Assert.IsFalse(pdfDoc.GetReader().GetPdfConformance().IsPdfAOrUa());
+            NUnit.Framework.Assert.IsFalse(pdfDoc.GetReader().GetPdfConformance().IsPdfA());
+            NUnit.Framework.Assert.IsFalse(pdfDoc.GetReader().GetPdfConformance().IsWtpdf());
+            NUnit.Framework.Assert.IsFalse(pdfDoc.GetReader().GetPdfConformance().IsPdfUA());
         }
 
         [NUnit.Framework.Test]
@@ -2531,14 +2533,14 @@ namespace iText.Kernel.Pdf {
             int objNumber = pdfDictionary.GetIndirectReference().objNr;
             pdfDocument.catalog.GetPdfObject().Put(PdfName.StructTreeRoot, pdfDictionary);
             pdfDocument.Close();
-            PdfReader pdfReader = new _PdfReader_2854(objNumber, new MemoryStream(bsaos.ToArray()));
+            PdfReader pdfReader = new _PdfReader_2856(objNumber, new MemoryStream(bsaos.ToArray()));
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => new PdfDocument(pdfReader));
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.INVALID_OBJECT_STREAM_NUMBER
                 , 5, 4, 492), e.Message);
         }
 
-        private sealed class _PdfReader_2854 : PdfReader {
-            public _PdfReader_2854(int objNumber, Stream baseArg1)
+        private sealed class _PdfReader_2856 : PdfReader {
+            public _PdfReader_2856(int objNumber, Stream baseArg1)
                 : base(baseArg1) {
                 this.objNumber = objNumber;
             }
@@ -2557,7 +2559,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void InitTagTreeStructureThrowsOOMIsCatched() {
             FileInfo file = new FileInfo(SOURCE_FOLDER + "big_table_lot_of_mcrs.pdf");
-            MemoryLimitsAwareHandler memoryLimitsAwareHandler = new _MemoryLimitsAwareHandler_2873();
+            MemoryLimitsAwareHandler memoryLimitsAwareHandler = new _MemoryLimitsAwareHandler_2875();
             memoryLimitsAwareHandler.SetMaxSizeOfDecompressedPdfStreamsSum(100000);
             NUnit.Framework.Assert.Catch(typeof(MemoryLimitsAwareException), () => {
                 using (PdfReader reader = new PdfReader(file, new ReaderProperties().SetMemoryLimitsAwareHandler(memoryLimitsAwareHandler
@@ -2569,8 +2571,8 @@ namespace iText.Kernel.Pdf {
             );
         }
 
-        private sealed class _MemoryLimitsAwareHandler_2873 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_2873() {
+        private sealed class _MemoryLimitsAwareHandler_2875 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_2875() {
             }
 
             public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {

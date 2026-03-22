@@ -37,7 +37,6 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfA4CatalogCheckTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -67,7 +66,6 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void CreateSimpleTaggedDocTest() {
             String outPdf = DESTINATION_FOLDER + "pdfA4_tagged.pdf";
@@ -91,7 +89,6 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void InvalidCatalogVersionCheckTest() {
             String outPdf = DESTINATION_FOLDER + "pdfA4_catalogCheck02.pdf";
@@ -176,7 +173,6 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void InvalidInfoTest() {
             String outPdf = DESTINATION_FOLDER + "pdfA4_catalogCheck05Invalid.pdf";
@@ -204,7 +200,6 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void ReadValidDocumentTest() {
             String outPdf = DESTINATION_FOLDER + "simplePdfA4_output01.pdf";
@@ -215,7 +210,6 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void InvalidVersionInCatalogTest() {
             String outPdf = DESTINATION_FOLDER + "pdfA4_catalogCheck06.pdf";
@@ -316,7 +310,6 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void CreateInvalidPdfAVersionNumberWithPDFA4() {
             PdfWriter writer = new PdfWriter(new PdfWriter(new MemoryStream()), new WriterProperties());
@@ -408,7 +401,6 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void DocumentWithInvalidLangEntryTest() {
             String outPdf = DESTINATION_FOLDER + "documentWithInvalidLangEntry.pdf";

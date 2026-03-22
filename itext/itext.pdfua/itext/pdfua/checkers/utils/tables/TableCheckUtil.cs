@@ -35,13 +35,13 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
         /// <see cref="TableCheckUtil"/>
         /// instance.
         /// </summary>
-        /// <param name="context">the validation context.</param>
+        /// <param name="context">the validation context</param>
         public TableCheckUtil(PdfUAValidationContext context) {
             this.context = context;
         }
 
         /// <summary>Checks if the table is pdf/ua compliant.</summary>
-        /// <param name="table">the table to check.</param>
+        /// <param name="table">the table to check</param>
         public void CheckTable(Table table) {
             new CellResultMatrix(table, this.context);
         }

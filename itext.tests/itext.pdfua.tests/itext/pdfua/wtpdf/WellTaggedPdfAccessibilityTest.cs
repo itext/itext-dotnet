@@ -28,16 +28,14 @@ using iText.Pdfua.Checkers;
 using iText.Pdfua.Logs;
 using iText.Test;
 using iText.Test.Attributes;
-using iText.Test.Pdfa;
 
 namespace iText.Pdfua.Wtpdf {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class WellTaggedPdfAccessibilityTest : ExtendedITextTest {
         private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfua/wtpdf/WellTaggedPdfAccessibilityTest/";
 
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/pdfua/wtpdf/WellTaggedPdfAccessibilityTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfua/wtpdf" + "/WellTaggedPdfAccessibilityTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
@@ -65,44 +63,35 @@ namespace iText.Pdfua.Wtpdf {
         }
 
         [NUnit.Framework.Test]
-        public virtual void WellTaggedPdfTableTest() {
-            WellTaggedPdfAccessibilityTest.WellTaggedValidationFramework framework = new WellTaggedPdfAccessibilityTest.WellTaggedValidationFramework
-                (DESTINATION_FOLDER);
+        public virtual void WellTaggedPdfTableAccesibilityTest() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, PdfConformance.WELL_TAGGED_PDF_FOR_REUSE
+                );
             PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(4);
-            tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 1", 1, 1, "Column"));
-            tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 2", 1, 1, "Column"));
-            tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 3", 1, 1, "Column"));
-            tableBuilder.AddBodyCell(new PdfUATableTest.HeaderCellSupplier(null, "Header 4", 1, 1, "Column"));
+            tableBuilder.AddBodyCell(PdfUATableTest.NewHeaderCell(null, "Header 1", 1, 1, "Column"));
+            tableBuilder.AddBodyCell(PdfUATableTest.NewHeaderCell(null, "Header 2", 1, 1, "Column"));
+            tableBuilder.AddBodyCell(PdfUATableTest.NewHeaderCell(null, "Header 3", 1, 1, "Column"));
+            tableBuilder.AddBodyCell(PdfUATableTest.NewHeaderCell(null, "Header 4", 1, 1, "Column"));
             for (int i = 0; i < 4; i++) {
-                tableBuilder.AddBodyCell(new PdfUATableTest.DataCellSupplier("Data 1", 1, 1, null));
+                tableBuilder.AddBodyCell(PdfUATableTest.NewDataCell("Data 1", 1, 1, null));
             }
-            framework.AddSuppliers(tableBuilder);
-            framework.AssertBothValid("wellTaggedPdfTableTest", PdfUAConformance.PDF_UA_2);
+            framework.AddSuppliers(tableBuilder.GenerateFunc());
+            framework.AssertBothValid("wellTaggedPdfTableTest");
         }
 
-        private class WellTaggedValidationFramework : UaValidationTestFramework {
-            public WellTaggedValidationFramework(String destinationFolder)
-                : base(destinationFolder) {
+        [NUnit.Framework.Test]
+        public virtual void WellTaggedPdfTableReuseTest() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, PdfConformance.WELL_TAGGED_PDF_FOR_ACCESSIBILITY
+                );
+            PdfUATableTest.TableBuilder tableBuilder = new PdfUATableTest.TableBuilder(4);
+            tableBuilder.AddBodyCell(PdfUATableTest.NewHeaderCell(null, "Header 1", 1, 1, "Column"));
+            tableBuilder.AddBodyCell(PdfUATableTest.NewHeaderCell(null, "Header 2", 1, 1, "Column"));
+            tableBuilder.AddBodyCell(PdfUATableTest.NewHeaderCell(null, "Header 3", 1, 1, "Column"));
+            tableBuilder.AddBodyCell(PdfUATableTest.NewHeaderCell(null, "Header 4", 1, 1, "Column"));
+            for (int i = 0; i < 4; i++) {
+                tableBuilder.AddBodyCell(PdfUATableTest.NewDataCell("Data 1", 1, 1, null));
             }
-
-            // Android-Conversion-Skip-Block-Start (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
-            protected internal override VeraPdfValidator GetVerapdfValidator() {
-                return new VeraPdfValidator("WTPDF");
-            }
-
-            // Android-Conversion-Skip-Block-End
-            protected internal override PdfDocument CreatePdfDocument(String filename, PdfUAConformance pdfUAConformance
-                ) {
-                return new WellTaggedPdfDocument(new PdfWriter(filename, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0
-                    )), new WellTaggedPdfConfig(WellTaggedPdfConformance.FOR_ACCESSIBILITY, "English pangram", "en-US"));
-            }
-
-            protected internal override PdfDocument CreatePdfDocument(String inputFile, String outputFile, PdfUAConformance
-                 pdfUAConformance) {
-                return new WellTaggedPdfDocument(new PdfReader(inputFile), new PdfWriter(outputFile, new WriterProperties(
-                    ).SetPdfVersion(PdfVersion.PDF_2_0)), new WellTaggedPdfConfig(WellTaggedPdfConformance.FOR_ACCESSIBILITY
-                    , "English pangram", "en-US"));
-            }
+            framework.AddSuppliers(tableBuilder.GenerateFunc());
+            framework.AssertBothValid("wellTaggedPdfTableTest");
         }
     }
 }

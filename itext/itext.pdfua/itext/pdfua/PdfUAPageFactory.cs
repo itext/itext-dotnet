@@ -47,7 +47,12 @@ namespace iText.Pdfua {
         /// <see cref="iText.Kernel.Pdf.PdfPage"/>
         /// will be based
         /// </param>
-        /// <returns>The pdf page.</returns>
+        /// <returns>
+        /// The
+        /// <see cref="iText.Kernel.Pdf.PdfPage"/>
+        /// based on the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// </returns>
         public virtual PdfPage CreatePdfPage(PdfDictionary pdfObject) {
             return new PdfUAPage(pdfObject, checker);
         }
@@ -62,7 +67,14 @@ namespace iText.Pdfua {
         /// <see cref="iText.Kernel.Geom.PageSize"/>
         /// of the created page
         /// </param>
-        /// <returns>The Pdf page.</returns>
+        /// <returns>
+        /// The
+        /// <see cref="iText.Kernel.Pdf.PdfPage"/>
+        /// based on the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// and
+        /// <see cref="iText.Kernel.Geom.PageSize"/>
+        /// </returns>
         public virtual PdfPage CreatePdfPage(PdfDocument pdfDocument, PageSize pageSize) {
             return new PdfUAPage(pdfDocument, pageSize, checker);
         }

@@ -27,7 +27,6 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Kernel.Pdf {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PageResizerTest : ExtendedITextTest {
         public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/pdf/PageResizerTest/";
@@ -489,7 +488,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void TestPdfASignatureFieldAspect() {
             String inFileName = "pdfASignatureFieldAspect.pdf";
@@ -504,7 +502,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void TestPdfAFormFieldsDefault() {
             String inFileName = "pdfAFormFieldsDefault.pdf";
@@ -519,7 +516,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void TestPdfAFormFieldsAspect() {
             String inFileName = "pdfAFormFieldsAspect.pdf";
@@ -534,7 +530,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void TestPdfUA1ButtonDefault() {
             String inFileName = "pdfUA1ButtonDefault.pdf";
@@ -549,7 +544,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void TestPdfUA1ButtonAspect() {
             String inFileName = "pdfUA1ButtonAspect.pdf";
@@ -564,7 +558,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void TestPdfUA2RadioButtonDefault() {
             String inFileName = "pdfUA2RadioButtonDefault.pdf";
@@ -579,7 +572,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void TestPdfUA2RadioButtonAspect() {
             String inFileName = "pdfUA2RadioButtonAspect.pdf";
@@ -594,7 +586,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void TestPdfUA1SignatureField() {
             String inFileName = "pdfUA1SignatureField.pdf";
@@ -609,7 +600,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void TestPdfUA2SignatureField() {
             String inFileName = "pdfUA2SignatureField.pdf";
@@ -624,7 +614,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(DESTINATION_FOLDER + outFileName));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void TestNestedForms() {
             String inFileName = "nestedForms.pdf";

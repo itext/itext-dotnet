@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.IO.Font;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
@@ -45,43 +46,29 @@ namespace iText.Pdfua.Checkers {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
-        public static IList<PdfUAConformance> TestSources() {
+        public static IList<PdfConformance> TestSources() {
             return UaValidationTestFramework.GetConformanceList();
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
-        public virtual void ValidListTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_70());
-            framework.AssertBothValid("validListTest", pdfUAConformance);
-        }
-
-        private sealed class _Generator_70 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_70() {
-            }
-
-            public IBlockElement Generate() {
+        public virtual void ValidListTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((pdfDocument) => {
                 List list = new List(ListNumberingType.DECIMAL);
                 list.Add(new ListItem("item1"));
                 list.Add(new ListItem("item2"));
                 list.Add(new ListItem("item3"));
-                list.SetFont(PdfUAListTest.LoadFont());
+                list.SetFont(LoadFont());
                 return list;
             }
+            );
+            framework.AssertBothValid("validListTest");
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
-        public virtual void LblAndLBodyInListItemTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_89());
-            framework.AssertBothValid("lblAndLBodyInListItemTest", pdfUAConformance);
-        }
-
-        private sealed class _Generator_89 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_89() {
-            }
-
-            public IBlockElement Generate() {
+        public virtual void LblAndLBodyInListItemTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((pdfDocument) => {
                 Div list = new Div();
                 list.GetAccessibilityProperties().SetRole(StandardRoles.L);
                 Div item = new Div();
@@ -93,89 +80,77 @@ namespace iText.Pdfua.Checkers {
                 item.Add(lbl);
                 item.Add(lBody);
                 list.Add(item);
-                list.SetFont(PdfUAListTest.LoadFont());
+                list.SetFont(LoadFont());
                 return list;
             }
+            );
+            framework.AssertBothValid("lblAndLBodyInListItemTest");
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
-        public virtual void InvalidListItemRoleTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_119());
-            framework.AssertBothFail("invalidListItemRoleTest", PdfUAExceptionMessageConstants.LIST_ITEM_CONTENT_HAS_INVALID_TAG
-                , pdfUAConformance);
-        }
-
-        private sealed class _Generator_119 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_119() {
-            }
-
-            public IBlockElement Generate() {
+        public virtual void InvalidListItemRoleTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((pdf) => {
                 List list = new List(ListNumberingType.DECIMAL);
                 ListItem item1 = new ListItem("item1");
                 item1.GetAccessibilityProperties().SetRole(StandardRoles.P);
                 list.Add(item1);
                 list.Add(new ListItem("item2"));
                 list.Add(new ListItem("item3"));
-                list.SetFont(PdfUAListTest.LoadFont());
+                list.SetFont(LoadFont());
                 return list;
             }
+            );
+            framework.AssertBothFail("invalidListItemRoleTest", PdfUAExceptionMessageConstants.LIST_ITEM_CONTENT_HAS_INVALID_TAG
+                );
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
-        public virtual void ArtifactInListItemTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_141());
-            framework.AssertBothValid("artifactInListItemTest", pdfUAConformance);
-        }
-
-        private sealed class _Generator_141 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_141() {
-            }
-
-            public IBlockElement Generate() {
+        public virtual void ArtifactInListItemTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((pdfDocument) => {
                 List list = new List(ListNumberingType.DECIMAL);
                 ListItem item1 = new ListItem("item1");
                 item1.GetAccessibilityProperties().SetRole(StandardRoles.ARTIFACT);
                 list.Add(item1);
                 list.Add(new ListItem("item2"));
                 list.Add(new ListItem("item3"));
-                list.SetFont(PdfUAListTest.LoadFont());
+                list.SetFont(LoadFont());
                 return list;
             }
+            );
+            framework.AssertBothValid("artifactInListItemTest");
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
-        public virtual void NoListNumberingTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void NoListNumberingTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 pdfDoc.GetTagStructureContext().NormalizeDocumentRootTag();
-                PdfStructElem list = pdfUAConformance == PdfUAConformance.PDF_UA_1 ? pdfDoc.GetStructTreeRoot().AddKid(new 
-                    PdfStructElem(pdfDoc, PdfName.L)) : ((PdfStructElem)pdfDoc.GetStructTreeRoot().GetKids()[0]).AddKid(new 
-                    PdfStructElem(pdfDoc, PdfName.L));
+                PdfStructElem list = conformance.GetUAConformance() == PdfUAConformance.PDF_UA_1 ? pdfDoc.GetStructTreeRoot
+                    ().AddKid(new PdfStructElem(pdfDoc, PdfName.L)) : ((PdfStructElem)pdfDoc.GetStructTreeRoot().GetKids()
+                    [0]).AddKid(new PdfStructElem(pdfDoc, PdfName.L));
                 PdfStructElem listItem1 = list.AddKid(new PdfStructElem(pdfDoc, PdfName.LI));
                 listItem1.AddKid(new PdfStructElem(pdfDoc, PdfName.Lbl));
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothValid("noListNumberingTest", pdfUAConformance);
+            if (conformance.GetUAConformance() == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothValid("noListNumberingTest");
             }
             else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothFail("noListNumberingTest", PdfUAExceptionMessageConstants.LIST_NUMBERING_IS_NOT_SPECIFIED
-                        , pdfUAConformance);
-                }
+                framework.AssertBothFail("noListNumberingTest", PdfUAExceptionMessageConstants.LIST_NUMBERING_IS_NOT_SPECIFIED
+                    );
             }
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
-        public virtual void NoneListNumberingTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void NoneListNumberingTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 pdfDoc.GetTagStructureContext().NormalizeDocumentRootTag();
-                PdfStructElem list = pdfUAConformance == PdfUAConformance.PDF_UA_1 ? pdfDoc.GetStructTreeRoot().AddKid(new 
-                    PdfStructElem(pdfDoc, PdfName.L)) : ((PdfStructElem)pdfDoc.GetStructTreeRoot().GetKids()[0]).AddKid(new 
-                    PdfStructElem(pdfDoc, PdfName.L));
+                PdfStructElem list = conformance.GetUAConformance() == PdfUAConformance.PDF_UA_1 ? pdfDoc.GetStructTreeRoot
+                    ().AddKid(new PdfStructElem(pdfDoc, PdfName.L)) : ((PdfStructElem)pdfDoc.GetStructTreeRoot().GetKids()
+                    [0]).AddKid(new PdfStructElem(pdfDoc, PdfName.L));
                 PdfDictionary attributes = new PdfDictionary();
                 attributes.Put(PdfName.O, PdfName.List);
                 attributes.Put(PdfName.ListNumbering, PdfName.None);
@@ -184,45 +159,34 @@ namespace iText.Pdfua.Checkers {
                 listItem1.AddKid(new PdfStructElem(pdfDoc, PdfName.Lbl));
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothValid("noneListNumberingTest", pdfUAConformance);
+            if (conformance.GetUAConformance() == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothValid("noneListNumberingTest");
             }
             else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothFail("noneListNumberingTest", PdfUAExceptionMessageConstants.LIST_NUMBERING_IS_NOT_SPECIFIED
-                        , pdfUAConformance);
-                }
+                framework.AssertBothFail("noneListNumberingTest", PdfUAExceptionMessageConstants.LIST_NUMBERING_IS_NOT_SPECIFIED
+                    );
             }
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
-        public virtual void NoListNumberingNoLblTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void NoListNumberingNoLblTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 pdfDoc.GetTagStructureContext().NormalizeDocumentRootTag();
-                PdfStructElem list = pdfUAConformance == PdfUAConformance.PDF_UA_1 ? pdfDoc.GetStructTreeRoot().AddKid(new 
-                    PdfStructElem(pdfDoc, PdfName.L)) : ((PdfStructElem)pdfDoc.GetStructTreeRoot().GetKids()[0]).AddKid(new 
-                    PdfStructElem(pdfDoc, PdfName.L));
+                PdfStructElem list = conformance.GetUAConformance() == PdfUAConformance.PDF_UA_1 ? pdfDoc.GetStructTreeRoot
+                    ().AddKid(new PdfStructElem(pdfDoc, PdfName.L)) : ((PdfStructElem)pdfDoc.GetStructTreeRoot().GetKids()
+                    [0]).AddKid(new PdfStructElem(pdfDoc, PdfName.L));
                 PdfStructElem listItem1 = list.AddKid(new PdfStructElem(pdfDoc, PdfName.LI));
                 listItem1.AddKid(new PdfStructElem(pdfDoc, PdfName.LBody));
             }
             );
-            framework.AssertBothValid("noListNumberingNoLblTest", pdfUAConformance);
+            framework.AssertBothValid("noListNumberingNoLblTest");
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
-        public virtual void InvalidNestedListTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_229());
-            framework.AssertBothFail("invalidNestedListTest", PdfUAExceptionMessageConstants.LIST_ITEM_CONTENT_HAS_INVALID_TAG
-                , pdfUAConformance);
-        }
-
-        private sealed class _Generator_229 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_229() {
-            }
-
-            public IBlockElement Generate() {
+        public virtual void InvalidNestedListTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((pdfDocument) => {
                 Div list = new Div();
                 list.GetAccessibilityProperties().SetRole(StandardRoles.L);
                 PdfDictionary attributes = new PdfDictionary();
@@ -237,47 +201,44 @@ namespace iText.Pdfua.Checkers {
                 list.Add(new ListItem("item2"));
                 list.Add(new ListItem("item3"));
                 list.Add(nestedList);
-                list.SetFont(PdfUAListTest.LoadFont());
+                list.SetFont(LoadFont());
                 return list;
             }
+            );
+            framework.AssertBothFail("invalidNestedListTest", PdfUAExceptionMessageConstants.LIST_ITEM_CONTENT_HAS_INVALID_TAG
+                );
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
-        public virtual void SeveralListNumberingsFirstValidTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_261());
-            // ListNumbering Decimal will be added to the beginning when processing List layout element.
-            framework.AssertBothValid("severalListNumberingsFirstValidTest", pdfUAConformance);
-        }
-
-        private sealed class _Generator_261 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_261() {
-            }
-
-            public IBlockElement Generate() {
+        public virtual void SeveralListNumberingsFirstValidTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((document) => {
                 List list = new List(ListNumberingType.DECIMAL);
                 list.Add(new ListItem("item1"));
                 list.Add(new ListItem("item2"));
                 list.Add(new ListItem("item3"));
-                list.SetFont(PdfUAListTest.LoadFont());
+                list.SetFont(LoadFont());
                 PdfDictionary attributes = new PdfDictionary();
                 attributes.Put(PdfName.O, PdfName.List);
                 attributes.Put(PdfName.ListNumbering, PdfName.None);
+                // ListNumbering Decimal will be added to the beginning when processing List layout element.
                 list.GetAccessibilityProperties().AddAttributes(new PdfStructureAttributes(attributes));
                 list.GetAccessibilityProperties().AddAttributes(new PdfStructureAttributes(attributes));
                 list.GetAccessibilityProperties().AddAttributes(new PdfStructureAttributes(attributes));
                 return list;
             }
+            );
+            framework.AssertBothValid("severalListNumberingsFirstValidTest");
         }
 
         [NUnit.Framework.TestCaseSource("TestSources")]
-        public virtual void SeveralListNumberingsFirstInvalidTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void SeveralListNumberingsFirstInvalidTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 pdfDoc.GetTagStructureContext().NormalizeDocumentRootTag();
-                PdfStructElem list = pdfUAConformance == PdfUAConformance.PDF_UA_1 ? pdfDoc.GetStructTreeRoot().AddKid(new 
-                    PdfStructElem(pdfDoc, PdfName.L)) : ((PdfStructElem)pdfDoc.GetStructTreeRoot().GetKids()[0]).AddKid(new 
-                    PdfStructElem(pdfDoc, PdfName.L));
+                PdfStructElem list = conformance.GetUAConformance() == PdfUAConformance.PDF_UA_1 ? pdfDoc.GetStructTreeRoot
+                    ().AddKid(new PdfStructElem(pdfDoc, PdfName.L)) : ((PdfStructElem)pdfDoc.GetStructTreeRoot().GetKids()
+                    [0]).AddKid(new PdfStructElem(pdfDoc, PdfName.L));
                 PdfDictionary validAttributes = new PdfDictionary();
                 validAttributes.Put(PdfName.O, PdfName.List);
                 validAttributes.Put(PdfName.ListNumbering, PdfName.Ordered);
@@ -293,14 +254,12 @@ namespace iText.Pdfua.Checkers {
                 listItem1.AddKid(new PdfStructElem(pdfDoc, PdfName.Lbl));
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothValid("severalListNumberingsFirstInvalidTest", pdfUAConformance);
+            if (conformance.GetUAConformance() == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothValid("severalListNumberingsFirstInvalidTest");
             }
             else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothFail("severalListNumberingsFirstInvalidTest", PdfUAExceptionMessageConstants.LIST_NUMBERING_IS_NOT_SPECIFIED
-                        , pdfUAConformance);
-                }
+                framework.AssertBothFail("severalListNumberingsFirstInvalidTest", PdfUAExceptionMessageConstants.LIST_NUMBERING_IS_NOT_SPECIFIED
+                    );
             }
         }
 
@@ -310,7 +269,7 @@ namespace iText.Pdfua.Checkers {
                     );
             }
             catch (System.IO.IOException e) {
-                throw new Exception(e.Message);
+                throw new PdfException(e.Message);
             }
         }
     }

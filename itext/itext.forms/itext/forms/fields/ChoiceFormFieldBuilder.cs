@@ -120,7 +120,7 @@ namespace iText.Forms.Fields {
             }
             else {
                 annotation = new PdfWidgetAnnotation(GetWidgetRectangle());
-                if (null != GetConformance() && GetConformance().IsPdfAOrUaOrWtpdf()) {
+                if (null != GetConformance() && GetConformance().ConformsToAny()) {
                     annotation.SetFlag(PdfAnnotation.PRINT);
                 }
                 field = PdfFormCreator.CreateChoiceFormField(annotation, GetDocument());

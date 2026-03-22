@@ -20,6 +20,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
+using System.Collections.Generic;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Kernel.Mac;
@@ -40,11 +42,27 @@ namespace iText.Kernel.Pdf {
 
         protected internal bool addXmpMetadata;
 
+        /// <summary>The following field is deprecated, because it doesn't affect the behavior of the writer in any way.
+        ///     </summary>
+        /// <remarks>
+        /// The following field is deprecated, because it doesn't affect the behavior of the writer in any way.
+        /// They are kept for backward compatibility, but they are not used anymore, use
+        /// <see cref="PdfConformance"/>
+        /// instead to specify the PDF conformance that will be added to XMP metadata.
+        /// </remarks>
+        [System.ObsoleteAttribute(@"in favor of conformance")]
         protected internal PdfAConformance addPdfAXmpMetadata = null;
 
+        /// <summary>The following field is deprecated, because it doesn't affect the behavior of the writer in any way.
+        ///     </summary>
+        /// <remarks>
+        /// The following field is deprecated, because it doesn't affect the behavior of the writer in any way.
+        /// They are kept for backward compatibility, but they are not used anymore, use
+        /// <see cref="PdfConformance"/>
+        /// instead to specify the PDF conformance that will be added to XMP metadata.
+        /// </remarks>
+        [System.ObsoleteAttribute(@"in favor of conformance")]
         protected internal PdfUAConformance addPdfUaXmpMetadata = null;
-
-        protected internal WellTaggedPdfConformance? addWtpdfXmpMetadata = null;
 
         protected internal PdfVersion pdfVersion;
 
@@ -55,6 +73,8 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>The ID entry that represents a change in a document.</summary>
         protected internal PdfString modifiedDocumentId;
+
+        private PdfConformance conformance = PdfConformance.PDF_NONE_CONFORMANCE;
 
         public WriterProperties() {
             smartMode = false;
@@ -136,7 +156,8 @@ namespace iText.Kernel.Pdf {
         /// instance
         /// </returns>
         public virtual iText.Kernel.Pdf.WriterProperties AddPdfAXmpMetadata(PdfAConformance aConformance) {
-            this.addPdfAXmpMetadata = aConformance;
+            this.conformance = new PdfConformance(aConformance, this.conformance.GetUAConformance(), this.conformance.
+                GetWtpdfConformances());
             AddXmpMetadata();
             return this;
         }
@@ -160,9 +181,17 @@ namespace iText.Kernel.Pdf {
         /// instance
         /// </returns>
         public virtual iText.Kernel.Pdf.WriterProperties AddPdfUaXmpMetadata(PdfUAConformance uaConformance) {
-            this.addPdfUaXmpMetadata = uaConformance;
+            this.conformance = new PdfConformance(this.conformance.GetAConformance(), uaConformance, this.conformance.
+                GetWtpdfConformances());
             AddXmpMetadata();
             return this;
+        }
+
+        /// <summary>Gets the PDF conformance that will be added to XMP metadata.</summary>
+        /// <returns>the PDF conformance that will be added to XMP metadata, or null if no PDF conformance will be added
+        ///     </returns>
+        public virtual PdfConformance GetPdfConformance() {
+            return conformance;
         }
 
         /// <summary>Adds Well Tagged PDF XMP metadata to the PDF document.</summary>
@@ -179,15 +208,16 @@ namespace iText.Kernel.Pdf {
         /// document requirements.
         /// If you are not sure, use dedicated iText PDF/UA module to create valid Well Tagged PDF documents.
         /// </remarks>
-        /// <param name="wtpdfConformance">the Well Tagged PDF conformance which will be added to XMP metadata</param>
+        /// <param name="wtpdfConformanceList">the Well Tagged PDF conformance which will be added to XMP metadata</param>
         /// <returns>
         /// this
         /// <see cref="WriterProperties"/>
         /// instance
         /// </returns>
-        public virtual iText.Kernel.Pdf.WriterProperties AddWtpdfXmpMetadata(WellTaggedPdfConformance? wtpdfConformance
+        public virtual iText.Kernel.Pdf.WriterProperties AddWtpdfXmpMetadata(IList<WellTaggedPdfConformance> wtpdfConformanceList
             ) {
-            this.addWtpdfXmpMetadata = wtpdfConformance;
+            this.conformance = new PdfConformance(this.conformance.GetAConformance(), this.conformance.GetUAConformance
+                (), wtpdfConformanceList);
             AddXmpMetadata();
             return this;
         }

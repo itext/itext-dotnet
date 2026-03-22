@@ -35,7 +35,6 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Layout.Tagging {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class ProhibitedTagRelationsResolverTest : ExtendedITextTest {
         public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout" + "/ResolveProhibitedRelationsRuleTest/";
@@ -149,7 +148,6 @@ namespace iText.Layout.Tagging {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(dest));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void CustomRoleMapping() {
             String dest = DESTINATION_FOLDER + "customRoleMapping.pdf";
@@ -171,7 +169,6 @@ namespace iText.Layout.Tagging {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(dest));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void CustomRoleMappingWithSkipParent() {
             String dest = DESTINATION_FOLDER + "customRoleMappingWithSkipParent.pdf";
@@ -193,7 +190,6 @@ namespace iText.Layout.Tagging {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(dest));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void LayoutListWithImage() {
             String dest = DESTINATION_FOLDER + "testLayoutListWithImage.pdf";
@@ -215,7 +211,6 @@ namespace iText.Layout.Tagging {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(dest));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void LayoutRole() {
             String dest = DESTINATION_FOLDER + "layoutRole.pdf";
@@ -234,7 +229,6 @@ namespace iText.Layout.Tagging {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(dest));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void LayoutHeaderInTable() {
             String dest = DESTINATION_FOLDER + "layoutHeaderInTable.pdf";
@@ -260,7 +254,6 @@ namespace iText.Layout.Tagging {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(dest));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void LayoutTableWithHeaderLargeTable() {
             String dest = DESTINATION_FOLDER + "layoutTableWithHeaderLargeTable.pdf";
@@ -290,7 +283,6 @@ namespace iText.Layout.Tagging {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(dest));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void LayoutWithFlushing() {
             String dest = DESTINATION_FOLDER + "layoutWithFlushing.pdf";
@@ -314,7 +306,6 @@ namespace iText.Layout.Tagging {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(dest));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         private static void ConvertToUa2(PdfDocument pdfDocument) {
             // We can't depend on ua module in layout module so we need to do some low level operations
             // to convert the to ua2

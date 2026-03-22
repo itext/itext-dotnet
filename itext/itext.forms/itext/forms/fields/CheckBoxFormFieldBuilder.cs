@@ -74,7 +74,7 @@ namespace iText.Forms.Fields {
             else {
                 PdfWidgetAnnotation annotation = new PdfWidgetAnnotation(GetWidgetRectangle());
                 annotation.SetAppearanceState(new PdfName(PdfFormAnnotation.OFF_STATE_VALUE));
-                if (GetConformance() != null && GetConformance().IsPdfAOrUaOrWtpdf()) {
+                if (GetConformance() != null && GetConformance().ConformsToAny()) {
                     annotation.SetFlag(PdfAnnotation.PRINT);
                 }
                 check = PdfFormCreator.CreateButtonFormField(annotation, GetDocument());

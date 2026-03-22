@@ -37,8 +37,8 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
         /// <see cref="CellResultMatrix"/>
         /// instance.
         /// </summary>
-        /// <param name="table">The table that needs to be checked.</param>
-        /// <param name="context">The validation context.</param>
+        /// <param name="table">The table that needs to be checked</param>
+        /// <param name="context">The validation context</param>
         public CellResultMatrix(Table table, PdfUAValidationContext context)
             : base(new TableCellIterator(table, context), context.GetUAConformance()) {
         }

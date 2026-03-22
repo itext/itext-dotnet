@@ -11,6 +11,10 @@ using iText.Pdfua.Checkers.Utils.Ua2;
 using iText.Pdfua.Exceptions;
 
 namespace iText.Pdfua.Wtpdf {
+    /// <summary>
+    /// <see cref="WellTaggedPdfForReuseChecker"/>
+    /// class performs validation of a PDF document against WTPDF For Reuse standard.
+    /// </summary>
     public class WellTaggedPdfForReuseChecker : WellTaggedPdfForAccessibilityChecker {
         /// <summary>
         /// Creates
@@ -25,12 +29,7 @@ namespace iText.Pdfua.Wtpdf {
         public override void Validate(IValidationContext context) {
             switch (context.GetType()) {
                 case ValidationType.PDF_DOCUMENT: {
-                    PdfDocumentValidationContext pdfDocContext = (PdfDocumentValidationContext)context;
-                    CheckCatalog(pdfDocContext.GetPdfDocument().GetCatalog());
-                    CheckStructureTreeRoot(pdfDocContext.GetPdfDocument().GetStructTreeRoot());
-                    CheckFonts(pdfDocContext.GetDocumentFonts());
-                    new PdfUA2DestinationsChecker(pdfDocContext.GetPdfDocument()).CheckDestinations();
-                    PdfUA2XfaChecker.Check(pdfDocContext.GetPdfDocument());
+                    ValidatePdfDocument((PdfDocumentValidationContext)context);
                     break;
                 }
 
@@ -41,29 +40,22 @@ namespace iText.Pdfua.Wtpdf {
                 }
 
                 case ValidationType.CANVAS_BEGIN_MARKED_CONTENT: {
-                    CanvasBmcValidationContext bmcContext = (CanvasBmcValidationContext)context;
-                    CheckLogicalStructureInBMC(bmcContext.GetTagStructureStack(), bmcContext.GetCurrentBmc(), GetPdfDocument()
-                        );
+                    ValidateCanvasBmc((CanvasBmcValidationContext)context);
                     break;
                 }
 
                 case ValidationType.CANVAS_WRITING_CONTENT: {
-                    CanvasWritingContentValidationContext writingContext = (CanvasWritingContentValidationContext)context;
-                    CheckContentInCanvas(writingContext.GetTagStructureStack(), GetPdfDocument());
+                    ValidateCanvasWriting((CanvasWritingContentValidationContext)context);
                     break;
                 }
 
                 case ValidationType.LAYOUT: {
-                    LayoutValidationContext layoutContext = (LayoutValidationContext)context;
-                    new WellTaggedPdfForReuseLayoutChecker(GetUAValidationContext()).CheckRenderer(layoutContext.GetRenderer()
-                        );
-                    new PdfUA2HeadingsChecker(GetUAValidationContext()).CheckLayoutElement(layoutContext.GetRenderer());
+                    ValidateLayout((LayoutValidationContext)context);
                     break;
                 }
 
                 case ValidationType.DESTINATION_ADDITION: {
-                    PdfDestinationAdditionContext destinationAdditionContext = (PdfDestinationAdditionContext)context;
-                    new PdfUA2DestinationsChecker(destinationAdditionContext, GetPdfDocument()).CheckDestinationsOnCreation();
+                    ValidateDestinationAddition((PdfDestinationAdditionContext)context);
                     break;
                 }
 
@@ -74,9 +66,11 @@ namespace iText.Pdfua.Wtpdf {
                 }
 
                 case ValidationType.ANNOTATION: {
-                    PdfAnnotationContext annotationContext = (PdfAnnotationContext)context;
-                    new WellTaggedPdfForReuseAnnotationChecker().CheckAnnotation(annotationContext.GetAnnotation(), GetUAValidationContext
-                        ());
+                    ValidateAnnotation((PdfAnnotationContext)context);
+                    break;
+                }
+
+                default: {
                     break;
                 }
             }
@@ -106,7 +100,7 @@ namespace iText.Pdfua.Wtpdf {
             formChecker.CheckFormFields(catalog.GetPdfObject().GetAsDictionary(PdfName.AcroForm));
             formChecker.CheckWidgetAnnotations(GetPdfDocument());
             PdfUA2LinkChecker.CheckLinkAnnotations(GetPdfDocument());
-            new WellTaggedPdfForReuseAnnotationChecker().CheckAnnotations(GetPdfDocument());
+            new WellTaggedPdfForReuseAnnotationChecker().CheckAllAnnotations(GetPdfDocument());
         }
 
         protected internal override TagTreeIterator CreateTagTreeIterator(PdfStructTreeRoot structTreeRoot) {
@@ -166,6 +160,38 @@ namespace iText.Pdfua.Wtpdf {
             catch (XMPException e) {
                 throw new PdfUAConformanceException(e.Message, e);
             }
+        }
+
+        private void ValidatePdfDocument(PdfDocumentValidationContext pdfDocContext) {
+            CheckCatalog(pdfDocContext.GetPdfDocument().GetCatalog());
+            CheckStructureTreeRoot(pdfDocContext.GetPdfDocument().GetStructTreeRoot());
+            CheckFonts(pdfDocContext.GetDocumentFonts());
+            new PdfUA2DestinationsChecker(pdfDocContext.GetPdfDocument()).CheckDestinations();
+            PdfUA2XfaChecker.Check(pdfDocContext.GetPdfDocument());
+        }
+
+        private void ValidateCanvasBmc(CanvasBmcValidationContext bmcContext) {
+            CheckLogicalStructureInBMC(bmcContext.GetTagStructureStack(), bmcContext.GetCurrentBmc(), GetPdfDocument()
+                );
+        }
+
+        private void ValidateCanvasWriting(CanvasWritingContentValidationContext writingContext) {
+            CheckContentInCanvas(writingContext.GetTagStructureStack(), GetPdfDocument());
+        }
+
+        private void ValidateLayout(LayoutValidationContext layoutContext) {
+            new WellTaggedPdfForReuseLayoutChecker(GetUAValidationContext()).CheckRenderer(layoutContext.GetRenderer()
+                );
+            new PdfUA2HeadingsChecker(GetUAValidationContext()).CheckLayoutElement(layoutContext.GetRenderer());
+        }
+
+        private void ValidateDestinationAddition(PdfDestinationAdditionContext ctx) {
+            new PdfUA2DestinationsChecker(ctx, GetPdfDocument()).CheckDestinationsOnCreation();
+        }
+
+        private void ValidateAnnotation(PdfAnnotationContext annotationContext) {
+            new WellTaggedPdfForReuseAnnotationChecker().CheckSingleAnnotation(annotationContext.GetAnnotation(), GetUAValidationContext
+                ());
         }
     }
 }

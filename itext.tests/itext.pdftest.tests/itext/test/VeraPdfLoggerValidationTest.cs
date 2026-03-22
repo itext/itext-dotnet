@@ -25,7 +25,6 @@ using iText.Test.Pdfa;
 using iText.Test.Utils;
 
 namespace iText.Test {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     // Android-Conversion-Skip-File (TODO DEVSIX-7377 introduce pdf\a validation on Android)
     [NUnit.Framework.Category("UnitTest")]
     public class VeraPdfLoggerValidationTest : ExtendedITextTest {

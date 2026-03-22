@@ -6,6 +6,8 @@ using iText.Pdfua.Checkers.Utils;
 using iText.Pdfua.Checkers.Utils.Tables;
 
 namespace iText.Pdfua.Wtpdf {
+    /// <summary>Performs layout checks for a PDF document being validated against the Well Tagged PDF for Reuse standard.
+    ///     </summary>
     public class WellTaggedPdfForReuseLayoutChecker {
         private readonly PdfUAValidationContext context;
 
@@ -35,7 +37,7 @@ namespace iText.Pdfua.Wtpdf {
             }
         }
 
-        private bool IsPartOfSignatureAppearance(IRenderer renderer) {
+        private static bool IsPartOfSignatureAppearance(IRenderer renderer) {
             IRenderer parent = renderer.GetParent();
             while (parent != null) {
                 if (parent is SignatureAppearanceRenderer) {

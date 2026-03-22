@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Font.Constants;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
@@ -633,8 +634,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void AddAnnotationTaggedAsArtifactInWtpdfTest() {
             using (PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "addAnnotationTaggedAsArtifactInWtpdf.pdf"
-                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0).AddWtpdfXmpMetadata(WellTaggedPdfConformance
-                .FOR_ACCESSIBILITY)))) {
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0).AddWtpdfXmpMetadata(JavaCollectionsUtil.SingletonList
+                (WellTaggedPdfConformance.FOR_ACCESSIBILITY))))) {
                 document.SetTagged();
                 PdfPage page = document.AddNewPage();
                 PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(80, 508, 40, 18));

@@ -21,10 +21,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
+using System.Text;
 using iText.Commons.Utils;
+using iText.Kernel.Exceptions;
 using iText.Kernel.XMP;
-using iText.Kernel.XMP.Options;
-using iText.Kernel.XMP.Properties;
 
 namespace iText.Kernel.Pdf {
     /// <summary>The class represents possible PDF document conformance.</summary>
@@ -71,19 +72,27 @@ namespace iText.Kernel.Pdf {
             .PDF_UA_2);
 
         public static readonly iText.Kernel.Pdf.PdfConformance WELL_TAGGED_PDF_FOR_ACCESSIBILITY = new iText.Kernel.Pdf.PdfConformance
-            (WellTaggedPdfConformance.FOR_ACCESSIBILITY);
+            (JavaCollectionsUtil.SingletonList(WellTaggedPdfConformance.FOR_ACCESSIBILITY));
 
         public static readonly iText.Kernel.Pdf.PdfConformance WELL_TAGGED_PDF_FOR_REUSE = new iText.Kernel.Pdf.PdfConformance
-            (WellTaggedPdfConformance.FOR_REUSE);
+            (JavaCollectionsUtil.SingletonList(WellTaggedPdfConformance.FOR_REUSE));
 
         public static readonly iText.Kernel.Pdf.PdfConformance PDF_NONE_CONFORMANCE = new iText.Kernel.Pdf.PdfConformance
             ();
+
+        private const int WTPDF_FLAG_NONE = 0;
+
+        private const int WTPDF_FLAG_ACCESSIBILITY = 1;
+
+        private const int WTPDF_FLAG_REUSE = 2;
+
+        private const int WTPDF_FLAG_ACCESSIBILITY_AND_REUSE = WTPDF_FLAG_ACCESSIBILITY | WTPDF_FLAG_REUSE;
 
         private readonly PdfAConformance aConformance;
 
         private readonly PdfUAConformance uaConformance;
 
-        private readonly WellTaggedPdfConformance? wtpdfConformance;
+        private int wtpdfFlag = WTPDF_FLAG_NONE;
 
         /// <summary>
         /// Creates a new
@@ -93,11 +102,26 @@ namespace iText.Kernel.Pdf {
         /// <param name="aConformance">the PDF/A conformance</param>
         /// <param name="uaConformance">the PDF/UA conformance</param>
         /// <param name="wtpdfConformance">the Well Tagged PDF conformance</param>
-        public PdfConformance(PdfAConformance aConformance, PdfUAConformance uaConformance, WellTaggedPdfConformance?
+        public PdfConformance(PdfAConformance aConformance, PdfUAConformance uaConformance, WellTaggedPdfConformance
              wtpdfConformance) {
             this.aConformance = aConformance;
             this.uaConformance = uaConformance;
-            this.wtpdfConformance = wtpdfConformance;
+            SetWtPdfFlag(wtpdfConformance);
+        }
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="PdfConformance"/>
+        /// instance based on PDF/A, PDF/UA and Well Tagged PDF conformance.
+        /// </summary>
+        /// <param name="aConformance">the PDF/A conformance</param>
+        /// <param name="uaConformance">the PDF/UA conformance</param>
+        /// <param name="wtpdfConformanceList">the Well Tagged PDF conformance</param>
+        public PdfConformance(PdfAConformance aConformance, PdfUAConformance uaConformance, IList<WellTaggedPdfConformance
+            > wtpdfConformanceList) {
+            this.aConformance = aConformance;
+            this.uaConformance = uaConformance;
+            SetWtPdfFlag(wtpdfConformanceList);
         }
 
         /// <summary>
@@ -110,7 +134,6 @@ namespace iText.Kernel.Pdf {
         public PdfConformance(PdfAConformance aConformance, PdfUAConformance uaConformance) {
             this.aConformance = aConformance;
             this.uaConformance = uaConformance;
-            this.wtpdfConformance = null;
         }
 
         /// <summary>
@@ -122,7 +145,6 @@ namespace iText.Kernel.Pdf {
         public PdfConformance(PdfAConformance aConformance) {
             this.aConformance = aConformance;
             this.uaConformance = null;
-            this.wtpdfConformance = null;
         }
 
         /// <summary>
@@ -134,7 +156,6 @@ namespace iText.Kernel.Pdf {
         public PdfConformance(PdfUAConformance uaConformance) {
             this.uaConformance = uaConformance;
             this.aConformance = null;
-            this.wtpdfConformance = null;
         }
 
         /// <summary>
@@ -143,8 +164,20 @@ namespace iText.Kernel.Pdf {
         /// instance based on only Well Tagged PDF conformance.
         /// </summary>
         /// <param name="wtpdfConformance">the Well Tagged PDF conformance</param>
-        public PdfConformance(WellTaggedPdfConformance? wtpdfConformance) {
-            this.wtpdfConformance = wtpdfConformance;
+        public PdfConformance(IList<WellTaggedPdfConformance> wtpdfConformance) {
+            SetWtPdfFlag(wtpdfConformance);
+            this.uaConformance = null;
+            this.aConformance = null;
+        }
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="PdfConformance"/>
+        /// instance based on only Well Tagged PDF conformance.
+        /// </summary>
+        /// <param name="wtpdfConformance">the Well Tagged PDF conformance</param>
+        public PdfConformance(WellTaggedPdfConformance wtpdfConformance) {
+            SetWtPdfFlag(wtpdfConformance);
             this.uaConformance = null;
             this.aConformance = null;
         }
@@ -157,7 +190,66 @@ namespace iText.Kernel.Pdf {
         public PdfConformance() {
             this.aConformance = null;
             this.uaConformance = null;
-            this.wtpdfConformance = null;
+        }
+
+        /// <summary>
+        /// Gets
+        /// <see cref="PdfConformance"/>
+        /// instance from
+        /// <see cref="iText.Kernel.XMP.XMPMeta"/>.
+        /// </summary>
+        /// <param name="meta">the meta data to parse</param>
+        /// <returns>
+        /// the
+        /// <see cref="PdfConformance"/>
+        /// instance
+        /// </returns>
+        public static iText.Kernel.Pdf.PdfConformance GetConformance(XMPMeta meta) {
+            if (meta == null) {
+                return iText.Kernel.Pdf.PdfConformance.PDF_NONE_CONFORMANCE;
+            }
+            PdfAConformance aLevel = PdfConformanceXmpMetaDataUtil.GetAConformance(meta);
+            PdfUAConformance uaLevel = PdfConformanceXmpMetaDataUtil.GetUAConformanceFromXmp(meta);
+            IList<WellTaggedPdfConformance> wtpdfConformanceList = PdfConformanceXmpMetaDataUtil.GetWtpdfConformanceFromXmp
+                (meta);
+            return new iText.Kernel.Pdf.PdfConformance(aLevel, uaLevel, wtpdfConformanceList);
+        }
+
+        /// <summary>Sets required fields into XMP metadata according to passed PDF conformance.</summary>
+        /// <param name="xmpMeta">the xmp metadata to which required PDF conformance fields will be set</param>
+        /// <param name="conformance">the PDF conformance which fields should be set into XMP metadata.</param>
+        [System.ObsoleteAttribute(@"Use SetConformanceToXmp(iText.Kernel.XMP.XMPMeta) method of PdfConformance instance instead."
+            )]
+        public static void SetConformanceToXmp(XMPMeta xmpMeta, iText.Kernel.Pdf.PdfConformance conformance) {
+            if (conformance == null) {
+                return;
+            }
+            conformance.SetConformanceToXmp(xmpMeta);
+        }
+
+        /// <summary>
+        /// Gets an instance of
+        /// <see cref="PdfAConformance"/>
+        /// based on passed part and level.
+        /// </summary>
+        /// <param name="part">the part of PDF/A conformance</param>
+        /// <param name="level">the level of PDF/A conformance</param>
+        /// <returns>
+        /// the
+        /// <see cref="PdfAConformance"/>
+        /// instance or
+        /// <see langword="null"/>
+        /// if there is no PDF/A conformance for passed
+        /// parameters
+        /// </returns>
+        public static PdfAConformance GetAConformance(String part, String level) {
+            return PdfConformanceXmpMetaDataUtil.GetAConformance(part, level);
+        }
+
+        /// <summary>Sets required fields into XMP metadata according to passed PDF conformance.</summary>
+        /// <param name="xmpMeta">the xmp metadata to which required PDF conformance fields will be set</param>
+        public virtual void SetConformanceToXmp(XMPMeta xmpMeta) {
+            PdfConformanceXmpMetaDataUtil.SetConformanceToXmp(this, xmpMeta);
         }
 
         /// <summary>Checks if any PDF/A conformance is specified.</summary>
@@ -190,18 +282,7 @@ namespace iText.Kernel.Pdf {
         /// <see langword="false"/>
         /// </returns>
         public virtual bool IsWtpdf() {
-            return wtpdfConformance != null;
-        }
-
-        /// <summary>Checks if any PDF/A or PDF/UA conformance is specified.</summary>
-        /// <returns>
-        /// 
-        /// <see langword="true"/>
-        /// if PDF/A or PDF/UA conformance is specified, otherwise
-        /// <see langword="false"/>
-        /// </returns>
-        public virtual bool IsPdfAOrUa() {
-            return IsPdfA() || IsPdfUA();
+            return wtpdfFlag != 0;
         }
 
         /// <summary>Checks if any of PDF/A, PDF/UA or Well Tagged PDF conformance is specified</summary>
@@ -211,8 +292,8 @@ namespace iText.Kernel.Pdf {
         /// if PDF/A, PDF/UA or Well Tagged PDF conformance is specified, otherwise
         /// <see langword="false"/>
         /// </returns>
-        public virtual bool IsPdfAOrUaOrWtpdf() {
-            return IsPdfAOrUa() || IsWtpdf();
+        public virtual bool ConformsToAny() {
+            return IsPdfA() || IsPdfUA() || IsWtpdf();
         }
 
         /// <summary>
@@ -246,18 +327,134 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
-        /// Gets the
-        /// <see cref="WellTaggedPdfConformance?"/>
-        /// instance if specified.
+        /// Gets the list of
+        /// <see cref="WellTaggedPdfConformance"/>
+        /// instances if specified.
         /// </summary>
         /// <returns>
+        /// the list of specified
+        /// <see cref="WellTaggedPdfConformance"/>
+        /// instances or empty list.
+        /// </returns>
+        public virtual IList<WellTaggedPdfConformance> GetWtpdfConformances() {
+            IList<WellTaggedPdfConformance> wtpdfConformanceList = new List<WellTaggedPdfConformance>();
+            if ((wtpdfFlag & WTPDF_FLAG_ACCESSIBILITY) != 0) {
+                wtpdfConformanceList.Add(WellTaggedPdfConformance.FOR_ACCESSIBILITY);
+            }
+            if ((wtpdfFlag & WTPDF_FLAG_REUSE) != 0) {
+                wtpdfConformanceList.Add(WellTaggedPdfConformance.FOR_REUSE);
+            }
+            return wtpdfConformanceList;
+        }
+
+        /// <summary>
+        /// Gets the
+        /// <see cref="WellTaggedPdfConformance"/>
+        /// instance if specified.
+        /// </summary>
+        /// <param name="wtPdfConformance">the Well Tagged PDF conformance to check</param>
+        /// <returns>
         /// the specified
-        /// <see cref="WellTaggedPdfConformance?"/>
+        /// <see cref="WellTaggedPdfConformance"/>
         /// instance or
         /// <see langword="null"/>.
         /// </returns>
-        public virtual WellTaggedPdfConformance? GetWtpdfConformance() {
-            return wtpdfConformance;
+        public virtual bool ConformsTo(WellTaggedPdfConformance wtPdfConformance) {
+            switch (wtPdfConformance) {
+                case WellTaggedPdfConformance.FOR_ACCESSIBILITY: {
+                    return (wtpdfFlag & WTPDF_FLAG_ACCESSIBILITY) != 0;
+                }
+
+                case WellTaggedPdfConformance.FOR_REUSE: {
+                    return (wtpdfFlag & WTPDF_FLAG_REUSE) != 0;
+                }
+
+                default: {
+                    throw new ArgumentException("Unknown Well Tagged PDF conformance: " + wtPdfConformance);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks if specified PDF/UA conformance is present in this
+        /// <see cref="PdfConformance"/>
+        /// instance.
+        /// </summary>
+        /// <param name="uaConformance">the PDF/UA conformance to check</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if specified PDF/UA conformance is present in this
+        /// <see cref="PdfConformance"/>
+        /// instance,
+        /// otherwise
+        /// </returns>
+        public virtual bool ConformsTo(PdfUAConformance uaConformance) {
+            return this.uaConformance == uaConformance;
+        }
+
+        /// <summary>
+        /// Checks if specified PDF/A conformance is present in this
+        /// <see cref="PdfConformance"/>
+        /// instance.
+        /// </summary>
+        /// <param name="aConformance">the PDF/A conformance to check</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if specified PDF/A conformance is present in this
+        /// <see cref="PdfConformance"/>
+        /// instance, otherwise
+        /// </returns>
+        public virtual bool ConformsTo(PdfAConformance aConformance) {
+            return this.aConformance == aConformance;
+        }
+
+        /// <summary>
+        /// Checks if any of specified conformance is present in this
+        /// <see cref="PdfConformance"/>
+        /// instance.
+        /// </summary>
+        /// <param name="conformanceList">the conformances to check</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if any of specified conformances is present in this
+        /// <see cref="PdfConformance"/>
+        /// instance,
+        /// otherwise
+        /// <see langword="false"/>
+        /// </returns>
+        public virtual bool ConformsTo(params iText.Kernel.Pdf.PdfConformance[] conformanceList) {
+            if (conformanceList == null) {
+                return false;
+            }
+            foreach (Object conformance in conformanceList) {
+                if (this.Equals(conformance)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>Checks if any PDF/A or PDF/UA conformance is specified.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if PDF/A or PDF/UA conformance is specified, otherwise
+        /// <see langword="false"/>
+        /// </returns>
+        [System.ObsoleteAttribute(@"Use ConformsToAny() instead, which also checks for Well Tagged PDF conformance."
+            )]
+        public virtual bool IsPdfAOrUa() {
+            return IsPdfA() || IsPdfUA();
+        }
+
+        public override int GetHashCode() {
+            int result = aConformance != null ? aConformance.GetHashCode() : 0;
+            result = 31 * result + (uaConformance != null ? uaConformance.GetHashCode() : 0);
+            result = 31 * result + wtpdfFlag;
+            return result;
         }
 
         public override bool Equals(Object o) {
@@ -268,241 +465,82 @@ namespace iText.Kernel.Pdf {
                 return false;
             }
             iText.Kernel.Pdf.PdfConformance that = (iText.Kernel.Pdf.PdfConformance)o;
-            return aConformance == that.aConformance && uaConformance == that.uaConformance && wtpdfConformance == that
-                .wtpdfConformance;
+            bool checkConformance = aConformance == that.aConformance && uaConformance == that.uaConformance;
+            if (!checkConformance) {
+                return false;
+            }
+            if (this.wtpdfFlag != that.wtpdfFlag) {
+                return false;
+            }
+            return true;
         }
 
-        public override int GetHashCode() {
-            int result = aConformance == null ? 0 : aConformance.GetHashCode();
-            result = 31 * result + (uaConformance == null ? 0 : uaConformance.GetHashCode());
-            result = 31 * result + (wtpdfConformance == null ? 0 : wtpdfConformance.GetHashCode());
-            return result;
-        }
-
-        /// <summary>
-        /// Gets
-        /// <see cref="PdfConformance"/>
-        /// instance from
-        /// <see cref="iText.Kernel.XMP.XMPMeta"/>.
-        /// </summary>
-        /// <param name="meta">the meta data to parse</param>
-        /// <returns>
-        /// the
-        /// <see cref="PdfConformance"/>
-        /// instance
-        /// </returns>
-        public static iText.Kernel.Pdf.PdfConformance GetConformance(XMPMeta meta) {
-            if (meta == null) {
-                return iText.Kernel.Pdf.PdfConformance.PDF_NONE_CONFORMANCE;
-            }
-            XMPProperty conformanceAXmpProperty = null;
-            XMPProperty partAXmpProperty = null;
-            PdfAConformance aLevel = null;
-            try {
-                conformanceAXmpProperty = meta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE);
-                partAXmpProperty = meta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART);
-            }
-            catch (XMPException) {
-            }
-            if (partAXmpProperty != null && (conformanceAXmpProperty != null || "4".Equals(partAXmpProperty.GetValue()
-                ))) {
-                aLevel = GetAConformance(partAXmpProperty.GetValue(), conformanceAXmpProperty == null ? null : conformanceAXmpProperty
-                    .GetValue());
-            }
-            XMPProperty partUAXmpProperty = null;
-            PdfUAConformance uaLevel = null;
-            try {
-                partUAXmpProperty = meta.GetProperty(XMPConst.NS_PDFUA_ID, XMPConst.PART);
-            }
-            catch (XMPException) {
-            }
-            if (partUAXmpProperty != null) {
-                uaLevel = GetUAConformance(partUAXmpProperty.GetValue());
-            }
-            WellTaggedPdfConformance? wellTaggedPdfConformance = null;
-            XMPProperty wtpdfProperty = null;
-            try {
-                wtpdfProperty = meta.GetProperty(XMPConst.NS_DECLARATIONS, XMPConst.DECLARATIONS + "/[1]/" + XMPConst.CONFORMS_TO
-                    );
-            }
-            catch (Exception) {
-            }
-            if (wtpdfProperty != null) {
-                if (XMPConst.NS_WTPDF_ACCESSIBILITY_ID.Equals(wtpdfProperty.GetValue())) {
-                    wellTaggedPdfConformance = WellTaggedPdfConformance.FOR_ACCESSIBILITY;
+        public override String ToString() {
+            StringBuilder sb = new StringBuilder("Conformance:");
+            if (IsPdfA()) {
+                sb.Append(" A-").Append(aConformance.GetPart());
+                if (aConformance.GetLevel() != null) {
+                    sb.Append(aConformance.GetLevel());
                 }
-                else {
-                    if (XMPConst.NS_WTPDF_REUSE_ID.Equals(wtpdfProperty.GetValue())) {
-                        wellTaggedPdfConformance = WellTaggedPdfConformance.FOR_REUSE;
+            }
+            if (IsPdfUA()) {
+                sb.Append(" UA-").Append(uaConformance.GetPart());
+            }
+            if (IsWtpdf()) {
+                sb.Append(" WTPDF-");
+                switch (wtpdfFlag) {
+                    case WTPDF_FLAG_ACCESSIBILITY: {
+                        sb.Append("FOR_ACCESSIBILITY");
+                        break;
+                    }
+
+                    case WTPDF_FLAG_REUSE: {
+                        sb.Append("FOR_REUSE");
+                        break;
+                    }
+
+                    case WTPDF_FLAG_ACCESSIBILITY_AND_REUSE: {
+                        sb.Append("FOR_ACCESSIBILITY_AND_REUSE");
+                        break;
+                    }
+
+                    default: {
+                        sb.Append("UNKNOWN");
+                        break;
                     }
                 }
             }
-            return new iText.Kernel.Pdf.PdfConformance(aLevel, uaLevel, wellTaggedPdfConformance);
+            return sb.ToString().Trim();
         }
 
-        /// <summary>Sets required fields into XMP metadata according to passed PDF conformance.</summary>
-        /// <param name="xmpMeta">the xmp metadata to which required PDF conformance fields will be set</param>
-        /// <param name="conformance">the PDF conformance according to which XMP will be updated</param>
-        public static void SetConformanceToXmp(XMPMeta xmpMeta, iText.Kernel.Pdf.PdfConformance conformance) {
-            if (conformance == null) {
-                return;
+        private void SetWtPdfFlag(IList<WellTaggedPdfConformance> wtpdfConformanceList) {
+            if (wtpdfConformanceList == null) {
+                throw new PdfException("Well Tagged PDF conformance list cannot be null");
             }
-            // Don't set any property if property value was set, so if
-            // smth was invalid in source document, it will be left as is.
-            // But if e.g. for PDF/A-4 revision wasn't specified, we will fix it.
-            if (conformance.IsPdfUA()) {
-                if (xmpMeta.GetProperty(XMPConst.NS_PDFUA_ID, XMPConst.PART) == null) {
-                    xmpMeta.SetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.PART, Convert.ToInt32(conformance.GetUAConformance
-                        ().GetPart(), System.Globalization.CultureInfo.InvariantCulture), new PropertyOptions(PropertyOptions.
-                        SEPARATE_NODE));
-                }
-                if (conformance.GetUAConformance() == PdfUAConformance.PDF_UA_2 && xmpMeta.GetProperty(XMPConst.NS_PDFUA_ID
-                    , XMPConst.REV) == null) {
-                    xmpMeta.SetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.REV, 2024);
-                }
-            }
-            if (xmpMeta.GetProperty(XMPConst.NS_DECLARATIONS, XMPConst.DECLARATIONS + "/[1]/" + XMPConst.CONFORMS_TO) 
-                == null) {
-                if (conformance.GetWtpdfConformance() == WellTaggedPdfConformance.FOR_ACCESSIBILITY || conformance.GetUAConformance
-                    () == PdfUAConformance.PDF_UA_2) {
-                    XMPMeta wtpdfMeta = XMPMetaFactory.ParseFromString(WELL_TAGGED_FOR_ACCESSIBILITY_SCHEMA);
-                    XMPUtils.AppendProperties(wtpdfMeta, xmpMeta, true, false, true);
-                }
-                else {
-                    if (conformance.GetWtpdfConformance() == WellTaggedPdfConformance.FOR_REUSE) {
-                        XMPMeta wtpdfMeta = XMPMetaFactory.ParseFromString(WELL_TAGGED_FOR_REUSE_SCHEMA);
-                        XMPUtils.AppendProperties(wtpdfMeta, xmpMeta, true, false, true);
-                    }
-                }
-            }
-            if (conformance.IsPdfA()) {
-                PdfAConformance aLevel = conformance.GetAConformance();
-                if (xmpMeta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART) == null) {
-                    xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART, aLevel.GetPart());
-                }
-                if (aLevel.GetLevel() != null && xmpMeta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE) == null) {
-                    xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE, aLevel.GetLevel());
-                }
-                if ("4".Equals(aLevel.GetPart()) && xmpMeta.GetProperty(XMPConst.NS_PDFA_ID, XMPConst.REV) == null) {
-                    xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.REV, iText.Kernel.Pdf.PdfConformance.PDF_A_4_REVISION);
-                }
-                if (xmpMeta.GetPropertyInteger(XMPConst.NS_PDFUA_ID, XMPConst.PART) != null) {
-                    XMPMeta taggedExtensionMeta = XMPMetaFactory.ParseFromString(PDF_UA_EXTENSION);
-                    XMPUtils.AppendProperties(taggedExtensionMeta, xmpMeta, true, false);
-                }
+            foreach (WellTaggedPdfConformance wtpdfConformance in wtpdfConformanceList) {
+                SetWtPdfFlag(wtpdfConformance);
             }
         }
 
-        /// <summary>
-        /// Gets an instance of
-        /// <see cref="PdfAConformance"/>
-        /// based on passed part and level.
-        /// </summary>
-        /// <param name="part">the part of PDF/A conformance</param>
-        /// <param name="level">the level of PDF/A conformance</param>
-        /// <returns>
-        /// the
-        /// <see cref="PdfAConformance"/>
-        /// instance or
-        /// <see langword="null"/>
-        /// if there is no PDF/A conformance for passed parameters
-        /// </returns>
-        public static PdfAConformance GetAConformance(String part, String level) {
-            String lowLetter = StringNormalizer.ToUpperCase(level);
-            bool aLevel = "A".Equals(lowLetter);
-            bool bLevel = "B".Equals(lowLetter);
-            bool uLevel = "U".Equals(lowLetter);
-            bool eLevel = "E".Equals(lowLetter);
-            bool fLevel = "F".Equals(lowLetter);
-            switch (part) {
-                case "1": {
-                    if (aLevel) {
-                        return PdfAConformance.PDF_A_1A;
-                    }
-                    if (bLevel) {
-                        return PdfAConformance.PDF_A_1B;
-                    }
+        private void SetWtPdfFlag(WellTaggedPdfConformance wtpdfConformance) {
+            if (wtpdfConformance == null) {
+                throw new PdfException("Well Tagged PDF conformance list cannot be null");
+            }
+            switch (wtpdfConformance) {
+                case WellTaggedPdfConformance.FOR_ACCESSIBILITY: {
+                    wtpdfFlag |= WTPDF_FLAG_ACCESSIBILITY;
                     break;
                 }
 
-                case "2": {
-                    if (aLevel) {
-                        return PdfAConformance.PDF_A_2A;
-                    }
-                    if (bLevel) {
-                        return PdfAConformance.PDF_A_2B;
-                    }
-                    if (uLevel) {
-                        return PdfAConformance.PDF_A_2U;
-                    }
+                case WellTaggedPdfConformance.FOR_REUSE: {
+                    wtpdfFlag |= WTPDF_FLAG_REUSE;
                     break;
                 }
 
-                case "3": {
-                    if (aLevel) {
-                        return PdfAConformance.PDF_A_3A;
-                    }
-                    if (bLevel) {
-                        return PdfAConformance.PDF_A_3B;
-                    }
-                    if (uLevel) {
-                        return PdfAConformance.PDF_A_3U;
-                    }
-                    break;
-                }
-
-                case "4": {
-                    if (eLevel) {
-                        return PdfAConformance.PDF_A_4E;
-                    }
-                    if (fLevel) {
-                        return PdfAConformance.PDF_A_4F;
-                    }
-                    return PdfAConformance.PDF_A_4;
+                default: {
+                    throw new ArgumentException("Unknown Well Tagged PDF conformance: " + wtpdfConformance);
                 }
             }
-            return null;
         }
-
-        private static PdfUAConformance GetUAConformance(String part) {
-            if ("1".Equals(part)) {
-                return PdfUAConformance.PDF_UA_1;
-            }
-            if ("2".Equals(part)) {
-                return PdfUAConformance.PDF_UA_2;
-            }
-            return null;
-        }
-
-        private const String WELL_TAGGED_FOR_ACCESSIBILITY_SCHEMA = " <x:xmpmeta xmlns:x=\"adobe:ns:meta/\">\n" + 
-            "  <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n" + "   <rdf:Description rdf:about=\"\" xmlns:pdfd=\"http://pdfa.org/declarations/\">\n"
-             + "    <pdfd:declarations>\n" + "     <rdf:Bag>\n" + "      <rdf:li rdf:parseType=\"Resource\">\n" + 
-            "       <pdfd:conformsTo>http://pdfa.org/declarations/wtpdf#accessibility1.0</pdfd:conformsTo>\n" + "      </rdf:li>\n"
-             + "     </rdf:Bag>\n" + "    </pdfd:declarations>\n" + "   </rdf:Description>\n" + "  </rdf:RDF>\n" +
-             " </x:xmpmeta>";
-
-        private const String WELL_TAGGED_FOR_REUSE_SCHEMA = " <x:xmpmeta xmlns:x=\"adobe:ns:meta/\">\n" + "  <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n"
-             + "   <rdf:Description rdf:about=\"\" xmlns:pdfd=\"http://pdfa.org/declarations/\">\n" + "    <pdfd:declarations>\n"
-             + "     <rdf:Bag>\n" + "      <rdf:li rdf:parseType=\"Resource\">\n" + "       <pdfd:conformsTo>http://pdfa.org/declarations/wtpdf#reuse1.0</pdfd:conformsTo>\n"
-             + "      </rdf:li>\n" + "     </rdf:Bag>\n" + "    </pdfd:declarations>\n" + "   </rdf:Description>\n"
-             + "  </rdf:RDF>\n" + " </x:xmpmeta>";
-
-        private const String PDF_UA_EXTENSION = "    <x:xmpmeta xmlns:x=\"adobe:ns:meta/\">\n" + "      <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n"
-             + "        <rdf:Description rdf:about=\"\" xmlns:pdfaExtension=\"http://www.aiim.org/pdfa/ns/extension/\" xmlns:pdfaSchema=\"http://www.aiim.org/pdfa/ns/schema#\" xmlns:pdfaProperty=\"http://www.aiim.org/pdfa/ns/property#\">\n"
-             + "          <pdfaExtension:schemas>\n" + "            <rdf:Bag>\n" + "              <rdf:li rdf:parseType=\"Resource\">\n"
-             + "                <pdfaSchema:namespaceURI rdf:resource=\"http://www.aiim.org/pdfua/ns/id/\"/>\n" + 
-            "                <pdfaSchema:prefix>pdfuaid</pdfaSchema:prefix>\n" + "                <pdfaSchema:schema>PDF/UA identification schema</pdfaSchema:schema>\n"
-             + "                <pdfaSchema:property>\n" + "                  <rdf:Seq>\n" + "                    <rdf:li rdf:parseType=\"Resource\">\n"
-             + "                      <pdfaProperty:category>internal</pdfaProperty:category>\n" + "                      <pdfaProperty:description>PDF/UA version identifier</pdfaProperty:description>\n"
-             + "                      <pdfaProperty:name>part</pdfaProperty:name>\n" + "                      <pdfaProperty:valueType>Integer</pdfaProperty:valueType>\n"
-             + "                    </rdf:li>\n" + "                    <rdf:li rdf:parseType=\"Resource\">\n" + "                      <pdfaProperty:category>internal</pdfaProperty:category>\n"
-             + "                      <pdfaProperty:description>PDF/UA amendment identifier</pdfaProperty:description>\n"
-             + "                      <pdfaProperty:name>amd</pdfaProperty:name>\n" + "                      <pdfaProperty:valueType>Text</pdfaProperty:valueType>\n"
-             + "                    </rdf:li>\n" + "                    <rdf:li rdf:parseType=\"Resource\">\n" + "                      <pdfaProperty:category>internal</pdfaProperty:category>\n"
-             + "                      <pdfaProperty:description>PDF/UA corrigenda identifier</pdfaProperty:description>\n"
-             + "                      <pdfaProperty:name>corr</pdfaProperty:name>\n" + "                      <pdfaProperty:valueType>Text</pdfaProperty:valueType>\n"
-             + "                    </rdf:li>\n" + "                  </rdf:Seq>\n" + "                </pdfaSchema:property>\n"
-             + "              </rdf:li>\n" + "            </rdf:Bag>\n" + "          </pdfaExtension:schemas>\n" +
-             "        </rdf:Description>\n" + "      </rdf:RDF>\n" + "    </x:xmpmeta>";
     }
 }

@@ -1673,24 +1673,17 @@ namespace iText.Kernel.Pdf {
 //\endcond
 
         private bool IsPdfUA2OrWellTaggedDocument() {
-            PdfUAConformance uaConformance = GetDocument().GetConformance().GetUAConformance();
-            WellTaggedPdfConformance? wtpdfConformance = GetDocument().GetConformance().GetWtpdfConformance();
-            PdfConformance parsedConformance;
-            if (uaConformance == null || wtpdfConformance == null) {
+            PdfConformance conformance = GetDocument().GetConformance();
+            if (conformance == null) {
                 try {
-                    parsedConformance = PdfConformance.GetConformance(GetDocument().GetXmpMetadata());
+                    conformance = PdfConformance.GetConformance(GetDocument().GetXmpMetadata());
                 }
                 catch (XMPException) {
                     return false;
                 }
-                if (uaConformance == null) {
-                    uaConformance = parsedConformance.GetUAConformance();
-                }
-                if (wtpdfConformance == null) {
-                    wtpdfConformance = parsedConformance.GetWtpdfConformance();
-                }
             }
-            return PdfUAConformance.PDF_UA_2 == uaConformance || WellTaggedPdfConformance.FOR_ACCESSIBILITY == wtpdfConformance;
+            return conformance.ConformsTo(PdfConformance.PDF_UA_2, PdfConformance.WELL_TAGGED_PDF_FOR_ACCESSIBILITY, PdfConformance
+                .WELL_TAGGED_PDF_FOR_REUSE);
         }
 
         private void CheckIsoConformanceForAnnotation(PdfAnnotation annotation) {

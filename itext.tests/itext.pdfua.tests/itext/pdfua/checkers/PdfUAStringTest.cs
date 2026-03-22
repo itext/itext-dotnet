@@ -43,25 +43,36 @@ namespace iText.Pdfua.Checkers {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
-        public static IList<int> PrivateUseAreaSymbols() {
-            return JavaUtil.ArraysAsList(0xE004, 0xF0009, 0x10FFFA);
+        public static IList<Object[]> PrivateUseAreaSymbols() {
+            IList<Object[]> result = new List<Object[]>();
+            foreach (PdfConformance pdfConformance in UaValidationTestFramework.GetConformanceList(false)) {
+                foreach (int? i in JavaUtil.ArraysAsList(0xE004, 0xF0009, 0x10FFFA)) {
+                    result.Add(new Object[] { pdfConformance, i });
+                }
+            }
+            return result;
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ValidValueWithDocEncodingTest() {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public static IList<PdfConformance> Conformances() {
+            return UaValidationTestFramework.GetConformanceList(false);
+        }
+
+        [NUnit.Framework.TestCaseSource("Conformances")]
+        public virtual void ValidValueWithDocEncodingTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false, conformance
+                );
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
                 PdfString pdfString = new PdfString("value", PdfEncodings.PDF_DOC_ENCODING);
                 document.GetCatalog().Put(PdfName.Lang, pdfString);
             }
             );
-            framework.AssertBothValid("validValueWithDocEncoding", PdfUAConformance.PDF_UA_2);
+            framework.AssertBothValid("validValueWithDocEncoding");
         }
 
         [NUnit.Framework.TestCaseSource("PrivateUseAreaSymbols")]
-        public virtual void PuaValueWithDocEncodingTest(int? puaSymbol) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void PuaValueWithDocEncodingTest(PdfConformance conformance, int? puaSymbol) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             String filename = "puaValueWithDocEncoding_" + GetPuaValueName(puaSymbol);
             framework.AddBeforeGenerationHook((document) => {
                 PdfString pdfString = new PdfString("hello_" + new String(iText.IO.Util.TextUtil.ToChars((int)puaSymbol)), 
@@ -71,16 +82,18 @@ namespace iText.Pdfua.Checkers {
                 page.AddAnnotation(textAnnotation);
             }
             );
-            // In this particular case validators which reopen the document cannot identify the problem, and strictly speaking PDF document is valid.
-            // Since PDFDocEncoding doesn't have enough space to allocate this Unicode PUA symbol, it is simply not present in the resulting file.
-            // Even though the file is valid, there was clearly an attempt to create human-readable PdfString with Unicode PUA, that's why we fail.
-            framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.TEXT_STRING_USES_UNICODE_PUA, PdfUAConformance
-                .PDF_UA_2);
+            // In this particular case validators which reopen the document cannot identify the problem, and strictly
+            // speaking PDF document is valid.
+            // Since PDFDocEncoding doesn't have enough space to allocate this Unicode PUA symbol, it is simply not
+            // present in the resulting file.
+            // Even though the file is valid, there was clearly an attempt to create human-readable PdfString with
+            // Unicode PUA, that's why we fail.
+            framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.TEXT_STRING_USES_UNICODE_PUA);
         }
 
         [NUnit.Framework.TestCaseSource("PrivateUseAreaSymbols")]
-        public virtual void PuaValueWithUTF8Test(int? puaSymbol) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void PuaValueWithUTF8Test(PdfConformance conformance, int? puaSymbol) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             String filename = "puaValueWithUTF8_" + GetPuaValueName(puaSymbol);
             framework.AddBeforeGenerationHook((document) => {
                 PdfString pdfString = new PdfString("hello_" + new String(iText.IO.Util.TextUtil.ToChars((int)puaSymbol)), 
@@ -91,13 +104,12 @@ namespace iText.Pdfua.Checkers {
             }
             );
             // VeraPdf doesn't fail because they mistakenly don't check all the PdfString entries in the document.
-            framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.TEXT_STRING_USES_UNICODE_PUA, PdfUAConformance
-                .PDF_UA_2);
+            framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.TEXT_STRING_USES_UNICODE_PUA);
         }
 
         [NUnit.Framework.TestCaseSource("PrivateUseAreaSymbols")]
-        public virtual void PuaValueWithUTF16Test(int? puaSymbol) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void PuaValueWithUTF16Test(PdfConformance conformance, int? puaSymbol) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             String filename = "puaValueWithUTF16_" + GetPuaValueName(puaSymbol);
             framework.AddBeforeGenerationHook((document) => {
                 PdfString pdfString = new PdfString("hello_" + new String(iText.IO.Util.TextUtil.ToChars((int)puaSymbol)), 
@@ -108,13 +120,12 @@ namespace iText.Pdfua.Checkers {
             }
             );
             // VeraPdf doesn't fail because they mistakenly don't check all the PdfString entries in the document.
-            framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.TEXT_STRING_USES_UNICODE_PUA, PdfUAConformance
-                .PDF_UA_2);
+            framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.TEXT_STRING_USES_UNICODE_PUA);
         }
 
         [NUnit.Framework.TestCaseSource("PrivateUseAreaSymbols")]
-        public virtual void PuaValueWithUTF16UnmarkedTest(int? puaSymbol) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void PuaValueWithUTF16UnmarkedTest(PdfConformance conformance, int? puaSymbol) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             String filename = "puaValueWithUTF16Unmarked_" + GetPuaValueName(puaSymbol);
             framework.AddBeforeGenerationHook((document) => {
                 PdfString pdfString = new PdfString("hello_" + new String(iText.IO.Util.TextUtil.ToChars((int)puaSymbol)), 
@@ -124,12 +135,13 @@ namespace iText.Pdfua.Checkers {
                 page.AddAnnotation(textAnnotation);
             }
             );
-            framework.AssertBothValid(filename, PdfUAConformance.PDF_UA_2);
+            framework.AssertBothValid(filename);
         }
 
         [NUnit.Framework.TestCaseSource("PrivateUseAreaSymbols")]
-        public virtual void PuaValueInLangTest(int? puaSymbol) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
+        public virtual void PuaValueInLangTest(PdfConformance conformance, int? puaSymbol) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false, conformance
+                );
             String filename = "puaValueInLang_" + GetPuaValueName(puaSymbol);
             framework.AddBeforeGenerationHook((document) => {
                 PdfString pdfString = new PdfString("hello_" + new String(iText.IO.Util.TextUtil.ToChars((int)puaSymbol)), 
@@ -141,13 +153,13 @@ namespace iText.Pdfua.Checkers {
             // This test is only needed to reproduce veraPdf failure.
             // For now, we only were able to reproduce it when lang entry in catalog dictionary contains PUA.
             // However, iText logic fails earlier, because Lang entry must contain valid language identifier.
-            framework.AssertBothFail(filename, PdfUAExceptionMessageConstants.DOCUMENT_SHALL_CONTAIN_VALID_LANG_ENTRY, 
-                PdfUAConformance.PDF_UA_2);
+            framework.AssertBothFail(filename, PdfUAExceptionMessageConstants.DOCUMENT_SHALL_CONTAIN_VALID_LANG_ENTRY);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void PuaValueWithTest() {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
+        [NUnit.Framework.TestCaseSource("Conformances")]
+        public virtual void PuaValueWithTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false, conformance
+                );
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
                 PdfString pdfString = new PdfString(new String(iText.IO.Util.TextUtil.ToChars(0xE005)), PdfEncodings.WINANSI
@@ -155,7 +167,7 @@ namespace iText.Pdfua.Checkers {
                 document.GetCatalog().Put(PdfName.Lang, pdfString);
             }
             );
-            framework.AssertBothFail("puaValueWithUTF16", PdfUAConformance.PDF_UA_2);
+            framework.AssertBothFail("puaValueWithUTF16");
         }
 
         private static String GetPuaValueName(int? puaSymbol) {

@@ -39,7 +39,6 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Forms.Tagging {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class ProhibitedTagRelationsResolverTest : ExtendedITextTest {
         public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/forms" + "/ResolveProhibitedRelationsRuleTest/";
@@ -68,7 +67,6 @@ namespace iText.Forms.Tagging {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(dest));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void Forms001Interactive() {
             String dest = DESTINATION_FOLDER + "testf001Interactive.pdf";
@@ -90,7 +88,6 @@ namespace iText.Forms.Tagging {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(dest));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void Forms002() {
             String dest = DESTINATION_FOLDER + "testf002.pdf";
@@ -119,7 +116,6 @@ namespace iText.Forms.Tagging {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(dest));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void Forms003() {
             String dest = DESTINATION_FOLDER + "testf003.pdf";
@@ -134,7 +130,6 @@ namespace iText.Forms.Tagging {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(dest));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void Forms005() {
             String dest = DESTINATION_FOLDER + "testf005.pdf";
@@ -154,7 +149,6 @@ namespace iText.Forms.Tagging {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(dest));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void Forms004() {
             String dest = DESTINATION_FOLDER + "testf004.pdf";
@@ -171,7 +165,6 @@ namespace iText.Forms.Tagging {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(dest));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void FormsButton() {
             String dest = DESTINATION_FOLDER + "testButton.pdf";
@@ -192,7 +185,6 @@ namespace iText.Forms.Tagging {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(dest));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         public virtual void Generate0(Document parent) {
             Paragraph paragraph1 = new Paragraph();
             paragraph1.SetMargins(0.000000F, 0.000000F, 0.000000F, 0.000000F);

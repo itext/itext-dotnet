@@ -95,7 +95,7 @@ namespace iText.Forms.Form.Renderer {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             InputFieldRenderer inputFieldRenderer = new InputFieldRenderer(new InputField(""));
             NUnit.Framework.Assert.IsNotNull(inputFieldRenderer.GetConformance(pdfDocument));
-            NUnit.Framework.Assert.IsFalse(inputFieldRenderer.GetConformance(pdfDocument).IsPdfAOrUa());
+            NUnit.Framework.Assert.IsFalse(inputFieldRenderer.GetConformance(pdfDocument).ConformsToAny());
         }
 
         [NUnit.Framework.Test]

@@ -48,7 +48,7 @@ namespace iText.Pdfua.Checkers.Utils {
             /// <see cref="FormTagHandler"/>
             /// instance.
             /// </summary>
-            /// <param name="context">The validation context.</param>
+            /// <param name="context">The validation context</param>
             public FormTagHandler(PdfUAValidationContext context)
                 : base(context) {
             }
@@ -83,8 +83,8 @@ namespace iText.Pdfua.Checkers.Utils {
             }
 
             /// <summary>Gets a widget annotation kid if it exists.</summary>
-            /// <param name="structElem">Parent structure element.</param>
-            /// <returns>Kid as PdfDictionary.</returns>
+            /// <param name="structElem">Parent structure element</param>
+            /// <returns>Kid as PdfDictionary</returns>
             private static PdfDictionary GetInteractiveKidForm(PdfStructElem structElem) {
                 PdfDictionary @object = structElem.GetPdfObject();
                 PdfDictionary kids = @object.GetAsDictionary(PdfName.K);

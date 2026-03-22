@@ -58,7 +58,7 @@ namespace iText.Pdfua.Checkers.Utils {
             /// Creates a new instance of the
             /// <see cref="AnnotationHandler"/>.
             /// </summary>
-            /// <param name="context">The validation context.</param>
+            /// <param name="context">The validation context</param>
             public AnnotationHandler(PdfUAValidationContext context)
                 : base(context) {
             }

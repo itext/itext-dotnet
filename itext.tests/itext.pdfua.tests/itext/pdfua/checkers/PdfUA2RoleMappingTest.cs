@@ -35,7 +35,6 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfua.Checkers {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfUA2RoleMappingTest : ExtendedITextTest {
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -70,7 +69,6 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void MathMLNamespaceTest() {
             String outPdf = DESTINATION_FOLDER + "mathMLNamespaceTest.pdf";
@@ -92,7 +90,6 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void NonStandardNamespaceTest() {
             String outPdf = DESTINATION_FOLDER + "nonStandardNamespaceTest.pdf";
@@ -116,7 +113,6 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void NoExplicitNamespaceTest() {
             String outPdf = DESTINATION_FOLDER + "noExplicitNamespaceTest.pdf";
@@ -136,7 +132,6 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void NonStandardNamespaceTransitiveToStandardTest() {
             String outPdf = DESTINATION_FOLDER + "nonStandardNamespaceTransitiveToStandardTest.pdf";
@@ -161,7 +156,6 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void StandardStructureTypeIsRemappedThroughNonStandardOneTest() {
             String outPdf = DESTINATION_FOLDER + "stStructTypeRemappedNonStandardOne.pdf";
@@ -185,7 +179,6 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         // UA-2 rule check: structure type with explicit namespace is role mapped to other structure type in the same NS:
         [NUnit.Framework.Test]
         public virtual void MappingToTheSameNamespaceTest() {
@@ -356,7 +349,6 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void CircularMappingWithNonStandardTest() {
             String outPdf = DESTINATION_FOLDER + "circularMappingWithNonStandardTest.pdf";
@@ -461,8 +453,8 @@ namespace iText.Pdfua.Checkers {
                 font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                     );
             }
-            catch (System.IO.IOException) {
-                throw new Exception();
+            catch (System.IO.IOException e) {
+                throw new PdfException(e);
             }
             canvas.OpenTag(new CanvasTag(mcr)).SaveState().BeginText().SetFontAndSize(font, 12).MoveText(200, 200).ShowText
                 ("Hello World!").EndText().RestoreState().CloseTag();

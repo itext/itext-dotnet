@@ -1246,7 +1246,7 @@ namespace iText.Forms.Fields {
                 checkType = CheckBoxType.CROSS;
             }
             this.checkType = new NullableContainer<CheckBoxType>(checkType);
-            if (GetPdfConformance() != null && GetPdfConformance().IsPdfAOrUaOrWtpdf()) {
+            if (GetPdfConformance() != null && GetPdfConformance().ConformsToAny()) {
                 return this;
             }
             try {

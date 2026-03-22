@@ -253,7 +253,7 @@ namespace iText.Forms.Fields {
                     }
                 }
             }
-            if (radioButtonFormField.pdfConformance != null && radioButtonFormField.pdfConformance.IsPdfAOrUa()) {
+            if (!radioButtonFormField.pdfConformance.Equals(PdfConformance.PDF_NONE_CONFORMANCE)) {
                 PutIfAbsent(expectedDictionary, PdfName.F, new PdfNumber(PdfAnnotation.PRINT));
             }
             // for the AS key if it's added to the group we expect it to be off or the value if the radiogroup was selected

@@ -27,15 +27,27 @@ using iText.Pdfua.Checkers;
 using iText.Pdfua.Exceptions;
 
 namespace iText.Pdfua.Wtpdf {
-    /// <summary>The class defines the requirements of the Well Tagged PDF standard.</summary>
+    /// <summary>Checker that validates a PDF document against the Well Tagged PDF for Accessibility standard.</summary>
     public class WellTaggedPdfForAccessibilityChecker : PdfUA2Checker {
         /// <summary>
-        /// Creates
+        /// Creates a new
         /// <see cref="WellTaggedPdfForAccessibilityChecker"/>
-        /// instance,
-        /// which will be validated against WTPDF For Accessibility standard.
+        /// instance.
         /// </summary>
-        /// <param name="pdfDocument">the document to validate</param>
+        /// <remarks>
+        /// Creates a new
+        /// <see cref="WellTaggedPdfForAccessibilityChecker"/>
+        /// instance.
+        /// <para />
+        /// The created checker will validate the provided document against the
+        /// WTPDF for Accessibility standard.
+        /// </remarks>
+        /// <param name="pdfDocument">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to validate; must not be
+        /// <see langword="null"/>
+        /// </param>
         public WellTaggedPdfForAccessibilityChecker(PdfDocument pdfDocument)
             : base(pdfDocument) {
         }

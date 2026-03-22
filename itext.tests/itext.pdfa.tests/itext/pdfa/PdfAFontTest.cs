@@ -37,7 +37,6 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfAFontTest : ExtendedITextTest {
 //\cond DO_NOT_DOCUMENT
@@ -628,7 +627,6 @@ namespace iText.Pdfa {
 
         private void CompareResult(String outPdf, String cmpPdf, String expectedVeraPdfWarning) {
             new VeraPdfValidator().ValidateWarning(outPdf, expectedVeraPdfWarning);
-            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_");
             if (result != null) {
                 NUnit.Framework.Assert.Fail(result);

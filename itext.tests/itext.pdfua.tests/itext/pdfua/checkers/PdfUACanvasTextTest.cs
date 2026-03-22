@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -48,48 +49,46 @@ namespace iText.Pdfua.Checkers {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
-        public static IEnumerable<Object[]> TextRepresentation() {
-            return JavaUtil.ArraysAsList(new Object[][] { new Object[] { "text", PdfUAConformance.PDF_UA_2 }, new Object
-                [] { "array", PdfUAConformance.PDF_UA_2 }, new Object[] { "glyphs", PdfUAConformance.PDF_UA_2 }, new Object
-                [] { "text", WellTaggedPdfConformance.FOR_REUSE }, new Object[] { "array", WellTaggedPdfConformance.FOR_REUSE
-                 }, new Object[] { "glyphs", WellTaggedPdfConformance.FOR_REUSE } });
+        public static IList<Object[]> TextRepresentation() {
+            IList<Object[]> data = new List<Object[]>();
+            foreach (PdfConformance pdfConformance in UaValidationTestFramework.GetConformanceList(false)) {
+                data.Add(new Object[] { "text", pdfConformance });
+                data.Add(new Object[] { "array", pdfConformance });
+                data.Add(new Object[] { "glyphs", pdfConformance });
+            }
+            return data;
         }
 
-        public static IList<Object> Conformances() {
-            return JavaUtil.ArraysAsList(PdfUAConformance.PDF_UA_2, WellTaggedPdfConformance.FOR_REUSE);
+        public static IList<PdfConformance> Conformances() {
+            return JavaUtil.ArraysAsList(new PdfConformance(PdfUAConformance.PDF_UA_2), new PdfConformance(WellTaggedPdfConformance
+                .FOR_REUSE));
         }
 
         [NUnit.Framework.TestCaseSource("Conformances")]
-        public virtual void PuaValueInLayoutTest(Object conformance) {
+        public virtual void PuaValueInLayoutTest(PdfConformance conformance) {
             String filename = "puaValueInLayoutTest";
-            UaValidationTestFramework2 framework = new UaValidationTestFramework2(DESTINATION_FOLDER, false, conformance
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false, conformance
                 );
-            framework.AddSuppliers(new _Generator_85());
-            if (conformance is PdfUAConformance) {
+            framework.AddSuppliers((document) => {
+                Paragraph paragraph = new Paragraph("hello_" + "\uE001");
+                paragraph.SetFont(LoadFont());
+                return paragraph;
+            }
+            );
+            if (conformance.IsPdfUA()) {
                 framework.AssertBothFail(filename, PdfUAExceptionMessageConstants.PUA_CONTENT_WITHOUT_ALT);
             }
             else {
-                if (conformance is WellTaggedPdfConformance?) {
+                if (conformance.IsWtpdf()) {
                     framework.AssertBothValid(filename);
                 }
             }
         }
 
-        private sealed class _Generator_85 : UaValidationTestFramework2.Generator<IBlockElement> {
-            public _Generator_85() {
-            }
-
-            public IBlockElement Generate() {
-                Paragraph paragraph = new Paragraph("hello_" + "\uE001");
-                paragraph.SetFont(PdfUACanvasTextTest.LoadFont());
-                return paragraph;
-            }
-        }
-
         [NUnit.Framework.TestCaseSource("TextRepresentation")]
-        public virtual void PuaValueWithoutAttributesTest(String textRepresentation, Object conformance) {
+        public virtual void PuaValueWithoutAttributesTest(String textRepresentation, PdfConformance conformance) {
             String filename = "puaValueWithoutAttributesTest_" + textRepresentation;
-            UaValidationTestFramework2 framework = new UaValidationTestFramework2(DESTINATION_FOLDER, false, conformance
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false, conformance
                 );
             framework.AddBeforeGenerationHook((document) => {
                 PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
@@ -105,13 +104,26 @@ namespace iText.Pdfua.Checkers {
                 canvas.EndText();
             }
             );
-            AssertResult(false, true, textRepresentation, filename, framework, conformance);
+            if (conformance.ConformsTo(PdfConformance.PDF_UA_2, PdfConformance.WELL_TAGGED_PDF_FOR_ACCESSIBILITY)) {
+                if (textRepresentation.Equals("array")) {
+                    // In case of "array" PdfCanvas#showText(PdfArray) is used. In this method we don't have this
+                    // check, because
+                    // of the complications regarding not symbolic fonts.
+                    framework.AssertOnlyVeraPdfFail(filename);
+                }
+                else {
+                    framework.AssertBothFail(filename, PdfUAExceptionMessageConstants.PUA_CONTENT_WITHOUT_ALT);
+                }
+            }
+            else {
+                framework.AssertBothValid(filename);
+            }
         }
 
         [NUnit.Framework.TestCaseSource("TextRepresentation")]
-        public virtual void PuaValueWithAltOnTagTest(String textRepresentation, Object conformance) {
+        public virtual void PuaValueWithAltOnTagTest(String textRepresentation, PdfConformance conformance) {
             String filename = "puaValueWithAltOnTagTest_" + textRepresentation;
-            UaValidationTestFramework2 framework = new UaValidationTestFramework2(DESTINATION_FOLDER, false, conformance
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false, conformance
                 );
             framework.AddBeforeGenerationHook((document) => {
                 PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
@@ -131,13 +143,13 @@ namespace iText.Pdfua.Checkers {
                 canvas.EndText();
             }
             );
-            AssertResult(true, true, textRepresentation, filename, framework, conformance);
+            framework.AssertBothValid(filename);
         }
 
         [NUnit.Framework.TestCaseSource("TextRepresentation")]
-        public virtual void PuaValueWithActualTextOnTagTest(String textRepresentation, Object conformance) {
+        public virtual void PuaValueWithActualTextOnTagTest(String textRepresentation, PdfConformance conformance) {
             String filename = "puaValueWithActualTextOnTagTest_" + textRepresentation;
-            UaValidationTestFramework2 framework = new UaValidationTestFramework2(DESTINATION_FOLDER, false, conformance
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false, conformance
                 );
             framework.AddBeforeGenerationHook((document) => {
                 PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
@@ -157,13 +169,13 @@ namespace iText.Pdfua.Checkers {
                 canvas.EndText();
             }
             );
-            AssertResult(true, true, textRepresentation, filename, framework, conformance);
+            framework.AssertBothValid(filename);
         }
 
         [NUnit.Framework.TestCaseSource("TextRepresentation")]
-        public virtual void PuaValueWithAltOnCanvasTest(String textRepresentation, Object conformance) {
+        public virtual void PuaValueWithAltOnCanvasTest(String textRepresentation, PdfConformance conformance) {
             String filename = "puaValueWithAltOnCanvasTest_" + textRepresentation;
-            UaValidationTestFramework2 framework = new UaValidationTestFramework2(DESTINATION_FOLDER, false, conformance
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false, conformance
                 );
             framework.AddBeforeGenerationHook((document) => {
                 PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
@@ -182,13 +194,14 @@ namespace iText.Pdfua.Checkers {
                 canvas.EndText();
             }
             );
-            AssertResult(true, true, textRepresentation, filename, framework, conformance);
+            framework.AssertBothValid(filename);
         }
 
         [NUnit.Framework.TestCaseSource("TextRepresentation")]
-        public virtual void PuaValueWithActualTextOnCanvasTest(String textRepresentation, Object conformance) {
+        public virtual void PuaValueWithActualTextOnCanvasTest(String textRepresentation, PdfConformance conformance
+            ) {
             String filename = "puaValueWithActualTextOnCanvasTest_" + textRepresentation;
-            UaValidationTestFramework2 framework = new UaValidationTestFramework2(DESTINATION_FOLDER, false, conformance
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false, conformance
                 );
             framework.AddBeforeGenerationHook((document) => {
                 PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
@@ -207,13 +220,13 @@ namespace iText.Pdfua.Checkers {
                 canvas.EndText();
             }
             );
-            AssertResult(true, true, textRepresentation, filename, framework, conformance);
+            framework.AssertBothValid(filename);
         }
 
         [NUnit.Framework.TestCaseSource("TextRepresentation")]
-        public virtual void PuaValueOnTwoPagesTest(String textRepresentation, Object conformance) {
+        public virtual void PuaValueOnTwoPagesTest(String textRepresentation, PdfConformance conformance) {
             String filename = "puaValueOnTwoPagesTest_" + textRepresentation;
-            UaValidationTestFramework2 framework = new UaValidationTestFramework2(DESTINATION_FOLDER, false, conformance
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false, conformance
                 );
             framework.AddBeforeGenerationHook((document) => {
                 // Text on page 1 contains PUA and alt, which is valid.
@@ -246,42 +259,19 @@ namespace iText.Pdfua.Checkers {
                 canvasOnPageTwo.EndText();
             }
             );
-            AssertResult(false, true, textRepresentation, filename, framework, conformance);
-        }
-
-        private void AssertResult(bool uaValidity, bool wtpdfValidity, String textRepresentation, String filename, 
-            UaValidationTestFramework2 framework, Object conformance) {
-            if (conformance is PdfUAConformance) {
-                if (uaValidity) {
-                    framework.AssertBothValid(filename);
+            if (conformance.ConformsTo(PdfConformance.PDF_UA_2, PdfConformance.WELL_TAGGED_PDF_FOR_ACCESSIBILITY)) {
+                if (textRepresentation.Equals("array")) {
+                    // In case of "array" PdfCanvas#showText(PdfArray) is used. In this method we don't have this
+                    // check, because
+                    // of the complications regarding not symbolic fonts.
+                    framework.AssertOnlyVeraPdfFail(filename);
                 }
                 else {
-                    if ("array".Equals(textRepresentation)) {
-                        // In case of "array" PdfCanvas#showText(PdfArray) is used. In this method we don't have this check, because
-                        // of the complications regarding not symbolic fonts.
-                        framework.AssertOnlyVeraPdfFail(filename);
-                    }
-                    else {
-                        framework.AssertBothFail(filename, PdfUAExceptionMessageConstants.PUA_CONTENT_WITHOUT_ALT);
-                    }
+                    framework.AssertBothFail(filename);
                 }
             }
             else {
-                if (conformance is WellTaggedPdfConformance?) {
-                    if (wtpdfValidity) {
-                        framework.AssertBothValid(filename);
-                    }
-                    else {
-                        if ("array".Equals(textRepresentation)) {
-                            // In case of "array" PdfCanvas#showText(PdfArray) is used. In this method we don't have this check, because
-                            // of the complications regarding not symbolic fonts.
-                            framework.AssertOnlyVeraPdfFail(filename);
-                        }
-                        else {
-                            framework.AssertBothFail(filename, PdfUAExceptionMessageConstants.PUA_CONTENT_WITHOUT_ALT);
-                        }
-                    }
-                }
+                framework.AssertBothValid(filename);
             }
         }
 
@@ -314,7 +304,7 @@ namespace iText.Pdfua.Checkers {
                     );
             }
             catch (System.IO.IOException e) {
-                throw new Exception(e.Message);
+                throw new PdfException(e.Message);
             }
         }
     }

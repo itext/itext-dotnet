@@ -116,7 +116,7 @@ namespace iText.Kernel.Utils.Checkers {
                 }
                 XMPMeta metadata = XMPMetaFactory.Parse(new MemoryStream(xmpMetadata.GetBytes()));
                 String NS_ID = conformance.IsPdfA() ? XMPConst.NS_PDFA_ID : XMPConst.NS_PDFUA_ID;
-                if (conformance.IsPdfAOrUa()) {
+                if (conformance.IsPdfA() || conformance.IsPdfUA()) {
                     XMPProperty actualPart = metadata.GetProperty(NS_ID, XMPConst.PART);
                     String expectedPart = conformance.IsPdfA() ? conformance.GetAConformance().GetPart() : conformance.GetUAConformance
                         ().GetPart();
@@ -147,18 +147,16 @@ namespace iText.Kernel.Utils.Checkers {
             }
             catch (Exception) {
             }
-            if (WellTaggedPdfConformance.FOR_ACCESSIBILITY == conformance.GetWtpdfConformance()) {
-                if (wtpdfProperty == null || !XMPConst.NS_WTPDF_ACCESSIBILITY_ID.Equals(wtpdfProperty.GetValue())) {
-                    throw exceptionSupplier.Invoke(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_WTPDF_ACCESSIBILITY_METADATA
-                        );
-                }
+            if (conformance.ConformsTo(WellTaggedPdfConformance.FOR_ACCESSIBILITY) && (wtpdfProperty == null || !XMPConst
+                .NS_WTPDF_ACCESSIBILITY_ID.Equals(wtpdfProperty.GetValue()))) {
+                throw exceptionSupplier.Invoke(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_WTPDF_ACCESSIBILITY_METADATA
+                    );
             }
             else {
-                if (WellTaggedPdfConformance.FOR_REUSE == conformance.GetWtpdfConformance()) {
-                    if (wtpdfProperty == null || !XMPConst.NS_WTPDF_REUSE_ID.Equals(wtpdfProperty.GetValue())) {
-                        throw exceptionSupplier.Invoke(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_WTPDF_REUSE_METADATA
-                            );
-                    }
+                if (conformance.ConformsTo(WellTaggedPdfConformance.FOR_REUSE) && (wtpdfProperty == null || !XMPConst.NS_WTPDF_REUSE_ID
+                    .Equals(wtpdfProperty.GetValue()))) {
+                    throw exceptionSupplier.Invoke(KernelExceptionMessageConstant.XMP_METADATA_HEADER_SHALL_CONTAIN_WTPDF_REUSE_METADATA
+                        );
                 }
             }
         }

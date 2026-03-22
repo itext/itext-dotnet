@@ -48,7 +48,6 @@ using iText.Test.Attributes;
 using iText.Test.Pdfa;
 
 namespace iText.Signatures {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfUASignerTest : ExtendedITextTest {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
@@ -99,7 +98,6 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void VisibleSignatureWithTUButNotAFont() {
             MemoryStream inPdf = GenerateSimplePdfUA1Document();
@@ -121,7 +119,6 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void VisibleSignatureWithoutTUFont() {
             MemoryStream inPdf = GenerateSimplePdfUA1Document();
@@ -177,7 +174,6 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void NormalPdfSignerInvisibleSignatureWithoutTU() {
             MemoryStream inPdf = GenerateSimplePdfUA1Document();
@@ -190,7 +186,6 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void NormalPdfSignerVisibleSignatureWithoutFont() {
             // TODO DEVSIX-8676 Enable keeping A and UA conformance in PdfSigner
@@ -209,7 +204,6 @@ namespace iText.Signatures {
             new VeraPdfValidator().ValidateFailure(outPdf);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void NormalPdfSignerVisibleSignatureWithFont() {
             MemoryStream inPdf = GenerateSimplePdfUA1Document();
@@ -228,7 +222,6 @@ namespace iText.Signatures {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void NormalPdfSignerVisibleSignatureWithFontEmptyTU() {
             // TODO DEVSIX-8676 Enable keeping A and UA conformance in PdfSigner
@@ -249,7 +242,6 @@ namespace iText.Signatures {
             new VeraPdfValidator().ValidateFailure(outPdf);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void PdfSignerVisibleSignatureWithFontEmptyTU() {
             //Should throw the correct exception if the font is not set
@@ -294,7 +286,6 @@ namespace iText.Signatures {
             new VeraPdfValidator().Validate(outPdf);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void SignatureAppearanceImageInDivUA2() {
@@ -322,7 +313,6 @@ namespace iText.Signatures {
             new VeraPdfValidator().Validate(outPdf);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void SignatureAppearanceWithLineSeparatorUA2() {
             // TODO DEVSIX-9023 Support "Signature fields" UA-2 rules
@@ -342,7 +332,6 @@ namespace iText.Signatures {
             new VeraPdfValidator().Validate(outPdf);
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         private MemoryStream GenerateSimplePdfUA1Document() {
             MemoryStream @out = new MemoryStream();
             PdfUADocument pdfUADocument = new PdfUADocument(new PdfWriter(@out), new PdfUAConfig(PdfUAConformance.PDF_UA_1

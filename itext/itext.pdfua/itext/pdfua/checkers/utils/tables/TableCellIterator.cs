@@ -52,8 +52,8 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
         /// <see cref="TableCellIterator"/>
         /// instance.
         /// </summary>
-        /// <param name="table">the table that will be iterated.</param>
-        /// <param name="context">the validation context.</param>
+        /// <param name="table">the table that will be iterated</param>
+        /// <param name="context">the validation context</param>
         public TableCellIterator(Table table, PdfUAValidationContext context) {
             this.context = context;
             if (table == null) {

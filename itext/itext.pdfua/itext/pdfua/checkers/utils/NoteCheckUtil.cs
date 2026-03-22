@@ -29,6 +29,14 @@ namespace iText.Pdfua.Checkers.Utils {
     /// <summary>Utility class for delegating notes checks to the correct checking logic.</summary>
     [System.ObsoleteAttribute(@"in favor of iText.Pdfua.Checkers.Utils.Ua1.PdfUA1NotesChecker")]
     public class NoteCheckUtil {
+        /// <summary>
+        /// Creates a new instance of
+        /// <see cref="NoteCheckUtil"/>.
+        /// </summary>
+        public NoteCheckUtil() {
+        }
+
+        //empty constructor
         /// <summary>Handler for checking Note elements in the TagTree.</summary>
         [System.ObsoleteAttribute(@"in favor of iText.Pdfua.Checkers.Utils.Ua1.PdfUA1NotesChecker.PdfUA1NotesTagHandler"
             )]
@@ -38,7 +46,7 @@ namespace iText.Pdfua.Checkers.Utils {
             /// <see cref="NoteTagHandler"/>
             /// instance.
             /// </summary>
-            /// <param name="context">The validation context.</param>
+            /// <param name="context">The validation context</param>
             public NoteTagHandler(PdfUAValidationContext context)
                 : base(context) {
             }

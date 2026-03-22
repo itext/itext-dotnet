@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.IO.Font;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -46,13 +47,13 @@ namespace iText.Pdfua.Checkers {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
-        public static IList<PdfUAConformance> Data() {
+        public static IList<PdfConformance> Data() {
             return UaValidationTestFramework.GetConformanceList();
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void PdfuaWithEmbeddedFilesWithoutFTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void PdfuaWithEmbeddedFilesWithoutFTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 PdfFileSpec fs = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, "file".GetBytes(), "description", "file.txt"
                     , null, null, null);
@@ -61,20 +62,18 @@ namespace iText.Pdfua.Checkers {
                 pdfDocument.AddFileAttachment("file.txt", fs);
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+            if (conformance.GetUAConformance() == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("pdfuaWithEmbeddedFilesWithoutF", PdfUAExceptionMessageConstants.FILE_SPECIFICATION_DICTIONARY_SHALL_CONTAIN_F_KEY_AND_UF_KEY
-                    , pdfUAConformance);
+                    );
             }
             else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothValid("pdfuaWithEmbeddedFilesWithoutF", pdfUAConformance);
-                }
+                framework.AssertBothValid("pdfuaWithEmbeddedFilesWithoutF");
             }
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void PdfuaWithEmbeddedFilesWithoutUFTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void PdfuaWithEmbeddedFilesWithoutUFTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 pdfDocument.AddNewPage();
                 PdfFileSpec fs = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, "file".GetBytes(), "description", "file.txt"
@@ -84,42 +83,38 @@ namespace iText.Pdfua.Checkers {
                 pdfDocument.AddFileAttachment("file.txt", fs);
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+            if (conformance.GetUAConformance() == PdfUAConformance.PDF_UA_1) {
                 framework.AssertBothFail("pdfuaWithEmbeddedFilesWithoutUF", PdfUAExceptionMessageConstants.FILE_SPECIFICATION_DICTIONARY_SHALL_CONTAIN_F_KEY_AND_UF_KEY
-                    , pdfUAConformance);
+                    );
             }
             else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothValid("pdfuaWithEmbeddedFilesWithoutUF", pdfUAConformance);
-                }
+                framework.AssertBothValid("pdfuaWithEmbeddedFilesWithoutUF");
             }
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void PdfuaWithValidEmbeddedFileTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void PdfuaWithValidEmbeddedFileTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook(((pdfDocument) => {
                 AddEmbeddedFile(pdfDocument, "some test pdf file");
             }
             ));
-            framework.AssertBothValid("pdfuaWithValidEmbeddedFile", pdfUAConformance);
+            framework.AssertBothValid("pdfuaWithValidEmbeddedFile");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void EmbeddedFilesWithFileSpecWithoutDescTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void EmbeddedFilesWithFileSpecWithoutDescTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook(((pdfDocument) => {
                 AddEmbeddedFile(pdfDocument, null);
             }
             ));
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothValid("embeddedFilesWithFileSpecWithoutDesc", pdfUAConformance);
+            if (conformance.GetUAConformance() == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothValid("embeddedFilesWithFileSpecWithoutDesc");
             }
             else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothFail("embeddedFilesWithFileSpecWithoutDesc", PdfUAExceptionMessageConstants.DESC_IS_REQUIRED_ON_ALL_FILE_SPEC_FROM_THE_EMBEDDED_FILES
-                        , pdfUAConformance);
-                }
+                framework.AssertBothFail("embeddedFilesWithFileSpecWithoutDesc", PdfUAExceptionMessageConstants.DESC_IS_REQUIRED_ON_ALL_FILE_SPEC_FROM_THE_EMBEDDED_FILES
+                    );
             }
         }
 
@@ -129,9 +124,9 @@ namespace iText.Pdfua.Checkers {
                 font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                     );
             }
-            catch (System.IO.IOException) {
+            catch (System.IO.IOException e) {
                 // Rethrow as unchecked to fail the test.
-                throw new Exception();
+                throw new PdfException(e);
             }
             PdfPage page = pdfDocument.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
