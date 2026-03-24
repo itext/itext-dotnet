@@ -64,5 +64,12 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             }
             return ((PageContextNode)node).GetPageClasses().Contains(pagePseudoClass);
         }
+
+        /* (non-Javadoc)
+        * @see java.lang.Object#toString()
+        */
+        public override String ToString() {
+            return ":" + pagePseudoClass;
+        }
     }
 }

@@ -62,5 +62,12 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             return !CommonCssConstants.AUTO.Equals(StringNormalizer.ToLowerCase(pageTypeName)) && pageTypeName.Equals(
                 ((PageContextNode)node).GetPageTypeName());
         }
+
+        /* (non-Javadoc)
+        * @see java.lang.Object#toString()
+        */
+        public override String ToString() {
+            return pageTypeName;
+        }
     }
 }
