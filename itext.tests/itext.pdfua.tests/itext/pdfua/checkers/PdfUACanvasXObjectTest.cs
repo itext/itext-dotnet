@@ -284,10 +284,10 @@ namespace iText.Pdfua.Checkers {
             }
             );
             if (framework.IsPdf2Based(conformance)) {
-                framework.AssertBothValid("manuallyAddToCanvasAndCorrectFontAndArtifactTaggedContent");
+                framework.AssertBothValid("manuallyCanvasCorrectFontAndArtifact");
             }
             else {
-                framework.AssertOnlyVeraPdfFail("manuallyAddToCanvasAndCorrectFontAndArtifactTaggedContent");
+                framework.AssertOnlyVeraPdfFail("manuallyCanvasCorrectFontAndArtifact");
             }
         }
 
