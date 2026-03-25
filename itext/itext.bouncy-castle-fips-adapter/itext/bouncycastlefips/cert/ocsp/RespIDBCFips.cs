@@ -31,6 +31,7 @@ using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Asn1.Pkcs;
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Ocsp;
 
 namespace iText.Bouncycastlefips.Cert.Ocsp {
     /// <summary>
@@ -38,7 +39,20 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
     /// <see cref="ResponderID"/>.
     /// </summary>
     public class RespIDBCFips : IRespID {
-        private readonly ResponderID respID;
+        private readonly RespID respID;
+        
+        /// <summary>
+        /// Creates new wrapper instance for
+        /// <see cref="Org.BouncyCastle.Ocsp.RespID"/>.
+        /// </summary>
+        /// <param name="respID">
+        /// 
+        /// <see cref="Org.BouncyCastle.Ocsp.RespID"/>
+        /// to be wrapped
+        /// </param>
+        public RespIDBCFips(RespID respID) {
+            this.respID = respID;
+        }
 
         /// <summary>
         /// Creates new wrapper instance for
@@ -49,8 +63,8 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
         /// <see cref="ResponderID"/>
         /// to be wrapped
         /// </param>
-        public RespIDBCFips(ResponderID respID) {
-            this.respID = respID;
+        public RespIDBCFips(ResponderID responderId) {
+            this.respID = new RespID(responderId);
         }
 
         /// <summary>
@@ -62,7 +76,7 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
         /// <see cref="ResponderID"/>
         /// </param>
         public RespIDBCFips(IX500Name x500Name)
-            : this(new ResponderID(((X500NameBCFips)x500Name).GetX500Name())) {
+            : this(new RespID(((X500NameBCFips)x500Name).GetX500Name())) {
         }
         
         /// <summary>
@@ -73,20 +87,15 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
         /// <see cref="Org.BouncyCastle.Ocsp.RespID"/>
         /// </param>
         public RespIDBCFips(IX509Certificate certificate) {
-            SubjectPublicKeyInfo info = new SubjectPublicKeyInfo(new AlgorithmIdentifier(
-                    PkcsObjectIdentifiers.RsaEncryption, DerNull.Instance),
-                ((PublicKeyBCFips) certificate.GetPublicKey()).GetPublicKey().GetEncoded());
-            byte[] key = info.PublicKeyData.GetBytes();
-            byte[] keyHash = new DigestBCFips("SHA1").Digest(key);
-            this.respID = new ResponderID(new DerOctetString(keyHash));
+            this.respID = new RespID(((X509CertificateBCFips) certificate).GetCertificate().GetPublicKey());
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>
         /// <returns>
         /// wrapped
-        /// <see cref="ResponderID"/>.
+        /// <see cref="Org.BouncyCastle.Ocsp.RespID"/>.
         /// </returns>
-        public virtual ResponderID GetRespID() {
+        public virtual RespID GetRespID() {
             return respID;
         }
 
@@ -117,9 +126,8 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
             return respID.ToString();
         }
 
-        public IResponderID ToASN1Primitive()
-        {
-            return new ResponderIDBCFips(respID);
+        public IResponderID ToASN1Primitive() {
+            return new ResponderIDBCFips(respID.ToAsn1Object());
         }
     }
 }
