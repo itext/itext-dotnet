@@ -18,7 +18,7 @@ using NUnit.Framework;
 
 [assembly: AssemblyVersion("9.6.0.0")]
 [assembly: AssemblyFileVersion("9.6.0.0")]
-[assembly: AssemblyInformationalVersion("9.6.0-SNAPSHOT")]
+[assembly: AssemblyInformationalVersion("9.6.0")]
 
 [assembly: Parallelizable(ParallelScope.ContextMask)]
 
