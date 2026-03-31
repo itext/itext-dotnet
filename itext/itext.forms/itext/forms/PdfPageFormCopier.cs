@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -85,6 +85,11 @@ namespace iText.Forms {
             IList<PdfAnnotation> annots = toPage.GetAnnotations();
             try {
                 foreach (PdfAnnotation annot in annots) {
+                    if (annot.GetSubtype() == null) {
+                        logger.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.ANNOTATION_WITHOUT_SUBTYPE_NOT_COPIED, 
+                            annot.GetPdfObject().GetIndirectReference()));
+                        continue;
+                    }
                     if (!annot.GetSubtype().Equals(PdfName.Widget)) {
                         continue;
                     }

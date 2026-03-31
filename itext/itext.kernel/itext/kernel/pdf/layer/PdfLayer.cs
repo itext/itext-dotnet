@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -66,8 +66,12 @@ namespace iText.Kernel.Pdf.Layer {
 
         /// <summary>Creates a new layer by existing dictionary, which must be an indirect object.</summary>
         /// <param name="layerDictionary">the layer dictionary, must have an indirect reference.</param>
+        [System.ObsoleteAttribute(@"PdfLayer shall not be created from iText.Kernel.Pdf.PdfDictionary , since some of the properties are not part of that dictionary. Instead, already existing layers shall be accessed through PdfOCProperties.GetLayers() ."
+            )]
         public PdfLayer(PdfDictionary layerDictionary)
-            : base(layerDictionary) {
+            : base(
+                        // Make package-private on next major release.
+                        layerDictionary) {
             SetForbidRelease();
             EnsureObjectIsAddedToDocument(layerDictionary);
         }
@@ -142,6 +146,12 @@ namespace iText.Kernel.Pdf.Layer {
         /// <returns>list of parents of the layer, or null if it has no parent</returns>
         public virtual IList<iText.Kernel.Pdf.Layer.PdfLayer> GetParents() {
             return parentLayers == null ? null : new List<iText.Kernel.Pdf.Layer.PdfLayer>(parentLayers);
+        }
+
+        /// <summary>Gets the name of the layer to be displayed in the Layers panel.</summary>
+        /// <returns>the name of the layer.</returns>
+        public virtual PdfString GetName() {
+            return GetPdfObject().GetAsString(PdfName.Name);
         }
 
         /// <summary>Sets the name of the layer to be displayed in the Layers panel.</summary>
@@ -452,6 +462,20 @@ namespace iText.Kernel.Pdf.Layer {
             return childLayers == null ? null : new List<iText.Kernel.Pdf.Layer.PdfLayer>(childLayers);
         }
 
+        /// <summary>Creates a title layer without registering it in PdfOCProperties.</summary>
+        /// <param name="title">the title of the layer</param>
+        /// <param name="document">the document this title layer belongs to</param>
+        /// <returns>the created layer</returns>
+        protected internal static iText.Kernel.Pdf.Layer.PdfLayer CreateTitleSilent(String title, PdfDocument document
+            ) {
+            if (title == null) {
+                throw new ArgumentException("Invalid title argument");
+            }
+            iText.Kernel.Pdf.Layer.PdfLayer layer = new iText.Kernel.Pdf.Layer.PdfLayer(document);
+            layer.title = title;
+            return layer;
+        }
+
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;
         }
@@ -468,20 +492,6 @@ namespace iText.Kernel.Pdf.Layer {
         /// </returns>
         protected internal virtual PdfDocument GetDocument() {
             return GetPdfObject().GetIndirectReference().GetDocument();
-        }
-
-        /// <summary>Creates a title layer without registering it in PdfOCProperties.</summary>
-        /// <param name="title">the title of the layer</param>
-        /// <param name="document">the document this title layer belongs to</param>
-        /// <returns>the created layer</returns>
-        protected internal static iText.Kernel.Pdf.Layer.PdfLayer CreateTitleSilent(String title, PdfDocument document
-            ) {
-            if (title == null) {
-                throw new ArgumentException("Invalid title argument");
-            }
-            iText.Kernel.Pdf.Layer.PdfLayer layer = new iText.Kernel.Pdf.Layer.PdfLayer(document);
-            layer.title = title;
-            return layer;
         }
 
         /// <summary>Gets the /Usage dictionary, creating a new one if necessary.</summary>

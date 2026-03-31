@@ -81,7 +81,7 @@
     <PackageReference Include="System.Globalization.Extensions" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
     <PackageReference Include="System.Diagnostics.Process" Version="4.3.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="10.0.2" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="4.3.0" />
 	  <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="1.1.0" />
 	  <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />

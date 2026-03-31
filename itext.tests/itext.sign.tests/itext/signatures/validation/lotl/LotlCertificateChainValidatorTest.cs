@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -164,7 +164,8 @@ namespace iText.Signatures.Validation.Lotl {
 
         [NUnit.Framework.Test]
         public virtual void LotlReportItemsTest() {
-            LotlService service = new LotlService(new LotlFetchingProperties(new RemoveOnFailingCountryData()));
+            LotlService service = new EuropeanLotlService(new LotlFetchingProperties(new RemoveOnFailingCountryData())
+                );
             service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
             service.WithLotlValidator(() => new LotlValidator(service));
             service.InitializeCache();

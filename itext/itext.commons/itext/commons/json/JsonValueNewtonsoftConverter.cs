@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -145,7 +145,8 @@ namespace iText.Commons.Json {
             var settings = new JsonSerializerSettings
             {
                 Formatting = Formatting.None,
-                NullValueHandling = NullValueHandling.Include
+                NullValueHandling = NullValueHandling.Include,
+                DateParseHandling = DateParseHandling.None
             };
 
             settings.Converters.Add(new JsonValueConverter());

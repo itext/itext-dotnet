@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -53,6 +53,7 @@ using iText.Bouncycastlefips.Crypto.Modes;
 using iText.Bouncycastlefips.Math;
 using iText.Bouncycastlefips.Openssl;
 using iText.Bouncycastlefips.Operator;
+using iText.Bouncycastlefips.Pkix;
 using iText.Bouncycastlefips.Security;
 using iText.Bouncycastlefips.Tsp;
 using iText.Bouncycastlefips.X509;
@@ -63,6 +64,7 @@ using iText.Commons.Bouncycastle.Asn1.Esf;
 using iText.Commons.Bouncycastle.Asn1.Ess;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.Pkcs;
+using iText.Commons.Bouncycastle.Asn1.Pkix;
 using iText.Commons.Bouncycastle.Asn1.Tsp;
 using iText.Commons.Bouncycastle.Asn1.Util;
 using iText.Commons.Bouncycastle.Asn1.X500;
@@ -93,8 +95,8 @@ using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Operators;
 using Org.BouncyCastle.Operators.Utilities;
 using Org.BouncyCastle.Security;
-using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.Utilities.IO;
+using CertStatus = Org.BouncyCastle.Asn1.Ocsp.CertStatus;
 using ContentInfo = Org.BouncyCastle.Asn1.Cms.ContentInfo;
 using ICipher = iText.Commons.Bouncycastle.Crypto.ICipher;
 using SignedData = Org.BouncyCastle.Asn1.Cms.SignedData;
@@ -705,6 +707,11 @@ namespace iText.Bouncycastlefips {
         }
 
         /// <summary><inheritDoc/></summary>
+        public IGeneralName CreateGeneralName(IAsn1Encodable encodable) {
+            return new GeneralNameBCFips(GeneralName.GetInstance(((Asn1EncodableBCFips) encodable).GetEncodable()));
+        }
+
+        /// <summary><inheritDoc/></summary>
         public virtual IOtherHashAlgAndValue CreateOtherHashAlgAndValue(IAlgorithmIdentifier algorithmIdentifier, 
             IAsn1OctetString octetString) {
             return new OtherHashAlgAndValueBCFips(algorithmIdentifier, octetString);
@@ -905,6 +912,11 @@ namespace iText.Bouncycastlefips {
         /// <summary><inheritDoc/></summary>
         public virtual IRespID CreateRespID(IX500Name x500Name) {
             return new RespIDBCFips(x500Name);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual IRespID CreateRespID(IX509Certificate certificate) {
+            return new RespIDBCFips(certificate);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -1359,7 +1371,17 @@ namespace iText.Bouncycastlefips {
 
             return qcStatements;
         }
-        
+
+        /// <summary><inheritDoc/></summary>
+        public IPKIXConstraintValidator CreateNameConstraintValidator() {
+            return new PKIXNameConstraintValidatorBCFips(new PkixNameConstraintValidatorFixed());
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public INameConstraints CreateNameConstraints(IAsn1Object primitive) {
+            return new NameConstraintsBCFips(NameConstraints.GetInstance(((Asn1ObjectBCFips) primitive).GetPrimitive()));
+        }
+
         private static RSAParameters ToRsaParameters(AsymmetricRsaPublicKey rsaKey) {
             RSAParameters rp = new RSAParameters();
             rp.Modulus = rsaKey.Modulus.ToByteArrayUnsigned();

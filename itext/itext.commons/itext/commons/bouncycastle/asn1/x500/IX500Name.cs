@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -32,5 +32,9 @@ namespace iText.Commons.Bouncycastle.Asn1.X500 {
         /// <summary>Gets the RFC2253 name.</summary>
         /// <returns>the RFC2253 name</returns>
         String GetName();
+
+        /// <summary>Gets byte array representation of a wrapped X500Name.</summary>
+        /// <returns>byte array representation of a wrapped X500Name</returns>
+        byte[] GetEncoded();
     }
 }

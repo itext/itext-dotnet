@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Utils;
+using iText.Kernel.Contrast;
 using iText.Kernel.Pdf;
 using iText.Kernel.Validation;
 using iText.Layout.Tagging;
@@ -43,22 +44,22 @@ namespace iText.Pdfua {
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Pdfua.PdfUADocument));
 
         /// <summary>Creates a PdfUADocument instance.</summary>
-        /// <param name="writer">The writer to write the PDF document.</param>
-        /// <param name="config">The configuration for the PDF/UA document.</param>
+        /// <param name="writer">The writer to write the PDF document</param>
+        /// <param name="config">The configuration for the PDF/UA document</param>
         public PdfUADocument(PdfWriter writer, PdfUAConfig config)
             : this(writer, new DocumentProperties(), config) {
         }
 
         /// <summary>Creates a PdfUADocument instance.</summary>
-        /// <param name="writer">The writer to write the PDF document.</param>
-        /// <param name="properties">The properties for the PDF document.</param>
-        /// <param name="config">The configuration for the PDF/UA document.</param>
+        /// <param name="writer">The writer to write the PDF document</param>
+        /// <param name="properties">The properties for the PDF document</param>
+        /// <param name="config">The configuration for the PDF/UA document</param>
         public PdfUADocument(PdfWriter writer, DocumentProperties properties, PdfUAConfig config)
             : base(ConfigureWriterProperties(writer, config.GetConformance()), properties) {
             this.pdfConformance = new PdfConformance(config.GetConformance());
             SetupUAConfiguration(config);
             ValidationContainer validationContainer = new ValidationContainer();
-            IList<IValidationChecker> checkers = GetCorrectCheckerFromConformance(config.GetConformance());
+            IList<IValidationChecker> checkers = CreateCheckers(config.GetConformance());
             foreach (IValidationChecker checker in checkers) {
                 validationContainer.AddChecker(checker);
             }
@@ -69,18 +70,18 @@ namespace iText.Pdfua {
         }
 
         /// <summary>Creates a PdfUADocument instance.</summary>
-        /// <param name="reader">The reader to read the PDF document.</param>
-        /// <param name="writer">The writer to write the PDF document.</param>
-        /// <param name="config">The configuration for the PDF/UA document.</param>
+        /// <param name="reader">The reader to read the PDF document</param>
+        /// <param name="writer">The writer to write the PDF document</param>
+        /// <param name="config">The configuration for the PDF/UA document</param>
         public PdfUADocument(PdfReader reader, PdfWriter writer, PdfUAConfig config)
             : this(reader, writer, new StampingProperties(), config) {
         }
 
         /// <summary>Creates a PdfUADocument instance.</summary>
-        /// <param name="reader">The reader to read the PDF document.</param>
-        /// <param name="writer">The writer to write the PDF document.</param>
-        /// <param name="properties">The properties for the PDF document.</param>
-        /// <param name="config">The configuration for the PDF/UA document.</param>
+        /// <param name="reader">The reader to read the PDF document</param>
+        /// <param name="writer">The writer to write the PDF document</param>
+        /// <param name="properties">The properties for the PDF document</param>
+        /// <param name="config">The configuration for the PDF/UA document</param>
         public PdfUADocument(PdfReader reader, PdfWriter writer, StampingProperties properties, PdfUAConfig config
             )
             : base(reader, writer, properties) {
@@ -89,7 +90,7 @@ namespace iText.Pdfua {
             }
             SetupUAConfiguration(config);
             ValidationContainer validationContainer = new ValidationContainer();
-            IList<IValidationChecker> checkers = GetCorrectCheckerFromConformance(config.GetConformance());
+            IList<IValidationChecker> checkers = CreateCheckers(config.GetConformance());
             foreach (IValidationChecker checker in checkers) {
                 validationContainer.AddChecker(checker);
             }
@@ -97,15 +98,64 @@ namespace iText.Pdfua {
             this.pdfPageFactory = new PdfUAPageFactory(GetUaChecker(checkers));
         }
 
+        /// <summary>
+        /// Creates a list of
+        /// <see cref="iText.Pdfua.Checkers.PdfUAChecker"/>
+        /// for specified PDF/UA conformance.
+        /// </summary>
+        /// <remarks>
+        /// Creates a list of
+        /// <see cref="iText.Pdfua.Checkers.PdfUAChecker"/>
+        /// for specified PDF/UA conformance.
+        /// If you want to enable/disable specific checks, you can override the implementation.
+        /// </remarks>
+        /// <param name="uaConformance">the conformance for which checker is needed</param>
+        /// <returns>the correct list of PDF/UA checkers</returns>
+        protected internal virtual IList<IValidationChecker> CreateCheckers(PdfUAConformance uaConformance) {
+            IList<IValidationChecker> checkers = new List<IValidationChecker>();
+            ColorContrastChecker contrastChecker = new ColorContrastChecker(false, false);
+            contrastChecker.SetCheckWcagAA(false);
+            contrastChecker.SetCheckWcagAAA(true);
+            switch (uaConformance.GetPart()) {
+                case "1": {
+                    checkers.Add(new PdfUA1Checker(this));
+                    checkers.Add(contrastChecker);
+                    break;
+                }
+
+                case "2": {
+                    checkers.Add(new PdfUA2Checker(this));
+                    checkers.Add(new Pdf20Checker(this));
+                    checkers.Add(contrastChecker);
+                    break;
+                }
+
+                default: {
+                    throw new ArgumentException(PdfUAExceptionMessageConstants.CANNOT_FIND_PDF_UA_CHECKER_FOR_SPECIFIED_CONFORMANCE
+                        );
+                }
+            }
+            return checkers;
+        }
+
+        private void SetupUAConfiguration(PdfUAConfig config) {
+            // Basic configuration.
+            this.SetTagged();
+            this.GetCatalog().SetViewerPreferences(new PdfViewerPreferences().SetDisplayDocTitle(true));
+            this.GetCatalog().SetLang(new PdfString(config.GetLanguage()));
+            PdfDocumentInfo info = this.GetDocumentInfo();
+            info.SetTitle(config.GetTitle());
+        }
+
         private static PdfWriter ConfigureWriterProperties(PdfWriter writer, PdfUAConformance uaConformance) {
             writer.GetProperties().AddPdfUaXmpMetadata(uaConformance);
             if (writer.GetPdfVersion() != null) {
-                if (uaConformance == PdfUAConformance.PDF_UA_1 && !writer.GetPdfVersion().Equals(PdfVersion.PDF_1_7)) {
+                if (uaConformance == PdfUAConformance.PDF_UA_1 && !PdfVersion.PDF_1_7.Equals(writer.GetPdfVersion())) {
                     LOGGER.LogWarning(MessageFormatUtil.Format(PdfUALogMessageConstants.WRITER_PROPERTIES_PDF_VERSION_WAS_OVERRIDDEN
                         , PdfVersion.PDF_1_7));
                     writer.GetProperties().SetPdfVersion(PdfVersion.PDF_1_7);
                 }
-                if (uaConformance == PdfUAConformance.PDF_UA_2 && !writer.GetPdfVersion().Equals(PdfVersion.PDF_2_0)) {
+                if (uaConformance == PdfUAConformance.PDF_UA_2 && !PdfVersion.PDF_2_0.Equals(writer.GetPdfVersion())) {
                     LOGGER.LogWarning(MessageFormatUtil.Format(PdfUALogMessageConstants.WRITER_PROPERTIES_PDF_VERSION_WAS_OVERRIDDEN
                         , PdfVersion.PDF_2_0));
                     writer.GetProperties().SetPdfVersion(PdfVersion.PDF_2_0);
@@ -121,44 +171,6 @@ namespace iText.Pdfua {
                 }
             }
             return null;
-        }
-
-        private void SetupUAConfiguration(PdfUAConfig config) {
-            // Basic configuration.
-            this.SetTagged();
-            this.GetCatalog().SetViewerPreferences(new PdfViewerPreferences().SetDisplayDocTitle(true));
-            this.GetCatalog().SetLang(new PdfString(config.GetLanguage()));
-            PdfDocumentInfo info = this.GetDocumentInfo();
-            info.SetTitle(config.GetTitle());
-        }
-
-        /// <summary>
-        /// Gets correct
-        /// <see cref="iText.Pdfua.Checkers.PdfUAChecker"/>
-        /// for specified PDF/UA conformance.
-        /// </summary>
-        /// <param name="uaConformance">the conformance for which checker is needed</param>
-        /// <returns>the correct PDF/UA checker</returns>
-        private IList<IValidationChecker> GetCorrectCheckerFromConformance(PdfUAConformance uaConformance) {
-            IList<IValidationChecker> checkers = new List<IValidationChecker>();
-            switch (uaConformance.GetPart()) {
-                case "1": {
-                    checkers.Add(new PdfUA1Checker(this));
-                    break;
-                }
-
-                case "2": {
-                    checkers.Add(new PdfUA2Checker(this));
-                    checkers.Add(new Pdf20Checker(this));
-                    break;
-                }
-
-                default: {
-                    throw new ArgumentException(PdfUAExceptionMessageConstants.CANNOT_FIND_PDF_UA_CHECKER_FOR_SPECIFIED_CONFORMANCE
-                        );
-                }
-            }
-            return checkers;
         }
     }
 }

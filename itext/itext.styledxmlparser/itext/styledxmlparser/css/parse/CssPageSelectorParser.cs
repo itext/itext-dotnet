@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -25,12 +25,16 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Css.Selector.Item;
+using iText.StyledXmlParser.Node;
 
 namespace iText.StyledXmlParser.Css.Parse {
     /// <summary>Utilities class to parse CSS page selectors.</summary>
     public sealed class CssPageSelectorParser {
         /// <summary>The pattern string for page selectors.</summary>
         private const String PAGE_SELECTOR_PATTERN_STR = "(^-?[_a-zA-Z][\\w-]*)|(:(?i)(left|right|first|blank))";
+
+        private static readonly Regex WHITESPACE_ONLY_OR_EMPTY_REGEX = iText.Commons.Utils.StringUtil.RegexCompile
+            ("\\s*");
 
         /// <summary>The pattern for page selectors.</summary>
         private static readonly Regex selectorPattern = iText.Commons.Utils.StringUtil.RegexCompile(PAGE_SELECTOR_PATTERN_STR
@@ -53,7 +57,14 @@ namespace iText.StyledXmlParser.Css.Parse {
         public static IList<ICssSelectorItem> ParseSelectorItems(String selectorItemsStr) {
             IList<ICssSelectorItem> selectorItems = new List<ICssSelectorItem>();
             Matcher itemMatcher = iText.Commons.Utils.Matcher.Match(selectorPattern, selectorItemsStr);
+            int previousEnd = 0;
             while (itemMatcher.Find()) {
+                String betweenLastAndCurrentMatches = selectorItemsStr.JSubstring(previousEnd, itemMatcher.Start());
+                if (!iText.Commons.Utils.Matcher.Match(WHITESPACE_ONLY_OR_EMPTY_REGEX, betweenLastAndCurrentMatches).Matches
+                    ()) {
+                    return JavaCollectionsUtil.SingletonList<ICssSelectorItem>(new CssPageSelectorParser.NeverMatchSelectorItem
+                        ());
+                }
                 String selectorItem = itemMatcher.Group(0);
                 if (selectorItem[0] == ':') {
                     selectorItems.Add(new CssPagePseudoClassSelectorItem(StringNormalizer.ToLowerCase(selectorItem.Substring(1
@@ -62,8 +73,30 @@ namespace iText.StyledXmlParser.Css.Parse {
                 else {
                     selectorItems.Add(new CssPageTypeSelectorItem(selectorItem));
                 }
+                previousEnd = itemMatcher.End();
+            }
+            String afterLastMatch = selectorItemsStr.Substring(previousEnd);
+            if (!iText.Commons.Utils.Matcher.Match(WHITESPACE_ONLY_OR_EMPTY_REGEX, afterLastMatch).Matches()) {
+                return JavaCollectionsUtil.SingletonList<ICssSelectorItem>(new CssPageSelectorParser.NeverMatchSelectorItem
+                    ());
             }
             return selectorItems;
         }
+
+//\cond DO_NOT_DOCUMENT
+        internal class NeverMatchSelectorItem : ICssSelectorItem {
+            public NeverMatchSelectorItem() {
+            }
+
+            // Empty constructor
+            public virtual bool Matches(INode node) {
+                return false;
+            }
+
+            public virtual int GetSpecificity() {
+                return 0;
+            }
+        }
+//\endcond
     }
 }

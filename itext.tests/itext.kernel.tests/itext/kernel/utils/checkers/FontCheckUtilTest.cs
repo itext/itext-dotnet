@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -30,7 +30,7 @@ namespace iText.Kernel.Utils.Checkers {
     [NUnit.Framework.Category("UnitTest")]
     public class FontCheckUtilTest : ExtendedITextTest {
         private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/fonts/";
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/fonts/";
 
         [NUnit.Framework.Test]
         public virtual void CheckFontAvailable() {

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.Kernel.Pdf;
@@ -56,8 +55,6 @@ namespace iText.Pdfua.Checkers {
     public class PdfUA1Checker : PdfUAChecker {
         private readonly PdfDocument pdfDocument;
 
-        private readonly TagStructureContext tagStructureContext;
-
         private readonly PdfUA1HeadingsChecker headingsChecker;
 
         private readonly PdfUAValidationContext context;
@@ -68,7 +65,6 @@ namespace iText.Pdfua.Checkers {
         public PdfUA1Checker(PdfDocument pdfDocument)
             : base() {
             this.pdfDocument = pdfDocument;
-            this.tagStructureContext = new TagStructureContext(pdfDocument);
             this.context = new PdfUAValidationContext(pdfDocument);
             this.headingsChecker = new PdfUA1HeadingsChecker(context);
         }
@@ -222,14 +218,6 @@ namespace iText.Pdfua.Checkers {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal override void CheckLogicalStructureInBMC(Stack<Tuple2<PdfName, PdfDictionary>> stack, Tuple2<PdfName
-            , PdfDictionary> currentBmc, PdfDocument document) {
-            CheckStandardRoleMapping(currentBmc);
-            base.CheckLogicalStructureInBMC(stack, currentBmc, document);
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// For all non-symbolic TrueType fonts used for rendering, the embedded TrueType font program shall contain one or
         /// several non-symbolic cmap entries such that all necessary glyph lookups can be carried out.
@@ -260,16 +248,6 @@ namespace iText.Pdfua.Checkers {
             }
         }
 //\endcond
-
-        private void CheckStandardRoleMapping(Tuple2<PdfName, PdfDictionary> tag) {
-            PdfNamespace @namespace = tagStructureContext.GetDocumentDefaultNamespace();
-            String role = tag.GetFirst().GetValue();
-            if (!StandardRoles.ARTIFACT.Equals(role) && !tagStructureContext.CheckIfRoleShallBeMappedToStandardRole(role
-                , @namespace)) {
-                throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.TAG_MAPPING_DOESNT_TERMINATE_WITH_STANDARD_TYPE
-                    , role));
-            }
-        }
 
         private void CheckCatalog(PdfCatalog catalog) {
             PdfDictionary catalogDict = catalog.GetPdfObject();

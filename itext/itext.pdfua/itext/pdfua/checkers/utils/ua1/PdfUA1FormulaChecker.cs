@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -69,7 +69,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua1 {
             /// <see cref="PdfUA1FormulaTagHandler"/>
             /// instance.
             /// </summary>
-            /// <param name="context">The validation context.</param>
+            /// <param name="context">The validation context</param>
             public PdfUA1FormulaTagHandler(PdfUAValidationContext context)
                 : base(context) {
                 this.checker = new PdfUA1FormulaChecker(context);

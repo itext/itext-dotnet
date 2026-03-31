@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -67,7 +67,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="documentProperties">the base for new class instance</param>
         internal StampingProperties(DocumentProperties documentProperties)
             : base(documentProperties) {
-            this.dependencies = documentProperties.dependencies;
         }
 //\endcond
 

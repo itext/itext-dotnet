@@ -1,6 +1,6 @@
 ﻿/*
     This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -80,7 +80,7 @@ namespace iText.Commons.Datastructures
         /// <summary><inheritDoc/></summary>
         public void CopyTo(TElement[] array, int arrayIndex)
         {
-            throw new NotSupportedException(CommonsExceptionMessageConstant.UNSUPPORTED_OPERATION);
+            dictionary.Keys.CopyTo(array, arrayIndex);
         }
 
         /// <summary><inheritDoc/></summary>

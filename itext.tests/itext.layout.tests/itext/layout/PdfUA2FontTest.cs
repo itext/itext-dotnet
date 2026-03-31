@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -32,7 +32,6 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Layout {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfUA2FontTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -49,13 +48,13 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void CheckPuritan2WithUTF8Test() {
-            String outFile = DESTINATION_FOLDER + "puritan2WithUTF8Test.pdf";
-            String cmpFile = SOURCE_FOLDER + "cmp_puritan2WithUTF8Test.pdf";
+        public virtual void CheckPuritanWithUTF8Test() {
+            String outFile = DESTINATION_FOLDER + "puritanWithUTF8Test.pdf";
+            String cmpFile = SOURCE_FOLDER + "cmp_puritanWithUTF8Test.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 Document document = new Document(pdfDocument);
-                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "Puritan2.otf", PdfEncodings.UTF8, PdfFontFactory.EmbeddingStrategy
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "Puritan-Regular.otf", PdfEncodings.UTF8, PdfFontFactory.EmbeddingStrategy
                     .FORCE_EMBEDDED);
                 document.SetFont(font);
                 CreateSimplePdfUA2Document(pdfDocument);
@@ -106,8 +105,8 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 Document document = new Document(pdfDocument);
-                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "Open_Sans/OpenSans-Regular.ttf", PdfEncodings.WINANSI
-                    , PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "OpenSans-Regular.ttf", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+                    .FORCE_EMBEDDED);
                 document.SetFont(font);
                 CreateSimplePdfUA2Document(pdfDocument);
                 Paragraph paragraph = new Paragraph("Simple paragraph");
@@ -146,7 +145,6 @@ namespace iText.Layout {
 
         private void CompareAndValidate(String outPdf, String cmpPdf) {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
-            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_");
             if (result != null) {
                 NUnit.Framework.Assert.Fail(result);

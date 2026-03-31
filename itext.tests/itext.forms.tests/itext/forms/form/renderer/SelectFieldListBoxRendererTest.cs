@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -57,7 +57,7 @@ namespace iText.Forms.Form.Renderer {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             SelectFieldListBoxRenderer renderer = new SelectFieldListBoxRenderer(new ListBoxField("", 1, false));
             NUnit.Framework.Assert.IsNotNull(renderer.GetConformance(pdfDocument));
-            NUnit.Framework.Assert.IsFalse(renderer.GetConformance(pdfDocument).IsPdfAOrUa());
+            NUnit.Framework.Assert.IsFalse(renderer.GetConformance(pdfDocument).ConformsToAny());
         }
 
         [NUnit.Framework.Test]

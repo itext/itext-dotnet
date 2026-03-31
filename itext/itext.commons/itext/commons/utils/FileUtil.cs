@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -101,6 +101,21 @@ namespace iText.Commons.Utils {
                 }
             }
             return null;
+        }
+        
+        /// <summary>
+        /// Lists all the directories located at the provided directory.
+        /// </summary>
+        /// <param name="path">path to the directory</param>
+        /// <param name="recursive">if <CODE>true</CODE>, directories from all the subdirectories will be returned</param>
+        /// <returns>all the directories located at the provided directory</returns>
+        public static String[] ListDirectoriesInDirectory(String path, bool recursive)
+        {
+            if (path != null)
+            {
+                return Directory.GetDirectories(path, "*", SearchOption.AllDirectories);
+            }
+            return new String[0];
         }
 
         /// <summary>

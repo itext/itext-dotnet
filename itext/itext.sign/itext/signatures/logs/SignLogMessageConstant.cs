@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -55,6 +55,10 @@ namespace iText.Signatures.Logs {
              + "to retrieve trusted certificates and LOTL location.";
 
         public const String COUNTRY_NOT_REQUIRED_BY_CONFIGURATION = "Country \"{0}\" is not required by " + "lotlFetchingProperties, and not be used when validating.";
+
+        public const String SCHEMA_NAMES_CONFIGURATION_PROPERTY_IGNORED = "LotlFetchingProperties#setCountryNames "
+             + "and LotlFetchingProperties#setCountryNamesToIgnore do not take effect for SingleFileLotlService and "
+             + "will be ignored.";
 
         private SignLogMessageConstant() {
         }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -417,6 +417,22 @@ namespace iText.Kernel.Geom {
         /// </returns>
         public virtual bool IsIdentity() {
             return GetTransformType() == TYPE_IDENTITY;
+        }
+
+        /// <summary>
+        /// Gets an array filled with the values of this
+        /// <see cref="AffineTransform"/>
+        /// instance.
+        /// </summary>
+        /// <returns>
+        /// an array filled with the values of this
+        /// <see cref="AffineTransform"/>
+        /// instance.
+        /// </returns>
+        public virtual float[] GetMatrix() {
+            float[] matrix = new float[6];
+            GetMatrix(matrix);
+            return matrix;
         }
 
         /// <summary>

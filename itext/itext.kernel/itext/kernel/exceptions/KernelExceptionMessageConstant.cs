@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -320,6 +320,8 @@ namespace iText.Kernel.Exceptions {
 
         public const String INSTANCE_SHOULD_NOT_BE_NULL = "Instance should not be null";
 
+        public const String INSTANCE_SUPPLIER_SHOULD_NOT_BE_NULL = "Instance supplier should not be null";
+
         public const String INVALID_CROSS_REFERENCE_ENTRY_IN_THIS_XREF_SUBSECTION = "Invalid cross reference entry "
              + "in this xref subsection.";
 
@@ -475,7 +477,8 @@ namespace iText.Kernel.Exceptions {
         public const String OPERATOR_EI_NOT_FOUND_AFTER_END_OF_IMAGE_DATA = "Operator EI not found after the end "
              + "of image data.";
 
-        public const String ORDERING_SHOULD_BE_DETERMINED = "Ordering should be determined for CIDFont of Type0 font.";
+        public const String ORDERING_SHOULD_BE_DETERMINED = "Ordering should be determined for CIDFont of Type0 " 
+            + "font.";
 
         public const String PAGE_ALREADY_FLUSHED = "The page has been already flushed.";
 
@@ -687,13 +690,17 @@ namespace iText.Kernel.Exceptions {
         public const String XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART = "XMP metadata header shall"
              + " contain version identifier pdfaid:part with value {0} instead of {1}.";
 
+        public const String XMP_METADATA_HEADER_SHALL_CONTAIN_WTPDF_ACCESSIBILITY_METADATA = "XMP metadata header shall contain declaration for Well Tagged PDF For Accessibility.";
+
+        public const String XMP_METADATA_HEADER_SHALL_CONTAIN_WTPDF_REUSE_METADATA = "XMP metadata header shall contain declaration for Well Tagged PDF For Reuse.";
+
         public const String XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_REV = "XMP metadata header shall"
              + " contain version identifier pdfaid:rev with four digit integer value";
 
         public const String XOBJECT_STRUCT_PARENT_INDEX_MISSED = "XObject has no StructParents index in its stream.";
 
-        public const String XREF_HAS_AN_ENTRY_WITH_TOO_BIG_OFFSET = "Pdf document is to large to " + "use normal cross reference table. Use cross reference streams instead. To enable feature use com.itextpdf"
-             + ".kernel.pdf.WriterProperties#setFullCompressionMode(true). ";
+        public const String XREF_HAS_AN_ENTRY_WITH_TOO_BIG_OFFSET = "Pdf document is to large to " + "use normal cross reference table. Use cross reference streams instead. To enable feature use com"
+             + ".itextpdf" + ".kernel.pdf.WriterProperties#setFullCompressionMode(true). ";
 
         public const String XREF_PREV_SHALL_BE_DIRECT_NUMBER_OBJECT = "Prev pointer in xref structure shall be " +
              "direct number object.";

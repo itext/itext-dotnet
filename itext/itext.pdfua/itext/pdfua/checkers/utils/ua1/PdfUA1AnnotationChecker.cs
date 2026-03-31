@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -76,8 +76,8 @@ namespace iText.Pdfua.Checkers.Utils.Ua1 {
         }
 
         /// <summary>Checks the annotation element for PDF/UA-1 compliance.</summary>
-        /// <param name="context">The validation context.</param>
-        /// <param name="elem">The structure element to check.</param>
+        /// <param name="context">The validation context</param>
+        /// <param name="elem">The structure element to check</param>
         public static void CheckElement(PdfUAValidationContext context, IStructureNode elem) {
             if (!(elem is PdfObjRef)) {
                 return;

@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -30,5 +30,11 @@ namespace iText.Commons.Bouncycastle.Crypto {
         /// <param name="inpLen">Input data length</param>
         /// <returns>Processed bytes</returns>
         byte[] ProcessBlock(byte[] inp, int inpOff, int inpLen);
+
+        /// <summary>
+        /// Finishes a multiple-part encryption or decryption operation, depending on how this cipher was initialized.
+        /// </summary>
+        /// <returns>Processed bytes</returns>
+        byte[] DoFinal();
     }
 }

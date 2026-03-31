@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using Org.BouncyCastle.Asn1.X509;
 using iText.Bouncycastlefips.Asn1;
+using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X509;
 
 namespace iText.Bouncycastlefips.Asn1.X509 {
@@ -55,6 +56,11 @@ namespace iText.Bouncycastlefips.Asn1.X509 {
         /// <summary><inheritDoc/></summary>
         public virtual IAlgorithmIdentifier GetAlgorithm() {
             return new AlgorithmIdentifierBCFips(GetSubjectPublicKeyInfo().AlgorithmID);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual IDerBitString GetPublicKeyData() {
+            return new DerBitStringBCFips(GetSubjectPublicKeyInfo().PublicKeyData);
         }
     }
 }

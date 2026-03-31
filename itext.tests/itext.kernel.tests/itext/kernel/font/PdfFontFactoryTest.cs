@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -31,9 +31,6 @@ using iText.Test;
 namespace iText.Kernel.Font {
     [NUnit.Framework.Category("UnitTest")]
     public class PdfFontFactoryTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/kernel/font/";
-
         [NUnit.Framework.Test]
         public virtual void StandardFontForceEmbeddedTest() {
             Type1Font fontProgram = (Type1Font)FontProgramFactory.CreateFont(StandardFonts.HELVETICA);

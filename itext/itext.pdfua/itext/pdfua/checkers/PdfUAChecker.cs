@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -77,7 +77,6 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
-//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Checks that the default natural language for content and text strings is specified using the
         /// <c>Lang</c>
@@ -88,7 +87,7 @@ namespace iText.Pdfua.Checkers {
         /// <see cref="iText.Kernel.Pdf.PdfCatalog"/>
         /// document catalog dictionary
         /// </param>
-        internal virtual void CheckLang(PdfCatalog catalog) {
+        protected internal virtual void CheckLang(PdfCatalog catalog) {
             PdfDictionary catalogDict = catalog.GetPdfObject();
             PdfObject lang = catalogDict.Get(PdfName.Lang);
             if (!(lang is PdfString)) {
@@ -99,9 +98,7 @@ namespace iText.Pdfua.Checkers {
                     );
             }
         }
-//\endcond
 
-//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Checks that the
         /// <c>ViewerPreferences</c>
@@ -118,7 +115,7 @@ namespace iText.Pdfua.Checkers {
         /// <see cref="iText.Kernel.Pdf.PdfCatalog"/>
         /// document catalog dictionary
         /// </param>
-        internal virtual void CheckViewerPreferences(PdfCatalog catalog) {
+        protected internal virtual void CheckViewerPreferences(PdfCatalog catalog) {
             PdfDictionary viewerPreferences = catalog.GetPdfObject().GetAsDictionary(PdfName.ViewerPreferences);
             if (viewerPreferences == null) {
                 throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.MISSING_VIEWER_PREFERENCES);
@@ -131,7 +128,6 @@ namespace iText.Pdfua.Checkers {
                 throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.VIEWER_PREFERENCES_IS_FALSE);
             }
         }
-//\endcond
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>
@@ -172,7 +168,6 @@ namespace iText.Pdfua.Checkers {
         }
 //\endcond
 
-//\cond DO_NOT_DOCUMENT
         /// <summary>Checks if content marked as Artifact resides in Artifact content, but real content does not.</summary>
         /// <param name="stack">the tag structure stack</param>
         /// <param name="currentBmc">the current BMC</param>
@@ -181,8 +176,8 @@ namespace iText.Pdfua.Checkers {
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to check
         /// </param>
-        internal virtual void CheckLogicalStructureInBMC(Stack<Tuple2<PdfName, PdfDictionary>> stack, Tuple2<PdfName
-            , PdfDictionary> currentBmc, PdfDocument document) {
+        protected internal virtual void CheckLogicalStructureInBMC(Stack<Tuple2<PdfName, PdfDictionary>> stack, Tuple2
+            <PdfName, PdfDictionary> currentBmc, PdfDocument document) {
             if (stack.IsEmpty()) {
                 return;
             }
@@ -195,9 +190,7 @@ namespace iText.Pdfua.Checkers {
                 throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.REAL_CONTENT_CANT_BE_INSIDE_ARTIFACT);
             }
         }
-//\endcond
 
-//\cond DO_NOT_DOCUMENT
         /// <summary>Checks if content is neither marked as Artifact nor tagged as real content.</summary>
         /// <param name="tagStack">tag structure stack</param>
         /// <param name="document">
@@ -205,8 +198,8 @@ namespace iText.Pdfua.Checkers {
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to check
         /// </param>
-        internal virtual void CheckContentInCanvas(Stack<Tuple2<PdfName, PdfDictionary>> tagStack, PdfDocument document
-            ) {
+        protected internal virtual void CheckContentInCanvas(Stack<Tuple2<PdfName, PdfDictionary>> tagStack, PdfDocument
+             document) {
             if (tagStack.IsEmpty()) {
                 throw new PdfUAConformanceException(PdfUAExceptionMessageConstants.TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING
                     );
@@ -224,9 +217,7 @@ namespace iText.Pdfua.Checkers {
                 }
             }
         }
-//\endcond
 
-//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Checks that font programs for all fonts used for rendering within a conforming file, as determined by whether at
         /// least one of its glyphs is referenced from one or more content streams, are embedded within that file, as defined
@@ -240,7 +231,7 @@ namespace iText.Pdfua.Checkers {
         /// Checks character encodings rules as defined in ISO 14289-2, 8.4.5.7 and ISO 14289-1, 7.21.6.
         /// </remarks>
         /// <param name="fontsInDocument">collection of fonts used in the document</param>
-        internal virtual void CheckFonts(ICollection<PdfFont> fontsInDocument) {
+        protected internal virtual void CheckFonts(ICollection<PdfFont> fontsInDocument) {
             ICollection<String> fontNamesThatAreNotEmbedded = new HashSet<String>();
             foreach (PdfFont font in fontsInDocument) {
                 if (!font.IsEmbedded()) {
@@ -265,7 +256,6 @@ namespace iText.Pdfua.Checkers {
                     , String.Join(", ", fontNamesThatAreNotEmbedded)));
             }
         }
-//\endcond
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>Checks cmap entries present in the embedded TrueType font program of the non-symbolic TrueType font.
@@ -280,19 +270,17 @@ namespace iText.Pdfua.Checkers {
         internal abstract void CheckSymbolicCmapSubtable(TrueTypeFont fontProgram);
 //\endcond
 
-//\cond DO_NOT_DOCUMENT
         /// <summary>Checks that embedded fonts define all glyphs referenced for rendering within the conforming file.
         ///     </summary>
         /// <param name="str">the text to check</param>
         /// <param name="font">the font to check</param>
-        internal virtual void CheckText(String str, PdfFont font) {
+        protected internal virtual void CheckText(String str, PdfFont font) {
             int index = FontCheckUtil.CheckGlyphsOfText(str, font, new PdfUAChecker.UaCharacterChecker());
             if (index != -1) {
                 throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
                     , str[index]));
             }
         }
-//\endcond
 
         private static void CheckOCGNameAndASKey(PdfDictionary dict) {
             if (dict == null) {

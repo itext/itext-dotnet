@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -65,7 +65,7 @@ namespace iText.Kernel.Pdf {
             if (workRef.GetObjectType() == PdfObject.DICTIONARY) {
                 PdfDictionary dict = (PdfDictionary)workRef;
                 // a goto action
-                if (dict.GetAsName(PdfName.S) == PdfName.GoTo) {
+                if (PdfName.GoTo.Equals(dict.GetAsName(PdfName.S))) {
                     ProcessAction(newParent, name, dict);
                     return false;
                 }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using iText.IO.Image;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -52,21 +53,25 @@ namespace iText.Pdfua.Checkers {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
-        public static IList<PdfUAConformance> Data() {
+        public static IList<PdfConformance> Data() {
             return UaValidationTestFramework.GetConformanceList();
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void ImageWithoutAlternativeDescription_ThrowsInLayout(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void ImageWithoutAlternativeDescription_ThrowsInLayout(PdfConformance pdfConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, pdfConformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 Document document = new Document(pdfDocument);
                 Image img = LoadImage();
                 document.Add(img);
             }
             );
-            framework.AssertBothFail("imageNoAltDescription", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT, pdfUAConformance
-                );
+            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+                framework.AssertBothValid("imageNoAltDescription");
+            }
+            else {
+                framework.AssertBothFail("imageNoAltDescription", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT);
+            }
         }
 
         [NUnit.Framework.Test]
@@ -75,8 +80,8 @@ namespace iText.Pdfua.Checkers {
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void ImageWithEmptyAlternativeDescription_ThrowsInLayout(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void ImageWithEmptyAlternativeDescription_ThrowsInLayout(PdfConformance pdfConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, pdfConformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 Document document = new Document(pdfDocument);
                 Image img = LoadImage();
@@ -84,23 +89,28 @@ namespace iText.Pdfua.Checkers {
                 document.Add(img);
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("imageWithEmptyAltDescription", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT
-                    , pdfUAConformance);
+            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+                framework.AssertBothValid("imageWithEmptyAltDescription");
             }
             else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertOnlyITextFail("imageWithEmptyAltDescription", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT
-                        , pdfUAConformance);
+                if (pdfConformance.GetUAConformance() == PdfUAConformance.PDF_UA_1) {
+                    framework.AssertBothFail("imageWithEmptyAltDescription", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT
+                        );
+                }
+                else {
+                    if (pdfConformance.GetUAConformance() == PdfUAConformance.PDF_UA_2) {
+                        framework.AssertOnlyITextFail("imageWithEmptyAltDescription", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT
+                            );
+                    }
                 }
             }
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void ImageCustomRole_Ok(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void ImageCustomRole_Ok(PdfConformance pdfConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, pdfConformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                if (framework.IsPdf2Based(pdfConformance)) {
                     PdfNamespace @namespace = new PdfNamespace(StandardNamespaces.PDF_2_0);
                     pdfDocument.GetTagStructureContext().SetDocumentDefaultNamespace(@namespace);
                     pdfDocument.GetStructTreeRoot().AddNamespace(@namespace);
@@ -110,27 +120,21 @@ namespace iText.Pdfua.Checkers {
                 root.AddRoleMapping("CustomImage", StandardRoles.FIGURE);
             }
             );
-            framework.AddSuppliers(new _Generator_127());
-            framework.AssertBothValid("imageWithCustomRoleOk", pdfUAConformance);
-        }
-
-        private sealed class _Generator_127 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_127() {
-            }
-
-            public IBlockElement Generate() {
-                Image img = PdfUAGraphicsTest.LoadImage();
+            framework.AddSuppliers((document) => {
+                Image img = LoadImage();
                 img.GetAccessibilityProperties().SetRole("CustomImage");
                 img.GetAccessibilityProperties().SetAlternateDescription("ff");
                 return new Div().Add(img);
             }
+            );
+            framework.AssertBothValid("imageWithCustomRoleOk");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void ImageCustomDoubleMapping_Ok(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void ImageCustomDoubleMapping_Ok(PdfConformance pdfConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, pdfConformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                if (framework.IsPdf2Based(pdfConformance)) {
                     PdfNamespace @namespace = new PdfNamespace(StandardNamespaces.PDF_2_0);
                     pdfDocument.GetTagStructureContext().SetDocumentDefaultNamespace(@namespace);
                     pdfDocument.GetStructTreeRoot().AddNamespace(@namespace);
@@ -142,27 +146,21 @@ namespace iText.Pdfua.Checkers {
                 root.AddRoleMapping("CustomImage2", "CustomImage");
             }
             );
-            framework.AddSuppliers(new _Generator_155());
-            framework.AssertBothValid("imageWithDoubleMapping", pdfUAConformance);
-        }
-
-        private sealed class _Generator_155 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_155() {
-            }
-
-            public IBlockElement Generate() {
-                Image img = PdfUAGraphicsTest.LoadImage();
+            framework.AddSuppliers((document) => {
+                Image img = LoadImage();
                 img.GetAccessibilityProperties().SetRole("CustomImage2");
                 img.GetAccessibilityProperties().SetAlternateDescription("ff");
                 return new Div().Add(img);
             }
+            );
+            framework.AssertBothValid("imageWithDoubleMapping");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void ImageCustomRoleNoAlternateDescription_Throws(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void ImageCustomRoleNoAlternateDescription_Throws(PdfConformance pdfConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, pdfConformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                if (framework.IsPdf2Based(pdfConformance)) {
                     PdfNamespace @namespace = new PdfNamespace(StandardNamespaces.PDF_2_0);
                     pdfDocument.GetTagStructureContext().SetDocumentDefaultNamespace(@namespace);
                     pdfDocument.GetStructTreeRoot().AddNamespace(@namespace);
@@ -172,26 +170,25 @@ namespace iText.Pdfua.Checkers {
                 root.AddRoleMapping("CustomImage", StandardRoles.FIGURE);
             }
             );
-            framework.AddSuppliers(new _Generator_181());
-            framework.AssertBothFail("imageWithCustomRoleAndNoDescription", pdfUAConformance);
-        }
-
-        private sealed class _Generator_181 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_181() {
-            }
-
-            public IBlockElement Generate() {
-                Image img = PdfUAGraphicsTest.LoadImage();
+            framework.AddSuppliers((document) => {
+                Image img = LoadImage();
                 img.GetAccessibilityProperties().SetRole("CustomImage");
                 return new Div().Add(img);
+            }
+            );
+            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+                framework.AssertBothValid("imageWithCustomRoleAndNoDescription");
+            }
+            else {
+                framework.AssertBothFail("imageWithCustomRoleAndNoDescription");
             }
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void ImageCustomDoubleMapping_Throws(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void ImageCustomDoubleMapping_Throws(PdfConformance pdfConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, pdfConformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                if (framework.IsPdf2Based(pdfConformance)) {
                     PdfNamespace @namespace = new PdfNamespace(StandardNamespaces.PDF_2_0);
                     pdfDocument.GetTagStructureContext().SetDocumentDefaultNamespace(@namespace);
                     pdfDocument.GetStructTreeRoot().AddNamespace(@namespace);
@@ -203,24 +200,23 @@ namespace iText.Pdfua.Checkers {
                 root.AddRoleMapping("CustomImage2", "CustomImage");
             }
             );
-            framework.AddSuppliers(new _Generator_209());
-            framework.AssertBothFail("imageCustomDoubleMapping_Throws", pdfUAConformance);
-        }
-
-        private sealed class _Generator_209 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_209() {
-            }
-
-            public IBlockElement Generate() {
-                Image img = PdfUAGraphicsTest.LoadImage();
+            framework.AddSuppliers((document) => {
+                Image img = LoadImage();
                 img.GetAccessibilityProperties().SetRole("CustomImage2");
                 return new Div().Add(img);
+            }
+            );
+            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+                framework.AssertBothValid("imageCustomDoubleMapping_Throws");
+            }
+            else {
+                framework.AssertBothFail("imageCustomDoubleMapping_Throws");
             }
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void ImageWithValidAlternativeDescription_OK(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void ImageWithValidAlternativeDescription_OK(PdfConformance pdfConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, pdfConformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 Document document = new Document(pdfDocument);
                 Image img = LoadImage();
@@ -228,12 +224,12 @@ namespace iText.Pdfua.Checkers {
                 document.Add(img);
             }
             );
-            framework.AssertBothValid("imageWithValidAltDescr", pdfUAConformance);
+            framework.AssertBothValid("imageWithValidAltDescr");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void ImageWithValidActualText_OK(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void ImageWithValidActualText_OK(PdfConformance pdfConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, pdfConformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 Document document = new Document(pdfDocument);
                 Image img = LoadImage();
@@ -241,12 +237,12 @@ namespace iText.Pdfua.Checkers {
                 document.Add(img);
             }
             );
-            framework.AssertBothValid("imageWithValidActualText", pdfUAConformance);
+            framework.AssertBothValid("imageWithValidActualText");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void ImageWithCaption_OK(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void ImageWithCaption_OK(PdfConformance pdfConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, pdfConformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 Document document = new Document(pdfDocument);
                 Div imgWithCaption = new Div();
@@ -256,10 +252,10 @@ namespace iText.Pdfua.Checkers {
                 img.SetNeutralRole();
                 Paragraph caption = new Paragraph("Caption");
                 try {
-                    caption.SetFont(PdfFontFactory.CreateFont(FONT));
+                    caption.SetFont(PdfFontFactory.CreateFont(FONT, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED));
                 }
                 catch (System.IO.IOException e) {
-                    throw new Exception(e.Message);
+                    throw new PdfException(e.Message);
                 }
                 caption.GetAccessibilityProperties().SetRole(StandardRoles.CAPTION);
                 imgWithCaption.Add(img);
@@ -267,12 +263,12 @@ namespace iText.Pdfua.Checkers {
                 document.Add(imgWithCaption);
             }
             );
-            framework.AssertBothValid("imageWithCaption_OK", pdfUAConformance);
+            framework.AssertBothValid("imageWithCaption_OK");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void ImageWithCaptionWithoutAlternateDescription_Throws(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void ImageWithCaptionWithoutAlternateDescription_Throws(PdfConformance pdfConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, pdfConformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 Document document = new Document(pdfDocument);
                 Div imgWithCaption = new Div();
@@ -284,7 +280,7 @@ namespace iText.Pdfua.Checkers {
                     caption.SetFont(PdfFontFactory.CreateFont(FONT));
                 }
                 catch (System.IO.IOException e) {
-                    throw new Exception(e.Message);
+                    throw new PdfException(e.Message);
                 }
                 caption.GetAccessibilityProperties().SetRole(StandardRoles.CAPTION);
                 imgWithCaption.Add(img);
@@ -293,13 +289,18 @@ namespace iText.Pdfua.Checkers {
                 document.Add(imgWithCaption);
             }
             );
-            framework.AssertBothFail("imageWithCaptionWithoutAltDescr", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT
-                , pdfUAConformance);
+            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+                framework.AssertBothValid("imageWithCaptionWithoutAltDescr");
+            }
+            else {
+                framework.AssertBothFail("imageWithCaptionWithoutAltDescr", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT
+                    );
+            }
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void ImageWithoutActualText_ThrowsInLayout(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void ImageWithoutActualText_ThrowsInLayout(PdfConformance pdfConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, pdfConformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 Document document = new Document(pdfDocument);
                 Image img = LoadImage();
@@ -307,13 +308,17 @@ namespace iText.Pdfua.Checkers {
                 document.Add(img);
             }
             );
-            framework.AssertBothFail("imageWithoutActualText", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT, pdfUAConformance
-                );
+            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+                framework.AssertBothValid("imageWithoutActualText");
+            }
+            else {
+                framework.AssertBothFail("imageWithoutActualText", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT);
+            }
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void ImageWithEmptyActualText_ThrowsInLayout(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void ImageWithEmptyActualText_ThrowsInLayout(PdfConformance pdfConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, pdfConformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 Image img = LoadImage();
@@ -321,12 +326,12 @@ namespace iText.Pdfua.Checkers {
                 document.Add(img);
             }
             );
-            framework.AssertBothValid("imageWithEmptyActualText", pdfUAConformance);
+            framework.AssertBothValid("imageWithEmptyActualText");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void ImageDirectlyOnCanvas_OK(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void ImageDirectlyOnCanvas_OK(PdfConformance pdfConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, pdfConformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 try {
                     Document document = new Document(pdfDoc);
@@ -352,17 +357,17 @@ namespace iText.Pdfua.Checkers {
                     canvas.CloseTag();
                 }
                 catch (UriFormatException e) {
-                    throw new Exception(e.Message);
+                    throw new PdfException(e.Message);
                 }
             }
             );
-            framework.AssertBothValid("imageDirectlyOnCanvas", pdfUAConformance);
+            framework.AssertBothValid("imageDirectlyOnCanvas");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void ImageDirectlyOnCanvasWithoutAlternateDescription_ThrowsOnClose(PdfUAConformance pdfUAConformance
+        public virtual void ImageDirectlyOnCanvasWithoutAlternateDescription_ThrowsOnClose(PdfConformance pdfConformance
             ) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, pdfConformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 TagTreePointer pointerForImage = new TagTreePointer(pdfDoc);
                 PdfPage page = pdfDoc.AddNewPage();
@@ -374,18 +379,22 @@ namespace iText.Pdfua.Checkers {
                     canvas.AddImageAt(ImageDataFactory.Create(DOG), 200, 200, false);
                 }
                 catch (UriFormatException e) {
-                    throw new Exception(e.Message);
+                    throw new PdfException(e.Message);
                 }
                 canvas.CloseTag();
             }
             );
-            framework.AssertBothFail("canvasWithoutAltDescr", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT, pdfUAConformance
-                );
+            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+                framework.AssertBothValid("canvasWithoutAltDescr");
+            }
+            else {
+                framework.AssertBothFail("canvasWithoutAltDescr", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT);
+            }
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void ImageDirectlyOnCanvasWithEmptyActualText_OK(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void ImageDirectlyOnCanvasWithEmptyActualText_OK(PdfConformance pdfConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, pdfConformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 TagTreePointer pointerForImage = new TagTreePointer(pdfDoc);
                 PdfPage page = pdfDoc.AddNewPage();
@@ -398,17 +407,17 @@ namespace iText.Pdfua.Checkers {
                     canvas.AddImageAt(ImageDataFactory.Create(DOG), 200, 200, false);
                 }
                 catch (UriFormatException e) {
-                    throw new Exception(e.Message);
+                    throw new PdfException(e.Message);
                 }
                 canvas.CloseTag();
             }
             );
-            framework.AssertBothValid("imageOnCanvasEmptyActualText", pdfUAConformance);
+            framework.AssertBothValid("imageOnCanvasEmptyActualText");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void TestOverflowImage(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void TestOverflowImage(PdfConformance pdfConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, pdfConformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 iText.Layout.Element.Image img = LoadImage();
                 Document document = new Document(pdfDoc);
@@ -416,30 +425,46 @@ namespace iText.Pdfua.Checkers {
                 document.Add(img);
             }
             );
-            framework.AssertBothFail("overflowImage", pdfUAConformance);
+            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+                framework.AssertBothValid("overflowImage");
+            }
+            else {
+                framework.AssertBothFail("overflowImage");
+            }
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void TestEmbeddedImageInTable(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void TestEmbeddedImageInTable(PdfConformance pdfConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, pdfConformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 iText.Layout.Element.Image img = LoadImage();
+                PdfFont font = null;
+                try {
+                    font = PdfFontFactory.CreateFont(FONT, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
+                }
+                catch (System.IO.IOException e) {
+                    throw new PdfException(e.Message);
+                }
                 Document document = new Document(pdfDoc);
                 Table table = new Table(2);
                 for (int i = 0; i <= 20; i++) {
-                    table.AddCell(new Paragraph("Cell " + i));
+                    table.AddCell(new Paragraph("Cell " + i).SetFont(font));
                 }
                 table.AddCell(img);
                 document.Add(table);
             }
             );
-            framework.AssertBothFail("embeddedImageInTable", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT, pdfUAConformance
-                );
+            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+                framework.AssertBothValid("embeddedImageInTable");
+            }
+            else {
+                framework.AssertBothFail("embeddedImageInTable", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT);
+            }
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void TestEmbeddedImageInDiv(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void TestEmbeddedImageInDiv(PdfConformance pdfConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, pdfConformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 iText.Layout.Element.Image img = LoadImage();
                 Document document = new Document(pdfDoc);
@@ -448,13 +473,17 @@ namespace iText.Pdfua.Checkers {
                 document.Add(div);
             }
             );
-            framework.AssertBothFail("embeddedImageInDiv", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT, pdfUAConformance
-                );
+            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+                framework.AssertBothValid("embeddedImageInDiv");
+            }
+            else {
+                framework.AssertBothFail("embeddedImageInDiv", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT);
+            }
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void TestEmbeddedImageInParagraph(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void TestEmbeddedImageInParagraph(PdfConformance pdfConformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, pdfConformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 iText.Layout.Element.Image img = LoadImage();
                 Document document = new Document(pdfDoc);
@@ -463,8 +492,12 @@ namespace iText.Pdfua.Checkers {
                 document.Add(paragraph);
             }
             );
-            framework.AssertBothFail("embeddedImageInParagraph", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT, 
-                pdfUAConformance);
+            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+                framework.AssertBothValid("embeddedImageInParagraph");
+            }
+            else {
+                framework.AssertBothFail("embeddedImageInParagraph", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT);
+            }
         }
 
         private static iText.Layout.Element.Image LoadImage() {
@@ -472,7 +505,7 @@ namespace iText.Pdfua.Checkers {
                 return new iText.Layout.Element.Image(ImageDataFactory.Create(DOG));
             }
             catch (UriFormatException e) {
-                throw new Exception(e.Message);
+                throw new PdfException(e.Message);
             }
         }
     }

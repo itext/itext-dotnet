@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -44,6 +44,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         private bool rightToLeftRunDirection = false;
 
         private TextRenderInfo lastTextRenderInfo;
+
+        private String outputChunkSeparator = " ";
+
+        private String outputNewline = "\n";
 
         /// <summary>Creates a new text extraction renderer.</summary>
         public LocationTextExtractionStrategy()
@@ -92,6 +96,30 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         public virtual iText.Kernel.Pdf.Canvas.Parser.Listener.LocationTextExtractionStrategy SetRightToLeftRunDirection
             (bool rightToLeftRunDirection) {
             this.rightToLeftRunDirection = rightToLeftRunDirection;
+            return this;
+        }
+
+        /// <summary>Sets the string value used to separate chunks when formatting output.</summary>
+        /// <param name="outputChunkSeparator">
+        /// the string that will be used as a separator between chunks. Must not be
+        /// <see langword="null"/>
+        /// </param>
+        /// <returns>this object</returns>
+        public virtual iText.Kernel.Pdf.Canvas.Parser.Listener.LocationTextExtractionStrategy SetOutputChunkSeparator
+            (String outputChunkSeparator) {
+            this.outputChunkSeparator = outputChunkSeparator;
+            return this;
+        }
+
+        /// <summary>Sets the string value used to separate lines when formatting output.</summary>
+        /// <param name="outputNewline">
+        /// the string that will be used to represent a new line. Must not be
+        /// <see langword="null"/>
+        /// </param>
+        /// <returns>this object</returns>
+        public virtual iText.Kernel.Pdf.Canvas.Parser.Listener.LocationTextExtractionStrategy SetOutputNewline(String
+             outputNewline) {
+            this.outputNewline = outputNewline;
             return this;
         }
 
@@ -166,12 +194,12 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                         // we only insert a blank space if the trailing character of the previous string wasn't a space, and the leading character of the current string isn't a space
                         if (IsChunkAtWordBoundary(chunk, lastChunk) && !StartsWithSpace(chunk.text) && !EndsWithSpace(lastChunk.text
                             )) {
-                            sb.Append(' ');
+                            sb.Append(outputChunkSeparator);
                         }
                         sb.Append(chunk.text);
                     }
                     else {
-                        sb.Append('\n');
+                        sb.Append(outputNewline);
                         sb.Append(chunk.text);
                     }
                 }

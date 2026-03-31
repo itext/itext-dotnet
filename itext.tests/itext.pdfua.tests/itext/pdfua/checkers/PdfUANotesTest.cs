@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -50,533 +50,399 @@ namespace iText.Pdfua.Checkers {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
-        public static IList<PdfUAConformance> Data() {
+        public static IList<PdfConformance> Data() {
             return UaValidationTestFramework.GetConformanceList();
         }
 
-        private static String GetRoleBasedOnConformance(PdfUAConformance pdfUAConformance) {
-            return pdfUAConformance == PdfUAConformance.PDF_UA_1 ? StandardRoles.NOTE : StandardRoles.FENOTE;
-        }
-
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void AddNoteForUA2AndFENoteForUA1Test(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_84(pdfUAConformance));
+        public virtual void AddNoteForUA2AndFENoteForUA1Test(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((document) => {
+                Paragraph note = new Paragraph("FENote");
+                PdfFont font;
+                try {
+                    font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                        );
+                }
+                catch (System.IO.IOException e) {
+                    throw new PdfException(e.Message);
+                }
+                note.SetFont(font);
+                note.GetAccessibilityProperties().SetRole(conformance.GetUAConformance() == PdfUAConformance.PDF_UA_1 ? StandardRoles
+                    .FENOTE : StandardRoles.NOTE);
+                return note;
+            }
+            );
             String message = NUnit.Framework.Assert.Catch(typeof(PdfException), () => 
                         // It doesn't matter what we call here.
                         
                         // Test fails on document creation and verapdf validation isn't triggered anyway.
-                        framework.AssertOnlyVeraPdfFail("addNoteForUA2AndFENoteForUA1", pdfUAConformance)).Message;
-            String expectedExceptionMessage = pdfUAConformance == PdfUAConformance.PDF_UA_1 ? MessageFormatUtil.Format
-                (KernelExceptionMessageConstant.ROLE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE, StandardRoles.FENOTE) : MessageFormatUtil
-                .Format(KernelExceptionMessageConstant.ROLE_IN_NAMESPACE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE, StandardRoles
-                .NOTE, StandardNamespaces.PDF_2_0);
+                        framework.AssertOnlyVeraPdfFail("addNoteForUA2AndFENoteForUA1")).Message;
+            String expectedExceptionMessage = conformance.GetUAConformance() == PdfUAConformance.PDF_UA_1 ? MessageFormatUtil
+                .Format(KernelExceptionMessageConstant.ROLE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE, StandardRoles.FENOTE) : 
+                MessageFormatUtil.Format(KernelExceptionMessageConstant.ROLE_IN_NAMESPACE_IS_NOT_MAPPED_TO_ANY_STANDARD_ROLE
+                , StandardRoles.NOTE, StandardNamespaces.PDF_2_0);
             NUnit.Framework.Assert.AreEqual(expectedExceptionMessage, message);
         }
 
-        private sealed class _Generator_84 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_84(PdfUAConformance pdfUAConformance) {
-                this.pdfUAConformance = pdfUAConformance;
-            }
-
-            public IBlockElement Generate() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void AddFENoteWithoutReferencesTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((pdfDocument) => {
                 Paragraph note = new Paragraph("FENote");
                 PdfFont font;
                 try {
-                    font = PdfFontFactory.CreateFont(PdfUANotesTest.FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
-                        .FORCE_EMBEDDED);
+                    font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                        );
                 }
                 catch (System.IO.IOException e) {
-                    throw new Exception(e.Message);
+                    throw new PdfException(e.Message);
                 }
                 note.SetFont(font);
-                note.GetAccessibilityProperties().SetRole(pdfUAConformance == PdfUAConformance.PDF_UA_1 ? StandardRoles.FENOTE
-                     : StandardRoles.NOTE);
+                note.GetAccessibilityProperties().SetRole(GetRoleBasedOnConformance(conformance));
                 return note;
             }
-
-            private readonly PdfUAConformance pdfUAConformance;
-        }
-
-        [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void AddFENoteWithoutReferencesTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_116(pdfUAConformance));
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+            );
+            if (conformance.ConformsTo(PdfUAConformance.PDF_UA_1)) {
                 framework.AssertBothFail("addFENoteWithoutReferences", PdfUAExceptionMessageConstants.NOTE_TAG_SHALL_HAVE_ID_ENTRY
-                    , pdfUAConformance);
+                    );
             }
             else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothValid("addFENoteWithoutReferences", pdfUAConformance);
-                }
+                framework.AssertBothValid("addFENoteWithoutReferences");
             }
-        }
-
-        private sealed class _Generator_116 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_116(PdfUAConformance pdfUAConformance) {
-                this.pdfUAConformance = pdfUAConformance;
-            }
-
-            public IBlockElement Generate() {
-                Paragraph note = new Paragraph("FENote");
-                PdfFont font;
-                try {
-                    font = PdfFontFactory.CreateFont(PdfUANotesTest.FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
-                        .FORCE_EMBEDDED);
-                }
-                catch (System.IO.IOException e) {
-                    throw new Exception(e.Message);
-                }
-                note.SetFont(font);
-                note.GetAccessibilityProperties().SetRole(PdfUANotesTest.GetRoleBasedOnConformance(pdfUAConformance));
-                return note;
-            }
-
-            private readonly PdfUAConformance pdfUAConformance;
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void AddFENoteWithValidNoteTypeTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_143(pdfUAConformance));
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("addFENoteWithValidNoteTypeTest", PdfUAExceptionMessageConstants.NOTE_TAG_SHALL_HAVE_ID_ENTRY
-                    , pdfUAConformance);
-            }
-            else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothValid("addFENoteWithValidNoteTypeTest", pdfUAConformance);
-                }
-            }
-        }
-
-        private sealed class _Generator_143 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_143(PdfUAConformance pdfUAConformance) {
-                this.pdfUAConformance = pdfUAConformance;
-            }
-
-            public IBlockElement Generate() {
+        public virtual void AddFENoteWithValidNoteTypeTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((pdfDoc) => {
                 Paragraph note = new Paragraph("FENote");
                 PdfFont font;
                 try {
-                    font = PdfFontFactory.CreateFont(PdfUANotesTest.FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
-                        .FORCE_EMBEDDED);
+                    font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                        );
                 }
                 catch (System.IO.IOException e) {
-                    throw new Exception(e.Message);
+                    throw new PdfException(e.Message);
                 }
                 note.SetFont(font);
-                note.GetAccessibilityProperties().SetRole(PdfUANotesTest.GetRoleBasedOnConformance(pdfUAConformance));
+                note.GetAccessibilityProperties().SetRole(GetRoleBasedOnConformance(conformance));
                 PdfDictionary attribute = new PdfDictionary();
                 attribute.Put(PdfName.O, PdfName.FENote);
                 attribute.Put(PdfName.NoteType, PdfName.Endnote);
                 note.GetAccessibilityProperties().AddAttributes(new PdfStructureAttributes(attribute));
                 return note;
             }
-
-            private readonly PdfUAConformance pdfUAConformance;
+            );
+            if (conformance.ConformsTo(PdfUAConformance.PDF_UA_1)) {
+                framework.AssertBothFail("addFENoteWithValidNoteTypeTest", PdfUAExceptionMessageConstants.NOTE_TAG_SHALL_HAVE_ID_ENTRY
+                    );
+            }
+            else {
+                framework.AssertBothValid("addFENoteWithValidNoteTypeTest");
+            }
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void AddFENoteWithInvalidNoteTypeTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_176(pdfUAConformance));
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("addFENoteWithInvalidNoteTypeTest", PdfUAExceptionMessageConstants.NOTE_TAG_SHALL_HAVE_ID_ENTRY
-                    , pdfUAConformance);
-            }
-            else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothFail("addFENoteWithInvalidNoteTypeTest", PdfUAExceptionMessageConstants.INCORRECT_NOTE_TYPE_VALUE
-                        , pdfUAConformance);
-                }
-            }
-        }
-
-        private sealed class _Generator_176 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_176(PdfUAConformance pdfUAConformance) {
-                this.pdfUAConformance = pdfUAConformance;
-            }
-
-            public IBlockElement Generate() {
+        public virtual void AddFENoteWithInvalidNoteTypeTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((pdfDoc) => {
                 Paragraph note = new Paragraph("FENote");
                 PdfFont font;
                 try {
-                    font = PdfFontFactory.CreateFont(PdfUANotesTest.FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
-                        .FORCE_EMBEDDED);
+                    font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                        );
                 }
                 catch (System.IO.IOException e) {
-                    throw new Exception(e.Message);
+                    throw new PdfException(e.Message);
                 }
                 note.SetFont(font);
-                note.GetAccessibilityProperties().SetRole(PdfUANotesTest.GetRoleBasedOnConformance(pdfUAConformance));
+                note.GetAccessibilityProperties().SetRole(GetRoleBasedOnConformance(conformance));
                 PdfDictionary attribute = new PdfDictionary();
                 attribute.Put(PdfName.O, PdfName.FENote);
                 attribute.Put(PdfName.NoteType, PdfName.End);
                 note.GetAccessibilityProperties().AddAttributes(new PdfStructureAttributes(attribute));
                 return note;
             }
-
-            private readonly PdfUAConformance pdfUAConformance;
+            );
+            if (conformance.ConformsTo(PdfUAConformance.PDF_UA_1)) {
+                framework.AssertBothFail("addFENoteWithInvalidNoteTypeTest", PdfUAExceptionMessageConstants.NOTE_TAG_SHALL_HAVE_ID_ENTRY
+                    );
+            }
+            else {
+                framework.AssertBothFail("addFENoteWithInvalidNoteTypeTest", PdfUAExceptionMessageConstants.INCORRECT_NOTE_TYPE_VALUE
+                    );
+            }
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Count = 4, Ignore
              = true)]
-        public virtual void RealContentDoesntHaveReferenceTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void RealContentDoesntHaveReferenceTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 pdfDocument.AddNewPage();
                 PdfAnnotation annotation = new PdfTextAnnotation(new Rectangle(100, 100)).SetContents("Real content");
                 pdfDocument.GetPage(1).AddAnnotation(annotation);
             }
             );
-            framework.AddSuppliers(new _Generator_216(pdfUAConformance));
+            framework.AddSuppliers((pdfDoc) => {
+                Paragraph note = new Paragraph("FENote");
+                PdfFont font;
+                try {
+                    font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                        );
+                }
+                catch (System.IO.IOException e) {
+                    throw new PdfException(e.Message);
+                }
+                note.SetFont(font);
+                note.GetAccessibilityProperties().SetRole(GetRoleBasedOnConformance(conformance));
+                return note;
+            }
+            );
             framework.AddAfterGenerationHook((pdfDocument) => {
                 TagTreePointer pointer = new TagTreePointer(pdfDocument);
-                pointer.MoveToKid(GetRoleBasedOnConformance(pdfUAConformance));
+                pointer.MoveToKid(GetRoleBasedOnConformance(conformance));
                 TagTreePointer feNotePointer = new TagTreePointer(pointer);
                 feNotePointer.ApplyProperties(new DefaultAccessibilityProperties(pointer.GetRole()).AddRef(pointer.MoveToRoot
                     ().MoveToKid(StandardRoles.ANNOT)));
                 pointer.MoveToRoot();
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+            if (conformance.ConformsTo(PdfUAConformance.PDF_UA_1)) {
                 framework.AssertBothFail("realContentDoesntHaveReferenceTest", PdfUAExceptionMessageConstants.NOTE_TAG_SHALL_HAVE_ID_ENTRY
-                    , pdfUAConformance);
+                    );
             }
             else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothFail("realContentDoesntHaveReferenceTest", PdfUAExceptionMessageConstants.CONTENT_NOT_REFERENCING_FE_NOTE
-                        , pdfUAConformance);
-                }
+                framework.AssertBothFail("realContentDoesntHaveReferenceTest", PdfUAExceptionMessageConstants.CONTENT_NOT_REFERENCING_FE_NOTE
+                    );
             }
-        }
-
-        private sealed class _Generator_216 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_216(PdfUAConformance pdfUAConformance) {
-                this.pdfUAConformance = pdfUAConformance;
-            }
-
-            public IBlockElement Generate() {
-                Paragraph note = new Paragraph("FENote");
-                PdfFont font;
-                try {
-                    font = PdfFontFactory.CreateFont(PdfUANotesTest.FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
-                        .FORCE_EMBEDDED);
-                }
-                catch (System.IO.IOException e) {
-                    throw new Exception(e.Message);
-                }
-                note.SetFont(font);
-                note.GetAccessibilityProperties().SetRole(PdfUANotesTest.GetRoleBasedOnConformance(pdfUAConformance));
-                return note;
-            }
-
-            private readonly PdfUAConformance pdfUAConformance;
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Count = 4, Ignore
              = true)]
-        public virtual void NoteDoesntHaveReferenceTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void NoteDoesntHaveReferenceTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 pdfDocument.AddNewPage();
                 PdfAnnotation annotation = new PdfTextAnnotation(new Rectangle(100, 100)).SetContents("Real content");
                 pdfDocument.GetPage(1).AddAnnotation(annotation);
             }
             );
-            framework.AddSuppliers(new _Generator_261(pdfUAConformance));
+            framework.AddSuppliers((pdfDoc) => {
+                Paragraph note = new Paragraph("FENote");
+                PdfFont font;
+                try {
+                    font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                        );
+                }
+                catch (System.IO.IOException e) {
+                    throw new PdfException(e.Message);
+                }
+                note.SetFont(font);
+                note.GetAccessibilityProperties().SetRole(GetRoleBasedOnConformance(conformance));
+                return note;
+            }
+            );
             framework.AddAfterGenerationHook((pdfDocument) => {
                 TagTreePointer pointer = new TagTreePointer(pdfDocument);
                 pointer.MoveToKid(StandardRoles.ANNOT);
                 TagTreePointer realContentPointer = new TagTreePointer(pointer);
                 realContentPointer.ApplyProperties(new DefaultAccessibilityProperties(pointer.GetRole()).AddRef(pointer.MoveToRoot
-                    ().MoveToKid(GetRoleBasedOnConformance(pdfUAConformance))));
+                    ().MoveToKid(GetRoleBasedOnConformance(conformance))));
                 pointer.MoveToRoot();
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+            if (conformance.ConformsTo(PdfUAConformance.PDF_UA_1)) {
                 framework.AssertBothFail("noteDoesntHaveReferenceTest", PdfUAExceptionMessageConstants.NOTE_TAG_SHALL_HAVE_ID_ENTRY
-                    , pdfUAConformance);
+                    );
             }
             else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothFail("noteDoesntHaveReferenceTest", PdfUAExceptionMessageConstants.FE_NOTE_NOT_REFERENCING_CONTENT
-                        , pdfUAConformance);
-                }
+                framework.AssertBothFail("noteDoesntHaveReferenceTest", PdfUAExceptionMessageConstants.FE_NOTE_NOT_REFERENCING_CONTENT
+                    );
             }
-        }
-
-        private sealed class _Generator_261 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_261(PdfUAConformance pdfUAConformance) {
-                this.pdfUAConformance = pdfUAConformance;
-            }
-
-            public IBlockElement Generate() {
-                Paragraph note = new Paragraph("FENote");
-                PdfFont font;
-                try {
-                    font = PdfFontFactory.CreateFont(PdfUANotesTest.FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
-                        .FORCE_EMBEDDED);
-                }
-                catch (System.IO.IOException e) {
-                    throw new Exception(e.Message);
-                }
-                note.SetFont(font);
-                note.GetAccessibilityProperties().SetRole(PdfUANotesTest.GetRoleBasedOnConformance(pdfUAConformance));
-                return note;
-            }
-
-            private readonly PdfUAConformance pdfUAConformance;
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Count = 4, Ignore
              = true)]
-        public virtual void FeNoteWithValidReferencesTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void FeNoteWithValidReferencesTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDocument) => {
                 pdfDocument.AddNewPage();
                 PdfAnnotation annotation = new PdfTextAnnotation(new Rectangle(100, 100)).SetContents("Real content");
                 pdfDocument.GetPage(1).AddAnnotation(annotation);
             }
             );
-            framework.AddSuppliers(new _Generator_306(pdfUAConformance));
+            framework.AddSuppliers((pdfDoc) => {
+                Paragraph note = new Paragraph("FENote");
+                PdfFont font;
+                try {
+                    font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                        );
+                }
+                catch (System.IO.IOException e) {
+                    throw new PdfException(e.Message);
+                }
+                note.SetFont(font);
+                note.GetAccessibilityProperties().SetRole(GetRoleBasedOnConformance(conformance));
+                return note;
+            }
+            );
             framework.AddAfterGenerationHook((pdfDocument) => {
                 TagTreePointer pointer = new TagTreePointer(pdfDocument);
                 pointer.MoveToKid(StandardRoles.ANNOT);
                 TagTreePointer realContentPointer = new TagTreePointer(pointer);
                 realContentPointer.ApplyProperties(new DefaultAccessibilityProperties(pointer.GetRole()).AddRef(pointer.MoveToRoot
-                    ().MoveToKid(GetRoleBasedOnConformance(pdfUAConformance))));
+                    ().MoveToKid(GetRoleBasedOnConformance(conformance))));
                 TagTreePointer notePointer = new TagTreePointer(pointer);
                 notePointer.ApplyProperties(new DefaultAccessibilityProperties(pointer.GetRole()).AddRef(pointer.MoveToRoot
                     ().MoveToKid(StandardRoles.ANNOT)));
                 pointer.MoveToRoot();
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
+            if (conformance.ConformsTo(PdfUAConformance.PDF_UA_1)) {
                 framework.AssertBothFail("feNoteWithValidReferencesTest", PdfUAExceptionMessageConstants.NOTE_TAG_SHALL_HAVE_ID_ENTRY
-                    , pdfUAConformance);
-            }
-            else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothValid("feNoteWithValidReferencesTest", pdfUAConformance);
-                }
-            }
-        }
-
-        private sealed class _Generator_306 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_306(PdfUAConformance pdfUAConformance) {
-                this.pdfUAConformance = pdfUAConformance;
-            }
-
-            public IBlockElement Generate() {
-                Paragraph note = new Paragraph("FENote");
-                PdfFont font;
-                try {
-                    font = PdfFontFactory.CreateFont(PdfUANotesTest.FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
-                        .FORCE_EMBEDDED);
-                }
-                catch (System.IO.IOException e) {
-                    throw new Exception(e.Message);
-                }
-                note.SetFont(font);
-                note.GetAccessibilityProperties().SetRole(PdfUANotesTest.GetRoleBasedOnConformance(pdfUAConformance));
-                return note;
-            }
-
-            private readonly PdfUAConformance pdfUAConformance;
-        }
-
-        [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void AddNoteWithoutIdTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_349(pdfUAConformance));
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("noteWithoutID", PdfUAExceptionMessageConstants.NOTE_TAG_SHALL_HAVE_ID_ENTRY, pdfUAConformance
                     );
             }
             else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothValid("noteWithoutID", pdfUAConformance);
-                }
+                framework.AssertBothValid("feNoteWithValidReferencesTest");
             }
         }
 
-        private sealed class _Generator_349 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_349(PdfUAConformance pdfUAConformance) {
-                this.pdfUAConformance = pdfUAConformance;
-            }
-
-            public IBlockElement Generate() {
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void AddNoteWithoutIdTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((pdfDoc) => {
                 Paragraph note = new Paragraph("note");
                 PdfFont font = null;
                 try {
-                    font = PdfFontFactory.CreateFont(PdfUANotesTest.FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
-                        .FORCE_EMBEDDED);
+                    font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                        );
                 }
                 catch (System.IO.IOException e) {
-                    throw new Exception(e.Message);
+                    throw new PdfException(e.Message);
                 }
                 note.SetFont(font);
-                note.GetAccessibilityProperties().SetRole(PdfUANotesTest.GetRoleBasedOnConformance(pdfUAConformance));
+                note.GetAccessibilityProperties().SetRole(GetRoleBasedOnConformance(conformance));
                 return note;
             }
-
-            private readonly PdfUAConformance pdfUAConformance;
+            );
+            if (conformance.ConformsTo(PdfUAConformance.PDF_UA_1)) {
+                framework.AssertBothFail("noteWithoutID", PdfUAExceptionMessageConstants.NOTE_TAG_SHALL_HAVE_ID_ENTRY);
+            }
+            else {
+                framework.AssertBothValid("noteWithoutID");
+            }
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.NAME_ALREADY_EXISTS_IN_THE_NAME_TREE, Ignore = true)]
-        public virtual void AddTwoNotesWithSameIdTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_378(pdfUAConformance), new _Generator_394(pdfUAConformance));
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("twoNotesWithSameId", MessageFormatUtil.Format(PdfUAExceptionMessageConstants.NON_UNIQUE_ID_ENTRY_IN_STRUCT_TREE_ROOT
-                    , "123"), false, pdfUAConformance);
-            }
-            else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothValid("twoNotesWithSameId", pdfUAConformance);
-                }
-            }
-        }
-
-        private sealed class _Generator_378 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_378(PdfUAConformance pdfUAConformance) {
-                this.pdfUAConformance = pdfUAConformance;
-            }
-
-            public IBlockElement Generate() {
+        public virtual void AddTwoNotesWithSameIdTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((pdfDoc) => {
                 Paragraph note = new Paragraph("note 1");
                 PdfFont font = null;
                 try {
-                    font = PdfFontFactory.CreateFont(PdfUANotesTest.FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
-                        .FORCE_EMBEDDED);
+                    font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                        );
                 }
                 catch (System.IO.IOException e) {
-                    throw new Exception(e.Message);
+                    throw new PdfException(e.Message);
                 }
                 note.SetFont(font);
-                note.GetAccessibilityProperties().SetRole(PdfUANotesTest.GetRoleBasedOnConformance(pdfUAConformance));
+                note.GetAccessibilityProperties().SetRole(GetRoleBasedOnConformance(conformance));
                 note.GetAccessibilityProperties().SetStructureElementIdString("123");
                 return note;
             }
-
-            private readonly PdfUAConformance pdfUAConformance;
-        }
-
-        private sealed class _Generator_394 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_394(PdfUAConformance pdfUAConformance) {
-                this.pdfUAConformance = pdfUAConformance;
-            }
-
-            public IBlockElement Generate() {
+            , (pdfDoc) => {
                 Paragraph note = new Paragraph("note 2");
                 PdfFont font = null;
                 try {
-                    font = PdfFontFactory.CreateFont(PdfUANotesTest.FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
-                        .FORCE_EMBEDDED);
+                    font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                        );
                 }
                 catch (System.IO.IOException e) {
-                    throw new Exception(e.Message);
+                    throw new PdfException(e.Message);
                 }
                 note.SetFont(font);
-                note.GetAccessibilityProperties().SetRole(PdfUANotesTest.GetRoleBasedOnConformance(pdfUAConformance));
+                note.GetAccessibilityProperties().SetRole(GetRoleBasedOnConformance(conformance));
                 note.GetAccessibilityProperties().SetStructureElementIdString("123");
                 return note;
             }
-
-            private readonly PdfUAConformance pdfUAConformance;
+            );
+            if (conformance.ConformsTo(PdfUAConformance.PDF_UA_1)) {
+                framework.AssertBothFail("twoNotesWithSameId", MessageFormatUtil.Format(PdfUAExceptionMessageConstants.NON_UNIQUE_ID_ENTRY_IN_STRUCT_TREE_ROOT
+                    , "123"), false);
+            }
+            else {
+                framework.AssertBothValid("twoNotesWithSameId");
+            }
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void AddNoteWithValidIdTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_423(pdfUAConformance));
-            framework.AssertBothValid("noteWithValidID", pdfUAConformance);
-        }
-
-        private sealed class _Generator_423 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_423(PdfUAConformance pdfUAConformance) {
-                this.pdfUAConformance = pdfUAConformance;
-            }
-
-            public IBlockElement Generate() {
+        public virtual void AddNoteWithValidIdTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((pdfDoc) => {
                 Paragraph note = new Paragraph("note");
                 PdfFont font = null;
                 try {
-                    font = PdfFontFactory.CreateFont(PdfUANotesTest.FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
-                        .FORCE_EMBEDDED);
+                    font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                        );
                 }
                 catch (System.IO.IOException e) {
-                    throw new Exception(e.Message);
+                    throw new PdfException(e.Message);
                 }
                 note.SetFont(font);
-                note.GetAccessibilityProperties().SetRole(PdfUANotesTest.GetRoleBasedOnConformance(pdfUAConformance));
+                note.GetAccessibilityProperties().SetRole(GetRoleBasedOnConformance(conformance));
                 note.GetAccessibilityProperties().SetStructureElementIdString("123");
                 return note;
             }
-
-            private readonly PdfUAConformance pdfUAConformance;
+            );
+            framework.AssertBothValid("noteWithValidID");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void AddTwoNotesWithDifferentIdTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_447(pdfUAConformance), new _Generator_463(pdfUAConformance));
-            framework.AssertBothValid("twoNotesWithDifferentId", pdfUAConformance);
-        }
-
-        private sealed class _Generator_447 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_447(PdfUAConformance pdfUAConformance) {
-                this.pdfUAConformance = pdfUAConformance;
-            }
-
-            public IBlockElement Generate() {
+        public virtual void AddTwoNotesWithDifferentIdTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((pdfDoc) => {
                 Paragraph note = new Paragraph("note 1");
                 PdfFont font = null;
                 try {
-                    font = PdfFontFactory.CreateFont(PdfUANotesTest.FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
-                        .FORCE_EMBEDDED);
+                    font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                        );
                 }
                 catch (System.IO.IOException e) {
-                    throw new Exception(e.Message);
+                    throw new PdfException(e.Message);
                 }
                 note.SetFont(font);
-                note.GetAccessibilityProperties().SetRole(PdfUANotesTest.GetRoleBasedOnConformance(pdfUAConformance));
+                note.GetAccessibilityProperties().SetRole(GetRoleBasedOnConformance(conformance));
                 note.GetAccessibilityProperties().SetStructureElementIdString("123");
                 return note;
             }
-
-            private readonly PdfUAConformance pdfUAConformance;
-        }
-
-        private sealed class _Generator_463 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_463(PdfUAConformance pdfUAConformance) {
-                this.pdfUAConformance = pdfUAConformance;
-            }
-
-            public IBlockElement Generate() {
+            , (pdfDoc) => {
                 Paragraph note = new Paragraph("note 2");
                 PdfFont font = null;
                 try {
-                    font = PdfFontFactory.CreateFont(PdfUANotesTest.FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
-                        .FORCE_EMBEDDED);
+                    font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
+                        );
                 }
                 catch (System.IO.IOException e) {
-                    throw new Exception(e.Message);
+                    throw new PdfException(e.Message);
                 }
                 note.SetFont(font);
-                note.GetAccessibilityProperties().SetRole(PdfUANotesTest.GetRoleBasedOnConformance(pdfUAConformance));
+                note.GetAccessibilityProperties().SetRole(GetRoleBasedOnConformance(conformance));
                 note.GetAccessibilityProperties().SetStructureElementIdString("234");
                 return note;
             }
+            );
+            framework.AssertBothValid("twoNotesWithDifferentId");
+        }
 
-            private readonly PdfUAConformance pdfUAConformance;
+        private static String GetRoleBasedOnConformance(PdfConformance conformance) {
+            return conformance.GetUAConformance() == PdfUAConformance.PDF_UA_1 ? StandardRoles.NOTE : StandardRoles.FENOTE;
         }
     }
 }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -49,6 +49,11 @@ namespace iText.Bouncycastlefips.Cert.Ocsp {
         /// <summary><inheritDoc/></summary>
         public virtual IX500Name GetName() {
             return new X500NameBCFips(responderID.Name);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public byte[] GetKeyHash() {
+            return responderID.GetKeyHash();
         }
 
         /// <summary>Gets actual org.bouncycastle object being wrapped.</summary>

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -83,6 +83,9 @@ namespace iText.Layout.Splitting {
                 return false;
             }
             int charCode = text.Get(glyphPos).GetUnicode();
+            if (iText.IO.Util.TextUtil.IsNewLine(charCode)) {
+                return true;
+            }
             if (text.Size() - 1 > glyphPos) {
                 // Check if a hyphen precedes a digit to denote negative value
                 // TODO: DEVSIX-4863 why is glyphPos == 0? negative value could be preceded by a whitespace!

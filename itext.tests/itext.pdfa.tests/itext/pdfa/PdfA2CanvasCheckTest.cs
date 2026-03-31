@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -33,20 +33,22 @@ using iText.Test;
 namespace iText.Pdfa {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfA2CanvasCheckTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/pdfa/PdfA2CanvasCheckTest/";
+        private static readonly String CMP_FOLDER = SOURCE_FOLDER + "cmp/PdfA2CanvasCheckTest/";
+
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfa/PdfA2CanvasCheckTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void CanvasCheckTest1() {
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
             using (PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformance.PDF_A_2B, outputIntent)) {
@@ -65,10 +67,10 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void CanvasCheckTest2() {
-            String outPdf = destinationFolder + "pdfA2b_canvasCheckTest2.pdf";
-            String cmpPdf = sourceFolder + "cmp/PdfA2CanvasCheckTest/cmp_pdfA2b_canvasCheckTest2.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA2b_canvasCheckTest2.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp/PdfA2CanvasCheckTest/cmp_pdfA2b_canvasCheckTest2.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
             using (PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformance.PDF_A_2B, outputIntent)) {
@@ -81,7 +83,7 @@ namespace iText.Pdfa {
                     canvas.RestoreState();
                 }
             }
-            String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            String result = new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_");
             if (result != null) {
                 NUnit.Framework.Assert.Fail(result);
             }
@@ -90,7 +92,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void CanvasCheckTest3() {
             PdfWriter writer = new PdfWriter(new MemoryStream());
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
                 , @is);
             using (PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformance.PDF_A_2B, outputIntent)) {
@@ -101,6 +103,22 @@ namespace iText.Pdfa {
                 NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.IF_SPECIFIED_RENDERING_SHALL_BE_ONE_OF_THE_FOLLOWING_RELATIVECOLORIMETRIC_ABSOLUTECOLORIMETRIC_PERCEPTUAL_OR_SATURATION
                     , e.Message);
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckInlineImageTest() {
+            String outPdf = DESTINATION_FOLDER + "checkInlineImage.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_checkInlineImage.pdf";
+            Stream iccStream = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
+            PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                , iccStream);
+            PdfADocument pdfADocument = new PdfADocument(new PdfWriter(outPdf), PdfAConformance.PDF_A_2B, outputIntent
+                );
+            PdfDocument inlineImagePdf = new PdfDocument(new PdfReader(SOURCE_FOLDER + "inlineImage.pdf"));
+            inlineImagePdf.CopyPagesTo(1, inlineImagePdf.GetNumberOfPages(), pdfADocument);
+            inlineImagePdf.Close();
+            pdfADocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER));
         }
     }
 }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -61,6 +61,13 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             }
             return !CommonCssConstants.AUTO.Equals(StringNormalizer.ToLowerCase(pageTypeName)) && pageTypeName.Equals(
                 ((PageContextNode)node).GetPageTypeName());
+        }
+
+        /* (non-Javadoc)
+        * @see java.lang.Object#toString()
+        */
+        public override String ToString() {
+            return pageTypeName;
         }
     }
 }

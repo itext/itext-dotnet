@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -20,10 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
-using System.Collections.Generic;
-using System.IO;
-using iText.IO.Source;
+using iText.Bouncycastle.Crypto;
 using iText.Bouncycastleconnector;
 using iText.Commons.Actions.Data;
 using iText.Commons.Bouncycastle;
@@ -32,6 +29,7 @@ using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
 using iText.Forms.Form.Element;
+using iText.IO.Source;
 using iText.Kernel.Actions.Data;
 using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
@@ -41,6 +39,10 @@ using iText.Signatures.Exceptions;
 using iText.Signatures.Testutils;
 using iText.Signatures.Testutils.Client;
 using iText.Test;
+using Org.BouncyCastle.Tls;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace iText.Signatures.Sign {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
@@ -237,7 +239,8 @@ namespace iText.Signatures.Sign {
         }
 
         [NUnit.Framework.Test]
-        public virtual void producerLineWithMetaInfoUsedTest() {
+        public virtual void ProducerLineWithMetaInfoUsedTest()
+        {
             String fileName = "producerLineWithMetaInfoUsedTest.pdf";
             String outFileName = destinationFolder + fileName;
             String srcFileName = sourceFolder + "helloWorldDoc.pdf";
@@ -261,13 +264,16 @@ namespace iText.Signatures.Sign {
             padesSigner.SignWithBaselineLTAProfile(signerProperties, signRsaChain, pks, testTsa);
 
             byte[] docBytes;
-            using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-                new PdfDocument(new PdfReader(srcFileName) ,new PdfWriter(outputStream)).Close();
+            using (ByteArrayOutputStream outputStream = new ByteArrayOutputStream())
+            {
+                new PdfDocument(new PdfReader(srcFileName), new PdfWriter(outputStream)).Close();
                 docBytes = outputStream.ToArray();
             }
-            
-            using (PdfDocument signedPdf = new PdfDocument(new PdfReader(outFileName))) {
-                using (PdfDocument regularPdf = new PdfDocument(new PdfReader(new MemoryStream(docBytes)))) {
+
+            using (PdfDocument signedPdf = new PdfDocument(new PdfReader(outFileName)))
+            {
+                using (PdfDocument regularPdf = new PdfDocument(new PdfReader(new MemoryStream(docBytes))))
+                {
                     ProductData productData = ITextCoreProductData.GetInstance();
                     String newlyAddedProducer = "iText\u00ae " + productData.GetPublicProductName() + " " +
                         productData.GetVersion() + " \u00a9" + productData.GetSinceCopyrightYear() + "-"
@@ -277,9 +283,43 @@ namespace iText.Signatures.Sign {
 
                     NUnit.Framework.Assert.IsTrue(actualProducerLine.Contains(regularProducerLine));
                     NUnit.Framework.Assert.IsTrue(actualProducerLine.Contains(newlyAddedProducer));
+                }
             }
         }
-    }
+
+        [NUnit.Framework.Test]
+        public virtual void PadesSignatureCreatorTest()
+        {
+            String fileName = "padesSignatureCreatorTest.pdf";
+            String outFileName = destinationFolder + fileName;
+            String srcFileName = sourceFolder + "helloWorldDoc.pdf";
+            String signCertFileName = certsSrc + "signCertRsa01.pem";
+
+            IX509Certificate[] signChain = PemFileHelper.ReadFirstChain(signCertFileName);
+            IPrivateKey signPrivateKey = PemFileHelper.ReadFirstKey(signCertFileName, password);
+
+            SignerProperties signerProperties = CreateSignerProperties();
+            PdfPadesSigner padesSigner = CreatePdfPadesSigner(srcFileName, outFileName);
+            padesSigner.SignWithBaselineBProfile(signerProperties, signChain, signPrivateKey);
+
+            SignatureUtil signatureUtil = new SignatureUtil(new PdfDocument(new PdfReader(outFileName)));
+            PdfSignature signature = signatureUtil.GetSignature(signerProperties.GetFieldName());
+            String creator = signature.GetPdfObject().GetAsDictionary(PdfName.Prop_Build).GetAsDictionary(PdfName.App)
+                    .GetAsName(PdfName.Name).GetValue();
+
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            PdfDocument doc = new PdfDocument(new PdfWriter(outputStream));
+            doc.AddNewPage();
+            doc.Close();
+
+            using (PdfDocument regularPdf = new PdfDocument(new PdfReader(new MemoryStream(outputStream.ToArray()))))
+            {
+                String regularProducerLine = regularPdf.GetDocumentInfo().GetProducer();
+                NUnit.Framework.Assert.AreEqual(regularProducerLine, creator);
+            }
+        }
+
+
         private SignerProperties CreateSignerProperties() {
             SignerProperties signerProperties = new SignerProperties();
             signerProperties.SetFieldName("Signature1");

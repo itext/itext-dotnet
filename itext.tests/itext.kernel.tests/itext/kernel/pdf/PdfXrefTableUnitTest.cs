@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -51,6 +51,24 @@ namespace iText.Kernel.Pdf {
             table.FreeReference(table.Get(freeReferenceNumber));
             NUnit.Framework.Assert.AreEqual(numberOfReferences - 1, table.GetCountOfIndirectObjects());
             NUnit.Framework.Assert.IsTrue(table.Get(freeReferenceNumber).IsFree());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XrefSizeLimitIsNotAppliedAfterReadingCompletedTest() {
+            MemoryLimitsAwareHandler memoryLimitsAwareHandler = new MemoryLimitsAwareHandler();
+            memoryLimitsAwareHandler.SetMaxNumberOfElementsInXrefStructure(5);
+            PdfXrefTable xrefTable = new PdfXrefTable(5, memoryLimitsAwareHandler);
+            // Simulate that original document xref reading/building has finished (stamping scenario).
+            xrefTable.MarkReadingCompleted();
+            // After reading is completed, growing xref due to new content must not be blocked by the limit.
+            NUnit.Framework.Assert.DoesNotThrow(() => xrefTable.SetCapacity(100));
+            // Also ensure adding new refs beyond the original limit doesn't throw.
+            NUnit.Framework.Assert.DoesNotThrow(() => {
+                for (int i = 1; i <= 50; i++) {
+                    xrefTable.Add(new PdfIndirectReference(null, i));
+                }
+            }
+            );
         }
 
         [NUnit.Framework.Test]

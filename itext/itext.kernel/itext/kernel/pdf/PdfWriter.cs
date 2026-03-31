@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -77,8 +77,16 @@ namespace iText.Kernel.Pdf {
             : this(file.FullName) {
         }
 
-        /// <summary>Create a PdfWriter writing to the passed outputstream and with default writer properties.</summary>
-        /// <param name="os">Outputstream to write to.</param>
+        /// <summary>
+        /// Create a PdfWriter writing to the passed
+        /// <see cref="System.IO.Stream"/>
+        /// and with default writer properties.
+        /// </summary>
+        /// <param name="os">
+        /// 
+        /// <see cref="System.IO.Stream"/>
+        /// to write to.
+        /// </param>
         public PdfWriter(Stream os)
             : this(os, new WriterProperties()) {
         }

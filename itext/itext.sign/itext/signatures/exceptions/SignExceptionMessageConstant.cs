@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -214,6 +214,8 @@ namespace iText.Signatures.Exceptions {
              + "process for the next document.";
 
         public const String SIGNATURE_NAME_NOT_PROVIDED = "Signature validation name needs to be provided with QualifiedValidator#startSignatureValidation method.";
+
+        public const String NO_SIGNATURE_WITH_THAT_NAME = "Signature field with {0} name was not found in the document.";
 
         private SignExceptionMessageConstant() {
         }

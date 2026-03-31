@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -32,7 +32,7 @@ namespace iText.Kernel.Pdf {
         private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/pdf/PdfType0FontIntegrationTest/";
 
         private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/fonts/";
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/fonts/";
 
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfType0FontIntegrationTest/";

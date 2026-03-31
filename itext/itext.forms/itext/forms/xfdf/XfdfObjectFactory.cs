@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -430,7 +430,7 @@ namespace iText.Forms.Xfdf {
                 PdfPage page = pdfDoc.GetPage(i);
                 IList<PdfAnnotation> pdfAnnots = page.GetAnnotations();
                 foreach (PdfAnnotation pdfAnnot in pdfAnnots) {
-                    if (pdfAnnot.GetSubtype() == PdfName.Popup) {
+                    if (PdfName.Popup.Equals(pdfAnnot.GetSubtype())) {
                         AddPopup(pdfAnnot, annots, i);
                     }
                     else {

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -292,5 +292,7 @@ namespace iText.IO.Exceptions {
 
         public const String READING_BYTE_LIMIT_MUST_NOT_BE_LESS_ZERO = "The reading byte limit argument must not "
              + "be less than zero.";
+
+        public const String INVALID_HTTP_RESPONSE = "Invalid http response {0}.";
     }
 }

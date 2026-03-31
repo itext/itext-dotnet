@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -31,6 +31,7 @@ using iText.Commons.Bouncycastle.Asn1.Esf;
 using iText.Commons.Bouncycastle.Asn1.Ess;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.Pkcs;
+using iText.Commons.Bouncycastle.Asn1.Pkix;
 using iText.Commons.Bouncycastle.Asn1.Tsp;
 using iText.Commons.Bouncycastle.Asn1.Util;
 using iText.Commons.Bouncycastle.Asn1.X500;
@@ -795,6 +796,13 @@ namespace iText.Commons.Bouncycastle {
         /// <summary>Create general name wrapper without parameters.</summary>
         /// <returns>created general name wrapper</returns>
         IGeneralName CreateGeneralName();
+        
+        /// <summary>
+        /// Creates General Name wrapper from the provided ASN1 Encodable wrapper.
+        /// </summary>
+        /// <param name="encodable">ASN1 Encodable wrapper</param>
+        /// <returns>General Name wrapper</returns>
+        IGeneralName CreateGeneralName(IAsn1Encodable encodable);
 
         /// <summary>Create other hash alg and value wrapper from algorithm identifier wrapper and ASN1 Octet string wrapper.
         ///     </summary>
@@ -1101,6 +1109,11 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="x500Name">X500 Name wrapper to create resp ID wrapper from</param>
         /// <returns>created resp ID wrapper</returns>
         IRespID CreateRespID(IX500Name x500Name);
+        
+        /// <summary>Creates resp ID wrapper from X509Certificate wrapper.</summary>
+        /// <param name="certificate">X509Certificate wrapper from which resp ID wrapper will be created</param>
+        /// <returns>created resp ID wrapper</returns>
+        IRespID CreateRespID(IX509Certificate certificate);
 
         /// <summary>Create basic OCSP Resp builder wrapper from resp ID wrapper.</summary>
         /// <param name="respID">resp ID wrapper to create basic OCSP Resp builder wrapper from</param>
@@ -1753,5 +1766,18 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="qcStatementsExtensionValue">certificate QC Statements Extension value as byte array</param>
         /// <returns>list of IQCStatement</returns>
         List<IQCStatement> ParseQcStatement(byte[] qcStatementsExtensionValue);
+
+        /// <summary>
+        /// Creates name constraint validator wrapper.
+        /// </summary>
+        /// <returns>name constraint validator wrapper</returns>
+        IPKIXConstraintValidator CreateNameConstraintValidator();
+
+        /// <summary>
+        /// Creates name constraints wrapper out of ASN1 Object wrapper.
+        /// </summary>
+        /// <param name="primitive">ASN1 Object wrapper from which name constraints wrapper is created</param>
+        /// <returns>name constraints wrapper</returns>
+        INameConstraints CreateNameConstraints(IAsn1Object primitive);
     }
 }

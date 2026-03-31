@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Actions.Sequence;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Utils;
@@ -433,6 +434,98 @@ namespace iText.Signatures {
             signer.SetSignerProperties(signerProperties);
             NUnit.Framework.Assert.AreEqual(fieldName, signer.GetSignerProperties().GetFieldName());
             reader.Close();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckSignatureCreatorDefaultTest() {
+            ByteArrayOutputStream signedOutputStream = new ByteArrayOutputStream();
+            PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateSimpleDocument())), signedOutputStream
+                , new StampingProperties());
+            SignerProperties signerProperties = new SignerProperties().SetFieldName("Signature1").SetPageNumber(1);
+            signer.SetSignerProperties(signerProperties);
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
+            signer.document.Close();
+            PdfDocument signedDocument = new PdfDocument(new PdfReader(new MemoryStream(signedOutputStream.ToArray()))
+                , new PdfWriter(new ByteArrayOutputStream()));
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(signedDocument, true);
+            PdfFormField formField = acroForm.GetField(signerProperties.GetFieldName());
+            PdfDictionary formFieldDictionary = formField.GetPdfObject();
+            NUnit.Framework.Assert.IsNotNull(formFieldDictionary);
+            PdfDictionary signatureDictionary = formFieldDictionary.GetAsDictionary(PdfName.V);
+            NUnit.Framework.Assert.IsNotNull(signatureDictionary);
+            String creator = signatureDictionary.GetAsDictionary(PdfName.Prop_Build).GetAsDictionary(PdfName.App).GetAsName
+                (PdfName.Name).GetValue();
+            NUnit.Framework.Assert.AreEqual(signedDocument.GetDocumentInfo().GetProducer(), creator);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckSignatureCreatorNullTest() {
+            ByteArrayOutputStream signedOutputStream = new ByteArrayOutputStream();
+            PdfSigner signer = new PdfSigner(new PdfReader(new MemoryStream(CreateSimpleDocument())), signedOutputStream
+                , new StampingProperties());
+            SignerProperties signerProperties = new SignerProperties().SetFieldName("Signature1").SetPageNumber(1);
+            signerProperties.SetSignatureCreator(null);
+            signer.SetSignerProperties(signerProperties);
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
+            signer.document.Close();
+            PdfDocument signedDocument = new PdfDocument(new PdfReader(new MemoryStream(signedOutputStream.ToArray()))
+                , new PdfWriter(new ByteArrayOutputStream()));
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(signedDocument, true);
+            PdfFormField formField = acroForm.GetField(signerProperties.GetFieldName());
+            PdfDictionary formFieldDictionary = formField.GetPdfObject();
+            NUnit.Framework.Assert.IsNotNull(formFieldDictionary);
+            PdfDictionary signatureDictionary = formFieldDictionary.GetAsDictionary(PdfName.V);
+            NUnit.Framework.Assert.IsNotNull(signatureDictionary);
+            NUnit.Framework.Assert.IsFalse(signatureDictionary.ContainsKey(PdfName.Prop_Build));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckSignatureCreatorZeroEventsTest() {
+            ByteArrayOutputStream signedOutputStream = new ByteArrayOutputStream();
+            PdfSigner signer = new PdfSignerUnitTest.DummySigner(new PdfReader(new MemoryStream(CreateSimpleDocument()
+                )), signedOutputStream, new StampingProperties());
+            SignerProperties signerProperties = new SignerProperties().SetFieldName("Signature1").SetPageNumber(1);
+            signer.SetSignerProperties(signerProperties);
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(new BouncyCastleDigest(), pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES
+                );
+            signer.document.Close();
+            PdfDocument signedDocument = new PdfDocument(new PdfReader(new MemoryStream(signedOutputStream.ToArray()))
+                , new PdfWriter(new ByteArrayOutputStream()));
+            PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(signedDocument, true);
+            PdfFormField formField = acroForm.GetField(signerProperties.GetFieldName());
+            PdfDictionary formFieldDictionary = formField.GetPdfObject();
+            NUnit.Framework.Assert.IsNotNull(formFieldDictionary);
+            PdfDictionary signatureDictionary = formFieldDictionary.GetAsDictionary(PdfName.V);
+            NUnit.Framework.Assert.IsNotNull(signatureDictionary);
+            String creator = signatureDictionary.GetAsDictionary(PdfName.Prop_Build).GetAsDictionary(PdfName.App).GetAsName
+                (PdfName.Name).GetValue();
+            NUnit.Framework.Assert.AreEqual("", creator);
+        }
+
+        private class DummySigner : PdfSigner {
+            public DummySigner(PdfReader reader, Stream outputStream, StampingProperties properties)
+                : base(reader, outputStream, properties) {
+            }
+
+            protected internal override PdfDocument InitDocument(PdfReader reader, PdfWriter writer, StampingProperties
+                 properties) {
+                return new PdfSignerUnitTest.DummyPdfDocument(reader, writer, properties);
+            }
+        }
+
+        private class DummyPdfDocument : PdfDocument {
+            public DummyPdfDocument(PdfReader reader, PdfWriter writer, StampingProperties properties)
+                : base(reader, writer, properties) {
+            }
+
+            public override SequenceId GetDocumentIdWrapper() {
+                return null;
+            }
         }
 
         private static byte[] CreateDocumentWithEmptyField() {

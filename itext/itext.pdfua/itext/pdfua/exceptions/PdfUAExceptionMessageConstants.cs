@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -106,7 +106,7 @@ namespace iText.Pdfua.Exceptions {
 
         public const String IMAGE_SHALL_HAVE_ALT = "Figure tags shall include an alternative representation or " +
              "replacement text. call com.itextpdf.kernel.pdf.tagutils.AccessibilityProperties#setActualText or com"
-             + ".itextpdf.kernel.pdf.tagutils.AccessibilityProperties#setAlternateDescription to be PDF/UA compliant.";
+             + ".itextpdf.kernel.pdf.tagutils.AccessibilityProperties#setAlternateDescription to be compliant.";
 
         public const String INCORRECT_NOTE_TYPE_VALUE = "The value of the NoteType attribute shall be either \"Footnote\", \"Endnote\" or \"None\".";
 
@@ -224,6 +224,7 @@ namespace iText.Pdfua.Exceptions {
 
         public const String TAG_HASNT_BEEN_ADDED_BEFORE_CONTENT_ADDING = "Tag hasn't been added before adding content to the canvas.";
 
+        [Obsolete]
         public const String TAG_MAPPING_DOESNT_TERMINATE_WITH_STANDARD_TYPE = "\"{0}\" tag mapping does not terminate with a standard type.";
 
         public const String TENTH_BIT_OF_P_VALUE_IN_ENCRYPTION_SHOULD_BE_NON_ZERO = "10th bit of P value of " + "Encryption dictionary should be 1 if the document is tagged.";
@@ -254,7 +255,7 @@ namespace iText.Pdfua.Exceptions {
 
         public const String WIDGET_WITH_ZERO_HEIGHT_SHALL_BE_AN_ARTIFACT = "Widget annotation of zero height " + "and width shall be an artifact.";
 
-        public const String XFA_FORMS_SHALL_NOT_BE_PRESENT = "XFA forms shall not be present in PDF/UA-2 document.";
+        public const String XFA_FORMS_SHALL_NOT_BE_PRESENT = "XFA forms shall not be present in a compliant document.";
 
         private PdfUAExceptionMessageConstants() {
         }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using iText.Commons.Bouncycastle.Cert;
@@ -73,6 +74,29 @@ namespace iText.Signatures.Validation {
                 (0).HasNumberOfLogs(2).HasLogItem((la) => la.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK
                 ).WithMessage("Certificate {0} is trusted, revocation data checks are not required.", (l) => rootCert.
                 GetSubjectDN()).WithCertificate(rootCert)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CrossSignedChainTest() {
+            MockRevocationDataValidator mockRevocationDataValidator = new MockRevocationDataValidator();
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties properties = new SignatureValidationProperties();
+            String chainName = CERTS_SRC + "crossSigned/chain.pem";
+            IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
+            IX509Certificate signingCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "crossSigned/sign.cert.pem"
+                )[0];
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "crossSigned/r1.cert.pem"
+                )[0];
+            certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList<IX509Certificate>(rootCert));
+            rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "crossSigned/r2.cert.pem")[0];
+            certificateRetriever.AddTrustedCertificates(JavaCollectionsUtil.SingletonList<IX509Certificate>(rootCert));
+            ValidatorChainBuilder validatorChainBuilder = SetUpValidatorChain(certificateRetriever, properties, mockRevocationDataValidator
+                );
+            CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
+            certificateRetriever.AddKnownCertificates(JavaUtil.ArraysAsList(certificateChain));
+            ValidationReport report = validator.ValidateCertificate(baseContext, signingCert, TimeTestUtil.TEST_DATE_TIME
+                );
+            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, report.GetValidationResult());
         }
 
         [NUnit.Framework.Test]
@@ -137,7 +161,7 @@ namespace iText.Signatures.Validation {
             IX509Certificate[] certificateChain = PemFileHelper.ReadFirstChain(chainName);
             IX509Certificate signingCert = (IX509Certificate)certificateChain[0];
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
-            IssuingCertificateRetriever customRetriever = new _IssuingCertificateRetriever_192();
+            IssuingCertificateRetriever customRetriever = new _IssuingCertificateRetriever_220();
             ValidatorChainBuilder validatorChainBuilder = SetUpValidatorChain(certificateRetriever, properties, mockRevocationDataValidator
                 );
             validatorChainBuilder.WithIssuingCertificateRetrieverFactory(() => customRetriever);
@@ -150,8 +174,8 @@ namespace iText.Signatures.Validation {
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
         }
 
-        private sealed class _IssuingCertificateRetriever_192 : IssuingCertificateRetriever {
-            public _IssuingCertificateRetriever_192() {
+        private sealed class _IssuingCertificateRetriever_220 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_220() {
             }
 
             protected internal override Stream GetIssuerCertByURI(String uri) {
@@ -170,7 +194,7 @@ namespace iText.Signatures.Validation {
             IX509Certificate signingCert = (IX509Certificate)certificateChain[0];
             IX509Certificate intermediateCert = (IX509Certificate)certificateChain[1];
             IX509Certificate rootCert = (IX509Certificate)certificateChain[2];
-            IssuingCertificateRetriever customRetriever = new _IssuingCertificateRetriever_220();
+            IssuingCertificateRetriever customRetriever = new _IssuingCertificateRetriever_248();
             ValidatorChainBuilder validatorChainBuilder = SetUpValidatorChain(certificateRetriever, properties, mockRevocationDataValidator
                 );
             validatorChainBuilder.WithIssuingCertificateRetrieverFactory(() => customRetriever);
@@ -185,8 +209,8 @@ namespace iText.Signatures.Validation {
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
         }
 
-        private sealed class _IssuingCertificateRetriever_220 : IssuingCertificateRetriever {
-            public _IssuingCertificateRetriever_220() {
+        private sealed class _IssuingCertificateRetriever_248 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_248() {
             }
 
             protected internal override Stream GetIssuerCertByURI(String uri) {
@@ -838,6 +862,186 @@ namespace iText.Signatures.Validation {
             AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
                 (0).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName(CertificateChainValidator.CERTIFICATE_CHECK).
                 WithMessage(CertificateChainValidator.CERTIFICATE_RETRIEVER_ORIGIN).WithCertificate(rootCert)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ITextConstraintPermittedTest() {
+            MockRevocationDataValidator mockRevocationDataValidator = new MockRevocationDataValidator();
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties properties = new SignatureValidationProperties();
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/itext_and_apryse_permitted_cert.pem"
+                )[0];
+            IX509Certificate intermediateCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/itext_permitted_cert.pem"
+                )[0];
+            IX509Certificate signingCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/itext_signing_cert.pem"
+                )[0];
+            IList<IX509Certificate> chain = JavaUtil.ArraysAsList(signingCert, intermediateCert);
+            ValidationReport validationReport = new ValidationReport();
+            ValidatorChainBuilder validatorChainBuilder = SetUpValidatorChain(certificateRetriever, properties, mockRevocationDataValidator
+                );
+            CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
+            validator.ValidateNameConstraints(validationReport, chain, rootCert);
+            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, validationReport.GetValidationResult
+                ());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ITextConstraintAltNamePermittedTest() {
+            MockRevocationDataValidator mockRevocationDataValidator = new MockRevocationDataValidator();
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties properties = new SignatureValidationProperties();
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/itext_and_apryse_permitted_cert.pem"
+                )[0];
+            IX509Certificate intermediateCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/itext_permitted_cert.pem"
+                )[0];
+            IX509Certificate signingCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/itext_alt_name_cert.pem"
+                )[0];
+            IList<IX509Certificate> chain = JavaUtil.ArraysAsList(signingCert, intermediateCert);
+            ValidationReport validationReport = new ValidationReport();
+            ValidatorChainBuilder validatorChainBuilder = SetUpValidatorChain(certificateRetriever, properties, mockRevocationDataValidator
+                );
+            CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
+            validator.ValidateNameConstraints(validationReport, chain, rootCert);
+            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.VALID, validationReport.GetValidationResult
+                ());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ApryseConstraintNotPermittedTest() {
+            MockRevocationDataValidator mockRevocationDataValidator = new MockRevocationDataValidator();
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties properties = new SignatureValidationProperties();
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/itext_and_apryse_permitted_cert.pem"
+                )[0];
+            IX509Certificate intermediateCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/itext_permitted_cert.pem"
+                )[0];
+            IX509Certificate signingCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/apryse_signing_cert.pem"
+                )[0];
+            IList<IX509Certificate> chain = JavaUtil.ArraysAsList(signingCert, intermediateCert);
+            ValidationReport validationReport = new ValidationReport();
+            ValidatorChainBuilder validatorChainBuilder = SetUpValidatorChain(certificateRetriever, properties, mockRevocationDataValidator
+                );
+            CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
+            validator.ValidateNameConstraints(validationReport, chain, rootCert);
+            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INVALID, validationReport.GetValidationResult
+                ());
+            NUnit.Framework.Assert.AreEqual(CertificateChainValidator.NAME_CONSTRAINT_DIRECT_NAME_VIOLATION, validationReport
+                .GetFailures()[0].GetMessage());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ApryseConstraintAtlNameNotPermittedTest() {
+            MockRevocationDataValidator mockRevocationDataValidator = new MockRevocationDataValidator();
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties properties = new SignatureValidationProperties();
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/itext_and_apryse_permitted_cert.pem"
+                )[0];
+            IX509Certificate intermediateCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/itext_permitted_cert.pem"
+                )[0];
+            IX509Certificate signingCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/apryse_alt_name_cert.pem"
+                )[0];
+            IList<IX509Certificate> chain = JavaUtil.ArraysAsList(signingCert, intermediateCert);
+            ValidationReport validationReport = new ValidationReport();
+            ValidatorChainBuilder validatorChainBuilder = SetUpValidatorChain(certificateRetriever, properties, mockRevocationDataValidator
+                );
+            CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
+            validator.ValidateNameConstraints(validationReport, chain, rootCert);
+            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INVALID, validationReport.GetValidationResult
+                ());
+            NUnit.Framework.Assert.AreEqual(CertificateChainValidator.NAME_CONSTRAINT_ALT_NAME_VIOLATION, validationReport
+                .GetFailures()[0].GetMessage());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ITextConstraintExcludedTest() {
+            MockRevocationDataValidator mockRevocationDataValidator = new MockRevocationDataValidator();
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties properties = new SignatureValidationProperties();
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/itext_and_apryse_excluded_cert.pem"
+                )[0];
+            IX509Certificate intermediateCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/itext_excluded_cert.pem"
+                )[0];
+            IX509Certificate signingCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/itext_signing_cert.pem"
+                )[0];
+            IList<IX509Certificate> chain = JavaUtil.ArraysAsList(signingCert, intermediateCert);
+            ValidationReport validationReport = new ValidationReport();
+            ValidatorChainBuilder validatorChainBuilder = SetUpValidatorChain(certificateRetriever, properties, mockRevocationDataValidator
+                );
+            CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
+            validator.ValidateNameConstraints(validationReport, chain, rootCert);
+            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INVALID, validationReport.GetValidationResult
+                ());
+            NUnit.Framework.Assert.AreEqual(CertificateChainValidator.NAME_CONSTRAINT_DIRECT_NAME_VIOLATION, validationReport
+                .GetFailures()[0].GetMessage());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ApryseConstraintExcludedTest() {
+            MockRevocationDataValidator mockRevocationDataValidator = new MockRevocationDataValidator();
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties properties = new SignatureValidationProperties();
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/itext_and_apryse_excluded_cert.pem"
+                )[0];
+            IX509Certificate intermediateCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/itext_excluded_cert.pem"
+                )[0];
+            IX509Certificate signingCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/apryse_signing_cert.pem"
+                )[0];
+            IList<IX509Certificate> chain = JavaUtil.ArraysAsList(signingCert, intermediateCert);
+            ValidationReport validationReport = new ValidationReport();
+            ValidatorChainBuilder validatorChainBuilder = SetUpValidatorChain(certificateRetriever, properties, mockRevocationDataValidator
+                );
+            CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
+            validator.ValidateNameConstraints(validationReport, chain, rootCert);
+            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INVALID, validationReport.GetValidationResult
+                ());
+            NUnit.Framework.Assert.AreEqual(CertificateChainValidator.NAME_CONSTRAINT_DIRECT_NAME_VIOLATION, validationReport
+                .GetFailures()[0].GetMessage());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ITextConstraintPermittedAndExcludedTest() {
+            MockRevocationDataValidator mockRevocationDataValidator = new MockRevocationDataValidator();
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties properties = new SignatureValidationProperties();
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/itext_and_apryse_permitted_cert.pem"
+                )[0];
+            IX509Certificate intermediateCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/itext_excluded_cert.pem"
+                )[0];
+            IX509Certificate signingCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/itext_signing_cert.pem"
+                )[0];
+            IList<IX509Certificate> chain = JavaUtil.ArraysAsList(signingCert, intermediateCert);
+            ValidationReport validationReport = new ValidationReport();
+            ValidatorChainBuilder validatorChainBuilder = SetUpValidatorChain(certificateRetriever, properties, mockRevocationDataValidator
+                );
+            CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
+            validator.ValidateNameConstraints(validationReport, chain, rootCert);
+            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INVALID, validationReport.GetValidationResult
+                ());
+            NUnit.Framework.Assert.AreEqual(CertificateChainValidator.NAME_CONSTRAINT_DIRECT_NAME_VIOLATION, validationReport
+                .GetFailures()[0].GetMessage());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CorruptedAtlNameTest() {
+            MockRevocationDataValidator mockRevocationDataValidator = new MockRevocationDataValidator();
+            IssuingCertificateRetriever certificateRetriever = new IssuingCertificateRetriever();
+            SignatureValidationProperties properties = new SignatureValidationProperties();
+            IX509Certificate rootCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/itext_and_apryse_permitted_cert.pem"
+                )[0];
+            IX509Certificate intermediateCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/itext_permitted_cert.pem"
+                )[0];
+            IX509Certificate signingCert = (IX509Certificate)PemFileHelper.ReadFirstChain(CERTS_SRC + "nameConstraint/corrupted_alt_name_cert.pem"
+                )[0];
+            IList<IX509Certificate> chain = JavaUtil.ArraysAsList(signingCert, intermediateCert);
+            ValidationReport validationReport = new ValidationReport();
+            ValidatorChainBuilder validatorChainBuilder = SetUpValidatorChain(certificateRetriever, properties, mockRevocationDataValidator
+                );
+            CertificateChainValidator validator = validatorChainBuilder.BuildCertificateChainValidator();
+            validator.ValidateNameConstraints(validationReport, chain, rootCert);
+            NUnit.Framework.Assert.AreEqual(ValidationReport.ValidationResult.INVALID, validationReport.GetValidationResult
+                ());
+            NUnit.Framework.Assert.AreEqual(CertificateChainValidator.NAME_CONSTRAINT_ALT_NAME_EXCEPTION, validationReport
+                .GetFailures()[0].GetMessage());
         }
     }
 }

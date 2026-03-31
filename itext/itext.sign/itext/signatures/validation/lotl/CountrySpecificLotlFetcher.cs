@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Json;
 using iText.Commons.Utils;
 using iText.IO.Resolver.Resource;
 using iText.Signatures.Exceptions;
@@ -31,7 +32,7 @@ using iText.Signatures.Validation;
 using iText.Signatures.Validation.Report;
 
 namespace iText.Signatures.Validation.Lotl {
-    /// <summary>This class fetches and validates country-specific List of Trusted Lists (Lotls).</summary>
+    /// <summary>This class fetches and validates country-specific List of Trusted Lists (LOTLs).</summary>
     public class CountrySpecificLotlFetcher {
         private readonly LotlService service;
 
@@ -39,21 +40,26 @@ namespace iText.Signatures.Validation.Lotl {
         /// Creates a new instance of
         /// <see cref="CountrySpecificLotlFetcher"/>.
         /// </summary>
-        /// <param name="service">the LotlService used to retrieve resources</param>
+        /// <param name="service">
+        /// the
+        /// <see cref="LotlService"/>
+        /// used to retrieve resources
+        /// </param>
         public CountrySpecificLotlFetcher(LotlService service) {
             this.service = service;
         }
 
-        /// <summary>Fetches and validates country-specific Lotls from the provided Lotl XML.</summary>
-        /// <param name="lotlXml">the byte array of the Lotl XML</param>
+        /// <summary>Fetches and validates country-specific LOTLs from the provided LOTL XML.</summary>
+        /// <param name="lotlXml">the byte array of the LOTL XML</param>
         /// <param name="lotlService">
         /// the
         /// <see cref="LotlService"/>
         /// used to build this fetcher
         /// </param>
-        /// <returns>a map of results containing validated country-specific Lotls and their contexts</returns>
+        /// <returns>a map of results containing validated country-specific LOTLs and their contexts</returns>
         public virtual IDictionary<String, CountrySpecificLotlFetcher.Result> GetAndValidateCountrySpecificLotlFiles
             (byte[] lotlXml, LotlService lotlService) {
+            // TODO DEVSIX-9710: remove lotlService parameter when LotlService will be accessible from this.service
             XmlCertificateRetriever certificateRetriever = new XmlCertificateRetriever(new XmlDefaultCertificateHandler
                 ());
             IList<IX509Certificate> lotlTrustedCertificates = certificateRetriever.GetCertificates(new MemoryStream(lotlXml
@@ -61,10 +67,48 @@ namespace iText.Signatures.Validation.Lotl {
             XmlCountryRetriever countryRetriever = new XmlCountryRetriever();
             IList<CountrySpecificLotl> countrySpecificLotl = countryRetriever.GetAllCountriesLotlFilesLocation(new MemoryStream
                 (lotlXml), lotlService.GetLotlFetchingProperties());
+            return ValidateCountrySpecificFiles(lotlTrustedCertificates, countrySpecificLotl, lotlService);
+        }
+
+        /// <summary>Creates an ExecutorService for downloading country-specific LOTLs.</summary>
+        /// <remarks>
+        /// Creates an ExecutorService for downloading country-specific LOTLs.
+        /// By default, it creates a fixed thread pool with a number of threads equal to the number of available
+        /// processors or the number of files to download, whichever is smaller.
+        /// If you require a different configuration with other executor services, you can override this method.
+        /// </remarks>
+        /// <param name="tasks">the list of tasks to be executed</param>
+        /// <returns>an ExecutorService instance configured for downloading LOTLs</returns>
+        protected internal virtual IList<CountrySpecificLotlFetcher.Result> ExecuteTasks(IList<Func<CountrySpecificLotlFetcher.Result
+            >> tasks) {
+            return MultiThreadingUtil.RunActionsParallel<CountrySpecificLotlFetcher.Result>(tasks, tasks.Count);
+        }
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Fetches and validates country-specific LOTLs from the provided
+        /// <see cref="CountrySpecificLotl"/>.
+        /// </summary>
+        /// <param name="certificates">certificates used for validation</param>
+        /// <param name="countrySpecificInfo">
+        /// a list of
+        /// <see cref="CountrySpecificLotl"/>
+        /// to retrieve
+        /// </param>
+        /// <param name="lotlService">
+        /// the
+        /// <see cref="LotlService"/>
+        /// used to build this fetcher
+        /// </param>
+        /// <returns>a map of results containing validated country-specific LOTLs and their contexts</returns>
+        internal virtual IDictionary<String, CountrySpecificLotlFetcher.Result> ValidateCountrySpecificFiles(IList
+            <IX509Certificate> certificates, IList<CountrySpecificLotl> countrySpecificInfo, LotlService lotlService
+            ) {
+            // TODO DEVSIX-9710: remove lotlService parameter when LotlService will be accessible from this.service
             TrustedCertificatesStore certificatesStore = new TrustedCertificatesStore();
-            certificatesStore.AddGenerallyTrustedCertificates(lotlTrustedCertificates);
+            certificatesStore.AddGenerallyTrustedCertificates(certificates);
             XmlSignatureValidator validator = lotlService.GetXmlSignatureValidator(certificatesStore);
-            IList<Func<CountrySpecificLotlFetcher.Result>> tasks = GetTasks(lotlService, countrySpecificLotl, validator
+            IList<Func<CountrySpecificLotlFetcher.Result>> tasks = GetTasks(lotlService, countrySpecificInfo, validator
                 );
             Dictionary<String, CountrySpecificLotlFetcher.Result> countrySpecificCacheEntries = new Dictionary<String, 
                 CountrySpecificLotlFetcher.Result>();
@@ -73,20 +117,7 @@ namespace iText.Signatures.Validation.Lotl {
             }
             return countrySpecificCacheEntries;
         }
-
-        /// <summary>Creates an ExecutorService for downloading country-specific Lotls.</summary>
-        /// <remarks>
-        /// Creates an ExecutorService for downloading country-specific Lotls.
-        /// By default, it creates a fixed thread pool with a number of threads equal to the number of available
-        /// processors or the number of files to download, whichever is smaller.
-        /// If you require a different configuration with other executor services, you can override this method.
-        /// </remarks>
-        /// <param name="tasks">the list of tasks to be executed</param>
-        /// <returns>an ExecutorService instance configured for downloading Lotls</returns>
-        protected internal virtual IList<CountrySpecificLotlFetcher.Result> ExecuteTasks(IList<Func<CountrySpecificLotlFetcher.Result
-            >> tasks) {
-            return MultiThreadingUtil.RunActionsParallel<CountrySpecificLotlFetcher.Result>(tasks, tasks.Count);
-        }
+//\endcond
 
         private IList<Func<CountrySpecificLotlFetcher.Result>> GetTasks(LotlService lotlService, IList<CountrySpecificLotl
             > countrySpecificLotl, XmlSignatureValidator validator) {
@@ -109,8 +140,18 @@ namespace iText.Signatures.Validation.Lotl {
             return tasks;
         }
 
-        /// <summary>Represents the result of fetching and validating country-specific Lotls.</summary>
-        public class Result {
+        /// <summary>Represents the result of fetching and validating country-specific LOTLs.</summary>
+        public class Result : IJsonSerializable {
+            private const String JSON_KEY_SERVICE_TYPE = "serviceType";
+
+            private const String JSON_KEY_SERVICE_CHRONOLOGICAL_INFOS = "serviceChronologicalInfos";
+
+            private const String JSON_KEY_LOCAL_REPORT = "localReport";
+
+            private const String JSON_KEY_CONTEXTS = "contexts";
+
+            private const String JSON_KEY_COUNTRY_SPECIFIC_LOTL = "countrySpecificLotl";
+
             private ValidationReport localReport;
 
             private IList<IServiceContext> contexts;
@@ -139,25 +180,25 @@ namespace iText.Signatures.Validation.Lotl {
                 this.localReport = localReport;
             }
 
-            /// <summary>Gets the list of service contexts associated with the country-specific Lotl.</summary>
+            /// <summary>Gets the list of service contexts associated with the country-specific LOTL.</summary>
             /// <returns>a list of IServiceContext objects representing the service contexts</returns>
             public virtual IList<IServiceContext> GetContexts() {
                 return contexts;
             }
 
-            /// <summary>Sets the list of service contexts associated with the country-specific Lotl.</summary>
+            /// <summary>Sets the list of service contexts associated with the country-specific LOTL.</summary>
             /// <param name="contexts">a list of IServiceContext objects to set</param>
             public virtual void SetContexts(IList<IServiceContext> contexts) {
                 this.contexts = contexts;
             }
 
-            /// <summary>Gets the country-specific Lotl that was fetched and validated.</summary>
-            /// <returns>the CountrySpecificLotl object representing the country-specific Lotl</returns>
+            /// <summary>Gets the country-specific LOTL that was fetched and validated.</summary>
+            /// <returns>the CountrySpecificLotl object representing the country-specific LOTL</returns>
             public virtual CountrySpecificLotl GetCountrySpecificLotl() {
                 return countrySpecificLotl;
             }
 
-            /// <summary>Sets the country-specific Lotl that was fetched and validated.</summary>
+            /// <summary>Sets the country-specific LOTL that was fetched and validated.</summary>
             /// <param name="countrySpecificLotl">the CountrySpecificLotl object to set</param>
             /// <returns>same result instance.</returns>
             public virtual CountrySpecificLotlFetcher.Result SetCountrySpecificLotl(CountrySpecificLotl countrySpecificLotl
@@ -166,17 +207,84 @@ namespace iText.Signatures.Validation.Lotl {
                 return this;
             }
 
-            /// <summary>Creates a unique identifier for the country-specific Lotl based on its scheme territory and TSL location.
+            /// <summary>Creates a unique identifier for the country-specific LOTL based on its scheme territory and TSL location.
             ///     </summary>
-            /// <returns>a string representing the unique identifier for the country-specific Lotl</returns>
+            /// <returns>a string representing the unique identifier for the country-specific LOTL</returns>
             public virtual String CreateUniqueIdentifier() {
                 return countrySpecificLotl.GetSchemeTerritory() + "_" + countrySpecificLotl.GetTslLocation();
+            }
+
+            /// <summary>
+            /// <inheritDoc/>.
+            /// </summary>
+            /// <returns>
+            /// 
+            /// <inheritDoc/>
+            /// </returns>
+            public virtual JsonValue ToJson() {
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.Add(JSON_KEY_LOCAL_REPORT, localReport.ToJson());
+                JsonArray contextsJson = new JsonArray();
+                foreach (IServiceContext serviceContext in contexts) {
+                    if (serviceContext is SimpleServiceContext) {
+                        contextsJson.Add(((SimpleServiceContext)serviceContext).ToJson());
+                    }
+                    else {
+                        if (serviceContext is CountryServiceContext) {
+                            contextsJson.Add(((CountryServiceContext)serviceContext).ToJson());
+                        }
+                    }
+                }
+                jsonObject.Add(JSON_KEY_CONTEXTS, contextsJson);
+                jsonObject.Add(JSON_KEY_COUNTRY_SPECIFIC_LOTL, countrySpecificLotl.ToJson());
+                return jsonObject;
+            }
+
+            /// <summary>
+            /// Deserializes
+            /// <see cref="iText.Commons.Json.JsonValue"/>
+            /// into
+            /// <see cref="Result"/>.
+            /// </summary>
+            /// <param name="jsonValue">
+            /// 
+            /// <see cref="iText.Commons.Json.JsonValue"/>
+            /// to deserialize
+            /// </param>
+            /// <returns>
+            /// deserialized
+            /// <see cref="Result"/>
+            /// </returns>
+            public static CountrySpecificLotlFetcher.Result FromJson(JsonValue jsonValue) {
+                JsonObject countrySpecificLotlFetcherResultJson = (JsonObject)jsonValue;
+                JsonObject localReportJson = (JsonObject)countrySpecificLotlFetcherResultJson.GetField(JSON_KEY_LOCAL_REPORT
+                    );
+                ValidationReport validationReportFromJson = ValidationReport.FromJson(localReportJson);
+                JsonArray contextsJson = (JsonArray)countrySpecificLotlFetcherResultJson.GetField(JSON_KEY_CONTEXTS);
+                IList<IServiceContext> serviceContextsFromJson = new List<IServiceContext>();
+                foreach (JsonValue contextJson in contextsJson.GetValues()) {
+                    JsonObject contextJsonObject = (JsonObject)contextJson;
+                    if (contextJsonObject.GetField(JSON_KEY_SERVICE_CHRONOLOGICAL_INFOS) != null || contextJsonObject.GetField
+                        (JSON_KEY_SERVICE_TYPE) != null) {
+                        serviceContextsFromJson.Add(CountryServiceContext.FromJson(contextJson));
+                    }
+                    else {
+                        serviceContextsFromJson.Add(SimpleServiceContext.FromJson(contextJson));
+                    }
+                }
+                CountrySpecificLotl countrySpecificLotlFromJson = CountrySpecificLotl.FromJson(countrySpecificLotlFetcherResultJson
+                    .GetField(JSON_KEY_COUNTRY_SPECIFIC_LOTL));
+                CountrySpecificLotlFetcher.Result resultFromJson = new CountrySpecificLotlFetcher.Result();
+                resultFromJson.localReport = validationReportFromJson;
+                resultFromJson.contexts = serviceContextsFromJson;
+                resultFromJson.countrySpecificLotl = countrySpecificLotlFromJson;
+                return resultFromJson;
             }
         }
 
         private sealed class CountryFetcher {
 //\cond DO_NOT_DOCUMENT
-            internal const String COUNTRY_SPECIFIC_LOTL_NOT_VALIDATED = "Country specific Lotl file: {0}, {1} wasn't "
+            internal const String COUNTRY_SPECIFIC_LOTL_NOT_VALIDATED = "Country specific LOTL file: {0}, {1} wasn't "
                  + "successfully validated. It will be ignored.";
 //\endcond
 

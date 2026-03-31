@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -33,13 +33,15 @@ using iText.Test;
 namespace iText.Forms {
     [NUnit.Framework.Category("UnitTest")]
     public class Utf8FormsTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/forms/fonts/";
+
+        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/Utf8FormsTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/forms/Utf8FormsTest/";
+        private static readonly String destinationFolder = TestUtil.GetOutputPath() + "/forms/Utf8FormsTest/";
 
-        public static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/forms/Utf8FormsTest/NotoSansCJKsc-Regular.otf";
+        private static readonly String FONT = FONT_FOLDER + "NotoSansCJKsc-Regular.otf";
 
         [NUnit.Framework.SetUp]
         public virtual void Before() {

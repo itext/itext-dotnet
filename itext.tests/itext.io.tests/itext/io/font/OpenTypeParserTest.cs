@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -31,15 +31,14 @@ using iText.Test;
 namespace iText.IO.Font {
     [NUnit.Framework.Category("IntegrationTest")]
     public class OpenTypeParserTest : ExtendedITextTest {
-        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/OpenTypeParserTest/";
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/";
 
-        private static readonly String FREESANS_FONT_PATH = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/FreeSans.ttf";
+        private static readonly String NOTO_SANS_FONT_PATH = FONTS_FOLDER + "NotoSans-Regular.ttf";
 
         [NUnit.Framework.Test]
         public virtual void TryToReadFontSubsetWithoutGlyfTableTest() {
-            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "subsetWithoutGlyfTable.ttf"));
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONTS_FOLDER + "subsetWithoutGlyfTable.ttf"));
             OpenTypeParser parser = new OpenTypeParser(fontBytes);
             parser.LoadTables(true);
             ICollection<int> usedGlyphs = new HashSet<int>();
@@ -55,7 +54,7 @@ namespace iText.IO.Font {
 
         [NUnit.Framework.Test]
         public virtual void GetFlatGlyphsCompositeTest() {
-            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FREESANS_FONT_PATH));
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(NOTO_SANS_FONT_PATH));
             OpenTypeParser parser = new OpenTypeParser(fontBytes);
             parser.LoadTables(true);
             ICollection<int> usedGlyphs = new HashSet<int>();
@@ -65,13 +64,13 @@ namespace iText.IO.Font {
             NUnit.Framework.Assert.AreEqual(4, glyphs.Count);
             NUnit.Framework.Assert.AreEqual(137, glyphs[0]);
             NUnit.Framework.Assert.AreEqual(0, glyphs[1]);
-            NUnit.Framework.Assert.AreEqual(586, glyphs[2]);
-            NUnit.Framework.Assert.AreEqual(38, glyphs[3]);
+            NUnit.Framework.Assert.AreEqual(38, glyphs[2]);
+            NUnit.Framework.Assert.AreEqual(122, glyphs[3]);
         }
 
         [NUnit.Framework.Test]
         public virtual void SmallNumberOfMetricsTest() {
-            OpenTypeParser parser = new OpenTypeParser(SOURCE_FOLDER + "NotoSansAndSpaceMono.ttc", 1);
+            OpenTypeParser parser = new OpenTypeParser(FONTS_FOLDER + "NotoSansAndSpaceMono.ttc", 1);
             parser.LoadTables(true);
             ICollection<int> usedGlyphs = new HashSet<int>();
             usedGlyphs.Add(36);

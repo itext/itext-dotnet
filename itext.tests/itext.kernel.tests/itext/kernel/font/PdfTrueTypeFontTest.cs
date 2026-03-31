@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -29,7 +29,10 @@ using iText.Test;
 namespace iText.Kernel.Font {
     [NUnit.Framework.Category("UnitTest")]
     public class PdfTrueTypeFontTest : ExtendedITextTest {
-        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/fonts/";
+
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/kernel/font/PdfTrueTypeFontTest/";
 
         [NUnit.Framework.Test]
@@ -54,7 +57,7 @@ namespace iText.Kernel.Font {
 
         [NUnit.Framework.Test]
         public virtual void IsNotBuiltInTest() {
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "NotoSans-Regular.ttf", PdfEncodings.WINANSI);
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoSans-Regular.ttf", PdfEncodings.WINANSI);
             NUnit.Framework.Assert.IsTrue(font is PdfTrueTypeFont);
             NUnit.Framework.Assert.IsFalse(((PdfTrueTypeFont)font).IsBuiltInFont());
         }

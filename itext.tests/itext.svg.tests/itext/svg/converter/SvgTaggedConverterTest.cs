@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -34,7 +34,6 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Svg.Converter {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class SvgTaggedConverterTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -123,7 +122,6 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(destination));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         [NUnit.Framework.Test]
         public virtual void SimpleSvgTaggedWithConverterPropertiesTaggedAsArtifact() {
             String source = SOURCE_FOLDER + "simple.svg";
@@ -140,7 +138,6 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(destination));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         [NUnit.Framework.Test]
         public virtual void ConvertToImage() {
             String source = SOURCE_FOLDER + "simple.svg";
@@ -157,7 +154,6 @@ namespace iText.Svg.Converter {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(destination));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         [NUnit.Framework.Test]
         public virtual void ConvertToImageWithProps() {
             String source = SOURCE_FOLDER + "simple.svg";
@@ -233,6 +229,5 @@ namespace iText.Svg.Converter {
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(destination));
         }
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     }
 }

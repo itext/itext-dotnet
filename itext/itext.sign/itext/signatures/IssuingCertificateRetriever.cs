@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -23,18 +23,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.Extensions.Logging;
 using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
+using iText.Commons.Bouncycastle.Asn1.X500;
+using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Utils;
 using iText.Commons.Utils.Collections;
+using iText.IO.Resolver.Resource;
+using iText.Kernel.Crypto;
 using iText.Signatures.Logs;
 using iText.Signatures.Validation;
 using iText.Signatures.Validation.Dataorigin;
-using iText.StyledXmlParser.Resolver.Resource;
 
 namespace iText.Signatures {
     /// <summary>
@@ -55,7 +59,12 @@ namespace iText.Signatures {
         private readonly IDictionary<IX509Certificate, CertificateOrigin?> certificateOrigins = new Dictionary<IX509Certificate
             , CertificateOrigin?>();
 
-        private readonly IResourceRetriever resourceRetriever;
+        [Obsolete]
+        private readonly iText.StyledXmlParser.Resolver.Resource.IResourceRetriever resourceRetriever;
+
+        private IAdvancedResourceRetriever advancedResourceRetriever;
+
+        private readonly HashSet<String> processedUrls = new HashSet<String>();
 
         /// <summary>
         /// Creates
@@ -63,7 +72,8 @@ namespace iText.Signatures {
         /// instance.
         /// </summary>
         public IssuingCertificateRetriever() {
-            this.resourceRetriever = new DefaultResourceRetriever();
+            this.resourceRetriever = null;
+            this.advancedResourceRetriever = new DefaultResourceRetriever();
         }
 
         /// <summary>
@@ -72,10 +82,13 @@ namespace iText.Signatures {
         /// instance.
         /// </summary>
         /// <param name="resourceRetriever">
-        /// an @{link IResourceRetriever} instance to use for performing http
-        /// requests.
+        /// an @{link com.itextpdf.styledxmlparser.resolver.resource.IResourceRetriever}
+        /// instance to use for performing http requests.
         /// </param>
-        public IssuingCertificateRetriever(IResourceRetriever resourceRetriever) {
+        [System.ObsoleteAttribute(@"in favour of WithResourceRetriever(iText.IO.Resolver.Resource.IAdvancedResourceRetriever)"
+            )]
+        public IssuingCertificateRetriever(iText.StyledXmlParser.Resolver.Resource.IResourceRetriever resourceRetriever
+            ) {
             this.resourceRetriever = resourceRetriever;
         }
 
@@ -89,44 +102,26 @@ namespace iText.Signatures {
         /// <inheritDoc/>
         /// </returns>
         public virtual IX509Certificate[] RetrieveMissingCertificates(IX509Certificate[] chain) {
-            IList<IX509Certificate> fullChain = new List<IX509Certificate>();
-            IX509Certificate signingCertificate = (IX509Certificate)chain[0];
-            fullChain.Add(signingCertificate);
-            int i = 1;
-            IX509Certificate lastAddedCert = signingCertificate;
-            while (!CertificateUtil.IsSelfSigned(lastAddedCert)) {
-                // Check if there are any missing certificates with isSignedByNext
-                if (i < chain.Length && CertificateUtil.IsIssuerCertificate(lastAddedCert, (IX509Certificate)chain[i])) {
-                    fullChain.Add(chain[i]);
-                    i++;
-                }
-                else {
-                    // Get missing certificates using AIA Extensions
-                    String url = CertificateUtil.GetIssuerCertURL(lastAddedCert);
-                    ICollection<IX509Certificate> certificatesFromAIA = ProcessCertificatesFromAIA(url);
-                    if (certificatesFromAIA != null) {
-                        AddKnownCertificates(certificatesFromAIA, CertificateOrigin.OTHER);
+            IList<IList<IX509Certificate>> chains = BuildCertificateChainsList(JavaUtil.ArraysToEnumerable(chain).Select
+                ((c) => (IX509Certificate)c).ToArray());
+            IList<IX509Certificate> result = new List<IX509Certificate>();
+            chains.ForEach((subChain) => {
+                JavaCollectionsUtil.Reverse(subChain);
+                subChain.ForEach((c) => {
+                    if (!result.Contains(c)) {
+                        result.Add(c);
                     }
-                    // Retrieve Issuer from the certificate store
-                    IX509Certificate issuer = GetIssuerFromCertificateSet(lastAddedCert, trustedCertificatesStore.GetKnownCertificates
-                        (lastAddedCert.GetIssuerDN().ToString()));
-                    if (issuer == null || !IsSignedBy(lastAddedCert, issuer)) {
-                        issuer = GetIssuerFromCertificateSet(lastAddedCert, knownCertificates.Get(lastAddedCert.GetIssuerDN().ToString
-                            ()));
-                        if (issuer == null) {
-                            // Unable to retrieve missing certificates
-                            while (i < chain.Length) {
-                                fullChain.Add(chain[i]);
-                                i++;
-                            }
-                            return fullChain.ToArray(new IX509Certificate[0]);
-                        }
-                    }
-                    fullChain.Add(issuer);
                 }
-                lastAddedCert = (IX509Certificate)fullChain[fullChain.Count - 1];
+                );
             }
-            return fullChain.ToArray(new IX509Certificate[0]);
+            );
+            // We want to add all the originally provided certificates, even if there is no path to them
+            foreach (IX509Certificate c in chain) {
+                if (!result.Contains(c)) {
+                    result.Add((IX509Certificate)c);
+                }
+            }
+            return result.ToArray();
         }
 
         /// <summary>This method tries to rebuild certificate issuer chain.</summary>
@@ -165,52 +160,33 @@ namespace iText.Signatures {
             return result;
         }
 
-        private IList<IList<IX509Certificate>> BuildCertificateChainsList(IX509Certificate[] certificates) {
-            IList<IList<IX509Certificate>> allChains = new List<IList<IX509Certificate>>(BuildCertificateChainsList(certificates
-                [certificates.Length - 1]));
-            foreach (IList<IX509Certificate> issuerChain in allChains) {
-                for (int i = certificates.Length - 2; i >= 0; --i) {
-                    issuerChain.Add(certificates[i]);
-                }
-            }
-            return allChains;
+        /// <summary>Sets a resource retriever for this CA issuer certificates retriever.</summary>
+        /// <remarks>
+        /// Sets a resource retriever for this CA issuer certificates retriever.
+        /// <para />
+        /// This method allows you to provide a custom implementation of
+        /// <see cref="iText.IO.Resolver.Resource.IAdvancedResourceRetriever"/>
+        /// to be used
+        /// for fetching CA issuer certificates. By default,
+        /// <see cref="iText.IO.Resolver.Resource.DefaultResourceRetriever"/>
+        /// is used.
+        /// </remarks>
+        /// <param name="resourceRetriever">the custom resource retriever to be used for fetching CA issuer certificates
+        ///     </param>
+        /// <returns>
+        /// the current instance of
+        /// <see cref="IssuingCertificateRetriever"/>
+        /// </returns>
+        public virtual iText.Signatures.IssuingCertificateRetriever WithResourceRetriever(IAdvancedResourceRetriever
+             resourceRetriever) {
+            advancedResourceRetriever = resourceRetriever;
+            return this;
         }
 
-        private IList<IList<IX509Certificate>> BuildCertificateChainsList(IX509Certificate certificate) {
-            if (CertificateUtil.IsSelfSigned(certificate)) {
-                IList<IList<IX509Certificate>> singleChain = new List<IList<IX509Certificate>>();
-                IList<IX509Certificate> chain = new List<IX509Certificate>();
-                chain.Add(certificate);
-                singleChain.Add(chain);
-                return singleChain;
-            }
-            IList<IList<IX509Certificate>> allChains = new List<IList<IX509Certificate>>();
-            // Get missing certificates using AIA Extensions
-            String url = CertificateUtil.GetIssuerCertURL(certificate);
-            ICollection<IX509Certificate> certificatesFromAIA = ProcessCertificatesFromAIA(url);
-            if (certificatesFromAIA != null) {
-                AddKnownCertificates(certificatesFromAIA, CertificateOrigin.OTHER);
-            }
-            ICollection<IX509Certificate> possibleIssuers = trustedCertificatesStore.GetKnownCertificates(certificate.
-                GetIssuerDN().ToString());
-            if (knownCertificates.Get(certificate.GetIssuerDN().ToString()) != null) {
-                possibleIssuers.AddAll(knownCertificates.Get(certificate.GetIssuerDN().ToString()));
-            }
-            if (possibleIssuers.IsEmpty()) {
-                IList<IList<IX509Certificate>> singleChain = new List<IList<IX509Certificate>>();
-                IList<IX509Certificate> chain = new List<IX509Certificate>();
-                chain.Add(certificate);
-                singleChain.Add(chain);
-                return singleChain;
-            }
-            foreach (IX509Certificate possibleIssuer in possibleIssuers) {
-                IList<IList<IX509Certificate>> issuerChains = BuildCertificateChainsList((IX509Certificate)possibleIssuer);
-                foreach (IList<IX509Certificate> issuerChain in issuerChains) {
-                    issuerChain.Add(certificate);
-                    allChains.Add(issuerChain);
-                }
-            }
-            return allChains;
+        /// <summary>Gets the resource retriever currently being used in this CA issuer certificates retriever.</summary>
+        /// <returns>resource retriever</returns>
+        public virtual IAdvancedResourceRetriever GetResourceRetriever() {
+            return advancedResourceRetriever;
         }
 
         /// <summary>Retrieve issuer certificate for the provided certificate.</summary>
@@ -225,13 +201,15 @@ namespace iText.Signatures {
         /// if there is no issuer certificate, or it cannot be retrieved.
         /// </returns>
         public virtual IList<IX509Certificate> RetrieveIssuerCertificate(IX509Certificate certificate) {
-            IList<IX509Certificate> result = new List<IX509Certificate>();
-            foreach (IX509Certificate[] certificateChain in BuildCertificateChains((IX509Certificate)certificate)) {
-                if (certificateChain.Length > 1) {
-                    result.Add(certificateChain[1]);
-                }
+            if (CertificateUtil.IsSelfSigned((IX509Certificate)certificate)) {
+                return JavaCollectionsUtil.EmptyList<IX509Certificate>();
             }
-            return result;
+            ICollection<IX509Certificate> possibleIssuers = GetPossibleIssuers((IX509Certificate)certificate);
+            if (possibleIssuers.IsEmpty()) {
+                return JavaCollectionsUtil.EmptyList<IX509Certificate>();
+            }
+            return possibleIssuers.Where((issuer) => IsSignedBy((IX509Certificate)certificate, issuer)).Select((issuer
+                ) => (IX509Certificate)issuer).ToList();
         }
 
         /// <summary>
@@ -242,8 +220,6 @@ namespace iText.Signatures {
         /// <returns>retrieved OCSP responder candidates or an empty set in case none were found.</returns>
         public virtual ICollection<IX509Certificate> RetrieveOCSPResponderByNameCertificate(IBasicOcspResponse ocspResp
             ) {
-            String name = FACTORY.CreateX500Name(FACTORY.CreateASN1Sequence(ocspResp.GetResponderId().ToASN1Primitive(
-                ).GetName().ToASN1Primitive())).GetName();
             // Look for the existence of an Authorized OCSP responder inside the cert chain in the ocsp response.
             IEnumerable<IX509Certificate> certs = SignUtils.GetCertsFromOcspResponse(ocspResp);
             IList<IX509Certificate> certList = new List<IX509Certificate>();
@@ -251,18 +227,26 @@ namespace iText.Signatures {
                 certList.Add(certificate);
             }
             AddKnownCertificates(certList, CertificateOrigin.OCSP_RESPONSE);
-            foreach (IX509Certificate cert in certs) {
-                try {
-                    if (name.Equals(cert.GetSubjectDN().ToString())) {
-                        return JavaCollectionsUtil.Singleton(cert);
-                    }
+            IX500Name x500Name = ocspResp.GetResponderId().ToASN1Primitive().GetName();
+            ICollection<IX509Certificate> responders = null;
+            if (!x500Name.IsNull()) {
+                responders = RetrieveOCSPResponderByName(certs, x500Name);
+            }
+            if (responders == null) {
+                byte[] keyHash = ocspResp.GetResponderId().ToASN1Primitive().GetKeyHash();
+                responders = RetrieveOCSPResponderByKeyHash(certs, keyHash);
+            }
+            // Certificate chain is not present in the response, or it does not contain the responder.
+            if (responders == null) {
+                if (x500Name.IsNull()) {
+                    responders = JavaCollectionsUtil.EmptySet<IX509Certificate>();
                 }
-                catch (Exception) {
+                else {
+                    responders = trustedCertificatesStore.GetKnownCertificates(FACTORY.CreateX500Name(FACTORY.CreateASN1Sequence
+                        (x500Name.ToASN1Primitive())).GetName());
                 }
             }
-            // Ignore.
-            // Certificate chain is not present in the response, or it does not contain the responder.
-            return trustedCertificatesStore.GetKnownCertificates(name);
+            return responders;
         }
 
         /// <summary><inheritDoc/></summary>
@@ -293,40 +277,6 @@ namespace iText.Signatures {
         /// </returns>
         public virtual IX509Certificate[][] GetCrlIssuerCertificatesByName(IX509Crl crl) {
             return GetCrlIssuerCertificatesGeneric(crl, false);
-        }
-
-        private IX509Certificate[][] GetCrlIssuerCertificatesGeneric(IX509Crl crl, bool verify) {
-            // Usually CRLs are signed using CA certificate, so we don’t need to do anything extra and the revocation data
-            // is already collected. However, it is possible to sign it with any other certificate.
-            // IssuingDistributionPoint extension: https://datatracker.ietf.org/doc/html/rfc5280#section-5.2.5
-            // Nothing special for the indirect CRLs.
-            // AIA Extension
-            List<IX509Certificate[]> matches = new List<IX509Certificate[]>();
-            String url = CertificateUtil.GetIssuerCertURL(crl);
-            IList<IX509Certificate> certificatesFromAIA = (IList<IX509Certificate>)ProcessCertificatesFromAIA(url);
-            if (certificatesFromAIA != null) {
-                AddKnownCertificates(certificatesFromAIA, CertificateOrigin.OTHER);
-            }
-            // Retrieve Issuer from the certificate store
-            ICollection<IX509Certificate> issuers = trustedCertificatesStore.GetKnownCertificates(((IX509Crl)crl).GetIssuerDN
-                ().ToString());
-            if (issuers == null) {
-                issuers = new HashSet<IX509Certificate>();
-            }
-            IList<IX509Certificate> localIssuers = GetCrlIssuersFromKnownCertificates((IX509Crl)crl);
-            if (localIssuers != null) {
-                issuers.AddAll(localIssuers);
-            }
-            if (issuers.IsEmpty()) {
-                // Unable to retrieve CRL issuer
-                return new IX509Certificate[0][];
-            }
-            foreach (IX509Certificate i in issuers) {
-                if (!verify || IsSignedBy((IX509Crl)crl, i)) {
-                    matches.AddAll(BuildCertificateChains((IX509Certificate)i));
-                }
-            }
-            return matches.ToArray(new IX509Certificate[][] {  });
         }
 
         /// <summary>Sets trusted certificate list to be used as certificates trusted for any possible usage.</summary>
@@ -458,7 +408,12 @@ namespace iText.Signatures {
         /// <see cref="System.IO.Stream"/>.
         /// </returns>
         protected internal virtual Stream GetIssuerCertByURI(String uri) {
-            return resourceRetriever.GetInputStreamByUrl(new Uri(uri));
+            if (advancedResourceRetriever == null) {
+                return resourceRetriever.GetInputStreamByUrl(new Uri(uri));
+            }
+            else {
+                return advancedResourceRetriever.GetInputStreamByUrl(new Uri(uri));
+            }
         }
 
         /// <summary>Parses certificates represented as byte array.</summary>
@@ -468,20 +423,39 @@ namespace iText.Signatures {
             return SignUtils.ReadAllCerts(certsData);
         }
 
-        private ICollection<IX509Certificate> ProcessCertificatesFromAIA(String url) {
-            if (url == null) {
-                // We don't have any URIs to the issuer certificates in AuthorityInfoAccess extension
-                return null;
-            }
-            try {
-                using (Stream missingCertsData = GetIssuerCertByURI(url)) {
-                    return ParseCertificates(missingCertsData);
+        private static ICollection<IX509Certificate> RetrieveOCSPResponderByKeyHash(IEnumerable<IX509Certificate> 
+            certs, byte[] keyHash) {
+            foreach (IX509Certificate cert in certs) {
+                try {
+                    ISubjectPublicKeyInfo publicKeyInfo = FACTORY.CreateSubjectPublicKeyInfo(cert.GetPublicKey());
+                    // According to RFC2560 hash algorithm is always SHA-1.
+                    byte[] publicKeyHash = DigestAlgorithms.Digest(new MemoryStream(publicKeyInfo.GetPublicKeyData().GetBytes(
+                        )), DigestAlgorithms.GetMessageDigest(DigestAlgorithms.SHA1));
+                    if (JavaUtil.ArraysEquals(publicKeyHash, keyHash)) {
+                        return JavaCollectionsUtil.Singleton(cert);
+                    }
+                }
+                catch (Exception) {
                 }
             }
-            catch (Exception) {
-                LOGGER.LogWarning(SignLogMessageConstant.UNABLE_TO_PARSE_AIA_CERT);
-                return null;
+            // Ignore.
+            return null;
+        }
+
+        private static ICollection<IX509Certificate> RetrieveOCSPResponderByName(IEnumerable<IX509Certificate> certs
+            , IX500Name x500Name) {
+            String name = FACTORY.CreateX500Name(FACTORY.CreateASN1Sequence(x500Name.ToASN1Primitive())).GetName();
+            foreach (IX509Certificate cert in certs) {
+                try {
+                    if (name.Equals(cert.GetSubjectDN().ToString())) {
+                        return JavaCollectionsUtil.Singleton(cert);
+                    }
+                }
+                catch (Exception) {
+                }
             }
+            // Ignore.
+            return null;
         }
 
         private static bool IsSignedBy(IX509Certificate certificate, IX509Certificate issuer) {
@@ -504,16 +478,123 @@ namespace iText.Signatures {
             }
         }
 
-        private static IX509Certificate GetIssuerFromCertificateSet(IX509Certificate lastAddedCert, ICollection<IX509Certificate
-            > certs) {
-            if (certs != null) {
-                foreach (IX509Certificate cert in certs) {
-                    if (IsSignedBy(lastAddedCert, cert)) {
-                        return cert;
+        private IList<IList<IX509Certificate>> BuildCertificateChainsList(IX509Certificate[] certificates) {
+            AddKnownCertificates(JavaUtil.ArraysAsList(certificates));
+            IList<IList<IX509Certificate>> allChains = new List<IList<IX509Certificate>>(BuildCertificateChainsList(certificates
+                [0], new HashSet<IX509Certificate>()));
+            foreach (IList<IX509Certificate> issuerChain in allChains) {
+                for (int i = certificates.Length - 2; i >= 0; --i) {
+                    issuerChain.Add(certificates[i]);
+                }
+            }
+            return allChains;
+        }
+
+        private IList<IList<IX509Certificate>> BuildCertificateChainsList(IX509Certificate certificate, HashSet<IX509Certificate
+            > processedCerts) {
+            if (!processedCerts.Add(certificate)) {
+                //certificate is already being processed
+                return new List<IList<IX509Certificate>>();
+            }
+            if (CertificateUtil.IsSelfSigned(certificate)) {
+                IList<IList<IX509Certificate>> singleChain = new List<IList<IX509Certificate>>();
+                IList<IX509Certificate> chain = new List<IX509Certificate>();
+                chain.Add(certificate);
+                singleChain.Add(chain);
+                return singleChain;
+            }
+            ICollection<IX509Certificate> possibleIssuers = GetPossibleIssuers(certificate);
+            if (possibleIssuers.IsEmpty()) {
+                IList<IList<IX509Certificate>> singleChain = new List<IList<IX509Certificate>>();
+                IList<IX509Certificate> chain = new List<IX509Certificate>();
+                chain.Add(certificate);
+                singleChain.Add(chain);
+                return singleChain;
+            }
+            IList<IList<IX509Certificate>> allChains = new List<IList<IX509Certificate>>();
+            foreach (IX509Certificate possibleIssuer in possibleIssuers) {
+                if (IsSignedBy(certificate, possibleIssuer)) {
+                    IList<IList<IX509Certificate>> issuerChains = BuildCertificateChainsList((IX509Certificate)possibleIssuer, 
+                        processedCerts);
+                    foreach (IList<IX509Certificate> issuerChain in issuerChains) {
+                        issuerChain.Add(certificate);
+                        allChains.Add(issuerChain);
                     }
                 }
             }
-            return null;
+            return allChains;
+        }
+
+        private ICollection<IX509Certificate> GetPossibleIssuers(IX509Certificate certificate) {
+            // Get missing certificates using AIA Extensions
+            IList<String> urls = CertificateUtil.GetIssuerCertURLs(certificate);
+            foreach (String url in urls) {
+                if (!processedUrls.Contains(url)) {
+                    ICollection<IX509Certificate> certificatesFromAIA = ProcessCertificatesFromAIA(url);
+                    if (certificatesFromAIA != null) {
+                        AddKnownCertificates(certificatesFromAIA, CertificateOrigin.OTHER);
+                        processedUrls.Add(url);
+                    }
+                }
+            }
+            ICollection<IX509Certificate> possibleIssuers = trustedCertificatesStore.GetKnownCertificates(certificate.
+                GetIssuerDN().ToString());
+            if (knownCertificates.Get(certificate.GetIssuerDN().ToString()) != null) {
+                possibleIssuers.AddAll(knownCertificates.Get(certificate.GetIssuerDN().ToString()));
+            }
+            return possibleIssuers;
+        }
+
+        private IX509Certificate[][] GetCrlIssuerCertificatesGeneric(IX509Crl crl, bool verify) {
+            // Usually CRLs are signed using CA certificate, so we don’t need to do anything extra and the revocation data
+            // is already collected. However, it is possible to sign it with any other certificate.
+            // IssuingDistributionPoint extension: https://datatracker.ietf.org/doc/html/rfc5280#section-5.2.5
+            // Nothing special for the indirect CRLs.
+            // AIA Extension
+            List<IX509Certificate[]> matches = new List<IX509Certificate[]>();
+            IList<String> urls = CertificateUtil.GetIssuerCertURLs(crl);
+            foreach (String url in urls) {
+                IList<IX509Certificate> certificatesFromAIA = (IList<IX509Certificate>)ProcessCertificatesFromAIA(url);
+                if (certificatesFromAIA != null) {
+                    AddKnownCertificates(certificatesFromAIA, CertificateOrigin.OTHER);
+                }
+            }
+            // Retrieve Issuer from the certificate store
+            ICollection<IX509Certificate> issuers = trustedCertificatesStore.GetKnownCertificates(((IX509Crl)crl).GetIssuerDN
+                ().ToString());
+            if (issuers == null) {
+                issuers = new HashSet<IX509Certificate>();
+            }
+            IList<IX509Certificate> localIssuers = GetCrlIssuersFromKnownCertificates((IX509Crl)crl);
+            if (localIssuers != null) {
+                issuers.AddAll(localIssuers);
+            }
+            if (issuers.IsEmpty()) {
+                // Unable to retrieve CRL issuer
+                return new IX509Certificate[0][];
+            }
+            foreach (IX509Certificate i in issuers) {
+                if (!verify || IsSignedBy((IX509Crl)crl, i)) {
+                    matches.AddAll(BuildCertificateChains((IX509Certificate)i));
+                }
+            }
+            return matches.ToArray(new IX509Certificate[][] {  });
+        }
+
+        private ICollection<IX509Certificate> ProcessCertificatesFromAIA(String url) {
+            if (url == null) {
+                // We don't have any URIs to the issuer certificates in AuthorityInfoAccess extension
+                return null;
+            }
+            try {
+                using (Stream missingCertsData = GetIssuerCertByURI(url)) {
+                    return ParseCertificates(missingCertsData);
+                }
+            }
+            catch (Exception) {
+                LOGGER.LogWarning(SignLogMessageConstant.UNABLE_TO_PARSE_AIA_CERT);
+                return null;
+            }
         }
 
         private IList<IX509Certificate> GetCrlIssuersFromKnownCertificates(IX509Crl crl) {

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -46,194 +47,133 @@ namespace iText.Pdfua.Checkers {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
-        public static IList<PdfUAConformance> Data() {
+        public static IList<PdfConformance> Data() {
             return UaValidationTestFramework.GetConformanceList();
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void LayoutTest01(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_70());
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("layout01", pdfUAConformance);
+        public virtual void LayoutTest01(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((document) => {
+                Paragraph p = new Paragraph("E=mc²").SetFont(LoadFont(FONT));
+                p.GetAccessibilityProperties().SetRole(StandardRoles.FORMULA);
+                return p;
+            }
+            );
+            if (conformance.GetUAConformance() == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("layout01");
             }
             else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothValid("layout01", pdfUAConformance);
+                if (conformance.GetUAConformance() == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothValid("layout01");
                 }
             }
         }
 
-        private sealed class _Generator_70 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_70() {
-            }
-
-            public IBlockElement Generate() {
-                Paragraph p = new Paragraph("E=mc²").SetFont(PdfUAFormulaTest.LoadFont(PdfUAFormulaTest.FONT));
-                p.GetAccessibilityProperties().SetRole(StandardRoles.FORMULA);
-                return p;
-            }
-        }
-
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void LayoutTest02(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_90());
-            framework.AssertBothValid("layout02", pdfUAConformance);
-        }
-
-        private sealed class _Generator_90 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_90() {
-            }
-
-            public IBlockElement Generate() {
-                Paragraph p = new Paragraph("E=mc²").SetFont(PdfUAFormulaTest.LoadFont(PdfUAFormulaTest.FONT));
+        public virtual void LayoutTest02(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((document) => {
+                Paragraph p = new Paragraph("E=mc²").SetFont(LoadFont(FONT));
                 p.GetAccessibilityProperties().SetRole(StandardRoles.FORMULA);
                 p.GetAccessibilityProperties().SetActualText("Einstein smart boy formula");
                 return p;
             }
+            );
+            framework.AssertBothValid("layout02");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void LayoutTest03(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_106());
-            framework.AssertBothValid("layout03", pdfUAConformance);
-        }
-
-        private sealed class _Generator_106 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_106() {
-            }
-
-            public IBlockElement Generate() {
-                Paragraph p = new Paragraph("E=mc²").SetFont(PdfUAFormulaTest.LoadFont(PdfUAFormulaTest.FONT));
+        public virtual void LayoutTest03(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((document) => {
+                Paragraph p = new Paragraph("E=mc²").SetFont(LoadFont(FONT));
                 p.GetAccessibilityProperties().SetRole(StandardRoles.FORMULA);
                 p.GetAccessibilityProperties().SetAlternateDescription("Einstein smart boy " + "formula");
                 return p;
             }
+            );
+            framework.AssertBothValid("layout03");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void LayoutTest04(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_122());
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("layout04", pdfUAConformance);
-            }
-            else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothValid("layout04", pdfUAConformance);
-                }
-            }
-        }
-
-        private sealed class _Generator_122 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_122() {
-            }
-
-            public IBlockElement Generate() {
-                Paragraph p = new Paragraph("E=mc²").SetFont(PdfUAFormulaTest.LoadFont(PdfUAFormulaTest.FONT));
+        public virtual void LayoutTest04(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((document) => {
+                Paragraph p = new Paragraph("E=mc²").SetFont(LoadFont(FONT));
                 p.GetAccessibilityProperties().SetRole(StandardRoles.FORMULA);
                 p.GetAccessibilityProperties().SetAlternateDescription("");
                 return p;
             }
+            );
+            if (conformance.GetUAConformance() == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("layout04");
+            }
+            else {
+                if (conformance.GetUAConformance() == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothValid("layout04");
+                }
+                else {
+                    if (conformance.ConformsTo(WellTaggedPdfConformance.FOR_REUSE)) {
+                        framework.AssertBothValid("layout04");
+                    }
+                }
+            }
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void LayoutTest05(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_143());
-            framework.AssertBothValid("layout05", pdfUAConformance);
-        }
-
-        private sealed class _Generator_143 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_143() {
-            }
-
-            public IBlockElement Generate() {
-                Paragraph p = new Paragraph("E=mc²").SetFont(PdfUAFormulaTest.LoadFont(PdfUAFormulaTest.FONT));
+        public virtual void LayoutTest05(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((document) => {
+                Paragraph p = new Paragraph("E=mc²").SetFont(LoadFont(FONT));
                 p.GetAccessibilityProperties().SetRole(StandardRoles.FORMULA);
                 p.GetAccessibilityProperties().SetActualText("");
                 return p;
             }
+            );
+            framework.AssertBothValid("layout05");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void LayoutTest06(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_159());
-            framework.AssertBothFail("layout06", MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
-                , "⫊"), false, pdfUAConformance);
-        }
-
-        private sealed class _Generator_159 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_159() {
-            }
-
-            public IBlockElement Generate() {
-                Paragraph p = new Paragraph("⫊").SetFont(PdfUAFormulaTest.LoadFont(PdfUAFormulaTest.FONT));
+        public virtual void LayoutTest06(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((document) => {
+                Paragraph p = new Paragraph("⫊").SetFont(LoadFont(FONT));
                 p.GetAccessibilityProperties().SetRole(StandardRoles.FORMULA);
                 p.GetAccessibilityProperties().SetActualText("Some character that is not embeded in the font");
                 return p;
             }
+            );
+            framework.AssertBothFail("layout06", MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
+                , "⫊"), false);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void LayoutTest07(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_177());
-            framework.AssertBothFail("layout07", MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
-                , "⫊"), false, pdfUAConformance);
-        }
-
-        private sealed class _Generator_177 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_177() {
-            }
-
-            public IBlockElement Generate() {
-                Paragraph p = new Paragraph("⫊").SetFont(PdfUAFormulaTest.LoadFont(PdfUAFormulaTest.FONT));
+        public virtual void LayoutTest07(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((document) => {
+                Paragraph p = new Paragraph("⫊").SetFont(LoadFont(FONT));
                 p.GetAccessibilityProperties().SetRole(StandardRoles.FORMULA);
                 p.GetAccessibilityProperties().SetAlternateDescription("Alternate " + "description");
                 return p;
             }
+            );
+            framework.AssertBothFail("layout07", MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
+                , "⫊"), false);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void LayoutWithValidRole(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_195());
-            framework.AddBeforeGenerationHook((pdfDocument) => {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    PdfNamespace @namespace = new PdfNamespace(StandardNamespaces.PDF_2_0);
-                    pdfDocument.GetTagStructureContext().SetDocumentDefaultNamespace(@namespace);
-                    pdfDocument.GetStructTreeRoot().AddNamespace(@namespace);
-                    @namespace.AddNamespaceRoleMapping("BING", StandardRoles.FORMULA);
-                }
-                PdfStructTreeRoot tagStructureContext = pdfDocument.GetStructTreeRoot();
-                tagStructureContext.AddRoleMapping("BING", StandardRoles.FORMULA);
-            }
-            );
-            framework.AssertBothValid("layoutWithValidRole", pdfUAConformance);
-        }
-
-        private sealed class _Generator_195 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_195() {
-            }
-
-            public IBlockElement Generate() {
-                Paragraph p = new Paragraph("e = mc^2").SetFont(PdfUAFormulaTest.LoadFont(PdfUAFormulaTest.FONT));
+        public virtual void LayoutWithValidRole(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((document) => {
+                Paragraph p = new Paragraph("e = mc^2").SetFont(LoadFont(FONT));
                 p.GetAccessibilityProperties().SetRole("BING");
                 p.GetAccessibilityProperties().SetAlternateDescription("Alternate " + "description");
                 return p;
             }
-        }
-
-        [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void LayoutWithValidRoleButNoAlternateDescription(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_222());
+            );
             framework.AddBeforeGenerationHook((pdfDocument) => {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
+                if (conformance.GetUAConformance() == PdfUAConformance.PDF_UA_2 || conformance.IsWtpdf()) {
                     PdfNamespace @namespace = new PdfNamespace(StandardNamespaces.PDF_2_0);
                     pdfDocument.GetTagStructureContext().SetDocumentDefaultNamespace(@namespace);
                     pdfDocument.GetStructTreeRoot().AddNamespace(@namespace);
@@ -243,30 +183,48 @@ namespace iText.Pdfua.Checkers {
                 tagStructureContext.AddRoleMapping("BING", StandardRoles.FORMULA);
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("layoutWithValidRoleButNoDescription", pdfUAConformance);
+            framework.AssertBothValid("layoutWithValidRole");
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void LayoutWithValidRoleButNoAlternateDescription(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddSuppliers((document) => {
+                Paragraph p = new Paragraph("e = mc^2").SetFont(LoadFont(FONT));
+                p.GetAccessibilityProperties().SetRole("BING");
+                return p;
+            }
+            );
+            framework.AddBeforeGenerationHook((pdfDocument) => {
+                if (conformance.GetUAConformance() == PdfUAConformance.PDF_UA_2 || conformance.ConformsTo(WellTaggedPdfConformance
+                    .FOR_REUSE)) {
+                    PdfNamespace @namespace = new PdfNamespace(StandardNamespaces.PDF_2_0);
+                    pdfDocument.GetTagStructureContext().SetDocumentDefaultNamespace(@namespace);
+                    pdfDocument.GetStructTreeRoot().AddNamespace(@namespace);
+                    @namespace.AddNamespaceRoleMapping("BING", StandardRoles.FORMULA);
+                }
+                PdfStructTreeRoot tagStructureContext = pdfDocument.GetStructTreeRoot();
+                tagStructureContext.AddRoleMapping("BING", StandardRoles.FORMULA);
+            }
+            );
+            if (conformance.GetUAConformance() == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("layoutWithValidRoleButNoDescription");
             }
             else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothValid("layoutWithValidRoleButNoDescription", pdfUAConformance);
+                if (conformance.GetUAConformance() == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothValid("layoutWithValidRoleButNoDescription");
+                }
+                else {
+                    if (conformance.ConformsTo(WellTaggedPdfConformance.FOR_REUSE)) {
+                        framework.AssertBothValid("layoutWithValidRoleButNoDescription");
+                    }
                 }
             }
         }
 
-        private sealed class _Generator_222 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_222() {
-            }
-
-            public IBlockElement Generate() {
-                Paragraph p = new Paragraph("e = mc^2").SetFont(PdfUAFormulaTest.LoadFont(PdfUAFormulaTest.FONT));
-                p.GetAccessibilityProperties().SetRole("BING");
-                return p;
-            }
-        }
-
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void CanvasTest01(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void CanvasTest01(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
@@ -278,20 +236,24 @@ namespace iText.Pdfua.Checkers {
                     ).EndText().CloseTag();
             }
             );
-            if (pdfUAConformance == PdfUAConformance.PDF_UA_1) {
-                framework.AssertBothFail("canvasTest01", PdfUAExceptionMessageConstants.FORMULA_SHALL_HAVE_ALT, pdfUAConformance
-                    );
+            if (conformance.GetUAConformance() == PdfUAConformance.PDF_UA_1) {
+                framework.AssertBothFail("canvasTest01", PdfUAExceptionMessageConstants.FORMULA_SHALL_HAVE_ALT);
             }
             else {
-                if (pdfUAConformance == PdfUAConformance.PDF_UA_2) {
-                    framework.AssertBothValid("canvasTest01", pdfUAConformance);
+                if (conformance.GetUAConformance() == PdfUAConformance.PDF_UA_2) {
+                    framework.AssertBothValid("canvasTest01");
+                }
+                else {
+                    if (conformance.ConformsTo(WellTaggedPdfConformance.FOR_REUSE)) {
+                        framework.AssertBothValid("canvasTest01");
+                    }
                 }
             }
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void CanvasTest02(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void CanvasTest02(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
@@ -304,12 +266,12 @@ namespace iText.Pdfua.Checkers {
                     ).EndText().CloseTag();
             }
             );
-            framework.AssertBothValid("canvasTest02", pdfUAConformance);
+            framework.AssertBothValid("canvasTest02");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void CanvasTest03(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void CanvasTest03(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
@@ -323,32 +285,28 @@ namespace iText.Pdfua.Checkers {
             }
             );
             framework.AssertBothFail("canvasTest03", MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
-                , "⫊"), false, pdfUAConformance);
+                , "⫊"), false);
         }
 
         [NUnit.Framework.Test]
         public virtual void MathStructureElementInvalidUA2Test() {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
-            framework.AddSuppliers(new _Generator_319());
-            framework.AssertBothFail("mathStructureElementInvalidUA2Test", PdfUAExceptionMessageConstants.MATH_NOT_CHILD_OF_FORMULA
-                , PdfUAConformance.PDF_UA_2);
-        }
-
-        private sealed class _Generator_319 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_319() {
-            }
-
-            public IBlockElement Generate() {
-                Paragraph p = new Paragraph("E=mc²").SetFont(PdfUAFormulaTest.LoadFont(PdfUAFormulaTest.FONT));
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, new PdfConformance
+                (PdfUAConformance.PDF_UA_2));
+            framework.AddSuppliers((document) => {
+                Paragraph p = new Paragraph("E=mc²").SetFont(LoadFont(FONT));
                 p.GetAccessibilityProperties().SetNamespace(new PdfNamespace(StandardNamespaces.MATH_ML));
                 p.GetAccessibilityProperties().SetRole("math");
                 return p;
             }
+            );
+            framework.AssertBothFail("mathStructureElementInvalidUA2Test", PdfUAExceptionMessageConstants.MATH_NOT_CHILD_OF_FORMULA
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void MathStructureElementValidUA2Test() {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, new PdfConformance
+                (PdfUAConformance.PDF_UA_2));
             framework.AddAfterGenerationHook((pdfDocument) => {
                 PdfPage page = pdfDocument.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
@@ -362,7 +320,7 @@ namespace iText.Pdfua.Checkers {
                     ).EndText().CloseTag();
             }
             );
-            framework.AssertBothValid("mathStructureElementValidUA2Test", PdfUAConformance.PDF_UA_2);
+            framework.AssertBothValid("mathStructureElementValidUA2Test");
         }
 
         private static PdfFont LoadFont(String fontPath) {
@@ -370,7 +328,7 @@ namespace iText.Pdfua.Checkers {
                 return PdfFontFactory.CreateFont(fontPath);
             }
             catch (System.IO.IOException e) {
-                throw new Exception(e.Message);
+                throw new PdfException(e.Message);
             }
         }
     }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -28,7 +28,7 @@ namespace iText.IO.Font.Otf {
     [NUnit.Framework.Category("IntegrationTest")]
     public class OpenTypeGdefTableReaderTest : ExtendedITextTest {
         private static readonly String RESOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/OpenTypeGdefTableReaderTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/";
 
         [NUnit.Framework.Test]
         public virtual void TestLookupFlagWithMarkAttachmentTypeAndMarkGlyphWithoutMarkAttachmentClass() {

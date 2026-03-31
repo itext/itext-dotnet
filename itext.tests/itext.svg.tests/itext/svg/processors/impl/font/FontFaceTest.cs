@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -53,33 +53,33 @@ namespace iText.Svg.Processors.Impl.Font {
         }
 
         [NUnit.Framework.Test]
-        public virtual void DroidSerifSingleQuotesTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "droidSerifSingleQuotesTest");
+        public virtual void RobotoSerifSingleQuotesTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "robotoSerifSingleQuotesTest");
         }
 
         [NUnit.Framework.Test]
-        public virtual void DroidSerifWebFontTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "droidSerifWebFontTest");
+        public virtual void RobotoSerifWebFontTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "robotoSerifWebFontTest");
         }
 
         [NUnit.Framework.Test]
-        public virtual void DroidSerifLocalFontTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "droidSerifLocalFontTest");
+        public virtual void RobotoSerifLocalFontTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "robotoSerifLocalFontTest");
         }
 
         [NUnit.Framework.Test]
-        public virtual void DroidSerifLocalLocalFontTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "droidSerifLocalLocalFontTest");
+        public virtual void RobotoSerifLocalLocalFontTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "robotoSerifLocalLocalFontTest");
         }
 
         [NUnit.Framework.Test]
-        public virtual void DroidSerifLocalWithMediaFontTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "droidSerifLocalWithMediaFontTest");
+        public virtual void RobotoSerifLocalWithMediaFontTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "robotoSerifLocalWithMediaFontTest");
         }
 
         [NUnit.Framework.Test]
-        public virtual void DroidSerifLocalWithMediaRuleFontTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "droidSerifLocalWithMediaRuleFontTest");
+        public virtual void RobotoSerifLocalWithMediaRuleFontTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "robotoSerifLocalWithMediaRuleFontTest");
         }
 
         [NUnit.Framework.Test]

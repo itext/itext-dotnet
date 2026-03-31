@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -63,6 +63,13 @@ namespace iText.Kernel.Crypto {
         /// <returns>Processed bytes</returns>
         public virtual byte[] ProcessBlock(byte[] inp, int inpOff, int inpLen) {
             return cipher.ProcessBlock(inp, inpOff, inpLen);
+        }
+
+        /// <summary>Finishes a multiple-part encryption or decryption operation, depending on how this cipher was initialized.
+        /// </summary>
+        /// <returns>byte array with the result</returns>
+        public virtual byte[] DoFinal() {
+            return cipher.DoFinal();
         }
     }
 }

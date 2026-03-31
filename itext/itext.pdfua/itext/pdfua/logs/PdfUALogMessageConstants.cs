@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -31,6 +31,8 @@ namespace iText.Pdfua.Logs {
              + "to be applied. Page will only be flushed on closing.";
 
         public const String PDF_TO_PDF_UA_CONVERSION_IS_NOT_SUPPORTED = "PDF to PDF/UA conversion is not supported.";
+
+        public const String PDF_TO_WTPDF_CONVERSION_IS_NOT_SUPPORTED = "PDF to WellTagged PDF conversion is not supported.";
 
         public const String WRITER_PROPERTIES_PDF_VERSION_WAS_OVERRIDDEN = "Pdf version from writer properties isn't compatible with specified PDF/UA conformance, it was overridden to {0} version.";
 

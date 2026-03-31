@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -33,5 +33,13 @@ namespace iText.Commons.Bouncycastle.Asn1 {
         /// </summary>
         /// <returns>int value of the wrapped ASN1BitString.</returns>
         int IntValue();
+
+        /// <summary>
+        /// Call actual
+        /// <c>getBytes</c>
+        /// method for the wrapped ASN1BitString object.
+        /// </summary>
+        /// <returns>bytes of the wrapped ASN1BitString.</returns>
+        byte[] GetBytes();
     }
 }

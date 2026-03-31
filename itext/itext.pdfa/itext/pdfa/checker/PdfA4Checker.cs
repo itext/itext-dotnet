@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -320,8 +320,9 @@ namespace iText.Pdfa.Checker {
                     );
             }
             CheckTransparencyGroup(form, contentStream);
-            CheckResources(form.GetAsDictionary(PdfName.Resources), form);
-            CheckContentStream(form);
+            PdfDictionary resourcesDict = form.GetAsDictionary(PdfName.Resources);
+            CheckResources(resourcesDict, form);
+            CheckContentStream(form, resourcesDict == null ? new PdfResources() : new PdfResources(resourcesDict));
         }
 
         /// <summary><inheritDoc/></summary>

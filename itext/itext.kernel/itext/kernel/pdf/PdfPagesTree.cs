@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -41,6 +41,8 @@ namespace iText.Kernel.Pdf {
         internal const int DEFAULT_LEAF_SIZE = 10;
 //\endcond
 
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPagesTree));
+
         private readonly int leafSize = DEFAULT_LEAF_SIZE;
 
         private ISimpleList<PdfIndirectReference> pageRefs;
@@ -54,8 +56,6 @@ namespace iText.Kernel.Pdf {
         private bool generated = false;
 
         private PdfPages root;
-
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPagesTree));
 
         /// <summary>Creates a PdfPages tree.</summary>
         /// <param name="pdfCatalog">
@@ -172,7 +172,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Returns the index of the first occurrence of the page in this tree
-        /// specified by it's PdfDictionary, or 0 if this tree does not contain the page.
+        /// specified by its PdfDictionary, or 0 if this tree does not contain the page.
         /// </summary>
         public virtual int GetPageNumber(PdfDictionary pageDictionary) {
             int pageNum = pageRefs.IndexOf(pageDictionary.GetIndirectReference());
@@ -204,7 +204,7 @@ namespace iText.Kernel.Pdf {
             PdfPages pdfPages;
             if (root != null) {
                 // in this case we save tree structure
-                if (pageRefs.Size() == 0) {
+                if (pageRefs.IsEmpty()) {
                     pdfPages = root;
                 }
                 else {
@@ -214,7 +214,7 @@ namespace iText.Kernel.Pdf {
             }
             else {
                 pdfPages = parents[parents.Count - 1];
-                if (pdfPages.GetCount() % leafSize == 0 && pageRefs.Size() > 0) {
+                if (pdfPages.GetCount() % leafSize == 0 && !pageRefs.IsEmpty()) {
                     pdfPages = new PdfPages(pdfPages.GetFrom() + pdfPages.GetCount(), document);
                     parents.Add(pdfPages);
                 }
@@ -295,7 +295,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfPages"/>
         /// </returns>
         protected internal virtual PdfObject GenerateTree() {
-            if (pageRefs.Size() == 0) {
+            if (pageRefs.IsEmpty()) {
                 LOGGER.LogInformation(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_TO_GENERATE_PDF_PAGES_TREE_WITHOUT_ANY_PAGES
                     );
                 document.AddNewPage();
@@ -305,26 +305,16 @@ namespace iText.Kernel.Pdf {
             }
             if (root == null) {
                 while (parents.Count != 1) {
-                    IList<PdfPages> nextParents = new List<PdfPages>();
-                    //dynamicLeafSize helps to avoid PdfPages leaf with only one page
-                    int dynamicLeafSize = leafSize;
-                    PdfPages current = null;
-                    for (int i = 0; i < parents.Count; i++) {
-                        PdfPages pages = parents[i];
-                        int pageCount = pages.GetCount();
-                        if (i % dynamicLeafSize == 0) {
-                            if (pageCount <= 1) {
-                                dynamicLeafSize++;
-                            }
-                            else {
-                                current = new PdfPages(-1, document);
-                                nextParents.Add(current);
-                                dynamicLeafSize = leafSize;
-                            }
+                    IList<PdfPages> newParents = new List<PdfPages>();
+                    PdfPages currentNewParent = null;
+                    foreach (PdfPages parent in parents) {
+                        if (currentNewParent == null || currentNewParent.GetKids().Size() >= leafSize) {
+                            currentNewParent = new PdfPages(-1, document);
+                            newParents.Add(currentNewParent);
                         }
-                        current.AddPages(pages);
+                        currentNewParent.AddPages(parent);
                     }
-                    parents = nextParents;
+                    parents = newParents;
                 }
                 root = parents[0];
             }
@@ -420,7 +410,7 @@ namespace iText.Kernel.Pdf {
                     /*
                     * We don't release pdfPagesObject in the end of each loop because we enter this for-cycle only when
                     * parent has PdfPages kids.
-                    * If all of the kids are PdfPages, then there's nothing to release, because we don't release
+                    * If all the kids are PdfPages, then there's nothing to release, because we don't release
                     * PdfPages at this point.
                     * If there are kids that are instances of PdfPage, then there's no sense in releasing them:
                     * in this case ParentTreeStructure is being rebuilt by inserting an intermediate PdfPages between
@@ -489,7 +479,7 @@ namespace iText.Kernel.Pdf {
                     pdfPages.RemoveFromParent();
                     --parentIndex;
                 }
-                if (parents.Count == 0) {
+                if (parents.IsEmpty()) {
                     root = null;
                     parents.Add(new PdfPages(0, document));
                 }

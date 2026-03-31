@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -40,11 +40,13 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Forms {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfUA2FormTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfUA2FormTest/";
+
+        public static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/forms/fonts/";
 
         public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/forms//PdfUA2FormTest/";
 
@@ -60,7 +62,7 @@ namespace iText.Forms {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 Document document = new Document(pdfDocument);
-                PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "NotoSans-Regular.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                     .FORCE_EMBEDDED);
                 document.SetFont(font);
                 CreateSimplePdfUA2Document(pdfDocument);
@@ -83,7 +85,7 @@ namespace iText.Forms {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 Document document = new Document(pdfDocument);
-                PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "NotoSans-Regular.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                     .FORCE_EMBEDDED);
                 document.SetFont(font);
                 CreateSimplePdfUA2Document(pdfDocument);
@@ -108,7 +110,7 @@ namespace iText.Forms {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 Document document = new Document(pdfDocument);
-                PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "NotoSans-Regular.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                     .FORCE_EMBEDDED);
                 document.SetFont(font);
                 CreateSimplePdfUA2Document(pdfDocument);
@@ -129,7 +131,7 @@ namespace iText.Forms {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 Document document = new Document(pdfDocument);
-                PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "NotoSans-Regular.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                     .FORCE_EMBEDDED);
                 document.SetFont(font);
                 CreateSimplePdfUA2Document(pdfDocument);
@@ -154,7 +156,7 @@ namespace iText.Forms {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFile, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)))) {
                 Document document = new Document(pdfDocument);
-                PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+                PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "NotoSans-Regular.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                     .FORCE_EMBEDDED);
                 document.SetFont(font);
                 CreateSimplePdfUA2Document(pdfDocument);
@@ -181,7 +183,6 @@ namespace iText.Forms {
 
         private void CompareAndValidate(String outPdf, String cmpPdf) {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
-            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_");
             if (result != null) {
                 NUnit.Framework.Assert.Fail(result);

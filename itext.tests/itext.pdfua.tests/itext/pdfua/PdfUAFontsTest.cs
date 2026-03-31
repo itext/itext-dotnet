@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -51,13 +52,13 @@ namespace iText.Pdfua {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
-        public static IList<PdfUAConformance> Data() {
+        public static IList<PdfConformance> Data() {
             return UaValidationTestFramework.GetConformanceList();
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void TryToUseType0Cid0FontTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void TryToUseType0Cid0FontTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -65,8 +66,8 @@ namespace iText.Pdfua {
                     font = PdfFontFactory.CreateFont("KozMinPro-Regular", "UniJIS-UCS2-H", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
                         );
                 }
-                catch (System.IO.IOException) {
-                    throw new Exception();
+                catch (System.IO.IOException e) {
+                    throw new PdfException(e);
                 }
                 document.SetFont(font);
                 Paragraph paragraph = new Paragraph("Simple paragraph");
@@ -74,32 +75,32 @@ namespace iText.Pdfua {
             }
             );
             framework.AssertBothFail("tryToUseType0Cid0FontTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
-                .FONT_SHOULD_BE_EMBEDDED, "KozMinPro-Regular"), false, pdfUAConformance);
+                .FONT_SHOULD_BE_EMBEDDED, "KozMinPro-Regular"), false);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void Type0Cid2FontTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void Type0Cid2FontTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
                 try {
                     font = PdfFontFactory.CreateFont(FONT);
                 }
-                catch (System.IO.IOException) {
-                    throw new Exception();
+                catch (System.IO.IOException e) {
+                    throw new PdfException(e);
                 }
                 document.SetFont(font);
                 Paragraph paragraph = new Paragraph("Simple paragraph");
                 document.Add(paragraph);
             }
             );
-            framework.AssertBothValid("type0Cid2FontTest", pdfUAConformance);
+            framework.AssertBothValid("type0Cid2FontTest");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void TrueTypeFontTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void TrueTypeFontTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -107,28 +108,28 @@ namespace iText.Pdfua {
                     font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                         );
                 }
-                catch (System.IO.IOException) {
-                    throw new Exception();
+                catch (System.IO.IOException e) {
+                    throw new PdfException(e);
                 }
                 document.SetFont(font);
                 Paragraph paragraph = new Paragraph("Simple paragraph");
                 document.Add(paragraph);
             }
             );
-            framework.AssertBothValid("trueTypeFontTest", pdfUAConformance);
+            framework.AssertBothValid("trueTypeFontTest");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void TrueTypeFontGlyphNotPresentTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void TrueTypeFontGlyphNotPresentTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font;
                 try {
                     font = PdfFontFactory.CreateFont(FONT, "# simple 32 0020 00C5 1987", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
                         );
                 }
-                catch (System.IO.IOException) {
-                    throw new Exception();
+                catch (System.IO.IOException e) {
+                    throw new PdfException(e);
                 }
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 TagTreePointer tagPointer = new TagTreePointer(pdfDoc).SetPageForTagging(pdfDoc.GetFirstPage()).AddTag(StandardRoles
@@ -138,20 +139,20 @@ namespace iText.Pdfua {
             }
             );
             framework.AssertBothFail("trueTypeFontGlyphNotPresentTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
-                .GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE, "w"), false, pdfUAConformance);
+                .GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE, "w"), false);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void TrueTypeFontWithDifferencesTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void TrueTypeFontWithDifferencesTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 PdfFont font;
                 try {
                     font = PdfFontFactory.CreateFont(FONT, "# simple 32 0077 006f 0072 006c 0064", PdfFontFactory.EmbeddingStrategy
                         .PREFER_EMBEDDED);
                 }
-                catch (System.IO.IOException) {
-                    throw new Exception();
+                catch (System.IO.IOException e) {
+                    throw new PdfException(e);
                 }
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
                 TagTreePointer tagPointer = new TagTreePointer(pdfDoc).SetPageForTagging(pdfDoc.GetFirstPage()).AddTag(StandardRoles
@@ -161,12 +162,12 @@ namespace iText.Pdfua {
             }
             );
             framework.AssertBothFail("trueTypeFontWithDifferencesTest", PdfUAExceptionMessageConstants.NON_SYMBOLIC_TTF_SHALL_SPECIFY_MAC_ROMAN_OR_WIN_ANSI_ENCODING
-                , false, pdfUAConformance);
+                , false);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void TryToUseStandardFontsTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void TryToUseStandardFontsTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -174,8 +175,8 @@ namespace iText.Pdfua {
                     font = PdfFontFactory.CreateFont(StandardFonts.COURIER, "", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
                         );
                 }
-                catch (System.IO.IOException) {
-                    throw new Exception();
+                catch (System.IO.IOException e) {
+                    throw new PdfException(e);
                 }
                 document.SetFont(font);
                 Paragraph paragraph = new Paragraph("Helloworld");
@@ -183,12 +184,12 @@ namespace iText.Pdfua {
             }
             );
             framework.AssertBothFail("tryToUseStandardFontsTest", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
-                .FONT_SHOULD_BE_EMBEDDED, "Courier"), false, pdfUAConformance);
+                .FONT_SHOULD_BE_EMBEDDED, "Courier"), false);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void Type1EmbeddedFontTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void Type1EmbeddedFontTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -196,15 +197,15 @@ namespace iText.Pdfua {
                     font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(FONT_FOLDER + "cmr10.afm", FONT_FOLDER
                          + "cmr10.pfb"), FontEncoding.FONT_SPECIFIC, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
                 }
-                catch (System.IO.IOException) {
-                    throw new Exception();
+                catch (System.IO.IOException e) {
+                    throw new PdfException(e);
                 }
                 document.SetFont(font);
                 Paragraph paragraph = new Paragraph("Helloworld");
                 document.Add(paragraph);
             }
             );
-            framework.AssertBothValid("type1EmbeddedFontTest", pdfUAConformance);
+            framework.AssertBothValid("type1EmbeddedFontTest");
         }
 
         [NUnit.Framework.Test]
@@ -215,8 +216,8 @@ namespace iText.Pdfua {
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void NonSymbolicTtfWithValidEncodingTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void NonSymbolicTtfWithValidEncodingTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -224,28 +225,28 @@ namespace iText.Pdfua {
                     font = PdfFontFactory.CreateFont(FONT, PdfEncodings.MACROMAN, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                         );
                 }
-                catch (System.IO.IOException) {
-                    throw new Exception();
+                catch (System.IO.IOException e) {
+                    throw new PdfException(e);
                 }
                 document.SetFont(font);
                 Paragraph paragraph = new Paragraph("ABC");
                 document.Add(paragraph);
             }
             );
-            framework.AssertBothValid("nonSymbolicTtfWithValidEncodingTest", pdfUAConformance);
+            framework.AssertBothValid("nonSymbolicTtfWithValidEncodingTest");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void NonSymbolicTtfWithIncompatibleEncodingTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void NonSymbolicTtfWithIncompatibleEncodingTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
                 try {
                     font = PdfFontFactory.CreateFont(FONT, PdfEncodings.UTF8, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
                 }
-                catch (System.IO.IOException) {
-                    throw new Exception();
+                catch (System.IO.IOException e) {
+                    throw new PdfException(e);
                 }
                 document.SetFont(font);
                 Paragraph paragraph = new Paragraph("ABC");
@@ -253,12 +254,12 @@ namespace iText.Pdfua {
             }
             );
             framework.AssertBothFail("nonSymbolicTtfWithIncompatibleEncoding", PdfUAExceptionMessageConstants.NON_SYMBOLIC_TTF_SHALL_SPECIFY_MAC_ROMAN_OR_WIN_ANSI_ENCODING
-                , false, pdfUAConformance);
+                , false);
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void SymbolicTtfTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void SymbolicTtfTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -267,20 +268,20 @@ namespace iText.Pdfua {
                     font = PdfFontFactory.CreateFont(FONT_FOLDER + "Symbols1.ttf", PdfEncodings.MACROMAN, PdfFontFactory.EmbeddingStrategy
                         .FORCE_EMBEDDED);
                 }
-                catch (System.IO.IOException) {
-                    throw new Exception();
+                catch (System.IO.IOException e) {
+                    throw new PdfException(e);
                 }
                 document.SetFont(font);
                 Paragraph paragraph = new Paragraph("ABC");
                 document.Add(paragraph);
             }
             );
-            framework.AssertBothValid("symbolicTtf", pdfUAConformance);
+            framework.AssertBothValid("symbolicTtf");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void SymbolicTtfWithEncodingTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void SymbolicTtfWithEncodingTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -289,8 +290,8 @@ namespace iText.Pdfua {
                     font = PdfFontFactory.CreateFont(FONT_FOLDER + "Symbols1.ttf", PdfEncodings.MACROMAN, PdfFontFactory.EmbeddingStrategy
                         .FORCE_EMBEDDED);
                 }
-                catch (System.IO.IOException) {
-                    throw new Exception();
+                catch (System.IO.IOException e) {
+                    throw new PdfException(e);
                 }
                 font.GetPdfObject().Put(PdfName.Encoding, PdfName.MacRomanEncoding);
                 document.SetFont(font);
@@ -300,12 +301,12 @@ namespace iText.Pdfua {
             );
             // VeraPDF is valid since iText fixes symbolic flag to non-symbolic on closing.
             framework.AssertOnlyITextFail("symbolicTtfWithEncoding", PdfUAExceptionMessageConstants.SYMBOLIC_TTF_SHALL_NOT_CONTAIN_ENCODING
-                , pdfUAConformance);
+                );
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void SymbolicTtfWithInvalidCmapTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void SymbolicTtfWithInvalidCmapTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -314,8 +315,8 @@ namespace iText.Pdfua {
                     font = PdfFontFactory.CreateFont(fontProgram, PdfEncodings.MACROMAN, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                         );
                 }
-                catch (System.IO.IOException) {
-                    throw new Exception();
+                catch (System.IO.IOException e) {
+                    throw new PdfException(e);
                 }
                 document.SetFont(font);
                 Paragraph paragraph = new Paragraph("ABC");
@@ -323,21 +324,19 @@ namespace iText.Pdfua {
             }
             );
             // VeraPDF is valid since iText fixes symbolic flag to non-symbolic on closing.
-            if (PdfUAConformance.PDF_UA_1 == pdfUAConformance) {
+            if (PdfConformance.PDF_UA_1.Equals(conformance)) {
                 framework.AssertOnlyITextFail("symbolicTtfWithInvalidCmapTest", PdfUAExceptionMessageConstants.SYMBOLIC_TTF_SHALL_CONTAIN_EXACTLY_ONE_OR_AT_LEAST_MICROSOFT_SYMBOL_CMAP
-                    , pdfUAConformance);
+                    );
             }
             else {
-                if (PdfUAConformance.PDF_UA_2 == pdfUAConformance) {
-                    framework.AssertOnlyITextFail("symbolicTtfWithInvalidCmapTest", PdfUAExceptionMessageConstants.SYMBOLIC_TTF_SHALL_CONTAIN_MAC_ROMAN_OR_MICROSOFT_SYMBOL_CMAP
-                        , pdfUAConformance);
-                }
+                framework.AssertOnlyITextFail("symbolicTtfWithInvalidCmapTest", PdfUAExceptionMessageConstants.SYMBOLIC_TTF_SHALL_CONTAIN_MAC_ROMAN_OR_MICROSOFT_SYMBOL_CMAP
+                    );
             }
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
-        public virtual void NonSymbolicTtfWithInvalidCmapTest(PdfUAConformance pdfUAConformance) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER);
+        public virtual void NonSymbolicTtfWithInvalidCmapTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             framework.AddBeforeGenerationHook((pdfDoc) => {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
@@ -346,8 +345,8 @@ namespace iText.Pdfua {
                     font = PdfFontFactory.CreateFont(fontProgram, PdfEncodings.MACROMAN, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED
                         );
                 }
-                catch (System.IO.IOException) {
-                    throw new Exception();
+                catch (System.IO.IOException e) {
+                    throw new PdfException(e);
                 }
                 document.SetFont(font);
                 Paragraph paragraph = new Paragraph("ABC");
@@ -355,15 +354,13 @@ namespace iText.Pdfua {
             }
             );
             // VeraPDF is valid since the file itself is valid, but itext code is modified for testing.
-            if (PdfUAConformance.PDF_UA_1 == pdfUAConformance) {
+            if (PdfConformance.PDF_UA_1.Equals(conformance)) {
                 framework.AssertOnlyITextFail("nonSymbolicTtfWithInvalidCmapTest", PdfUAExceptionMessageConstants.NON_SYMBOLIC_TTF_SHALL_CONTAIN_NON_SYMBOLIC_CMAP
-                    , pdfUAConformance);
+                    );
             }
             else {
-                if (PdfUAConformance.PDF_UA_2 == pdfUAConformance) {
-                    framework.AssertOnlyITextFail("nonSymbolicTtfWithInvalidCmapTest", PdfUAExceptionMessageConstants.NON_SYMBOLIC_TTF_SHALL_CONTAIN_MAC_ROMAN_OR_MICROSOFT_UNI_CMAP
-                        , pdfUAConformance);
-                }
+                framework.AssertOnlyITextFail("nonSymbolicTtfWithInvalidCmapTest", PdfUAExceptionMessageConstants.NON_SYMBOLIC_TTF_SHALL_CONTAIN_MAC_ROMAN_OR_MICROSOFT_UNI_CMAP
+                    );
             }
         }
 

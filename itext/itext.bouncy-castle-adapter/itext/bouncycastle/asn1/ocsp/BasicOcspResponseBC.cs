@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -130,9 +130,8 @@ namespace iText.Bouncycastle.Asn1.Ocsp {
                 .GetExtensionParsedValue(((DerObjectIdentifierBC)objectIdentifier).GetDerObjectIdentifier()));
         }
 
-        public IRespID GetResponderId()
-        {
-            return new RespIDBC(new X509NameBC(GetBasicOcspResponse().TbsResponseData.ResponderID.Name));
+        public IRespID GetResponderId() {
+            return new RespIDBC(GetBasicOcspResponse().TbsResponseData.ResponderID);
         }
 
         /// <summary><inheritDoc/></summary>

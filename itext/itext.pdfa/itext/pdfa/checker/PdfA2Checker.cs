@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -963,8 +963,9 @@ namespace iText.Pdfa.Checker {
                     );
             }
             CheckTransparencyGroup(form, contentStream);
-            CheckResources(form.GetAsDictionary(PdfName.Resources), contentStream != null ? contentStream : form);
-            CheckContentStream(form);
+            PdfDictionary resourcesDict = form.GetAsDictionary(PdfName.Resources);
+            CheckResources(resourcesDict, contentStream != null ? contentStream : form);
+            CheckContentStream(form, resourcesDict == null ? new PdfResources() : new PdfResources(resourcesDict));
         }
 
         /// <summary>
@@ -1241,9 +1242,10 @@ namespace iText.Pdfa.Checker {
 
         private void CheckType3FontGlyphs(PdfType3Font font, PdfStream contentStream) {
             for (int i = 0; i <= PdfFont.SIMPLE_FONT_MAX_CHAR_CODE_VALUE; ++i) {
-                FontEncoding fontEncoding = font.GetFontEncoding();
-                if (fontEncoding.CanDecode(i)) {
-                    Type3Glyph type3Glyph = font.GetType3Glyph(fontEncoding.GetUnicode(i));
+                FontProgram fontProgram = font.GetFontProgram();
+                if (fontProgram is Type3Font) {
+                    Type3Font type3Font = (Type3Font)fontProgram;
+                    Type3Glyph type3Glyph = type3Font.GetType3GlyphByCode(i);
                     if (type3Glyph != null) {
                         CheckFormXObject(type3Glyph.GetContentStream(), contentStream);
                     }

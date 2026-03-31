@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -54,6 +54,20 @@ namespace iText.Commons.Json {
         /// <returns>json object fields</returns>
         public IDictionary<String, JsonValue> GetFields() {
             return new LinkedDictionary<String, JsonValue>(fields);
+        }
+
+        /// <summary>Gets particular json object field.</summary>
+        /// <param name="fieldName">
+        /// 
+        /// <see cref="System.String"/>
+        /// name of the field
+        /// </param>
+        /// <returns>
+        /// field as
+        /// <see cref="JsonValue"/>
+        /// </returns>
+        public JsonValue GetField(String fieldName) {
+            return fields.Get(fieldName);
         }
 
         /// <summary>Adds a new field into json object.</summary>

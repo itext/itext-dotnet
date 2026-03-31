@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -30,9 +30,6 @@ namespace iText.IO.Font.Otf {
     public class OtfReadCommonTest : ExtendedITextTest {
         private static readonly String RESOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf/OtfReadCommonTest/";
-
-        private static readonly String RESOURCE_FOLDER_2 = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/otf" + "/GposLookupType7Test/";
 
         [NUnit.Framework.Test]
         public virtual void TestReadCoverageFormat1() {

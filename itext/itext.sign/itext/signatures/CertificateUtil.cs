@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -144,11 +144,13 @@ namespace iText.Signatures {
         /// <summary>Retrieves the URL for the issuer certificate for the given CRL.</summary>
         /// <param name="crl">the CRL response</param>
         /// <returns>the URL or null.</returns>
+        [System.ObsoleteAttribute(@"use GetIssuerCertURLs(IX509Crl) instead")]
         public static String GetIssuerCertURL(IX509Crl crl) {
             IAsn1Object obj;
             try {
                 obj = GetExtensionValue(crl, FACTORY.CreateExtensions().GetAuthorityInfoAccess().GetId());
-                return GetValueFromAIAExtension(obj, OID.CA_ISSUERS);
+                IList<String> urls = GetValueFromAIAExtension(obj, OID.CA_ISSUERS);
+                return urls.IsEmpty() ? null : urls[0];
             }
             catch (System.IO.IOException) {
                 return null;
@@ -163,7 +165,9 @@ namespace iText.Signatures {
             IAsn1Object obj;
             try {
                 obj = GetExtensionValue(certificate, FACTORY.CreateExtensions().GetAuthorityInfoAccess().GetId());
-                return GetValueFromAIAExtension(obj, OID.OCSP);
+                IList<String> urls = GetValueFromAIAExtension(obj, OID.OCSP);
+                // For OCSP only one entry is allowed.
+                return urls.IsEmpty() ? null : urls[0];
             }
             catch (System.IO.IOException) {
                 return null;
@@ -174,14 +178,46 @@ namespace iText.Signatures {
         /// <summary>Retrieves the URL for the issuer lists certificates for the given certificate.</summary>
         /// <param name="certificate">the certificate</param>
         /// <returns>the URL or null.</returns>
+        [System.ObsoleteAttribute(@"use GetIssuerCertURLs(IX509Certificate) instead")]
         public static String GetIssuerCertURL(IX509Certificate certificate) {
             IAsn1Object obj;
             try {
                 obj = GetExtensionValue(certificate, FACTORY.CreateExtensions().GetAuthorityInfoAccess().GetId());
-                return GetValueFromAIAExtension(obj, OID.CA_ISSUERS);
+                IList<String> urls = GetValueFromAIAExtension(obj, OID.CA_ISSUERS);
+                return urls.IsEmpty() ? null : urls[0];
             }
             catch (System.IO.IOException) {
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Retrieves all URLs locations for issuer certificates for the given CRL.
+        /// </summary>
+        /// <param name="crl">the CRL response</param>
+        /// <returns>list of URL links</returns>
+        public static IList<String> GetIssuerCertURLs(IX509Crl crl) {
+            IAsn1Object obj;
+            try {
+                obj = GetExtensionValue(crl, FACTORY.CreateExtensions().GetAuthorityInfoAccess().GetId());
+                return GetValueFromAIAExtension(obj, OID.CA_ISSUERS);
+            } catch (Exception e) {
+                return JavaCollectionsUtil.EmptyList<String>();
+            }
+        }
+        
+        /// <summary>
+        /// Retrieves all URLs locations representing certificate issuers for the given certificate.
+        /// </summary>
+        /// <param name="crl">the certificate</param>
+        /// <returns>list of URL links</returns>
+        public static IList<String> GetIssuerCertURLs(IX509Certificate certificate) {
+            IAsn1Object obj;
+            try {
+                obj = GetExtensionValue(certificate, FACTORY.CreateExtensions().GetAuthorityInfoAccess().GetId());
+                return GetValueFromAIAExtension(obj, OID.CA_ISSUERS);
+            } catch (Exception e) {
+                return JavaCollectionsUtil.EmptyList<String>();
             }
         }
 
@@ -488,20 +524,21 @@ namespace iText.Signatures {
         /// <param name="extensionValue">Authority Information Access extension value</param>
         /// <param name="accessMethod">accessMethod OID; usually id-ad-caIssuers or id-ad-ocsp</param>
         /// <returns>the location (URI) of the information.</returns>
-        private static String GetValueFromAIAExtension(IAsn1Object extensionValue, String accessMethod) {
+        private static IList<String> GetValueFromAIAExtension(IAsn1Object extensionValue, String accessMethod) {
             if (extensionValue == null) {
-                return null;
+                return JavaCollectionsUtil.EmptyList<String>();
             }
             IAsn1Sequence accessDescriptions = FACTORY.CreateASN1Sequence(extensionValue);
+            IList<String> urls = new List<String>();
             for (int i = 0; i < accessDescriptions.Size(); i++) {
                 IAsn1Sequence accessDescription = FACTORY.CreateASN1Sequence(accessDescriptions.GetObjectAt(i));
                 IDerObjectIdentifier id = FACTORY.CreateASN1ObjectIdentifier(accessDescription.GetObjectAt(0));
                 if (accessDescription.Size() == 2 && id != null && accessMethod.Equals(id.GetId())) {
                     IAsn1Object description = FACTORY.CreateASN1Primitive(accessDescription.GetObjectAt(1));
-                    return GetStringFromGeneralName(description);
+                    urls.Add(GetStringFromGeneralName(description));
                 }
             }
-            return null;
+            return urls;
         }
 
         /// <summary>

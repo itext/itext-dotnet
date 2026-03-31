@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -95,7 +95,7 @@ namespace iText.Forms.Form.Renderer {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             InputFieldRenderer inputFieldRenderer = new InputFieldRenderer(new InputField(""));
             NUnit.Framework.Assert.IsNotNull(inputFieldRenderer.GetConformance(pdfDocument));
-            NUnit.Framework.Assert.IsFalse(inputFieldRenderer.GetConformance(pdfDocument).IsPdfAOrUa());
+            NUnit.Framework.Assert.IsFalse(inputFieldRenderer.GetConformance(pdfDocument).ConformsToAny());
         }
 
         [NUnit.Framework.Test]

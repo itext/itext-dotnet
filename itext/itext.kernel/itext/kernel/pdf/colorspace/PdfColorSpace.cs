@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
@@ -113,11 +114,23 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// <summary>
         /// Returns the
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
-        /// of the namespace
+        /// of the colorspace
+        /// </summary>
+        /// <returns>the PdfName of the colorspace</returns>
+        public virtual PdfName GetColorspaceName() {
+            return new PdfName(this.GetType().Name);
+        }
+
+        /// <summary>
+        /// Returns the
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// of the colorspace or in case separation color spaces
+        /// the separation color name.
         /// </summary>
         /// <returns>the PdfName of the namespace</returns>
+        [System.ObsoleteAttribute(@"in favour of GetColorspaceName()")]
         public virtual PdfName GetName() {
-            return new PdfName(this.GetType().Name);
+            return GetColorspaceName();
         }
     }
 }

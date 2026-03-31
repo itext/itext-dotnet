@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -127,7 +127,7 @@ namespace iText.Pdfua.Checkers {
 
                 case ValidationType.ANNOTATION: {
                     PdfAnnotationContext annotationContext = (PdfAnnotationContext)context;
-                    PdfUA2AnnotationChecker.CheckAnnotation(annotationContext.GetAnnotation(), this.context);
+                    new PdfUA2AnnotationChecker().CheckSingleAnnotation(annotationContext.GetAnnotation(), this.context);
                     break;
                 }
 
@@ -141,6 +141,19 @@ namespace iText.Pdfua.Checkers {
 
         public override bool IsPdfObjectReadyToFlush(PdfObject @object) {
             return false;
+        }
+
+        /// <summary>Gets the PDF/UA validation context which contains common information and utilities used for PDF/UA validation.
+        ///     </summary>
+        /// <returns>the PDF/UA validation context</returns>
+        protected internal virtual PdfUAValidationContext GetUAValidationContext() {
+            return context;
+        }
+
+        /// <summary>Gets the PDF document being validated.</summary>
+        /// <returns>the PDF document being validated</returns>
+        protected internal virtual PdfDocument GetPdfDocument() {
+            return pdfDocument;
         }
 
         /// <summary>
@@ -189,6 +202,138 @@ namespace iText.Pdfua.Checkers {
             }
         }
 
+        /// <summary>
+        /// Checks that the given PDF object and all its descendant objects recursively (if any) are compliant with PDF/UA-2
+        /// standard.
+        /// </summary>
+        /// <remarks>
+        /// Checks that the given PDF object and all its descendant objects recursively (if any) are compliant with PDF/UA-2
+        /// standard. The check is performed on all objects except for indirect objects.
+        /// </remarks>
+        /// <param name="obj">the PDF object to check</param>
+        protected internal virtual void CheckPdfObject(PdfObject obj) {
+            switch (obj.GetObjectType()) {
+                case PdfObject.STRING: {
+                    PdfUA2StringChecker.CheckPdfString((PdfString)obj);
+                    break;
+                }
+
+                case PdfObject.ARRAY: {
+                    CheckArrayRecursively((PdfArray)obj);
+                    break;
+                }
+
+                case PdfObject.DICTIONARY:
+                case PdfObject.STREAM: {
+                    CheckDictionaryRecursively((PdfDictionary)obj);
+                    break;
+                }
+            }
+        }
+
+        /// <summary>Validates document catalog dictionary against PDF/UA-2 standard.</summary>
+        /// <param name="catalog">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfCatalog"/>
+        /// document catalog dictionary to check
+        /// </param>
+        protected internal virtual void CheckCatalog(PdfCatalog catalog) {
+            CheckLang(catalog);
+            CheckMetadata(catalog);
+            CheckViewerPreferences(catalog);
+            CheckOCProperties(catalog.GetPdfObject().GetAsDictionary(PdfName.OCProperties));
+            CheckFormFieldsAndAnnotations(catalog);
+            PdfUA2EmbeddedFilesChecker.CheckEmbeddedFiles(catalog);
+        }
+
+        /// <summary>Validates all annotations and form fields present in the document against PDF/UA-2 standard.</summary>
+        /// <param name="catalog">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfCatalog"/>
+        /// to check form fields present in the acroform
+        /// </param>
+        protected internal virtual void CheckFormFieldsAndAnnotations(PdfCatalog catalog) {
+            PdfUA2FormChecker formChecker = new PdfUA2FormChecker(context);
+            formChecker.CheckFormFields(catalog.GetPdfObject().GetAsDictionary(PdfName.AcroForm));
+            formChecker.CheckWidgetAnnotations(this.pdfDocument);
+            PdfUA2LinkChecker.CheckLinkAnnotations(this.pdfDocument);
+            new PdfUA2AnnotationChecker().CheckAllAnnotations(this.pdfDocument);
+        }
+
+        /// <summary>Validates structure tree root dictionary against PDF/UA-2 standard.</summary>
+        /// <remarks>
+        /// Validates structure tree root dictionary against PDF/UA-2 standard.
+        /// <para />
+        /// Additionally, checks that within a given explicitly provided namespace, structure types are not role mapped to
+        /// other structure types in the same namespace. In the StructTreeRoot RoleMap there is no explicitly provided
+        /// namespace, that's why it is not checked.
+        /// </remarks>
+        /// <param name="structTreeRoot">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructTreeRoot"/>
+        /// structure tree root dictionary to check
+        /// </param>
+        protected internal virtual void CheckStructureTreeRoot(PdfStructTreeRoot structTreeRoot) {
+            IList<PdfNamespace> namespaces = structTreeRoot.GetNamespaces();
+            foreach (PdfNamespace @namespace in namespaces) {
+                PdfDictionary roleMap = @namespace.GetNamespaceRoleMap();
+                if (roleMap != null) {
+                    foreach (KeyValuePair<PdfName, PdfObject> entry in roleMap.EntrySet()) {
+                        String role = entry.Key.GetValue();
+                        IRoleMappingResolver roleMappingResolver = pdfDocument.GetTagStructureContext().GetRoleMappingResolver(role
+                            , @namespace);
+                        int i = 0;
+                        // Reasonably large arbitrary number that will help to avoid a possible infinite loop.
+                        int maxIters = 100;
+                        while (roleMappingResolver.ResolveNextMapping()) {
+                            if (++i > maxIters) {
+                                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Pdfua.Checkers.PdfUA2Checker));
+                                logger.LogError(MessageFormatUtil.Format(PdfUALogMessageConstants.CANNOT_RESOLVE_ROLE_IN_NAMESPACE_TOO_MUCH_TRANSITIVE_MAPPINGS
+                                    , role, @namespace));
+                                break;
+                            }
+                            PdfNamespace roleMapToNamespace = roleMappingResolver.GetNamespace();
+                            if (@namespace.GetNamespaceName().Equals(roleMapToNamespace.GetNamespaceName())) {
+                                throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.STRUCTURE_TYPE_IS_ROLE_MAPPED_TO_OTHER_STRUCTURE_TYPE_IN_THE_SAME_NAMESPACE
+                                    , @namespace.GetNamespaceName(), role));
+                            }
+                        }
+                    }
+                }
+            }
+            CreateTagTreeIterator(structTreeRoot).Traverse();
+        }
+
+        /// <summary>
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.Tagutils.TagTreeIterator"/>
+        /// responsible for validation of tag tree elements.
+        /// </summary>
+        /// <param name="structTreeRoot">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructTreeRoot"/>
+        /// to be validated
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Tagutils.TagTreeIterator"/>
+        /// responsible for validation of tag tree elements
+        /// </returns>
+        protected internal virtual TagTreeIterator CreateTagTreeIterator(PdfStructTreeRoot structTreeRoot) {
+            TagTreeIterator tagTreeIterator = new TagTreeIterator(structTreeRoot);
+            tagTreeIterator.AddHandler(new GraphicsCheckUtil.GraphicsHandler(context));
+            tagTreeIterator.AddHandler(new PdfUA2HeadingsChecker.PdfUA2HeadingHandler(context));
+            tagTreeIterator.AddHandler(new TableCheckUtil.TableHandler(context));
+            tagTreeIterator.AddHandler(new PdfUA2FormChecker.PdfUA2FormTagHandler(context));
+            tagTreeIterator.AddHandler(new PdfUA2AnnotationChecker.PdfUA2AnnotationHandler(context));
+            tagTreeIterator.AddHandler(new PdfUA2ListChecker.PdfUA2ListHandler(context));
+            tagTreeIterator.AddHandler(new PdfUA2NotesChecker.PdfUA2NotesHandler(context));
+            tagTreeIterator.AddHandler(new PdfUA2TableOfContentsChecker.PdfUA2TableOfContentsHandler(context));
+            tagTreeIterator.AddHandler(new PdfUA2FormulaChecker.PdfUA2FormulaTagHandler(context));
+            tagTreeIterator.AddHandler(new PdfUA2LinkChecker.PdfUA2LinkAnnotationHandler(context, pdfDocument));
+            return tagTreeIterator;
+        }
+
 //\cond DO_NOT_DOCUMENT
         /// <summary>
         /// For all non-symbolic TrueType fonts used for rendering, the embedded TrueType font program shall contain
@@ -221,26 +366,6 @@ namespace iText.Pdfua.Checkers {
         }
 //\endcond
 
-        private void CheckPdfObject(PdfObject obj) {
-            switch (obj.GetObjectType()) {
-                case PdfObject.STRING: {
-                    PdfUA2StringChecker.CheckPdfString((PdfString)obj);
-                    break;
-                }
-
-                case PdfObject.ARRAY: {
-                    CheckArrayRecursively((PdfArray)obj);
-                    break;
-                }
-
-                case PdfObject.DICTIONARY:
-                case PdfObject.STREAM: {
-                    CheckDictionaryRecursively((PdfDictionary)obj);
-                    break;
-                }
-            }
-        }
-
         private void CheckArrayRecursively(PdfArray array) {
             for (int i = 0; i < array.Size(); i++) {
                 PdfObject @object = array.Get(i, false);
@@ -257,90 +382,6 @@ namespace iText.Pdfua.Checkers {
                     CheckPdfObject(@object);
                 }
             }
-        }
-
-        /// <summary>Validates document catalog dictionary against PDF/UA-2 standard.</summary>
-        /// <param name="catalog">
-        /// 
-        /// <see cref="iText.Kernel.Pdf.PdfCatalog"/>
-        /// document catalog dictionary to check
-        /// </param>
-        private void CheckCatalog(PdfCatalog catalog) {
-            CheckLang(catalog);
-            CheckMetadata(catalog);
-            CheckViewerPreferences(catalog);
-            CheckOCProperties(catalog.GetPdfObject().GetAsDictionary(PdfName.OCProperties));
-            CheckFormFieldsAndAnnotations(catalog);
-            PdfUA2EmbeddedFilesChecker.CheckEmbeddedFiles(catalog);
-        }
-
-        /// <summary>Validates all annotations and form fields present in the document against PDF/UA-2 standard.</summary>
-        /// <param name="catalog">
-        /// 
-        /// <see cref="iText.Kernel.Pdf.PdfCatalog"/>
-        /// to check form fields present in the acroform
-        /// </param>
-        private void CheckFormFieldsAndAnnotations(PdfCatalog catalog) {
-            PdfUA2FormChecker formChecker = new PdfUA2FormChecker(context);
-            formChecker.CheckFormFields(catalog.GetPdfObject().GetAsDictionary(PdfName.AcroForm));
-            formChecker.CheckWidgetAnnotations(this.pdfDocument);
-            PdfUA2LinkChecker.CheckLinkAnnotations(this.pdfDocument);
-            PdfUA2AnnotationChecker.CheckAnnotations(this.pdfDocument);
-        }
-
-        /// <summary>Validates structure tree root dictionary against PDF/UA-2 standard.</summary>
-        /// <remarks>
-        /// Validates structure tree root dictionary against PDF/UA-2 standard.
-        /// <para />
-        /// Additionally, checks that within a given explicitly provided namespace, structure types are not role mapped to
-        /// other structure types in the same namespace. In the StructTreeRoot RoleMap there is no explicitly provided
-        /// namespace, that's why it is not checked.
-        /// </remarks>
-        /// <param name="structTreeRoot">
-        /// 
-        /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructTreeRoot"/>
-        /// structure tree root dictionary to check
-        /// </param>
-        private void CheckStructureTreeRoot(PdfStructTreeRoot structTreeRoot) {
-            IList<PdfNamespace> namespaces = structTreeRoot.GetNamespaces();
-            foreach (PdfNamespace @namespace in namespaces) {
-                PdfDictionary roleMap = @namespace.GetNamespaceRoleMap();
-                if (roleMap != null) {
-                    foreach (KeyValuePair<PdfName, PdfObject> entry in roleMap.EntrySet()) {
-                        String role = entry.Key.GetValue();
-                        IRoleMappingResolver roleMappingResolver = pdfDocument.GetTagStructureContext().GetRoleMappingResolver(role
-                            , @namespace);
-                        int i = 0;
-                        // Reasonably large arbitrary number that will help to avoid a possible infinite loop.
-                        int maxIters = 100;
-                        while (roleMappingResolver.ResolveNextMapping()) {
-                            if (++i > maxIters) {
-                                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Pdfua.Checkers.PdfUA2Checker));
-                                logger.LogError(MessageFormatUtil.Format(PdfUALogMessageConstants.CANNOT_RESOLVE_ROLE_IN_NAMESPACE_TOO_MUCH_TRANSITIVE_MAPPINGS
-                                    , role, @namespace));
-                                break;
-                            }
-                            PdfNamespace roleMapToNamespace = roleMappingResolver.GetNamespace();
-                            if (@namespace.GetNamespaceName().Equals(roleMapToNamespace.GetNamespaceName())) {
-                                throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.STRUCTURE_TYPE_IS_ROLE_MAPPED_TO_OTHER_STRUCTURE_TYPE_IN_THE_SAME_NAMESPACE
-                                    , @namespace.GetNamespaceName(), role));
-                            }
-                        }
-                    }
-                }
-            }
-            TagTreeIterator tagTreeIterator = new TagTreeIterator(structTreeRoot);
-            tagTreeIterator.AddHandler(new GraphicsCheckUtil.GraphicsHandler(context));
-            tagTreeIterator.AddHandler(new PdfUA2HeadingsChecker.PdfUA2HeadingHandler(context));
-            tagTreeIterator.AddHandler(new TableCheckUtil.TableHandler(context));
-            tagTreeIterator.AddHandler(new PdfUA2FormChecker.PdfUA2FormTagHandler(context));
-            tagTreeIterator.AddHandler(new PdfUA2AnnotationChecker.PdfUA2AnnotationHandler(context));
-            tagTreeIterator.AddHandler(new PdfUA2ListChecker.PdfUA2ListHandler(context));
-            tagTreeIterator.AddHandler(new PdfUA2NotesChecker.PdfUA2NotesHandler(context));
-            tagTreeIterator.AddHandler(new PdfUA2TableOfContentsChecker.PdfUA2TableOfContentsHandler(context));
-            tagTreeIterator.AddHandler(new PdfUA2FormulaChecker.PdfUA2FormulaTagHandler(context));
-            tagTreeIterator.AddHandler(new PdfUA2LinkChecker.PdfUA2LinkAnnotationHandler(context, pdfDocument));
-            tagTreeIterator.Traverse();
         }
     }
 }

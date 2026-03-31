@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -521,7 +521,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <param name="document">to check conformance, e.g. for PDF/UA-1, only Link role is allowed.</param>
         /// <returns>link annotation tag role</returns>
         public virtual String GetRoleBasedOnDestination(PdfDocument document) {
-            if (document != null && PdfUAConformance.PDF_UA_1 == document.GetConformance().GetUAConformance()) {
+            if (document != null && document.GetConformance().ConformsTo(PdfUAConformance.PDF_UA_1)) {
                 return StandardRoles.LINK;
             }
             PdfObject dest = null;

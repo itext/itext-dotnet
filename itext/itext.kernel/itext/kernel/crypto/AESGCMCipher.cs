@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -85,14 +85,12 @@ namespace iText.Kernel.Crypto {
         /// <param name="len">the input length</param>
         /// <returns>the new buffer with the result</returns>
         public virtual byte[] Update(byte[] b, int off, int len) {
-            byte[] cipherBuffer = new byte[cipher.GetUpdateOutputSize(len)];
             try {
-                cipher.ProcessBytes(b, off, len, cipherBuffer, 0);
+                return cipher.ProcessBytes(b, off, len);
             }
-            catch (AbstractGeneralSecurityException e) {
+            catch (Exception e) {
                 throw new PdfException(KernelExceptionMessageConstant.PDF_ENCRYPTION, e);
             }
-            return cipherBuffer;
         }
 
         /// <summary>
@@ -102,10 +100,8 @@ namespace iText.Kernel.Crypto {
         /// </summary>
         /// <returns>final bytes array</returns>
         public virtual byte[] DoFinal() {
-            byte[] cipherBuffer = new byte[cipher.GetOutputSize(0)];
             try {
-                cipher.DoFinal(cipherBuffer, 0);
-                return cipherBuffer;
+                return cipher.DoFinal();
             }
             catch (AbstractGeneralSecurityException e) {
                 throw new PdfException(KernelExceptionMessageConstant.PDF_ENCRYPTION, e);

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -39,5 +39,17 @@ namespace iText.Commons.Bouncycastle.Asn1.X509 {
         /// wrapped AlgorithmIdentifier.
         /// </returns>
         IAlgorithmIdentifier GetAlgorithm();
+
+        /// <summary>
+        /// Calls actual
+        /// <c>getPublicKeyData</c>
+        /// method for the wrapped SubjectPublicKeyInfo object.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Commons.Bouncycastle.Asn1.IDerBitString"/>
+        /// wrapped ASN1 Bit String representing public key data.
+        /// </returns>
+        IDerBitString GetPublicKeyData();
     }
 }

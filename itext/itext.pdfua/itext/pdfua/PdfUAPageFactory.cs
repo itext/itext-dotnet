@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -20,28 +20,14 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Pdfua.Checkers;
 
 namespace iText.Pdfua {
-//\cond DO_NOT_DOCUMENT
     /// <summary>The class implements PDF page factory which is used for creating correct PDF/UA documents.</summary>
-    internal class PdfUAPageFactory : IPdfPageFactory {
+    public class PdfUAPageFactory : IPdfPageFactory {
         private readonly PdfUAChecker checker;
-
-        /// <summary>
-        /// Instantiates a new
-        /// <see cref="PdfUAPageFactory"/>
-        /// instance based on
-        /// <see cref="iText.Pdfua.Checkers.PdfUA1Checker"/>.
-        /// </summary>
-        /// <param name="checker">the PDF/UA checker</param>
-        [System.ObsoleteAttribute(@"in favour of PdfUAPageFactory(iText.Pdfua.Checkers.PdfUAChecker)")]
-        public PdfUAPageFactory(PdfUA1Checker checker) {
-            this.checker = checker;
-        }
 
         /// <summary>
         /// Instantiates a new
@@ -61,7 +47,12 @@ namespace iText.Pdfua {
         /// <see cref="iText.Kernel.Pdf.PdfPage"/>
         /// will be based
         /// </param>
-        /// <returns>The pdf page.</returns>
+        /// <returns>
+        /// The
+        /// <see cref="iText.Kernel.Pdf.PdfPage"/>
+        /// based on the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// </returns>
         public virtual PdfPage CreatePdfPage(PdfDictionary pdfObject) {
             return new PdfUAPage(pdfObject, checker);
         }
@@ -76,10 +67,16 @@ namespace iText.Pdfua {
         /// <see cref="iText.Kernel.Geom.PageSize"/>
         /// of the created page
         /// </param>
-        /// <returns>The Pdf page.</returns>
+        /// <returns>
+        /// The
+        /// <see cref="iText.Kernel.Pdf.PdfPage"/>
+        /// based on the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// and
+        /// <see cref="iText.Kernel.Geom.PageSize"/>
+        /// </returns>
         public virtual PdfPage CreatePdfPage(PdfDocument pdfDocument, PageSize pageSize) {
             return new PdfUAPage(pdfDocument, pageSize, checker);
         }
     }
-//\endcond
 }

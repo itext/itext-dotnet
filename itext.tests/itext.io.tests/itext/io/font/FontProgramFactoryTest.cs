@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -28,8 +28,8 @@ using iText.Test;
 namespace iText.IO.Font {
     [NUnit.Framework.Category("IntegrationTest")]
     public class FontProgramFactoryTest : ExtendedITextTest {
-        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/io/font/FontProgramFactoryTest/";
+        private static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/font/";
 
         [NUnit.Framework.Test]
         public virtual void CreateRegisteredFontTest() {
@@ -50,7 +50,7 @@ namespace iText.IO.Font {
 
         [NUnit.Framework.Test]
         public virtual void CreateTrueTypeWoffFontTest() {
-            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "SourceSerif4-Black.woff"));
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONT_FOLDER + "SourceSerif4-Black.woff"));
             TrueTypeFont woffFont = FontProgramFactory.CreateTrueTypeFont(fontBytes, false);
             NUnit.Framework.Assert.IsNotNull(woffFont);
             NUnit.Framework.Assert.AreEqual(1463, woffFont.bBoxes.Length);
@@ -58,10 +58,10 @@ namespace iText.IO.Font {
 
         [NUnit.Framework.Test]
         public virtual void TryToCreateTrueTypeWoff2FontTest() {
-            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "valid.woff2"));
+            byte[] fontBytes = File.ReadAllBytes(System.IO.Path.Combine(FONT_FOLDER + "BellefairRegularLatin.woff2"));
             TrueTypeFont woff2Font = FontProgramFactory.CreateTrueTypeFont(fontBytes, false);
             NUnit.Framework.Assert.IsNotNull(woff2Font);
-            NUnit.Framework.Assert.AreEqual(4, woff2Font.CountOfGlyphs());
+            NUnit.Framework.Assert.AreEqual(209, woff2Font.CountOfGlyphs());
         }
     }
 }

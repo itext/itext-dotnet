@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -45,8 +45,8 @@ namespace iText.Commons.Actions.Contexts {
                 .Singleton(ProductNameConstant.PDF_SWEEP));
             local.RegisterGenericContext(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_OCR_TESSERACT4), JavaCollectionsUtil
                 .Singleton(ProductNameConstant.PDF_OCR_TESSERACT4));
-            local.RegisterGenericContext(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_OCR_ONNXTR), JavaCollectionsUtil
-                .Singleton(ProductNameConstant.PDF_OCR_ONNXTR));
+            local.RegisterGenericContext(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_OCR_ONNX), JavaCollectionsUtil
+                .Singleton(ProductNameConstant.PDF_OCR_ONNX));
             INSTANCE = local;
         }
 

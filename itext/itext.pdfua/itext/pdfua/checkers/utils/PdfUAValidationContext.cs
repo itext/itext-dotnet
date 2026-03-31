@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -48,8 +48,8 @@ namespace iText.Pdfua.Checkers.Utils {
         }
 
         /// <summary>Resolves the node's role to a standard role.</summary>
-        /// <param name="node">The node you want to resolve the standard role for.</param>
-        /// <returns>The role.</returns>
+        /// <param name="node">The node you want to resolve the standard role for</param>
+        /// <returns>The role</returns>
         public virtual String ResolveToStandardRole(IStructureNode node) {
             if (node == null) {
                 return null;
@@ -98,12 +98,12 @@ namespace iText.Pdfua.Checkers.Utils {
         /// Note: This  method will not check recursive mapping. So either the node's role is the provided role,
         /// or the standard role is the provided role. So we do not take into account the roles in between the mappings.
         /// </remarks>
-        /// <param name="role">The role we want to check against.</param>
-        /// <param name="structureNode">The structure node we want to check.</param>
+        /// <param name="role">The role we want to check against</param>
+        /// <param name="structureNode">The structure node we want to check</param>
         /// <returns>
         /// The
         /// <see cref="iText.Kernel.Pdf.Tagging.PdfStructElem"/>
-        /// if the role matches.
+        /// if the role matches
         /// </returns>
         public virtual PdfStructElem GetElementIfRoleMatches(PdfName role, IStructureNode structureNode) {
             if (structureNode == null) {
@@ -148,7 +148,12 @@ namespace iText.Pdfua.Checkers.Utils {
         /// value
         /// </returns>
         public virtual PdfUAConformance GetUAConformance() {
-            return this.pdfDocument.GetConformance().GetUAConformance();
+            PdfUAConformance uaConformance = this.pdfDocument.GetConformance().GetUAConformance();
+            if (uaConformance == null) {
+                // In case of WTPDF being set, checkers should behave as if UA-2 is set.
+                return !this.pdfDocument.GetConformance().IsWtpdf() ? null : PdfUAConformance.PDF_UA_2;
+            }
+            return uaConformance;
         }
     }
 }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -35,8 +35,8 @@ namespace iText.Pdfua.Checkers.Utils.Tables {
         /// <see cref="StructTreeResultMatrix"/>
         /// instance.
         /// </summary>
-        /// <param name="elem">a table structure element.</param>
-        /// <param name="context">The validation context.</param>
+        /// <param name="elem">a table structure element</param>
+        /// <param name="context">The validation context</param>
         public StructTreeResultMatrix(PdfStructElem elem, PdfUAValidationContext context)
             : base(new TableStructElementIterator(elem, context), context.GetUAConformance()) {
         }

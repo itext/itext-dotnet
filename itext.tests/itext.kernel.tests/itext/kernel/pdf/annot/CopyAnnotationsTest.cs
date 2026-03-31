@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -193,6 +193,20 @@ namespace iText.Kernel.Pdf.Annot {
             }
             IList<PdfAnnotation> annotations = GetAnnotationsFromPdf(outFile, 1);
             NUnit.Framework.Assert.IsTrue(annotations.IsEmpty(), "Annotation is copied");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NamedIndirectDestTest() {
+            String outFile = DESTINATION_FOLDER + "namedIndirectDest.pdf";
+            String inFile = SOURCE_FOLDER + "namedIndirectDest.pdf";
+            using (PdfDocument @out = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile))) {
+                using (PdfDocument input = new PdfDocument(new PdfReader(inFile))) {
+                    input.CopyPagesTo(1, 1, @out);
+                }
+            }
+            IList<PdfAnnotation> annotations = GetAnnotationsFromPdf(outFile, 1);
+            NUnit.Framework.Assert.IsFalse(annotations.IsEmpty());
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, inFile, DESTINATION_FOLDER));
         }
 
         private IList<PdfAnnotation> GetAnnotationsFromPdf(String outFilePath, int pageNumber) {

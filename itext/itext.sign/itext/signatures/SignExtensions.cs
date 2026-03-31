@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -71,7 +71,13 @@ namespace iText.Signatures {
 
             return r;
         }
-        
+
+        public static void ForEach<T>(this IList<T> collection, Action<T> action) {
+            foreach (T element in collection) {
+                action(element);
+            }
+        }
+
         public static void RemoveIf<T>(this ICollection<T> collection, Func<T, bool> predicate) {
             T element;
             for (int i = 0; i < collection.Count; i++) {

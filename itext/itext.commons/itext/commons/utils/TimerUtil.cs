@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -28,7 +28,7 @@ namespace iText.Commons.Utils {
     public class TimerUtil {
         /// <summary>Creates a new Timer instance.</summary>
         /// <returns>a new Timer instance</returns>
-        public static Timer NewTimerWithRecurringTask(Action task, long delay, long period) {
+        public static Timer NewTimerWithRecurringTask(System.Action task, long delay, long period) {
             Timer timer = new Timer((state) => { task(); }, null, delay, period);
             return timer;
         }

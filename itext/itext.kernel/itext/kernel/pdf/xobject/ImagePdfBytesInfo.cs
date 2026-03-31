@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -92,7 +92,7 @@ namespace iText.Kernel.Pdf.Xobject {
         public virtual byte[] GetProcessedImageData(byte[] intialBytes) {
             if (channels > 1 && colorDepth != 8 && colorDepth != 16) {
                 throw new iText.IO.Exceptions.IOException(KernelExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_COLORSPACE
-                    ).SetMessageParams(colorDepth, sourceColorSpace.GetName());
+                    ).SetMessageParams(colorDepth, sourceColorSpace.GetColorspaceName());
             }
             byte[] data = PdfReader.DecodeBytes(intialBytes, imageXObject.GetPdfObject());
             if (decodeArray != null && !IsNeutralDecodeArray(decodeArray)) {
@@ -188,14 +188,16 @@ namespace iText.Kernel.Pdf.Xobject {
                     switch (((PdfName)csArray.Get(0)).GetValue()) {
                         case "Indexed": {
                             palette = new ImagePdfBytesInfo.Palette(csArray, colorDepth);
-                            long color0 = IsPaletteBlackAndWhite(palette);
-                            if (colorDepth == 1 && color0 >= 0) {
-                                targetColorSpace = new PdfDeviceCs.Gray();
-                                if (color0 == 1 && decodeArray == null) {
-                                    decodeArray = new double[] { 1.0, 0.0 };
+                            if (colorDepth == 1 && palette.GetPaletteSize() == 2) {
+                                long color0 = IsPaletteBlackAndWhite(palette);
+                                if (color0 >= 0) {
+                                    targetColorSpace = new PdfDeviceCs.Gray();
+                                    if (color0 == 1 && decodeArray == null) {
+                                        decodeArray = new double[] { 1.0, 0.0 };
+                                    }
+                                    palette = null;
+                                    break;
                                 }
-                                palette = null;
-                                break;
                             }
                             if ((properties.IsApplyTransparency() && alphaChannel) || palette.GetBaseColorspace().GetNumberOfComponents
                                 () == 1) {
@@ -217,13 +219,14 @@ namespace iText.Kernel.Pdf.Xobject {
                             if (properties.IsApplyTintTransformations()) {
                                 colorTransformations.Add(separationCs.GetTintTransformation());
                                 targetColorSpace = separationCs.GetBaseCs();
-                                if (targetColorSpace.GetName() != PdfName.DeviceRGB && targetColorSpace.GetName() != PdfName.CalRGB) {
+                                if (targetColorSpace.GetColorspaceName() != PdfName.DeviceRGB && targetColorSpace.GetColorspaceName() != PdfName
+                                    .CalRGB) {
                                     throw new NotSupportedException(KernelExceptionMessageConstant.GET_IMAGEBYTES_FOR_SEPARATION_COLOR_ONLY_SUPPORTS_RGB
                                         );
                                 }
                                 if (colorDepth < 8) {
                                     throw new iText.IO.Exceptions.IOException(KernelExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_SEPARATION_ALTERNATE_COLORSPACE
-                                        ).SetMessageParams(colorDepth, targetColorSpace.GetName());
+                                        ).SetMessageParams(colorDepth, targetColorSpace.GetColorspaceName());
                                 }
                             }
                             else {
@@ -265,38 +268,6 @@ namespace iText.Kernel.Pdf.Xobject {
                     channels = targetColorSpace.GetNumberOfComponents();
                 }
             }
-        }
-
-        private static long IsPaletteBlackAndWhite(ImagePdfBytesInfo.Palette palette) {
-            // more than 2 values
-            if (palette.GetHiVal() > 1) {
-                return -1;
-            }
-            long color0 = -1;
-            for (int c = 0; c < palette.GetBaseColorspace().GetNumberOfComponents(); c++) {
-                for (int i = 0; i < 2; i++) {
-                    switch ((int)palette.GetColor(i)[c]) {
-                        case 0: {
-                            if (i == 0) {
-                                color0 = 0;
-                            }
-                            break;
-                        }
-
-                        case 0xff: {
-                            if (i == 0) {
-                                color0 = 1;
-                            }
-                            break;
-                        }
-
-                        default: {
-                            return -1;
-                        }
-                    }
-                }
-            }
-            return color0;
         }
 
         private byte[] Applytransparency(byte[] imageData) {
@@ -342,6 +313,38 @@ namespace iText.Kernel.Pdf.Xobject {
             return imagePixels.GetData();
         }
 
+        private static long IsPaletteBlackAndWhite(ImagePdfBytesInfo.Palette palette) {
+            // more than 2 values
+            if (palette.GetHiVal() > 1) {
+                return -1;
+            }
+            long color0 = -1;
+            for (int c = 0; c < palette.GetBaseColorspace().GetNumberOfComponents(); c++) {
+                for (int i = 0; i < 2 && i < palette.GetPaletteSize(); i++) {
+                    switch ((int)palette.GetColor(i)[c]) {
+                        case 0: {
+                            if (i == 0) {
+                                color0 = 0;
+                            }
+                            break;
+                        }
+
+                        case 0xff: {
+                            if (i == 0) {
+                                color0 = 1;
+                            }
+                            break;
+                        }
+
+                        default: {
+                            return -1;
+                        }
+                    }
+                }
+            }
+            return color0;
+        }
+
         public enum OutputFileType {
             TIFF,
             PNG
@@ -355,6 +358,10 @@ namespace iText.Kernel.Pdf.Xobject {
             GRAYSCALE_ALPHA,
             INVALID_5,
             RGBA
+        }
+
+        private interface ImageProcesser {
+            byte[] ProcessImage();
         }
 
         private class Palette {
@@ -413,10 +420,10 @@ namespace iText.Kernel.Pdf.Xobject {
             public virtual int GetHiVal() {
                 return hiVal;
             }
-        }
 
-        private interface ImageProcesser {
-            byte[] ProcessImage();
+            public virtual int GetPaletteSize() {
+                return paletteData.Length / paletteChannels;
+            }
         }
 
         private class TiffImageProcessor : ImagePdfBytesInfo.ImageProcesser {

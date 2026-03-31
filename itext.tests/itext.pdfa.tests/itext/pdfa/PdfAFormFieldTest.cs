@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -47,13 +47,15 @@ using iText.Test.Attributes;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfAFormFieldTest : ExtendedITextTest {
-        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
-        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfa/PdfAFormFieldTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfa/PdfAFormFieldTest/";
+
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/fonts/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -70,9 +72,9 @@ namespace iText.Pdfa {
                 PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB ICC preference", @is));
             PageSize pageSize = PageSize.LETTER;
             Document doc = new Document(pdf, pageSize);
-            PdfFontFactory.Register(SOURCE_FOLDER + "FreeSans.ttf", SOURCE_FOLDER + "FreeSans.ttf");
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.
-                PREFER_EMBEDDED);
+            PdfFontFactory.Register(FONTS_FOLDER + "FreeSans.ttf", FONTS_FOLDER + "FreeSans.ttf");
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                );
             PdfButtonFormField group = new RadioFormFieldBuilder(pdf, "group").SetConformance(PdfConformance.PDF_A_1B)
                 .CreateRadioGroup();
             group.SetValue("");
@@ -126,7 +128,6 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void PdfA1DocWithPdfA1CheckBoxFieldTest() {
             String name = "pdfA1DocWithPdfA1CheckBoxField";
@@ -144,14 +145,13 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY)]
         public virtual void PdfA1DocWithPdfA1ChoiceFieldTest() {
             String name = "pdfA1DocWithPdfA1ChoiceField";
             String fileName = DESTINATION_FOLDER + name + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1ChoiceField.pdf";
-            PdfFont fontFreeSans = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont fontFreeSans = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfConformance conformance = PdfConformance.PDF_A_1B;
@@ -170,13 +170,12 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void PdfA1DocWithPdfA1ComboBoxFieldTest() {
             String name = "pdfA1DocWithPdfA1ComboBoxField";
             String fileName = DESTINATION_FOLDER + name + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1ComboBoxField.pdf";
-            PdfFont fontCJK = PdfFontFactory.CreateFont(SOURCE_FOLDER + "NotoSansCJKtc-Light.otf", PdfEncodings.IDENTITY_H
+            PdfFont fontCJK = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoSansCJKtc-Light.otf", PdfEncodings.IDENTITY_H
                 , PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfConformance conformance = PdfConformance.PDF_A_1B;
@@ -193,13 +192,12 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void PdfA1DocWithPdfA1ListFieldTest() {
             String name = "pdfA1DocWithPdfA1ListField";
             String fileName = DESTINATION_FOLDER + name + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1ListField.pdf";
-            PdfFont fontFreeSans = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont fontFreeSans = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfConformance conformance = PdfConformance.PDF_A_1B;
@@ -220,13 +218,12 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void PdfA1DocWithPdfA1PushButtonFieldTest() {
             String name = "pdfA1DocWithPdfA1PushButtonField";
             String fileName = DESTINATION_FOLDER + name + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1PushButtonField.pdf";
-            PdfFont fontFreeSans = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont fontFreeSans = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfConformance conformance = PdfConformance.PDF_A_1B;
@@ -242,7 +239,6 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void PdfA1DocWithPdfA1RadioButtonFieldTest() {
             String name = "pdfA1DocWithPdfA1RadioButtonField";
@@ -270,13 +266,12 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void PdfA1DocWithPdfA1TextFieldTest() {
             String name = "pdfA1DocWithPdfA1TextField";
             String fileName = DESTINATION_FOLDER + name + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1TextField.pdf";
-            PdfFont fontFreeSans = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont fontFreeSans = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             fontFreeSans.SetSubset(false);
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
@@ -293,13 +288,12 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void PdfA1DocWithPdfA1SignatureFieldTest() {
             String name = "pdfA1DocWithPdfA1SignatureField";
             String fileName = DESTINATION_FOLDER + name + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_pdfA1DocWithPdfA1SignatureField.pdf";
-            PdfFont fontFreeSans = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont fontFreeSans = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             fontFreeSans.SetSubset(false);
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
@@ -316,7 +310,6 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void MergePdfADocWithFormTest() {
             String fileName = DESTINATION_FOLDER + "pdfADocWithTextFormField.pdf";
@@ -325,7 +318,7 @@ namespace iText.Pdfa {
                 using (PdfADocument pdfDoc = new PdfADocument(new PdfWriter(fileName), PdfAConformance.PDF_A_1B, new PdfOutputIntent
                     ("Custom", "", "http://www.color.org", "sRGB ICC preference", @is))) {
                     using (Document doc = new Document(pdfDoc)) {
-                        PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfEncodings.WINANSI);
+                        PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", PdfEncodings.WINANSI);
                         doc.Add(new Paragraph(new Text("Some text").SetFont(font).SetFontSize(10)));
                         PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
                         PdfFormField field = new TextFormFieldBuilder(pdfDoc, "text").SetWidgetRectangle(new Rectangle(150, 100, 100
@@ -337,7 +330,6 @@ namespace iText.Pdfa {
                 }
             }
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(fileName));
-            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
             PdfADocument pdfDocToMerge;
             using (Stream is_1 = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm")) {
                 using (PdfDocument newDoc = new PdfDocument(new PdfReader(fileName))) {
@@ -349,7 +341,6 @@ namespace iText.Pdfa {
             pdfDocToMerge.Close();
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_mergePdfADocWithForm.pdf";
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(mergedDocFileName));
-            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(mergedDocFileName, cmp, DESTINATION_FOLDER
                 , "diff_"));
         }
@@ -420,7 +411,7 @@ namespace iText.Pdfa {
         public virtual void TestMultipleCombinationsFontOnFieldSeparate() {
             String outPdf = DESTINATION_FOLDER + "testMultipleCombinations.pdf";
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_testMultipleCombinations.pdf";
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             MakePdfDocument(outPdf, cmp, (document) => {
                 foreach (Func<IFormField> formFieldSupplier in GenerateFormFields()) {
@@ -441,7 +432,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void TestMultipleCombinationsWriteAndReload() {
             String outPdf = DESTINATION_FOLDER + "testMultipleCombinationsWriteAndLoad1.pdf";
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             MakePdfDocument(outPdf, null, ((document) => {
                 foreach (Func<IFormField> formFieldSupplier in GenerateFormFields()) {
@@ -469,12 +460,11 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf2));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void TestMultipleCombinationsOnDocument() {
             String outPdf = DESTINATION_FOLDER + "testMultipleCombinationsOnDocument.pdf";
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_testMultipleCombinationsOnDocument.pdf";
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             MakePdfDocument(outPdf, cmp, ((document) => {
                 document.SetFont(font);
@@ -497,7 +487,7 @@ namespace iText.Pdfa {
         public virtual void TestMultipleCombinationsFontOnFieldSeparateNonInteractive() {
             String outPdf = DESTINATION_FOLDER + "testMultipleCombinationsNonInteractive.pdf";
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_testMultipleCombinationsNonInteractive.pdf";
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             MakePdfDocument(outPdf, cmp, ((document) => {
                 foreach (Func<IFormField> formFieldSupplier in GenerateFormFields()) {
@@ -519,7 +509,7 @@ namespace iText.Pdfa {
         public virtual void TestMultipleCombinationsOnDocumentNonInteractive() {
             String outPdf = DESTINATION_FOLDER + "testMultipleCombinationsOnDocumentNonInteractive.pdf";
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_testMultipleCombinationsOnDocumentNonInteractive.pdf";
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             MakePdfDocument(outPdf, cmp, ((document) => {
                 document.SetFont(font);
@@ -543,7 +533,7 @@ namespace iText.Pdfa {
             String simplePdf = DESTINATION_FOLDER + "simplePdfAWithFormfield.pdf";
             String outPdf = DESTINATION_FOLDER + "testCopyPagesDoesntEmbedHelveticaFont.pdf";
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_testCopyPagesDoesntEmbedHelveticaFont.pdf";
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfWriter writer = new PdfWriter(simplePdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4E, new PdfOutputIntent("Custom", "", "http://www.color.org"
@@ -562,7 +552,6 @@ namespace iText.Pdfa {
             docToCopy.Close();
             doc2.Close();
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
-            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmp, DESTINATION_FOLDER, "diff_")
                 );
         }
@@ -572,7 +561,7 @@ namespace iText.Pdfa {
             String name = "pdfASignatureFieldTestWithText";
             String fileName = DESTINATION_FOLDER + name + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp/PdfAFormFieldTest/cmp_" + name + ".pdf";
-            PdfFont fontFreeSans = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont fontFreeSans = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             MakePdfDocument(fileName, cmp, (pdfDoc) => {
                 SignatureFieldAppearance signatureFieldAppearance = new SignatureFieldAppearance("Signature1");
@@ -606,7 +595,6 @@ namespace iText.Pdfa {
                 return;
             }
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
-            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmp, DESTINATION_FOLDER));
         }
 

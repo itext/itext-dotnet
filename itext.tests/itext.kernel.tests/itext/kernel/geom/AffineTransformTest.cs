@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -326,6 +326,14 @@ namespace iText.Kernel.Geom {
             float[] dest = new float[6];
             affineTransform.InverseTransform(src, 1, dest, 1, 2);
             iText.Test.TestUtil.AreEqual(expected, dest, 0);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetMatrixNoArgumentTest() {
+            float[] expected = new float[] { 0f, 1f, 2f, 3f, 4f, 5f };
+            AffineTransform affineTransform = new AffineTransform(expected);
+            float[] result = affineTransform.GetMatrix();
+            iText.Test.TestUtil.AreEqual(expected, result, 0);
         }
     }
 }

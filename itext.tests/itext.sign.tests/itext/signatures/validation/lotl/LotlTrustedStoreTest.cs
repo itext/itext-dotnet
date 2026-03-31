@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -227,7 +227,7 @@ namespace iText.Signatures.Validation.Lotl {
             ValidatorChainBuilder chainBuilder = new ValidatorChainBuilder();
             chainBuilder.TrustEuropeanLotl(true);
             LotlFetchingProperties fetchingProperties = new LotlFetchingProperties(new RemoveOnFailingCountryData());
-            using (LotlService lotlService = new LotlService(fetchingProperties)) {
+            using (LotlService lotlService = new EuropeanLotlService(fetchingProperties)) {
                 lotlService.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
                 chainBuilder.WithLotlService(() => lotlService);
                 lotlService.InitializeCache();
@@ -241,7 +241,7 @@ namespace iText.Signatures.Validation.Lotl {
             ValidatorChainBuilder chainBuilder = new ValidatorChainBuilder();
             chainBuilder.TrustEuropeanLotl(true);
             LotlFetchingProperties fetchingProperties = new LotlFetchingProperties(new RemoveOnFailingCountryData());
-            using (LotlService lotlService = new LotlService(fetchingProperties)) {
+            using (LotlService lotlService = new EuropeanLotlService(fetchingProperties)) {
                 lotlService.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
                 chainBuilder.WithLotlService(() => lotlService);
                 lotlService.InitializeCache();

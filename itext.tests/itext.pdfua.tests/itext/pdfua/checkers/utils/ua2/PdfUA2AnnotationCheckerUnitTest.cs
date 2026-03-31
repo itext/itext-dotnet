@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -42,7 +42,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
                  });
             PdfStructElem parent = new PdfStructElem(null, PdfName.Div);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
-                PdfUA2AnnotationChecker.CheckAnnotation(lineAnnotation.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(lineAnnotation.GetPdfObject(), parent);
             }
             );
             NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.MARKUP_ANNOT_IS_NOT_TAGGED_AS_ANNOT, e.Message
@@ -55,7 +55,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
                  });
             PdfStructElem parent = new PdfStructElem(null, PdfName.Annot);
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                PdfUA2AnnotationChecker.CheckAnnotation(lineAnnotation.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(lineAnnotation.GetPdfObject(), parent);
             }
             );
         }
@@ -65,7 +65,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             PdfSquareAnnotation squareAnnotation = new PdfSquareAnnotation(new Rectangle(0, 0, 100, 100));
             PdfStructElem parent = new PdfStructElem(null, PdfName.Annot);
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                PdfUA2AnnotationChecker.CheckAnnotation(squareAnnotation.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(squareAnnotation.GetPdfObject(), parent);
             }
             );
         }
@@ -75,7 +75,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             PdfCircleAnnotation circleAnnotation = new PdfCircleAnnotation(new Rectangle(0, 0, 100, 100));
             PdfStructElem parent = new PdfStructElem(null, PdfName.Annot);
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                PdfUA2AnnotationChecker.CheckAnnotation(circleAnnotation.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(circleAnnotation.GetPdfObject(), parent);
             }
             );
         }
@@ -87,7 +87,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             PdfAnnotation annot = PdfAnnotation.MakeAnnotation(annotation);
             PdfStructElem parent = new PdfStructElem(null, PdfName.Annot);
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                PdfUA2AnnotationChecker.CheckAnnotation(annot.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(annot.GetPdfObject(), parent);
             }
             );
         }
@@ -99,7 +99,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             PdfAnnotation annot = PdfAnnotation.MakeAnnotation(annotation);
             PdfStructElem parent = new PdfStructElem(null, PdfName.Annot);
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                PdfUA2AnnotationChecker.CheckAnnotation(annot.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(annot.GetPdfObject(), parent);
             }
             );
         }
@@ -111,7 +111,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             PdfAnnotation annot = PdfAnnotation.MakeAnnotation(annotation);
             PdfStructElem parent = new PdfStructElem(null, PdfName.Annot);
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                PdfUA2AnnotationChecker.CheckAnnotation(annot.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(annot.GetPdfObject(), parent);
             }
             );
         }
@@ -123,7 +123,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             PdfAnnotation annot = PdfAnnotation.MakeAnnotation(annotation);
             PdfStructElem parent = new PdfStructElem(null, PdfName.Annot);
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                PdfUA2AnnotationChecker.CheckAnnotation(annot.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(annot.GetPdfObject(), parent);
             }
             );
         }
@@ -135,7 +135,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             PdfAnnotation annot = PdfAnnotation.MakeAnnotation(annotation);
             PdfStructElem parent = new PdfStructElem(null, PdfName.Annot);
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                PdfUA2AnnotationChecker.CheckAnnotation(annot.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(annot.GetPdfObject(), parent);
             }
             );
         }
@@ -147,7 +147,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             PdfAnnotation annot = PdfAnnotation.MakeAnnotation(annotation);
             PdfStructElem parent = new PdfStructElem(null, PdfName.Annot);
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                PdfUA2AnnotationChecker.CheckAnnotation(annot.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(annot.GetPdfObject(), parent);
             }
             );
         }
@@ -157,7 +157,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             PdfCaretAnnotation annotation = new PdfCaretAnnotation(new Rectangle(2, 2, 100, 100));
             PdfStructElem parent = new PdfStructElem(null, PdfName.Annot);
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                PdfUA2AnnotationChecker.CheckAnnotation(annotation.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(annotation.GetPdfObject(), parent);
             }
             );
         }
@@ -167,7 +167,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             PdfInkAnnotation annotation = new PdfInkAnnotation(new Rectangle(2, 2, 100, 100));
             PdfStructElem parent = new PdfStructElem(null, PdfName.Annot);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
-                PdfUA2AnnotationChecker.CheckAnnotation(annotation.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(annotation.GetPdfObject(), parent);
             }
             );
             NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.ANNOT_CONTENTS_IS_NULL_OR_EMPTY, e.Message);
@@ -179,7 +179,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             PdfStructElem parent = new PdfStructElem(null, PdfName.Annot);
             annotation.SetContents("");
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
-                PdfUA2AnnotationChecker.CheckAnnotation(annotation.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(annotation.GetPdfObject(), parent);
             }
             );
             NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.ANNOT_CONTENTS_IS_NULL_OR_EMPTY, e.Message);
@@ -191,7 +191,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             annotation.SetContents("Test");
             PdfStructElem parent = new PdfStructElem(null, PdfName.Annot);
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                PdfUA2AnnotationChecker.CheckAnnotation(annotation.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(annotation.GetPdfObject(), parent);
             }
             );
         }
@@ -201,7 +201,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             PdfPopupAnnotation annotation = new PdfPopupAnnotation(new Rectangle(2, 2, 100, 100));
             PdfStructElem parent = new PdfStructElem(null, PdfName.Annot);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
-                PdfUA2AnnotationChecker.CheckAnnotation(annotation.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(annotation.GetPdfObject(), parent);
             }
             );
             NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.POPUP_ANNOTATIONS_ARE_NOT_ALLOWED, e.Message
@@ -213,7 +213,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             PdfFileAttachmentAnnotation annotation = new PdfFileAttachmentAnnotation(new Rectangle(2, 2, 100, 100));
             PdfStructElem parent = new PdfStructElem(null, PdfName.Annot);
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                PdfUA2AnnotationChecker.CheckAnnotation(annotation.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(annotation.GetPdfObject(), parent);
             }
             );
         }
@@ -225,7 +225,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             PdfAnnotation annot = PdfAnnotation.MakeAnnotation(annotation);
             PdfStructElem parent = new PdfStructElem(null, PdfName.Annot);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
-                PdfUA2AnnotationChecker.CheckAnnotation(annot.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(annot.GetPdfObject(), parent);
             }
             );
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.DEPRECATED_ANNOTATIONS_ARE_NOT_ALLOWED
@@ -239,7 +239,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             PdfAnnotation annot = PdfAnnotation.MakeAnnotation(annotation);
             PdfStructElem parent = new PdfStructElem(null, PdfName.Annot);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
-                PdfUA2AnnotationChecker.CheckAnnotation(annot.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(annot.GetPdfObject(), parent);
             }
             );
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.DEPRECATED_ANNOTATIONS_ARE_NOT_ALLOWED
@@ -253,7 +253,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             PdfAnnotation annot = PdfAnnotation.MakeAnnotation(annotation);
             PdfStructElem parent = new PdfStructElem(null, PdfName.Annot);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
-                PdfUA2AnnotationChecker.CheckAnnotation(annot.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(annot.GetPdfObject(), parent);
             }
             );
             NUnit.Framework.Assert.AreEqual(PdfUAExceptionMessageConstants.PRINTER_MARK_SHALL_BE_AN_ARTIFACT, e.Message
@@ -267,7 +267,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             PdfAnnotation annot = PdfAnnotation.MakeAnnotation(annotation);
             PdfStructElem parent = new PdfStructElem(null, PdfName.Annot);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => {
-                PdfUA2AnnotationChecker.CheckAnnotation(annot.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(annot.GetPdfObject(), parent);
             }
             );
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.DEPRECATED_ANNOTATIONS_ARE_NOT_ALLOWED
@@ -279,7 +279,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             PdfWatermarkAnnotation annot = new PdfWatermarkAnnotation(new Rectangle(0, 0, 100, 100));
             PdfStructElem parent = new PdfStructElem(null, PdfName.Annot);
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                PdfUA2AnnotationChecker.CheckAnnotation(annot.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(annot.GetPdfObject(), parent);
             }
             );
         }
@@ -289,7 +289,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             PdfRedactAnnotation annot = new PdfRedactAnnotation(new Rectangle(0, 0, 100, 100));
             PdfStructElem parent = new PdfStructElem(null, PdfName.Annot);
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                PdfUA2AnnotationChecker.CheckAnnotation(annot.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(annot.GetPdfObject(), parent);
             }
             );
         }
@@ -301,7 +301,7 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
             PdfAnnotation annot = PdfAnnotation.MakeAnnotation(annotation);
             PdfStructElem parent = new PdfStructElem(null, PdfName.Annot);
             NUnit.Framework.Assert.DoesNotThrow(() => {
-                PdfUA2AnnotationChecker.CheckAnnotation(annot.GetPdfObject(), parent);
+                new PdfUA2AnnotationChecker().CheckSingleAnnotation(annot.GetPdfObject(), parent);
             }
             );
         }

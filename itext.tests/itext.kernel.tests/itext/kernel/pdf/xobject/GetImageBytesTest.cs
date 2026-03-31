@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -890,6 +890,11 @@ namespace iText.Kernel.Pdf.Xobject {
                 ();
             properties.SetApplyTransparency(true);
             TestFile("indexed8bitSMask.pdf", "Im0", "png", ".trans", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OneColorPalletIndexedTest() {
+            TestFile("oneColorPalette.pdf", "Im1", "png");
         }
 
         [NUnit.Framework.Test]

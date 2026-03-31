@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -244,7 +244,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void GetPdfAConformanceLevelInitializationTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "pdfWithMetadata.pdf"));
-            NUnit.Framework.Assert.IsTrue(pdfDocument.reader.GetPdfConformance().IsPdfAOrUa());
+            NUnit.Framework.Assert.IsTrue(pdfDocument.reader.GetPdfConformance().IsPdfA());
             pdfDocument.Close();
         }
 

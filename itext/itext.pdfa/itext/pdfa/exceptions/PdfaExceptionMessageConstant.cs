@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -302,8 +302,8 @@ namespace iText.Pdfa.Exceptions {
         public const String XMP_METADATA_HEADER_PACKET_MAY_NOT_CONTAIN_BYTES_OR_ENCODING_ATTRIBUTE = "XMP metadata"
              + " header packet may not contain bytes or encoding attribute.";
 
-        public const String XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART = "XMP metadata header shall"
-             + " contain version identifier pdfaid:part with value {0}";
+        [Obsolete]
+        public const String XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_PART = "XMP metadata header shall";
 
         public const String XMP_METADATA_HEADER_SHALL_CONTAIN_VERSION_IDENTIFIER_REV = "XMP metadata header shall"
              + " contain version identifier pdfaid:rev with four digit integer value";

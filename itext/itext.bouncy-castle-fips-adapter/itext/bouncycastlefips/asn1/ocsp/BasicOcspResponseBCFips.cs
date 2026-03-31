@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -92,7 +92,7 @@ namespace iText.Bouncycastlefips.Asn1.Ocsp {
         public IEnumerable<IX509Certificate> GetCerts() {
             List<IX509Certificate> certificates = new List<IX509Certificate>();
             if (GetBasicOcspResponse() != null && GetBasicOcspResponse().Certs != null) {
-                foreach (Asn1Object asn1Object in GetBasicOcspResponse().Certs) {
+                foreach (Asn1Encodable asn1Object in GetBasicOcspResponse().Certs) {
                     if (asn1Object != null) {
                         certificates.Add(new X509CertificateBCFips(new X509Certificate(asn1Object.GetEncoded())));
                     }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -46,14 +46,20 @@ namespace iText.Pdfua.Checkers {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
-        public static IList<String> DestinationWrapperType() {
-            return JavaUtil.ArraysAsList("GoTo", "Destination", "Outline", "OutlineWithAction", "GoToR", "Manual", "GoToInRandomPlace"
-                );
+        public static IList<Object[]> DestinationWrapperType() {
+            IList<Object[]> result = new List<Object[]>();
+            foreach (PdfConformance pdfConformance in UaValidationTestFramework.GetConformanceList(false)) {
+                foreach (String s in JavaUtil.ArraysAsList("GoTo", "Destination", "Outline", "OutlineWithAction", "GoToR", 
+                    "Manual", "GoToInRandomPlace")) {
+                    result.Add(new Object[] { pdfConformance, s });
+                }
+            }
+            return result;
         }
 
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
-        public virtual void PureStructureDestinationTest(String destinationWrapType) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
+        public virtual void PureStructureDestinationTest(PdfConformance conformance, String destinationWrapType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             String filename = "pureStructureDestinationTest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -66,24 +72,26 @@ namespace iText.Pdfua.Checkers {
                 case "Outline":
                 case "GoToR":
                 case "GoToInRandomPlace": {
-                    framework.AssertBothValid(filename, PdfUAConformance.PDF_UA_2);
+                    framework.AssertBothValid(filename);
                     break;
                 }
 
                 case "GoTo":
                 case "OutlineWithAction": {
-                    // Verapdf doesn't allow actions with structure destination being placed in D entry. Instead, it requires
-                    // structure destination to be added into special SD entry. There is no such requirement in released PDF 2.0 spec.
+                    // Verapdf doesn't allow actions with structure destination being placed in D entry. Instead, it
+                    // requires
+                    // structure destination to be added into special SD entry. There is no such requirement in released
+                    // PDF 2.0 spec.
                     // Although it is already mentioned in errata version.
-                    framework.AssertOnlyVeraPdfFail(filename, PdfUAConformance.PDF_UA_2);
+                    framework.AssertOnlyVeraPdfFail(filename);
                     break;
                 }
             }
         }
 
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
-        public virtual void PureExplicitDestinationTest(String destinationWrapType) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
+        public virtual void PureExplicitDestinationTest(PdfConformance conformance, String destinationWrapType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             String filename = "pureExplicitDestinationTest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -96,30 +104,31 @@ namespace iText.Pdfua.Checkers {
                 case "Outline":
                 case "OutlineWithAction":
                 case "GoTo": {
-                    framework.AssertBothFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION, PdfUAConformance
-                        .PDF_UA_2);
+                    framework.AssertBothFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION);
                     break;
                 }
 
                 case "GoToR": {
-                    framework.AssertBothValid(filename, PdfUAConformance.PDF_UA_2);
+                    framework.AssertBothValid(filename);
                     break;
                 }
 
                 case "GoToInRandomPlace": {
                     // iText fails because of the way we search for goto actions.
                     // We traverse whole document looking for a dictionary, which can represent GoTo action.
-                    // That's why in this particular example we fail, however in reality GoTo action cannot be added directly to catalog.
+                    // That's why in this particular example we fail, however in reality GoTo action cannot be added
+                    // directly to catalog.
                     framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
-                        , PdfUAConformance.PDF_UA_2);
+                        );
                     break;
                 }
             }
         }
 
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
-        public virtual void NamedDestinationWithStructureDestinationTest(String destinationWrapType) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
+        public virtual void NamedDestinationWithStructureDestinationTest(PdfConformance conformance, String destinationWrapType
+            ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             String filename = "namedDestWithStructureDest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -127,12 +136,13 @@ namespace iText.Pdfua.Checkers {
                     (document)));
             }
             );
-            framework.AssertBothValid(filename, PdfUAConformance.PDF_UA_2);
+            framework.AssertBothValid(filename);
         }
 
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
-        public virtual void NamedDestinationWithDictionaryWithStructureDestinationTest(String destinationWrapType) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
+        public virtual void NamedDestinationWithDictionaryWithStructureDestinationTest(PdfConformance conformance, 
+            String destinationWrapType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             String filename = "namedDestWithDictWithStructDest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -148,22 +158,22 @@ namespace iText.Pdfua.Checkers {
                 case "OutlineWithAction": {
                     // Verapdf doesn't allow name destination to contain dictionary with structure destination in D entry.
                     // Instead, it wants it to be in special SD entry.
-                    framework.AssertOnlyVeraPdfFail(filename, PdfUAConformance.PDF_UA_2);
+                    framework.AssertOnlyVeraPdfFail(filename);
                     break;
                 }
 
                 case "GoToR":
                 case "GoToInRandomPlace": {
-                    framework.AssertBothValid(filename, PdfUAConformance.PDF_UA_2);
+                    framework.AssertBothValid(filename);
                     break;
                 }
             }
         }
 
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
-        public virtual void NamedDestinationWithDictionaryAndSDWithStructureDestinationTest(String destinationWrapType
-            ) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
+        public virtual void NamedDestinationWithDictionaryAndSDWithStructureDestinationTest(PdfConformance conformance
+            , String destinationWrapType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             String filename = "namedDestWithDictAndSDWithStructDest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -171,12 +181,13 @@ namespace iText.Pdfua.Checkers {
                     , CreateStructureDestination(document)));
             }
             );
-            framework.AssertBothValid(filename, PdfUAConformance.PDF_UA_2);
+            framework.AssertBothValid(filename);
         }
 
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
-        public virtual void NamedDestinationWithExplicitDestinationTest(String destinationWrapType) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
+        public virtual void NamedDestinationWithExplicitDestinationTest(PdfConformance conformance, String destinationWrapType
+            ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             String filename = "namedDestWithExplicitDest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -190,31 +201,31 @@ namespace iText.Pdfua.Checkers {
                 case "Outline":
                 case "GoTo":
                 case "OutlineWithAction": {
-                    framework.AssertBothFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION, PdfUAConformance
-                        .PDF_UA_2);
+                    framework.AssertBothFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION);
                     break;
                 }
 
                 case "GoToR": {
-                    framework.AssertBothValid(filename, PdfUAConformance.PDF_UA_2);
+                    framework.AssertBothValid(filename);
                     break;
                 }
 
                 case "GoToInRandomPlace": {
                     // iText fails because of the way we search for goto actions.
                     // We traverse whole document looking for a dictionary, which can represent GoTo action.
-                    // That's why in this particular example we fail, however in reality GoTo action cannot be added directly to catalog.
+                    // That's why in this particular example we fail, however in reality GoTo action cannot be added
+                    // directly to catalog.
                     framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
-                        , PdfUAConformance.PDF_UA_2);
+                        );
                     break;
                 }
             }
         }
 
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
-        public virtual void NamedDestinationWithDictionaryAndSDWithExplicitDestinationTest(String destinationWrapType
-            ) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
+        public virtual void NamedDestinationWithDictionaryAndSDWithExplicitDestinationTest(PdfConformance conformance
+            , String destinationWrapType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             String filename = "namedDestWithDictAndSDWithExplicitDest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -234,21 +245,21 @@ namespace iText.Pdfua.Checkers {
                     // that's why placing not structure destination in there is wrong in the first place.
                     // However, if one is placed there, UA-2 exception is expected.
                     framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
-                        , PdfUAConformance.PDF_UA_2);
+                        );
                     break;
                 }
 
                 case "GoToR": {
-                    framework.AssertBothValid(filename, PdfUAConformance.PDF_UA_2);
+                    framework.AssertBothValid(filename);
                     break;
                 }
             }
         }
 
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
-        public virtual void NamedDestinationWithNamedDestinationWithStructureDestinationTest(String destinationWrapType
-            ) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
+        public virtual void NamedDestinationWithNamedDestinationWithStructureDestinationTest(PdfConformance conformance
+            , String destinationWrapType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             String filename = "namedDestWithNamedDestWithStructDest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -262,22 +273,24 @@ namespace iText.Pdfua.Checkers {
                 case "Outline":
                 case "GoTo":
                 case "OutlineWithAction": {
-                    // Verapdf doesn't allow named destination inside named destination, because it contradicts PDF 2.0 spec.
-                    framework.AssertOnlyVeraPdfFail(filename, PdfUAConformance.PDF_UA_2);
+                    // Verapdf doesn't allow named destination inside named destination, because it contradicts PDF 2.0
+                    // spec.
+                    framework.AssertOnlyVeraPdfFail(filename);
                     break;
                 }
 
                 case "GoToR":
                 case "GoToInRandomPlace": {
-                    framework.AssertBothValid(filename, PdfUAConformance.PDF_UA_2);
+                    framework.AssertBothValid(filename);
                     break;
                 }
             }
         }
 
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
-        public virtual void NamedDestinationWithCyclicReferenceTest(String destinationWrapType) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
+        public virtual void NamedDestinationWithCyclicReferenceTest(PdfConformance conformance, String destinationWrapType
+            ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             String filename = "namedDestWithCyclicReference_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -291,30 +304,31 @@ namespace iText.Pdfua.Checkers {
                 case "Outline":
                 case "GoTo":
                 case "OutlineWithAction": {
-                    framework.AssertBothFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION, PdfUAConformance
-                        .PDF_UA_2);
+                    framework.AssertBothFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION);
                     break;
                 }
 
                 case "GoToR": {
-                    framework.AssertBothValid(filename, PdfUAConformance.PDF_UA_2);
+                    framework.AssertBothValid(filename);
                     break;
                 }
 
                 case "GoToInRandomPlace": {
                     // iText fails because of the way we search for goto actions.
                     // We traverse whole document looking for a dictionary, which can represent GoTo action.
-                    // That's why in this particular example we fail, however in reality GoTo action cannot be added directly to catalog.
+                    // That's why in this particular example we fail, however in reality GoTo action cannot be added
+                    // directly to catalog.
                     framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
-                        , PdfUAConformance.PDF_UA_2);
+                        );
                     break;
                 }
             }
         }
 
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
-        public virtual void StringDestinationWithStructureDestinationTest(String destinationWrapType) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
+        public virtual void StringDestinationWithStructureDestinationTest(PdfConformance conformance, String destinationWrapType
+            ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             String filename = "stringDestWithStructureDest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -322,13 +336,13 @@ namespace iText.Pdfua.Checkers {
                     (document)));
             }
             );
-            framework.AssertBothValid(filename, PdfUAConformance.PDF_UA_2);
+            framework.AssertBothValid(filename);
         }
 
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
-        public virtual void StringDestinationWithDictionaryWithStructureDestinationTest(String destinationWrapType
-            ) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
+        public virtual void StringDestinationWithDictionaryWithStructureDestinationTest(PdfConformance conformance
+            , String destinationWrapType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             String filename = "stringDestWithDictWithStructDest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -344,22 +358,22 @@ namespace iText.Pdfua.Checkers {
                 case "OutlineWithAction": {
                     // Verapdf doesn't allow name destination to contain dictionary with structure destination in D entry.
                     // Instead, it wants it to be in special SD entry.
-                    framework.AssertOnlyVeraPdfFail(filename, PdfUAConformance.PDF_UA_2);
+                    framework.AssertOnlyVeraPdfFail(filename);
                     break;
                 }
 
                 case "GoToR":
                 case "GoToInRandomPlace": {
-                    framework.AssertBothValid(filename, PdfUAConformance.PDF_UA_2);
+                    framework.AssertBothValid(filename);
                     break;
                 }
             }
         }
 
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
-        public virtual void StringDestinationWithDictionaryAndSDWithStructureDestinationTest(String destinationWrapType
-            ) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
+        public virtual void StringDestinationWithDictionaryAndSDWithStructureDestinationTest(PdfConformance conformance
+            , String destinationWrapType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             String filename = "stringDestWithDictAndSDWithStructDest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -367,12 +381,13 @@ namespace iText.Pdfua.Checkers {
                     , CreateStructureDestination(document)));
             }
             );
-            framework.AssertBothValid(filename, PdfUAConformance.PDF_UA_2);
+            framework.AssertBothValid(filename);
         }
 
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
-        public virtual void StringDestinationWithExplicitDestinationTest(String destinationWrapType) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
+        public virtual void StringDestinationWithExplicitDestinationTest(PdfConformance conformance, String destinationWrapType
+            ) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             String filename = "stringDestWithExplicitDest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -386,31 +401,31 @@ namespace iText.Pdfua.Checkers {
                 case "Outline":
                 case "GoTo":
                 case "OutlineWithAction": {
-                    framework.AssertBothFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION, PdfUAConformance
-                        .PDF_UA_2);
+                    framework.AssertBothFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION);
                     break;
                 }
 
                 case "GoToR": {
-                    framework.AssertBothValid(filename, PdfUAConformance.PDF_UA_2);
+                    framework.AssertBothValid(filename);
                     break;
                 }
 
                 case "GoToInRandomPlace": {
                     // iText fails because of the way we search for goto actions.
                     // We traverse whole document looking for a dictionary, which can represent GoTo action.
-                    // That's why in this particular example we fail, however in reality GoTo action cannot be added directly to catalog.
+                    // That's why in this particular example we fail, however in reality GoTo action cannot be added
+                    // directly to catalog.
                     framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
-                        , PdfUAConformance.PDF_UA_2);
+                        );
                     break;
                 }
             }
         }
 
         [NUnit.Framework.TestCaseSource("DestinationWrapperType")]
-        public virtual void StringDestinationWithDictionaryAndSDWithExplicitDestinationTest(String destinationWrapType
-            ) {
-            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false);
+        public virtual void StringDestinationWithDictionaryAndSDWithExplicitDestinationTest(PdfConformance conformance
+            , String destinationWrapType) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             String filename = "stringDestWithDictAndSDWithExplicitDest_" + destinationWrapType;
             framework.AddBeforeGenerationHook((document) => {
                 document.AddNewPage();
@@ -430,12 +445,12 @@ namespace iText.Pdfua.Checkers {
                     // that's why placing not structure destination in there is wrong in the first place.
                     // However, if one is placed there, UA-2 exception is expected.
                     framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
-                        , PdfUAConformance.PDF_UA_2);
+                        );
                     break;
                 }
 
                 case "GoToR": {
-                    framework.AssertBothValid(filename, PdfUAConformance.PDF_UA_2);
+                    framework.AssertBothValid(filename);
                     break;
                 }
             }

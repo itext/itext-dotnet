@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -40,7 +40,6 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Signatures.Sign {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
     public class PdfASigningTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -78,18 +77,17 @@ namespace iText.Signatures.Sign {
             String dest = destinationFolder + fileName;
             int x = 36;
             int y = 548;
-            int w = 200;
-            int h = 100;
+            int w = 300;
+            int h = 200;
             Rectangle rect = new Rectangle(x, y, w, h);
             String fieldName = "Signature1";
             Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1", "TestCity"
                 , rect, false, false, AccessPermissions.UNSPECIFIED, 12f);
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(dest));
-            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(dest, sourceFolder + "cmp_" + fileName
                 ));
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + fileName, destinationFolder
-                , "diff_", GetTestMap(new Rectangle(27, 550, 195, 40))));
+                , "diff_", GetTestMap(new Rectangle(27, 620, 195, 40))));
         }
 
         [NUnit.Framework.Test]
@@ -107,7 +105,6 @@ namespace iText.Signatures.Sign {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(@out));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void SignPdf2CmsTest() {
             String srcFile = sourceFolder + "simplePdfA4Document.pdf";
@@ -126,7 +123,7 @@ namespace iText.Signatures.Sign {
             String srcFile = sourceFolder + "simplePdfA4Document.pdf";
             String cmpPdf = sourceFolder + "cmp_signPdfCades.pdf";
             String outPdf = destinationFolder + "signPdfCades.pdf";
-            Rectangle rect = new Rectangle(30, 200, 200, 100);
+            Rectangle rect = new Rectangle(30, 200, 300, 200);
             String fieldName = "Signature1";
             Sign(srcFile, fieldName, outPdf, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard.CADES, "Test 1"
                 , "TestCity", rect, false, true, AccessPermissions.UNSPECIFIED, 12f);
@@ -136,7 +133,6 @@ namespace iText.Signatures.Sign {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void FailedSigningPdfA2DocumentTest() {
             String src = sourceFolder + "simplePdfADocument.pdf";

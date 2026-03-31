@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -29,15 +29,16 @@ namespace iText.IO.Resolver.Resource {
         /// <summary>
         /// Gets the
         /// <see cref="System.IO.Stream"/>
-        /// that connect with source URL for retrieving data from that connection.
+        /// with the data from a provided URL by instantiating an HTTP connection to the URL.
         /// </summary>
         /// <param name="url">the source URL</param>
-        /// <returns>the input stream or null if the retrieving failed</returns>
+        /// <returns>the input stream with the retrieved data</returns>
         Stream GetInputStreamByUrl(Uri url);
 
-        /// <summary>Gets the byte array that are retrieved from the source URL.</summary>
+        /// <summary>Gets the byte array with the data from a provided URL by instantiating an HTTP connection to the URL.
+        ///     </summary>
         /// <param name="url">the source URL</param>
-        /// <returns>the byte array or null if the retrieving failed</returns>
+        /// <returns>the byte array with the retrieved data</returns>
         byte[] GetByteArrayByUrl(Uri url);
     }
 }

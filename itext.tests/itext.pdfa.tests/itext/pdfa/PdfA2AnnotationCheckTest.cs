@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -38,25 +38,27 @@ using iText.Test.Attributes;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfA2AnnotationCheckTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
-        public static readonly String cmpFolder = sourceFolder + "cmp/PdfA2AnnotationCheckTest/";
+        private static readonly String CMP_FOLDER = SOURCE_FOLDER + "cmp/PdfA2AnnotationCheckTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/pdfa/PdfA2AnnotationCheckTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfa/PdfA2AnnotationCheckTest/";
+
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/fonts/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest01() {
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_2B, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
@@ -70,10 +72,10 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest02() {
-            String outPdf = destinationFolder + "pdfA2b_annotationCheckTest02.pdf";
-            String cmpPdf = cmpFolder + "cmp_pdfA2b_annotationCheckTest02.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA2b_annotationCheckTest02.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA2b_annotationCheckTest02.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_2B, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
@@ -86,10 +88,10 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest03() {
-            String outPdf = destinationFolder + "pdfA2b_annotationCheckTest03.pdf";
-            String cmpPdf = cmpFolder + "cmp_pdfA2b_annotationCheckTest03.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA2b_annotationCheckTest03.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA2b_annotationCheckTest03.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_2B, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
@@ -105,7 +107,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest04() {
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_2B, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
@@ -122,7 +124,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest05() {
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_2B, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
@@ -138,7 +140,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest06() {
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_2B, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
@@ -154,7 +156,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest07() {
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_2B, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
@@ -174,7 +176,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest08() {
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_2B, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
@@ -194,7 +196,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest09() {
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_2B, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
@@ -211,10 +213,10 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest10() {
-            String outPdf = destinationFolder + "pdfA2b_annotationCheckTest10.pdf";
-            String cmpPdf = cmpFolder + "cmp_pdfA2b_annotationCheckTest10.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA2b_annotationCheckTest10.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA2b_annotationCheckTest10.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_2B, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
@@ -231,10 +233,10 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest11() {
-            String outPdf = destinationFolder + "pdfA2b_annotationCheckTest11.pdf";
-            String cmpPdf = cmpFolder + "cmp_pdfA2b_annotationCheckTest11.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA2b_annotationCheckTest11.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA2b_annotationCheckTest11.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_2B, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
@@ -253,10 +255,10 @@ namespace iText.Pdfa {
         [LogMessage(PdfAConformanceLogMessageConstant.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY, LogLevel = LogLevelConstants
             .WARN)]
         public virtual void AnnotationCheckTest12() {
-            String outPdf = destinationFolder + "pdfA1a_annotationCheckTest12.pdf";
-            String cmpPdf = cmpFolder + "cmp_pdfA1a_annotationCheckTest12.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA1a_annotationCheckTest12.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA1a_annotationCheckTest12.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_2A, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             doc.SetTagged();
@@ -272,11 +274,10 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest13() {
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_2A, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             doc.SetTagged();
@@ -294,10 +295,10 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest14() {
-            String outPdf = destinationFolder + "pdfA2a_annotationCheckTest14.pdf";
-            String cmpPdf = cmpFolder + "cmp_pdfA2a_annotationCheckTest14.pdf";
+            String outPdf = DESTINATION_FOLDER + "pdfA2a_annotationCheckTest14.pdf";
+            String cmpPdf = CMP_FOLDER + "cmp_pdfA2a_annotationCheckTest14.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_2A, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             doc.SetTagged();
@@ -317,7 +318,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest15() {
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_2B, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
@@ -333,7 +334,7 @@ namespace iText.Pdfa {
         [NUnit.Framework.Test]
         public virtual void AnnotationCheckTest16() {
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-            Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm");
+            Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_2B, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
@@ -349,7 +350,7 @@ namespace iText.Pdfa {
         private PdfStream CreateAppearance(PdfADocument doc, Rectangle formRect) {
             PdfFormXObject form = new PdfFormXObject(formRect);
             PdfCanvas canvas = new PdfCanvas(form, doc);
-            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "WinAnsi", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             canvas.SetFontAndSize(font, 12);
             canvas.BeginText().SetTextMatrix(200, 50).ShowText("Hello World").EndText();
@@ -357,7 +358,7 @@ namespace iText.Pdfa {
         }
 
         private void CompareResult(String outPdf, String cmpPdf) {
-            String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            String result = new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_");
             if (result != null) {
                 NUnit.Framework.Assert.Fail(result);
             }

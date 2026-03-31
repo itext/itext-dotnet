@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -551,13 +551,22 @@ namespace iText.Layout.Renderer {
 
         private void DrawColorBackground(Background background, DrawContext drawContext, Rectangle colorBackgroundArea
             ) {
+            double backgroundRectangleWidth = (double)colorBackgroundArea.GetWidth() + background.GetExtraLeft() + background
+                .GetExtraRight();
+            double backgroundRectangleHeight = (double)colorBackgroundArea.GetHeight() + background.GetExtraTop() + background
+                .GetExtraBottom();
+            if (backgroundRectangleWidth < EPS || backgroundRectangleHeight < EPS) {
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                logger.LogInformation(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES
+                    , "background"));
+                return;
+            }
             TransparentColor backgroundColor = new TransparentColor(background.GetColor(), background.GetOpacity());
             drawContext.GetCanvas().SaveState().SetFillColor(backgroundColor.GetColor());
             backgroundColor.ApplyFillTransparency(drawContext.GetCanvas());
             drawContext.GetCanvas().Rectangle((double)colorBackgroundArea.GetX() - background.GetExtraLeft(), (double)
-                colorBackgroundArea.GetY() - background.GetExtraBottom(), (double)colorBackgroundArea.GetWidth() + background
-                .GetExtraLeft() + background.GetExtraRight(), (double)colorBackgroundArea.GetHeight() + background.GetExtraTop
-                () + background.GetExtraBottom()).Fill().RestoreState();
+                colorBackgroundArea.GetY() - background.GetExtraBottom(), backgroundRectangleWidth, backgroundRectangleHeight
+                ).Fill().RestoreState();
         }
 
         private Rectangle ApplyBackgroundBoxProperty(Rectangle rectangle, BackgroundBox clip) {

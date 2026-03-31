@@ -4,3 +4,4 @@ This software uses third-party libraries under the licenses in the following fil
 - [kernel/NOTICE.txt](itext/itext.kernel/NOTICE.txt)
 - [layout/NOTICE.txt](itext/itext.layout/NOTICE.txt)
 - [styled-xml-parser/NOTICE.txt](itext/itext.styledxmlparser/NOTICE.txt)
+- [bouncy-castle-fips-adapter/NOTICE.txt](itext/itext.bouncy-castle-fips-adapter/NOTICE.txt)

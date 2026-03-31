@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -195,7 +195,7 @@ namespace iText.Layout.Renderer {
             // Puritan doesn't contain cyrillic symbols, while Noto Sans does.
             text.SetFontFamily(JavaUtil.ArraysAsList("Puritan 2.0", "Noto Sans"));
             FontProvider fontProvider = new FontProvider();
-            fontProvider.AddFont(FONTS_FOLDER + "Puritan2.otf");
+            fontProvider.AddFont(FONTS_FOLDER + "Puritan-Regular.ttf");
             fontProvider.AddFont(FONTS_FOLDER + "NotoSans-Regular.ttf");
             text.SetProperty(Property.FONT_PROVIDER, fontProvider);
             TextRenderer renderer = (TextRenderer)new TextRenderer(text);

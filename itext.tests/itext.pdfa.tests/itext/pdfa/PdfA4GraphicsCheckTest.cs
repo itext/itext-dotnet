@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -40,15 +40,17 @@ using iText.Test;
 using iText.Test.Pdfa;
 
 namespace iText.Pdfa {
-    // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
     [NUnit.Framework.Category("IntegrationTest")]
     public class PdfA4GraphicsCheckTest : ExtendedITextTest {
-        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
-        public static readonly String CMP_FOLDER = SOURCE_FOLDER + "cmp/PdfA4GraphicsCheckTest/";
+        private static readonly String CMP_FOLDER = SOURCE_FOLDER + "cmp/PdfA4GraphicsCheckTest/";
 
-        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfa/PdfA4GraphicsCheckTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfa/PdfA4GraphicsCheckTest/";
+
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/fonts/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -79,7 +81,6 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void ValidHalftoneType1Test() {
             String outPdf = DESTINATION_FOLDER + "pdfA4_halftone1.pdf";
@@ -100,7 +101,6 @@ namespace iText.Pdfa {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
         [NUnit.Framework.Test]
         public virtual void ValidHalftoneTest2() {
             String outPdf = DESTINATION_FOLDER + "pdfA4_halftone2.pdf";
@@ -254,8 +254,8 @@ namespace iText.Pdfa {
                 canvas.GetResources().SetDefaultRgb(calRgb);
                 canvas.GetResources().SetDefaultGray(calGray);
                 String shortText = "text";
-                PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.
-                    PREFER_EMBEDDED);
+                PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                    );
                 canvas.SetFontAndSize(font, 12);
                 canvas.SetFillColor(ColorConstants.RED).BeginText().ShowText(shortText).EndText();
                 canvas.SetFillColor(DeviceGray.GRAY).BeginText().ShowText(shortText).EndText();
@@ -349,8 +349,8 @@ namespace iText.Pdfa {
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             String shortText = "text";
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.
-                PREFER_EMBEDDED);
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                );
             canvas.SetFontAndSize(font, 12);
             canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.CLIP);
             canvas.SetFillColor(ColorConstants.RED).BeginText().ShowText(shortText).EndText();
@@ -377,8 +377,8 @@ namespace iText.Pdfa {
                 (SOURCE_FOLDER + "USWebUncoated.icc")));
             PdfCanvas canvas = new PdfCanvas(page);
             String shortText = "text";
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.
-                PREFER_EMBEDDED);
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                );
             canvas.SetFontAndSize(font, 12);
             canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.CLIP);
             canvas.SetFillColor(ColorConstants.RED).BeginText().ShowText(shortText).EndText();
@@ -404,8 +404,8 @@ namespace iText.Pdfa {
             PdfADocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, outputIntent);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             String shortText = "text";
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.
-                PREFER_EMBEDDED);
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                );
             canvas.SetFontAndSize(font, 12);
             canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.STROKE);
             canvas.SetFillColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f)).BeginText().ShowText(shortText).EndText();
@@ -432,8 +432,8 @@ namespace iText.Pdfa {
                 (SOURCE_FOLDER + "USWebUncoated.icc")));
             PdfCanvas canvas = new PdfCanvas(page);
             String shortText = "text";
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.
-                PREFER_EMBEDDED);
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                );
             canvas.SetFontAndSize(font, 12);
             canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.STROKE);
             canvas.SetFillColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f)).BeginText().ShowText(shortText).EndText();
@@ -523,7 +523,7 @@ namespace iText.Pdfa {
             String outPdf = DESTINATION_FOLDER + "defaultColorCheck.pdf";
             PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
                 .PDF_2_0)), PdfAConformance.PDF_A_4, null);
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfPage page = pdfDocument.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -541,7 +541,7 @@ namespace iText.Pdfa {
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4_defaultTextColorCheckWithPageOutputIntent.pdf";
             PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
                 .PDF_2_0)), PdfAConformance.PDF_A_4, null);
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfPage page = pdfDocument.AddNewPage();
             page.AddOutputIntent(new PdfOutputIntent("Custom", "", "http://www.color.org", "cmyk", FileUtil.GetInputStreamForFile
@@ -560,7 +560,7 @@ namespace iText.Pdfa {
             String cmpPdf = CMP_FOLDER + "cmp_pdfA4_defaultColorCheckInvisibleText.pdf";
             PdfDocument pdfDocument = new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion
                 .PDF_2_0)), PdfAConformance.PDF_A_4, null);
-            PdfFont font = PdfFontFactory.CreateFont(SOURCE_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf", "Identity-H", PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED);
             PdfPage page = pdfDocument.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
@@ -1135,7 +1135,6 @@ namespace iText.Pdfa {
 
         private void CompareResult(String outPdf, String cmpPdf) {
             NUnit.Framework.Assert.IsNull(new VeraPdfValidator().Validate(outPdf));
-            // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf\a validation on Android)
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_");
             if (result != null) {
                 NUnit.Framework.Assert.Fail(result);

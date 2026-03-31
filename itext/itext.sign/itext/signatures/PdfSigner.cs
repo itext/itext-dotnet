@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Bouncycastleconnector;
+using iText.Commons.Actions;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Esf;
@@ -183,7 +184,7 @@ namespace iText.Signatures {
         /// </param>
         public PdfSigner(PdfReader reader, Stream outputStream, String path, StampingProperties properties) {
             StampingProperties localProps = new StampingProperties(properties).PreserveEncryption();
-            localProps.RegisterDependency(typeof(IMacContainerLocator), new SignatureMacContainerLocator());
+            localProps.RegisterDependency(typeof(IMacContainerLocator), () => new SignatureMacContainerLocator());
             if (path == null) {
                 this.temporaryOS = new MemoryStream();
                 this.document = InitDocument(reader, new PdfWriter(temporaryOS), localProps);
@@ -542,7 +543,7 @@ namespace iText.Signatures {
                 .ETSI_CAdES_DETACHED : PdfName.Adbe_pkcs7_detached);
             dic.SetReason(this.signerProperties.GetReason());
             dic.SetLocation(this.signerProperties.GetLocation());
-            dic.SetSignatureCreator(this.signerProperties.GetSignatureCreator());
+            dic.SetSignatureCreator(GetSignatureCreator());
             dic.SetContact(this.signerProperties.GetContact());
             DateTime claimedSignDate = this.signerProperties.GetClaimedSignDate();
             if (claimedSignDate != TimestampConstants.UNDEFINED_TIMESTAMP_DATE) {
@@ -658,6 +659,7 @@ namespace iText.Signatures {
             this.signerProperties.SetFieldName(signatureName);
             PdfSignature dic = new PdfSignature(PdfName.Adobe_PPKLite, PdfName.ETSI_RFC3161);
             dic.Put(PdfName.Type, PdfName.DocTimeStamp);
+            dic.SetSignatureCreator(GetSignatureCreator());
             cryptoDictionary = dic;
             IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
             exc.Put(PdfName.Contents, contentEstimated * 2 + 2);
@@ -1282,7 +1284,7 @@ namespace iText.Signatures {
             PdfSignature dic = new PdfSignature();
             dic.SetReason(this.signerProperties.GetReason());
             dic.SetLocation(this.signerProperties.GetLocation());
-            dic.SetSignatureCreator(this.signerProperties.GetSignatureCreator());
+            dic.SetSignatureCreator(GetSignatureCreator());
             dic.SetContact(this.signerProperties.GetContact());
             DateTime claimedSignDate = this.signerProperties.GetClaimedSignDate();
             if (includeDate && claimedSignDate != TimestampConstants.UNDEFINED_TIMESTAMP_DATE) {
@@ -1340,6 +1342,16 @@ namespace iText.Signatures {
             return signatureContainer;
         }
 //\endcond
+
+        private String GetSignatureCreator() {
+            String signatureCreator = this.signerProperties.GetSignatureCreator();
+            if (signatureCreator == null || !String.IsNullOrEmpty(signatureCreator)) {
+                return signatureCreator;
+            }
+            GetSignatureCreatorEvent @event = new GetSignatureCreatorEvent(document);
+            EventManager.GetInstance().OnEvent(@event);
+            return @event.GetSignatureCreator();
+        }
 
         private static String GetSignerName(IX509Certificate certificate) {
             String name = null;
@@ -1499,7 +1511,7 @@ namespace iText.Signatures {
 
             public virtual void Apply(PdfSigner.ISignatureDataProvider signatureDataProvider) {
                 StampingProperties properties = new StampingProperties().PreserveEncryption();
-                properties.RegisterDependency(typeof(IMacContainerLocator), new SignatureMacContainerLocator());
+                properties.RegisterDependency(typeof(IMacContainerLocator), () => new SignatureMacContainerLocator());
                 // This IdleOutputStream writer does nothing and only required to be able to apply MAC if needed.
                 using (PdfWriter dummyWriter = new PdfWriter(new IdleOutputStream())) {
                     if (document == null) {

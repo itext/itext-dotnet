@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -23,11 +23,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using iText.Bouncycastleconnector;
 using iText.Commons.Actions;
+using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1;
+using iText.Commons.Bouncycastle.Asn1.Pkix;
+using iText.Commons.Bouncycastle.Asn1.X500;
+using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Utils;
 using iText.Commons.Utils.Collections;
+using iText.Kernel.Crypto;
 using iText.Signatures;
 using iText.Signatures.Validation.Context;
 using iText.Signatures.Validation.Dataorigin;
@@ -39,6 +46,8 @@ using iText.Signatures.Validation.Report;
 namespace iText.Signatures.Validation {
     /// <summary>Validator class, which is expected to be used for certificates chain validation.</summary>
     public class CertificateChainValidator {
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+
         private readonly SignatureValidationProperties properties;
 
         private readonly IssuingCertificateRetriever certificateRetriever;
@@ -122,6 +131,22 @@ namespace iText.Signatures.Validation {
         internal const String CERTIFICATE_CUSTOM_ORIGIN = "Trusted Certificate is taken from {0}.";
 //\endcond
 
+//\cond DO_NOT_DOCUMENT
+        internal const String NAME_CONSTRAINT_DIRECT_NAME_VIOLATION = "Certificate's direct name is not allowed according to Name Constraint extension.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String NAME_CONSTRAINT_DIRECT_NAME_EXCEPTION = "Exception occurred while trying to check certificate direct name against Name Constraint extension.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String NAME_CONSTRAINT_ALT_NAME_VIOLATION = "Certificate's alternative name is not allowed according to Name Constraint extension.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String NAME_CONSTRAINT_ALT_NAME_EXCEPTION = "Exception occurred while trying to check certificate alternative name against Name Constraint extension.";
+//\endcond
+
         /// <summary>
         /// Create new instance of
         /// <see cref="CertificateChainValidator"/>.
@@ -194,6 +219,108 @@ namespace iText.Signatures.Validation {
             return Validate(result, context, certificate, validationDate, new List<IX509Certificate>());
         }
 
+        /// <summary>Validates name constraint extension for complete certificate chain.</summary>
+        /// <param name="report">
+        /// 
+        /// <see cref="iText.Signatures.Validation.Report.ValidationReport"/>
+        /// which is populated with detailed validation results
+        /// </param>
+        /// <param name="previousCertificates">
+        /// 
+        /// <see cref="System.Collections.IList{E}"/>
+        /// of
+        /// <see cref="iText.Commons.Bouncycastle.Cert.IX509Certificate"/>
+        /// , which represent a complete chain,
+        /// without a trusted root. List starts with a signing certificate.
+        /// </param>
+        /// <param name="trustedCertificate">
+        /// 
+        /// <see cref="iText.Commons.Bouncycastle.Cert.IX509Certificate"/>
+        /// trusted root of this chain
+        /// </param>
+        protected internal virtual void ValidateNameConstraints(ValidationReport report, IList<IX509Certificate> previousCertificates
+            , IX509Certificate trustedCertificate) {
+            IPKIXConstraintValidator constraintValidator = FACTORY.CreateNameConstraintValidator();
+            IList<IX509Certificate> certificateChain = new List<IX509Certificate>(previousCertificates);
+            JavaCollectionsUtil.Reverse(certificateChain);
+            UpdateConstraintValidator(constraintValidator, trustedCertificate);
+            foreach (IX509Certificate certificate in certificateChain) {
+                IX500Name principal = certificate.GetSubjectDN();
+                try {
+                    using (IAsn1InputStream inputStream = FACTORY.CreateASN1InputStream(principal.GetEncoded())) {
+                        IAsn1Sequence directName = FACTORY.CreateASN1Sequence(inputStream.ReadObject());
+                        constraintValidator.CheckPermittedDN(directName);
+                        constraintValidator.CheckExcludedDN(directName);
+                    }
+                }
+                catch (AbstractPKIXNameConstraintValidatorException e) {
+                    report.AddReportItem(new CertificateReportItem(certificate, EXTENSIONS_CHECK, NAME_CONSTRAINT_DIRECT_NAME_VIOLATION
+                        , e, ReportItem.ReportItemStatus.INVALID));
+                    return;
+                }
+                catch (Exception e) {
+                    report.AddReportItem(new CertificateReportItem(certificate, EXTENSIONS_CHECK, NAME_CONSTRAINT_DIRECT_NAME_EXCEPTION
+                        , e, ReportItem.ReportItemStatus.INVALID));
+                    return;
+                }
+                IAsn1Sequence alternativeName = GetAlternativeName(certificate);
+                if (alternativeName != null && !alternativeName.IsNull()) {
+                    for (int i = 0; i < alternativeName.Size(); ++i) {
+                        try {
+                            IGeneralName generalName = FACTORY.CreateGeneralName(alternativeName.GetObjectAt(i));
+                            constraintValidator.CheckPermitted(generalName);
+                            constraintValidator.CheckExcluded(generalName);
+                        }
+                        catch (AbstractPKIXNameConstraintValidatorException e) {
+                            report.AddReportItem(new CertificateReportItem(certificate, EXTENSIONS_CHECK, NAME_CONSTRAINT_ALT_NAME_VIOLATION
+                                , e, ReportItem.ReportItemStatus.INVALID));
+                            return;
+                        }
+                        catch (Exception e) {
+                            report.AddReportItem(new CertificateReportItem(certificate, EXTENSIONS_CHECK, NAME_CONSTRAINT_ALT_NAME_EXCEPTION
+                                , e, ReportItem.ReportItemStatus.INVALID));
+                            return;
+                        }
+                    }
+                }
+                UpdateConstraintValidator(constraintValidator, certificate);
+            }
+        }
+
+        private static IAsn1Sequence GetAlternativeName(IX509Certificate certificate) {
+            try {
+                return FACTORY.CreateASN1Sequence(CertificateUtil.GetExtensionValue(certificate, OID.X509Extensions.SUBJECT_ALTERNATIVE_NAME
+                    ));
+            }
+            catch (Exception) {
+                return null;
+            }
+        }
+
+        private static void UpdateConstraintValidator(IPKIXConstraintValidator constraintValidator, IX509Certificate
+             certificate) {
+            INameConstraints nameConstraints;
+            try {
+                nameConstraints = FACTORY.CreateNameConstraints(CertificateUtil.GetExtensionValue(certificate, OID.X509Extensions
+                    .NAME_CONSTRAINTS));
+            }
+            catch (Exception) {
+                return;
+            }
+            if (nameConstraints != null && !nameConstraints.IsNull()) {
+                IGeneralSubtree[] permitted = nameConstraints.GetPermittedSubtrees();
+                if (permitted != null) {
+                    constraintValidator.IntersectPermittedSubtree(permitted);
+                }
+                IGeneralSubtree[] excluded = nameConstraints.GetExcludedSubtrees();
+                if (excluded != null) {
+                    foreach (IGeneralSubtree iGeneralSubtree in excluded) {
+                        constraintValidator.AddExcludedSubtree(iGeneralSubtree);
+                    }
+                }
+            }
+        }
+
         private ValidationReport Validate(ValidationReport result, ValidationContext context, IX509Certificate certificate
             , DateTime validationDate, IList<IX509Certificate> previousCertificates) {
             ReportAlgorithmUsage(certificate);
@@ -205,6 +332,8 @@ namespace iText.Signatures.Validation {
             if (SafeCalling.OnExceptionLog(() => CheckIfCertIsTrusted(result, localContext, certificate, validationDate
                 , previousCertificates), false, result, (e) => new CertificateReportItem(certificate, CERTIFICATE_CHECK
                 , TRUSTSTORE_RETRIEVAL_FAILED, e, ReportItem.ReportItemStatus.INFO))) {
+                // We need to perform this check right after we allegedly found trusted root.
+                ValidateNameConstraints(result, previousCertificates, certificate);
                 return result;
             }
             HandlePadesEvents(certificate);
@@ -317,14 +446,15 @@ namespace iText.Signatures.Validation {
                     ReportItem.ReportItemStatus.INDETERMINATE));
                 return;
             }
+            // We need to sort certificates to process them starting from those, better suited for PAdES validation.
+            issuerCertificates = issuerCertificates.Sorted((issuer1, issuer2) => JavaUtil.IntegerCompare((int)(certificateRetriever
+                .GetCertificateOrigin(issuer1)), (int)(certificateRetriever.GetCertificateOrigin(issuer2)))).Where((c) =>
+                 !previousCertificates.Contains(c)).ToList();
             if (issuerCertificates.IsEmpty()) {
                 result.AddReportItem(new CertificateReportItem(certificate, CERTIFICATE_CHECK, MessageFormatUtil.Format(ISSUER_MISSING
                     , certificate.GetSubjectDN()), ReportItem.ReportItemStatus.INDETERMINATE));
                 return;
             }
-            // We need to sort certificates to process them starting from those, better suited for PAdES validation.
-            issuerCertificates = issuerCertificates.Sorted((issuer1, issuer2) => JavaUtil.IntegerCompare((int)(certificateRetriever
-                .GetCertificateOrigin(issuer1)), (int)(certificateRetriever.GetCertificateOrigin(issuer2)))).ToList();
             ValidationReport[] candidateReports = new ValidationReport[issuerCertificates.Count];
             for (int i = 0; i < issuerCertificates.Count; i++) {
                 candidateReports[i] = new ValidationReport();

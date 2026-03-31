@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>itext.commons</id>
-    <version>9.5.0</version>
+    <version>9.6.0</version>
     <title>iText commons module</title>
     <authors>Apryse Software</authors>
     <owners>Apryse Software</owners>
@@ -13,7 +13,7 @@
     <description>Commons module</description>
     <summary />
     <releaseNotes>https://itextpdf.com/itext7release</releaseNotes>
-    <copyright>Copyright (c) 1998-2025 Apryse Group NV</copyright>
+    <copyright>Copyright (c) 1998-2026 Apryse Group NV</copyright>
     <language>en-US</language>
     <tags>itext itext7 itextsharp c# .net csharp</tags>
     <dependencies>
@@ -23,7 +23,7 @@
         <dependency id="Microsoft.Extensions.Logging" version="5.0.0" />
       </group>
       <group targetFramework="netstandard2.0">
-        <dependency id="System.Text.Json" version="9.0.4" />
+        <dependency id="System.Text.Json" version="10.0.2" />
         <!--TODO DEVSIX-7184: Bump Microsoft.Extensions.Logging when targeting netcoreapp3.1-->
         <dependency id="Microsoft.Extensions.Logging" version="5.0.0" />
       </group>

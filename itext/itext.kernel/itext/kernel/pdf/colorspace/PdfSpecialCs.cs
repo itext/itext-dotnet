@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2025 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -74,11 +74,6 @@ namespace iText.Kernel.Pdf.Colorspace {
                 return MakeColorSpace(((PdfArray)GetPdfObject()).Get(1));
             }
 
-            /// <summary><inheritDoc/></summary>
-            public override PdfName GetName() {
-                return ((PdfArray)GetPdfObject()).GetAsName(0);
-            }
-
             private static PdfArray GetIndexedCsArray(PdfObject @base, int hival, PdfString lookup) {
                 PdfArray indexed = new PdfArray();
                 indexed.Add(PdfName.Indexed);
@@ -118,6 +113,19 @@ namespace iText.Kernel.Pdf.Colorspace {
 
             public virtual PdfColorSpace GetBaseCs() {
                 return MakeColorSpace(((PdfArray)GetPdfObject()).Get(2));
+            }
+
+            /// <summary>Retrieves separation color name.</summary>
+            /// <returns>separation color name</returns>
+            public virtual PdfName GetSeparationColorName() {
+                return ((PdfArray)GetPdfObject()).GetAsName(1);
+            }
+
+            /// <summary>Retrieves separation color name.</summary>
+            /// <returns>separation color name</returns>
+            [System.ObsoleteAttribute(@"in favour of GetSeparationColorName()")]
+            public override PdfName GetName() {
+                return GetSeparationColorName();
             }
 
             /// <summary>Gets the function to calulate a separation color value to an alternative colorspace.</summary>
