@@ -18,7 +18,7 @@
         <tags>itext itext7 itextsharp c# .net csharp brotli</tags>
         <dependencies>
             <dependency id="itext.commons" version="9.6.0" />
-            <dependency id="itext.kernel" version="9.5.0-SNAPSHOT" />
+            <dependency id="itext" version="9.6.0" />
         </dependencies>
     </metadata>
     <files>
