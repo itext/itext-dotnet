@@ -2285,7 +2285,7 @@ namespace iText.Kernel.Pdf {
                             // If the header specifies a later version, or if this entry is absent, the document conforms
                             // to the
                             // version specified in the header.
-                            // So only update the version if it is older than the one in the header
+                            // So only update the version if it is newer than the one in the header
                             if (newPdfVersion.CompareTo(reader.headerPdfVersion) > 0) {
                                 catalog.Put(PdfName.Version, newPdfVersion.ToPdfName());
                                 catalog.SetModified();
@@ -2544,7 +2544,9 @@ namespace iText.Kernel.Pdf {
                     ((PdfWidgetAnnotation)annot).ReleaseFormFieldFromWidgetAnnotation();
                     if (fields != null) {
                         fields.Remove(annot.GetPdfObject());
+                        fields.SetModified();
                     }
+                    acroForm.SetModified();
                 }
             }
         }

@@ -50,6 +50,10 @@ namespace iText.Kernel.Pdf {
 
         public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/kernel/pdf/PdfDocumentTest/";
 
+        private static ICollection<Object[]> AppendModes() {
+            return JavaUtil.ArraysAsList(new Object[][] { new Object[] { true }, new Object[] { false } });
+        }
+
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
@@ -343,10 +347,14 @@ namespace iText.Kernel.Pdf {
                 ());
         }
 
-        [NUnit.Framework.Test]
-        public virtual void CheckAndResolveCircularReferences() {
+        [NUnit.Framework.TestCaseSource("AppendModes")]
+        public virtual void CheckAndResolveCircularReferences(bool appendMode) {
+            StampingProperties props = new StampingProperties();
+            if (appendMode) {
+                props.UseAppendMode();
+            }
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "datasheet.pdf"), CompareTool.CreateTestPdfWriter
-                (DESTINATION_FOLDER + "datasheet_mode.pdf"));
+                (DESTINATION_FOLDER + "datasheet_mode.pdf"), props);
             PdfDictionary pdfObject = (PdfDictionary)pdfDocument.GetPdfObject(53);
             pdfDocument.GetPage(1).GetResources().AddForm((PdfStream)pdfObject);
             pdfDocument.Close();
@@ -465,36 +473,48 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        [NUnit.Framework.Test]
-        public virtual void WidgetDaEntryRemovePageTest() {
+        [NUnit.Framework.TestCaseSource("AppendModes")]
+        public virtual void WidgetDaEntryRemovePageTest(bool appendMode) {
             String testName = "widgetDaEntryRemovePage.pdf";
             String outPdf = DESTINATION_FOLDER + testName;
+            StampingProperties props = new StampingProperties();
+            if (appendMode) {
+                props.UseAppendMode();
+            }
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "widgetWithDaEntry.pdf"), CompareTool
-                .CreateTestPdfWriter(outPdf))) {
+                .CreateTestPdfWriter(outPdf), props)) {
                 pdfDocument.RemovePage(3);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_" + testName
                 , DESTINATION_FOLDER));
         }
 
-        [NUnit.Framework.Test]
-        public virtual void MergedAndSimpleWidgetsRemovePageTest() {
+        [NUnit.Framework.TestCaseSource("AppendModes")]
+        public virtual void MergedAndSimpleWidgetsRemovePageTest(bool appendMode) {
             String testName = "mergedAndSimpleWidgetsRemovePage.pdf";
             String outPdf = DESTINATION_FOLDER + testName;
+            StampingProperties props = new StampingProperties();
+            if (appendMode) {
+                props.UseAppendMode();
+            }
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "mergedAndSimpleWidgets.pdf"
-                ), CompareTool.CreateTestPdfWriter(outPdf))) {
+                ), CompareTool.CreateTestPdfWriter(outPdf), props)) {
                 pdfDocument.RemovePage(1);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_" + testName
                 , DESTINATION_FOLDER));
         }
 
-        [NUnit.Framework.Test]
-        public virtual void MergedSiblingWidgetsRemovePageTest() {
+        [NUnit.Framework.TestCaseSource("AppendModes")]
+        public virtual void MergedSiblingWidgetsRemovePageTest(bool appendMode) {
             String testName = "mergedSiblingWidgetsRemovePage.pdf";
             String outPdf = DESTINATION_FOLDER + testName;
+            StampingProperties props = new StampingProperties();
+            if (appendMode) {
+                props.UseAppendMode();
+            }
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "mergedSiblingWidgets.pdf")
-                , CompareTool.CreateTestPdfWriter(outPdf))) {
+                , CompareTool.CreateTestPdfWriter(outPdf), props)) {
                 pdfDocument.RemovePage(2);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_" + testName

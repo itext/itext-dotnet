@@ -63,14 +63,14 @@ namespace iText.Kernel.Pdf {
             PdfArray media = pdfDoc.GetPage(1).GetPdfObject().GetAsArray(PdfName.MediaBox);
             media.Remove(2);
             media.Add(new PdfNumber(500));
-            media.SetModified();
+            pdfDoc.GetPage(1).SetModified();
             pdfDoc.Close();
-            PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "adjustingsInObjStm.pdf"));
+            int expectNumberOfObjects = pdfDoc.GetNumberOfPdfObjects();
+            NUnit.Framework.Assert.AreEqual(10, expectNumberOfObjects);
+            // Output pdf document should be openable
+            PdfDocument doc = new PdfDocument(CompareTool.CreateOutputReader(outputFile));
             PdfObject @object = doc.GetPdfObject(8);
             PdfDictionary pageDict = (PdfDictionary)@object;
-            int expectNumberOfObjects = pdfDoc.GetNumberOfPdfObjects();
-            //output pdf document should be openable
-            NUnit.Framework.Assert.AreEqual(10, expectNumberOfObjects);
             NUnit.Framework.Assert.AreEqual(PdfName.ObjStm, pageDict.Get(PdfName.Type));
         }
 
@@ -83,11 +83,11 @@ namespace iText.Kernel.Pdf {
             PdfObject newObj = pdfDoc.GetPage(1).GetPdfObject();
             newObj.SetModified();
             pdfDoc.Close();
-            PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "adjustingsInObjStmInIncrement.pdf"));
+            // Output pdf document should be openable
+            PdfDocument doc = new PdfDocument(CompareTool.CreateOutputReader(outputFile));
             PdfDictionary objStmDict = (PdfDictionary)doc.GetPdfObject(8);
             int expectNumberOfObjects = doc.GetNumberOfPdfObjects();
-            //output pdf document should be openable
-            NUnit.Framework.Assert.AreEqual(9, expectNumberOfObjects);
+            NUnit.Framework.Assert.AreEqual(10, expectNumberOfObjects);
             NUnit.Framework.Assert.AreEqual(PdfName.ObjStm, objStmDict.Get(PdfName.Type));
             doc.Close();
         }

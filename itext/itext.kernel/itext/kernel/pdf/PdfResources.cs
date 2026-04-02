@@ -667,6 +667,7 @@ namespace iText.Kernel.Pdf {
                         PdfObject cloneResources = GetPdfObject().Clone();
                         cloneResources.MakeIndirect(GetPdfObject().GetIndirectReference().GetDocument());
                         pdfXObject.Put(PdfName.Resources, cloneResources.GetIndirectReference());
+                        pdfXObject.SetModified();
                     }
                 }
             }

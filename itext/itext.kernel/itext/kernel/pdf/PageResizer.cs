@@ -623,6 +623,10 @@ namespace iText.Kernel.Pdf {
             double[] newMatrixArray = new double[6];
             newMatrix.GetMatrix(newMatrixArray);
             appearanceStream.Put(PdfName.Matrix, new PdfArray(newMatrixArray));
+            // TODO: DEVSIX-9778 - Kernel: Incremental update truncates the page content stream,
+            //  dropping the final drawing commands in Append mode
+            // See if this can be eliminated
+            appearanceStream.SetModified();
         }
 
         private static String GetDaFromParent(PdfDictionary dict) {
