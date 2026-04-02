@@ -26,6 +26,7 @@ using System.IO;
 using iText.IO.Image;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Layer;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
@@ -275,6 +276,128 @@ namespace iText.Kernel.Pdf {
             Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => PdfXObject.CalculateProportionallyFitRectangleWithHeight
                 (pdfXObject, 0, 0, 20));
             NUnit.Framework.Assert.AreEqual("PdfFormXObject or PdfImageXObject expected.", e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfFormXObjectStreamConstructorIsModifiedFlagSetTest() {
+            String srcPdf = SOURCE_FOLDER + "formXObjectWithoutSubtype.pdf";
+            String destPdf = DESTINATION_FOLDER + "pdfFormXObjectStreamConstructorIsModifiedFlagSetTest.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_pdfFormXObjectStreamConstructorIsModifiedFlagSetTest.pdf";
+            PdfName formName = new PdfName("Form1");
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(destPdf), new StampingProperties
+                ().UseAppendMode())) {
+                PdfPage firstPage = pdfDocument.GetFirstPage();
+                PdfResources pageResources = firstPage.GetResources();
+                PdfDictionary xObjectDict = pageResources.GetResource(PdfName.XObject);
+                PdfStream formStream = (PdfStream)xObjectDict.Get(formName);
+                PdfFormXObject formXObject = new PdfFormXObject(formStream);
+                PdfCanvas canvas = new PdfCanvas(firstPage);
+                canvas.AddXObjectAt(formXObject, 0, 300);
+                canvas.Release();
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfFormXObjectGetResourcesIsModifiedFlagSetTest() {
+            String srcPdf = SOURCE_FOLDER + "formXObjectWithoutResources.pdf";
+            String destPdf = DESTINATION_FOLDER + "pdfFormXObjectGetResourcesIsModifiedFlagSetTest.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_pdfFormXObjectGetResourcesIsModifiedFlagSetTest.pdf";
+            PdfName formName = new PdfName("Form1");
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(destPdf), new StampingProperties
+                ().UseAppendMode())) {
+                PdfPage firstPage = pdfDocument.GetFirstPage();
+                PdfResources pageResources = firstPage.GetResources();
+                PdfDictionary xObjectDict = pageResources.GetResource(PdfName.XObject);
+                PdfStream formStream = (PdfStream)xObjectDict.Get(formName);
+                PdfFormXObject formXObject = new PdfFormXObject(formStream);
+                formXObject.GetResources();
+                PdfCanvas canvas = new PdfCanvas(firstPage);
+                canvas.AddXObjectAt(formXObject, 0, 300);
+                canvas.Release();
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfXObjectSetLayerIsModifiedFlagSetTest() {
+            String srcPdf = SOURCE_FOLDER + "simpleFormXObject.pdf";
+            String destPdf = DESTINATION_FOLDER + "pdfXObjectSetLayerIsModifiedFlagSetTest.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_pdfXObjectSetLayerIsModifiedFlagSetTest.pdf";
+            PdfName formName = new PdfName("Form1");
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(destPdf), new StampingProperties
+                ().UseAppendMode())) {
+                PdfPage firstPage = pdfDocument.GetFirstPage();
+                PdfResources pageResources = firstPage.GetResources();
+                PdfDictionary xObjectDict = pageResources.GetResource(PdfName.XObject);
+                PdfStream formStream = (PdfStream)xObjectDict.Get(formName);
+                PdfFormXObject formXObject = new PdfFormXObject(formStream);
+                PdfLayer layer = pdfDocument.GetCatalog().GetOCProperties(true).GetLayers()[0];
+                formXObject.SetLayer(layer);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfXObjectGetAssociatedFilesIsModifiedFlagSetTest() {
+            String srcPdf = SOURCE_FOLDER + "simpleFormXObject.pdf";
+            String destPdf = DESTINATION_FOLDER + "pdfXObjectGetAssociatedFilesIsModifiedFlagSetTest.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_pdfXObjectGetAssociatedFilesIsModifiedFlagSetTest.pdf";
+            PdfName formName = new PdfName("Form1");
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(destPdf), new StampingProperties
+                ().UseAppendMode())) {
+                PdfPage firstPage = pdfDocument.GetFirstPage();
+                PdfResources pageResources = firstPage.GetResources();
+                PdfDictionary xObjectDict = pageResources.GetResource(PdfName.XObject);
+                PdfStream formStream = (PdfStream)xObjectDict.Get(formName);
+                PdfFormXObject formXObject = new PdfFormXObject(formStream);
+                formXObject.GetAssociatedFiles(true);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfXObjectAddAssociatedFileIsModifiedFlagSetTest() {
+            String srcPdf = SOURCE_FOLDER + "simpleFormXObject.pdf";
+            String destPdf = DESTINATION_FOLDER + "pdfXObjectAddAssociatedFileIsModifiedFlagSetTest.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_pdfXObjectAddAssociatedFileIsModifiedFlagSetTest.pdf";
+            PdfName formName = new PdfName("Form1");
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(destPdf), new StampingProperties
+                ().UseAppendMode())) {
+                PdfPage firstPage = pdfDocument.GetFirstPage();
+                PdfResources pageResources = firstPage.GetResources();
+                PdfDictionary xObjectDict = pageResources.GetResource(PdfName.XObject);
+                PdfStream formStream = (PdfStream)xObjectDict.Get(formName);
+                PdfFormXObject formXObject = new PdfFormXObject(formStream);
+                formXObject.AddAssociatedFile(PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, "Associated File".GetBytes()
+                    , "af.txt", PdfName.Data));
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PdfImageXObjectPutIsModifiedSetTest() {
+            String fileName = "pdfImageXObjectPutIsModifiedSetTest.pdf";
+            String srcPdf = SOURCE_FOLDER + fileName;
+            String destPdf = DESTINATION_FOLDER + fileName;
+            String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
+            PdfName imageName = new PdfName("Im1");
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(destPdf), new StampingProperties
+                ().UseAppendMode())) {
+                PdfPage firstPage = pdfDocument.GetFirstPage();
+                PdfResources pageResources = firstPage.GetResources();
+                PdfDictionary xObjectDict = pageResources.GetResource(PdfName.XObject);
+                PdfStream imageXObjectStream = (PdfStream)xObjectDict.Get(imageName);
+                PdfImageXObject imageXObject = new PdfImageXObject(imageXObjectStream);
+                imageXObject.Put(PdfName.AF, new PdfArray());
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                ));
         }
 
         private class CustomPdfXObject : PdfXObject {
