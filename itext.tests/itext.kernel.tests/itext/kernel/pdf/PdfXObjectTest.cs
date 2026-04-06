@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Image;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
@@ -44,6 +45,10 @@ namespace iText.Kernel.Pdf {
         public static readonly String[] images = new String[] { SOURCE_FOLDER + "WP_20140410_001.bmp", SOURCE_FOLDER
              + "WP_20140410_001.JPC", SOURCE_FOLDER + "WP_20140410_001.jpg", SOURCE_FOLDER + "WP_20140410_001.tif"
              };
+
+        private static ICollection<Object[]> AppendModes() {
+            return JavaUtil.ArraysAsList(new Object[][] { new Object[] { true }, new Object[] { false } });
+        }
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -278,14 +283,17 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual("PdfFormXObject or PdfImageXObject expected.", e.Message);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void PdfFormXObjectStreamConstructorIsModifiedFlagSetTest() {
+        [NUnit.Framework.TestCaseSource("AppendModes")]
+        public virtual void PdfFormXObjectStreamConstructorIsModifiedFlagSetTest(bool appendMode) {
             String srcPdf = SOURCE_FOLDER + "formXObjectWithoutSubtype.pdf";
-            String destPdf = DESTINATION_FOLDER + "pdfFormXObjectStreamConstructorIsModifiedFlagSetTest.pdf";
-            String cmpPdf = SOURCE_FOLDER + "cmp_pdfFormXObjectStreamConstructorIsModifiedFlagSetTest.pdf";
+            String destPdf = DESTINATION_FOLDER + "formStreamConstructorModified.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_formStreamConstructorModified.pdf";
             PdfName formName = new PdfName("Form1");
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(destPdf), new StampingProperties
-                ().UseAppendMode())) {
+            StampingProperties props = new StampingProperties();
+            if (appendMode) {
+                props.UseAppendMode();
+            }
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(destPdf), props)) {
                 PdfPage firstPage = pdfDocument.GetFirstPage();
                 PdfResources pageResources = firstPage.GetResources();
                 PdfDictionary xObjectDict = pageResources.GetResource(PdfName.XObject);
@@ -299,14 +307,17 @@ namespace iText.Kernel.Pdf {
                 ));
         }
 
-        [NUnit.Framework.Test]
-        public virtual void PdfFormXObjectGetResourcesIsModifiedFlagSetTest() {
+        [NUnit.Framework.TestCaseSource("AppendModes")]
+        public virtual void PdfFormXObjectGetResourcesIsModifiedFlagSetTest(bool appendMode) {
             String srcPdf = SOURCE_FOLDER + "formXObjectWithoutResources.pdf";
-            String destPdf = DESTINATION_FOLDER + "pdfFormXObjectGetResourcesIsModifiedFlagSetTest.pdf";
-            String cmpPdf = SOURCE_FOLDER + "cmp_pdfFormXObjectGetResourcesIsModifiedFlagSetTest.pdf";
+            String destPdf = DESTINATION_FOLDER + "formGetResourcesModified.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_formGetResourcesModified.pdf";
             PdfName formName = new PdfName("Form1");
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(destPdf), new StampingProperties
-                ().UseAppendMode())) {
+            StampingProperties props = new StampingProperties();
+            if (appendMode) {
+                props.UseAppendMode();
+            }
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(destPdf), props)) {
                 PdfPage firstPage = pdfDocument.GetFirstPage();
                 PdfResources pageResources = firstPage.GetResources();
                 PdfDictionary xObjectDict = pageResources.GetResource(PdfName.XObject);
@@ -321,14 +332,17 @@ namespace iText.Kernel.Pdf {
                 ));
         }
 
-        [NUnit.Framework.Test]
-        public virtual void PdfXObjectSetLayerIsModifiedFlagSetTest() {
+        [NUnit.Framework.TestCaseSource("AppendModes")]
+        public virtual void PdfXObjectSetLayerIsModifiedFlagSetTest(bool appendMode) {
             String srcPdf = SOURCE_FOLDER + "simpleFormXObject.pdf";
-            String destPdf = DESTINATION_FOLDER + "pdfXObjectSetLayerIsModifiedFlagSetTest.pdf";
-            String cmpPdf = SOURCE_FOLDER + "cmp_pdfXObjectSetLayerIsModifiedFlagSetTest.pdf";
+            String destPdf = DESTINATION_FOLDER + "setLayerModified.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_setLayerModified.pdf";
             PdfName formName = new PdfName("Form1");
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(destPdf), new StampingProperties
-                ().UseAppendMode())) {
+            StampingProperties props = new StampingProperties();
+            if (appendMode) {
+                props.UseAppendMode();
+            }
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(destPdf), props)) {
                 PdfPage firstPage = pdfDocument.GetFirstPage();
                 PdfResources pageResources = firstPage.GetResources();
                 PdfDictionary xObjectDict = pageResources.GetResource(PdfName.XObject);
@@ -341,14 +355,17 @@ namespace iText.Kernel.Pdf {
                 ));
         }
 
-        [NUnit.Framework.Test]
-        public virtual void PdfXObjectGetAssociatedFilesIsModifiedFlagSetTest() {
+        [NUnit.Framework.TestCaseSource("AppendModes")]
+        public virtual void PdfXObjectGetAssociatedFilesIsModifiedFlagSetTest(bool appendMode) {
             String srcPdf = SOURCE_FOLDER + "simpleFormXObject.pdf";
-            String destPdf = DESTINATION_FOLDER + "pdfXObjectGetAssociatedFilesIsModifiedFlagSetTest.pdf";
-            String cmpPdf = SOURCE_FOLDER + "cmp_pdfXObjectGetAssociatedFilesIsModifiedFlagSetTest.pdf";
+            String destPdf = DESTINATION_FOLDER + "getAssociatedFilesModified.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_getAssociatedFilesModified.pdf";
             PdfName formName = new PdfName("Form1");
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(destPdf), new StampingProperties
-                ().UseAppendMode())) {
+            StampingProperties props = new StampingProperties();
+            if (appendMode) {
+                props.UseAppendMode();
+            }
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(destPdf), props)) {
                 PdfPage firstPage = pdfDocument.GetFirstPage();
                 PdfResources pageResources = firstPage.GetResources();
                 PdfDictionary xObjectDict = pageResources.GetResource(PdfName.XObject);
@@ -360,14 +377,17 @@ namespace iText.Kernel.Pdf {
                 ));
         }
 
-        [NUnit.Framework.Test]
-        public virtual void PdfXObjectAddAssociatedFileIsModifiedFlagSetTest() {
+        [NUnit.Framework.TestCaseSource("AppendModes")]
+        public virtual void PdfXObjectAddAssociatedFileIsModifiedFlagSetTest(bool appendMode) {
             String srcPdf = SOURCE_FOLDER + "simpleFormXObject.pdf";
-            String destPdf = DESTINATION_FOLDER + "pdfXObjectAddAssociatedFileIsModifiedFlagSetTest.pdf";
-            String cmpPdf = SOURCE_FOLDER + "cmp_pdfXObjectAddAssociatedFileIsModifiedFlagSetTest.pdf";
+            String destPdf = DESTINATION_FOLDER + "addAssociatedFileModified.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_addAssociatedFileModified.pdf";
             PdfName formName = new PdfName("Form1");
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(destPdf), new StampingProperties
-                ().UseAppendMode())) {
+            StampingProperties props = new StampingProperties();
+            if (appendMode) {
+                props.UseAppendMode();
+            }
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(destPdf), props)) {
                 PdfPage firstPage = pdfDocument.GetFirstPage();
                 PdfResources pageResources = firstPage.GetResources();
                 PdfDictionary xObjectDict = pageResources.GetResource(PdfName.XObject);
@@ -380,15 +400,17 @@ namespace iText.Kernel.Pdf {
                 ));
         }
 
-        [NUnit.Framework.Test]
-        public virtual void PdfImageXObjectPutIsModifiedSetTest() {
-            String fileName = "pdfImageXObjectPutIsModifiedSetTest.pdf";
-            String srcPdf = SOURCE_FOLDER + fileName;
-            String destPdf = DESTINATION_FOLDER + fileName;
-            String cmpPdf = SOURCE_FOLDER + "cmp_" + fileName;
+        [NUnit.Framework.TestCaseSource("AppendModes")]
+        public virtual void PdfImageXObjectPutIsModifiedSetTest(bool appendMode) {
+            String srcPdf = SOURCE_FOLDER + "imagePutModified.pdf";
+            String destPdf = DESTINATION_FOLDER + "imagePutModified.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_imagePutModified.pdf";
             PdfName imageName = new PdfName("Im1");
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(destPdf), new StampingProperties
-                ().UseAppendMode())) {
+            StampingProperties props = new StampingProperties();
+            if (appendMode) {
+                props.UseAppendMode();
+            }
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(destPdf), props)) {
                 PdfPage firstPage = pdfDocument.GetFirstPage();
                 PdfResources pageResources = firstPage.GetResources();
                 PdfDictionary xObjectDict = pageResources.GetResource(PdfName.XObject);
