@@ -438,7 +438,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <summary>Sets the layer this annotation belongs to.</summary>
         /// <param name="layer">the layer this annotation belongs to</param>
         public virtual void SetLayer(IPdfOCG layer) {
-            GetPdfObject().Put(PdfName.OC, layer.GetIndirectReference());
+            Put(PdfName.OC, layer.GetIndirectReference());
         }
 
         /// <summary>
@@ -907,7 +907,7 @@ namespace iText.Kernel.Pdf.Annot {
             PdfDictionary ap = GetAppearanceDictionary();
             if (ap == null) {
                 ap = new PdfDictionary();
-                GetPdfObject().Put(PdfName.AP, ap);
+                Put(PdfName.AP, ap);
             }
             ap.Put(appearanceType, appearance);
             return this;
@@ -1533,6 +1533,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation Remove(PdfName key) {
             GetPdfObject().Remove(key);
+            SetModified();
             return this;
         }
 

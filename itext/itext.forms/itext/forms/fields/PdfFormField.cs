@@ -529,7 +529,7 @@ namespace iText.Forms.Fields {
             if (kids != null) {
                 kids.Remove(fieldName.GetPdfObject());
                 if (kids.IsEmpty()) {
-                    GetPdfObject().Remove(PdfName.Kids);
+                    Remove(PdfName.Kids);
                 }
             }
         }
@@ -537,7 +537,7 @@ namespace iText.Forms.Fields {
         /// <summary>Removes all children from the current field.</summary>
         public virtual void RemoveChildren() {
             childFields.Clear();
-            GetPdfObject().Remove(PdfName.Kids);
+            Remove(PdfName.Kids);
         }
 
         /// <summary>Gets the kids of this object.</summary>
@@ -1138,8 +1138,7 @@ namespace iText.Forms.Fields {
             }
             else {
                 if (!PdfName.Sig.Equals(GetFormType())) {
-                    GetPdfObject().Remove(PdfName.DA);
-                    SetModified();
+                    Remove(PdfName.DA);
                 }
             }
         }
