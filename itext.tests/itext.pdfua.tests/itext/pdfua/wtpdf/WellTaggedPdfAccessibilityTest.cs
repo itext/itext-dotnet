@@ -22,7 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
+using iText.Kernel.Utils.Checkers;
 using iText.Pdfua;
 using iText.Pdfua.Checkers;
 using iText.Pdfua.Logs;
@@ -92,6 +94,23 @@ namespace iText.Pdfua.Wtpdf {
             }
             framework.AddSuppliers(tableBuilder.GenerateFunc());
             framework.AssertBothValid("wellTaggedPdfTableTest");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WellTaggedPdfXmpTwoConformanceWrongOrderTest() {
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream(), new WriterProperties().
+                SetPdfVersion(PdfVersion.PDF_2_0)))) {
+                pdfDocument.AddNewPage();
+                PdfCatalog catalog = pdfDocument.GetCatalog();
+                byte[] bytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "wtpdfReuseAccessibilityMetadata.xmp"
+                    ));
+                PdfStream metadata = new PdfStream(bytes);
+                catalog.Put(PdfName.Metadata, metadata);
+                catalog.Put(PdfName.Type, PdfName.Metadata);
+                catalog.Put(PdfName.Subtype, PdfName.XML);
+                NUnit.Framework.Assert.DoesNotThrow(() => PdfCheckersUtil.CheckMetadata(catalog.GetPdfObject(), PdfConformance
+                    .WELL_TAGGED_PDF_FOR_REUSE, (msg) => new PdfException(msg)));
+            }
         }
     }
 }

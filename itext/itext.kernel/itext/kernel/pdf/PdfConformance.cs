@@ -451,8 +451,24 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual bool Includes(iText.Kernel.Pdf.PdfConformance conformance) {
             return (conformance.uaConformance == null || conformance.uaConformance.Equals(this.uaConformance)) && (conformance
-                .aConformance == null || conformance.aConformance.Equals(this.aConformance)) && (this.wtpdfFlag & conformance
-                .wtpdfFlag) == conformance.wtpdfFlag;
+                .aConformance == null || conformance.aConformance.Equals(this.aConformance)) && IsWellTaggedConformanceIncluded
+                (conformance);
+        }
+
+        /// <summary>
+        /// Checks if well tagged conformance part of passed conformance is included into this
+        /// <see cref="PdfConformance"/>
+        /// </summary>
+        /// <param name="conformance">the conformance to check</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if well tagged conformance of this conformance is included,
+        /// otherwise
+        /// <see langword="false"/>
+        /// </returns>
+        public virtual bool IsWellTaggedConformanceIncluded(iText.Kernel.Pdf.PdfConformance conformance) {
+            return (this.wtpdfFlag & conformance.wtpdfFlag) == conformance.wtpdfFlag;
         }
 
         /// <summary>Checks if any PDF/A or PDF/UA conformance is specified.</summary>
