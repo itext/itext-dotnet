@@ -66,7 +66,8 @@ namespace iText.Pdfua.Checkers {
                 document.Add(img);
             }
             );
-            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE) && !pdfConformance.ConformsTo(PdfConformance
+                .WELL_TAGGED_PDF_FOR_ACCESSIBILITY)) {
                 framework.AssertBothValid("imageNoAltDescription");
             }
             else {
@@ -89,7 +90,8 @@ namespace iText.Pdfua.Checkers {
                 document.Add(img);
             }
             );
-            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE) && !pdfConformance.ConformsTo(PdfConformance
+                .WELL_TAGGED_PDF_FOR_ACCESSIBILITY)) {
                 framework.AssertBothValid("imageWithEmptyAltDescription");
             }
             else {
@@ -176,7 +178,8 @@ namespace iText.Pdfua.Checkers {
                 return new Div().Add(img);
             }
             );
-            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE) && !pdfConformance.ConformsTo(PdfConformance
+                .WELL_TAGGED_PDF_FOR_ACCESSIBILITY)) {
                 framework.AssertBothValid("imageWithCustomRoleAndNoDescription");
             }
             else {
@@ -206,7 +209,8 @@ namespace iText.Pdfua.Checkers {
                 return new Div().Add(img);
             }
             );
-            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE) && !pdfConformance.ConformsTo(PdfConformance
+                .WELL_TAGGED_PDF_FOR_ACCESSIBILITY)) {
                 framework.AssertBothValid("imageCustomDoubleMapping_Throws");
             }
             else {
@@ -289,7 +293,8 @@ namespace iText.Pdfua.Checkers {
                 document.Add(imgWithCaption);
             }
             );
-            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE) && !pdfConformance.ConformsTo(PdfConformance
+                .WELL_TAGGED_PDF_FOR_ACCESSIBILITY)) {
                 framework.AssertBothValid("imageWithCaptionWithoutAltDescr");
             }
             else {
@@ -308,7 +313,8 @@ namespace iText.Pdfua.Checkers {
                 document.Add(img);
             }
             );
-            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE) && !pdfConformance.ConformsTo(PdfConformance
+                .WELL_TAGGED_PDF_FOR_ACCESSIBILITY)) {
                 framework.AssertBothValid("imageWithoutActualText");
             }
             else {
@@ -384,7 +390,8 @@ namespace iText.Pdfua.Checkers {
                 canvas.CloseTag();
             }
             );
-            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE) && !pdfConformance.ConformsTo(PdfConformance
+                .WELL_TAGGED_PDF_FOR_ACCESSIBILITY)) {
                 framework.AssertBothValid("canvasWithoutAltDescr");
             }
             else {
@@ -425,7 +432,8 @@ namespace iText.Pdfua.Checkers {
                 document.Add(img);
             }
             );
-            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE) && !pdfConformance.ConformsTo(PdfConformance
+                .WELL_TAGGED_PDF_FOR_ACCESSIBILITY)) {
                 framework.AssertBothValid("overflowImage");
             }
             else {
@@ -454,7 +462,8 @@ namespace iText.Pdfua.Checkers {
                 document.Add(table);
             }
             );
-            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE) && !pdfConformance.ConformsTo(PdfConformance
+                .WELL_TAGGED_PDF_FOR_ACCESSIBILITY)) {
                 framework.AssertBothValid("embeddedImageInTable");
             }
             else {
@@ -473,7 +482,8 @@ namespace iText.Pdfua.Checkers {
                 document.Add(div);
             }
             );
-            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE) && !pdfConformance.ConformsTo(PdfConformance
+                .WELL_TAGGED_PDF_FOR_ACCESSIBILITY)) {
                 framework.AssertBothValid("embeddedImageInDiv");
             }
             else {
@@ -492,7 +502,8 @@ namespace iText.Pdfua.Checkers {
                 document.Add(paragraph);
             }
             );
-            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+            if (pdfConformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE) && !pdfConformance.ConformsTo(PdfConformance
+                .WELL_TAGGED_PDF_FOR_ACCESSIBILITY)) {
                 framework.AssertBothValid("embeddedImageInParagraph");
             }
             else {

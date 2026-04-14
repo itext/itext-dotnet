@@ -267,7 +267,8 @@ namespace iText.Pdfua.Checkers {
                 info.SetTitle("English pangram");
             }
             );
-            if (conformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+            if (conformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE) && !conformance.ConformsTo(PdfConformance
+                .WELL_TAGGED_PDF_FOR_ACCESSIBILITY)) {
                 framework.AssertBothValid("documentWithEmptyViewerPreferencesTest");
             }
             else {
@@ -360,7 +361,8 @@ namespace iText.Pdfua.Checkers {
                 pdfDocument.GetCatalog().Put(PdfName.OCProperties, ocProperties);
             }
             );
-            if (conformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+            if (conformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE) && !conformance.ConformsTo(PdfConformance
+                .WELL_TAGGED_PDF_FOR_ACCESSIBILITY)) {
                 framework.AssertBothValid("pdfuaOCGPropertiesCheck01");
             }
             else {
@@ -384,7 +386,8 @@ namespace iText.Pdfua.Checkers {
                 pdfDocument.GetCatalog().Put(PdfName.OCProperties, ocProperties);
             }
             );
-            if (conformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+            if (conformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE) && !conformance.ConformsTo(PdfConformance
+                .WELL_TAGGED_PDF_FOR_ACCESSIBILITY)) {
                 framework.AssertBothValid("pdfuaOCGPropertiesCheck02");
             }
             else {
@@ -409,7 +412,8 @@ namespace iText.Pdfua.Checkers {
                 pdfDocument.GetCatalog().Put(PdfName.OCProperties, ocProperties);
             }
             );
-            if (conformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+            if (conformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE) && !conformance.ConformsTo(PdfConformance
+                .WELL_TAGGED_PDF_FOR_ACCESSIBILITY)) {
                 framework.AssertBothValid("pdfuaOCGPropertiesCheck03");
             }
             else {
