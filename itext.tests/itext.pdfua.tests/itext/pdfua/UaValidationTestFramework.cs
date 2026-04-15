@@ -292,9 +292,20 @@ namespace iText.Pdfua {
         }
 
         private String PathSafeConformance() {
-            String conformanceString = conformance.ToString();
-            return iText.Commons.Utils.StringUtil.ReplaceAll(conformanceString.Substring(conformanceString.IndexOf(":"
-                , StringComparison.Ordinal) + 1), "[ -]", "_");
+            StringBuilder conformanceShortString = new StringBuilder();
+            if (conformance.GetUAConformance() != null) {
+                conformanceShortString.Append("_UA_").Append(conformance.GetUAConformance().GetPart());
+            }
+            if (conformance.IsWtpdf()) {
+                conformanceShortString.Append("_WTPDF");
+                if (conformance.ConformsTo(WellTaggedPdfConformance.FOR_ACCESSIBILITY)) {
+                    conformanceShortString.Append("_A");
+                }
+                if (conformance.ConformsTo(WellTaggedPdfConformance.FOR_REUSE)) {
+                    conformanceShortString.Append("_R");
+                }
+            }
+            return conformanceShortString.ToString();
         }
 
         private static String PrintStackTrace(Exception e) {
