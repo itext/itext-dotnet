@@ -75,6 +75,18 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.RESOLUTION_NOT_PARSED, LogLevel = 
+            LogLevelConstants.INFO)]
+        public virtual void ParseResolutionFloatParsingTest() {
+            float expected = 10f;
+            float actual = CssDimensionParsingUtils.ParseResolution("10dpi");
+            NUnit.Framework.Assert.AreEqual(expected, actual, 0.01f);
+            expected = 0f;
+            actual = CssDimensionParsingUtils.ParseResolution("10...2.1dpi");
+            NUnit.Framework.Assert.AreEqual(expected, actual, 0.01f);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ParseInvalidFloat() {
             String value = "invalidFloat";
             try {
@@ -200,6 +212,17 @@ namespace iText.StyledXmlParser.Css.Util {
         }
 
         [NUnit.Framework.Test]
+        public virtual void ParseAbsoluteLengthFloatParsingTest() {
+            float expected = 7.5f;
+            float actual = CssDimensionParsingUtils.ParseAbsoluteLength("10px", CommonCssConstants.PX);
+            NUnit.Framework.Assert.AreEqual(expected, actual, 0.01f);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssDimensionParsingUtils
+                .ParseAbsoluteLength("10.+++1.2px", CommonCssConstants.PX));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.NAN, "10.+++1.2px"), e.Message
+                );
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ParseDoubleIntegerValueTest() {
             double? expectedString = 5.0;
             double? actualString = CssDimensionParsingUtils.ParseDouble("5");
@@ -232,6 +255,13 @@ namespace iText.StyledXmlParser.Css.Util {
             double? expectedString = null;
             double? actualString = CssDimensionParsingUtils.ParseDouble("text");
             NUnit.Framework.Assert.AreEqual(expectedString, actualString);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseIntegerNegativeTextTest() {
+            int? expected = null;
+            int? actual = CssDimensionParsingUtils.ParseInteger("text");
+            NUnit.Framework.Assert.AreEqual(expected, actual);
         }
 
         [NUnit.Framework.Test]
@@ -314,6 +344,38 @@ namespace iText.StyledXmlParser.Css.Util {
             NUnit.Framework.Assert.IsNull(CssDimensionParsingUtils.ParseFlex("13.3f"));
             NUnit.Framework.Assert.IsNull(CssDimensionParsingUtils.ParseFlex("13.3"));
             NUnit.Framework.Assert.IsNull(CssDimensionParsingUtils.ParseFlex(null));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParsePercentToPtTest() {
+            UnitValue expected = new UnitValue(UnitValue.PERCENT, 0.9f);
+            UnitValue actual = CssDimensionParsingUtils.ParseLengthValueToPt("+.9%", 0, 0);
+            NUnit.Framework.Assert.AreEqual(expected, actual);
+            actual = CssDimensionParsingUtils.ParseLengthValueToPt("10%%", 0, 0);
+            NUnit.Framework.Assert.IsNull(actual);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseAngleFloatParsingTest() {
+            float expected = 4.71f;
+            float actual = CssDimensionParsingUtils.ParseAngle("270deg", CommonCssConstants.DEG);
+            NUnit.Framework.Assert.AreEqual(expected, actual, 0.01f);
+            Exception e = NUnit.Framework.Assert.Catch(typeof(StyledXMLParserException), () => CssDimensionParsingUtils
+                .ParseAngle("2...51deg", CommonCssConstants.DEG));
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(StyledXMLParserException.NAN, "2...51deg"), e.Message
+                );
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.RELATIVE_VALUE_NOT_PARSED, LogLevel
+             = LogLevelConstants.INFO)]
+        public virtual void ParseRelativeLengthFloatParsingTest() {
+            float expected = 10f;
+            float actual = CssDimensionParsingUtils.ParseRelativeValue("10%", 100f);
+            NUnit.Framework.Assert.AreEqual(expected, actual, 0.01f);
+            expected = 0f;
+            actual = CssDimensionParsingUtils.ParseRelativeValue("10...2.1%", 100f);
+            NUnit.Framework.Assert.AreEqual(expected, actual, 0.01f);
         }
     }
 }

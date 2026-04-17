@@ -105,27 +105,29 @@ namespace iText.StyledXmlParser.Css.Util {
                 }
                 throw new StyledXMLParserException(MessageFormatUtil.Format(StyledXMLParserException.NAN, angle));
             }
-            float floatValue = float.Parse(angle.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture
-                );
+            float? floatValue = ParseFloat(angle.JSubstring(0, pos));
+            if (floatValue == null) {
+                throw new StyledXMLParserException(MessageFormatUtil.Format(StyledXMLParserException.NAN, angle));
+            }
             String unit = angle.Substring(pos);
             // Degrees
             if (unit.StartsWith(CommonCssConstants.DEG) || unit.Equals("") && CommonCssConstants.DEG.Equals(defaultMetric
                 )) {
-                return (float)Math.PI * floatValue / 180f;
+                return (float)Math.PI * floatValue.Value / 180f;
             }
             // Grads
             if (unit.StartsWith(CommonCssConstants.GRAD) || unit.Equals("") && CommonCssConstants.GRAD.Equals(defaultMetric
                 )) {
-                return (float)Math.PI * floatValue / 200f;
+                return (float)Math.PI * floatValue.Value / 200f;
             }
             // Radians
             if (unit.StartsWith(CommonCssConstants.RAD) || unit.Equals("") && CommonCssConstants.RAD.Equals(defaultMetric
                 )) {
-                return floatValue;
+                return floatValue.Value;
             }
             logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_METRIC_ANGLE_PARSED
                 , unit.Equals("") ? defaultMetric : unit));
-            return floatValue;
+            return floatValue.Value;
         }
 
         /// <summary>
@@ -184,12 +186,15 @@ namespace iText.StyledXmlParser.Css.Util {
                 throw new StyledXMLParserException(MessageFormatUtil.Format(StyledXMLParserException.NAN, length));
             }
             // Use double type locally to have better precision of the result after applying arithmetic operations
-            double f = Double.Parse(length.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture);
+            double? f = ParseDouble(length.JSubstring(0, pos));
+            if (f == null) {
+                throw new StyledXMLParserException(MessageFormatUtil.Format(StyledXMLParserException.NAN, length));
+            }
             String unit = length.Substring(pos);
             //points
             if (unit.StartsWith(CommonCssConstants.PT) || unit.Equals("") && defaultMetric.Equals(CommonCssConstants.PT
                 )) {
-                return (float)f;
+                return (float)f.Value;
             }
             // inches
             if (unit.StartsWith(CommonCssConstants.IN) || (unit.Equals("") && defaultMetric.Equals(CommonCssConstants.
@@ -233,7 +238,7 @@ namespace iText.StyledXmlParser.Css.Util {
             }
             logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
                 , unit.Equals("") ? defaultMetric : unit));
-            return (float)f;
+            return (float)f.Value;
         }
 
         /// <summary>Parses the absolute length.</summary>
@@ -257,8 +262,12 @@ namespace iText.StyledXmlParser.Css.Util {
                 return 0f;
             }
             // Use double type locally to have better precision of the result after applying arithmetic operations
-            double f = Double.Parse(relativeValue.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture
-                );
+            double? f = ParseDouble(relativeValue.JSubstring(0, pos));
+            if (f == null) {
+                logger.LogInformation(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant
+                    .RELATIVE_VALUE_NOT_PARSED, relativeValue));
+                return 0f;
+            }
             String unit = relativeValue.Substring(pos);
             if (unit.StartsWith(CommonCssConstants.PERCENTAGE)) {
                 f = baseValue * f / 100;
@@ -273,7 +282,7 @@ namespace iText.StyledXmlParser.Css.Util {
                     }
                 }
             }
-            return (float)f;
+            return (float)f.Value;
         }
 
         /// <summary>Convenience method for parsing a value to pt.</summary>
@@ -297,9 +306,8 @@ namespace iText.StyledXmlParser.Css.Util {
                 return new UnitValue(UnitValue.POINT, ParseAbsoluteLength(value));
             }
             else {
-                if (value != null && value.EndsWith(CommonCssConstants.PERCENTAGE)) {
-                    return new UnitValue(UnitValue.PERCENT, float.Parse(value.JSubstring(0, value.Length - 1), System.Globalization.CultureInfo.InvariantCulture
-                        ));
+                if (CssTypesValidationUtils.IsPercentageValue(value)) {
+                    return new UnitValue(UnitValue.PERCENT, (float)ParseFloat(value.JSubstring(0, value.Length - 1)));
                 }
                 else {
                     if (CssTypesValidationUtils.IsRemValue(value)) {
@@ -326,7 +334,7 @@ namespace iText.StyledXmlParser.Css.Util {
             if (value.EndsWith(CommonCssConstants.FR)) {
                 value = value.JSubstring(0, value.Length - CommonCssConstants.FR.Length);
                 if (CssTypesValidationUtils.IsNumber(value)) {
-                    return float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
+                    return ParseFloat(value);
                 }
             }
             return null;
@@ -468,8 +476,12 @@ namespace iText.StyledXmlParser.Css.Util {
             if (pos == 0) {
                 return 0f;
             }
-            double f = Double.Parse(resolutionStr.JSubstring(0, pos), System.Globalization.CultureInfo.InvariantCulture
-                );
+            double? f = ParseDouble(resolutionStr.JSubstring(0, pos));
+            if (f == null) {
+                logger.LogInformation(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant
+                    .RESOLUTION_NOT_PARSED, resolutionStr));
+                return 0f;
+            }
             String unit = resolutionStr.Substring(pos);
             if (unit.StartsWith(CommonCssConstants.DPCM)) {
                 f *= 2.54;
@@ -485,7 +497,7 @@ namespace iText.StyledXmlParser.Css.Util {
                     }
                 }
             }
-            return (float)f;
+            return (float)f.Value;
         }
 
         /// <summary>Parses either RGBA or CMYK color.</summary>
