@@ -206,8 +206,8 @@ namespace iText.Pdfua.Checkers {
         [NUnit.Framework.TestCaseSource("Data")]
         public virtual void DocumentWithInvalidLangEntryTest(PdfConformance conformance) {
             UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
-            PdfDocument pdfDoc = framework.CreatePdfDocument(null, DESTINATION_FOLDER + "invalidLang.pdf", "English pangram"
-                , "inv:alid");
+            PdfDocument pdfDoc = framework.CreatePdfDocument(null, DESTINATION_FOLDER + "invalidLang" + framework.PathSafeConformance
+                () + ".pdf", "English pangram", "inv:alid");
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => pdfDoc.Close());
             NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.DOCUMENT_SHALL_CONTAIN_VALID_LANG_ENTRY, e.
                 Message);

@@ -291,7 +291,7 @@ namespace iText.Pdfua {
             return null;
         }
 
-        private String PathSafeConformance() {
+        public virtual String PathSafeConformance() {
             StringBuilder conformanceShortString = new StringBuilder();
             if (conformance.GetUAConformance() != null) {
                 conformanceShortString.Append("_UA_").Append(conformance.GetUAConformance().GetPart());
