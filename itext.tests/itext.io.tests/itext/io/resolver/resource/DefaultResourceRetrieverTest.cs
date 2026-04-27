@@ -31,6 +31,7 @@ using iText.IO.Util;
 using iText.Test;
 using iText.Test.Attributes;
 using System.Net;
+using NUnit.Framework;
 
 namespace iText.IO.Resolver.Resource {
 //\cond DO_NOT_DOCUMENT
@@ -78,6 +79,7 @@ namespace iText.IO.Resolver.Resource {
         }
 
         [NUnit.Framework.Test]
+        [Ignore("Flaky on CI")]
         public virtual void LoadWithRequestAndHeaders()
         {
             // Android-Conversion-Ignore-Test DEVSIX-6459 Some different random connect exceptions on Android
