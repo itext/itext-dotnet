@@ -21,11 +21,22 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.IO.Font.Otf {
+    /// <summary>
+    /// A GPOS table uses anchor points to position one glyph with respect to another: two glyphs each define an anchor
+    /// point, and the text-processing client attaches the glyphs by aligning their corresponding anchor points.
+    /// </summary>
+    /// <remarks>
+    /// A GPOS table uses anchor points to position one glyph with respect to another: two glyphs each define an anchor
+    /// point, and the text-processing client attaches the glyphs by aligning their corresponding anchor points.
+    /// <para />
+    /// For more information see <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/gpos#anchor-table">Anchor table</a>
+    /// </remarks>
     public class GposAnchor {
         private int xCoordinate;
 
         private int yCoordinate;
 
+        /// <summary>Creates a GPOS Anchor object with zero x and y coordinates.</summary>
         public GposAnchor() {
         }
 

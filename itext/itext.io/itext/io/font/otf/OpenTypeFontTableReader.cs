@@ -261,7 +261,11 @@ namespace iText.IO.Font.Otf {
             int lookupFlag = rf.ReadUnsignedShort();
             int subTableCount = rf.ReadUnsignedShort();
             int[] subTableLocations = ReadUShortArray(subTableCount, lookupTableLocation);
-            lookupList.Add(ReadLookupTable(lookupType, lookupFlag, subTableLocations));
+            OpenTableLookup lookup = ReadLookupTable(lookupType, lookupFlag, subTableLocations);
+            if (lookup != null) {
+                lookup.SetIndexInLookupList(lookupList.Count);
+            }
+            lookupList.Add(lookup);
         }
     }
 }

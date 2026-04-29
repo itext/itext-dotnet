@@ -65,7 +65,7 @@ namespace iText.IO.Font {
             FontProgramFactory.ClearRegisteredFontFamilies();
             FontCache.ClearSavedFonts();
             FontProgramFactory.RegisterFontDirectory(FONT_FOLDER);
-            NUnit.Framework.Assert.AreEqual(52, FontProgramFactory.GetRegisteredFonts().Count);
+            NUnit.Framework.Assert.AreEqual(54, FontProgramFactory.GetRegisteredFonts().Count);
             NUnit.Framework.Assert.IsNull(FontCache.GetFont(iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
                 .CurrentContext.TestDirectory) + "/resources/itext/io/font/FreeSansBold.ttf"));
             NUnit.Framework.Assert.IsTrue(FontProgramFactory.GetRegisteredFonts().Contains("free sans bold"));

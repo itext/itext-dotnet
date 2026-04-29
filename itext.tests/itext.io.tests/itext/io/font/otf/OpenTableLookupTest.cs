@@ -53,5 +53,26 @@ namespace iText.IO.Font.Otf {
             NUnit.Framework.Assert.AreEqual(0, glyphIndexer.GetLine().GetStart());
             NUnit.Framework.Assert.AreEqual(1, glyphIndexer.GetLine().GetEnd());
         }
+
+        [NUnit.Framework.Test]
+        public virtual void LookupIndexTest() {
+            OpenTableLookupTest.SimpleTableLookup lookup = new OpenTableLookupTest.SimpleTableLookup();
+            NUnit.Framework.Assert.AreEqual(0, lookup.GetIndexInLookupList());
+            lookup.SetIndexInLookupList(1);
+            NUnit.Framework.Assert.AreEqual(1, lookup.GetIndexInLookupList());
+        }
+
+        private class SimpleTableLookup : OpenTableLookup {
+            public SimpleTableLookup()
+                : base(null, 0, null) {
+            }
+
+            public override bool TransformOne(GlyphLine line) {
+                return false;
+            }
+
+            protected internal override void ReadSubTable(int subTableLocation) {
+            }
+        }
     }
 }
