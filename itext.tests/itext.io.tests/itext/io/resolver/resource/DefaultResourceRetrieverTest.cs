@@ -79,7 +79,7 @@ namespace iText.IO.Resolver.Resource {
         }
 
         [NUnit.Framework.Test]
-        [Ignore("Flaky on CI")]
+        [Ignore("TODO DEVSIX-9938 - Flaky access on ci")]
         public virtual void LoadWithRequestAndHeaders()
         {
             // Android-Conversion-Ignore-Test DEVSIX-6459 Some different random connect exceptions on Android
