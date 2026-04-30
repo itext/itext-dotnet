@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Forms;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -165,12 +166,14 @@ namespace iText.Forms.Fields {
         /// Default value is
         /// <see langword="true"/>.
         /// </remarks>
-        /// <param name="ignore">boolean value to set.</param>
+        /// <param name="ignore">boolean value to set</param>
         /// <returns>
         /// this same
         /// <see cref="PdfSignatureFormField"/>
-        /// instance.
+        /// instance
         /// </returns>
+        [System.ObsoleteAttribute(@"if you have rotated pages but want to ignore that rotation when adding a new field, you need to disable this broken feature and negate page rotation by modifying form field rectangle and field rotation properties using PdfFormAnnotation.SetRotation(int) . An example code explaining how to do it can be found at <a href=""https://github.com/itext/itext-publications-examples-java/blob/develop/src/main/java/com/itextpdf/samples/sandbox/signatures/appearance/SignatureAppearancePageRotationAgnosticExample.java""> SignatureAppearancePageRotationAgnosticExample for Java</a> and <a href=""https://github.com/itext/itext-publications-samples-dotnet/blob/develop/itext/itext.samples/itext/samples/sandbox/signatures/appearance/SignatureAppearancePageRotationAgnosticExample.cs""> SignatureAppearancePageRotationAgnosticExample for C#</a>."
+            )]
         public virtual iText.Forms.Fields.PdfSignatureFormField SetIgnorePageRotation(bool ignore) {
             this.ignorePageRotation = ignore;
             return this;
