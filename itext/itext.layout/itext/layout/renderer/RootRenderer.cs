@@ -150,7 +150,7 @@ namespace iText.Layout.Renderer {
                                 }
                             }
                             else {
-                                if (currentArea.IsEmptyArea() && result.GetAreaBreak() == null) {
+                                if (currentArea.IsEmptyArea() && result.GetAreaBreak() == null && result.GetSectionBreak() == null) {
                                     bool keepTogetherChanged = TryDisableKeepTogether(result, rendererIsFloat, rootRendererStateHandler);
                                     bool areKeepTogetherAndForcedPlacementBothNotChanged = !keepTogetherChanged;
                                     if (areKeepTogetherAndForcedPlacementBothNotChanged) {

@@ -26,11 +26,13 @@ using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Event;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Exceptions;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
+using iText.Layout.Properties.Margins;
 using iText.Layout.Tagging;
 
 namespace iText.Layout.Renderer {
@@ -41,6 +43,14 @@ namespace iText.Layout.Renderer {
 
         protected internal TargetCounterHandler targetCounterHandler = new TargetCounterHandler();
 
+        private DocumentRenderer.PageMarginBoxesDrawingHandler marginBoxesHandler;
+
+        private bool dynamicPageMarginsUsed = false;
+
+        private PageSize currentPageSize = null;
+
+        private SectionBreak prevSectionBreak = null;
+
         public DocumentRenderer(Document document)
             : this(document, true) {
         }
@@ -49,6 +59,10 @@ namespace iText.Layout.Renderer {
             this.document = document;
             this.immediateFlush = immediateFlush;
             this.modelElement = document;
+            this.marginBoxesHandler = new DocumentRenderer.PageMarginBoxesDrawingHandler().SetDocumentRenderer(this);
+            if (this.document != null) {
+                this.document.GetPdfDocument().AddEventHandler(PdfDocumentEvent.END_PAGE, marginBoxesHandler);
+            }
         }
 
         /// <summary>Get handler for target-counters.</summary>
@@ -67,6 +81,16 @@ namespace iText.Layout.Renderer {
             return targetCounterHandler.IsRelayoutRequired();
         }
 
+        public override void AddChild(IRenderer renderer) {
+            if (renderer is SectionBreakRenderer) {
+                SectionBreak sectionBreak = (SectionBreak)renderer.GetModelElement();
+                if (sectionBreak != null) {
+                    this.currentPageSize = sectionBreak.GetPageSize();
+                }
+            }
+            base.AddChild(renderer);
+        }
+
         public override LayoutArea GetOccupiedArea() {
             throw new InvalidOperationException("Not applicable for DocumentRenderer");
         }
@@ -81,7 +105,21 @@ namespace iText.Layout.Renderer {
             iText.Layout.Renderer.DocumentRenderer renderer = new iText.Layout.Renderer.DocumentRenderer(document, immediateFlush
                 );
             renderer.targetCounterHandler = new TargetCounterHandler(targetCounterHandler);
+            renderer.marginBoxesHandler = marginBoxesHandler.SetDocumentRenderer(renderer);
             return renderer;
+        }
+
+        public override void Close() {
+            base.Close();
+            document.GetPdfDocument().RemoveEventHandler(marginBoxesHandler);
+            if (!document.GetPdfDocument().IsClosed()) {
+                for (int i = 1; i <= document.GetPdfDocument().GetNumberOfPages(); ++i) {
+                    PdfPage page = document.GetPdfDocument().GetPage(i);
+                    if (!page.IsFlushed()) {
+                        marginBoxesHandler.ProcessPage(document.GetPdfDocument(), i);
+                    }
+                }
+            }
         }
 
         protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult) {
@@ -92,6 +130,8 @@ namespace iText.Layout.Renderer {
             }
             AreaBreak areaBreak = overflowResult != null && overflowResult.GetAreaBreak() != null ? overflowResult.GetAreaBreak
                 () : null;
+            SectionBreak sectionBreak = overflowResult != null && overflowResult.GetSectionBreak() != null ? overflowResult
+                .GetSectionBreak() : null;
             int currentPageNumber = currentArea == null ? 0 : currentArea.GetPageNumber();
             if (areaBreak != null && areaBreak.GetAreaType() == AreaBreakType.LAST_PAGE) {
                 while (currentPageNumber < document.GetPdfDocument().GetNumberOfPages()) {
@@ -101,9 +141,22 @@ namespace iText.Layout.Renderer {
             }
             else {
                 PossiblyFlushPreviousPage(currentPageNumber);
-                currentPageNumber++;
+                // Don't bump page number in case SectionBreak is added to the empty page which is not the 1st.
+                // Or if page margins weren't changed.
+                if (sectionBreak == null || SectionBreakUtil.BreakPage(sectionBreak)) {
+                    currentPageNumber++;
+                }
             }
-            PageSize customPageSize = areaBreak != null ? areaBreak.GetPageSize() : null;
+            PageSize customPageSize = currentPageSize;
+            if (areaBreak != null) {
+                customPageSize = areaBreak.GetPageSize();
+            }
+            else {
+                if (sectionBreak != null) {
+                    customPageSize = sectionBreak.GetPageSize();
+                    currentPageSize = customPageSize;
+                }
+            }
             while (document.GetPdfDocument().GetNumberOfPages() >= currentPageNumber && document.GetPdfDocument().GetPage
                 (currentPageNumber).IsFlushed()) {
                 currentPageNumber++;
@@ -112,7 +165,21 @@ namespace iText.Layout.Renderer {
             if (lastPageSize == null) {
                 lastPageSize = new PageSize(document.GetPdfDocument().GetPage(currentPageNumber).GetTrimBox());
             }
-            return (currentArea = new RootLayoutArea(currentPageNumber, GetCurrentPageEffectiveArea(lastPageSize)));
+            if (sectionBreak != null) {
+                this.document.SetPageMargins(currentPageNumber, sectionBreak.GetPageMargins());
+            }
+            ComputeLayoutMargins(currentPageNumber);
+            if (sectionBreak != null) {
+                // Save section break to apply same page margins for all the following pages
+                // in case their margins were not set via Document by page number, rule or function.
+                prevSectionBreak = sectionBreak;
+            }
+            Rectangle updatedAreaRect = GetCurrentPageEffectiveArea(lastPageSize);
+            if (sectionBreak != null && currentArea.GetPageNumber() == currentPageNumber && overflowResult.GetOccupiedArea
+                () != null) {
+                updatedAreaRect.SetHeight(overflowResult.GetOccupiedArea().GetBBox().GetY() - updatedAreaRect.GetY());
+            }
+            return (currentArea = new RootLayoutArea(currentPageNumber, updatedAreaRect));
         }
 
         protected internal override void FlushSingleRenderer(IRenderer resultRenderer) {
@@ -191,6 +258,90 @@ namespace iText.Layout.Renderer {
                 // because of manipulations with areas in case of keepTogether property
                 document.GetPdfDocument().GetPage(currentPageNumber - 1).Flush();
             }
+        }
+
+        private void ComputeLayoutMargins(int pageNumber) {
+            PageMarginBoxes pageMarginBoxes = this.document.GetPageMargins(pageNumber);
+            PdfPage page = document.GetPdfDocument().GetPage(pageNumber);
+            if (pageMarginBoxes == null) {
+                PageMarginBoxes prevPageMarginBoxes = prevSectionBreak == null ? null : prevSectionBreak.GetPageMargins();
+                if (this.document.IsPageMarginsSpecified(pageNumber) || prevPageMarginBoxes == null) {
+                    this.ResetDynamicPageMargins();
+                    return;
+                }
+                pageMarginBoxes = new PageMarginBoxes(prevPageMarginBoxes);
+                PageSize prevPageSize = prevSectionBreak.GetPageSize();
+                if (prevPageSize == null) {
+                    prevPageSize = document.GetPdfDocument().GetDefaultPageSize();
+                }
+                if (prevPageSize.EqualsWithEpsilon(page.GetPageSize())) {
+                    this.document.SetPageMargins(pageNumber, pageMarginBoxes);
+                    this.SetDynamicPageMargins(pageMarginBoxes.GetMarginSizes());
+                    return;
+                }
+            }
+            float[] margins = pageMarginBoxes.Layout(this, pageNumber, page.GetPageSize());
+            pageMarginBoxes.SetMarginSizes(margins);
+            // Set page margins for page number to prioritize them and save the layout result.
+            this.document.SetPageMargins(pageNumber, pageMarginBoxes);
+            this.SetDynamicPageMargins(margins);
+        }
+
+        private void SetDynamicPageMargins(float[] margins) {
+            dynamicPageMarginsUsed = true;
+            SetProperty(Property.MARGIN_TOP, margins[0]);
+            SetProperty(Property.MARGIN_RIGHT, margins[1]);
+            SetProperty(Property.MARGIN_BOTTOM, margins[2]);
+            SetProperty(Property.MARGIN_LEFT, margins[3]);
+        }
+
+        private void ResetDynamicPageMargins() {
+            if (dynamicPageMarginsUsed) {
+                DeleteOwnProperty(Property.MARGIN_TOP);
+                DeleteOwnProperty(Property.MARGIN_RIGHT);
+                DeleteOwnProperty(Property.MARGIN_BOTTOM);
+                DeleteOwnProperty(Property.MARGIN_LEFT);
+                dynamicPageMarginsUsed = false;
+            }
+        }
+
+        /// <summary>
+        /// Handler for drawing page margins on
+        /// <c>END_PAGE</c>
+        /// event.
+        /// </summary>
+        private sealed class PageMarginBoxesDrawingHandler : AbstractPdfDocumentEventHandler {
+            private DocumentRenderer documentRenderer;
+
+            public PageMarginBoxesDrawingHandler() {
+            }
+
+//\cond DO_NOT_DOCUMENT
+            // Default constructor.
+            internal DocumentRenderer.PageMarginBoxesDrawingHandler SetDocumentRenderer(DocumentRenderer documentRenderer
+                ) {
+                this.documentRenderer = documentRenderer;
+                return this;
+            }
+//\endcond
+
+            protected override void OnAcceptedEvent(AbstractPdfDocumentEvent @event) {
+                if (@event is PdfDocumentEvent) {
+                    PdfPage page = ((PdfDocumentEvent)@event).GetPage();
+                    PdfDocument pdfDoc = @event.GetDocument();
+                    int pageNumber = pdfDoc.GetPageNumber(page);
+                    ProcessPage(pdfDoc, pageNumber);
+                }
+            }
+
+//\cond DO_NOT_DOCUMENT
+            internal void ProcessPage(PdfDocument document, int pageNumber) {
+                PageMarginBoxes pageMarginBoxes = documentRenderer.document.GetPageMargins(pageNumber);
+                if (pageMarginBoxes != null) {
+                    pageMarginBoxes.Draw(documentRenderer, document, pageNumber);
+                }
+            }
+//\endcond
         }
     }
 }

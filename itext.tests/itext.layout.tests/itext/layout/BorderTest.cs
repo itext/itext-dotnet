@@ -256,7 +256,6 @@ namespace iText.Layout {
             img.SetBorder(new SolidBorder(50));
             img.SetRotationAngle(Math.PI / 6);
             doc.Add(img);
-            doc.Close();
             CloseDocumentAndCompareOutputs(doc, fileName);
         }
 

@@ -72,7 +72,7 @@ namespace iText.Layout.Element {
         /// <returns>
         /// the
         /// <see cref="iText.Kernel.Geom.PageSize">page size</see>
-        /// of the next content area.
+        /// of the next content area
         /// </returns>
         public virtual PageSize GetPageSize() {
             return pageSize;
@@ -82,7 +82,7 @@ namespace iText.Layout.Element {
         /// <param name="pageSize">
         /// the new
         /// <see cref="iText.Kernel.Geom.PageSize">page size</see>
-        /// of the next content area.
+        /// of the next content area
         /// </param>
         public virtual void SetPageSize(PageSize pageSize) {
             this.pageSize = pageSize;

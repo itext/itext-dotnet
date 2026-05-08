@@ -84,8 +84,8 @@ namespace iText.Layout {
         }
 
         protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult) {
-            if (overflowResult != null && overflowResult.GetAreaBreak() != null && overflowResult.GetAreaBreak().GetAreaType
-                () != AreaBreakType.NEXT_AREA) {
+            if (overflowResult != null && ((overflowResult.GetAreaBreak() != null && overflowResult.GetAreaBreak().GetAreaType
+                () != AreaBreakType.NEXT_AREA) || overflowResult.GetSectionBreak() != null)) {
                 nextAreaNumber = 0;
             }
             if (nextAreaNumber % columns.Length == 0) {

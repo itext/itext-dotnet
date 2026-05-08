@@ -21,12 +21,15 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
+using iText.Commons.Datastructures;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout.Element;
 using iText.Layout.Exceptions;
 using iText.Layout.Properties;
+using iText.Layout.Properties.Margins;
 using iText.Layout.Renderer;
 
 namespace iText.Layout {
@@ -45,6 +48,14 @@ namespace iText.Layout {
     /// <see cref="SetRenderer(iText.Layout.Renderer.DocumentRenderer)"></see>.
     /// </remarks>
     public class Document : RootElement<iText.Layout.Document> {
+        private readonly IDictionary<int, PageMarginBoxes> pageMargins = new Dictionary<int, PageMarginBoxes>();
+
+        private readonly IList<Tuple2<Predicate<int>, PageMarginBoxes>> pageMarginsRules = new List<Tuple2<Predicate
+            <int>, PageMarginBoxes>>();
+
+        private readonly IList<Func<int, PageMarginBoxes>> pageMarginsFunctions = new List<Func<int, PageMarginBoxes
+            >>();
+
         /// <summary>
         /// Creates a document from a
         /// <see cref="iText.Kernel.Pdf.PdfDocument"/>.
@@ -120,6 +131,31 @@ namespace iText.Layout {
             CheckClosingStatus();
             childElements.Add(areaBreak);
             EnsureRootRendererNotNull().AddChild(areaBreak.CreateRendererSubTree());
+            if (immediateFlush) {
+                childElements.JRemoveAt(childElements.Count - 1);
+            }
+            return this;
+        }
+
+        /// <summary>Terminates the current page if it's not the first one in the document.</summary>
+        /// <remarks>
+        /// Terminates the current page if it's not the first one in the document.
+        /// Sets the page size and/or page margins specified in the arguments for the next page.
+        /// </remarks>
+        /// <param name="sectionBreak">
+        /// 
+        /// <see cref="iText.Layout.Element.SectionBreak"/>
+        /// , optionally with a specified page size and/or page margins
+        /// </param>
+        /// <returns>
+        /// this same
+        /// <see cref="Document"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Layout.Document Add(SectionBreak sectionBreak) {
+            CheckClosingStatus();
+            childElements.Add(sectionBreak);
+            EnsureRootRendererNotNull().AddChild(sectionBreak.CreateRendererSubTree());
             if (immediateFlush) {
                 childElements.JRemoveAt(childElements.Count - 1);
             }
@@ -267,6 +303,139 @@ namespace iText.Layout {
             SetRightMargin(rightMargin);
             SetBottomMargin(bottomMargin);
             SetLeftMargin(leftMargin);
+        }
+
+        /// <summary>Gets page margins by specified page number.</summary>
+        /// <param name="pageNumber">number of the page to get margins for</param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Layout.Properties.Margins.PageMarginBoxes"/>
+        /// page margins
+        /// </returns>
+        public virtual PageMarginBoxes GetPageMargins(int pageNumber) {
+            if (pageMargins.ContainsKey(pageNumber)) {
+                return pageMargins.Get(pageNumber);
+            }
+            foreach (Tuple2<Predicate<int>, PageMarginBoxes> rule in pageMarginsRules) {
+                if (rule.GetFirst()(pageNumber)) {
+                    PageMarginBoxes pageMarginBoxes = rule.GetSecond();
+                    return pageMarginBoxes != null ? new PageMarginBoxes(pageMarginBoxes) : null;
+                }
+            }
+            foreach (Func<int, PageMarginBoxes> function in pageMarginsFunctions) {
+                PageMarginBoxes pageMarginBoxes = function.Invoke(pageNumber);
+                if (pageMarginBoxes != null) {
+                    return pageMarginBoxes;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>Sets page margins for page with provided number.</summary>
+        /// <param name="pageNumber">number of the page to set margins for</param>
+        /// <param name="margins">
+        /// 
+        /// <see cref="iText.Layout.Properties.Margins.PageMarginBoxes"/>
+        /// page margins to set
+        /// </param>
+        /// <returns>
+        /// this same
+        /// <see cref="Document"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Layout.Document SetPageMargins(int pageNumber, PageMarginBoxes margins) {
+            pageMargins.Put(pageNumber, margins);
+            return this;
+        }
+
+        /// <summary>Sets page margins for page based on provided condition for page number.</summary>
+        /// <param name="condition">matching rule with page number as argument</param>
+        /// <param name="margins">
+        /// 
+        /// <see cref="iText.Layout.Properties.Margins.PageMarginBoxes"/>
+        /// page margins to set
+        /// </param>
+        /// <returns>
+        /// this same
+        /// <see cref="Document"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Layout.Document SetPageMargins(Predicate<int> condition, PageMarginBoxes margins) {
+            pageMarginsRules.Add(new Tuple2<Predicate<int>, PageMarginBoxes>(condition, margins));
+            return this;
+        }
+
+        /// <summary>Sets page margins for page based on provided function for page number.</summary>
+        /// <param name="function">
+        /// function with page number as argument, return
+        /// <see langword="null"/>
+        /// in case result should be ignored
+        /// and
+        /// <see cref="iText.Layout.Properties.Margins.PageMarginBoxes"/>
+        /// page margins return value
+        /// </param>
+        /// <returns>
+        /// this same
+        /// <see cref="Document"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Layout.Document SetPageMargins(Func<int, PageMarginBoxes> function) {
+            this.pageMarginsFunctions.Add(function);
+            return this;
+        }
+
+        /// <summary>Checks whether page margins have been specified for the given page number.</summary>
+        /// <remarks>
+        /// Checks whether page margins have been specified for the given page number.
+        /// <para />
+        /// This method returns
+        /// <see langword="true"/>
+        /// if the margins for the page are determined by
+        /// any of the following mechanisms (in order of precedence):
+        /// <list type="number">
+        /// <item><description>Explicitly set margins for page number via
+        /// <see cref="SetPageMargins(int, iText.Layout.Properties.Margins.PageMarginBoxes)"/>
+        /// </description></item>
+        /// <item><description>Matching rule set via
+        /// <see cref="SetPageMargins(System.Predicate{T}, iText.Layout.Properties.Margins.PageMarginBoxes)"/>
+        /// </description></item>
+        /// <item><description>Function set via
+        /// <see cref="SetPageMargins(System.Func{T, R})"/>
+        /// </description></item>
+        /// </list>
+        /// <para />
+        /// NOTE: the method returns
+        /// <see langword="true"/>
+        /// even if the value produced by the mechanisms is
+        /// <see langword="null"/>.
+        /// Only when none of the above apply and the default static margins are used, this method returns
+        /// <see langword="false"/>.
+        /// </remarks>
+        /// <param name="pageNumber">the page number to check</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if margins for the page are defined explicitly by page number,
+        /// by matching rule or by function,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        public virtual bool IsPageMarginsSpecified(int pageNumber) {
+            if (pageMargins.ContainsKey(pageNumber)) {
+                return true;
+            }
+            foreach (Tuple2<Predicate<int>, PageMarginBoxes> rule in pageMarginsRules) {
+                if (rule.GetFirst()(pageNumber)) {
+                    return true;
+                }
+            }
+            foreach (Func<int, PageMarginBoxes> function in pageMarginsFunctions) {
+                PageMarginBoxes pageMarginBoxes = function.Invoke(pageNumber);
+                if (pageMarginBoxes != null) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>

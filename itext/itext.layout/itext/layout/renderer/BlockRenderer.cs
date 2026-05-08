@@ -193,12 +193,12 @@ namespace iText.Layout.Renderer {
                                 (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, bfcHeightCorrection, marginsCollapsingEnabled
                                 );
                             return new LayoutResult(layoutResult, editedArea, splitRenderer, overflowRenderer, null).SetAreaBreak(result
-                                .GetAreaBreak());
+                                .GetAreaBreak()).SetSectionBreak(result.GetSectionBreak());
                         }
                         else {
                             floatRendererAreas.RetainAll(nonChildFloatingRendererAreas);
                             return new LayoutResult(layoutResult, null, null, overflowRenderer, result.GetCauseOfNothing()).SetAreaBreak
-                                (result.GetAreaBreak());
+                                (result.GetAreaBreak()).SetSectionBreak(result.GetSectionBreak());
                         }
                     }
                 }
@@ -252,8 +252,8 @@ namespace iText.Layout.Renderer {
                         causeOfNothing = result.GetCauseOfNothing();
                     }
                     // have more areas
-                    if (currentAreaPos + 1 < areas.Count && !(result.GetAreaBreak() != null && result.GetAreaBreak().GetAreaType
-                        () == AreaBreakType.NEXT_PAGE)) {
+                    if (currentAreaPos + 1 < areas.Count && !((result.GetAreaBreak() != null && result.GetAreaBreak().GetAreaType
+                        () == AreaBreakType.NEXT_PAGE) || result.GetSectionBreak() != null)) {
                         if (result.GetStatus() == LayoutResult.PARTIAL) {
                             childRenderers[childPos] = result.GetSplitRenderer();
                             childRenderers.Add(childPos + 1, result.GetOverflowRenderer());
@@ -899,12 +899,12 @@ namespace iText.Layout.Renderer {
                             LayoutArea editedArea = FloatingHelper.AdjustResultOccupiedAreaForFloatAndClear(this, layoutContext.GetFloatRendererAreas
                                 (), layoutContext.GetArea().GetBBox(), clearHeightCorrection, marginsCollapsingEnabled);
                             return new LayoutResult(layoutResult, editedArea, splitRenderer, overflowRenderer, null).SetAreaBreak(result
-                                .GetAreaBreak());
+                                .GetAreaBreak()).SetSectionBreak(result.GetSectionBreak());
                         }
                         else {
                             floatRendererAreas.RetainAll(nonChildFloatingRendererAreas);
                             return new LayoutResult(layoutResult, null, null, overflowRenderer, result.GetCauseOfNothing()).SetAreaBreak
-                                (result.GetAreaBreak());
+                                (result.GetAreaBreak()).SetSectionBreak(result.GetSectionBreak());
                         }
                     }
                 }

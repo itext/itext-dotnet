@@ -108,6 +108,14 @@ namespace iText.Layout.Layout {
         protected internal IRenderer causeOfNothing;
 
         /// <summary>
+        /// The
+        /// <see cref="iText.Layout.Element.SectionBreak"/>
+        /// that that terminates the current page content
+        /// and creates a new page, optionally with a specified page size and/or page margins.
+        /// </summary>
+        private SectionBreak sectionBreak;
+
+        /// <summary>
         /// Creates the
         /// <see cref="LayoutResult"/>
         /// result of
@@ -251,9 +259,49 @@ namespace iText.Layout.Layout {
 
         /// <summary>Sets areaBreak value.</summary>
         /// <param name="areaBreak">the areaBreak value</param>
-        /// <returns>the areaBreak value</returns>
+        /// <returns>
+        /// current
+        /// <see cref="LayoutResult"/>
+        /// instance
+        /// </returns>
         public virtual iText.Layout.Layout.LayoutResult SetAreaBreak(AreaBreak areaBreak) {
             this.areaBreak = areaBreak;
+            return this;
+        }
+
+        /// <summary>
+        /// Gets
+        /// <see cref="iText.Layout.Element.SectionBreak"/>
+        /// value.
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Layout.Element.SectionBreak"/>
+        /// value that terminates the current page content
+        /// and creates a new page, optionally with a specified page size and/or page margins
+        /// </returns>
+        public virtual SectionBreak GetSectionBreak() {
+            return sectionBreak;
+        }
+
+        /// <summary>
+        /// Sets
+        /// <see cref="iText.Layout.Element.SectionBreak"/>
+        /// value.
+        /// </summary>
+        /// <param name="sectionBreak">
+        /// the
+        /// <see cref="iText.Layout.Element.SectionBreak"/>
+        /// value that terminates the current page content
+        /// and creates a new page, optionally with a specified page size and/or page margins
+        /// </param>
+        /// <returns>
+        /// current
+        /// <see cref="LayoutResult"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Layout.Layout.LayoutResult SetSectionBreak(SectionBreak sectionBreak) {
+            this.sectionBreak = sectionBreak;
             return this;
         }
 
@@ -295,7 +343,8 @@ namespace iText.Layout.Layout {
                     break;
                 }
             }
-            return "LayoutResult{" + status + ", areaBreak=" + areaBreak + ", occupiedArea=" + occupiedArea + '}';
+            return "LayoutResult{" + status + ", areaBreak=" + areaBreak + (sectionBreak == null ? "" : (", sectionBreak="
+                 + sectionBreak)) + ", occupiedArea=" + occupiedArea + '}';
         }
     }
 }
