@@ -34,6 +34,7 @@ using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Properties.Margins;
 using iText.Layout.Renderer;
+using iText.Layout.Testutil;
 using iText.Test;
 
 namespace iText.Layout {
@@ -62,8 +63,8 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     pdfDocument.AddNewPage();
-                    IList<PageMarginContent> elements = GetPageMargins1();
-                    IList<PageMarginContent> elements2 = GetPageMargins2();
+                    IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
+                    IList<PageMarginContent> elements2 = PageMarginsTestUtil.GetPageMargins2();
                     Paragraph p = new Paragraph(TEXT_BYRON);
                     for (int i = 0; i < 5; i++) {
                         p.Add(TEXT_BYRON);
@@ -122,8 +123,8 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    IList<PageMarginContent> elements = GetPageMargins1();
-                    IList<PageMarginContent> elements2 = GetPageMargins2();
+                    IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
+                    IList<PageMarginContent> elements2 = PageMarginsTestUtil.GetPageMargins2();
                     Paragraph p = new Paragraph(TEXT_BYRON);
                     SectionBreak sectionBreak = new SectionBreak(new PageMarginBoxes(elements));
                     SectionBreak sectionBreak2 = new SectionBreak(new PageMarginBoxes(elements2));
@@ -178,8 +179,8 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    IList<PageMarginContent> elements = GetPageMargins1();
-                    IList<PageMarginContent> elements2 = GetPageMargins2();
+                    IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
+                    IList<PageMarginContent> elements2 = PageMarginsTestUtil.GetPageMargins2();
                     Paragraph p = new Paragraph(TEXT_BYRON);
                     SectionBreak sectionBreak = new SectionBreak(PageSize.A4.Rotate(), new PageMarginBoxes(elements));
                     SectionBreak sectionBreak2 = new SectionBreak(PageSize.A5, new PageMarginBoxes(elements2));
@@ -203,7 +204,7 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    IList<PageMarginContent> elements = GetPageMargins1();
+                    IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
                     Paragraph p = new Paragraph(TEXT_BYRON);
                     for (int i = 0; i < 5; i++) {
                         p.Add(TEXT_BYRON);
@@ -231,7 +232,7 @@ namespace iText.Layout {
                     for (int i = 0; i < 5; i++) {
                         p.Add(TEXT_BYRON);
                     }
-                    IList<PageMarginContent> pageMargins = GetPageMargins1();
+                    IList<PageMarginContent> pageMargins = PageMarginsTestUtil.GetPageMargins1();
                     SectionBreak sectionBreak = new SectionBreak(new PageMarginBoxes(pageMargins));
                     SectionBreak sectionBreak1 = new SectionBreak(new PageMarginBoxes(pageMargins));
                     SectionBreak sectionBreak2 = new SectionBreak(PageSize.A3, new PageMarginBoxes(pageMargins));
@@ -251,8 +252,8 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    IList<PageMarginContent> elements = GetPageMargins1();
-                    IList<PageMarginContent> elements2 = GetPageMargins2();
+                    IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
+                    IList<PageMarginContent> elements2 = PageMarginsTestUtil.GetPageMargins2();
                     Paragraph p = new Paragraph(TEXT_BYRON);
                     SectionBreak sectionBreak = new SectionBreak(new PageMarginBoxes(elements));
                     SectionBreak sectionBreak2 = new SectionBreak(PageSize.A4.Rotate(), new PageMarginBoxes(elements2));
@@ -278,7 +279,7 @@ namespace iText.Layout {
                 using (Document document = new Document(pdfDocument)) {
                     // Set static margins
                     document.SetMargins(100, 100, 100, 100);
-                    IList<PageMarginContent> elements = GetPageMargins1();
+                    IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
                     IList<PageMarginContent> elements3 = new List<PageMarginContent>();
                     elements3.Add(new PageMarginContent(MarginBoxName.BOTTOM, new Div().Add(new Paragraph("TEST BOTTOM MARGIN\nWITH SOME FOOTNOTE"
                         )).SetBackgroundColor(ColorConstants.CYAN).SetMinHeight(50)));
@@ -305,8 +306,8 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    IList<PageMarginContent> elements = GetPageMargins1();
-                    IList<PageMarginContent> elements2 = GetPageMargins2();
+                    IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
+                    IList<PageMarginContent> elements2 = PageMarginsTestUtil.GetPageMargins2();
                     document.SetPageMargins(1, new PageMarginBoxes(elements));
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(elements2));
                     document.SetPageMargins((pageNum) => {
@@ -346,8 +347,8 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    IList<PageMarginContent> elements = GetPageMargins1();
-                    IList<PageMarginContent> elements2 = GetPageMargins2();
+                    IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
+                    IList<PageMarginContent> elements2 = PageMarginsTestUtil.GetPageMargins2();
                     document.SetPageMargins((pageNum) => pageNum > 0 && pageNum % 2 == 0, new PageMarginBoxes(elements));
                     SectionBreak sectionBreak = new SectionBreak(new PageMarginBoxes(elements2));
                     Paragraph p = new Paragraph(TEXT_BYRON);
@@ -398,7 +399,7 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    IList<PageMarginContent> elements = GetPageMargins1();
+                    IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
                     Paragraph p = new Paragraph(TEXT_BYRON);
                     SectionBreak sectionBreak = new SectionBreak(new PageMarginBoxes(elements));
                     Div div1 = new Div().Add(p).SetBackgroundColor(new DeviceRgb(65, 151, 29));
@@ -419,7 +420,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     pdfDocument.SetTagged();
-                    IList<PageMarginContent> elements = GetPageMargins1();
+                    IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
                     Paragraph p = new Paragraph(TEXT_BYRON);
                     SectionBreak sectionBreak = new SectionBreak(new PageMarginBoxes(elements));
                     Div div1 = new Div().Add(p).SetBackgroundColor(new DeviceRgb(65, 151, 29));
@@ -443,32 +444,6 @@ namespace iText.Layout {
             values = "footertext;blurb";
             AddFooterTable(columnNum, values, document);
             NUnit.Framework.Assert.DoesNotThrow(() => document.Close());
-        }
-
-        private static IList<PageMarginContent> GetPageMargins1() {
-            IList<PageMarginContent> elements = new List<PageMarginContent>();
-            elements.Add(new PageMarginContent(MarginBoxName.TOP, new Div().Add(new Paragraph("TEST TOP MARGIN")).SetBackgroundColor
-                (ColorConstants.PINK).SetHeight(200)));
-            elements.Add(new PageMarginContent(MarginBoxName.RIGHT, new Div().Add(new Paragraph("TEST RIGHT MARGIN")).
-                SetBackgroundColor(ColorConstants.YELLOW).SetWidth(200)));
-            elements.Add(new PageMarginContent(MarginBoxName.BOTTOM, new Div().Add(new Paragraph("TEST BOTTOM MARGIN\nTEST BOTTOM MARGIN\nTEST BOTTOM MARGIN"
-                )).SetBackgroundColor(ColorConstants.GREEN)));
-            elements.Add(new PageMarginContent(MarginBoxName.LEFT, new Div().Add(new Paragraph("TEST LEFT MARGIN, TEST LEFT MARGIN"
-                )).SetBackgroundColor(ColorConstants.BLUE)));
-            return elements;
-        }
-
-        private static IList<PageMarginContent> GetPageMargins2() {
-            IList<PageMarginContent> elements2 = new List<PageMarginContent>();
-            elements2.Add(new PageMarginContent(MarginBoxName.TOP, new Div().Add(new Paragraph("TEST TOP MARGIN")).SetBackgroundColor
-                (ColorConstants.LIGHT_GRAY).SetHeight(100)));
-            elements2.Add(new PageMarginContent(MarginBoxName.RIGHT, new Div().Add(new Paragraph("TEST RIGHT MARGIN"))
-                .SetBackgroundColor(ColorConstants.CYAN)));
-            elements2.Add(new PageMarginContent(MarginBoxName.BOTTOM, new Div().Add(new Paragraph("TEST BOTTOM MARGIN"
-                )).SetBackgroundColor(ColorConstants.ORANGE)));
-            elements2.Add(new PageMarginContent(MarginBoxName.LEFT, new Div().Add(new Paragraph("TEST LEFT MARGIN")).SetBackgroundColor
-                (ColorConstants.RED).SetWidth(100)));
-            return elements2;
         }
 
         private void AddFooterTable(int numColumns, String values, Document document) {
