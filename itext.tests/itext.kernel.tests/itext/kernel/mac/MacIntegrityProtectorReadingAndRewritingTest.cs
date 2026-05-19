@@ -320,7 +320,7 @@ namespace iText.Kernel.Mac {
             String outputFileName = DESTINATION_FOLDER + fileName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
             StampingProperties stampingProperties = new StampingProperties();
-            stampingProperties.RegisterDependency(typeof(IMacContainerLocator), () => new _StandaloneMacContainerLocator_360
+            stampingProperties.RegisterDependency(typeof(IMacContainerLocator), () => new _StandaloneMacContainerLocator_359
                 ());
             // do nothing
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "macProtectionStrippedTest.pdf", 
@@ -330,8 +330,8 @@ namespace iText.Kernel.Mac {
             new CompareTool().CompareByContent(outputFileName, cmpFileName, DESTINATION_FOLDER, "diff");
         }
 
-        private sealed class _StandaloneMacContainerLocator_360 : StandaloneMacContainerLocator {
-            public _StandaloneMacContainerLocator_360() {
+        private sealed class _StandaloneMacContainerLocator_359 : StandaloneMacContainerLocator {
+            public _StandaloneMacContainerLocator_359() {
             }
 
             public override void HandleMacValidationError(MacValidationException exception) {
@@ -345,7 +345,7 @@ namespace iText.Kernel.Mac {
             String outputFileName = DESTINATION_FOLDER + fileName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName;
             StampingProperties stampingProperties = new StampingProperties();
-            stampingProperties.RegisterDependency(typeof(IMacContainerLocator), () => new _StandaloneMacContainerLocator_384
+            stampingProperties.RegisterDependency(typeof(IMacContainerLocator), () => new _StandaloneMacContainerLocator_383
                 ());
             // do nothing
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "thirdPartyMacProtectedDocumentTampered.pdf"
@@ -355,8 +355,8 @@ namespace iText.Kernel.Mac {
             new CompareTool().CompareByContent(outputFileName, cmpFileName, DESTINATION_FOLDER, "diff");
         }
 
-        private sealed class _StandaloneMacContainerLocator_384 : StandaloneMacContainerLocator {
-            public _StandaloneMacContainerLocator_384() {
+        private sealed class _StandaloneMacContainerLocator_383 : StandaloneMacContainerLocator {
+            public _StandaloneMacContainerLocator_383() {
             }
 
             public override void HandleMacValidationError(MacValidationException exception) {

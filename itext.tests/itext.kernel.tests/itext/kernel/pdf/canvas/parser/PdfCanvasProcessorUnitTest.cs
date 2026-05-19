@@ -33,14 +33,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
     public class PdfCanvasProcessorUnitTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void BeginMarkerContentOperatorTest() {
-            PdfCanvasProcessor processor = new _PdfCanvasProcessor_51(new FilteredEventListener());
+            PdfCanvasProcessor processor = new _PdfCanvasProcessor_50(new FilteredEventListener());
             IContentOperator contentOperator = processor.RegisterContentOperator("BMC", null);
             processor.RegisterContentOperator("BMC", contentOperator);
             contentOperator.Invoke(processor, null, JavaCollectionsUtil.SingletonList((PdfObject)null));
         }
 
-        private sealed class _PdfCanvasProcessor_51 : PdfCanvasProcessor {
-            public _PdfCanvasProcessor_51(IEventListener baseArg1)
+        private sealed class _PdfCanvasProcessor_50 : PdfCanvasProcessor {
+            public _PdfCanvasProcessor_50(IEventListener baseArg1)
                 : base(baseArg1) {
             }
 
