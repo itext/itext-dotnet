@@ -158,6 +158,7 @@ namespace iText.Forms.Fields {
             return this;
         }
 
+        // TODO DEVSIX-9984 Replace documentation links to directories with links to files
         /// <summary>Sets the boolean value which indicates if page rotation should be ignored for the signature appearance.
         ///     </summary>
         /// <remarks>
@@ -165,6 +166,17 @@ namespace iText.Forms.Fields {
         /// <para />
         /// Default value is
         /// <see langword="true"/>.
+        /// <para />
+        /// If you have rotated pages but want to ignore that rotation when adding a new field,
+        /// you need to disable this broken feature and negate page rotation by modifying form field rectangle
+        /// and field rotation properties using
+        /// <see cref="PdfFormAnnotation.SetRotation(int)"/>.
+        /// An example code explaining how to do it can be found in SignatureAppearancePageRotationAgnosticExample sample in
+        /// <a href="https://github.com/itext/itext-publications-examples-java/blob/develop/src/main/java/com/itextpdf/samples/sandbox/signatures/appearance">
+        /// Java samples repository</a>
+        /// and
+        /// <a href="https://github.com/itext/itext-publications-samples-dotnet/blob/develop/itext/itext.samples/itext/samples/sandbox/signatures/appearance">
+        /// C# samples repository</a>.
         /// </remarks>
         /// <param name="ignore">boolean value to set</param>
         /// <returns>
@@ -172,8 +184,7 @@ namespace iText.Forms.Fields {
         /// <see cref="PdfSignatureFormField"/>
         /// instance
         /// </returns>
-        [System.ObsoleteAttribute(@"if you have rotated pages but want to ignore that rotation when adding a new field, you need to disable this broken feature and negate page rotation by modifying form field rectangle and field rotation properties using PdfFormAnnotation.SetRotation(int) . An example code explaining how to do it can be found at <a href=""https://github.com/itext/itext-publications-examples-java/blob/develop/src/main/java/com/itextpdf/samples/sandbox/signatures/appearance/SignatureAppearancePageRotationAgnosticExample.java""> SignatureAppearancePageRotationAgnosticExample for Java</a> and <a href=""https://github.com/itext/itext-publications-samples-dotnet/blob/develop/itext/itext.samples/itext/samples/sandbox/signatures/appearance/SignatureAppearancePageRotationAgnosticExample.cs""> SignatureAppearancePageRotationAgnosticExample for C#</a>."
-            )]
+        [System.ObsoleteAttribute(@"Functionality is deprecated, see documentation for more information.")]
         public virtual iText.Forms.Fields.PdfSignatureFormField SetIgnorePageRotation(bool ignore) {
             this.ignorePageRotation = ignore;
             return this;

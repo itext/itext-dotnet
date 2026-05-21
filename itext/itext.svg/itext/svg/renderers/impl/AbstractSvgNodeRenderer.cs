@@ -202,6 +202,7 @@ namespace iText.Svg.Renderers.Impl {
             return CssDimensionParsingUtils.ParseAbsoluteFontSize(fontSizeAttribute);
         }
 
+        // TODO DEVSIX-9984 Fix the link being lowercase in C#
         /// <summary>Gets the viewbox from the first parent element which can define it.</summary>
         /// <remarks>
         /// Gets the viewbox from the first parent element which can define it.
