@@ -673,7 +673,7 @@ namespace iText.Kernel.Pdf.Canvas {
                 int sub = glyphLinePart.GetStart();
                 for (int i = glyphLinePart.GetStart(); i < glyphLinePart.GetEnd(); i++) {
                     Glyph glyph = text.Get(i);
-                    if (glyph.HasOffsets()) {
+                    if (glyph.HasOffsets() || glyph.GetAnchorDelta() != 0) {
                         if (i - 1 - sub >= 0) {
                             font.WriteText(text, sub, i - 1, contentStream.GetOutputStream());
                             contentStream.GetOutputStream().WriteBytes(Tj);
@@ -682,55 +682,61 @@ namespace iText.Kernel.Pdf.Canvas {
                         }
                         float xPlacement = float.NaN;
                         float yPlacement = float.NaN;
-                        if (glyph.HasPlacement()) {
- {
-                                float xPlacementAddition = 0;
-                                int currentGlyphIndex = i;
-                                Glyph currentGlyph = text.Get(i);
-                                // if xPlacement is not zero, anchorDelta is expected to be non-zero as well
-                                while (currentGlyph != null && (currentGlyph.GetAnchorDelta() != 0)) {
-                                    xPlacementAddition += currentGlyph.GetXPlacement();
-                                    if (currentGlyph.GetAnchorDelta() == 0) {
-                                        break;
-                                    }
-                                    else {
-                                        currentGlyphIndex += currentGlyph.GetAnchorDelta();
-                                        currentGlyph = text.Get(currentGlyphIndex);
-                                    }
+                        // Apply offsets
+                        if (glyph.HasPlacement() || glyph.GetAnchorDelta() != 0) {
+                            // Calculating x offset
+                            float xPlacementAddition = 0;
+                            int currentGlyphIndex = i;
+                            Glyph currentGlyph = text.Get(i);
+                            while (currentGlyph != null) {
+                                xPlacementAddition += currentGlyph.GetXPlacement();
+                                if (currentGlyph.GetAnchorDelta() == 0) {
+                                    break;
                                 }
-                                xPlacement = -GetSubrangeWidth(text, currentGlyphIndex, i) + xPlacementAddition * fontSize * scaling;
-                            }
- {
-                                float yPlacementAddition = 0;
-                                int currentGlyphIndex = i;
-                                Glyph currentGlyph = text.Get(i);
-                                while (currentGlyph != null && currentGlyph.GetYPlacement() != 0) {
-                                    yPlacementAddition += currentGlyph.GetYPlacement();
-                                    if (currentGlyph.GetAnchorDelta() == 0) {
-                                        break;
-                                    }
-                                    else {
-                                        currentGlyphIndex += currentGlyph.GetAnchorDelta();
-                                        currentGlyph = text.Get(currentGlyphIndex);
-                                    }
+                                else {
+                                    currentGlyphIndex += currentGlyph.GetAnchorDelta();
+                                    currentGlyph = text.Get(currentGlyphIndex);
                                 }
-                                yPlacement = -GetSubrangeYDelta(text, currentGlyphIndex, i) + yPlacementAddition * fontSize;
                             }
+                            xPlacement = (xPlacementAddition * fontSize * scaling);
+                            if (glyph.GetAnchorDelta() != 0) {
+                                xPlacement -= GetSubrangeWidth(text, currentGlyphIndex, i);
+                            }
+                            // Calculating y offset
+                            float yPlacementAddition = 0;
+                            currentGlyphIndex = i;
+                            currentGlyph = text.Get(i);
+                            while (currentGlyph != null) {
+                                yPlacementAddition += currentGlyph.GetYPlacement();
+                                if (currentGlyph.GetAnchorDelta() == 0) {
+                                    break;
+                                }
+                                else {
+                                    currentGlyphIndex += currentGlyph.GetAnchorDelta();
+                                    currentGlyph = text.Get(currentGlyphIndex);
+                                }
+                            }
+                            yPlacement = (yPlacementAddition * fontSize) - GetSubrangeYDelta(text, currentGlyphIndex, i);
+                            // Writing x and y offset
                             contentStream.GetOutputStream().WriteFloat(xPlacement, true).WriteSpace().WriteFloat(yPlacement, true).WriteSpace
                                 ().WriteBytes(Td);
                         }
+                        // Write text
                         font.WriteText(text, i, i, contentStream.GetOutputStream());
                         contentStream.GetOutputStream().WriteBytes(Tj);
+                        // Reverting x and y offset (if it has been written)
                         if (!float.IsNaN(xPlacement)) {
                             contentStream.GetOutputStream().WriteFloat(-xPlacement, true).WriteSpace().WriteFloat(-yPlacement, true).WriteSpace
                                 ().WriteBytes(Td);
                         }
+                        // Apply advance offsets
                         if (glyph.HasAdvance()) {
-                            contentStream.GetOutputStream()
-                                                        // Let's explicitly ignore width of glyphs with placement if they also have xAdvance, since their width doesn't affect text cursor position.
-                                                        .WriteFloat((((glyph.HasPlacement() ? 0 : glyph.GetWidth()) + glyph.GetXAdvance()) * fontSize + charSpacing
-                                 + GetWordSpacingAddition(glyph)) * scaling, true).WriteSpace().WriteFloat(glyph.GetYAdvance() * fontSize
-                                , true).WriteSpace().WriteBytes(Td);
+                            // Let's explicitly ignore width of glyphs with placement if they also
+                            // have xAdvance, since their width doesn't affect text cursor position
+                            float xAdvance = (glyph.GetAnchorDelta() == 0 ? glyph.GetWidth() : 0) + glyph.GetXAdvance();
+                            contentStream.GetOutputStream().WriteFloat((xAdvance * fontSize + charSpacing + GetWordSpacingAddition(glyph
+                                )) * scaling, true).WriteSpace().WriteFloat(glyph.GetYAdvance() * fontSize, true).WriteSpace().WriteBytes
+                                (Td);
                         }
                         sub = i + 1;
                     }
@@ -770,7 +776,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Finds horizontal distance between the start of the `from` glyph and end of `to` glyph.</summary>
         /// <remarks>
         /// Finds horizontal distance between the start of the `from` glyph and end of `to` glyph.
-        /// Glyphs with placement are ignored.
+        /// Glyphs with anchor delta are ignored.
         /// XAdvance is not taken into account neither before `from` nor after `to` glyphs.
         /// </remarks>
         private float GetSubrangeWidth(GlyphLine text, int from, int to) {
@@ -780,7 +786,7 @@ namespace iText.Kernel.Pdf.Canvas {
             float width = 0;
             for (int iter = from; iter <= to; iter++) {
                 Glyph glyph = text.Get(iter);
-                if (!glyph.HasPlacement()) {
+                if (glyph.GetAnchorDelta() == 0) {
                     width += (glyph.GetWidth() * fontSize + charSpacing + GetWordSpacingAddition(glyph)) * scaling;
                 }
                 if (iter > from) {

@@ -59,5 +59,37 @@ namespace iText.IO.Font.Otf {
             bool transform = lookup.TransformOne(gl);
             NUnit.Framework.Assert.IsFalse(transform);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void Subformat1TransformTest() {
+            // We test here GPOS Lookup Type 2 (Pair Adjustment) Format 1 (adjustments for glyph pairs)
+            TrueTypeFont font = new TrueTypeFont(FONT_FOLDER + "NotoSansKhmer-Regular.ttf");
+            GlyphPositioningTableReader gposTableReader = font.GetGposTable();
+            GposLookupType2 lookup = (GposLookupType2)gposTableReader.GetLookupTable(31);
+            IList<Glyph> glyphs = JavaUtil.ArraysAsList(new Glyph(font.GetGlyphByCode(387)), new Glyph(font.GetGlyphByCode
+                (434)));
+            GlyphLine gl = new GlyphLine(glyphs);
+            gl.SetIdx(0);
+            NUnit.Framework.Assert.AreEqual(0, gl.Get(0).GetXAdvance());
+            bool transform = lookup.TransformOne(gl);
+            NUnit.Framework.Assert.IsTrue(transform);
+            NUnit.Framework.Assert.AreEqual(50, gl.Get(0).GetXAdvance());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void Subformat2TransformTest() {
+            // We test here GPOS Lookup Type 2 (Pair Adjustment) Format 1 (class pair adjustment)
+            TrueTypeFont font = new TrueTypeFont(DEJAVU_FONT_PATH);
+            GlyphPositioningTableReader gposTableReader = font.GetGposTable();
+            GposLookupType2 lookup = (GposLookupType2)gposTableReader.GetLookupTable(15);
+            IList<Glyph> glyphs = JavaUtil.ArraysAsList(new Glyph(font.GetGlyphByCode(4960)), new Glyph(font.GetGlyphByCode
+                (4970)));
+            GlyphLine gl = new GlyphLine(glyphs);
+            gl.SetIdx(0);
+            NUnit.Framework.Assert.AreEqual(0, gl.Get(0).GetXAdvance());
+            bool transform = lookup.TransformOne(gl);
+            NUnit.Framework.Assert.IsTrue(transform);
+            NUnit.Framework.Assert.AreEqual(-45, gl.Get(0).GetXAdvance());
+        }
     }
 }

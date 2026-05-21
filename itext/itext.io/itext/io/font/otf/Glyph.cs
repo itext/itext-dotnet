@@ -138,7 +138,17 @@ namespace iText.IO.Font.Otf {
             this.anchorDelta = glyph.anchorDelta;
         }
 
-        /// <summary>Copy a Glyph and assign new placement and advance offsets and a new index delta to base glyph</summary>
+        /// <summary>Copy a Glyph and assign new advance offsets.</summary>
+        /// <param name="glyph">Glyph to copy</param>
+        /// <param name="xAdvance">x - advance offset</param>
+        /// <param name="yAdvance">y - advance offset</param>
+        public Glyph(iText.IO.Font.Otf.Glyph glyph, int xAdvance, int yAdvance)
+            : this(glyph) {
+            this.xAdvance = (short)xAdvance;
+            this.yAdvance = (short)yAdvance;
+        }
+
+        /// <summary>Copy a Glyph and assign new placement and advance offsets and a new index delta to base glyph.</summary>
         /// <param name="glyph">Glyph to copy</param>
         /// <param name="xPlacement">x - placement offset</param>
         /// <param name="yPlacement">y - placement offset</param>
@@ -148,11 +158,9 @@ namespace iText.IO.Font.Otf {
         ///     </param>
         public Glyph(iText.IO.Font.Otf.Glyph glyph, int xPlacement, int yPlacement, int xAdvance, int yAdvance, int
              anchorDelta)
-            : this(glyph) {
+            : this(glyph, xAdvance, yAdvance) {
             this.xPlacement = (short)xPlacement;
             this.yPlacement = (short)yPlacement;
-            this.xAdvance = (short)xAdvance;
-            this.yAdvance = (short)yAdvance;
             this.anchorDelta = (short)anchorDelta;
         }
 
@@ -232,23 +240,60 @@ namespace iText.IO.Font.Otf {
             this.yAdvance = yAdvance;
         }
 
+        /// <summary>Gets the index delta to base glyph.</summary>
+        /// <returns>the index delta to base glyph</returns>
         public virtual short GetAnchorDelta() {
+            // Non-zero value potentially means that the glyph is mark (isMark is never used, seems as something to improve).
             return anchorDelta;
         }
 
+        /// <summary>Sets the index delta to base glyph.</summary>
+        /// <param name="anchorDelta">the index delta to base glyph to be set</param>
         public virtual void SetAnchorDelta(short anchorDelta) {
             this.anchorDelta = anchorDelta;
         }
 
+        /// <summary>Checks whether the glyph has any offsets either own or advance or both at the same time.</summary>
+        /// <remarks>
+        /// Checks whether the glyph has any offsets either own or advance or both at the same time.
+        /// <para />
+        /// See
+        /// <see cref="HasPlacement()"/>
+        /// and
+        /// <see cref="HasAdvance()"/>.
+        /// </remarks>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if glyph has any offsets,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public virtual bool HasOffsets() {
             return HasAdvance() || HasPlacement();
         }
 
-        // In case some of placement values are not zero we always expect anchorDelta to be non-zero
+        /// <summary>Checks whether the glyph has own offsets: either for X axis or Y axis or both at the same time.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if glyph has any own offsets,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public virtual bool HasPlacement() {
-            return anchorDelta != 0;
+            return xPlacement != 0 || yPlacement != 0;
         }
 
+        /// <summary>Checks whether the glyph has advance offsets: either for X axis or Y axis or both at the same time.
+        ///     </summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if glyph has any advance offsets,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public virtual bool HasAdvance() {
             return xAdvance != 0 || yAdvance != 0;
         }
@@ -263,8 +308,12 @@ namespace iText.IO.Font.Otf {
         }
 
         /// <summary>Two Glyphs are equal if their unicode characters, code and normalized width are equal.</summary>
-        /// <param name="obj">The object</param>
-        /// <returns>True if this equals obj cast to Glyph, false otherwise.</returns>
+        /// <param name="obj">еhe object</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if this equals obj cast to Glyph, false otherwise
+        /// </returns>
         public override bool Equals(Object obj) {
             if (this == obj) {
                 return true;

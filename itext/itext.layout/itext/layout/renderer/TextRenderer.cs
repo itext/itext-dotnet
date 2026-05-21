@@ -1296,7 +1296,7 @@ namespace iText.Layout.Renderer {
             int count = 0;
             for (int i = line.GetStart(); i < line.GetEnd(); i++) {
                 Glyph glyph = line.Get(i);
-                if (!glyph.HasPlacement()) {
+                if (glyph.GetAnchorDelta() == 0) {
                     count++;
                 }
             }
