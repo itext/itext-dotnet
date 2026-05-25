@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -427,6 +428,56 @@ namespace iText.Layout {
                     div1.SetRelativePosition(50, 50, 0, 0);
                     Div div2 = new Div().Add(p).SetBackgroundColor(new DeviceRgb(209, 247, 29));
                     document.Add(div1).Add(sectionBreak).Add(div2);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StaticPageMarginContentTest() {
+            String fileName = "staticPageMarginContent";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    IList<PageMarginContent> elements = JavaUtil.ArraysAsList(new PageMarginContent(MarginBoxName.TOP, 30), new 
+                        PageMarginContent(MarginBoxName.RIGHT, 60), new PageMarginContent(MarginBoxName.BOTTOM, 200.5f), new PageMarginContent
+                        (MarginBoxName.LEFT, 150));
+                    Paragraph p = new Paragraph(TEXT_BYRON);
+                    for (int i = 0; i < 5; i++) {
+                        p.Add(TEXT_BYRON);
+                    }
+                    SectionBreak sectionBreak = new SectionBreak(new PageMarginBoxes(elements));
+                    Div div1 = new Div();
+                    div1.Add(p).SetBackgroundColor(new DeviceRgb(65, 151, 29));
+                    document.Add(sectionBreak).Add(div1);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StaticAndDynamicPageMarginContentTest() {
+            String fileName = "staticAndDynamicPageMarginContent";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    IList<PageMarginContent> elements = JavaUtil.ArraysAsList(new PageMarginContent(MarginBoxName.TOP, new Div
+                        ().Add(new Paragraph("TEST TOP MARGIN")).SetBackgroundColor(ColorConstants.PINK).SetHeight(100)), new 
+                        PageMarginContent(MarginBoxName.RIGHT, new Div().Add(new Paragraph("TEST RIGHT MARGIN").SetBackgroundColor
+                        (ColorConstants.YELLOW).SetWidth(150))), new PageMarginContent(MarginBoxName.BOTTOM, 200), new PageMarginContent
+                        (MarginBoxName.LEFT, 50));
+                    Paragraph p = new Paragraph(TEXT_BYRON);
+                    for (int i = 0; i < 5; i++) {
+                        p.Add(TEXT_BYRON);
+                    }
+                    SectionBreak sectionBreak = new SectionBreak(new PageMarginBoxes(elements));
+                    Div div1 = new Div();
+                    div1.Add(p).SetBackgroundColor(new DeviceRgb(65, 151, 29));
+                    document.Add(sectionBreak).Add(div1);
                 }
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER

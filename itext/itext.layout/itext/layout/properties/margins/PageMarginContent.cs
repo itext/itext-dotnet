@@ -40,6 +40,38 @@ namespace iText.Layout.Properties.Margins {
         /// <summary>
         /// Creates new
         /// <see cref="PageMarginContent"/>
+        /// instance.
+        /// </summary>
+        /// <remarks>
+        /// Creates new
+        /// <see cref="PageMarginContent"/>
+        /// instance.
+        /// <para />
+        /// The margin will have the specified size in points.
+        /// </remarks>
+        /// <param name="marginBoxName">
+        /// 
+        /// <see cref="MarginBoxName"/>
+        /// specifying margin name based on its location on the page
+        /// </param>
+        /// <param name="marginInPoints"><c>float</c> specifying the margin in points</param>
+        public PageMarginContent(MarginBoxName marginBoxName, float marginInPoints) {
+            this.marginBoxName = marginBoxName;
+            Div staticMarginContent = new Div();
+            if (marginBoxName == MarginBoxName.TOP || marginBoxName == MarginBoxName.BOTTOM) {
+                staticMarginContent.SetHeight(marginInPoints);
+            }
+            else {
+                if (marginBoxName == MarginBoxName.LEFT || marginBoxName == MarginBoxName.RIGHT) {
+                    staticMarginContent.SetWidth(marginInPoints);
+                }
+            }
+            this.marginContent = staticMarginContent;
+        }
+
+        /// <summary>
+        /// Creates new
+        /// <see cref="PageMarginContent"/>
         /// instance by copying existing one.
         /// </summary>
         /// <param name="other">
