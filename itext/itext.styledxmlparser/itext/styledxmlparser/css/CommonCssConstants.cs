@@ -1107,6 +1107,12 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant HAS.</summary>
         public const String HAS = "has";
 
+        /// <summary>The Constant IS.</summary>
+        public const String IS = "is";
+
+        /// <summary>The Constant WHERE.</summary>
+        public const String WHERE = "where";
+
         /// <summary>The Constant DISABLED.</summary>
         public const String DISABLED = "disabled";
 

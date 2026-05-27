@@ -38,6 +38,12 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         }
 //\endcond
 
+        public override int GetSpecificity() {
+            // Per Selectors Level 4: :not() specificity is replaced by the specificity
+            // of the most specific complex selector in its selector list argument.
+            return argumentsSelector != null ? argumentsSelector.CalculateSpecificity() : 0;
+        }
+
         public virtual IList<ICssSelectorItem> GetArgumentsSelector() {
             return CssSelectorParser.ParseSelectorItems(arguments);
         }

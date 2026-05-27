@@ -151,6 +151,14 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
                     return CreateNotSelectorItem(arguments);
                 }
 
+                case CommonCssConstants.IS: {
+                    return CssPseudoClassIsSelectorItem.CreateIsSelectorItem(arguments);
+                }
+
+                case CommonCssConstants.WHERE: {
+                    return CssPseudoClassWhereSelectorItem.CreateWhereSelectorItem(arguments);
+                }
+
                 case CommonCssConstants.ROOT: {
                     return CssPseudoClassRootSelectorItem.GetInstance();
                 }

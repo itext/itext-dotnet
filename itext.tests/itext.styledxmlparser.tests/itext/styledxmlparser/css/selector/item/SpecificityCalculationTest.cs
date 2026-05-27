@@ -137,12 +137,12 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
 
         [NUnit.Framework.Test]
         public virtual void Test20() {
-            NUnit.Framework.Assert.AreEqual(CssSpecificityConstants.CLASS_SPECIFICITY, GetSpecificity(":not(p)"));
+            NUnit.Framework.Assert.AreEqual(CssSpecificityConstants.ELEMENT_SPECIFICITY, GetSpecificity(":not(p)"));
         }
 
         [NUnit.Framework.Test]
         public virtual void Test21() {
-            NUnit.Framework.Assert.AreEqual(CssSpecificityConstants.CLASS_SPECIFICITY, GetSpecificity(":not(#id)"));
+            NUnit.Framework.Assert.AreEqual(CssSpecificityConstants.ID_SPECIFICITY, GetSpecificity(":not(#id)"));
         }
 
         [NUnit.Framework.Test]
@@ -167,6 +167,18 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         public virtual void Test25() {
             NUnit.Framework.Assert.AreEqual(CssSpecificityConstants.CLASS_SPECIFICITY * 2, GetSpecificity(".class_name:nth-last-of-type(2n - 3)"
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IsSpecificityIsMaxOfSelectorListTest() {
+            NUnit.Framework.Assert.AreEqual(GetSpecificity("#id"), GetSpecificity(":is(#id, p, .c)"));
+            NUnit.Framework.Assert.AreEqual(GetSpecificity(".c"), GetSpecificity(":is(.c, p)"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WhereSpecificityIsAlwaysZeroTest() {
+            NUnit.Framework.Assert.AreEqual(0, GetSpecificity(":where(#id, p, .c)"));
+            NUnit.Framework.Assert.AreEqual(1, GetSpecificity("div:where(#id, .c, p)"));
         }
 
         [NUnit.Framework.Test]

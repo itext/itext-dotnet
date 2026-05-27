@@ -93,7 +93,6 @@ namespace iText.StyledXmlParser.Css.Parse {
             return ParseSelectorItems(selector, false);
         }
 
-//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Parses the given CSS selector string into a list of
         /// <see cref="iText.StyledXmlParser.Css.Selector.Item.ICssSelectorItem"/>
@@ -118,7 +117,7 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// objects representing the parsed components
         /// of the CSS selector
         /// </returns>
-        internal static IList<ICssSelectorItem> ParseSelectorItems(String selector, bool allowRelativeSelectorAtStart
+        public static IList<ICssSelectorItem> ParseSelectorItems(String selector, bool allowRelativeSelectorAtStart
             ) {
             IList<ICssSelectorItem> selectorItems = new List<ICssSelectorItem>();
             CssSelectorParser.State state = new CssSelectorParser.NoneState();
@@ -147,9 +146,7 @@ namespace iText.StyledXmlParser.Css.Parse {
             state.Process(selectorItems);
             return selectorItems;
         }
-//\endcond
 
-//\cond DO_NOT_DOCUMENT
         /// <summary>Splits a string by top-level commas, ignoring commas inside parentheses or quoted strings.</summary>
         /// <remarks>
         /// Splits a string by top-level commas, ignoring commas inside parentheses or quoted strings.
@@ -157,11 +154,10 @@ namespace iText.StyledXmlParser.Css.Parse {
         /// </remarks>
         /// <param name="input">the string to split</param>
         /// <returns>a list of string parts split by top-level commas</returns>
-        internal static IList<String> SplitByTopLevelComma(String input) {
+        public static IList<String> SplitByTopLevelComma(String input) {
             return CssUtils.SplitString(input, ',', new EscapeGroup('(', ')'), new EscapeGroup('"'), new EscapeGroup('\''
                 ));
         }
-//\endcond
 
         /// <summary>Processes a possible escape sequence in the given source string, starting from the specified index.
         ///     </summary>
@@ -564,6 +560,10 @@ namespace iText.StyledXmlParser.Css.Parse {
 
             protected internal bool isReadyForSwitch = false;
 
+            // Tracks nested parentheses for pseudo-class functions like :is(...), :not(...), :where(...), :has(...)
+            // Only used when closure == ')'.
+            protected internal int parenthesesDepth = 0;
+
             /// <summary>Constructs a new FunctionState object with the specified closure character.</summary>
             /// <remarks>
             /// Constructs a new FunctionState object with the specified closure character.
@@ -591,7 +591,27 @@ namespace iText.StyledXmlParser.Css.Parse {
                 if ((c == '"' || c == '\'') && !isEscaped) {
                     inString = !inString;
                 }
-                if (c == closure && !isEscaped && !inString) {
+                if (isEscaped || inString) {
+                    return;
+                }
+                if (closure == ')') {
+                    if (c == '(') {
+                        parenthesesDepth++;
+                    }
+                    else {
+                        if (c == ')') {
+                            // Close one nesting level; function ends when we close the initial '('.
+                            if (parenthesesDepth > 0) {
+                                parenthesesDepth--;
+                            }
+                            if (parenthesesDepth == 0) {
+                                isReadyForSwitch = true;
+                            }
+                        }
+                    }
+                    return;
+                }
+                if (c == closure) {
                     isReadyForSwitch = true;
                 }
             }
