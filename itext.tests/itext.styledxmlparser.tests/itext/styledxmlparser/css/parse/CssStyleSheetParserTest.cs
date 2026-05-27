@@ -139,6 +139,7 @@ namespace iText.StyledXmlParser.Css.Parse {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INCORRECT_CHARACTER_SEQUENCE)]
         public virtual void InvalidCssExampleWithCommaInsideOfPseudoClassTest() {
             String cssFile = sourceFolder + "invalidCssExampleWithCommaInsideOfPseudoClassTest.css";
             String cmpFile = sourceFolder + "cmp_invalidCssExampleWithCommaInsideOfPseudoClassTest.css";

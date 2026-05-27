@@ -24,7 +24,7 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
 
         public static iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassIsSelectorItem CreateIsSelectorItem(String
              arguments) {
-            IList<ICssSelector> selectors = ParseForgivingSelectorListWithoutPseudoElements(arguments);
+            IList<ICssSelector> selectors = ParseSelectorListWithoutPseudoElements(arguments, true);
             if (selectors == null) {
                 return null;
             }

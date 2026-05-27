@@ -94,6 +94,7 @@ namespace iText.StyledXmlParser.Css.Selector {
         /// <summary>Checks if the node not matches all the selectors.</summary>
         /// <param name="element">the node</param>
         /// <returns>true, if node doesn't match all the selectors</returns>
+        [System.ObsoleteAttribute(@"can be replaced with proper Matches(iText.StyledXmlParser.Node.INode) use.")]
         public virtual bool NotMatches(INode element) {
             int counter = 0;
             while (counter != selectorItems.Count) {

@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using System.Collections.Generic;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Parse;
@@ -29,34 +30,48 @@ using iText.StyledXmlParser.Node;
 namespace iText.StyledXmlParser.Css.Selector.Item {
 //\cond DO_NOT_DOCUMENT
     internal class CssPseudoClassNotSelectorItem : CssPseudoClassSelectorItem {
-        private ICssSelector argumentsSelector;
+        protected internal readonly IList<ICssSelector> selectorList;
 
 //\cond DO_NOT_DOCUMENT
-        internal CssPseudoClassNotSelectorItem(ICssSelector argumentsSelector)
-            : base(CommonCssConstants.NOT, argumentsSelector.ToString()) {
-            this.argumentsSelector = argumentsSelector;
+        internal CssPseudoClassNotSelectorItem(IList<ICssSelector> selectorList, String argumentsString)
+            : base(CommonCssConstants.NOT, argumentsString) {
+            this.selectorList = selectorList;
         }
 //\endcond
 
+        public static iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassNotSelectorItem CreateNotSelectorItem(
+            String arguments) {
+            IList<ICssSelector> selectors = ParseSelectorListWithoutPseudoElements(arguments, false);
+            if (selectors == null) {
+                return null;
+            }
+            return new iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassNotSelectorItem(selectors, arguments);
+        }
+
         public override int GetSpecificity() {
-            // Per Selectors Level 4: :not() specificity is replaced by the specificity
-            // of the most specific complex selector in its selector list argument.
-            return argumentsSelector != null ? argumentsSelector.CalculateSpecificity() : 0;
+            int max = 0;
+            foreach (ICssSelector sel in selectorList) {
+                if (sel != null) {
+                    max = Math.Max(max, sel.CalculateSpecificity());
+                }
+            }
+            return max;
         }
 
         public virtual IList<ICssSelectorItem> GetArgumentsSelector() {
             return CssSelectorParser.ParseSelectorItems(arguments);
         }
 
-        // TODO DEVSIX-9069 Add notMatches to ICssSelector interface
         public override bool Matches(INode node) {
             if (!(node is IElementNode) || node is ICustomElementNode || node is IDocumentNode) {
                 return false;
             }
-            if (argumentsSelector is CssSelector) {
-                return ((CssSelector)argumentsSelector).NotMatches(node);
+            foreach (ICssSelector selector in selectorList) {
+                if (selector.Matches(node)) {
+                    return false;
+                }
             }
-            return !argumentsSelector.Matches(node);
+            return true;
         }
     }
 //\endcond

@@ -22,8 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using iText.Commons.Utils;
-using iText.StyledXmlParser.Css.Parse;
 using iText.StyledXmlParser.Css.Selector;
 using iText.StyledXmlParser.Node;
 
@@ -50,61 +48,6 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             }
             return false;
         }
-
-//\cond DO_NOT_DOCUMENT
-        /// <summary>Parses a forgiving selector list for :is() / :where().</summary>
-        /// <remarks>
-        /// Parses a forgiving selector list for :is() / :where().
-        /// <para />
-        /// Per Selectors Level 4, :is() and :where() accept a forgiving selector list:
-        /// invalid selectors are ignored rather than invalidating the whole pseudo-class.
-        /// </remarks>
-        /// <param name="arguments">selector list as written inside parentheses</param>
-        /// <returns>list of valid selectors (possibly empty), or null if arguments are syntactically missing</returns>
-        internal static IList<ICssSelector> ParseForgivingSelectorListWithoutPseudoElements(String arguments) {
-            if (arguments == null || String.IsNullOrEmpty(arguments.Trim())) {
-                // :is() / :where() with empty arguments is invalid.
-                return null;
-            }
-            IList<String> parts = CssSelectorParser.SplitByTopLevelComma(arguments);
-            if (parts.IsEmpty()) {
-                return null;
-            }
-            IList<ICssSelector> selectors = new List<ICssSelector>();
-            foreach (String rawPart in parts) {
-                String part = rawPart == null ? "" : rawPart.Trim();
-                if (String.IsNullOrEmpty(part)) {
-                    // Empty entries like :is(.a,,.b) are invalid selectors in the list; ignore (forgiving).
-                    continue;
-                }
-                try {
-                    CssSelector sel = new CssSelector(CssSelectorParser.ParseSelectorItems(part, false));
-                    if (!ContainsPseudoElement(JavaCollectionsUtil.SingletonList(sel))) {
-                        selectors.Add(sel);
-                    }
-                }
-                catch (ArgumentException) {
-                }
-            }
-            // Invalid/unsupported selector in the list; ignore (forgiving).
-            return selectors;
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
-        internal static bool ContainsPseudoElement(IList<ICssSelector> selectors) {
-            foreach (ICssSelector sel in selectors) {
-                if (sel is CssSelector) {
-                    foreach (ICssSelectorItem item in ((CssSelector)sel).GetSelectorItems()) {
-                        if (item is CssPseudoElementSelectorItem) {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-//\endcond
     }
 //\endcond
 }

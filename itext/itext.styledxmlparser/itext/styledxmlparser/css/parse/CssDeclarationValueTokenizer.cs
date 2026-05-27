@@ -95,7 +95,7 @@ namespace iText.StyledXmlParser.Css.Parse {
                     ProcessFunctionToken(token, functionBuffer);
                 }
                 return new CssDeclarationValueTokenizer.Token(functionBuffer.ToString(), CssDeclarationValueTokenizer.TokenType
-                    .FUNCTION);
+                    .FUNCTION, (char)0, token != null && token.hasSpace);
             }
             return null;
         }
@@ -265,6 +265,10 @@ namespace iText.StyledXmlParser.Css.Parse {
 
         /// <summary>The Token class.</summary>
         public class Token {
+//\cond DO_NOT_DOCUMENT
+            internal readonly bool hasSpace;
+//\endcond
+
             /// <summary>The value.</summary>
             private readonly String value;
 
@@ -272,8 +276,6 @@ namespace iText.StyledXmlParser.Css.Parse {
             private readonly CssDeclarationValueTokenizer.TokenType type;
 
             private readonly char stringQuote;
-
-            private readonly bool hasSpace;
 
             /// <summary>
             /// Creates a new
