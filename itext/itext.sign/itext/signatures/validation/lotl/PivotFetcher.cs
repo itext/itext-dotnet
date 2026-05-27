@@ -77,9 +77,13 @@ namespace iText.Signatures.Validation.Lotl {
             }
             PivotFetcher.Result result = new PivotFetcher.Result();
             IList<String> pivotsUrlList = GetPivotsUrlList(lotlXml);
+            //Stream is guaranteed to retain order so we should be a ok.
             IList<String> ojUris = pivotsUrlList.Where((url) => XmlPivotsHandler.IsOfficialJournal(url)).ToList();
             if (ojUris.Count > 1) {
-                LOGGER.LogWarning(SignLogMessageConstant.OJ_TRANSITION_PERIOD);
+                //This means we are in a transition period but the user has already updated, so no need to log.
+                if (ojUris.IndexOf(currentJournalUri) != 0) {
+                    LOGGER.LogWarning(SignLogMessageConstant.OJ_TRANSITION_PERIOD);
+                }
             }
             result.SetPivotUrls(pivotsUrlList);
             IList<byte[]> pivotFiles = new List<byte[]>();
