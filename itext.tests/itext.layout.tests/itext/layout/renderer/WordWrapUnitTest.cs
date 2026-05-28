@@ -33,9 +33,11 @@ using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Logs;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout.Renderer {
     [NUnit.Framework.Category("UnitTest")]
@@ -107,6 +109,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.TYPOGRAPHY_NOT_FOUND_WARNING)]
         public virtual void NoNeedToSplitTextRendererOnLineSplit() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
             Document document = new Document(pdfDocument);
@@ -375,6 +378,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.TYPOGRAPHY_NOT_FOUND_WARNING)]
         public virtual void SpecialScriptsWordBreakPointsSplit() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
             Document document = new Document(pdfDocument);
@@ -413,6 +417,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.TYPOGRAPHY_NOT_FOUND_WARNING)]
         public virtual void ForcedSplitOnTooNarrowArea() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
             Document document = new Document(pdfDocument);
@@ -429,6 +434,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.TYPOGRAPHY_NOT_FOUND_WARNING)]
         public virtual void MidWordSplitPartialLayoutResult() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
             Document document = new Document(pdfDocument);
@@ -447,6 +453,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.TYPOGRAPHY_NOT_FOUND_WARNING)]
         public virtual void MultipleRenderers() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
             Document document = new Document(pdfDocument);
@@ -504,6 +511,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.TYPOGRAPHY_NOT_FOUND_WARNING)]
         public virtual void WordWrappingUnavailableWithNoCalligraph() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
             Document document = new Document(pdfDocument);
@@ -520,6 +528,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.TYPOGRAPHY_NOT_FOUND_WARNING)]
         public virtual void NothingLayoutResult() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
             Document document = new Document(pdfDocument);
@@ -791,6 +800,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.TYPOGRAPHY_NOT_FOUND_WARNING)]
         public virtual void OverflowXSingleWordSingleRenderer() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
             Document document = new Document(pdfDocument);
@@ -809,6 +819,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.TYPOGRAPHY_NOT_FOUND_WARNING)]
         public virtual void OverflowXSingleWordOneGlyphPerTextRenderer() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()));
             Document document = new Document(pdfDocument);

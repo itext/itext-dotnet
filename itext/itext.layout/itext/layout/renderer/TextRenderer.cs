@@ -684,7 +684,7 @@ namespace iText.Layout.Renderer {
         public virtual void ApplyOtf() {
             UpdateFontAndText();
             UnicodeScript? script = this.GetProperty<UnicodeScript?>(Property.FONT_SCRIPT);
-            if (!otfFeaturesApplied && TypographyUtils.IsPdfCalligraphAvailable() && text.GetStart() < text.GetEnd()) {
+            if (!otfFeaturesApplied && text.GetStart() < text.GetEnd()) {
                 PdfDocument pdfDocument = GetPdfDocument();
                 SequenceId sequenceId = pdfDocument == null ? null : pdfDocument.GetDocumentIdWrapper();
                 MetaInfoContainer metaInfoContainer = this.GetProperty<MetaInfoContainer>(Property.META_INFO);

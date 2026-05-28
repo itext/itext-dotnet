@@ -325,6 +325,43 @@ namespace iText.IO.Font {
             return cmaps.cmapEncodings.Count;
         }
 
+        /// <summary>Extracts features from GSUB and GPOS tables based on the passed script tags.</summary>
+        /// <remarks>
+        /// Extracts features from GSUB and GPOS tables based on the passed script tags.
+        /// The features are put in the passed extractedFeatures map
+        /// </remarks>
+        /// <param name="otfScriptTags">the script tags to extract the features for</param>
+        /// <param name="extractedFeatures">the features will be added to this map</param>
+        /// <returns>
+        /// the script tag which was used to extract features.
+        /// It may be null if no features were extracted or default script tag was used.
+        /// </returns>
+        public virtual String ExtractFeatures(ICollection<String> otfScriptTags, IDictionary<String, IList<OpenTableLookup
+            >> extractedFeatures) {
+            IList<String> otfScriptTagsList;
+            otfScriptTagsList = new List<String>();
+            if (otfScriptTags != null) {
+                otfScriptTagsList.AddAll(otfScriptTags);
+            }
+            String dfltScriptTag = "DFLT";
+            otfScriptTagsList.Add(dfltScriptTag);
+            GlyphSubstitutionTableReader gsubTableReader = GetGsubTable();
+            String usedScriptTag = ExtractFeaturesFromTable(gsubTableReader, otfScriptTagsList, extractedFeatures);
+            String finalUsedScriptTag = null;
+            if (usedScriptTag != null && !dfltScriptTag.Equals(usedScriptTag)) {
+                // In case there are more than one version of script, let's try use it for both gsub and gpos.
+                // For this reason reinit otfScriptTagsList without other versions of scripts
+                otfScriptTagsList = JavaUtil.ArraysAsList(usedScriptTag, dfltScriptTag);
+                finalUsedScriptTag = usedScriptTag;
+            }
+            GlyphPositioningTableReader gposTableReader = GetGposTable();
+            usedScriptTag = ExtractFeaturesFromTable(gposTableReader, otfScriptTagsList, extractedFeatures);
+            if (finalUsedScriptTag == null) {
+                finalUsedScriptTag = usedScriptTag;
+            }
+            return finalUsedScriptTag;
+        }
+
         protected internal virtual void ReadGdefTable() {
             int[] gdef = fontParser.tables.Get("GDEF");
             if (gdef != null) {
@@ -603,6 +640,29 @@ namespace iText.IO.Font {
                 }
             }
             return missingGlyphs;
+        }
+
+        private static String ExtractFeaturesFromTable(OpenTypeFontTableReader table, IEnumerable<String> otfScriptTagsList
+            , IDictionary<String, IList<OpenTableLookup>> extractedFeatures) {
+            String usedScriptTag = null;
+            LanguageRecord languageRecord = null;
+            if (table != null) {
+                foreach (String scriptTag in otfScriptTagsList) {
+                    languageRecord = table.GetLanguageRecord(scriptTag);
+                    if (languageRecord != null) {
+                        usedScriptTag = scriptTag;
+                        break;
+                    }
+                }
+            }
+            if (languageRecord != null) {
+                foreach (int featureIndex in languageRecord.GetFeatures()) {
+                    FeatureRecord feature = table.GetFeatureRecords()[featureIndex];
+                    IList<OpenTableLookup> lookups = table.GetLookups(new FeatureRecord[] { feature });
+                    extractedFeatures.Put(feature.GetTag(), lookups);
+                }
+            }
+            return usedScriptTag;
         }
     }
 }

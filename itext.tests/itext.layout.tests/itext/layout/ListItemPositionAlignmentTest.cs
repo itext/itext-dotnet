@@ -31,7 +31,6 @@ using iText.Kernel.Utils;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -78,7 +77,6 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.TestCaseSource("BaseDirectionAndSymbolAlignmentProperties")]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND, Count = 8)]
         public virtual void DefaultListIemPositionAlignmentTest(BaseDirection? listBaseDirection, BaseDirection? listItemBaseDirection
             , ListSymbolAlignment listSymbolAlignment, ListSymbolPosition listSymbolPosition, int? comparisonPdfId
             ) {
