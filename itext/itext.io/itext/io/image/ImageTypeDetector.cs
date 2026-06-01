@@ -28,26 +28,30 @@ using iText.IO.Util;
 namespace iText.IO.Image {
     /// <summary>Helper class that detects image type by magic bytes</summary>
     public sealed class ImageTypeDetector {
-        private static readonly byte[] gif = new byte[] { (byte)'G', (byte)'I', (byte)'F' };
+        private static readonly byte[] GIF = new byte[] { (byte)'G', (byte)'I', (byte)'F' };
 
-        private static readonly byte[] jpeg = new byte[] { (byte)0xFF, (byte)0xD8 };
+        private static readonly byte[] JPEG = new byte[] { (byte)0xFF, (byte)0xD8 };
 
-        private static readonly byte[] jpeg2000_1 = new byte[] { 0x00, 0x00, 0x00, 0x0c };
+        private static readonly byte[] JPEG_2000_1 = new byte[] { 0x00, 0x00, 0x00, 0x0c };
 
-        private static readonly byte[] jpeg2000_2 = new byte[] { (byte)0xff, (byte)0x4f, (byte)0xff, 0x51 };
+        private static readonly byte[] JPEG_2000_2 = new byte[] { (byte)0xff, (byte)0x4f, (byte)0xff, 0x51 };
 
-        private static readonly byte[] png = new byte[] { (byte)137, 80, 78, 71 };
+        private static readonly byte[] PNG = new byte[] { (byte)137, 80, 78, 71 };
 
-        private static readonly byte[] wmf = new byte[] { (byte)0xD7, (byte)0xCD };
+        private static readonly byte[] WMF = new byte[] { (byte)0xD7, (byte)0xCD };
 
-        private static readonly byte[] bmp = new byte[] { (byte)'B', (byte)'M' };
+        private static readonly byte[] BMP = new byte[] { (byte)'B', (byte)'M' };
 
-        private static readonly byte[] tiff_1 = new byte[] { (byte)'M', (byte)'M', 0, 42 };
+        private static readonly byte[] TIFF_1 = new byte[] { (byte)'M', (byte)'M', 0, 42 };
 
-        private static readonly byte[] tiff_2 = new byte[] { (byte)'I', (byte)'I', 42, 0 };
+        private static readonly byte[] TIFF_2 = new byte[] { (byte)'I', (byte)'I', 42, 0 };
 
-        private static readonly byte[] jbig2 = new byte[] { (byte)0x97, (byte)'J', (byte)'B', (byte)'2', (byte)'\r'
+        private static readonly byte[] JBIG_2 = new byte[] { (byte)0x97, (byte)'J', (byte)'B', (byte)'2', (byte)'\r'
             , (byte)'\n', 0x1a, (byte)'\n' };
+
+        //WebP header only needs to be checked for bytes 0 - 3 and 8 - 11, picture size should be in between
+        private static readonly byte[] WEBP = new byte[] { (byte)'R', (byte)'I', (byte)'F', (byte)'F', 0x00, 0x00, 
+            0x00, 0x00, (byte)'W', (byte)'E', (byte)'B', (byte)'P' };
 
         private ImageTypeDetector() {
         }
@@ -95,36 +99,44 @@ namespace iText.IO.Image {
         }
 
         private static ImageType DetectImageTypeByHeader(byte[] header) {
-            if (ImageTypeIs(header, gif)) {
+            if (ImageTypeIs(header, GIF)) {
                 return ImageType.GIF;
             }
             else {
-                if (ImageTypeIs(header, jpeg)) {
+                if (ImageTypeIs(header, JPEG)) {
                     return ImageType.JPEG;
                 }
                 else {
-                    if (ImageTypeIs(header, jpeg2000_1) || ImageTypeIs(header, jpeg2000_2)) {
+                    if (ImageTypeIs(header, JPEG_2000_1) || ImageTypeIs(header, JPEG_2000_2)) {
                         return ImageType.JPEG2000;
                     }
                     else {
-                        if (ImageTypeIs(header, png)) {
+                        if (ImageTypeIs(header, PNG)) {
                             return ImageType.PNG;
                         }
                         else {
-                            if (ImageTypeIs(header, bmp)) {
+                            if (ImageTypeIs(header, BMP)) {
                                 return ImageType.BMP;
                             }
                             else {
-                                if (ImageTypeIs(header, tiff_1) || ImageTypeIs(header, tiff_2)) {
+                                if (ImageTypeIs(header, TIFF_1) || ImageTypeIs(header, TIFF_2)) {
                                     return ImageType.TIFF;
                                 }
                                 else {
-                                    if (ImageTypeIs(header, jbig2)) {
+                                    if (ImageTypeIs(header, JBIG_2)) {
                                         return ImageType.JBIG2;
                                     }
                                     else {
-                                        if (ImageTypeIs(header, wmf)) {
+                                        if (ImageTypeIs(header, WMF)) {
                                             return ImageType.WMF;
+                                        }
+                                        else {
+                                            if (ImageTypeIsWebP(header)) {
+                                                return ImageType.WEBP;
+                                            }
+                                            else {
+                                                return ImageType.NONE;
+                                            }
                                         }
                                     }
                                 }
@@ -133,12 +145,26 @@ namespace iText.IO.Image {
                     }
                 }
             }
-            return ImageType.NONE;
         }
 
         private static bool ImageTypeIs(byte[] imageType, byte[] compareWith) {
             for (int i = 0; i < compareWith.Length; i++) {
                 if (imageType[i] != compareWith[i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static bool ImageTypeIsWebP(byte[] imageType) {
+            //WebP header only needs to be checked for bytes 0 - 3 and 8 - 11, picture size should be in between
+            for (int i = 0; i < 3; i++) {
+                if (imageType[i] != WEBP[i]) {
+                    return false;
+                }
+            }
+            for (int i = 8; i < 11; i++) {
+                if (imageType[i] != WEBP[i]) {
                     return false;
                 }
             }
@@ -158,7 +184,7 @@ namespace iText.IO.Image {
 
         private static byte[] ReadImageType(Stream stream) {
             try {
-                byte[] bytes = new byte[8];
+                byte[] bytes = new byte[12];
                 stream.Read(bytes);
                 return bytes;
             }
@@ -170,7 +196,7 @@ namespace iText.IO.Image {
         private static byte[] ReadImageType(byte[] source) {
             try {
                 Stream stream = new MemoryStream(source);
-                byte[] bytes = new byte[8];
+                byte[] bytes = new byte[12];
                 stream.Read(bytes);
                 return bytes;
             }

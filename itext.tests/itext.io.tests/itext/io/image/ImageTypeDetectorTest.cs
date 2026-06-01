@@ -130,6 +130,20 @@ namespace iText.IO.Image {
                 )), ImageType.WMF);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void WebPByteTest() {
+            byte[] webpImageDummy = new byte[] { (byte)'R', (byte)'I', (byte)'F', (byte)'F', 0x00, 0x00, 0x00, 0x00, (
+                byte)'W', (byte)'E', (byte)'B', (byte)'P', 0 };
+            TestBytes(webpImageDummy, ImageType.WEBP);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WebPStreamTest() {
+            byte[] webpImageDummy = new byte[] { (byte)'R', (byte)'I', (byte)'F', (byte)'F', 0x00, 0x00, 0x00, 0x00, (
+                byte)'W', (byte)'E', (byte)'B', (byte)'P', 0 };
+            TestStream(new MemoryStream(webpImageDummy), ImageType.WEBP);
+        }
+
         private static void TestURL(Uri location, ImageType expectedType) {
             NUnit.Framework.Assert.AreEqual(expectedType, ImageTypeDetector.DetectImageType(location));
         }
