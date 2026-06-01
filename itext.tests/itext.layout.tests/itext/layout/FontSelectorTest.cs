@@ -409,8 +409,7 @@ namespace iText.Layout {
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             FontProvider fontProvider = new FontProvider();
-            // TODO DEVSIX-9589 Create symbol font with cmap 3,0 for testing
-            NUnit.Framework.Assert.IsTrue(fontProvider.GetFontSet().AddFont(FONTS_FOLDER + "Symbols1.ttf", PdfEncodings
+            NUnit.Framework.Assert.IsTrue(fontProvider.GetFontSet().AddFont(FONTS_FOLDER + "iTextSymbolicFont.ttf", PdfEncodings
                 .IDENTITY_H));
             NUnit.Framework.Assert.IsTrue(fontProvider.GetFontSet().AddFont(FONTS_FOLDER + "NotoSansJP-Regular.ttf"));
             String textString = "佗佘余偂卑卒卓屍屎奆奇慄慅慆慇慈敗敘教時灈灉灊睎";
@@ -419,7 +418,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))) {
                 using (Document doc = new Document(pdfDoc)) {
                     doc.SetFontProvider(fontProvider);
-                    doc.SetProperty(Property.FONT, new String[] { "Symbols1" });
+                    doc.SetProperty(Property.FONT, new String[] { "iTextSymbolicFont" });
                     doc.Add(paragraph);
                 }
             }

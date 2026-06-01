@@ -209,56 +209,52 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void SymbolicTtfCharEncodingsPdfA1Test01() {
-            // TODO DEVSIX-9589 Create symbol font with cmap 3,0 for testing
             // encoding must not be specified
             // Here we produced valid pdfa files in the past by silently removing not valid symbols
             // But right now we check for used glyphs which don't exist in the font and throw exception
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
-                "symbolicTtfCharEncodingsPdfA1Test01.pdf", "Symbols1.ttf", "", PdfAConformance.PDF_A_1B));
+                "symbolicTtfCharEncodingsPdfA1Test01.pdf", "iTextSymbolicFont.ttf", "", PdfAConformance.PDF_A_1B));
             NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
                 , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void SymbolicTtfCharEncodingsPdfA1Test02() {
-            // TODO DEVSIX-9589 Create symbol font with cmap 3,0 for testing
             // if you specify encoding, symbolic font is treated as non-symbolic
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
-                "symbolicTtfCharEncodingsPdfA1Test02.pdf", "Symbols1.ttf", PdfEncodings.MACROMAN, PdfAConformance.PDF_A_1B
-                ));
+                "symbolicTtfCharEncodingsPdfA1Test02.pdf", "iTextSymbolicFont.ttf", PdfEncodings.MACROMAN, PdfAConformance
+                .PDF_A_1B));
             NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
                 , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void SymbolicTtfCharEncodingsPdfA1Test03() {
-            // TODO DEVSIX-9589 Create symbol font with cmap 3,0 for testing
             // if you specify encoding, symbolic font is treated as non-symbolic
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
-                "symbolicTtfCharEncodingsPdfA1Test03.pdf", "Symbols1.ttf", "ISO-8859-1", PdfAConformance.PDF_A_1B));
+                "symbolicTtfCharEncodingsPdfA1Test03.pdf", "iTextSymbolicFont.ttf", "ISO-8859-1", PdfAConformance.PDF_A_1B
+                ));
             NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
                 , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void SymbolicTtfCharEncodingsPdfA1Test04() {
-            // TODO DEVSIX-9589 Create symbol font with cmap 3,0 for testing
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
-                "symbolicTtfCharEncodingsPdfA1Test04.pdf", "Symbols1.ttf", PdfEncodings.WINANSI, PdfAConformance.PDF_A_1B
-                ));
+                "symbolicTtfCharEncodingsPdfA1Test04.pdf", "iTextSymbolicFont.ttf", PdfEncodings.WINANSI, PdfAConformance
+                .PDF_A_1B));
             NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
                 , e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void SymbolicTtfCharEncodingsPdfA1Test05() {
-            // TODO DEVSIX-9589 Create symbol font with cmap 3,0 for testing
             // Identity-H behaviour should be the same as the default one, starting from 7.2
             // Here we produced valid pdfa files in the past by silently removing not valid symbols
             // But right now we check for used glyphs which don't exist in the font and throw exception
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
-                "symbolicTtfCharEncodingsPdfA1Test05.pdf", "Symbols1.ttf", PdfEncodings.IDENTITY_H, PdfAConformance.PDF_A_1B
-                ));
+                "symbolicTtfCharEncodingsPdfA1Test05.pdf", "iTextSymbolicFont.ttf", PdfEncodings.IDENTITY_H, PdfAConformance
+                .PDF_A_1B));
             NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
                 , e.Message);
         }

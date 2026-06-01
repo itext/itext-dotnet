@@ -264,8 +264,7 @@ namespace iText.Pdfua {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
                 try {
-                    // TODO DEVSIX-9589 Create symbol font with cmap 3,0 for testing
-                    font = PdfFontFactory.CreateFont(FONT_FOLDER + "Symbols1.ttf", PdfEncodings.MACROMAN, PdfFontFactory.EmbeddingStrategy
+                    font = PdfFontFactory.CreateFont(FONT_FOLDER + "iTextSymbolicFont.ttf", PdfEncodings.MACROMAN, PdfFontFactory.EmbeddingStrategy
                         .FORCE_EMBEDDED);
                 }
                 catch (System.IO.IOException e) {
@@ -286,8 +285,7 @@ namespace iText.Pdfua {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
                 try {
-                    // TODO DEVSIX-9589 Create symbol font with cmap 3,0 for testing
-                    font = PdfFontFactory.CreateFont(FONT_FOLDER + "Symbols1.ttf", PdfEncodings.MACROMAN, PdfFontFactory.EmbeddingStrategy
+                    font = PdfFontFactory.CreateFont(FONT_FOLDER + "iTextSymbolicFont.ttf", PdfEncodings.MACROMAN, PdfFontFactory.EmbeddingStrategy
                         .FORCE_EMBEDDED);
                 }
                 catch (System.IO.IOException e) {
@@ -367,9 +365,8 @@ namespace iText.Pdfua {
         [NUnit.Framework.Test]
         public virtual void SymbolicTtfWithChangedCmapTest() {
             // TODO DEVSIX-9076 NPE when cmap of True Type Font doesn't contain Microsoft Unicode or Macintosh Roman encodings
-            // TODO DEVSIX-9589 Create symbol font with cmap 3,0 for testing
             NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => PdfFontFactory.CreateFont(FONT_FOLDER +
-                 "Symbols1_changed_cmap.ttf", PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED));
+                 "iTextSymbolicFontChangedCmap.ttf", PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED));
         }
 
         private class CustomSymbolicTrueTypeFont : TrueTypeFont {

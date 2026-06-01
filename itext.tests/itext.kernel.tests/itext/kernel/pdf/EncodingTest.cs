@@ -189,8 +189,7 @@ namespace iText.Kernel.Pdf {
             String fileName = "symbolTrueTypeFontWinAnsiTest.pdf";
             PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + fileName);
             PdfDocument doc = new PdfDocument(writer);
-            // TODO DEVSIX-9589 Create symbol font with cmap 3,0 for testing
-            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "Symbols1.ttf", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "iTextSymbolicFont.ttf", PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
                 .PREFER_EMBEDDED);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             StringBuilder str = new StringBuilder();
@@ -221,8 +220,7 @@ namespace iText.Kernel.Pdf {
             String fileName = "symbolTrueTypeFontIdentityTest.pdf";
             PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + fileName);
             PdfDocument doc = new PdfDocument(writer);
-            // TODO DEVSIX-9589 Create symbol font with cmap 3,0 for testing
-            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "Symbols1.ttf", PdfEncodings.IDENTITY_H);
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "iTextSymbolicFont.ttf", PdfEncodings.IDENTITY_H);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             StringBuilder builder = new StringBuilder();
             for (int i = 32; i <= 100; i++) {
@@ -253,8 +251,7 @@ namespace iText.Kernel.Pdf {
             String fileName = "symbolTrueTypeFontSameCharsIdentityTest.pdf";
             PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + fileName);
             PdfDocument doc = new PdfDocument(writer);
-            // TODO DEVSIX-9589 Create symbol font with cmap 3,0 for testing
-            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "Symbols1.ttf", PdfEncodings.IDENTITY_H);
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "iTextSymbolicFont.ttf", PdfEncodings.IDENTITY_H);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             String line = "AABBCCDDEEFFGGHHIIJJ";
             canvas.SaveState().BeginText().SetFontAndSize(font, 36).MoveText(36, 786).ShowText(line).EndText().RestoreState
