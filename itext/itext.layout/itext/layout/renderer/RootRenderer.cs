@@ -31,10 +31,12 @@ using iText.Kernel.Actions.Events;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout;
+using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Logs;
 using iText.Layout.Margincollapse;
 using iText.Layout.Properties;
+using iText.Layout.Properties.Margins;
 using iText.Layout.Tagging;
 
 namespace iText.Layout.Renderer {
@@ -110,9 +112,8 @@ namespace iText.Layout.Renderer {
                 if (marginsCollapsingEnabled && currentArea != null) {
                     childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(renderer, currentArea.GetBBox());
                 }
-                while (clearanceOverflowsToNextPage || (currentArea != null && renderer != null && (result = renderer.SetParent
-                    (this).Layout(new LayoutContext(currentArea.Clone(), childMarginsInfo, floatRendererAreas))).GetStatus
-                    () != LayoutResult.FULL)) {
+                while (clearanceOverflowsToNextPage || (currentArea != null && renderer != null && (result = LayoutChild(renderer
+                    , childMarginsInfo)).GetStatus() != LayoutResult.FULL)) {
                     bool currentAreaNeedsToBeUpdated = false;
                     if (clearanceOverflowsToNextPage) {
                         result = new LayoutResult(LayoutResult.NOTHING, null, null, renderer);
@@ -248,6 +249,80 @@ namespace iText.Layout.Renderer {
                     positionedRenderers.JRemoveAt(positionedRenderers.Count - 1);
                 }
             }
+        }
+
+        private LayoutResult LayoutChild(IRenderer renderer, MarginsCollapseInfo childMarginsInfo) {
+            FootnotesCounterHandler footnotesCounterHandler = FootnotesCounterHandler.GetFootnotesCounterHandler(this);
+            if (footnotesCounterHandler != null) {
+                footnotesCounterHandler.Reset();
+            }
+            LayoutResult layoutResult = renderer.SetParent(this).Layout(new LayoutContext(currentArea.Clone(), childMarginsInfo
+                , floatRendererAreas));
+            if (footnotesCounterHandler == null) {
+                return layoutResult;
+            }
+            // Process footnotes that were collected during renderer layout.
+            IDictionary<Footnote, float?> footnotes = footnotesCounterHandler.CollectFootnotes(currentArea);
+            int footnoteAnchorsNum = footnotes.Count;
+            if (footnoteAnchorsNum == 0) {
+                return layoutResult;
+            }
+            bool footnotesPlaced = false;
+            float decreasedHeight = 0;
+            bool footnotesNumDefined = false;
+            int footnotesNum = 0;
+            while (!footnotesPlaced) {
+                if (footnotesNumDefined) {
+                    decreasedHeight = 0;
+                }
+                else {
+                    // Restore initial current area.
+                    currentArea.GetBBox().MoveDown(decreasedHeight).IncreaseHeight(decreasedHeight);
+                    // Decrease current area from the bottom to the height of footnotes.
+                    footnotesNum = footnoteAnchorsNum;
+                    decreasedHeight = 0;
+                    foreach (float? footnoteHeight in footnotes.Values) {
+                        currentArea.GetBBox().MoveUp((float)footnoteHeight).DecreaseHeight((float)footnoteHeight);
+                        decreasedHeight += (float)footnoteHeight;
+                    }
+                }
+                footnotesCounterHandler.Reset();
+                layoutResult = renderer.SetParent(this).Layout(new LayoutContext(currentArea.Clone(), childMarginsInfo, floatRendererAreas
+                    ));
+                footnotes = footnotesCounterHandler.CollectFootnotes(currentArea);
+                footnoteAnchorsNum = footnotes.Count;
+                // Number of the placed anchors == number of footnotes we reserved the space for before the layout
+                footnotesPlaced = footnoteAnchorsNum == footnotesNum;
+                if (footnoteAnchorsNum > footnotesNum) {
+                    footnotesNumDefined = true;
+                    // Decrease current area from the bottom until extra anchor will be moved to the next page.
+                    currentArea.GetBBox().MoveUp(1).DecreaseHeight(1);
+                }
+            }
+            PageMarginBoxes pageMarginBoxes = null;
+            Document document = new Document(this.GetPdfDocument());
+            DocumentRenderer documentRenderer = new DocumentRenderer(document);
+            if (this is DocumentRenderer) {
+                documentRenderer = (DocumentRenderer)this;
+                document = (Document)documentRenderer.GetModelElement();
+                pageMarginBoxes = document.GetPageMargins(currentArea.GetPageNumber());
+            }
+            IList<Footnote> footnotesContainer = new List<Footnote>();
+            float footnotesHeight = 0;
+            foreach (KeyValuePair<Footnote, float?> entry in footnotes) {
+                Footnote footnote = entry.Key;
+                footnotesContainer.Add(footnote);
+                footnotesHeight += (float)entry.Value;
+            }
+            int pageNum = currentArea.GetPageNumber();
+            if (pageMarginBoxes == null) {
+                pageMarginBoxes = new PageMarginBoxes(JavaCollectionsUtil.EmptyList<PageMarginContent>());
+                document.SetPageMargins(currentArea.GetPageNumber(), pageMarginBoxes);
+            }
+            FootnotesUtil.AddFootnotesToPage(pageNum, footnotesContainer, pageMarginBoxes);
+            documentRenderer.SetProperty(Property.MARGIN_BOTTOM, documentRenderer.GetPropertyAsFloat(Property.MARGIN_BOTTOM
+                ) + footnotesHeight);
+            return layoutResult;
         }
 
         /// <summary>Draws (flushes) the content.</summary>

@@ -20,21 +20,33 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
+using iText.Layout.Renderer;
 
-namespace iText.Layout.Logs {
-    /// <summary>Class containing constants to be used in layout.</summary>
-    public sealed class LayoutLogMessageConstant {
-        public const String AREA_BREAK_UNEXPECTED = "Unexpected use of AreaBreakRenderer detected, which may indicate an issue with layout processing.";
-
-        public const String ELEMENT_DOES_NOT_FIT_AREA = "Element does not fit current area. {0}";
-
-        public const String PAGE_CONTENT_CANNOT_BE_DRAWN = "Page {0} content cannot be drawn for page {1}.";
-
-        public const String SECTION_BREAK_UNEXPECTED = "Unexpected use of SectionBreakRenderer detected, " + "which may indicate an issue with layout processing.";
-
-        private LayoutLogMessageConstant() {
+namespace iText.Layout.Properties.Margins {
+//\cond DO_NOT_DOCUMENT
+    /// <summary>
+    /// Represents a renderer for the
+    /// <see cref="FootnotesContainer"/>
+    /// layout element.
+    /// </summary>
+    internal class FootnotesContainerRenderer : BlockRenderer {
+        /// <summary>
+        /// Creates new
+        /// <see cref="FootnotesContainerRenderer"/>
+        /// from its corresponding layout object.
+        /// </summary>
+        /// <param name="modelElement">
+        /// the
+        /// <see cref="FootnotesContainer"/>
+        /// which this object should manage
+        /// </param>
+        public FootnotesContainerRenderer(FootnotesContainer modelElement)
+            : base(modelElement) {
         }
-        // Private constructor will prevent the instantiation of this class directly.
+
+        public override IRenderer GetNextRenderer() {
+            return new iText.Layout.Properties.Margins.FootnotesContainerRenderer((FootnotesContainer)modelElement);
+        }
     }
+//\endcond
 }

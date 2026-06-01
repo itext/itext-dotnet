@@ -30,23 +30,23 @@ namespace iText.Layout.Properties.Margins {
         [NUnit.Framework.Test]
         public virtual void StaticMarginsConstructorTest() {
             PageMarginContent pageMarginContentTop = new PageMarginContent(MarginBoxName.TOP, 100);
-            UnitValue topMarginHeight = ((Div)pageMarginContentTop.GetMarginContent()).GetHeight();
-            UnitValue topMarginWidth = ((Div)pageMarginContentTop.GetMarginContent()).GetWidth();
+            UnitValue topMarginHeight = ((Div)pageMarginContentTop.GetContent()).GetHeight();
+            UnitValue topMarginWidth = ((Div)pageMarginContentTop.GetContent()).GetWidth();
             NUnit.Framework.Assert.AreEqual(100, topMarginHeight.GetValue());
             NUnit.Framework.Assert.IsNull(topMarginWidth);
             PageMarginContent pageMarginContentBottom = new PageMarginContent(MarginBoxName.BOTTOM, 150);
-            UnitValue bottomMarginHeight = ((Div)pageMarginContentBottom.GetMarginContent()).GetHeight();
-            UnitValue bottomMarginWidth = ((Div)pageMarginContentBottom.GetMarginContent()).GetWidth();
+            UnitValue bottomMarginHeight = ((Div)pageMarginContentBottom.GetContent()).GetHeight();
+            UnitValue bottomMarginWidth = ((Div)pageMarginContentBottom.GetContent()).GetWidth();
             NUnit.Framework.Assert.AreEqual(150, bottomMarginHeight.GetValue());
             NUnit.Framework.Assert.IsNull(bottomMarginWidth);
             PageMarginContent pageMarginContentLeft = new PageMarginContent(MarginBoxName.LEFT, 60);
-            UnitValue leftMarginHeight = ((Div)pageMarginContentLeft.GetMarginContent()).GetHeight();
-            UnitValue leftMarginWidth = ((Div)pageMarginContentLeft.GetMarginContent()).GetWidth();
+            UnitValue leftMarginHeight = ((Div)pageMarginContentLeft.GetContent()).GetHeight();
+            UnitValue leftMarginWidth = ((Div)pageMarginContentLeft.GetContent()).GetWidth();
             NUnit.Framework.Assert.IsNull(leftMarginHeight);
             NUnit.Framework.Assert.AreEqual(60, leftMarginWidth.GetValue());
             PageMarginContent pageMarginContentRight = new PageMarginContent(MarginBoxName.RIGHT, 200);
-            UnitValue rightMarginHeight = ((Div)pageMarginContentRight.GetMarginContent()).GetHeight();
-            UnitValue rightMarginWidth = ((Div)pageMarginContentRight.GetMarginContent()).GetWidth();
+            UnitValue rightMarginHeight = ((Div)pageMarginContentRight.GetContent()).GetHeight();
+            UnitValue rightMarginWidth = ((Div)pageMarginContentRight.GetContent()).GetWidth();
             NUnit.Framework.Assert.IsNull(rightMarginHeight);
             NUnit.Framework.Assert.AreEqual(200, rightMarginWidth.GetValue());
         }

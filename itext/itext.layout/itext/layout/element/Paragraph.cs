@@ -126,6 +126,23 @@ namespace iText.Layout.Element {
         }
 
         /// <summary>
+        /// Adds the
+        /// <see cref="FootnoteAnchor"/>
+        /// element to this
+        /// <see cref="Paragraph"/>.
+        /// </summary>
+        /// <param name="footnoteAnchor">the footnote anchor to be added</param>
+        /// <returns>
+        /// this same
+        /// <see cref="Paragraph"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Layout.Element.Paragraph Add(FootnoteAnchor footnoteAnchor) {
+            childElements.Add(footnoteAnchor);
+            return this;
+        }
+
+        /// <summary>
         /// Adds a
         /// <see cref="System.Collections.IList{E}"/>
         /// of layout elements to this

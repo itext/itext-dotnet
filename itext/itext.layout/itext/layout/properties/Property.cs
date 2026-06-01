@@ -419,7 +419,7 @@ namespace iText.Layout.Properties {
         /// <see cref="iText.Layout.IPropertyContainer"/>
         /// objects that
         /// are lower in the document's hierarchy. Most inherited properties are
-        /// related to textual operations. Indicates whether or not this type of property is inheritable.
+        /// related to textual operations. Indicates whether this type of property is inheritable.
         /// </remarks>
         private static readonly bool[] INHERITED_PROPERTIES;
 

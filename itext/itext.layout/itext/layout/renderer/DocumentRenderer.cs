@@ -37,6 +37,10 @@ using iText.Layout.Tagging;
 
 namespace iText.Layout.Renderer {
     public class DocumentRenderer : RootRenderer {
+//\cond DO_NOT_DOCUMENT
+        internal readonly FootnotesCounterHandler footnotesCounterHandler = new FootnotesCounterHandler();
+//\endcond
+
         protected internal Document document;
 
         protected internal IList<int> wrappedContentPage = new List<int>();

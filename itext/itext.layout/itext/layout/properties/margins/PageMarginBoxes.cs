@@ -18,13 +18,16 @@ using iText.Layout.Renderer;
 using iText.Layout.Tagging;
 
 namespace iText.Layout.Properties.Margins {
-    /// <summary>Class to store information about all page margin boxes for single page.</summary>
+    /// <summary>Class to store information about all page margin boxes for a single page.</summary>
     public class PageMarginBoxes {
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Layout.Properties.Margins.PageMarginBoxes
             ));
 
         private readonly IDictionary<MarginBoxName, PageMarginContent> margins = new LinkedDictionary<MarginBoxName
             , PageMarginContent>();
+
+        private readonly IDictionary<int, PageFootnotesContent> footnotes = new LinkedDictionary<int, PageFootnotesContent
+            >();
 
         private float[] marginSizes = new float[4];
 
@@ -61,6 +64,9 @@ namespace iText.Layout.Properties.Margins {
             foreach (KeyValuePair<MarginBoxName, PageMarginContent> margin in other.margins) {
                 this.margins.Put(margin.Key, new PageMarginContent(margin.Value));
             }
+            foreach (KeyValuePair<int, PageFootnotesContent> footnote in other.footnotes) {
+                this.footnotes.Put(footnote.Key, new PageFootnotesContent(footnote.Value));
+            }
             this.marginSizes = other.marginSizes;
         }
 
@@ -85,8 +91,8 @@ namespace iText.Layout.Properties.Margins {
             if (rendererToDraw == null) {
                 // Margin box elements have overflow property set to HIDDEN, therefore it is expected to neither get
                 // LayoutResult other than FULL nor get no split renderer (result NOTHING) even if result is not FULL.
-                LOGGER.LogError(MessageFormatUtil.Format(LayoutLogMessageConstant.PAGE_MARGIN_BOX_CONTENT_CANNOT_BE_DRAWN, 
-                    marginBoxName, pageNumber));
+                LOGGER.LogError(MessageFormatUtil.Format(LayoutLogMessageConstant.PAGE_CONTENT_CANNOT_BE_DRAWN, marginBoxName
+                    , pageNumber));
                 return;
             }
             TagTreePointer tagPointer = null;
@@ -138,28 +144,35 @@ namespace iText.Layout.Properties.Margins {
             return renderer;
         }
 
-        /// <summary>
-        /// Gets rid of all page breaks that might have occurred inside page margin boxes
-        /// because of the running/layout elements.
-        /// </summary>
-        /// <param name="renderer">the root renderer of the renderers subtree</param>
-        private static void RemovePageBreaks(IRenderer renderer) {
-            IList<IRenderer> pageBreaks = null;
-            foreach (IRenderer child in renderer.GetChildRenderers()) {
-                if (child is AreaBreakRenderer || child is SectionBreakRenderer) {
-                    if (pageBreaks == null) {
-                        pageBreaks = new List<IRenderer>();
-                    }
-                    pageBreaks.Add(child);
-                }
-                else {
-                    RemovePageBreaks(child);
-                }
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Adds footnotes for the page.</summary>
+        /// <param name="content">
+        /// 
+        /// <see cref="PageFootnotesContent"/>
+        /// representing footnotes
+        /// </param>
+        /// <returns>
+        /// this same
+        /// <see cref="PageMarginBoxes"/>
+        /// instance
+        /// </returns>
+        internal virtual iText.Layout.Properties.Margins.PageMarginBoxes AddFootnotes(PageFootnotesContent content
+            ) {
+            int pageNum = content.GetPageNumber();
+            if (this.footnotes.ContainsKey(pageNum)) {
+                PageFootnotesContent existing = this.footnotes.Get(pageNum);
+                IElement existingFootnotes = existing.GetContent();
+                IElement newFootnotes = content.GetContent();
+                // TODO DEVSIX-9981 We want to be able to customize this container by user.
+                FootnotesContainer combined = new FootnotesContainer();
+                CollectFootnotes(combined, existingFootnotes);
+                CollectFootnotes(combined, newFootnotes);
+                content = new PageFootnotesContent(combined).SetPageNumber(pageNum);
             }
-            if (pageBreaks != null) {
-                renderer.GetChildRenderers().RemoveAll(pageBreaks);
-            }
+            this.footnotes.Put(pageNum, content);
+            return this;
         }
+//\endcond
 
         /// <summary>
         /// Gets page margin content
@@ -218,21 +231,21 @@ namespace iText.Layout.Properties.Margins {
             LayoutResult bottom = null;
             MinMaxWidth leftMinMaxWidth = null;
             if (topM != null) {
-                IRenderer topMargin = topM.GetMarginContent().CreateRendererSubTree();
+                IRenderer topMargin = topM.GetContent().CreateRendererSubTree();
                 top = topMargin.SetParent(documentRenderer).Layout(new LayoutContext(new LayoutArea(pageNumber, pageSize))
                     );
             }
             if (rightM != null) {
-                IRenderer rightMargin = rightM.GetMarginContent().CreateRendererSubTree();
+                IRenderer rightMargin = rightM.GetContent().CreateRendererSubTree();
                 rightMinMaxWidth = ((AbstractRenderer)rightMargin.SetParent(documentRenderer)).GetMinMaxWidth();
             }
             if (bottomM != null) {
-                IRenderer bottomMargin = bottomM.GetMarginContent().CreateRendererSubTree();
+                IRenderer bottomMargin = bottomM.GetContent().CreateRendererSubTree();
                 bottom = bottomMargin.SetParent(documentRenderer).Layout(new LayoutContext(new LayoutArea(pageNumber, pageSize
                     )));
             }
             if (leftM != null) {
-                IRenderer leftMargin = leftM.GetMarginContent().CreateRendererSubTree();
+                IRenderer leftMargin = leftM.GetContent().CreateRendererSubTree();
                 leftMinMaxWidth = ((AbstractRenderer)leftMargin.SetParent(documentRenderer)).GetMinMaxWidth();
             }
             Document document = (Document)documentRenderer.GetModelElement();
@@ -240,25 +253,36 @@ namespace iText.Layout.Properties.Margins {
             float leftMargin_1 = leftMinMaxWidth == null ? document.GetLeftMargin() : leftMinMaxWidth.GetMinWidth();
             float rightMargin_1 = rightMinMaxWidth == null ? document.GetRightMargin() : rightMinMaxWidth.GetMinWidth(
                 );
-            Rectangle topBBox = top == null ? new Rectangle(document.GetLeftMargin(), pageSize.GetTop() - document.GetTopMargin
-                (), pageSize.GetWidth(), document.GetTopMargin()) : top.GetOccupiedArea().GetBBox();
-            Rectangle bottomBBox = bottom == null ? new Rectangle(document.GetLeftMargin(), 0, pageSize.GetWidth(), document
-                .GetBottomMargin()) : bottom.GetOccupiedArea().GetBBox();
+            Rectangle topBBox = top == null ? new Rectangle(0, pageSize.GetTop() - document.GetTopMargin(), pageSize.GetWidth
+                (), document.GetTopMargin()) : top.GetOccupiedArea().GetBBox();
+            Rectangle bottomBBox = bottom == null ? new Rectangle(0, 0, pageSize.GetWidth(), document.GetBottomMargin(
+                )) : bottom.GetOccupiedArea().GetBBox();
             if (topM != null) {
-                topM.SetPageMarginBoxRectangle(new Rectangle(leftMargin_1, topBBox.GetY(), topBBox.GetWidth() - rightMargin_1
-                     - leftMargin_1, topBBox.GetHeight()));
+                topM.SetRectangle(new Rectangle(leftMargin_1, topBBox.GetY(), pageSize.GetWidth() - rightMargin_1 - leftMargin_1
+                    , topBBox.GetHeight()));
             }
             if (rightM != null) {
-                rightM.SetPageMarginBoxRectangle(new Rectangle(pageSize.GetRight() - rightMargin_1, bottomBBox.GetHeight()
-                    , rightMargin_1, pageSize.GetHeight() - topBBox.GetHeight() - bottomBBox.GetHeight()));
+                rightM.SetRectangle(new Rectangle(pageSize.GetRight() - rightMargin_1, bottomBBox.GetHeight(), rightMargin_1
+                    , pageSize.GetHeight() - topBBox.GetHeight() - bottomBBox.GetHeight()));
             }
             if (bottomM != null) {
-                bottomM.SetPageMarginBoxRectangle(new Rectangle(leftMargin_1, 0, bottomBBox.GetWidth() - rightMargin_1 - leftMargin_1
-                    , bottomBBox.GetHeight()));
+                bottomM.SetRectangle(new Rectangle(leftMargin_1, 0, pageSize.GetWidth() - rightMargin_1 - leftMargin_1, bottomBBox
+                    .GetHeight()));
             }
             if (leftM != null) {
-                leftM.SetPageMarginBoxRectangle(new Rectangle(0, bottomBBox.GetHeight(), leftMargin_1, pageSize.GetHeight(
-                    ) - topBBox.GetHeight() - bottomBBox.GetHeight()));
+                leftM.SetRectangle(new Rectangle(0, bottomBBox.GetHeight(), leftMargin_1, pageSize.GetHeight() - topBBox.GetHeight
+                    () - bottomBBox.GetHeight()));
+            }
+            PageFootnotesContent footnotes = this.GetFootnotes(pageNumber);
+            if (footnotes != null) {
+                Rectangle footnotesRect = new Rectangle(leftMargin_1, bottomBBox.GetHeight(), pageSize.GetWidth() - rightMargin_1
+                     - leftMargin_1, pageSize.GetHeight() - topBBox.GetHeight() - bottomBBox.GetHeight());
+                IRenderer footnotesRenderer = footnotes.GetContent().CreateRendererSubTree();
+                LayoutResult footnotesResult = footnotesRenderer.SetParent(documentRenderer).Layout(new LayoutContext(new 
+                    LayoutArea(pageNumber, footnotesRect)));
+                footnotesRect.SetHeight(footnotesResult.GetOccupiedArea().GetBBox().GetHeight());
+                footnotes.SetRectangle(footnotesRect);
+                bottomBBox.IncreaseHeight(footnotes.GetRectangle().GetHeight());
             }
             return new float[] { topBBox.GetHeight(), rightMargin_1, bottomBBox.GetHeight(), leftMargin_1 };
         }
@@ -272,18 +296,12 @@ namespace iText.Layout.Properties.Margins {
         /// </param>
         /// <param name="pageNumber">page number</param>
         public virtual void Draw(DocumentRenderer documentRenderer, PdfDocument document, int pageNumber) {
+            PageFootnotesContent footnotes = this.GetFootnotes(pageNumber);
+            if (footnotes != null) {
+                DrawPageContent(documentRenderer, document, pageNumber, footnotes);
+            }
             foreach (PageMarginContent margin in margins.Values) {
-                Rectangle rect = margin.GetPageMarginBoxRectangle();
-                if (rect == null) {
-                    // Margins weren't layouted, we can get here if page is added manually and is empty.
-                    Layout(documentRenderer, pageNumber, document.GetPage(pageNumber).GetPageSize());
-                    rect = margin.GetPageMarginBoxRectangle();
-                }
-                IElement element = margin.GetMarginContent();
-                MarginBoxName marginBoxName = margin.GetMarginBoxName();
-                SetPageMarginTagRole(element);
-                IRenderer renderer = CreateRendererFromElement(element, documentRenderer, document);
-                Draw(renderer, rect, documentRenderer, document, pageNumber, marginBoxName.ToString());
+                DrawPageContent(documentRenderer, document, pageNumber, margin);
             }
         }
 
@@ -297,6 +315,60 @@ namespace iText.Layout.Properties.Margins {
             if (element is IAccessibleElement) {
                 ((IAccessibleElement)element).GetAccessibilityProperties().SetRole(StandardRoles.ARTIFACT);
             }
+        }
+
+        /// <summary>
+        /// Gets rid of all page breaks that might have occurred inside page margin boxes
+        /// because of the running/layout elements.
+        /// </summary>
+        /// <param name="renderer">the root renderer of the renderers subtree</param>
+        private static void RemovePageBreaks(IRenderer renderer) {
+            IList<IRenderer> pageBreaks = null;
+            foreach (IRenderer child in renderer.GetChildRenderers()) {
+                if (child is AreaBreakRenderer || child is SectionBreakRenderer) {
+                    if (pageBreaks == null) {
+                        pageBreaks = new List<IRenderer>();
+                    }
+                    pageBreaks.Add(child);
+                }
+                else {
+                    RemovePageBreaks(child);
+                }
+            }
+            if (pageBreaks != null) {
+                renderer.GetChildRenderers().RemoveAll(pageBreaks);
+            }
+        }
+
+        private static void CollectFootnotes(FootnotesContainer container, IElement footnotes) {
+            if (footnotes is FootnotesContainer) {
+                foreach (IElement element in ((FootnotesContainer)footnotes).GetChildren()) {
+                    if (element is Footnote) {
+                        container.Add((Footnote)element);
+                    }
+                }
+            }
+        }
+
+        private PageFootnotesContent GetFootnotes(int pageNumber) {
+            return this.footnotes.Get(pageNumber);
+        }
+
+        private void DrawPageContent(DocumentRenderer documentRenderer, PdfDocument document, int pageNumber, AbstractPageContent
+             pageContent) {
+            Rectangle rect = pageContent.GetRectangle();
+            if (rect == null) {
+                // Margins weren't layouted, we can get here if page is added manually and is empty.
+                // Or in case footnotes are added.
+                Layout(documentRenderer, pageNumber, document.GetPage(pageNumber).GetPageSize());
+                rect = pageContent.GetRectangle();
+            }
+            IElement element = pageContent.GetContent();
+            SetPageMarginTagRole(element);
+            String name = pageContent is PageMarginContent ? (((PageMarginContent)pageContent).GetMarginBoxName().ToString
+                () + " margin box") : "footnotes";
+            IRenderer renderer = CreateRendererFromElement(element, documentRenderer, document);
+            Draw(renderer, rect, documentRenderer, document, pageNumber, name);
         }
 
         public override bool Equals(Object o) {
