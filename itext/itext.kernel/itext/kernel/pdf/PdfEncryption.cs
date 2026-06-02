@@ -22,10 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using System.Security.Cryptography;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
-using iText.Commons.Digest;
-using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Crypto;
 using iText.Kernel.Crypto.Securityhandler;
@@ -50,7 +49,7 @@ namespace iText.Kernel.Pdf {
 
         private const int MAC_DISABLED = 1 << 12;
 
-        private static long seq = SystemUtil.GetTimeBasedSeed();
+        private static readonly RNGCryptoServiceProvider RANDOM_ID_GENERATOR = new RNGCryptoServiceProvider();
 
         private int cryptoMode;
 
@@ -429,18 +428,12 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>Generates random document ID.</summary>
+        /// <returns>document ID</returns>
         public static byte[] GenerateNewDocumentId() {
-            IMessageDigest sha512;
-            try {
-                sha512 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("SHA-512");
-            }
-            catch (Exception e) {
-                throw new PdfException(KernelExceptionMessageConstant.PDF_ENCRYPTION, e);
-            }
-            long time = SystemUtil.GetTimeBasedSeed();
-            long mem = SystemUtil.GetFreeMemory();
-            String s = time + "+" + mem + "+" + (seq++);
-            return sha512.Digest(s.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1));
+            byte[] bytes = new byte[64];
+            RANDOM_ID_GENERATOR.GetBytes(bytes);
+            return bytes;
         }
 
         /// <summary>Creates a PdfLiteral that contains an array of two id entries.</summary>
