@@ -29,13 +29,13 @@ namespace iText.Signatures.Validation {
         }
 
         public override AsymmetricSignatureDeformatter CreateDeformatter(AsymmetricAlgorithm key) {
-            return new ECDSACngSignatureDeformatter((ECDsaCng)key);
+            return new ECDSACngSignatureDeformatter((ECDsa)key);
         }
 
         private class ECDSACngSignatureDeformatter : AsymmetricSignatureDeformatter {
-            private ECDsaCng key;
+            private ECDsa key;
             
-            internal ECDSACngSignatureDeformatter(ECDsaCng key) {
+            internal ECDSACngSignatureDeformatter(ECDsa key) {
                 this.key = key;
             }
 

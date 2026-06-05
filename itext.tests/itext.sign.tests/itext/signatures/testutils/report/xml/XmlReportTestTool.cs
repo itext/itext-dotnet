@@ -28,6 +28,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.XPath;
+using iText.Commons.Internal.Runtime;
 using iText.Signatures.Validation.Report.Xml;
 
 namespace iText.Signatures.Testutils.Report.Xml {

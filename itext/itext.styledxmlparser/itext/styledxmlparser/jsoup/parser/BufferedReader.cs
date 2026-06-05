@@ -5,8 +5,9 @@ It may contain modifications beyond the original version.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 
-  namespace iText.StyledXmlParser.Jsoup.Parser
+namespace iText.StyledXmlParser.Jsoup.Parser
   {
       public class BufferedReader
       {

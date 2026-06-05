@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 #if NETSTANDARD2_0
 using System.Text.Json.Serialization;
 #else
@@ -426,12 +427,7 @@ namespace iText.Commons.Utils {
 
         private static MemoryStream ConvertInputStreamToOutput(Stream inputStream) {
             MemoryStream result = new MemoryStream();
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = inputStream.Read(buffer)) != -1) {
-                result.Write(buffer, 0, length);
-            }
-            result.Flush();
+            inputStream.CopyTo(result);
             return result;
         }
 

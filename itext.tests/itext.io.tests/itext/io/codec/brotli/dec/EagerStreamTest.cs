@@ -4,6 +4,8 @@ Distributed under MIT license.
 See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 using System.IO;
+using iText.Commons;
+using iText.Commons.Internal.Runtime;
 using iText.Test;
 
 namespace iText.IO.Codec.Brotli.Dec {
@@ -348,13 +350,13 @@ namespace iText.IO.Codec.Brotli.Dec {
             EagerStreamTest.ProxyStream ps = new EagerStreamTest.ProxyStream(data);
             BrotliInputStream reader = new BrotliInputStream(ps, 1);
             byte[] buffer = new byte[1];
-            reader.Read(buffer);
+            reader.JRead(buffer);
             reader.Close();
             int normalReadBytes = ps.ReadBytes;
             ps = new EagerStreamTest.ProxyStream(data);
             reader = new BrotliInputStream(ps, 1);
             reader.EnableEagerOutput();
-            reader.Read(buffer);
+            reader.JRead(buffer);
             reader.Close();
             int eagerReadBytes = ps.ReadBytes;
             // Did not continue decoding - suspended as soon as enough data was decoded.

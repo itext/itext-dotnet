@@ -22,10 +22,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Commons.Utils.Collections;
 using iText.Signatures.Validation.Context;
 using iText.Signatures.Validation.Extensions;
+using iText.Signatures.Validation.Report;
 
 namespace iText.Signatures.Validation {
     /// <summary>
@@ -122,7 +124,7 @@ namespace iText.Signatures.Validation {
         /// <summary>
         /// Sets the Continue after failure setting for the provided context.
         /// This parameter specifies if validation is expected to continue after first failure is encountered.
-        /// Only <see cref="ValidationResult#INVALID"/> is considered to be a failure.
+        /// Only <see cref="ValidationReport.ValidationResult.INVALID"/> is considered to be a failure.
         /// </summary>
         /// <param name="validatorContexts">the validators for which to set the Continue after failure setting</param>
         /// <param name="certificateSources">the certificateSources for which to set the Continue after failure setting

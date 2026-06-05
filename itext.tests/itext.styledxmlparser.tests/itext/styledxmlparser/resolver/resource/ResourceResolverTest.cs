@@ -22,6 +22,7 @@ Copyright (c) 1998-2026 Apryse Group NV
  */
 using System;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Kernel.Pdf.Xobject;
@@ -135,7 +136,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
             Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileName);
             Assert.NotNull(stream);
-            Assert.AreEqual(expected.Read(), stream.Read());
+            Assert.AreEqual(expected.ReadByte(), stream.ReadByte());
         }
 
         // Boolean method tests block
@@ -335,10 +336,10 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             ResourceResolver resourceResolver = new ResourceResolver(baseUri, retriever);
             Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileName);
             for (int i = 0; i < 40; i++) {
-                stream.Read();
+                stream.ReadByte();
             } 
             
-            Assert.Catch(typeof(ReadingByteLimitException), () => stream.Read());
+            Assert.Catch(typeof(ReadingByteLimitException), () => stream.ReadByte());
         }
 
         [Test]
@@ -355,7 +356,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
             Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileName);
             Assert.NotNull(stream);
-            Assert.AreEqual(expected.Read(), stream.Read());
+            Assert.AreEqual(expected.ReadByte(), stream.ReadByte());
         }
 
         [Test]
@@ -365,7 +366,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             ResourceResolver resourceResolver = new ResourceResolver(baseUri);
             Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileName);
             Assert.NotNull(stream);
-            Assert.AreEqual(expected.Read(), stream.Read());
+            Assert.AreEqual(expected.ReadByte(), stream.ReadByte());
         }
 
         [Test]
@@ -392,7 +393,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             Stream expected = FileUtil.GetInputStreamForFile(baseUri + "retrieveStyleSheetTest.css");
             Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileName);
             Assert.NotNull(stream);
-            Assert.AreEqual(expected.Read(), stream.Read());
+            Assert.AreEqual(expected.ReadByte(), stream.ReadByte());
         }
 
         class RetryResourceRetriever : DefaultResourceRetriever {
@@ -430,7 +431,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             using (Stream stream = resourceResolver.RetrieveResourceAsInputStream(absolutePath),
                 expected = FileUtil.GetInputStreamForFile(absolutePath)) {
                 Assert.NotNull(stream);
-                Assert.AreEqual(expected.Read(), stream.Read());
+                Assert.AreEqual(expected.ReadByte(), stream.ReadByte());
             }
         }
 
@@ -443,7 +444,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             using (Stream stream = resourceResolver.RetrieveResourceAsInputStream(absolutePath),
                 expected = FileUtil.GetInputStreamForFile(absolutePath)) {
                 Assert.NotNull(stream);
-                Assert.AreEqual(expected.Read(), stream.Read());
+                Assert.AreEqual(expected.ReadByte(), stream.ReadByte());
             }
         }
 
@@ -457,7 +458,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             using (Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileUrlString),
                 expected = UrlUtil.OpenStream(url)) {
                 Assert.NotNull(stream);
-                Assert.AreEqual(expected.Read(), stream.Read());
+                Assert.AreEqual(expected.ReadByte(), stream.ReadByte());
             }
 
         }
@@ -472,7 +473,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
             using (Stream stream = resourceResolver.RetrieveResourceAsInputStream(fileUrlString),
                 expected = UrlUtil.OpenStream(url)) {
                 Assert.NotNull(stream);
-                Assert.AreEqual(expected.Read(), stream.Read());
+                Assert.AreEqual(expected.ReadByte(), stream.ReadByte());
             }
         }
     }

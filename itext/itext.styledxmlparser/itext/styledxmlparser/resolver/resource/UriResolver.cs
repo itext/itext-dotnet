@@ -23,6 +23,7 @@ Copyright (c) 1998-2026 Apryse Group NV
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Util;
 

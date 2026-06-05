@@ -20,6 +20,7 @@ using System.Collections;
 using System.IO;
 using System.Text;
 using System.Xml;
+using iText.Commons.Internal.Runtime;
 using iText.IO.Util;
 using iText.Kernel.Utils;
 

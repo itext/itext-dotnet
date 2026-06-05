@@ -31,6 +31,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Kernel.XMP.Options;

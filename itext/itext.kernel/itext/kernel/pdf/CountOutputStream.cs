@@ -22,6 +22,7 @@ Copyright (c) 1998-2026 Apryse Group NV
  */
 using System;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 
 namespace iText.Kernel.Pdf {
     /// <summary>An <c>OutputStream</c> that counts the written bytes.</summary>

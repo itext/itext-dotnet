@@ -31,6 +31,7 @@ using iText.IO.Util;
 using iText.Test;
 using iText.Test.Attributes;
 using System.Net;
+using iText.Commons.Internal.Runtime;
 using NUnit.Framework;
 
 namespace iText.IO.Resolver.Resource {

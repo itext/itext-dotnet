@@ -23,6 +23,7 @@ Copyright (c) 1998-2026 Apryse Group NV
 using System;
 using System.Text;
 using System.Globalization;
+using iText.Commons.Internal.Runtime;
 
 
 namespace iText.Kernel.Pdf {
@@ -43,7 +44,7 @@ namespace iText.Kernel.Pdf {
     /// See also ISO-320001 7.9.4, "Dates".
     /// </summary>
     /// <seealso cref="PdfString"/>
-    /// <seealso cref="Java.Util.GregorianCalendar"/>
+    /// <seealso cref="GregorianCalendar"/>
     public class PdfDate : PdfObjectWrapper<PdfString> {
         /// <summary>
         /// Constructs a

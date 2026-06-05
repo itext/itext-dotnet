@@ -27,6 +27,7 @@ using iText.Bouncycastlefips;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Openssl;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;

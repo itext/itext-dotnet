@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.ExceptionServices;
 using System.Text;
+using iText.Commons.Internal.Runtime;
 
 namespace iText.Commons.Utils
 {

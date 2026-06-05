@@ -24,6 +24,7 @@ using System.IO;
 using iText.Commons.Actions.Confirmations;
 using iText.Commons.Actions.Sequence;
 using iText.Commons.Ecosystem;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Test;
 

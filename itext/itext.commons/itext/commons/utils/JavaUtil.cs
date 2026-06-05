@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using iText.Commons.Internal.Runtime;
 
 namespace iText.Commons.Utils {
     /// <summary>
@@ -337,11 +338,11 @@ namespace iText.Commons.Utils {
         public static Stream CorrectWavFile(Stream stream) {
             String header = "";
             for (int i = 0; i < 4; i++) {
-                header = header + (char) stream.Read();
+                header = header + (char) stream.ReadByte();
             }
             stream.Position = 0;
             if (header.Equals("RIFF")) {
-                stream.Read();
+                stream.ReadByte();
             }
 
             return stream;

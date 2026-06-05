@@ -31,6 +31,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using iText.Commons.Internal.Runtime;
 using iText.Kernel.XMP;
 using iText.Kernel.XMP.Impl.XPath;
 using iText.Kernel.XMP.Options;

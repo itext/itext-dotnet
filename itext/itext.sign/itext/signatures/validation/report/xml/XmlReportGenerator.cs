@@ -26,6 +26,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using iText.Commons.Datastructures;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 
 namespace iText.Signatures.Validation.Report.Xml {

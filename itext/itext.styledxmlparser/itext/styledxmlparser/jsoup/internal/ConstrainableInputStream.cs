@@ -4,6 +4,7 @@ It may contain modifications beyond the original version.
 */
 using System.IO;
 using System.Net.Sockets;
+using iText.Commons.Internal.Runtime;
 using iText.StyledXmlParser.Jsoup.Helper;
 
 namespace iText.StyledXmlParser.Jsoup.Internal {
@@ -86,7 +87,7 @@ namespace iText.StyledXmlParser.Jsoup.Internal {
             int read;
             int remaining = max;
             while (true) {
-                read = input.Read(readBuffer);
+                read = input.JRead(readBuffer);
                 if (read == -1) {
                     break;
                 }

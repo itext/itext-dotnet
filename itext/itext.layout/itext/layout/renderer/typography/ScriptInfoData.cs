@@ -22,6 +22,7 @@
  */
 using System.Collections.Generic;
 using System.ComponentModel;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 
 namespace iText.Layout.Renderer.Typography {

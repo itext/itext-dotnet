@@ -29,6 +29,7 @@ using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Digest;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Crypto;
@@ -242,7 +243,7 @@ namespace iText.Signatures.Sign {
             // read data
             byte[] signData = new byte[4096];
             using (Stream signdataS = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "signeddata.bin")) {
-                signdataS.Read(signData);
+                signdataS.JRead(signData);
             }
             // open prepared document
             using (PdfReader reader = new PdfReader(new FileInfo(SOURCE_FOLDER + "2PhasePreparedSignature.pdf"

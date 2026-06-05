@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils.Collections;
 
 namespace iText.Signatures.Validation.Context {
@@ -100,14 +101,14 @@ namespace iText.Signatures.Validation.Context {
 
         /// <summary>
         /// Gets encapsulated
-        /// <see cref="Java.Util.EnumSet{E}"/>
+        /// <see cref="EnumSet{T}"/>
         /// containing
         /// <see cref="ValidatorContext"/>
         /// elements.
         /// </summary>
         /// <returns>
         /// encapsulated
-        /// <see cref="Java.Util.EnumSet{E}"/>
+        /// <see cref="EnumSet{T}"/>
         /// containing
         /// <see cref="ValidatorContext"/>
         /// elements

@@ -23,6 +23,7 @@ Copyright (c) 1998-2026 Apryse Group NV
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using iText.Commons.Internal.Runtime;
 
 namespace iText.Commons.Utils {
     public class LinkedHashSet<TKey> : ISet<TKey> {
