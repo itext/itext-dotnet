@@ -602,13 +602,20 @@ namespace iText.Pdfa.Checker {
                     logger.LogWarning(PdfAConformanceLogMessageConstant.FILE_SPECIFICATION_DICTIONARY_SHOULD_CONTAIN_DESC_KEY);
                 }
                 PdfDictionary ef = fileSpec.GetAsDictionary(PdfName.EF);
-                PdfStream embeddedFile = ef.GetAsStream(PdfName.F);
-                if (embeddedFile == null) {
-                    throw new PdfAConformanceException(PdfaExceptionMessageConstant.EF_KEY_OF_FILE_SPECIFICATION_DICTIONARY_SHALL_CONTAIN_DICTIONARY_WITH_VALID_F_KEY
-                        );
-                }
+                CheckFileSpecEmbeddedStream(ef.GetAsStream(PdfName.F));
                 // iText doesn't check whether provided file is compliant to PDF-A specs.
                 logger.LogWarning(PdfAConformanceLogMessageConstant.EMBEDDED_FILE_SHALL_BE_COMPLIANT_WITH_SPEC);
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override void CheckFileSpecEmbeddedStream(PdfStream embeddedFile) {
+            if (IsAlreadyChecked(embeddedFile)) {
+                return;
+            }
+            if (embeddedFile == null) {
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.EF_KEY_OF_FILE_SPECIFICATION_DICTIONARY_SHALL_CONTAIN_DICTIONARY_WITH_VALID_F_KEY
+                    );
             }
         }
 

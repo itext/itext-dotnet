@@ -168,6 +168,9 @@ namespace iText.Pdfa.Checker {
             protected internal override void CheckFileSpec(PdfDictionary fileSpec) {
             }
 
+            protected internal override void CheckFileSpecEmbeddedStream(PdfStream embeddedFile) {
+            }
+
             protected internal override void CheckForm(PdfDictionary form) {
             }
 

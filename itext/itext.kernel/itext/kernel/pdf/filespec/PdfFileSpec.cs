@@ -27,6 +27,7 @@ using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Collection;
 using iText.Kernel.Pdf.Xobject;
+using iText.Kernel.Validation.Context;
 
 namespace iText.Kernel.Pdf.Filespec {
     public class PdfFileSpec : PdfObjectWrapper<PdfObject> {
@@ -297,16 +298,10 @@ namespace iText.Kernel.Pdf.Filespec {
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, String filePath
             , String description, String fileDisplay, PdfName mimeType, PdfDictionary fileParameter, PdfName afRelationshipValue
             ) {
-            PdfStream stream = new PdfStream(doc, UrlUtil.OpenStream(UrlUtil.ToURL(filePath)));
-            PdfDictionary @params = new PdfDictionary();
-            if (fileParameter != null) {
-                @params.MergeDifferent(fileParameter);
+            using (Stream fileStream = UrlUtil.OpenStream(UrlUtil.ToURL(filePath))) {
+                return CreateEmbeddedFileSpec(doc, fileStream, description, fileDisplay, mimeType, fileParameter, afRelationshipValue
+                    );
             }
-            if (!@params.ContainsKey(PdfName.ModDate)) {
-                @params.Put(PdfName.ModDate, new PdfDate().GetPdfObject());
-            }
-            stream.Put(PdfName.Params, @params);
-            return CreateEmbeddedFileSpec(doc, stream, description, fileDisplay, mimeType, afRelationshipValue);
         }
 
         /// <summary>Create an embedded file specification.</summary>
@@ -508,32 +503,11 @@ namespace iText.Kernel.Pdf.Filespec {
             ef.Put(PdfName.UF, stream);
             dict.Put(PdfName.EF, ef);
             doc.MarkStreamAsEmbeddedFile(stream);
-            return (iText.Kernel.Pdf.Filespec.PdfFileSpec)new iText.Kernel.Pdf.Filespec.PdfFileSpec(dict).MakeIndirect
-                (doc);
-        }
-
-        /// <summary>Create an embedded file specification.</summary>
-        /// <param name="doc">
-        /// 
-        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
-        /// instance to make this file specification indirect
-        /// </param>
-        /// <param name="stream">an embedded file stream dictionary</param>
-        /// <param name="fileDisplay">actual file name stored in the pdf</param>
-        /// <param name="afRelationshipValue">
-        /// value that represents the relationship between the component of the passed PDF document that
-        /// refers to this file specification and the associated file. If <c>null</c>,
-        /// <see cref="iText.Kernel.Pdf.PdfName.Unspecified"/>
-        /// will be added.
-        /// </param>
-        /// <returns>
-        /// 
-        /// <see cref="PdfFileSpec"/>
-        /// containing the file specification of the file
-        /// </returns>
-        private static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, PdfStream stream
-            , String description, String fileDisplay, PdfName afRelationshipValue) {
-            return CreateEmbeddedFileSpec(doc, stream, description, fileDisplay, null, afRelationshipValue);
+            iText.Kernel.Pdf.Filespec.PdfFileSpec resFileSpec = (iText.Kernel.Pdf.Filespec.PdfFileSpec)new iText.Kernel.Pdf.Filespec.PdfFileSpec
+                (dict).MakeIndirect(doc);
+            doc.CheckIsoConformance(new PdfFileSpecDataValidationContext(stream));
+            stream.Flush();
+            return resFileSpec;
         }
 
         public virtual iText.Kernel.Pdf.Filespec.PdfFileSpec SetFileIdentifier(PdfArray fileIdentifier) {

@@ -565,6 +565,16 @@ namespace iText.Pdfa.Checker {
         }
 
         /// <summary><inheritDoc/></summary>
+        protected internal override void CheckFileSpecEmbeddedStream(PdfStream embeddedFile) {
+            // This method is intended to verify file's specification EF->F stream.
+            // Throw an exception since EF is forbidden for PDF/A-1.
+            if (embeddedFile != null) {
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.FILE_SPECIFICATION_DICTIONARY_SHALL_NOT_CONTAIN_THE_EF_KEY
+                    );
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
         protected internal override void CheckAnnotation(PdfDictionary annotDic) {
             PdfName subtype = annotDic.GetAsName(PdfName.Subtype);
             if (subtype == null) {
