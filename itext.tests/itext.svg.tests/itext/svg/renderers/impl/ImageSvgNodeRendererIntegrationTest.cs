@@ -21,6 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.IO;
+using iText.IO.Image;
 using iText.Svg.Logs;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
@@ -207,6 +209,16 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void ImageBase64WithUrlTest() {
             ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "base64Image", properties);
+        }
+
+        [NUnit.Framework.Test]
+        // TODO DEVSIX-10012 Extra misleading log messages are produced when WebP module is missing
+        [LogMessage(WebPLogMessageConstant.WEBP_NOT_FOUND)]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI
+            )]
+        public virtual void WebPImageWithoutWebPModuleTest() {
+            ConvertToSinglePage(new FileInfo(sourceFolder + "webPImageWithoutWebPModule.svg"), new FileInfo(destinationFolder
+                 + "webPImageWithoutWebPModule.pdf"), properties);
         }
     }
 }
