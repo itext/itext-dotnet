@@ -28,21 +28,26 @@ using iText.Commons.Actions;
 using iText.Commons.Actions.Sequence;
 using iText.Commons.Utils;
 using iText.Kernel.Actions.Events;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
+using iText.Layout.Exceptions;
 using iText.Layout.Layout;
 using iText.Layout.Logs;
 using iText.Layout.Margincollapse;
 using iText.Layout.Properties;
 using iText.Layout.Properties.Margins;
 using iText.Layout.Tagging;
+using iText.Layout.Utils;
 
 namespace iText.Layout.Renderer {
     public abstract class RootRenderer : AbstractRenderer {
         /// <summary>The Logger instance.</summary>
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(RootRenderer));
+
+        private const int MAX_AMOUNT_OF_ELEMENT_LAYOUTS = 1_000_000;
 
         protected internal bool immediateFlush = true;
 
@@ -112,8 +117,18 @@ namespace iText.Layout.Renderer {
                 if (marginsCollapsingEnabled && currentArea != null) {
                     childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(renderer, currentArea.GetBBox());
                 }
+                int rendererLayoutCounter = 0;
                 while (clearanceOverflowsToNextPage || (currentArea != null && renderer != null && (result = LayoutChild(renderer
                     , childMarginsInfo)).GetStatus() != LayoutResult.FULL)) {
+                    rendererLayoutCounter++;
+                    LayoutInfiniteLoopResolver loopResolver = GetPdfDocument().GetDiContainer().GetInstance<LayoutInfiniteLoopResolver
+                        >();
+                    int limit = loopResolver == null ? MAX_AMOUNT_OF_ELEMENT_LAYOUTS : loopResolver.GetMaxPagesCountForSingleElement
+                        ();
+                    if (rendererLayoutCounter > limit) {
+                        throw new PdfException(MessageFormatUtil.Format(LayoutExceptionMessageConstant.INFINITE_LOOP_DETECTED, limit
+                             / 3));
+                    }
                     bool currentAreaNeedsToBeUpdated = false;
                     if (clearanceOverflowsToNextPage) {
                         result = new LayoutResult(LayoutResult.NOTHING, null, null, renderer);
