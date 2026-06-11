@@ -74,7 +74,8 @@ namespace iText.Webpimagesupport {
                         info.Width,
                         info.Height,
                         SKColorType.Rgba8888,
-                        SKAlphaType.Unpremul);
+                        SKAlphaType.Unpremul,
+                        SKColorSpace.CreateSrgb());
 
                     using (var bitmap = new SKBitmap(imageInfo)) {
                         var result = codec.GetPixels(bitmap.Info, bitmap.GetPixels());
@@ -112,7 +113,7 @@ namespace iText.Webpimagesupport {
                         this.SetBpc(8);
                         this.SetColorEncodingComponentsNumber(3);
 
-                        if (bitmap.AlphaType != SKAlphaType.Opaque) {
+                        if (codec.Info.AlphaType != SKAlphaType.Opaque) {
                             ImageData softMask = ImageDataFactory.Create(bitmap.Width, bitmap.Height, 1, 8, alpha, null);
                             softMask.MakeMask();
                             this.SetImageMask(softMask);
