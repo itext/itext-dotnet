@@ -113,7 +113,7 @@ namespace iText.Layout.Tagging {
 
         public virtual void AddKidsHint<_T0>(IPropertyContainer parent, IEnumerable<_T0> newKids, int insertIndex)
             where _T0 : IPropertyContainer {
-            if (parent is AreaBreakRenderer) {
+            if (parent is AreaBreakRenderer || parent is SectionBreakRenderer) {
                 return;
             }
             TaggingHintKey parentKey = GetOrCreateHintKey(parent);

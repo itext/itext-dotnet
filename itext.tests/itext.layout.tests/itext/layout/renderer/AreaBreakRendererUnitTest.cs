@@ -37,7 +37,8 @@ namespace iText.Layout.Renderer {
         [LogMessage(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED)]
         public virtual void AddChildTestUnsupported() {
             AreaBreakRenderer areaBreakRenderer = new AreaBreakRenderer(new AreaBreak());
-            NUnit.Framework.Assert.IsNull(areaBreakRenderer.GetChildRenderers());
+            NUnit.Framework.Assert.IsNotNull(areaBreakRenderer.GetChildRenderers());
+            NUnit.Framework.Assert.IsTrue(areaBreakRenderer.GetChildRenderers().IsEmpty());
             NUnit.Framework.Assert.DoesNotThrow(() => areaBreakRenderer.AddChild(new TextRenderer(new Text("Test"))));
         }
 
@@ -107,8 +108,7 @@ namespace iText.Layout.Renderer {
         public virtual void GetPropertyWithDefaultValueTestUnsupported() {
             //The BORDER_BOTTOM_LEFT_RADIUS property is chosen without any specific intention. It could be replaced with any other property.
             AreaBreakRenderer areaBreakRenderer = new AreaBreakRenderer(new AreaBreak());
-            NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => areaBreakRenderer.GetProperty(Property.BORDER_BOTTOM_LEFT_RADIUS
-                , 3));
+            NUnit.Framework.Assert.IsNull(areaBreakRenderer.GetProperty<int?>(Property.BORDER_BOTTOM_LEFT_RADIUS, 3));
         }
 
         [NUnit.Framework.Test]

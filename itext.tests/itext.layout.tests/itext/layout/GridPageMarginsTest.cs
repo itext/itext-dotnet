@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -419,10 +418,8 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED)]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 13)]
+        [LogMessage(LayoutLogMessageConstant.GRID_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK)]
         public virtual void AreaBreakInsideNestedGridCellWithDocumentMarginsTest() {
-            //TODO DEVSIX-9976: Update test after fix.
             String fileName = "nestedGridCellAreaBreakDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
@@ -435,7 +432,7 @@ namespace iText.Layout {
                     GridContainer innerLeft = CreateTwoColumnGrid();
                     innerLeft.Add(ColoredDiv("LEFT-1", new DeviceRgb(65, 151, 29)));
                     innerLeft.Add(ColoredDiv("LEFT-2", new DeviceRgb(209, 247, 29)));
-                    Div breakCell = new Div().Add(new Paragraph("Before break.")).Add(new AreaBreak()).Add(new Paragraph("After break — should be on even page with margins1."
+                    Div breakCell = new Div().Add(new Paragraph("Before break.")).Add(new AreaBreak()).Add(new Paragraph("After break."
                         ));
                     innerLeft.Add(breakCell);
                     innerLeft.Add(ColoredDiv("LEFT-4", new DeviceRgb(78, 151, 205)));
@@ -576,10 +573,12 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED, Count = 3)]
+        [LogMessage(LayoutLogMessageConstant.GRID_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK)]
         public virtual void AreaBreakDirectlyInsideGridContainerTest() {
-            //TODO DEVSIX-9976: Update test after fix.
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+            String fileName = "areaBreakDirectlyInsideGridContainer";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins2
                         ()));
@@ -591,17 +590,20 @@ namespace iText.Layout {
                     grid.Add(ColoredDiv("AFTER-1", new DeviceRgb(255, 165, 0)));
                     grid.Add(ColoredDiv("AFTER-2", new DeviceRgb(200, 100, 100)));
                     grid.Add(ColoredDiv("AFTER-3", new DeviceRgb(100, 200, 100)));
-                    NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => document.Add(grid), "Expected NPE when AreaBreak is directly added inside a grid cell"
-                        );
+                    document.Add(grid);
                 }
             }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.SECTION_BREAK_UNEXPECTED, Count = 3)]
+        [LogMessage(LayoutLogMessageConstant.GRID_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK)]
         public virtual void SectionBreakDirectlyInsideGridContainerTest() {
-            //TODO DEVSIX-9976: Update test after fix.
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+            String fileName = "sectionBreakDirectlyInsideGridContainer";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins2
                         ()));
@@ -613,17 +615,16 @@ namespace iText.Layout {
                     grid.Add(ColoredDiv("AFTER-1", new DeviceRgb(255, 165, 0)));
                     grid.Add(ColoredDiv("AFTER-2", new DeviceRgb(200, 100, 100)));
                     grid.Add(ColoredDiv("AFTER-3", new DeviceRgb(100, 200, 100)));
-                    NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => document.Add(grid), "Expected NPE when SectionBreak is nested inside a grid cell"
-                        );
+                    document.Add(grid);
                 }
             }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.SECTION_BREAK_UNEXPECTED)]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 13)]
+        [LogMessage(LayoutLogMessageConstant.GRID_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK)]
         public virtual void SectionBreakInsideNestedGridCellTest() {
-            //TODO DEVSIX-9976: Update test after fix.
             String fileName = "sectionBreakInNestedGrid";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
@@ -648,10 +649,8 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED)]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 13)]
+        [LogMessage(LayoutLogMessageConstant.GRID_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK)]
         public virtual void AreaBreakInsideNestedGridCellTest() {
-            //TODO DEVSIX-9976: Update test after fix.
             String fileName = "areaBreakInNestedGrid";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
@@ -702,6 +701,42 @@ namespace iText.Layout {
                     outer.Add(innerRight);
                     document.Add(outer);
                     document.Add(new Paragraph(TestResourceUtil.RepeatString(TestResourceUtil.GetByronStanza(), 4)));
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
+        }
+
+        [NUnit.Framework.Test]
+        // TODO DEVSIX-10004: Update test after fix.
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(LayoutLogMessageConstant.SECTION_BREAK_UNEXPECTED, Count = 5)]
+        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED, Count = 21)]
+        public virtual void GridWithTableHeaderAndFooterWithAreaBreakAndSectionBreakTest() {
+            String fileName = "gridWithTableHeaderAndFooter";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDoc)) {
+                    GridContainer gridContainer = CreateTwoColumnGrid();
+                    Table table = new Table(3);
+                    Cell headerCell = new Cell().Add(new Div().Add(new Paragraph("Before section break")).Add(new SectionBreak
+                        (new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1()))).Add(new Paragraph("After section break")
+                        ));
+                    table.AddHeaderCell(headerCell);
+                    table.AddHeaderCell(new Cell());
+                    table.AddHeaderCell(new Cell());
+                    table.AddCell("Table cell content 1");
+                    table.AddCell("Table cell content 2");
+                    table.AddCell("Table cell content 3");
+                    Cell footerCell = new Cell().Add(new Div().Add(new Paragraph("Before area break")).Add(new AreaBreak()).Add
+                        (new Paragraph("After area break")));
+                    table.AddFooterCell(footerCell);
+                    table.AddFooterCell(new Cell());
+                    table.AddFooterCell(new Cell());
+                    gridContainer.Add(table);
+                    gridContainer.Add(ColoredDiv("Second column div", new DeviceRgb(65, 151, 29)));
+                    document.Add(gridContainer);
                 }
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER

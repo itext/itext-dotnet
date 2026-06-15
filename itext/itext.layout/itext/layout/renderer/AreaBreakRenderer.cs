@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Utils;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Layout;
@@ -138,7 +139,7 @@ namespace iText.Layout.Renderer {
         /// <inheritDoc/>
         /// </returns>
         public virtual T1 GetProperty<T1>(int property, T1 defaultValue) {
-            throw new NotSupportedException();
+            return (T1)(Object)null;
         }
 
         /// <summary>
@@ -173,7 +174,7 @@ namespace iText.Layout.Renderer {
         }
 
         public virtual IList<IRenderer> GetChildRenderers() {
-            return null;
+            return JavaCollectionsUtil.EmptyList<IRenderer>();
         }
 
         public virtual bool IsFlushed() {

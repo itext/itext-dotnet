@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout;
@@ -85,6 +86,10 @@ namespace iText.Layout.Renderer {
             bool pageMarginsChanged = false;
             bool pageSizeChanged = false;
             int pageNumber = layoutContext.GetArea().GetPageNumber();
+            if (pageNumber == 0) {
+                LOGGER.LogWarning(LayoutLogMessageConstant.SECTION_BREAK_LAYOUT_ON_PAGE_0);
+                pageNumber = 1;
+            }
             IRenderer parentRenderer = GetParent();
             while (parentRenderer != null) {
                 if (parentRenderer is DocumentRenderer) {
@@ -110,8 +115,8 @@ namespace iText.Layout.Renderer {
                 parentRenderer = parentRenderer.GetParent();
             }
             // We're interested only in bottom coordinate of the already placed content.
-            LayoutArea updatedArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), new Rectangle(0, layoutContext
-                .GetArea().GetBBox().GetTop(), 0, 0));
+            LayoutArea updatedArea = new LayoutArea(pageNumber, new Rectangle(0, layoutContext.GetArea().GetBBox().GetTop
+                (), 0, 0));
             SectionBreakUtil.BreakPage(sectionBreak, pageSizeChanged || (anythingPlaced && pageMarginsChanged));
             return new LayoutResult(LayoutResult.NOTHING, anythingPlaced ? updatedArea : null, null, null, this).SetSectionBreak
                 (sectionBreak);
@@ -157,7 +162,7 @@ namespace iText.Layout.Renderer {
         }
 
         /// <summary>
-        /// Throws an UnsupportedOperationException because instances of this
+        /// Always returns <c>null</c> because instances of this
         /// class are only used for terminating the current page content.
         /// </summary>
         /// <param name="property">
@@ -177,7 +182,7 @@ namespace iText.Layout.Renderer {
         /// <inheritDoc/>
         /// </returns>
         public virtual T1 GetProperty<T1>(int property, T1 defaultValue) {
-            throw new NotSupportedException();
+            return (T1)(Object)null;
         }
 
         public virtual T1 GetProperty<T1>(int key) {
@@ -227,7 +232,7 @@ namespace iText.Layout.Renderer {
         }
 
         public virtual IList<IRenderer> GetChildRenderers() {
-            return null;
+            return JavaCollectionsUtil.EmptyList<IRenderer>();
         }
 
         public virtual bool IsFlushed() {

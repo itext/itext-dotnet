@@ -28,10 +28,12 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Logs;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 using iText.Layout.Tagging;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -59,6 +61,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.FLEX_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK)]
         public virtual void AreaBreakInsideFlexContainerTest() {
             String outFileName = destinationFolder + "areaBreakInsideFlexContainer.pdf";
             String cmpFileName = sourceFolder + "cmp_areaBreakInsideFlexContainer.pdf";

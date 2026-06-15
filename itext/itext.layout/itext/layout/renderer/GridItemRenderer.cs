@@ -21,9 +21,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.Kernel.Geom;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Logs;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
@@ -31,9 +34,12 @@ namespace iText.Layout.Renderer {
     /// <summary>Wrapper renderer around grid item.</summary>
     /// <remarks>Wrapper renderer around grid item. It's expected there is always exactly 1 child renderer.</remarks>
     internal class GridItemRenderer : BlockRenderer {
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.GridItemRenderer
+            ));
+
 //\cond DO_NOT_DOCUMENT
         /// <summary>A renderer to wrap.</summary>
-        internal AbstractRenderer renderer;
+        internal IRenderer renderer;
 //\endcond
 
         /// <summary>Flag saying that we updated height of the renderer we wrap.</summary>
@@ -51,8 +57,13 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public override void AddChild(IRenderer renderer) {
-            this.renderer = (AbstractRenderer)renderer;
-            base.AddChild(renderer);
+            if (renderer is AreaBreakRenderer || renderer is SectionBreakRenderer) {
+                LOGGER.LogWarning(LayoutLogMessageConstant.GRID_ITEM_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK);
+            }
+            else {
+                this.renderer = renderer;
+                base.AddChild(renderer);
+            }
         }
 
         /// <summary><inheritDoc/></summary>
@@ -139,7 +150,7 @@ namespace iText.Layout.Renderer {
 //\cond DO_NOT_DOCUMENT
         /// <summary><inheritDoc/></summary>
         internal override void AddChildRenderer(IRenderer child) {
-            this.renderer = (AbstractRenderer)child;
+            this.renderer = child;
             base.AddChildRenderer(child);
         }
 //\endcond
@@ -149,23 +160,26 @@ namespace iText.Layout.Renderer {
             // We subtract margins/borders/paddings because we should take into account that
             // borders/paddings/margins should also fit into a cell.
             Rectangle rectangle = new Rectangle(0, 0, 0, initialHeight);
-            if (AbstractRenderer.IsBorderBoxSizing(renderer)) {
-                renderer.ApplyMargins(rectangle, false);
-                // In BlockRenderer#layout, after applying continuous container, we call AbstractRenderer#retrieveMaxHeight,
-                // which calls AbstractRenderer#retrieveHeight where in case of BoxSizing we reduce the height for top
-                // padding and border. So to reduce the height for top + bottom border, padding and margin here we apply
-                // both top and bottom margin, but only bottom padding and border
-                UnitValue paddingBottom = renderer.GetProperty<UnitValue>(Property.PADDING_BOTTOM);
-                if (paddingBottom.IsPointValue()) {
-                    rectangle.DecreaseHeight(paddingBottom.GetValue());
+            if (renderer is AbstractRenderer) {
+                AbstractRenderer abstractRenderer = (AbstractRenderer)renderer;
+                if (AbstractRenderer.IsBorderBoxSizing(abstractRenderer)) {
+                    abstractRenderer.ApplyMargins(rectangle, false);
+                    // In BlockRenderer#layout, after applying continuous container, we call AbstractRenderer#retrieveMaxHeight,
+                    // which calls AbstractRenderer#retrieveHeight where in case of BoxSizing we reduce the height for top
+                    // padding and border. So to reduce the height for top + bottom border, padding and margin here we apply
+                    // both top and bottom margin, but only bottom padding and border
+                    UnitValue paddingBottom = abstractRenderer.GetProperty<UnitValue>(Property.PADDING_BOTTOM);
+                    if (paddingBottom.IsPointValue()) {
+                        rectangle.DecreaseHeight(paddingBottom.GetValue());
+                    }
+                    Border borderBottom = abstractRenderer.GetBorders()[AbstractRenderer.BOTTOM_SIDE];
+                    if (borderBottom != null) {
+                        rectangle.DecreaseHeight(borderBottom.GetWidth());
+                    }
                 }
-                Border borderBottom = renderer.GetBorders()[AbstractRenderer.BOTTOM_SIDE];
-                if (borderBottom != null) {
-                    rectangle.DecreaseHeight(borderBottom.GetWidth());
+                else {
+                    abstractRenderer.ApplyMarginsBordersPaddings(rectangle, false);
                 }
-            }
-            else {
-                renderer.ApplyMarginsBordersPaddings(rectangle, false);
             }
             return rectangle.GetHeight();
         }

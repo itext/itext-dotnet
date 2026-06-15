@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -376,25 +375,31 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        //TODO DEVSIX-9976: Update test after fix.
-        [LogMessage(LayoutLogMessageConstant.SECTION_BREAK_UNEXPECTED)]
-        public virtual void SectionBreakInsideFlexContainerThrowsTest() {
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+        [LogMessage(LayoutLogMessageConstant.FLEX_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK)]
+        public virtual void SectionBreakInsideFlexContainerTest() {
+            String fileName = "sectionBreakInsideFlexContainer";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div flex = CreateRowFlexContainer();
                     flex.Add(ColoredDiv("ITEM A", new DeviceRgb(65, 151, 29)));
                     flex.Add(new SectionBreak(new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1())));
                     flex.Add(ColoredDiv("ITEM B", new DeviceRgb(209, 247, 29)));
-                    NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => document.Add(flex), "Expected UnsupportedOperationException when SectionBreak is a flex child"
-                        );
+                    document.Add(flex);
                 }
             }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
         }
 
         [NUnit.Framework.Test]
-        public virtual void SectionBreakOnFlexItemChildThrowsTest() {
-            //TODO DEVSIX-9976: Update test after fix.
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+        [LogMessage(LayoutLogMessageConstant.FLEX_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK)]
+        public virtual void SectionBreakOnFlexItemChildTest() {
+            String fileName = "sectionBreakOnFlexItemChild";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div flex = CreateRowFlexContainer();
                     Div item = new Div().SetBackgroundColor(new DeviceRgb(65, 151, 29)).SetWidth(UnitValue.CreatePercentValue(
@@ -403,18 +408,16 @@ namespace iText.Layout {
                     item.Add(new SectionBreak(new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1())));
                     item.Add(new Paragraph("Content after break."));
                     flex.Add(item);
-                    NUnit.Framework.Assert.Catch(typeof(Exception), () => document.Add(flex), "Expected a RuntimeException when SectionBreak is nested inside a flex item"
-                        );
+                    document.Add(flex);
                 }
             }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
-        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED)]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED)]
+        [LogMessage(LayoutLogMessageConstant.FLEX_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK)]
         public virtual void AreaBreakOnFlexItemChildTest() {
-            //TODO DEVSIX-9976: Update test after fix.
             String fileName = "flexItemChildAreaBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
@@ -437,8 +440,8 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.FLEX_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK)]
         public virtual void AreaBreakInFlexWithDocumentMarginsTest() {
-            //TODO DEVSIX-9976: Update test after fix.
             String fileName = "flexAreaBreakDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
@@ -447,9 +450,9 @@ namespace iText.Layout {
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1
                         ()));
                     Div flex = CreateColumnFlexContainer();
-                    flex.Add(ColoredDiv("FLEX - PAGE 1", new DeviceRgb(65, 151, 29)));
+                    flex.Add(ColoredDiv("Before break.", new DeviceRgb(65, 151, 29)));
                     flex.Add(new AreaBreak());
-                    flex.Add(ColoredDiv("FLEX - PAGE 2", new DeviceRgb(209, 247, 29)));
+                    flex.Add(ColoredDiv("After break.", new DeviceRgb(209, 247, 29)));
                     document.Add(flex);
                 }
             }
@@ -458,20 +461,20 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.FLEX_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK)]
         public virtual void AreaBreakInFlexThenSectionBreakTest() {
-            //TODO DEVSIX-9976: Update test after fix.
             String fileName = "flexAreaBreakThenSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div flex = CreateColumnFlexContainer();
-                    flex.Add(ColoredDiv("FLEX - PAGE 1", new DeviceRgb(65, 151, 29)));
+                    flex.Add(ColoredDiv("Before break.", new DeviceRgb(65, 151, 29)));
                     flex.Add(new AreaBreak());
-                    flex.Add(ColoredDiv("FLEX - PAGE 2", new DeviceRgb(209, 247, 29)));
+                    flex.Add(ColoredDiv("After break.", new DeviceRgb(209, 247, 29)));
                     document.Add(flex);
                     document.Add(new SectionBreak(new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins2())));
-                    document.Add(new Paragraph("Page 3 — margins2 active after section break."));
+                    document.Add(new Paragraph("Page 2 — margins2 active after section break."));
                 }
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
@@ -479,8 +482,8 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.FLEX_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK, Count = 2)]
         public virtual void MultipleAreaBreaksInNestedFlexWithDocumentMarginsTest() {
-            //TODO DEVSIX-9976: Update test after fix.
             String fileName = "nestedFlexMultiAreaBreakDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
@@ -511,11 +514,8 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
-        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED)]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, Count = 2)]
+        [LogMessage(LayoutLogMessageConstant.FLEX_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK)]
         public virtual void AreaBreakOnNestedFlexItemWithDocumentMarginsTest() {
-            //TODO DEVSIX-9976: Update test after fix.
             String fileName = "nestedFlexItemAreaBreakDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
@@ -542,8 +542,8 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.FLEX_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK)]
         public virtual void AreaBreakWithPageSizeInFlexWithDocumentMarginsTest() {
-            //TODO DEVSIX-9976: Update test after fix.
             String fileName = "flexAreaBreakPageSizeDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
@@ -696,6 +696,44 @@ namespace iText.Layout {
                     document.Add(flex2);
                     document.Add(new SectionBreak(new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1())));
                     document.Add(new Paragraph("Third section — same margins again."));
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
+        }
+
+        [NUnit.Framework.Test]
+        // TODO DEVSIX-10004: Update test after fix.
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(LayoutLogMessageConstant.SECTION_BREAK_UNEXPECTED, Count = 3)]
+        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED, Count = 11)]
+        [LogMessage(LayoutLogMessageConstant.FLEX_ITEM_LAYOUT_RESULT_IS_NOT_FULL)]
+        [LogMessage(LayoutLogMessageConstant.SECTION_BREAK_LAYOUT_ON_PAGE_0)]
+        public virtual void FlexWithTableHeaderAndFooterWithAreaBreakAndSectionBreakTest() {
+            String fileName = "flexWithTableHeaderAndFooter";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDoc)) {
+                    Div flex = CreateRowFlexContainer();
+                    Table table = new Table(3);
+                    Cell headerCell = new Cell().Add(new Div().Add(new Paragraph("Before section break")).Add(new SectionBreak
+                        (new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1()))).Add(new Paragraph("After section break")
+                        ));
+                    table.AddHeaderCell(headerCell);
+                    table.AddHeaderCell(new Cell());
+                    table.AddHeaderCell(new Cell());
+                    table.AddCell("Table cell content 1");
+                    table.AddCell("Table cell content 2");
+                    table.AddCell("Table cell content 3");
+                    Cell footerCell = new Cell().Add(new Div().Add(new Paragraph("Before area break")).Add(new AreaBreak()).Add
+                        (new Paragraph("After area break")));
+                    table.AddFooterCell(footerCell);
+                    table.AddFooterCell(new Cell());
+                    table.AddFooterCell(new Cell());
+                    flex.Add(table);
+                    flex.Add(ColoredDiv("Second element", new DeviceRgb(65, 151, 29)));
+                    document.Add(flex);
                 }
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER

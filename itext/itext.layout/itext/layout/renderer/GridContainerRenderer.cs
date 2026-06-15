@@ -22,15 +22,21 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
 using iText.Kernel.Geom;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Logs;
 using iText.Layout.Properties;
 using iText.Layout.Properties.Grid;
 
 namespace iText.Layout.Renderer {
     /// <summary>Represents a renderer for a grid.</summary>
     public class GridContainerRenderer : BlockRenderer {
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.GridContainerRenderer
+            ));
+
         private float containerHeight = 0.0f;
 
         private float containerWidth = 0.0f;
@@ -93,6 +99,15 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public override void AddChild(IRenderer renderer) {
+            if (renderer is AreaBreakRenderer || renderer is SectionBreakRenderer) {
+                LOGGER.LogWarning(LayoutLogMessageConstant.GRID_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK);
+                return;
+            }
+            // TODO DEVSIX-10004: Remove after the change
+            bool rendererRemoved = RendererRemovalUtil.RemoveAreaBreakAndSectionBreakDescendants(renderer);
+            if (rendererRemoved) {
+                LOGGER.LogWarning(LayoutLogMessageConstant.GRID_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK);
+            }
             // The grid's items are not affected by the 'float' and 'clear' properties.
             // Still let clear them on renderer level not model element
             renderer.SetProperty(Property.FLOAT, null);

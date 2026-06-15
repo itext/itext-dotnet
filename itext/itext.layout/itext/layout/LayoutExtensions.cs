@@ -198,6 +198,21 @@ namespace iText.Layout {
             col.CopyTo(r, 0);
             return r;
         }
+        
+        public static bool RemoveIf<T>(this IList<T> list, Func<T, bool> predicate)
+        {
+            bool elementRemoved = false;
+            for (int i = 0; i < list.Count; i++) {
+                T element = list.ElementAt(i);
+                if (predicate(element))
+                {
+                    list.RemoveAt(i);
+                    elementRemoved = true;
+                    i--;
+                }
+            }
+            return elementRemoved;
+        }
 
         public static Assembly GetAssembly(this Type type) {
 #if !NETSTANDARD2_0
