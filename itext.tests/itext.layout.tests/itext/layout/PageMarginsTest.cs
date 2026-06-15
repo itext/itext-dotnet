@@ -49,11 +49,6 @@ namespace iText.Layout {
 
         private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/PageMarginsTest/";
 
-        private const String TEXT_BYRON = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
-             + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
-             + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
-             + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
-
         private static readonly String DOG = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/PageMarginsTest/DOG.bmp";
 
@@ -78,17 +73,17 @@ namespace iText.Layout {
                     Footnote footnote3 = new Footnote("Footnote text 3\nSecond line\nThird line\nFourth line");
                     footnote3.SetBackgroundColor(ColorConstants.RED);
                     FootnoteAnchor anchor3 = new FootnoteAnchor("[3]", footnote3);
-                    Paragraph p = new Paragraph(TEXT_BYRON);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
                     p.Add(anchor);
                     p.Add("\n\n");
-                    p.Add(TEXT_BYRON);
+                    p.Add(TestResourceUtil.GetByronStanza());
                     p.Add(anchor2);
                     p.Add("\n\n");
-                    p.Add(TEXT_BYRON);
+                    p.Add(TestResourceUtil.GetByronStanza());
                     p.Add(anchor3);
                     for (int i = 0; i < 5; i++) {
                         p.Add("\n\n");
-                        p.Add(TEXT_BYRON);
+                        p.Add(TestResourceUtil.GetByronStanza());
                     }
                     SectionBreak sectionBreak = new SectionBreak().SetPageMargins(new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1
                         ()));
@@ -147,7 +142,8 @@ namespace iText.Layout {
                         table.AddCell(paragraph);
                     }
                     table.AddCell(img);
-                    document.Add(new Paragraph(TEXT_BYRON + "\n\n" + TEXT_BYRON + "\n\n" + "Two more \nlines"));
+                    document.Add(new Paragraph(TestResourceUtil.GetByronStanza() + "\n\n" + TestResourceUtil.GetByronStanza() 
+                        + "\n\n" + "Two more \nlines"));
                     document.Add(table);
                 }
             }
@@ -209,7 +205,8 @@ namespace iText.Layout {
                             }
                         }
                     }
-                    document.Add(new Paragraph(TEXT_BYRON + "\n\n" + TEXT_BYRON + "\n\n" + "Two more \nlines"));
+                    document.Add(new Paragraph(TestResourceUtil.GetByronStanza() + "\n\n" + TestResourceUtil.GetByronStanza() 
+                        + "\n\n" + "Two more \nlines"));
                     document.Add(table);
                 }
             }
@@ -267,7 +264,8 @@ namespace iText.Layout {
                         }
                     }
                     table.AddCell(img);
-                    document.Add(new Paragraph(TEXT_BYRON + "\n\n" + TEXT_BYRON + "\n\n" + "Two more \nlines"));
+                    document.Add(new Paragraph(TestResourceUtil.GetByronStanza() + "\n\n" + TestResourceUtil.GetByronStanza() 
+                        + "\n\n" + "Two more \nlines"));
                     document.Add(table);
                 }
             }
@@ -285,9 +283,9 @@ namespace iText.Layout {
                     pdfDocument.AddNewPage();
                     IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
                     IList<PageMarginContent> elements2 = PageMarginsTestUtil.GetPageMargins2();
-                    Paragraph p = new Paragraph(TEXT_BYRON);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
                     for (int i = 0; i < 5; i++) {
-                        p.Add(TEXT_BYRON);
+                        p.Add(TestResourceUtil.GetByronStanza());
                     }
                     SectionBreak sectionBreak = new SectionBreak().SetPageMargins(new PageMarginBoxes(elements));
                     SectionBreak sectionBreak2 = new SectionBreak(new PageMarginBoxes(elements2));
@@ -315,9 +313,9 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    Paragraph p = new Paragraph(TEXT_BYRON);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
                     for (int i = 0; i < 5; i++) {
-                        p.Add(TEXT_BYRON);
+                        p.Add(TestResourceUtil.GetByronStanza());
                     }
                     SectionBreak sectionBreak = new SectionBreak().SetPageSize(PageSize.A4.Rotate());
                     SectionBreak sectionBreak2 = new SectionBreak().SetPageSize(PageSize.A5);
@@ -345,7 +343,7 @@ namespace iText.Layout {
                 using (Document document = new Document(pdfDocument)) {
                     IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
                     IList<PageMarginContent> elements2 = PageMarginsTestUtil.GetPageMargins2();
-                    Paragraph p = new Paragraph(TEXT_BYRON);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
                     SectionBreak sectionBreak = new SectionBreak(new PageMarginBoxes(elements));
                     SectionBreak sectionBreak2 = new SectionBreak(new PageMarginBoxes(elements2));
                     Div div1 = new Div();
@@ -373,7 +371,7 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    Paragraph p = new Paragraph(TEXT_BYRON);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
                     SectionBreak sectionBreak = new SectionBreak(PageSize.A4.Rotate());
                     SectionBreak sectionBreak2 = new SectionBreak(PageSize.A5.Rotate());
                     Div div1 = new Div().Add(p).SetBackgroundColor(new DeviceRgb(65, 151, 29));
@@ -401,7 +399,7 @@ namespace iText.Layout {
                 using (Document document = new Document(pdfDocument)) {
                     IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
                     IList<PageMarginContent> elements2 = PageMarginsTestUtil.GetPageMargins2();
-                    Paragraph p = new Paragraph(TEXT_BYRON);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
                     SectionBreak sectionBreak = new SectionBreak(PageSize.A4.Rotate(), new PageMarginBoxes(elements));
                     SectionBreak sectionBreak2 = new SectionBreak(PageSize.A5, new PageMarginBoxes(elements2));
                     Div div1 = new Div().Add(p).SetBackgroundColor(new DeviceRgb(65, 151, 29));
@@ -425,9 +423,9 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
-                    Paragraph p = new Paragraph(TEXT_BYRON);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
                     for (int i = 0; i < 5; i++) {
-                        p.Add(TEXT_BYRON);
+                        p.Add(TestResourceUtil.GetByronStanza());
                     }
                     SectionBreak sectionBreak = new SectionBreak(PageSize.A3.Rotate(), new PageMarginBoxes(elements));
                     Div div1 = new Div().Add(p).SetBackgroundColor(new DeviceRgb(65, 151, 29));
@@ -448,9 +446,9 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    Paragraph p = new Paragraph(TEXT_BYRON);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
                     for (int i = 0; i < 5; i++) {
-                        p.Add(TEXT_BYRON);
+                        p.Add(TestResourceUtil.GetByronStanza());
                     }
                     IList<PageMarginContent> pageMargins = PageMarginsTestUtil.GetPageMargins1();
                     SectionBreak sectionBreak = new SectionBreak(new PageMarginBoxes(pageMargins));
@@ -474,7 +472,7 @@ namespace iText.Layout {
                 using (Document document = new Document(pdfDocument)) {
                     IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
                     IList<PageMarginContent> elements2 = PageMarginsTestUtil.GetPageMargins2();
-                    Paragraph p = new Paragraph(TEXT_BYRON);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
                     SectionBreak sectionBreak = new SectionBreak(new PageMarginBoxes(elements));
                     SectionBreak sectionBreak2 = new SectionBreak(PageSize.A4.Rotate(), new PageMarginBoxes(elements2));
                     Div div1 = new Div();
@@ -503,9 +501,9 @@ namespace iText.Layout {
                     IList<PageMarginContent> elements3 = new List<PageMarginContent>();
                     elements3.Add(new PageMarginContent(MarginBoxName.BOTTOM, new Div().Add(new Paragraph("TEST BOTTOM MARGIN\nWITH SOME FOOTNOTE"
                         )).SetBackgroundColor(ColorConstants.CYAN).SetMinHeight(50)));
-                    Paragraph p = new Paragraph(TEXT_BYRON);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
                     for (int i = 0; i < 5; i++) {
-                        p.Add(TEXT_BYRON);
+                        p.Add(TestResourceUtil.GetByronStanza());
                     }
                     Div div1 = new Div();
                     Div div2 = new Div();
@@ -542,9 +540,9 @@ namespace iText.Layout {
                         return null;
                     }
                     );
-                    Paragraph p = new Paragraph(TEXT_BYRON);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
                     for (int i = 0; i < 5; i++) {
-                        p.Add(TEXT_BYRON);
+                        p.Add(TestResourceUtil.GetByronStanza());
                     }
                     Div div1 = new Div().Add(p).SetBackgroundColor(new DeviceRgb(65, 151, 29));
                     Div div2 = new Div().Add(p).SetBackgroundColor(new DeviceRgb(209, 247, 29));
@@ -571,13 +569,13 @@ namespace iText.Layout {
                     IList<PageMarginContent> elements2 = PageMarginsTestUtil.GetPageMargins2();
                     document.SetPageMargins((pageNum) => pageNum > 0 && pageNum % 2 == 0, new PageMarginBoxes(elements));
                     SectionBreak sectionBreak = new SectionBreak(new PageMarginBoxes(elements2));
-                    Paragraph p = new Paragraph(TEXT_BYRON);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
                     for (int i = 0; i < 7; i++) {
-                        p.Add(TEXT_BYRON);
+                        p.Add(TestResourceUtil.GetByronStanza());
                     }
                     Div div1 = new Div().Add(p).SetBackgroundColor(new DeviceRgb(65, 151, 29));
                     Div div2 = new Div().Add(p).SetBackgroundColor(new DeviceRgb(209, 247, 29));
-                    document.Add(new Paragraph(TEXT_BYRON));
+                    document.Add(new Paragraph(TestResourceUtil.GetByronStanza()));
                     document.Add(sectionBreak);
                     document.Add(div1);
                     document.Add(div2);
@@ -596,9 +594,9 @@ namespace iText.Layout {
                 using (Document document = new Document(pdfDocument)) {
                     SectionBreak sectionBreak = new SectionBreak(PageSize.A5);
                     AreaBreak areaBreak = new AreaBreak(PageSize.A5.Rotate());
-                    Paragraph p = new Paragraph(TEXT_BYRON);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
                     for (int i = 0; i < 7; i++) {
-                        p.Add(TEXT_BYRON);
+                        p.Add(TestResourceUtil.GetByronStanza());
                     }
                     Div div1 = new Div().Add(p).SetBackgroundColor(new DeviceRgb(65, 151, 29));
                     Div div2 = new Div().Add(p).SetBackgroundColor(new DeviceRgb(209, 247, 29));
@@ -620,7 +618,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
-                    Paragraph p = new Paragraph(TEXT_BYRON);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
                     SectionBreak sectionBreak = new SectionBreak(new PageMarginBoxes(elements));
                     Div div1 = new Div().Add(p).SetBackgroundColor(new DeviceRgb(65, 151, 29));
                     div1.SetFixedPosition(0, 100, 300);
@@ -641,7 +639,7 @@ namespace iText.Layout {
                 using (Document document = new Document(pdfDocument)) {
                     pdfDocument.SetTagged();
                     IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
-                    Paragraph p = new Paragraph(TEXT_BYRON);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
                     SectionBreak sectionBreak = new SectionBreak(new PageMarginBoxes(elements));
                     Div div1 = new Div().Add(p).SetBackgroundColor(new DeviceRgb(65, 151, 29));
                     div1.SetRelativePosition(50, 50, 0, 0);
@@ -660,15 +658,15 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    Footnote footnote = new Footnote(TEXT_BYRON);
+                    Footnote footnote = new Footnote(TestResourceUtil.GetByronStanza());
                     footnote.SetBackgroundColor(ColorConstants.CYAN);
-                    Paragraph p = new Paragraph(TEXT_BYRON);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
                     Footnote paragraphFootnote = new Footnote("Footnote text");
                     paragraphFootnote.SetBackgroundColor(ColorConstants.RED);
                     FootnoteAnchor anchor = new FootnoteAnchor("1", paragraphFootnote);
                     p.Add(anchor);
                     for (int i = 0; i < 3; i++) {
-                        p.Add("\n\n").Add(TEXT_BYRON);
+                        p.Add("\n\n").Add(TestResourceUtil.GetByronStanza());
                     }
                     PageMarginBoxes pageMarginBoxes = new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1());
                     SectionBreak sectionBreak = new SectionBreak().SetPageMargins(pageMarginBoxes);
@@ -692,14 +690,14 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     pdfDocument.SetTagged();
-                    Paragraph p = new Paragraph(TEXT_BYRON);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
                     for (int i = 0; i < 2; i++) {
-                        p.Add("\n\n").Add(TEXT_BYRON);
+                        p.Add("\n\n").Add(TestResourceUtil.GetByronStanza());
                     }
-                    Footnote footnote1 = new Footnote(TEXT_BYRON);
+                    Footnote footnote1 = new Footnote(TestResourceUtil.GetByronStanza());
                     footnote1.SetBackgroundColor(ColorConstants.YELLOW);
                     FootnoteAnchor anchor1 = new FootnoteAnchor("1", footnote1);
-                    Footnote footnote2 = new Footnote(TEXT_BYRON);
+                    Footnote footnote2 = new Footnote(TestResourceUtil.GetByronStanza());
                     footnote2.SetBackgroundColor(ColorConstants.PINK);
                     FootnoteAnchor anchor2 = new FootnoteAnchor("2", footnote2);
                     p.Add(anchor1).Add(anchor2);
@@ -719,12 +717,13 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     pdfDocument.SetTagged();
-                    Footnote footnote = new Footnote(TEXT_BYRON);
+                    Footnote footnote = new Footnote(TestResourceUtil.GetByronStanza());
                     footnote.SetBorder(new DashedBorder(ColorConstants.YELLOW, 3));
                     iText.Layout.Element.Image image = new Image(ImageDataFactory.Create(SOURCE_FOLDER + "bulb.gif"));
                     image.SetWidth(15);
                     FootnoteAnchor anchor = new FootnoteAnchor(image, footnote);
-                    Paragraph p = new Paragraph(TEXT_BYRON).Add(anchor).Add(TEXT_BYRON);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza()).Add(anchor).Add(TestResourceUtil.GetByronStanza
+                        ());
                     Div div = new Div().Add(p).SetBorder(new SolidBorder(ColorConstants.GREEN, 3));
                     document.Add(div);
                 }

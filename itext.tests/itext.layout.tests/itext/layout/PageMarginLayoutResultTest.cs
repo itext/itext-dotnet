@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -33,6 +32,7 @@ using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Properties.Margins;
 using iText.Layout.Renderer;
+using iText.Layout.Testutil;
 using iText.Test;
 
 namespace iText.Layout {
@@ -42,11 +42,6 @@ namespace iText.Layout {
             .CurrentContext.TestDirectory) + "/resources/itext/layout/PageMarginLayoutResultTest/";
 
         private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/PageMarginLayoutResultTest/";
-
-        private const String TEXT_BYRON = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
-             + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
-             + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
-             + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
 
         private static readonly float A4_HEIGHT = PageSize.A4.GetHeight();
 
@@ -62,7 +57,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
                 using (Document document = new Document(pdfDoc)) {
                     ApplyMarginBoxes(document, 100, 100, 0, 0);
-                    Paragraph p = new Paragraph(TEXT_BYRON);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
                     int status = LayoutStatus(p, document, AvailableRect(100, 100, 0, 0));
                     NUnit.Framework.Assert.AreEqual(LayoutResult.FULL, status, "Short paragraph should fit fully with modest margin boxes"
                         );
@@ -90,7 +85,7 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
-                    document.Add(new Paragraph("Page 1 — no margin boxes.").Add(TEXT_BYRON));
+                    document.Add(new Paragraph("Page 1 — no margin boxes.").Add(TestResourceUtil.GetByronStanza()));
                     document.Add(new SectionBreak(MarginBoxes(100, 80, 0, 0)));
                     document.Add(ShortContentDiv());
                 }
@@ -104,8 +99,8 @@ namespace iText.Layout {
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
                 using (Document document = new Document(pdfDoc)) {
                     ApplyMarginBoxes(document, 250, 200, 0, 0);
-                    Div tall = new Div().Add(new Paragraph(RepeatString(TEXT_BYRON, 4))).SetBackgroundColor(new DeviceRgb(65, 
-                        151, 29));
+                    Div tall = new Div().Add(new Paragraph(TestResourceUtil.RepeatString(TestResourceUtil.GetByronStanza(), 4)
+                        )).SetBackgroundColor(new DeviceRgb(65, 151, 29));
                     int status = LayoutStatus(tall, document, AvailableRect(250, 200, 0, 0));
                     NUnit.Framework.Assert.AreEqual(LayoutResult.PARTIAL, status, "Tall element should split (PARTIAL) when top/bottom margin boxes are large"
                         );
@@ -123,7 +118,7 @@ namespace iText.Layout {
                     document.Add(new SectionBreak(MarginBoxes(250, 200, 0, 0)));
                     Div tall = new Div().SetBackgroundColor(new DeviceRgb(209, 247, 29));
                     for (int i = 0; i < 6; i++) {
-                        tall.Add(new Paragraph("PARAGRAPH " + i + "\n" + TEXT_BYRON));
+                        tall.Add(new Paragraph("PARAGRAPH " + i + "\n" + TestResourceUtil.GetByronStanza()));
                     }
                     document.Add(tall);
                 }
@@ -142,7 +137,7 @@ namespace iText.Layout {
                     document.SetPageMargins((pageNum) => true, MarginBoxes(200, 150, 0, 0));
                     Div tall = new Div().SetBackgroundColor(new DeviceRgb(78, 151, 205));
                     for (int i = 0; i < 4; i++) {
-                        tall.Add(new Paragraph("BLOCK " + i + "\n" + TEXT_BYRON));
+                        tall.Add(new Paragraph("BLOCK " + i + "\n" + TestResourceUtil.GetByronStanza()));
                     }
                     document.Add(tall);
                     document.Add(new AreaBreak());
@@ -159,7 +154,7 @@ namespace iText.Layout {
                 using (Document document = new Document(pdfDoc)) {
                     float hugeMargin = (A4_HEIGHT - 20f) / 2f;
                     ApplyMarginBoxes(document, hugeMargin, hugeMargin, 0, 0);
-                    Div element = new Div().Add(new Paragraph(TEXT_BYRON)).SetHeight(100);
+                    Div element = new Div().Add(new Paragraph(TestResourceUtil.GetByronStanza())).SetHeight(100);
                     int status = LayoutStatus(element, document, AvailableRect(hugeMargin, hugeMargin, 0, 0));
                     NUnit.Framework.Assert.AreEqual(LayoutResult.NOTHING, status, "Element with explicit height greater than available area should return NOTHING"
                         );
@@ -173,7 +168,7 @@ namespace iText.Layout {
                 using (Document document = new Document(pdfDoc)) {
                     float hugeBottom = A4_HEIGHT - 30f;
                     ApplyMarginBoxes(document, 0, hugeBottom, 0, 0);
-                    Div element = new Div().Add(new Paragraph(TEXT_BYRON)).SetHeight(80);
+                    Div element = new Div().Add(new Paragraph(TestResourceUtil.GetByronStanza())).SetHeight(80);
                     int status = LayoutStatus(element, document, AvailableRect(0, hugeBottom, 0, 0));
                     NUnit.Framework.Assert.AreEqual(LayoutResult.NOTHING, status, "Element should return NOTHING when huge bottom footnote margin leaves no space"
                         );
@@ -189,7 +184,8 @@ namespace iText.Layout {
                     float bottom = A4_HEIGHT * 0.40f;
                     float left = A4_WIDTH * 0.40f;
                     float right = A4_WIDTH * 0.40f;
-                    Div element = new Div().Add(new Paragraph(TEXT_BYRON)).SetHeight(200).SetKeepTogether(true);
+                    Div element = new Div().Add(new Paragraph(TestResourceUtil.GetByronStanza())).SetHeight(200).SetKeepTogether
+                        (true);
                     int status = LayoutStatus(element, document, AvailableRect(top, bottom, left, right));
                     NUnit.Framework.Assert.AreEqual(LayoutResult.NOTHING, status, "Non-splittable element (keepTogether) taller than available area should return NOTHING"
                         );
@@ -240,8 +236,8 @@ namespace iText.Layout {
         public virtual void ProgressivelyLargerMarginsStatusAssertTest() {
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
                 using (Document document = new Document(pdfDoc)) {
-                    Div element = new Div().Add(new Paragraph(TEXT_BYRON)).SetHeight(200).SetBackgroundColor(new DeviceRgb(65, 
-                        151, 29));
+                    Div element = new Div().Add(new Paragraph(TestResourceUtil.GetByronStanza())).SetHeight(200).SetBackgroundColor
+                        (new DeviceRgb(65, 151, 29));
                     int smallStatus = LayoutStatus(element, document, AvailableRect(50, 50, 0, 0));
                     NUnit.Framework.Assert.AreEqual(LayoutResult.FULL, smallStatus, "Expected FULL with small margin boxes (200pt element, ~670pt area)"
                         );
@@ -380,7 +376,7 @@ namespace iText.Layout {
         private static Div ContentDiv(String label, DeviceRgb color) {
             Div div = new Div().SetBackgroundColor(color);
             div.Add(new Paragraph(label));
-            div.Add(new Paragraph(RepeatString(TEXT_BYRON, 2)));
+            div.Add(new Paragraph(TestResourceUtil.RepeatString(TestResourceUtil.GetByronStanza(), 2)));
             return div;
         }
 
@@ -393,14 +389,6 @@ namespace iText.Layout {
             DeviceRgb[] palette = new DeviceRgb[] { new DeviceRgb(65, 151, 29), new DeviceRgb(209, 247, 29), new DeviceRgb
                 (78, 151, 205), new DeviceRgb(255, 165, 0) };
             return palette[index % palette.Length];
-        }
-
-        private static String RepeatString(String s, int n) {
-            StringBuilder sb = new StringBuilder(s.Length * n);
-            for (int i = 0; i < n; i++) {
-                sb.Append(s);
-            }
-            return sb.ToString();
         }
     }
 }

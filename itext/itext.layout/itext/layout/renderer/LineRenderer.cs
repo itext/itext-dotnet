@@ -412,8 +412,8 @@ namespace iText.Layout.Renderer {
                 bool forceOverflowForTextRendererPartialResult = false;
                 if (shouldBreakLayoutingOnTextRenderer) {
                     bool isWordHasBeenSplitLayoutRenderingMode = ((TextLayoutResult)childResult).IsWordHasBeenSplit() && RenderingMode
-                        .HTML_MODE != childRenderingMode && !((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(true
-                        );
+                        .HTML_MODE != childRenderingMode && childRenderer is TextRenderer && !((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs
+                        (true);
                     bool enableSpecialScriptsWrapping = ((TextRenderer)GetChildRenderers()[childPos]).TextContainsSpecialScriptGlyphs
                         (true) && !textSequenceOverflowXProcessing && !newLineOccurred;
                     bool enableTextSequenceWrapping = RenderingMode.HTML_MODE == childRenderingMode && !newLineOccurred && !textSequenceOverflowXProcessing;

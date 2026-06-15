@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -44,11 +43,6 @@ namespace iText.Layout {
             .CurrentContext.TestDirectory) + "/resources/itext/layout/GridPageMarginsTest/";
 
         private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/GridPageMarginsTest/";
-
-        private const String TEXT_BYRON = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
-             + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
-             + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
-             + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -106,7 +100,8 @@ namespace iText.Layout {
                 using (Document document = new Document(pdfDoc)) {
                     GridContainer grid = CreateThreeColumnGrid();
                     for (int i = 1; i <= 18; i++) {
-                        grid.Add(new Div().Add(new Paragraph("ITEM " + i + "\n" + TEXT_BYRON)).SetBackgroundColor(CellColor(i)));
+                        grid.Add(new Div().Add(new Paragraph("ITEM " + i + "\n" + TestResourceUtil.GetByronStanza())).SetBackgroundColor
+                            (CellColor(i)));
                     }
                     document.Add(grid);
                     document.Add(new SectionBreak(new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1())));
@@ -176,7 +171,8 @@ namespace iText.Layout {
                         ()));
                     GridContainer grid = CreateThreeColumnGrid();
                     for (int i = 1; i <= 18; i++) {
-                        grid.Add(new Div().Add(new Paragraph("CELL " + i + "\n" + TEXT_BYRON)).SetBackgroundColor(CellColor(i)));
+                        grid.Add(new Div().Add(new Paragraph("CELL " + i + "\n" + TestResourceUtil.GetByronStanza())).SetBackgroundColor
+                            (CellColor(i)));
                     }
                     document.Add(grid);
                 }
@@ -201,7 +197,8 @@ namespace iText.Layout {
                     );
                     GridContainer grid = CreateThreeColumnGrid();
                     for (int i = 1; i <= 15; i++) {
-                        grid.Add(new Div().Add(new Paragraph("CELL " + i + "\n" + TEXT_BYRON)).SetBackgroundColor(CellColor(i)));
+                        grid.Add(new Div().Add(new Paragraph("CELL " + i + "\n" + TestResourceUtil.GetByronStanza())).SetBackgroundColor
+                            (CellColor(i)));
                     }
                     document.Add(grid);
                 }
@@ -221,7 +218,8 @@ namespace iText.Layout {
                         ()));
                     GridContainer grid1 = CreateThreeColumnGrid();
                     for (int i = 1; i <= 6; i++) {
-                        grid1.Add(new Div().Add(new Paragraph("S1-" + i + "\n" + TEXT_BYRON)).SetBackgroundColor(CellColor(i)));
+                        grid1.Add(new Div().Add(new Paragraph("S1-" + i + "\n" + TestResourceUtil.GetByronStanza())).SetBackgroundColor
+                            (CellColor(i)));
                     }
                     GridContainer grid2 = CreateTwoColumnGrid();
                     for (int i = 1; i <= 4; i++) {
@@ -271,7 +269,8 @@ namespace iText.Layout {
                     document.SetPageMargins(2, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1()));
                     GridContainer grid = CreateThreeColumnGrid();
                     for (int i = 1; i <= 18; i++) {
-                        grid.Add(new Div().Add(new Paragraph("CELL " + i + "\n" + TEXT_BYRON)).SetBackgroundColor(CellColor(i)));
+                        grid.Add(new Div().Add(new Paragraph("CELL " + i + "\n" + TestResourceUtil.GetByronStanza())).SetBackgroundColor
+                            (CellColor(i)));
                     }
                     document.Add(grid);
                 }
@@ -311,20 +310,20 @@ namespace iText.Layout {
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1
                         ()));
                     GridContainer grid = CreateThreeColumnGrid();
-                    grid.Add(new Div().Add(new Paragraph("LARGE MARGIN\n" + TEXT_BYRON)).SetBackgroundColor(new DeviceRgb(65, 
-                        151, 29)).SetMargins(20, 15, 20, 15));
-                    grid.Add(new Div().Add(new Paragraph("NO MARGIN\n" + TEXT_BYRON)).SetBackgroundColor(new DeviceRgb(209, 247
-                        , 29)).SetMargin(0));
-                    grid.Add(new Div().Add(new Paragraph("LARGE PADDING\n" + TEXT_BYRON)).SetBackgroundColor(new DeviceRgb(78, 
-                        151, 205)).SetPaddings(20, 20, 20, 20));
-                    grid.Add(new Div().Add(new Paragraph("MIXED\n" + TEXT_BYRON)).SetBackgroundColor(new DeviceRgb(255, 165, 0
-                        )).SetMarginTop(30).SetPaddingBottom(30));
-                    grid.Add(new Div().Add(new Paragraph("DEFAULT\n" + TEXT_BYRON)).SetBackgroundColor(new DeviceRgb(200, 100, 
-                        100)));
-                    grid.Add(new Div().Add(new Paragraph("SMALL PADDING\n" + TEXT_BYRON)).SetBackgroundColor(new DeviceRgb(100
-                        , 200, 100)).SetPadding(5));
+                    grid.Add(new Div().Add(new Paragraph("LARGE MARGIN\n" + TestResourceUtil.GetByronStanza())).SetBackgroundColor
+                        (new DeviceRgb(65, 151, 29)).SetMargins(20, 15, 20, 15));
+                    grid.Add(new Div().Add(new Paragraph("NO MARGIN\n" + TestResourceUtil.GetByronStanza())).SetBackgroundColor
+                        (new DeviceRgb(209, 247, 29)).SetMargin(0));
+                    grid.Add(new Div().Add(new Paragraph("LARGE PADDING\n" + TestResourceUtil.GetByronStanza())).SetBackgroundColor
+                        (new DeviceRgb(78, 151, 205)).SetPaddings(20, 20, 20, 20));
+                    grid.Add(new Div().Add(new Paragraph("MIXED\n" + TestResourceUtil.GetByronStanza())).SetBackgroundColor(new 
+                        DeviceRgb(255, 165, 0)).SetMarginTop(30).SetPaddingBottom(30));
+                    grid.Add(new Div().Add(new Paragraph("DEFAULT\n" + TestResourceUtil.GetByronStanza())).SetBackgroundColor(
+                        new DeviceRgb(200, 100, 100)));
+                    grid.Add(new Div().Add(new Paragraph("SMALL PADDING\n" + TestResourceUtil.GetByronStanza())).SetBackgroundColor
+                        (new DeviceRgb(100, 200, 100)).SetPadding(5));
                     document.Add(grid);
-                    document.Add(new Paragraph(RepeatString(TEXT_BYRON, 5)));
+                    document.Add(new Paragraph(TestResourceUtil.RepeatString(TestResourceUtil.GetByronStanza(), 5)));
                 }
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
@@ -373,10 +372,11 @@ namespace iText.Layout {
                     grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, columns);
                     grid.SetProperty(Property.GRID_FLOW, GridFlow.ROW);
                     for (int i = 1; i <= 9; i++) {
-                        grid.Add(new Div().Add(new Paragraph("CELL " + i + "\n" + TEXT_BYRON)).SetBackgroundColor(CellColor(i)));
+                        grid.Add(new Div().Add(new Paragraph("CELL " + i + "\n" + TestResourceUtil.GetByronStanza())).SetBackgroundColor
+                            (CellColor(i)));
                     }
                     document.Add(grid);
-                    document.Add(new Paragraph(RepeatString(TEXT_BYRON, 4)));
+                    document.Add(new Paragraph(TestResourceUtil.RepeatString(TestResourceUtil.GetByronStanza(), 4)));
                 }
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
@@ -466,8 +466,8 @@ namespace iText.Layout {
                     for (int col = 0; col < 3; col++) {
                         GridContainer inner = CreateTwoColumnGrid();
                         for (int i = 1; i <= 4; i++) {
-                            inner.Add(new Div().Add(new Paragraph("C" + col + "-" + i + "\n" + TEXT_BYRON)).SetBackgroundColor(CellColor
-                                (col * 2 + i)));
+                            inner.Add(new Div().Add(new Paragraph("C" + col + "-" + i + "\n" + TestResourceUtil.GetByronStanza())).SetBackgroundColor
+                                (CellColor(col * 2 + i)));
                         }
                         outer.Add(inner);
                     }
@@ -559,8 +559,8 @@ namespace iText.Layout {
                         for (int m = 0; m < 2; m++) {
                             GridContainer inner = CreateTwoColumnGrid();
                             for (int i = 1; i <= 2; i++) {
-                                inner.Add(new Div().Add(new Paragraph("O" + o + "M" + m + "I" + i + "\n" + TEXT_BYRON)).SetBackgroundColor
-                                    (CellColor(o * 4 + m * 2 + i)));
+                                inner.Add(new Div().Add(new Paragraph("O" + o + "M" + m + "I" + i + "\n" + TestResourceUtil.GetByronStanza
+                                    ())).SetBackgroundColor(CellColor(o * 4 + m * 2 + i)));
                             }
                             mid.Add(inner);
                         }
@@ -639,7 +639,7 @@ namespace iText.Layout {
                     outer.Add(inner);
                     outer.Add(ColoredDiv("OTHER CELL", new DeviceRgb(78, 151, 205)));
                     document.Add(outer);
-                    document.Add(new Paragraph(RepeatString(TEXT_BYRON, 6)));
+                    document.Add(new Paragraph(TestResourceUtil.RepeatString(TestResourceUtil.GetByronStanza(), 6)));
                     document.Add(new Paragraph("Page 2 — PageMargins1 should be active here if SectionBreak was honoured."));
                 }
             }
@@ -701,7 +701,7 @@ namespace iText.Layout {
                     outer.Add(innerLeft);
                     outer.Add(innerRight);
                     document.Add(outer);
-                    document.Add(new Paragraph(RepeatString(TEXT_BYRON, 4)));
+                    document.Add(new Paragraph(TestResourceUtil.RepeatString(TestResourceUtil.GetByronStanza(), 4)));
                 }
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
@@ -746,14 +746,6 @@ namespace iText.Layout {
 
         private static Div ColoredDiv(String label, DeviceRgb color) {
             return new Div().Add(new Paragraph(label)).SetBackgroundColor(color).SetMargin(4).SetPadding(6);
-        }
-
-        private static String RepeatString(String s, int n) {
-            StringBuilder sb = new StringBuilder(s.Length * n);
-            for (int i = 0; i < n; i++) {
-                sb.Append(s);
-            }
-            return sb.ToString();
         }
     }
 }

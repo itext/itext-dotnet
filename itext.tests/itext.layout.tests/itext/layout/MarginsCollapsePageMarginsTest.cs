@@ -40,11 +40,6 @@ namespace iText.Layout {
 
         private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/MarginsCollapsePageMarginsTest/";
 
-        private const String TEXT_BYRON = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
-             + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
-             + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
-             + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
-
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
@@ -224,7 +219,7 @@ namespace iText.Layout {
                         ()));
                     for (int i = 0; i < 5; i++) {
                         document.Add(MarginedDiv("BLOCK " + i, CellColor(i), 50, 50));
-                        document.Add(new Paragraph(TEXT_BYRON));
+                        document.Add(new Paragraph(TestResourceUtil.GetByronStanza()));
                     }
                 }
             }
@@ -249,7 +244,7 @@ namespace iText.Layout {
                     );
                     for (int i = 0; i < 8; i++) {
                         document.Add(MarginedDiv("BLOCK " + i, CellColor(i), 40, 40));
-                        document.Add(new Paragraph(TEXT_BYRON));
+                        document.Add(new Paragraph(TestResourceUtil.GetByronStanza()));
                     }
                 }
             }
@@ -287,12 +282,12 @@ namespace iText.Layout {
                     document.SetMargins(80, 80, 80, 80);
                     for (int i = 0; i < 3; i++) {
                         document.Add(MarginedDiv("BLOCK " + i, CellColor(i), 50, 50));
-                        document.Add(new Paragraph(TEXT_BYRON));
+                        document.Add(new Paragraph(TestResourceUtil.GetByronStanza()));
                     }
                     document.Add(new SectionBreak(new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1())));
                     for (int i = 3; i < 6; i++) {
                         document.Add(MarginedDiv("BLOCK " + i, CellColor(i), 50, 50));
-                        document.Add(new Paragraph(TEXT_BYRON));
+                        document.Add(new Paragraph(TestResourceUtil.GetByronStanza()));
                     }
                 }
             }

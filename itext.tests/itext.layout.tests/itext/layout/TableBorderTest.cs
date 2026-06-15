@@ -30,6 +30,7 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Logs;
 using iText.Layout.Properties;
+using iText.Layout.Testutil;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -188,18 +189,14 @@ namespace iText.Layout {
         public virtual void SimpleBorderTest04() {
             String fileName = "simpleBorderTest04.pdf";
             Document doc = CreateDocument(fileName);
-            String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
-                 + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
-                 + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
-                 + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
             String textHelloWorld = "Hello World\n" + "Hello World\n" + "Hello World\n" + "Hello World\n" + "Hello World\n";
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.SetBorder(new SolidBorder(ColorConstants.RED, 2f));
             table.AddCell(new Cell(2, 1).Add(new Paragraph(textHelloWorld)));
             for (int i = 0; i < 2; i++) {
-                table.AddCell(new Cell().Add(new Paragraph(textByron)));
+                table.AddCell(new Cell().Add(new Paragraph(TestResourceUtil.GetByronStanza())));
             }
-            table.AddCell(new Cell(1, 2).Add(new Paragraph(textByron)));
+            table.AddCell(new Cell(1, 2).Add(new Paragraph(TestResourceUtil.GetByronStanza())));
             doc.Add(table);
             doc.Add(new AreaBreak());
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
@@ -1821,17 +1818,13 @@ namespace iText.Layout {
         public virtual void SplitRowspanKeepTogetherTest() {
             String fileName = "splitRowspanKeepTogetherTest.pdf";
             Document doc = CreateDocument(fileName);
-            String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
-                 + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
-                 + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
-                 + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.SetKeepTogether(true);
             int bigRowspan = 8;
             table.AddCell(new Cell(bigRowspan, 1).Add(new Paragraph("Big cell")).SetBorder(new SolidBorder(ColorConstants
                 .GREEN, 20)));
             for (int i = 0; i < bigRowspan; i++) {
-                table.AddCell(i + " " + textByron);
+                table.AddCell(i + " " + TestResourceUtil.GetByronStanza());
             }
             doc.Add(new Paragraph("Try to break me!"));
             doc.Add(table);

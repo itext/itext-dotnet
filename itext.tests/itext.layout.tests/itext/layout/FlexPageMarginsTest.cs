@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -44,11 +43,6 @@ namespace iText.Layout {
             .CurrentContext.TestDirectory) + "/resources/itext/layout/FlexPageMarginsTest/";
 
         private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/FlexPageMarginsTest/";
-
-        private const String TEXT_BYRON = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
-             + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
-             + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
-             + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -162,9 +156,9 @@ namespace iText.Layout {
                     for (int i = 0; i < 3; i++) {
                         Div row = CreateRowFlexContainer();
                         for (int j = 0; j < 3; j++) {
-                            row.Add(new Div().Add(new Paragraph("R" + i + "C" + j + "\n" + TEXT_BYRON)).SetWidth(UnitValue.CreatePercentValue
-                                (30)).SetBackgroundColor(j % 2 == 0 ? new DeviceRgb(65, 151, 29) : new DeviceRgb(209, 247, 29)).SetMargin
-                                (5));
+                            row.Add(new Div().Add(new Paragraph("R" + i + "C" + j + "\n" + TestResourceUtil.GetByronStanza())).SetWidth
+                                (UnitValue.CreatePercentValue(30)).SetBackgroundColor(j % 2 == 0 ? new DeviceRgb(65, 151, 29) : new DeviceRgb
+                                (209, 247, 29)).SetMargin(5));
                         }
                         flex.Add(row);
                     }
@@ -193,8 +187,9 @@ namespace iText.Layout {
                     for (int i = 0; i < 4; i++) {
                         Div row = CreateRowFlexContainer();
                         for (int j = 0; j < 3; j++) {
-                            row.Add(new Div().Add(new Paragraph(TEXT_BYRON)).SetWidth(UnitValue.CreatePercentValue(30)).SetBackgroundColor
-                                (j % 2 == 0 ? new DeviceRgb(65, 151, 29) : new DeviceRgb(209, 247, 29)).SetMargin(4));
+                            row.Add(new Div().Add(new Paragraph(TestResourceUtil.GetByronStanza())).SetWidth(UnitValue.CreatePercentValue
+                                (30)).SetBackgroundColor(j % 2 == 0 ? new DeviceRgb(65, 151, 29) : new DeviceRgb(209, 247, 29)).SetMargin
+                                (4));
                         }
                         flex.Add(row);
                     }
@@ -217,7 +212,7 @@ namespace iText.Layout {
                     Div flex1 = CreateRowFlexContainer();
                     flex1.Add(ColoredDiv("S1-A", new DeviceRgb(65, 151, 29)));
                     flex1.Add(ColoredDiv("S1-B", new DeviceRgb(209, 247, 29)));
-                    flex1.Add(new Paragraph(RepeatString(TEXT_BYRON, 3)));
+                    flex1.Add(new Paragraph(TestResourceUtil.RepeatString(TestResourceUtil.GetByronStanza(), 3)));
                     Div flex2 = CreateRowFlexContainer();
                     flex2.Add(ColoredDiv("S2-A", new DeviceRgb(78, 151, 205)));
                     flex2.Add(ColoredDiv("S2-B", new DeviceRgb(255, 165, 0)));
@@ -261,17 +256,17 @@ namespace iText.Layout {
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1
                         ()));
                     Div flex = CreateRowFlexContainer();
-                    Div item1 = new Div().Add(new Paragraph("LARGE MARGIN\n" + TEXT_BYRON)).SetBackgroundColor(new DeviceRgb(65
-                        , 151, 29)).SetWidth(UnitValue.CreatePercentValue(28)).SetMargins(30, 20, 30, 20);
-                    Div item2 = new Div().Add(new Paragraph("NO MARGIN\n" + TEXT_BYRON)).SetBackgroundColor(new DeviceRgb(209, 
-                        247, 29)).SetWidth(UnitValue.CreatePercentValue(28)).SetMargin(0);
-                    Div item3 = new Div().Add(new Paragraph("LARGE PADDING\n" + TEXT_BYRON)).SetBackgroundColor(new DeviceRgb(
-                        78, 151, 205)).SetWidth(UnitValue.CreatePercentValue(28)).SetPaddings(25, 25, 25, 25);
+                    Div item1 = new Div().Add(new Paragraph("LARGE MARGIN\n" + TestResourceUtil.GetByronStanza())).SetBackgroundColor
+                        (new DeviceRgb(65, 151, 29)).SetWidth(UnitValue.CreatePercentValue(28)).SetMargins(30, 20, 30, 20);
+                    Div item2 = new Div().Add(new Paragraph("NO MARGIN\n" + TestResourceUtil.GetByronStanza())).SetBackgroundColor
+                        (new DeviceRgb(209, 247, 29)).SetWidth(UnitValue.CreatePercentValue(28)).SetMargin(0);
+                    Div item3 = new Div().Add(new Paragraph("LARGE PADDING\n" + TestResourceUtil.GetByronStanza())).SetBackgroundColor
+                        (new DeviceRgb(78, 151, 205)).SetWidth(UnitValue.CreatePercentValue(28)).SetPaddings(25, 25, 25, 25);
                     flex.Add(item1);
                     flex.Add(item2);
                     flex.Add(item3);
                     document.Add(flex);
-                    document.Add(new Paragraph(RepeatString(TEXT_BYRON, 8)));
+                    document.Add(new Paragraph(TestResourceUtil.RepeatString(TestResourceUtil.GetByronStanza(), 8)));
                 }
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
@@ -292,8 +287,8 @@ namespace iText.Layout {
                     flex.Add(ColoredDiv("ITEM 3", new DeviceRgb(78, 151, 205)));
                     document.Add(flex);
                     document.Add(new SectionBreak(new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins2())));
-                    document.Add(new Div().Add(new Paragraph(RepeatString(TEXT_BYRON, 3))).SetBackgroundColor(new DeviceRgb(255
-                        , 165, 0)));
+                    document.Add(new Div().Add(new Paragraph(TestResourceUtil.RepeatString(TestResourceUtil.GetByronStanza(), 
+                        3))).SetBackgroundColor(new DeviceRgb(255, 165, 0)));
                 }
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
@@ -310,8 +305,8 @@ namespace iText.Layout {
                     document.SetPageMargins(1, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1()));
                     Div flex = CreateColumnFlexContainer();
                     for (int i = 0; i < 3; i++) {
-                        flex.Add(new Div().Add(new Paragraph("ITEM " + i + "\n" + TEXT_BYRON)).SetBackgroundColor(i % 2 == 0 ? new 
-                            DeviceRgb(65, 151, 29) : new DeviceRgb(209, 247, 29)));
+                        flex.Add(new Div().Add(new Paragraph("ITEM " + i + "\n" + TestResourceUtil.GetByronStanza())).SetBackgroundColor
+                            (i % 2 == 0 ? new DeviceRgb(65, 151, 29) : new DeviceRgb(209, 247, 29)));
                     }
                     document.Add(flex);
                 }
@@ -363,10 +358,10 @@ namespace iText.Layout {
                         for (int col = 0; col < 2; col++) {
                             Div innerCol = CreateColumnFlexContainer();
                             innerCol.SetWidth(UnitValue.CreatePercentValue(45)).SetMargin(4);
-                            innerCol.Add(new Div().Add(new Paragraph("R" + row + "C" + col + "-TOP\n" + TEXT_BYRON)).SetBackgroundColor
-                                (col == 0 ? new DeviceRgb(65, 151, 29) : new DeviceRgb(209, 247, 29)));
-                            innerCol.Add(new Div().Add(new Paragraph("R" + row + "C" + col + "-BOT\n" + TEXT_BYRON)).SetBackgroundColor
-                                (col == 0 ? new DeviceRgb(78, 151, 205) : new DeviceRgb(255, 165, 0)));
+                            innerCol.Add(new Div().Add(new Paragraph("R" + row + "C" + col + "-TOP\n" + TestResourceUtil.GetByronStanza
+                                ())).SetBackgroundColor(col == 0 ? new DeviceRgb(65, 151, 29) : new DeviceRgb(209, 247, 29)));
+                            innerCol.Add(new Div().Add(new Paragraph("R" + row + "C" + col + "-BOT\n" + TestResourceUtil.GetByronStanza
+                                ())).SetBackgroundColor(col == 0 ? new DeviceRgb(78, 151, 205) : new DeviceRgb(255, 165, 0)));
                             midRow.Add(innerCol);
                         }
                         outerCol.Add(midRow);
@@ -532,9 +527,9 @@ namespace iText.Layout {
                     Div item = new Div().SetBackgroundColor(new DeviceRgb(220, 220, 255)).SetWidth(UnitValue.CreatePercentValue
                         (80));
                     item.Add(new Paragraph("Item content before nested area break."));
-                    item.Add(new Div().Add(new Paragraph("Inner div before break.")).Add(new Paragraph(RepeatString(TEXT_BYRON
-                        , 5))).Add(new AreaBreak()).Add(new Paragraph("Inner div after break.")).SetBackgroundColor(new DeviceRgb
-                        (209, 247, 29)));
+                    item.Add(new Div().Add(new Paragraph("Inner div before break.")).Add(new Paragraph(TestResourceUtil.RepeatString
+                        (TestResourceUtil.GetByronStanza(), 5))).Add(new AreaBreak()).Add(new Paragraph("Inner div after break."
+                        )).SetBackgroundColor(new DeviceRgb(209, 247, 29)));
                     item.Add(new Paragraph("Item content after nested area break."));
                     flex.Add(ColoredDiv("ABOVE", new DeviceRgb(65, 151, 29)));
                     flex.Add(item);
@@ -589,7 +584,7 @@ namespace iText.Layout {
                     outer.Add(inner1);
                     outer.Add(inner2);
                     document.Add(outer);
-                    document.Add(new Paragraph(RepeatString(TEXT_BYRON, 6)));
+                    document.Add(new Paragraph(TestResourceUtil.RepeatString(TestResourceUtil.GetByronStanza(), 6)));
                 }
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
@@ -617,7 +612,7 @@ namespace iText.Layout {
                     rightCol.SetWidth(UnitValue.CreatePercentValue(45)).SetMargin(5);
                     rightCol.Add(ColoredDiv("R A", new DeviceRgb(255, 165, 0)));
                     rightCol.Add(ColoredDiv("R B", new DeviceRgb(200, 100, 100)));
-                    rightCol.Add(new Paragraph(RepeatString(TEXT_BYRON, 3)));
+                    rightCol.Add(new Paragraph(TestResourceUtil.RepeatString(TestResourceUtil.GetByronStanza(), 3)));
                     outer.Add(leftCol);
                     outer.Add(rightCol);
                     document.Add(outer);
@@ -639,9 +634,9 @@ namespace iText.Layout {
                     for (int i = 0; i < 4; i++) {
                         Div row = CreateRowFlexContainer();
                         for (int j = 0; j < 3; j++) {
-                            row.Add(new Div().Add(new Paragraph("R" + i + "C" + j + "\n" + TEXT_BYRON)).SetWidth(UnitValue.CreatePercentValue
-                                (30)).SetBackgroundColor(j % 2 == 0 ? new DeviceRgb(65, 151, 29) : new DeviceRgb(209, 247, 29)).SetMargin
-                                (4));
+                            row.Add(new Div().Add(new Paragraph("R" + i + "C" + j + "\n" + TestResourceUtil.GetByronStanza())).SetWidth
+                                (UnitValue.CreatePercentValue(30)).SetBackgroundColor(j % 2 == 0 ? new DeviceRgb(65, 151, 29) : new DeviceRgb
+                                (209, 247, 29)).SetMargin(4));
                         }
                         outer.Add(row);
                     }
@@ -664,9 +659,9 @@ namespace iText.Layout {
                     for (int i = 0; i < 3; i++) {
                         Div row = CreateRowFlexContainer();
                         for (int j = 0; j < 3; j++) {
-                            row.Add(new Div().Add(new Paragraph("R" + i + "C" + j + "\n" + TEXT_BYRON)).SetWidth(UnitValue.CreatePercentValue
-                                (30)).SetBackgroundColor(j % 2 == 0 ? new DeviceRgb(65, 151, 29) : new DeviceRgb(209, 247, 29)).SetMargin
-                                (4));
+                            row.Add(new Div().Add(new Paragraph("R" + i + "C" + j + "\n" + TestResourceUtil.GetByronStanza())).SetWidth
+                                (UnitValue.CreatePercentValue(30)).SetBackgroundColor(j % 2 == 0 ? new DeviceRgb(65, 151, 29) : new DeviceRgb
+                                (209, 247, 29)).SetMargin(4));
                         }
                         outer.Add(row);
                     }
@@ -689,13 +684,13 @@ namespace iText.Layout {
                     row1.Add(ColoredDiv("S1 ITEM A", new DeviceRgb(65, 151, 29)));
                     row1.Add(ColoredDiv("S1 ITEM B", new DeviceRgb(209, 247, 29)));
                     flex1.Add(row1);
-                    flex1.Add(new Paragraph(RepeatString(TEXT_BYRON, 3)));
+                    flex1.Add(new Paragraph(TestResourceUtil.RepeatString(TestResourceUtil.GetByronStanza(), 3)));
                     Div flex2 = CreateColumnFlexContainer();
                     Div row2 = CreateRowFlexContainer();
                     row2.Add(ColoredDiv("S2 ITEM A", new DeviceRgb(78, 151, 205)));
                     row2.Add(ColoredDiv("S2 ITEM B", new DeviceRgb(255, 165, 0)));
                     flex2.Add(row2);
-                    flex2.Add(new Paragraph(RepeatString(TEXT_BYRON, 3)));
+                    flex2.Add(new Paragraph(TestResourceUtil.RepeatString(TestResourceUtil.GetByronStanza(), 3)));
                     document.Add(flex1);
                     document.Add(new SectionBreak(new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1())));
                     document.Add(flex2);
@@ -722,14 +717,6 @@ namespace iText.Layout {
             flex.SetProperty(Property.FLEX_DIRECTION, FlexDirectionPropertyValue.COLUMN);
             flex.SetProperty(Property.FLEX_WRAP, FlexWrapPropertyValue.NOWRAP);
             return flex;
-        }
-
-        private static String RepeatString(String s, int n) {
-            StringBuilder sb = new StringBuilder(s.Length * n);
-            for (int i = 0; i < n; i++) {
-                sb.Append(s);
-            }
-            return sb.ToString();
         }
 
         private static Div ColoredDiv(String label, DeviceRgb color) {
