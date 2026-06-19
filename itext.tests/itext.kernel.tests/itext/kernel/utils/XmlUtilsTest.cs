@@ -22,31 +22,38 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using System.Xml;
+using iText.Kernel.Exceptions;
 using iText.Test;
 
 namespace iText.Kernel.Utils {
-    public class XmlUtilsNormalizeTextNodesTest : ExtendedITextTest {
-        private static System.IO.Stream Stream(String s) {
-            return new MemoryStream(s.GetBytes(System.Text.Encoding.UTF8));
+    [NUnit.Framework.Category("UnitTest")]
+    public class XmlUtilsTest : ExtendedITextTest {
+        private const String XML_WITH_XXE = "<?xml version=\"1.0\"?>\n" + "<!DOCTYPE r [ <!ENTITY xxe SYSTEM \"xxe-data.txt\"> ]>\n"
+             + "<body xmlns=\"http://www.w3.org/1999/xhtml\"><p>&xxe;</p></body>";
+
+        [NUnit.Framework.SetUp]
+        public virtual void ResetXmlParserFactoryToDefault() {
+            XmlProcessorCreator.SetXmlParserFactory(null);
         }
 
         [NUnit.Framework.Test]
         public virtual void CompareXmlsSameStructureDifferentWhitespace() {
             String pretty = "<root>\n" + "  <a>1</a>\n" + "  <b>2</b>\n" + "</root>";
             String compact = "<root><a>1</a><b>2</b></root>";
-            NUnit.Framework.Assert.IsTrue(XmlUtils.CompareXmls(Stream(pretty), Stream(compact)));
+            NUnit.Framework.Assert.IsTrue(XmlUtils.CompareXmls(GetStream(pretty), GetStream(compact)));
         }
 
         [NUnit.Framework.Test]
         public virtual void CompareXmlsMixedContentDifferentFormatting() {
             String xml1 = "<Title>Text\n" + "  <Link>link</Link>\n" + "</Title>";
             String xml2 = "<Title>Text<Link>link</Link></Title>";
-            NUnit.Framework.Assert.IsFalse(XmlUtils.CompareXmls(Stream(xml1), Stream(xml2)));
+            NUnit.Framework.Assert.IsFalse(XmlUtils.CompareXmls(GetStream(xml1), GetStream(xml2)));
         }
 
         [NUnit.Framework.Test]
         public virtual void CompareXmlsDifferentTextContent() {
-            NUnit.Framework.Assert.IsFalse(XmlUtils.CompareXmls(Stream("<root><a>1</a></root>"), Stream("<root><a>2</a></root>"
+            NUnit.Framework.Assert.IsFalse(XmlUtils.CompareXmls(GetStream("<root><a>1</a></root>"), GetStream("<root><a>2</a></root>"
                 )));
         }
 
@@ -54,14 +61,31 @@ namespace iText.Kernel.Utils {
         public virtual void CompareXmlsEmptyElementsWithAttributes() {
             String xml1 = "<root><a x=\"1\"/></root>";
             String xml2 = "<root>\n  <a x=\"1\" />\n</root>";
-            NUnit.Framework.Assert.IsTrue(XmlUtils.CompareXmls(Stream(xml1), Stream(xml2)));
+            NUnit.Framework.Assert.IsTrue(XmlUtils.CompareXmls(GetStream(xml1), GetStream(xml2)));
         }
 
         [NUnit.Framework.Test]
         public virtual void EmptyElementWithAttributesIsNotRemoved() {
             String xmlWithWhitespace = "<root>\n" + "  <a x=\"1\">   \n   </a>\n" + "</root>";
             String xmlExpected = "<root><a x=\"1\"/></root>";
-            NUnit.Framework.Assert.IsTrue(XmlUtils.CompareXmls(Stream(xmlWithWhitespace), Stream(xmlExpected)));
+            NUnit.Framework.Assert.IsTrue(XmlUtils.CompareXmls(GetStream(xmlWithWhitespace), GetStream(xmlExpected)));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SafeXmlDocumentTest() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => XmlUtils.InitXmlDocument(GetStream(
+                XML_WITH_XXE)));
+            NUnit.Framework.Assert.AreEqual(ExceptionTestUtil.GetDoctypeIsDisallowedExceptionMessage(), e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InitNewXmlDocumentTest() {
+            XmlDocument doc = XmlUtils.InitNewXmlDocument();
+            NUnit.Framework.Assert.IsNotNull(doc);
+        }
+
+        private static Stream GetStream(String s) {
+            return new MemoryStream(s.GetBytes(System.Text.Encoding.UTF8));
         }
     }
 }

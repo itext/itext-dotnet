@@ -34,6 +34,7 @@ namespace iText.IO.Util {
         /// This method creates a new empty Xml document.
         /// </summary>
         /// <returns>a new Xml document</returns>
+        [System.ObsoleteAttribute(@"as unsafe, use XmlUtils#InitNewXmlDocument from kernel module instead")]
         public static XmlDocument InitNewXmlDocument() {
             return new XmlDocument();
         }
@@ -43,6 +44,7 @@ namespace iText.IO.Util {
         /// </summary>
         /// <param name="inputStream">to parse</param>
         /// <returns>parsed Xml document</returns>
+        [System.ObsoleteAttribute(@"as unsafe, use XmlUtils#InitXmlDocument from kernel module instead")]
         public static XmlDocument InitXmlDocument(Stream inputStream) {
             XmlDocument doc = new XmlDocument();
             doc.PreserveWhitespace = true;

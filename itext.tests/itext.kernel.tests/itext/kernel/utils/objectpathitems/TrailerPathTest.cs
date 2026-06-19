@@ -23,8 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 using System.Xml;
 using iText.IO.Source;
-using iText.IO.Util;
 using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Kernel.Utils.Objectpathitems {
@@ -98,7 +98,7 @@ namespace iText.Kernel.Utils.Objectpathitems {
             Stack<LocalPathItem> stack = new Stack<LocalPathItem>();
             stack.Push(new ArrayPathItem(1));
             TrailerPath path1 = new TrailerPath(src, dest, stack);
-            XmlDocument doc = XmlUtil.InitNewXmlDocument();
+            XmlDocument doc = XmlUtils.InitNewXmlDocument();
             NUnit.Framework.Assert.IsNotNull(path1.ToXmlNode(doc));
         }
 

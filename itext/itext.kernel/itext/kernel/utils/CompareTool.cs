@@ -2500,7 +2500,7 @@ namespace iText.Kernel.Utils {
             /// <summary>Converts this CompareResult into xml form.</summary>
             /// <param name="stream">output stream to which xml report will be written.</param>
             public virtual void WriteReportToXml(Stream stream) {
-                XmlDocument xmlReport = XmlUtil.InitNewXmlDocument();
+                XmlDocument xmlReport = XmlUtils.InitNewXmlDocument();
                 XmlElement root = xmlReport.CreateElement("report");
                 XmlElement errors = xmlReport.CreateElement("errors");
                 errors.SetAttribute("count", differences.Count.ToString());

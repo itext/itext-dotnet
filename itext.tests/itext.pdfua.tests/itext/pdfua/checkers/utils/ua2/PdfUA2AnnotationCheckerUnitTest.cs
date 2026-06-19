@@ -30,7 +30,6 @@ using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
-using iText.Kernel.Utils;
 using iText.Pdfua;
 using iText.Pdfua.Exceptions;
 using iText.Test;
@@ -40,11 +39,6 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
     public class PdfUA2AnnotationCheckerUnitTest : ExtendedITextTest {
         private const String RICH_TEXT_WITH_XXE = "<?xml version=\"1.0\"?>\n" + "<!DOCTYPE r [ <!ENTITY xxe SYSTEM \"xxe-data.txt\"> ]>\n"
              + "<body xmlns=\"http://www.w3.org/1999/xhtml\"><p>&xxe;</p></body>";
-
-        [NUnit.Framework.SetUp]
-        public virtual void ResetXmlParserFactoryToDefault() {
-            XmlProcessorCreator.SetXmlParserFactory(null);
-        }
 
         [NUnit.Framework.Test]
         public virtual void RichTextWithXxeIsRejected() {
