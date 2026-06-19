@@ -38,13 +38,13 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
         public virtual void GetNextRendererShouldBeOverriddenTest() {
-            ListRenderer listRenderer = new _ListRenderer_57(new List());
+            ListRenderer listRenderer = new _ListRenderer_56(new List());
             // Nothing is overridden
             NUnit.Framework.Assert.AreEqual(typeof(ListRenderer), listRenderer.GetNextRenderer().GetType());
         }
 
-        private sealed class _ListRenderer_57 : ListRenderer {
-            public _ListRenderer_57(List baseArg1)
+        private sealed class _ListRenderer_56 : ListRenderer {
+            public _ListRenderer_56(List baseArg1)
                 : base(baseArg1) {
             }
         }
@@ -111,6 +111,48 @@ namespace iText.Layout.Renderer {
             LayoutResult result = listRenderer.Layout(CreateLayoutContext(100, -10));
             NUnit.Framework.Assert.AreEqual(LayoutResult.NOTHING, result.GetStatus());
             NUnit.Framework.Assert.IsNotNull(result.GetCauseOfNothing());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InsideListSymbolIsNotDuplicatedOnRepeatedGridLayoutTest() {
+            ListRenderer listRenderer = CreateInsideListRenderer();
+            GridContainerRenderer gridRenderer = new GridContainerRenderer(new GridContainer());
+            gridRenderer.AddChild(listRenderer);
+            Document document = CreateDummyDocument();
+            gridRenderer.SetParent(document.GetRenderer());
+            gridRenderer.Layout(CreateLayoutContext(500, 500));
+            int childrenCountAfterFirstLayout = GetFirstParagraphChildrenCount(listRenderer);
+            gridRenderer.Layout(CreateLayoutContext(500, 500));
+            NUnit.Framework.Assert.AreEqual(childrenCountAfterFirstLayout, GetFirstParagraphChildrenCount(listRenderer
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InsideListSymbolIsNotDuplicatedOnRepeatedFlexLayoutTest() {
+            ListRenderer listRenderer = CreateInsideListRenderer();
+            FlexContainerRenderer flexRenderer = new FlexContainerRenderer(new Div());
+            flexRenderer.AddChild(listRenderer);
+            Document document = CreateDummyDocument();
+            flexRenderer.SetParent(document.GetRenderer());
+            flexRenderer.Layout(CreateLayoutContext(500, 500));
+            int childrenCountAfterFirstLayout = GetFirstParagraphChildrenCount(listRenderer);
+            flexRenderer.Layout(CreateLayoutContext(500, 500));
+            NUnit.Framework.Assert.AreEqual(childrenCountAfterFirstLayout, GetFirstParagraphChildrenCount(listRenderer
+                ));
+        }
+
+        private static ListRenderer CreateInsideListRenderer() {
+            List list = new List();
+            list.SetListSymbol(new iText.Layout.Element.Text("*"));
+            list.SetProperty(Property.LIST_SYMBOL_POSITION, ListSymbolPosition.INSIDE);
+            list.Add((ListItem)new ListItem().Add(new Paragraph("List item")));
+            return (ListRenderer)list.CreateRendererSubTree();
+        }
+
+        private static int GetFirstParagraphChildrenCount(ListRenderer listRenderer) {
+            IRenderer listItemRenderer = listRenderer.GetChildRenderers()[0];
+            IRenderer paragraphRenderer = listItemRenderer.GetChildRenderers()[0];
+            return paragraphRenderer.GetChildRenderers().Count;
         }
 
         private class ListRendererCreatingNotifyingListSymbols : ListRenderer {

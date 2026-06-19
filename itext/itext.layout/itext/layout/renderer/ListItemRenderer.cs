@@ -254,7 +254,7 @@ namespace iText.Layout.Renderer {
         }
 
         private void ApplyListSymbolPosition() {
-            if (symbolRenderer == null) {
+            if (symbolRenderer == null || symbolAddedInside) {
                 return;
             }
             ListSymbolPosition symbolPosition = (ListSymbolPosition)ListRenderer.GetListItemOrListProperty(this, parent
