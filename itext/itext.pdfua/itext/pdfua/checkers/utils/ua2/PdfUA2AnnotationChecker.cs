@@ -25,13 +25,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
+using Javax.Xml.Parsers;
 using iText.Commons.Utils;
 using iText.Forms.Fields;
-using iText.IO.Util;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Tagging;
+using iText.Kernel.Utils;
 using iText.Kernel.Utils.Checkers;
 using iText.Pdfua.Checkers.Utils;
 using iText.Pdfua.Exceptions;
@@ -150,8 +151,8 @@ namespace iText.Pdfua.Checkers.Utils.Ua2 {
                 return richText;
             }
             try {
-                return ParseRichText(XmlUtil.InitXmlDocument(new MemoryStream(richText.GetBytes(System.Text.Encoding.UTF8)
-                    )));
+                DocumentBuilder db = XmlProcessorCreator.CreateSafeDocumentBuilder(false, false);
+                return ParseRichText(db.Parse(new MemoryStream(richText.GetBytes(System.Text.Encoding.UTF8))));
             }
             catch (Exception e) {
                 throw new PdfException(e.Message, e);
