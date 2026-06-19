@@ -29,10 +29,12 @@ namespace iText.Layout.Properties.Margins {
 //\cond DO_NOT_DOCUMENT
     /// <summary>
     /// Class representing container to store
-    /// <see cref="iText.Layout.Element.Footnote"/>
+    /// <see cref="Footnote"/>
     /// instances.
     /// </summary>
     internal class FootnotesContainer : BlockElement<iText.Layout.Properties.Margins.FootnotesContainer> {
+        private readonly int pageNumber;
+
         protected internal DefaultAccessibilityProperties tagProperties;
 
         /// <summary>
@@ -40,18 +42,19 @@ namespace iText.Layout.Properties.Margins {
         /// <see cref="FootnotesContainer"/>
         /// instance.
         /// </summary>
-        public FootnotesContainer() {
+        /// <param name="pageNum">number of the page to which this container will be added</param>
+        public FootnotesContainer(int pageNum) {
+            this.pageNumber = pageNum;
         }
 
-        // Empty constructor.
         /// <summary>
         /// Adds
-        /// <see cref="iText.Layout.Element.Footnote"/>
+        /// <see cref="Footnote"/>
         /// to this container.
         /// </summary>
         /// <param name="footnote">
         /// 
-        /// <see cref="iText.Layout.Element.Footnote"/>
+        /// <see cref="Footnote"/>
         /// to add
         /// </param>
         /// <returns>
@@ -62,6 +65,23 @@ namespace iText.Layout.Properties.Margins {
         public virtual iText.Layout.Properties.Margins.FootnotesContainer Add(Footnote footnote) {
             this.childElements.Add(footnote);
             return this;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        public override IRenderer CreateRendererSubTree() {
+            IRenderer rendererRoot = GetRenderer();
+            foreach (IElement child in childElements) {
+                if (child is Footnote) {
+                    Footnote footnote = (Footnote)child;
+                    footnote.ApplyFootnoteAnchor(this.pageNumber);
+                }
+                rendererRoot.AddChild(child.CreateRendererSubTree());
+            }
+            return rendererRoot;
         }
 
         /// <summary><inheritDoc/></summary>

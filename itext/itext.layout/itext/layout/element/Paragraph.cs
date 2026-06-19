@@ -26,6 +26,7 @@ using iText.Commons.Utils;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Properties;
+using iText.Layout.Properties.Margins;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
@@ -127,7 +128,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Adds the
-        /// <see cref="FootnoteAnchor"/>
+        /// <see cref="iText.Layout.Properties.Margins.FootnoteAnchor"/>
         /// element to this
         /// <see cref="Paragraph"/>.
         /// </summary>
@@ -271,12 +272,12 @@ namespace iText.Layout.Element {
         /// </summary>
         /// <param name="orphansControl">
         /// an instance of
-        /// <see cref="iText.Layout.Properties.ParagraphOrphansControl"/>.
+        /// <see cref="iText.Layout.Properties.ParagraphOrphansControl"/>
         /// </param>
         /// <returns>
         /// this
         /// <see cref="Paragraph"/>
-        /// instance.
+        /// instance
         /// </returns>
         public virtual iText.Layout.Element.Paragraph SetOrphansControl(ParagraphOrphansControl orphansControl) {
             SetProperty(Property.ORPHANS_CONTROL, orphansControl);
@@ -289,12 +290,12 @@ namespace iText.Layout.Element {
         /// </summary>
         /// <param name="widowsControl">
         /// an instance of
-        /// <see cref="iText.Layout.Properties.ParagraphWidowsControl"/>.
+        /// <see cref="iText.Layout.Properties.ParagraphWidowsControl"/>
         /// </param>
         /// <returns>
         /// this
         /// <see cref="Paragraph"/>
-        /// instance.
+        /// instance
         /// </returns>
         public virtual iText.Layout.Element.Paragraph SetWidowsControl(ParagraphWidowsControl widowsControl) {
             SetProperty(Property.WIDOWS_CONTROL, widowsControl);

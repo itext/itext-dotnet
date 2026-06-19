@@ -22,20 +22,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Kernel.Geom;
-using iText.Kernel.Pdf.Tagging;
-using iText.Kernel.Pdf.Tagutils;
+using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
+using iText.Layout.Properties.Margins;
 
 namespace iText.Layout.Renderer {
     /// <summary>
     /// Renderer for
-    /// <see cref="iText.Layout.Element.FootnoteAnchor"/>
+    /// <see cref="iText.Layout.Properties.Margins.FootnoteAnchor"/>
     /// instance representing an anchor for a footnote.
     /// </summary>
     public class FootnoteAnchorRenderer : AbstractRenderer {
-        private readonly IRenderer footnoteAnchor;
+        private IRenderer footnoteAnchor;
 
 //\cond DO_NOT_DOCUMENT
         // Create and store footnote renderer once to save its layout result.
@@ -49,7 +49,7 @@ namespace iText.Layout.Renderer {
         /// </summary>
         /// <param name="modelElement">
         /// the
-        /// <see cref="iText.Layout.Element.FootnoteAnchor"/>
+        /// <see cref="iText.Layout.Properties.Margins.FootnoteAnchor"/>
         /// which this object should manage
         /// </param>
         public FootnoteAnchorRenderer(FootnoteAnchor modelElement)
@@ -63,7 +63,6 @@ namespace iText.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             if (this.footnoteRenderer == null) {
                 Footnote footnote = ((FootnoteAnchor)this.modelElement).GetFootnote();
-                ApplyFootnoteAnchor(footnote);
                 this.footnoteRenderer = (FootnoteRenderer)footnote.CreateRendererSubTree().SetParent(this);
             }
             int pageNumber = layoutContext.GetArea().GetPageNumber();
@@ -72,17 +71,23 @@ namespace iText.Layout.Renderer {
             while (parentRenderer != null) {
                 if (parentRenderer is DocumentRenderer) {
                     DocumentRenderer documentRenderer = (DocumentRenderer)parentRenderer;
-                    float leftMargin = (float)documentRenderer.GetPropertyAsFloat(Property.MARGIN_BOTTOM);
-                    float rightMargin = (float)documentRenderer.GetPropertyAsFloat(Property.MARGIN_TOP);
+                    FootnotesUtil.SetParentForFootnoteRenderer(this.footnoteRenderer, documentRenderer);
+                    float leftMargin = (float)documentRenderer.GetPropertyAsFloat(Property.MARGIN_LEFT);
+                    float rightMargin = (float)documentRenderer.GetPropertyAsFloat(Property.MARGIN_RIGHT);
                     pageRectangle.MoveRight(leftMargin).DecreaseWidth(leftMargin + rightMargin);
                     break;
                 }
                 parentRenderer = parentRenderer.GetParent();
             }
             this.footnoteRenderer.Layout(new LayoutContext(new LayoutArea(pageNumber, pageRectangle)));
+            // TODO DEVSIX-10023 Process partial result. Take it into account in line renderer
+            //  and in case of table header/footer or fixed width.
             LayoutResult layoutResult = footnoteAnchor.Layout(layoutContext);
             this.occupiedArea = layoutResult.GetOccupiedArea();
             FootnotesCounterHandler.AddFootnoteAnchor(this);
+            if (LayoutResult.NOTHING == layoutResult.GetStatus()) {
+                return new LayoutResult(LayoutResult.NOTHING, null, null, layoutResult.GetOverflowRenderer(), this);
+            }
             return layoutResult;
         }
 
@@ -92,6 +97,24 @@ namespace iText.Layout.Renderer {
 
         public override IRenderer GetNextRenderer() {
             return new iText.Layout.Renderer.FootnoteAnchorRenderer((FootnoteAnchor)modelElement);
+        }
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual iText.Layout.Renderer.FootnoteAnchorRenderer AddSymbolRenderer(IRenderer footnoteNumberingSymbolRenderer
+            ) {
+            this.footnoteAnchor = footnoteNumberingSymbolRenderer.SetParent(this);
+            SetFootnoteAnchor(((FootnoteAnchor)this.modelElement), footnoteNumberingSymbolRenderer.GetModelElement());
+            return this;
+        }
+//\endcond
+
+        private static void SetFootnoteAnchor(FootnoteAnchor footnoteAnchor, IPropertyContainer element) {
+            if (element is Image) {
+                footnoteAnchor.SetFootnoteAnchor((Image)element);
+            }
+            if (element is Text) {
+                footnoteAnchor.SetFootnoteAnchor((Text)element);
+            }
         }
 
         private IRenderer CreateFootnoteAnchorRenderer() {
@@ -111,41 +134,6 @@ namespace iText.Layout.Renderer {
                         throw new InvalidOperationException();
                     }
                 }
-            }
-        }
-
-        private void ApplyFootnoteAnchor(Footnote footnote) {
-            if (!footnote.GetChildren().IsEmpty() && footnote.GetChildren()[0] is Paragraph) {
-                Paragraph paragraph = (Paragraph)footnote.GetChildren()[0];
-                InjectFootnoteAnchorIntoParagraph(paragraph);
-            }
-        }
-
-        private void InjectFootnoteAnchorIntoParagraph(Paragraph paragraph) {
-            // TODO DEVSIX-9981 Introduce anchor indent property to make it configurable.
-            Div anchorIndent = new _Div_129().SetWidth(5F);
-            IElement footnoteAnchorSymbol = ((FootnoteAnchor)this.modelElement).GetFootnoteAnchor();
-            if (!paragraph.GetChildren().Contains(footnoteAnchorSymbol)) {
-                bool isRtl = BaseDirection.RIGHT_TO_LEFT == this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION);
-                if (!isRtl) {
-                    paragraph.GetChildren().Add(0, anchorIndent);
-                }
-                paragraph.GetChildren().Add(0, footnoteAnchorSymbol);
-                if (isRtl) {
-                    paragraph.GetChildren().Add(0, anchorIndent);
-                }
-            }
-        }
-
-        private sealed class _Div_129 : Div {
-            public _Div_129() {
-            }
-
-            public override AccessibilityProperties GetAccessibilityProperties() {
-                if (this.tagProperties == null) {
-                    this.tagProperties = new DefaultAccessibilityProperties(StandardRoles.ARTIFACT);
-                }
-                return this.tagProperties;
             }
         }
     }

@@ -183,6 +183,8 @@ namespace iText.Layout.Properties {
 
         public const int FONT_SIZE = 24;
 
+        public const int FOOTNOTES_PROPERTIES = 160;
+
         public const int FORCED_PLACEMENT = 26;
 
         public const int FULL = 25;
@@ -423,7 +425,7 @@ namespace iText.Layout.Properties {
         /// </remarks>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 157;
+        private const int MAX_INHERITED_PROPERTY_ID = 160;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
@@ -444,6 +446,7 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_SIZE] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_STYLE] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_WEIGHT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.FOOTNOTES_PROPERTIES] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FORCED_PLACEMENT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.HYPHENATION] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.ITALIC_SIMULATION] = true;

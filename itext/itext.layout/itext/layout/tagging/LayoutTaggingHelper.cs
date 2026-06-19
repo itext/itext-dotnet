@@ -124,7 +124,7 @@ namespace iText.Layout.Tagging {
             }
             IList<TaggingHintKey> newKidsKeys = new List<TaggingHintKey>();
             foreach (IPropertyContainer kid in newKids) {
-                if (kid is AreaBreakRenderer) {
+                if (kid is AreaBreakRenderer || kid is SectionBreakRenderer) {
                     return;
                 }
                 newKidsKeys.Add(GetOrCreateHintKey(kid));

@@ -20,12 +20,12 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using iText.Layout.Element;
+using iText.Layout.Properties.Margins;
 
 namespace iText.Layout.Renderer {
     /// <summary>
     /// Renderer for
-    /// <see cref="iText.Layout.Element.Footnote"/>
+    /// <see cref="iText.Layout.Properties.Margins.Footnote"/>
     /// representing a footnote placed at the bottom of the page.
     /// </summary>
     public class FootnoteRenderer : BlockRenderer {
@@ -36,7 +36,7 @@ namespace iText.Layout.Renderer {
         /// </summary>
         /// <param name="modelElement">
         /// the
-        /// <see cref="iText.Layout.Element.Footnote"/>
+        /// <see cref="iText.Layout.Properties.Margins.Footnote"/>
         /// which this object should manage
         /// </param>
         public FootnoteRenderer(Footnote modelElement)

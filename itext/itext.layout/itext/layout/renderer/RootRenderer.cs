@@ -27,12 +27,12 @@ using iText.Commons;
 using iText.Commons.Actions;
 using iText.Commons.Actions.Sequence;
 using iText.Commons.Utils;
+using iText.Commons.Utils.Collections;
 using iText.Kernel.Actions.Events;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout;
-using iText.Layout.Element;
 using iText.Layout.Exceptions;
 using iText.Layout.Layout;
 using iText.Layout.Logs;
@@ -57,6 +57,10 @@ namespace iText.Layout.Renderer {
 
 //\cond DO_NOT_DOCUMENT
         internal IList<Rectangle> floatRendererAreas;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal IDictionary<int, int?> latestFootnoteNumber = new Dictionary<int, int?>();
 //\endcond
 
         private readonly IList<IRenderer> waitingNextPageRenderers = new List<IRenderer>();
@@ -277,15 +281,30 @@ namespace iText.Layout.Renderer {
                 return layoutResult;
             }
             // Process footnotes that were collected during renderer layout.
-            IDictionary<Footnote, float?> footnotes = footnotesCounterHandler.CollectFootnotes(currentArea);
+            IDictionary<Footnote, float?> footnotes = footnotesCounterHandler.CollectFootnotes(layoutResult.GetOccupiedArea
+                () == null ? currentArea : layoutResult.GetOccupiedArea());
             int footnoteAnchorsNum = footnotes.Count;
             if (footnoteAnchorsNum == 0) {
                 return layoutResult;
+            }
+            int pageNum = currentArea.GetPageNumber();
+            PageMarginBoxes pageMarginBoxes = null;
+            Document document = new Document(this.GetPdfDocument());
+            if (this is DocumentRenderer) {
+                document = (Document)this.GetModelElement();
+                pageMarginBoxes = document.GetPageMargins(currentArea.GetPageNumber());
+            }
+            FootnotesProperties footnotesProperties = document.GetFootnotesProperties();
+            FootnoteNumberingConfig footnoteNumberingConfig = footnotesProperties.GetFootnoteNumberingConfig();
+            if (FootnoteNumberingConfig.PER_PAGE != footnoteNumberingConfig && !latestFootnoteNumber.ContainsKey(pageNum
+                ) && latestFootnoteNumber.ContainsKey(pageNum - 1)) {
+                latestFootnoteNumber.Put(pageNum, latestFootnoteNumber.Get(pageNum - 1));
             }
             bool footnotesPlaced = false;
             float decreasedHeight = 0;
             bool footnotesNumDefined = false;
             int footnotesNum = 0;
+            // TODO DEVSIX-10030 Support forced placement for footnotes to prevent infinite loops
             while (!footnotesPlaced) {
                 if (footnotesNumDefined) {
                     decreasedHeight = 0;
@@ -301,42 +320,31 @@ namespace iText.Layout.Renderer {
                         decreasedHeight += (float)footnoteHeight;
                     }
                 }
+                footnotesCounterHandler.UpdateFootnoteNumberingAndStyles(footnotesProperties, (int)latestFootnoteNumber.GetOrDefault
+                    (pageNum, 0));
                 footnotesCounterHandler.Reset();
                 layoutResult = renderer.SetParent(this).Layout(new LayoutContext(currentArea.Clone(), childMarginsInfo, floatRendererAreas
                     ));
-                footnotes = footnotesCounterHandler.CollectFootnotes(currentArea);
+                footnotes = footnotesCounterHandler.CollectFootnotes(layoutResult.GetOccupiedArea() == null ? currentArea : 
+                    layoutResult.GetOccupiedArea());
                 footnoteAnchorsNum = footnotes.Count;
                 // Number of the placed anchors == number of footnotes we reserved the space for before the layout
                 footnotesPlaced = footnoteAnchorsNum == footnotesNum;
                 if (footnoteAnchorsNum > footnotesNum) {
                     footnotesNumDefined = true;
                     // Decrease current area from the bottom until extra anchor will be moved to the next page.
+                    // TODO DEVSIX-10030 This logic can be improved.
                     currentArea.GetBBox().MoveUp(1).DecreaseHeight(1);
                 }
             }
-            PageMarginBoxes pageMarginBoxes = null;
-            Document document = new Document(this.GetPdfDocument());
-            DocumentRenderer documentRenderer = new DocumentRenderer(document);
-            if (this is DocumentRenderer) {
-                documentRenderer = (DocumentRenderer)this;
-                document = (Document)documentRenderer.GetModelElement();
-                pageMarginBoxes = document.GetPageMargins(currentArea.GetPageNumber());
-            }
-            IList<Footnote> footnotesContainer = new List<Footnote>();
-            float footnotesHeight = 0;
-            foreach (KeyValuePair<Footnote, float?> entry in footnotes) {
-                Footnote footnote = entry.Key;
-                footnotesContainer.Add(footnote);
-                footnotesHeight += (float)entry.Value;
-            }
-            int pageNum = currentArea.GetPageNumber();
             if (pageMarginBoxes == null) {
                 pageMarginBoxes = new PageMarginBoxes(JavaCollectionsUtil.EmptyList<PageMarginContent>());
                 document.SetPageMargins(currentArea.GetPageNumber(), pageMarginBoxes);
             }
-            FootnotesUtil.AddFootnotesToPage(pageNum, footnotesContainer, pageMarginBoxes);
-            documentRenderer.SetProperty(Property.MARGIN_BOTTOM, documentRenderer.GetPropertyAsFloat(Property.MARGIN_BOTTOM
-                ) + footnotesHeight);
+            FootnotesUtil.AddFootnotesToPage(pageNum, new List<Footnote>(footnotes.Keys), pageMarginBoxes, footnotesProperties
+                );
+            latestFootnoteNumber.Put(pageNum, latestFootnoteNumber.ContainsKey(pageNum) ? (latestFootnoteNumber.Get(pageNum
+                ) + footnotes.Count) : footnotes.Count);
             return layoutResult;
         }
 

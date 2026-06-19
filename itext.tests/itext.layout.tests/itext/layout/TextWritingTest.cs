@@ -392,7 +392,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TextInitializationWithNullValueThrowsException() {
-            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new Text(null));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => new Text((String)null));
             NUnit.Framework.Assert.AreEqual(LayoutExceptionMessageConstant.TEXT_CONTENT_CANNOT_BE_NULL, e.Message);
         }
 

@@ -282,7 +282,7 @@ namespace iText.Layout.Renderer {
                     fittingLengthWithTrailingRightSideSpaces = textRenderer.Length();
                 }
                 else {
-                    if (childPosLayoutResult.GetSplitRenderer() != null) {
+                    if (childPosLayoutResult.GetSplitRenderer() is TextRenderer) {
                         TextRenderer splitTextRenderer = (TextRenderer)childPosLayoutResult.GetSplitRenderer();
                         GlyphLine splitText = splitTextRenderer.text;
                         if (splitTextRenderer.Length() > 0) {

@@ -51,6 +51,8 @@ namespace iText.Layout.Element {
 
         private PageMarginBoxes pageMarginBoxes;
 
+        private FootnotesProperties footnotesProperties;
+
         private bool breakPage;
 
         /// <summary>
@@ -179,6 +181,43 @@ namespace iText.Layout.Element {
         /// <returns>this same instance</returns>
         public virtual iText.Layout.Element.SectionBreak SetPageMargins(PageMarginBoxes pageMarginBoxes) {
             this.pageMarginBoxes = pageMarginBoxes;
+            return this;
+        }
+
+        /// <summary>
+        /// Gets
+        /// <see cref="iText.Layout.Properties.Margins.FootnotesProperties"/>
+        /// specified for the document via
+        /// <see cref="SectionBreak"/>
+        /// to customize footnotes.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Layout.Properties.Margins.FootnotesProperties"/>
+        /// specified for the document
+        /// </returns>
+        public virtual FootnotesProperties GetFootnotesProperties() {
+            return footnotesProperties;
+        }
+
+        /// <summary>
+        /// Sets
+        /// <see cref="iText.Layout.Properties.Margins.FootnotesProperties"/>
+        /// for the document.
+        /// </summary>
+        /// <param name="footnotesProperties">
+        /// 
+        /// <see cref="iText.Layout.Properties.Margins.FootnotesProperties"/>
+        /// to customize footnotes
+        /// </param>
+        /// <returns>
+        /// this same
+        /// <see cref="SectionBreak"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Layout.Element.SectionBreak SetFootnotesProperties(FootnotesProperties footnotesProperties
+            ) {
+            this.footnotesProperties = footnotesProperties;
             return this;
         }
 

@@ -62,8 +62,8 @@ namespace iText.Layout {
                     Div tall = TestResourceUtil.GetTallDiv(4);
                     int status = LayoutResultTestUtil.GetLayoutStatus(tall, document, TestResourceUtil.GetAvailableRect(A4_HEIGHT
                         , A4_WIDTH, 36f, largeTop, 0, 0, 0));
-                    NUnit.Framework.Assert.AreEqual(LayoutResult.PARTIAL, status, "Tall element should be split (PARTIAL) when a large dynamic top margin "
-                         + "leaves only a small usable area");
+                    NUnit.Framework.Assert.AreEqual(LayoutResult.PARTIAL, status, "Tall element should be split (PARTIAL) when a "
+                         + "large dynamic top margin leaves only a small usable area");
                 }
             }
         }
@@ -78,8 +78,8 @@ namespace iText.Layout {
                     Div tall = TestResourceUtil.GetTallDiv(4);
                     int status = LayoutResultTestUtil.GetLayoutStatus(tall, document, TestResourceUtil.GetAvailableRect(A4_HEIGHT
                         , A4_WIDTH, 36f, top, bottom, 0, 0));
-                    NUnit.Framework.Assert.AreEqual(LayoutResult.PARTIAL, status, "Tall element should be split (PARTIAL) when both dynamic top and bottom "
-                         + "margins are large but a small usable strip remains");
+                    NUnit.Framework.Assert.AreEqual(LayoutResult.PARTIAL, status, "Tall element should be split (PARTIAL) when both "
+                         + "dynamic top and bottom margins are large but a small usable strip remains");
                 }
             }
         }
@@ -174,8 +174,8 @@ namespace iText.Layout {
                     Div tall = TestResourceUtil.GetTallDiv(3);
                     int status = LayoutResultTestUtil.GetLayoutStatus(tall, document, TestResourceUtil.GetAvailableRect(A4_HEIGHT
                         , A4_WIDTH, 36f, 0, footnoteHeight, 0, 0));
-                    NUnit.Framework.Assert.AreEqual(LayoutResult.PARTIAL, status, "Tall element should be split (PARTIAL) when a large footnote margin "
-                         + "leaves less than half the page for content");
+                    NUnit.Framework.Assert.AreEqual(LayoutResult.PARTIAL, status, "Tall element should be split (PARTIAL) when a "
+                         + "large footnote margin leaves less than half the page for content");
                 }
             }
         }
@@ -228,8 +228,8 @@ namespace iText.Layout {
                     Div tall = TestResourceUtil.GetTallDiv(4);
                     int status = LayoutResultTestUtil.GetLayoutStatus(tall, document, TestResourceUtil.GetAvailableRect(A4_HEIGHT
                         , A4_WIDTH, 36f, headerHeight, footnoteHeight, 0, 0));
-                    NUnit.Framework.Assert.AreEqual(LayoutResult.PARTIAL, status, "Tall element should be split (PARTIAL) when both header and large "
-                         + "footnote margins leave only a small usable band");
+                    NUnit.Framework.Assert.AreEqual(LayoutResult.PARTIAL, status, "Tall element should be split (PARTIAL) when both "
+                         + "header and large footnote margins leave only a small usable band");
                 }
             }
         }
@@ -266,8 +266,8 @@ namespace iText.Layout {
                     Div element = new Div().Add(new Paragraph(TestResourceUtil.GetByronStanza())).SetHeight(80);
                     int status = LayoutResultTestUtil.GetLayoutStatus(element, document, TestResourceUtil.GetAvailableRect(A4_HEIGHT
                         , A4_WIDTH, 36f, hugeTop, 0, 0, 0));
-                    NUnit.Framework.Assert.AreEqual(LayoutResult.NOTHING, status, "Element should return NOTHING when a dynamic top margin occupies "
-                         + "virtually the entire page");
+                    NUnit.Framework.Assert.AreEqual(LayoutResult.NOTHING, status, "Element should return NOTHING when a dynamic top "
+                         + "margin occupies virtually the entire page");
                 }
             }
         }
@@ -282,8 +282,8 @@ namespace iText.Layout {
                     Div element = new Div().Add(new Paragraph(TestResourceUtil.GetByronStanza())).SetHeight(80);
                     int status = LayoutResultTestUtil.GetLayoutStatus(element, document, TestResourceUtil.GetAvailableRect(A4_HEIGHT
                         , A4_WIDTH, 36f, hugeMargin, hugeMargin, 0, 0));
-                    NUnit.Framework.Assert.AreEqual(LayoutResult.NOTHING, status, "Element should return NOTHING when combined dynamic top and bottom margins "
-                         + "leave virtually no usable area");
+                    NUnit.Framework.Assert.AreEqual(LayoutResult.NOTHING, status, "Element should return NOTHING when combined "
+                         + "dynamic top and bottom margins leave virtually no usable area");
                 }
             }
         }
@@ -297,8 +297,8 @@ namespace iText.Layout {
                     Div element = new Div().Add(new Paragraph(TestResourceUtil.GetByronStanza())).SetHeight(60);
                     int status = LayoutResultTestUtil.GetLayoutStatus(element, document, TestResourceUtil.GetAvailableRect(A4_HEIGHT
                         , A4_WIDTH, 36f, 0, hugeFootnote, 0, 0));
-                    NUnit.Framework.Assert.AreEqual(LayoutResult.NOTHING, status, "Short element with explicit height should return NOTHING when a huge "
-                         + "footnote margin leaves essentially no vertical room");
+                    NUnit.Framework.Assert.AreEqual(LayoutResult.NOTHING, status, "Short element with explicit height should "
+                         + "return NOTHING when a huge footnote margin leaves essentially no vertical room");
                 }
             }
         }
@@ -478,35 +478,47 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void HugeTopDynamicMarginWithFootnoteAnchorThrowsTest() {
-            //TODO DEVSIX-9981: Adapt test after fix
-            float largeTop = A4_HEIGHT * 0.55f;
-            Footnote footnote = new Footnote(TestResourceUtil.GetByronStanza());
-            footnote.SetBorder(new DashedBorder(ColorConstants.YELLOW, 3));
-            FootnoteAnchor anchor = new FootnoteAnchor("[1]", footnote);
-            Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza()).Add(anchor).Add(TestResourceUtil.GetByronStanza
-                ());
-            Div div = new Div().Add(p).SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
-            Document document = new Document(pdfDoc);
-            document.SetPageMargins((pageNum) => true, PageMarginsTestUtil.GetMarginBoxes(largeTop, 0, 0, 0));
-            NUnit.Framework.Assert.Catch(typeof(InvalidCastException), () => document.Add(div));
+        public virtual void HugeTopDynamicMarginWithFootnoteAnchorTest() {
+            String fileName = "hugeTopDynamicMarginWithFootnoteAnchor";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDoc)) {
+                    float largeTop = A4_HEIGHT * 0.55f;
+                    Footnote footnote = new Footnote(TestResourceUtil.GetByronStanza());
+                    footnote.SetBorder(new DashedBorder(ColorConstants.YELLOW, 3));
+                    FootnoteAnchor anchor = new FootnoteAnchor("[1]", footnote);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza()).Add(anchor).Add(TestResourceUtil.GetByronStanza
+                        ());
+                    Div div = new Div().Add(p).SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
+                    document.SetPageMargins((pageNum) => true, PageMarginsTestUtil.GetMarginBoxes(largeTop, 0, 0, 0));
+                    document.Add(div);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
         }
 
         [NUnit.Framework.Test]
-        public virtual void HugeBottomDynamicMarginWithFootnoteAnchorThrowsTest() {
-            //TODO DEVSIX-9981: Adapt test after fix
-            float largeBottom = A4_HEIGHT * 0.55f;
-            Footnote footnote = new Footnote(TestResourceUtil.GetByronStanza());
-            footnote.SetBorder(new DashedBorder(ColorConstants.YELLOW, 3));
-            FootnoteAnchor anchor = new FootnoteAnchor("[1]", footnote);
-            Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza()).Add(anchor).Add(TestResourceUtil.GetByronStanza
-                ());
-            Div div = new Div().Add(p).SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
-            Document document = new Document(pdfDoc);
-            document.SetPageMargins((pageNum) => true, PageMarginsTestUtil.GetMarginBoxes(0, largeBottom, 0, 0));
-            NUnit.Framework.Assert.Catch(typeof(InvalidCastException), () => document.Add(div));
+        public virtual void HugeBottomDynamicMarginWithFootnoteAnchorTest() {
+            String fileName = "hugeBottomDynamicMarginWithFootnoteAnchor";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDoc)) {
+                    float largeBottom = A4_HEIGHT * 0.55f;
+                    Footnote footnote = new Footnote(TestResourceUtil.GetByronStanza());
+                    footnote.SetBorder(new DashedBorder(ColorConstants.YELLOW, 3));
+                    FootnoteAnchor anchor = new FootnoteAnchor("[1]", footnote);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza()).Add(anchor).Add(TestResourceUtil.GetByronStanza
+                        ());
+                    Div div = new Div().Add(p).SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
+                    document.SetPageMargins((pageNum) => true, PageMarginsTestUtil.GetMarginBoxes(0, largeBottom, 0, 0));
+                    document.Add(div);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
         }
 
         [NUnit.Framework.Test]

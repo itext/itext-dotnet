@@ -21,9 +21,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
+using iText.Layout;
 using iText.Layout.Exceptions;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
@@ -58,6 +60,24 @@ namespace iText.Layout.Element {
                 throw new ArgumentException(LayoutExceptionMessageConstant.TEXT_CONTENT_CANNOT_BE_NULL);
             }
             this.text = text;
+        }
+
+        /// <summary>
+        /// Creates new
+        /// <see cref="Text"/>
+        /// instance by copying an existing one.
+        /// </summary>
+        /// <param name="text">
+        /// 
+        /// <see cref="Text"/>
+        /// instance to copy
+        /// </param>
+        public Text(iText.Layout.Element.Text text) {
+            this.text = text.text;
+            this.tagProperties = text.tagProperties;
+            this.properties = new Dictionary<int, Object>(text.properties);
+            this.styles = text.styles == null ? null : new LinkedHashSet<Style>(text.styles);
+            this.childElements = new List<IElement>(text.childElements);
         }
 
         /// <summary>Gets the contents of the Text object that will be rendered.</summary>

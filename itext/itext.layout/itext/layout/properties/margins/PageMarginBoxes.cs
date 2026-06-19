@@ -163,11 +163,8 @@ namespace iText.Layout.Properties.Margins {
                 PageFootnotesContent existing = this.footnotes.Get(pageNum);
                 IElement existingFootnotes = existing.GetContent();
                 IElement newFootnotes = content.GetContent();
-                // TODO DEVSIX-9981 We want to be able to customize this container by user.
-                FootnotesContainer combined = new FootnotesContainer();
-                CollectFootnotes(combined, existingFootnotes);
-                CollectFootnotes(combined, newFootnotes);
-                content = new PageFootnotesContent(combined).SetPageNumber(pageNum);
+                content = new PageFootnotesContent(CollectFootnotes(existingFootnotes, newFootnotes)).SetPageNumber(pageNum
+                    );
             }
             this.footnotes.Put(pageNum, content);
             return this;
@@ -340,14 +337,17 @@ namespace iText.Layout.Properties.Margins {
             }
         }
 
-        private static void CollectFootnotes(FootnotesContainer container, IElement footnotes) {
-            if (footnotes is FootnotesContainer) {
-                foreach (IElement element in ((FootnotesContainer)footnotes).GetChildren()) {
-                    if (element is Footnote) {
-                        container.Add((Footnote)element);
-                    }
+        private static FootnotesContainer CollectFootnotes(IElement existingFootnotes, IElement newFootnotes) {
+            if (!(existingFootnotes is FootnotesContainer) || !(newFootnotes is FootnotesContainer)) {
+                throw new ArgumentException("Footnotes must be a FootnotesContainer!");
+            }
+            FootnotesContainer container = (FootnotesContainer)existingFootnotes;
+            foreach (IElement element in ((FootnotesContainer)newFootnotes).GetChildren()) {
+                if (element is Footnote) {
+                    container.Add((Footnote)element);
                 }
             }
+            return container;
         }
 
         private PageFootnotesContent GetFootnotes(int pageNumber) {

@@ -658,8 +658,6 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    Footnote footnote = new Footnote(TestResourceUtil.GetByronStanza());
-                    footnote.SetBackgroundColor(ColorConstants.CYAN);
                     Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
                     Footnote paragraphFootnote = new Footnote("Footnote text");
                     paragraphFootnote.SetBackgroundColor(ColorConstants.RED);
@@ -670,8 +668,11 @@ namespace iText.Layout {
                     }
                     PageMarginBoxes pageMarginBoxes = new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1());
                     SectionBreak sectionBreak = new SectionBreak().SetPageMargins(pageMarginBoxes);
+                    Footnote footnote = new Footnote(TestResourceUtil.GetByronStanza());
+                    footnote.SetBackgroundColor(ColorConstants.CYAN);
                     // This API is not supposed to be used by the users, but this util class can't be hidden.
-                    FootnotesUtil.AddFootnotesToPage(1, JavaCollectionsUtil.SingletonList(footnote), pageMarginBoxes);
+                    FootnotesUtil.AddFootnotesToPage(1, JavaCollectionsUtil.SingletonList(footnote), pageMarginBoxes, document
+                        .GetFootnotesProperties());
                     Div div1 = new Div();
                     div1.Add(p).SetBorder(new SolidBorder(ColorConstants.MAGENTA, 5));
                     document.Add(sectionBreak);

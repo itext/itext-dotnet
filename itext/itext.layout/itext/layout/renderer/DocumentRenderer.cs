@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Utils.Collections;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -171,6 +172,21 @@ namespace iText.Layout.Renderer {
             }
             if (sectionBreak != null) {
                 this.document.SetPageMargins(currentPageNumber, sectionBreak.GetPageMargins());
+                FootnotesProperties sectionBreakFootnotesProperties = sectionBreak.GetFootnotesProperties();
+                if (sectionBreakFootnotesProperties != null) {
+                    document.SetFootnotesProperties(sectionBreakFootnotesProperties);
+                }
+            }
+            FootnotesProperties footnotesProperties = document.GetFootnotesProperties();
+            FootnoteNumberingConfig footnoteNumberingConfig = footnotesProperties.GetFootnoteNumberingConfig();
+            if (sectionBreak != null && FootnoteNumberingConfig.PER_SECTION == footnoteNumberingConfig) {
+                this.latestFootnoteNumber.Put(currentPageNumber, 0);
+            }
+            else {
+                if (FootnoteNumberingConfig.PER_PAGE != footnoteNumberingConfig) {
+                    this.latestFootnoteNumber.Put(currentPageNumber, this.latestFootnoteNumber.GetOrDefault(currentPageNumber 
+                        - 1, 0));
+                }
             }
             ComputeLayoutMargins(currentPageNumber);
             if (sectionBreak != null) {

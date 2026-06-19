@@ -411,11 +411,16 @@ namespace iText.Layout.Renderer {
                 bool shouldBreakLayoutingOnTextRenderer = shouldBreakLayouting && childResult is TextLayoutResult;
                 bool forceOverflowForTextRendererPartialResult = false;
                 if (shouldBreakLayoutingOnTextRenderer) {
+                    IRenderer textRenderer = childRenderer;
+                    // TODO DEVSIX-10023 Process partial result for FootnoteAnchorRenderer
+                    // if (childRenderer instanceof FootnoteAnchorRenderer) {
+                    //     textRenderer = ((FootnoteAnchorRenderer) childRenderer).footnoteAnchor;
+                    // }
                     bool isWordHasBeenSplitLayoutRenderingMode = ((TextLayoutResult)childResult).IsWordHasBeenSplit() && RenderingMode
-                        .HTML_MODE != childRenderingMode && childRenderer is TextRenderer && !((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs
+                        .HTML_MODE != childRenderingMode && textRenderer is TextRenderer && !((TextRenderer)textRenderer).TextContainsSpecialScriptGlyphs
                         (true);
-                    bool enableSpecialScriptsWrapping = ((TextRenderer)GetChildRenderers()[childPos]).TextContainsSpecialScriptGlyphs
-                        (true) && !textSequenceOverflowXProcessing && !newLineOccurred;
+                    bool enableSpecialScriptsWrapping = textRenderer is TextRenderer && !textSequenceOverflowXProcessing && !newLineOccurred
+                         && ((TextRenderer)textRenderer).TextContainsSpecialScriptGlyphs(true);
                     bool enableTextSequenceWrapping = RenderingMode.HTML_MODE == childRenderingMode && !newLineOccurred && !textSequenceOverflowXProcessing;
                     if (isWordHasBeenSplitLayoutRenderingMode) {
                         forceOverflowForTextRendererPartialResult = IsForceOverflowForTextRendererPartialResult(childRenderer, wasXOverflowChanged
@@ -573,7 +578,7 @@ namespace iText.Layout.Renderer {
                         split[1] = null;
                     }
                     IRenderer causeOfNothing = childResult.GetStatus() == LayoutResult.NOTHING ? childResult.GetCauseOfNothing
-                        () : GetChildRenderers()[childPos];
+                        () : childRenderer;
                     if (split[1] == null) {
                         result = new LineLayoutResult(LayoutResult.FULL, occupiedArea, split[0], split[1], causeOfNothing);
                     }

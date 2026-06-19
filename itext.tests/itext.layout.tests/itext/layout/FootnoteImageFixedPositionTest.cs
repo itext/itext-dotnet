@@ -21,7 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.IO;
 using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -29,6 +28,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Properties.Margins;
 using iText.Layout.Testutil;
 using iText.Test;
 
@@ -89,17 +89,25 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void FixedPositionOnTextFootnoteHugeContentThrowsTest() {
-            //TODO DEVSIX-9981: Adapt test after fix
-            Footnote footnote = new Footnote(TestResourceUtil.RepeatString(TestResourceUtil.GetByronStanza(), 6));
-            footnote.SetBorder(new DashedBorder(ColorConstants.YELLOW, 3));
-            footnote.SetFixedPosition(36, 100, A4_WIDTH - 72f);
-            FootnoteAnchor anchor = new FootnoteAnchor("[1]", footnote);
-            Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza()).Add(anchor);
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()));
-            Document document = new Document(pdfDoc);
-            Div div = new Div().Add(p).SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
-            NUnit.Framework.Assert.Catch(typeof(InvalidCastException), () => document.Add(div));
+        [NUnit.Framework.Ignore("TODO DEVSIX-10030 Support forced placement for footnotes to prevent infinite loops"
+            )]
+        public virtual void FixedPositionOnTextFootnoteHugeContentTest() {
+            String fileName = "fixedPositionOnTextFootnoteHugeContent";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDoc)) {
+                    Footnote footnote = new Footnote(TestResourceUtil.RepeatString(TestResourceUtil.GetByronStanza(), 6));
+                    footnote.SetBorder(new DashedBorder(ColorConstants.YELLOW, 3));
+                    footnote.SetFixedPosition(36, 100, A4_WIDTH - 72f);
+                    FootnoteAnchor anchor = new FootnoteAnchor("[1]", footnote);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza()).Add(anchor);
+                    Div div = new Div().Add(p).SetBorder(new SolidBorder(ColorConstants.GREEN, 2));
+                    document.Add(div);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
         }
 
         [NUnit.Framework.Test]
