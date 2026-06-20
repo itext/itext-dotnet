@@ -199,38 +199,43 @@ namespace iText.Layout.Renderer {
                 layoutResult.SetCauseOfNothing(cellResult.GetCauseOfNothing());
                 return cell.GetRowStart();
             }
-            // PARTIAL + FULL result handling
-            layoutResult.GetSplitRenderers().Add(cell.GetValue());
-            if (cellResult.GetStatus() == LayoutResult.PARTIAL) {
-                overflowRenderer.SetProperty(Property.GRID_COLUMN_START, cell.GetColumnStart() + 1);
-                overflowRenderer.SetProperty(Property.GRID_COLUMN_END, cell.GetColumnEnd() + 1);
-                int rowStart = cell.GetRowStart() + 1;
-                int rowEnd = cell.GetRowEnd() + 1;
-                layoutResult.GetOverflowRenderers().Add(overflowRenderer);
-                // Now let's find out where we split exactly
-                float accumulatedRowSize = 0;
-                float layoutedHeight = cellResult.GetOccupiedArea().GetBBox().GetHeight();
-                int notLayoutedRow = rowStart - 1;
-                for (int i = 0; i < cell.GetRowSizes().Length; ++i) {
-                    accumulatedRowSize += cell.GetRowSizes()[i];
-                    if (accumulatedRowSize < layoutedHeight) {
-                        ++rowStart;
-                        ++notLayoutedRow;
+            else {
+                if (cellResult.GetStatus() == LayoutResult.PARTIAL) {
+                    layoutResult.GetSplitRenderers().Add(cellResult.GetSplitRenderer());
+                    overflowRenderer.SetProperty(Property.GRID_COLUMN_START, cell.GetColumnStart() + 1);
+                    overflowRenderer.SetProperty(Property.GRID_COLUMN_END, cell.GetColumnEnd() + 1);
+                    int rowStart = cell.GetRowStart() + 1;
+                    int rowEnd = cell.GetRowEnd() + 1;
+                    layoutResult.GetOverflowRenderers().Add(overflowRenderer);
+                    // Now let's find out where we split exactly
+                    float accumulatedRowSize = 0;
+                    float layoutedHeight = cellResult.GetOccupiedArea().GetBBox().GetHeight();
+                    int notLayoutedRow = rowStart - 1;
+                    for (int i = 0; i < cell.GetRowSizes().Length; ++i) {
+                        accumulatedRowSize += cell.GetRowSizes()[i];
+                        if (accumulatedRowSize < layoutedHeight) {
+                            ++rowStart;
+                            ++notLayoutedRow;
+                        }
+                        else {
+                            break;
+                        }
                     }
-                    else {
-                        break;
+                    // We don't know what to do if rowStart is equal or more than rowEnd
+                    // Let's not try to guess by just take the 1st available space in a column
+                    // by leaving nulls for grid-row-start/end
+                    if (rowEnd > rowStart) {
+                        overflowRenderer.SetProperty(Property.GRID_ROW_START, rowStart);
+                        overflowRenderer.SetProperty(Property.GRID_ROW_END, rowEnd);
                     }
+                    return notLayoutedRow;
                 }
-                // We don't know what to do if rowStart is equal or more than rowEnd
-                // Let's not try to guess by just take the 1st available space in a column
-                // by leaving nulls for grid-row-start/end
-                if (rowEnd > rowStart) {
-                    overflowRenderer.SetProperty(Property.GRID_ROW_START, rowStart);
-                    overflowRenderer.SetProperty(Property.GRID_ROW_END, rowEnd);
+                else {
+                    // FULL result
+                    layoutResult.GetSplitRenderers().Add(cell.GetValue());
+                    return int.MaxValue;
                 }
-                return notLayoutedRow;
             }
-            return int.MaxValue;
         }
 
         //Init cell layout context based on a parent context and calculated cell layout area from grid sizing algorithm.
