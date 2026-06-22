@@ -907,9 +907,17 @@ namespace iText.Forms {
                         else {
                             if (normal.IsDictionary()) {
                                 PdfName @as = fieldObject.GetAsName(PdfName.AS);
-                                if (((PdfDictionary)normal).GetAsStream(@as) != null) {
-                                    xObject = new PdfFormXObject(((PdfDictionary)normal).GetAsStream(@as));
-                                    xObject.MakeIndirect(document);
+                                if (@as == null) {
+                                    LOGGER.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.FORMFIELD_DOES_NOT_CONTAIN_AS, formField
+                                        .GetFieldName()));
+                                }
+                                else {
+                                    PdfDictionary normalDict = (PdfDictionary)normal;
+                                    PdfStream asStream = normalDict.GetAsStream(@as);
+                                    if (asStream != null) {
+                                        xObject = new PdfFormXObject(asStream);
+                                        xObject.MakeIndirect(document);
+                                    }
                                 }
                             }
                         }

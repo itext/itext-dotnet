@@ -22,9 +22,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using iText.Forms.Fields;
 using iText.Forms.Logs;
 using iText.Kernel.Font;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Utils;
@@ -132,6 +134,24 @@ namespace iText.Forms {
             document.Close();
             NUnit.Framework.Assert.IsTrue(textAfterFlatten.Contains("hiddenFieldValue"), "Pdf does not contain the expected text"
                 );
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(FormsLogMessageConstants.FORMFIELD_DOES_NOT_CONTAIN_AS)]
+        public virtual void NoASDictionaryWhileFlatteningShouldWarn() {
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
+                pdfDoc.AddNewPage();
+                PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+                String formName = "text_1";
+                PdfFormField textFormField = new TextFormFieldBuilder(pdfDoc, formName).SetWidgetRectangle(new Rectangle(20
+                    , 20, 20, 20)).SetPage(1).CreateText();
+                form.AddField(textFormField);
+                form.GetField(formName).GetPdfObject().GetAsDictionary(PdfName.AP).Put(PdfName.N, new PdfDictionary());
+                NUnit.Framework.Assert.DoesNotThrow(() => {
+                    form.FlattenFields();
+                }
+                );
+            }
         }
     }
 }

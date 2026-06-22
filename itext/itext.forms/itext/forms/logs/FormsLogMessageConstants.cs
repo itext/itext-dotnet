@@ -80,6 +80,8 @@ namespace iText.Forms.Logs {
 
         public const String ANNOTATION_WITHOUT_SUBTYPE_NOT_COPIED = "Encountered an annotation without " + "a Subtype property: {0}. If there is a corresponding Acroform field, it will not be copied";
 
+        public const String FORMFIELD_DOES_NOT_CONTAIN_AS = "Form field {0} does not contain an /AS value. " + "Flattened appearance might be unexpected.";
+
         private FormsLogMessageConstants() {
         }
     }
