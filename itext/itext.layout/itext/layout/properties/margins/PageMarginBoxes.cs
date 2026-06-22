@@ -251,9 +251,10 @@ namespace iText.Layout.Properties.Margins {
             float rightMargin_1 = rightMinMaxWidth == null ? document.GetRightMargin() : rightMinMaxWidth.GetMinWidth(
                 );
             Rectangle topBBox = top == null ? new Rectangle(0, pageSize.GetTop() - document.GetTopMargin(), pageSize.GetWidth
-                (), document.GetTopMargin()) : top.GetOccupiedArea().GetBBox();
+                (), document.GetTopMargin()) : (top.GetOccupiedArea() == null ? new Rectangle(0, 0) : top.GetOccupiedArea
+                ().GetBBox());
             Rectangle bottomBBox = bottom == null ? new Rectangle(0, 0, pageSize.GetWidth(), document.GetBottomMargin(
-                )) : bottom.GetOccupiedArea().GetBBox();
+                )) : (bottom.GetOccupiedArea() == null ? new Rectangle(0, 0) : bottom.GetOccupiedArea().GetBBox());
             if (topM != null) {
                 topM.SetRectangle(new Rectangle(leftMargin_1, topBBox.GetY(), pageSize.GetWidth() - rightMargin_1 - leftMargin_1
                     , topBBox.GetHeight()));

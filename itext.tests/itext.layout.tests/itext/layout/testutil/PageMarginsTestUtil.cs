@@ -119,5 +119,32 @@ namespace iText.Layout.Testutil {
             }
             return new PageMarginBoxes(elements);
         }
+
+        /// <summary>Creates a PageMarginBox with given content on each side.</summary>
+        /// <remarks>
+        /// Creates a PageMarginBox with given content on each side.
+        /// Null sides are omitted.
+        /// </remarks>
+        /// <param name="top">content for the top margin box</param>
+        /// <param name="bottom">content for the bottom margin box</param>
+        /// <param name="left">content for the left margin box</param>
+        /// <param name="right">content for the right margin box</param>
+        /// <returns>a PageMarginBox containing the specified margin box sides</returns>
+        public static PageMarginBoxes GetMarginBoxesWithContent(Div top, Div bottom, Div left, Div right) {
+            IList<PageMarginContent> elements = new List<PageMarginContent>();
+            if (top != null) {
+                elements.Add(new PageMarginContent(MarginBoxName.TOP, top));
+            }
+            if (bottom != null) {
+                elements.Add(new PageMarginContent(MarginBoxName.BOTTOM, bottom));
+            }
+            if (left != null) {
+                elements.Add(new PageMarginContent(MarginBoxName.LEFT, left));
+            }
+            if (right != null) {
+                elements.Add(new PageMarginContent(MarginBoxName.RIGHT, right));
+            }
+            return new PageMarginBoxes(elements);
+        }
     }
 }
