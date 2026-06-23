@@ -30,11 +30,37 @@ namespace iText.Signatures {
     /// <summary>Properties to be used in signing operations.</summary>
     public class SignerProperties {
         /// <summary>
-        /// This string could be used to create the
+        /// A placeholder string used as a parameter when creating a
         /// <see cref="iText.Forms.Form.Element.SignatureFieldAppearance"/>
-        /// instance which will be used for signing
-        /// since its ID will be ignored anyway in that case, and specified ID won't override the field name.
+        /// instance
+        /// for signing operations via
+        /// <see cref="SetSignatureAppearance(iText.Forms.Form.Element.SignatureFieldAppearance)"/>.
         /// </summary>
+        /// <remarks>
+        /// A placeholder string used as a parameter when creating a
+        /// <see cref="iText.Forms.Form.Element.SignatureFieldAppearance"/>
+        /// instance
+        /// for signing operations via
+        /// <see cref="SetSignatureAppearance(iText.Forms.Form.Element.SignatureFieldAppearance)"/>.
+        /// <para />
+        /// The ID parameter of
+        /// <see cref="iText.Forms.Form.Element.SignatureFieldAppearance.SignatureFieldAppearance(System.String)"/>
+        /// is ignored
+        /// in signing contexts, as the actual form field name is set via
+        /// <see cref="SetFieldName(System.String)"/>
+        /// or
+        /// generated automatically by
+        /// <see cref="PdfSigner.GetNewSigFieldName()"/>.
+        /// <para />
+        /// This same constructor serves a dual purpose: when used via the layout module for creating new
+        /// interactive signature form fields (without embedding an actual signature), the ID parameter
+        /// serves as the form field name. However, when used for complete signature creation
+        /// (e.g., via
+        /// <see cref="PdfSigner"/>
+        /// ), the ID parameter is ignored.
+        /// <para />
+        /// The "IGNORED" in the constant name emphasizes that this parameter is intentionally ignored in signing contexts.
+        /// </remarks>
         /// <seealso cref="SetSignatureAppearance(iText.Forms.Form.Element.SignatureFieldAppearance)"/>
         public const String IGNORED_ID = "";
 
@@ -85,12 +111,21 @@ namespace iText.Signatures {
         /// <summary>Sets the signature field layout element to customize the appearance of the signature.</summary>
         /// <remarks>
         /// Sets the signature field layout element to customize the appearance of the signature.
-        /// ID specified for
-        /// <see cref="iText.Forms.Form.Element.SignatureFieldAppearance"/>
-        /// will be ignored and won't override field name, so
+        /// <para />
+        /// The ID parameter of
+        /// <see cref="iText.Forms.Form.Element.SignatureFieldAppearance.SignatureFieldAppearance(System.String)"/>
+        /// is ignored
+        /// in signing contexts, as the actual form field name is set via
+        /// <see cref="SetFieldName(System.String)"/>
+        /// or
+        /// generated automatically by
+        /// <see cref="PdfSigner.GetNewSigFieldName()"/>
+        /// . So
         /// <see cref="IGNORED_ID"/>
-        /// could be used. To specify signature name use
-        /// <see cref="SetFieldName(System.String)"/>.
+        /// could be used
+        /// as a placeholder when creating a
+        /// <see cref="iText.Forms.Form.Element.SignatureFieldAppearance"/>
+        /// instance for this method.
         /// <para />
         /// Note that if
         /// <see cref="iText.Forms.Fields.Properties.SignedAppearanceText"/>
