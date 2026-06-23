@@ -21,9 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
 
@@ -41,6 +41,11 @@ namespace iText.Kernel.Pdf {
     /// <see cref="PdfReader"/>
     /// when opening
     /// a document.
+    /// <para />Note that
+    /// <see cref="MemoryLimitsAwareHandler"/>
+    /// must not be shared between different
+    /// <see cref="PdfDocument"/>
+    /// instances.
     /// </remarks>
     /// <seealso cref="ReaderProperties.SetMemoryLimitsAwareHandler(MemoryLimitsAwareHandler)"/>
     /// <seealso cref="iText.Kernel.Exceptions.MemoryLimitsAwareException"/>
@@ -95,7 +100,7 @@ namespace iText.Kernel.Pdf {
         /// with calculated memory limits
         /// for decompression and xref structures based on the provided document size.
         /// </summary>
-        /// <param name="documentSize">the size of the document (in bytes).</param>
+        /// <param name="documentSize">the size of the document (in bytes)</param>
         public MemoryLimitsAwareHandler(long documentSize)
             : this((int)CalculateDefaultParameter(documentSize, SINGLE_SCALE_COEFFICIENT, SINGLE_DECOMPRESSED_PDF_STREAM_MIN_SIZE
                 ), CalculateDefaultParameter(documentSize, SUM_SCALE_COEFFICIENT, SUM_OF_DECOMPRESSED_PDF_STREAMS_MIN_SIZE
@@ -119,7 +124,7 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         /// <returns>
         /// a new instance of
-        /// <see cref="MemoryLimitsAwareHandler"/>.
+        /// <see cref="MemoryLimitsAwareHandler"/>
         /// </returns>
         public virtual iText.Kernel.Pdf.MemoryLimitsAwareHandler CreateNewInstance() {
             iText.Kernel.Pdf.MemoryLimitsAwareHandler to = new iText.Kernel.Pdf.MemoryLimitsAwareHandler();
@@ -134,26 +139,26 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Returns the maximum allowed size (in bytes) of a single decompressed PDF stream.</summary>
-        /// <returns>maximum allowed size of a single decompressed stream in bytes.</returns>
+        /// <returns>maximum allowed size of a single decompressed stream in bytes</returns>
         public virtual int GetMaxSizeOfSingleDecompressedPdfStream() {
             return maxSizeOfSingleDecompressedPdfStream;
         }
 
-        /// <summary>Sets the maximum allowed size which can be occupied by a single decompressed pdf stream.</summary>
+        /// <summary>Sets the maximum allowed size which can be occupied by a single decompressed PDF stream.</summary>
         /// <remarks>
-        /// Sets the maximum allowed size which can be occupied by a single decompressed pdf stream.
+        /// Sets the maximum allowed size which can be occupied by a single decompressed PDF stream.
         /// This value correlates with maximum heap size. This value should not exceed limit of the heap size.
-        /// <para />iText will throw an exception if during decompression a pdf stream which was identified as
+        /// <para />iText will throw an exception if during decompression a PDF stream which was identified as
         /// requiring memory limits awareness occupies more memory than allowed.
         /// </remarks>
         /// <param name="maxSizeOfSingleDecompressedPdfStream">
         /// the maximum allowed size which can be occupied by a single
-        /// decompressed pdf stream.
+        /// decompressed PDF stream
         /// </param>
         /// <returns>
         /// this
         /// <see cref="MemoryLimitsAwareHandler"/>
-        /// instance.
+        /// instance
         /// </returns>
         /// <seealso cref="IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray)"/>
         public virtual iText.Kernel.Pdf.MemoryLimitsAwareHandler SetMaxSizeOfSingleDecompressedPdfStream(int maxSizeOfSingleDecompressedPdfStream
@@ -162,28 +167,30 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
-        /// <summary>Gets the maximum allowed size which can be occupied by all decompressed pdf streams.</summary>
+        /// <summary>Gets the maximum allowed size which can be occupied by all decompressed PDF streams.</summary>
         /// <returns>the maximum allowed size value which streams may occupy</returns>
         public virtual long GetMaxSizeOfDecompressedPdfStreamsSum() {
             return maxSizeOfDecompressedPdfStreamsSum;
         }
 
-        /// <summary>Sets the maximum allowed size which can be occupied by all decompressed pdf streams.</summary>
+        /// <summary>Sets the maximum allowed size which can be occupied by all decompressed PDF streams.</summary>
         /// <remarks>
-        /// Sets the maximum allowed size which can be occupied by all decompressed pdf streams.
+        /// Sets the maximum allowed size which can be occupied by all decompressed PDF streams.
         /// This value can be limited by the maximum expected PDF file size when it's completely decompressed.
         /// Setting this value correlates with the maximum processing time spent on document reading
-        /// <para />iText will throw an exception if during decompression pdf streams which were identified as
+        /// <para />iText will throw an exception if during decompression of PDF streams which were identified as
         /// requiring memory limits awareness occupy more memory than allowed.
+        /// <para />
+        /// Note that if a PDF stream is decompressed multiple times, it is counted multiple times for this limit.
         /// </remarks>
         /// <param name="maxSizeOfDecompressedPdfStreamsSum">
-        /// he maximum allowed size which can be occupied by all decompressed pdf
-        /// streams.
+        /// he maximum allowed size which can be occupied by all decompressed PDF
+        /// streams
         /// </param>
         /// <returns>
         /// this
         /// <see cref="MemoryLimitsAwareHandler"/>
-        /// instance.
+        /// instance
         /// </returns>
         /// <seealso cref="IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray)"/>
         public virtual iText.Kernel.Pdf.MemoryLimitsAwareHandler SetMaxSizeOfDecompressedPdfStreamsSum(long maxSizeOfDecompressedPdfStreamsSum
@@ -203,44 +210,47 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfArray"/>
         /// of names of filters
         /// </param>
-        /// <returns>true if PDF stream is suspicious and false otherwise</returns>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if PDF stream is suspicious and
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        [System.ObsoleteAttribute(@"to be made protected and accept stream dictionary instead of PdfArray of filters"
+            )]
         public virtual bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {
-            HashSet<PdfName> filterSet = new HashSet<PdfName>();
-            for (int index = 0; index < filters.Size(); index++) {
-                PdfName filterName = filters.GetAsName(index);
-                if (!filterSet.Add(filterName)) {
-                    return true;
-                }
-            }
-            return false;
+            return true;
         }
 
         /// <summary>Gets maximum number of elements in xref structure.</summary>
-        /// <returns>maximum number of elements in xref structure.</returns>
+        /// <returns>maximum number of elements in xref structure</returns>
         public virtual int GetMaxNumberOfElementsInXrefStructure() {
             return maxNumberOfElementsInXrefStructure;
         }
 
         /// <summary>Gets maximum page size.</summary>
-        /// <returns>maximum page size.</returns>
+        /// <returns>maximum page size</returns>
+        [System.ObsoleteAttribute(@"in favor of SetMaxSizeOfDecompressedPdfStreamsSum(long)")]
         public virtual long GetMaxXObjectsSizePerPage() {
             return maxXObjectsSizePerPage;
         }
 
         /// <summary>Sets maximum page size.</summary>
-        /// <param name="maxPageSize">maximum page size.</param>
+        /// <param name="maxPageSize">maximum page size</param>
+        [System.ObsoleteAttribute(@"in favor of SetMaxSizeOfDecompressedPdfStreamsSum(long)")]
         public virtual void SetMaxXObjectsSizePerPage(long maxPageSize) {
             this.maxXObjectsSizePerPage = maxPageSize;
         }
 
         /// <summary>Sets maximum number of elements in xref structure.</summary>
-        /// <param name="maxNumberOfElementsInXrefStructure">maximum number of elements in xref structure.</param>
+        /// <param name="maxNumberOfElementsInXrefStructure">maximum number of elements in xref structure</param>
         public virtual void SetMaxNumberOfElementsInXrefStructure(int maxNumberOfElementsInXrefStructure) {
             this.maxNumberOfElementsInXrefStructure = maxNumberOfElementsInXrefStructure;
         }
 
         /// <summary>Performs a check of possible extension of xref structure.</summary>
-        /// <param name="requestedCapacity">capacity to which we need to expand xref array.</param>
+        /// <param name="requestedCapacity">capacity to which we need to expand xref array</param>
         public virtual void CheckIfXrefStructureExceedsTheLimit(int requestedCapacity) {
             // Objects in xref structures are using 1-based indexes, so to store maxNumberOfElementsInXrefStructure
             // amount of elements we need maxNumberOfElementsInXrefStructure + 1 capacity.
@@ -250,8 +260,12 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        public virtual void CheckIfPageSizeExceedsTheLimit(long totalXObjectsSize) {
-            if (totalXObjectsSize > maxXObjectsSizePerPage) {
+        /// <summary>Checks if page size limit is exceeded.</summary>
+        /// <param name="totalPageSize">total size of the read page content</param>
+        [System.ObsoleteAttribute(@"in favor of SetMaxSizeOfDecompressedPdfStreamsSum(long) . Also get rid of its usage in iText.Kernel.Pdf.Canvas.Parser.PdfCanvasProcessor"
+            )]
+        public virtual void CheckIfPageSizeExceedsTheLimit(long totalPageSize) {
+            if (totalPageSize > maxXObjectsSizePerPage) {
                 throw new MemoryLimitsAwareException(KernelExceptionMessageConstant.TOTAL_XOBJECT_SIZE_ONE_PAGE_EXCEEDED_THE_LIMIT
                     );
             }
@@ -259,8 +273,8 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Calculate max number of elements allowed in xref table based on the size of the document, achieving max limit at 100MB.
         ///     </summary>
-        /// <param name="documentSizeInBytes">document size in bytes.</param>
-        /// <returns>calculated limit.</returns>
+        /// <param name="documentSizeInBytes">document size in bytes</param>
+        /// <returns>calculated limit</returns>
         protected internal static int CalculateMaxElementsInXref(long documentSizeInBytes) {
             int maxDocSizeForMaxLimit = MAX_NUMBER_OF_ELEMENTS_IN_XREF_STRUCTURE / MIN_LIMIT_FOR_NUMBER_OF_ELEMENTS_IN_XREF_STRUCTURE;
             int documentSizeInMb = (int)Math.Max(1, Math.Min(documentSizeInBytes / (1024 * 1024), maxDocSizeForMaxLimit
@@ -269,12 +283,12 @@ namespace iText.Kernel.Pdf {
         }
 
 //\cond DO_NOT_DOCUMENT
-        /// <summary>Considers the number of bytes which are occupied by the decompressed pdf stream.</summary>
+        /// <summary>Considers the number of bytes which are occupied by the decompressed PDF stream.</summary>
         /// <remarks>
-        /// Considers the number of bytes which are occupied by the decompressed pdf stream.
+        /// Considers the number of bytes which are occupied by the decompressed PDF stream.
         /// If memory limits have not been faced, throws an exception.
         /// </remarks>
-        /// <param name="numOfOccupiedBytes">the number of bytes which are occupied by the decompressed pdf stream.</param>
+        /// <param name="numOfOccupiedBytes">the number of bytes which are occupied by the decompressed PDF stream</param>
         /// <returns>
         /// this
         /// <see cref="MemoryLimitsAwareHandler"/>
@@ -286,8 +300,8 @@ namespace iText.Kernel.Pdf {
             if (considerCurrentPdfStream && memoryUsedForCurrentPdfStreamDecompression < numOfOccupiedBytes) {
                 memoryUsedForCurrentPdfStreamDecompression = numOfOccupiedBytes;
                 if (memoryUsedForCurrentPdfStreamDecompression > maxSizeOfSingleDecompressedPdfStream) {
-                    throw new MemoryLimitsAwareException(KernelExceptionMessageConstant.DURING_DECOMPRESSION_SINGLE_STREAM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED
-                        );
+                    throw new MemoryLimitsAwareException(MessageFormatUtil.Format(KernelExceptionMessageConstant.DURING_DECOMPRESSION_SINGLE_STREAM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED
+                        , maxSizeOfSingleDecompressedPdfStream / 1024 / 1024 + "MB"));
                 }
             }
             return this;
@@ -295,11 +309,11 @@ namespace iText.Kernel.Pdf {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        /// <summary>Begins handling of current pdf stream decompression.</summary>
+        /// <summary>Begins handling of current PDF stream decompression.</summary>
         /// <returns>
         /// this
         /// <see cref="MemoryLimitsAwareHandler"/>
-        /// instance.
+        /// instance
         /// </returns>
         internal virtual iText.Kernel.Pdf.MemoryLimitsAwareHandler BeginDecompressedPdfStreamProcessing() {
             EnsureCurrentStreamIsReset();
@@ -317,14 +331,14 @@ namespace iText.Kernel.Pdf {
         /// <returns>
         /// this
         /// <see cref="MemoryLimitsAwareHandler"/>
-        /// instance.
+        /// instance
         /// </returns>
         /// <seealso cref="iText.Kernel.Exceptions.MemoryLimitsAwareException"/>
         internal virtual iText.Kernel.Pdf.MemoryLimitsAwareHandler EndDecompressedPdfStreamProcessing() {
             allMemoryUsedForDecompression += memoryUsedForCurrentPdfStreamDecompression;
             if (allMemoryUsedForDecompression > maxSizeOfDecompressedPdfStreamsSum) {
-                throw new MemoryLimitsAwareException(KernelExceptionMessageConstant.DURING_DECOMPRESSION_MULTIPLE_STREAMS_IN_SUM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED
-                    );
+                throw new MemoryLimitsAwareException(MessageFormatUtil.Format(KernelExceptionMessageConstant.DURING_DECOMPRESSION_MULTIPLE_STREAMS_IN_SUM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED
+                    , maxSizeOfDecompressedPdfStreamsSum / 1024 / 1024 + "MB"));
             }
             EnsureCurrentStreamIsReset();
             considerCurrentPdfStream = false;

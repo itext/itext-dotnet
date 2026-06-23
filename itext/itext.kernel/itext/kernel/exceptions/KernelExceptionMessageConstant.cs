@@ -220,12 +220,12 @@ namespace iText.Kernel.Exceptions {
         public const String DOCUMENT_SHALL_CONTAIN_VALID_LANG_ENTRY = "Document does not contain valid lang entry.";
 
         public const String DURING_DECOMPRESSION_MULTIPLE_STREAMS_IN_SUM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED = "" + 
-            "During decompression multiple streams in sum occupied more memory than allowed. Please either check "
-             + "your pdf or increase the allowed single decompressed pdf stream maximum size value by setting " + 
-            "the appropriate parameter of ReaderProperties's MemoryLimitsAwareHandler.";
+            "During decompression multiple streams in sum occupied more memory than allowed ({0}). Please either check "
+             + "your pdf or increase the allowed multiple decompressed pdf streams maximum size value by setting "
+             + "the appropriate parameter of ReaderProperties's MemoryLimitsAwareHandler.";
 
-        public const String DURING_DECOMPRESSION_SINGLE_STREAM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED = "During " + "decompression a single stream occupied more memory than allowed. Please either check your pdf or "
-             + "increase the allowed multiple decompressed pdf streams maximum size value by setting the appropriate "
+        public const String DURING_DECOMPRESSION_SINGLE_STREAM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED = "During " + "decompression a single stream occupied more memory than allowed ({0}). Please either check your pdf or "
+             + "increase the allowed single decompressed pdf stream maximum size value by setting the appropriate "
              + "parameter of ReaderProperties's MemoryLimitsAwareHandler.";
 
         public const String DURING_DECOMPRESSION_SINGLE_STREAM_OCCUPIED_MORE_THAN_MAX_INTEGER_VALUE = "During " + 

@@ -124,6 +124,10 @@ namespace iText.Kernel.Utils {
 
         private String compareExec;
 
+        // Cache with the streams for out and cmp documents
+        private readonly IDictionary<PdfStream, byte[]> decompressedStreams = new IdentityDictionary<PdfStream, byte
+            []>();
+
         static CompareTool() {
             MEMORY_FIRST_WRITER_DISABLED = "true".EqualsIgnoreCase(SystemUtil.GetEnvironmentVariable("DISABLE_MEMORY_FIRST_WRITER"
                 ));
@@ -2067,8 +2071,16 @@ namespace iText.Kernel.Utils {
              compareResult) {
             bool toDecodeOut = PdfName.FlateDecode.Equals(outStream.Get(PdfName.Filter));
             bool toDecodeCmp = PdfName.FlateDecode.Equals(cmpStream.Get(PdfName.Filter));
-            byte[] outStreamBytes = outStream.GetBytes(toDecodeOut);
-            byte[] cmpStreamBytes = cmpStream.GetBytes(toDecodeCmp);
+            byte[] outStreamBytes = decompressedStreams.Get(outStream);
+            if (outStreamBytes == null) {
+                outStreamBytes = outStream.GetBytes(toDecodeOut);
+                decompressedStreams.Put(outStream, outStreamBytes);
+            }
+            byte[] cmpStreamBytes = decompressedStreams.Get(cmpStream);
+            if (cmpStreamBytes == null) {
+                cmpStreamBytes = cmpStream.GetBytes(toDecodeCmp);
+                decompressedStreams.Put(cmpStream, cmpStreamBytes);
+            }
             if (JavaUtil.ArraysEquals(outStreamBytes, cmpStreamBytes)) {
                 return CompareDictionariesExtended(outStream, cmpStream, currentPath, compareResult);
             }
