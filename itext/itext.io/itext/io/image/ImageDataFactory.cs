@@ -28,7 +28,6 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
-using Versions.Attributes;
 using iText.Commons;
 using iText.Commons.Utils;
 using iText.IO.Codec;
@@ -666,12 +665,9 @@ namespace iText.IO.Image {
 
             Assembly ioAssembly = typeof(ImageDataFactory).GetAssembly();
             try {
-                Attribute customAttribute = ioAssembly.GetCustomAttribute(typeof( WebpImageSupportVersionAttribute));
-                if (customAttribute is  WebpImageSupportVersionAttribute) {
-                    string webPVersion = (( WebpImageSupportVersionAttribute) customAttribute).WebpImageSupportVersion;
-                    string format = "{0}, Version={1}, Culture=neutral, PublicKeyToken=8354ae6d2174ddca";
-                    classFullName = String.Format(format, partialName, webPVersion);
-                }
+                string webPVersion = ioAssembly.GetName().Version.ToString();
+                string format = "{0}, Version={1}, Culture=neutral, PublicKeyToken=8354ae6d2174ddca";
+                classFullName = String.Format(format, partialName, webPVersion);
             } catch (Exception ignored) {
             }
 

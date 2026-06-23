@@ -1,7 +1,6 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Versions.Attributes;
 
 [assembly: AssemblyTitle("iText.IO")]
 [assembly: AssemblyDescription("")]
@@ -36,7 +35,6 @@ using Versions.Attributes;
 
 [assembly: Guid("39631ecb-1d39-4eb2-b775-37bd34cbf5a4")]
 
-[assembly: WebpImageSupportVersion("9.7.0.0")]
 [assembly: AssemblyVersion("9.7.0.0")]
 [assembly: AssemblyFileVersion("9.7.0.0")]
 [assembly: AssemblyInformationalVersion("9.7.0-SNAPSHOT")]
