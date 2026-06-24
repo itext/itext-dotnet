@@ -23,7 +23,13 @@ namespace iText.Layout {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(DESTINATION_FOLDER);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
+        }
+
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            //We need to clean this because it generate a very big pdf file which is not used.
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
@@ -34,14 +40,14 @@ namespace iText.Layout {
                 (10_000));
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName), documentProperties)) {
                 using (Document document = new Document(pdfDocument)) {
-                    Paragraph paragraph = new _Paragraph_48();
+                    Paragraph paragraph = new _Paragraph_55();
                     NUnit.Framework.Assert.Catch(typeof(PdfException), () => document.Add(paragraph));
                 }
             }
         }
 
-        private sealed class _Paragraph_48 : Paragraph {
-            public _Paragraph_48() {
+        private sealed class _Paragraph_55 : Paragraph {
+            public _Paragraph_55() {
             }
 
             protected internal override IRenderer MakeNewRenderer() {
