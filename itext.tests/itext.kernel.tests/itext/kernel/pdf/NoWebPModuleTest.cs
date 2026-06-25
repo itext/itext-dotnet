@@ -31,5 +31,11 @@ namespace iText.Kernel.Pdf {
             ImageData imageData = ImageDataFactory.CreateWebP(UrlUtil.ToURL(SOURCE_FOLDER + "webpImage.webp"));
             NUnit.Framework.Assert.IsNull(imageData);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void WebpNotFoundLogMessageConstantTest() {
+            NUnit.Framework.Assert.IsFalse(String.IsNullOrEmpty(WebPLogMessageConstant.WEBP_NOT_FOUND));
+        }
+        // Android-Conversion-Replace Assertions.assertEquals("Processing WebP images is not supported on Android.", WebPLogMessageConstant.WEBP_NOT_FOUND);
     }
 }

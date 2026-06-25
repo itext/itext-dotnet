@@ -48,6 +48,7 @@ namespace iText.IO.Image {
         }
 
         static ImageDataFactory() {
+            // Android-Conversion-Skip-Block-Start
             try {
                 Type type = GetWebPClass(WEBP_PACKAGE + WEBP_APPLIER);
                 if (type != null) {
@@ -60,6 +61,7 @@ namespace iText.IO.Image {
             catch (Exception) {
             }
             // do nothing
+            // Android-Conversion-Skip-Block-End
             if (webpLoader == null) {
                 webpLoader = new NoWebPLoader();
             }
