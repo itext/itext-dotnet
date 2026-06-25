@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Commons.Actions;
+using iText.Commons.Internal.Runtime;
 
 namespace iText.Kernel.Pdf.Event {
     /// <summary>Base class for PDF document events handling based on the event type.</summary>

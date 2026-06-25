@@ -33,6 +33,7 @@ using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Bouncycastle.Security;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Signatures.Logs;
 

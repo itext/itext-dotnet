@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.Kernel.Font;
@@ -122,7 +123,8 @@ namespace iText.Layout.Font {
         /// <param name="alias">font alias.</param>
         /// <param name="unicodeRange">sets the specific range of characters to be used from the font</param>
         /// <returns>true, if font was successfully added, otherwise false.</returns>
-        public bool AddFont(FontProgram fontProgram, String encoding, String alias, Range unicodeRange) {
+        public bool AddFont(FontProgram fontProgram, String encoding, String alias, iText.Layout.Font.Range unicodeRange
+            ) {
             if (fontProgram == null) {
                 return false;
             }

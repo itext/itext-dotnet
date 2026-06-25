@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using iText.Commons.Datastructures;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Css.Selector;
 using iText.StyledXmlParser.Css.Selector.Item;

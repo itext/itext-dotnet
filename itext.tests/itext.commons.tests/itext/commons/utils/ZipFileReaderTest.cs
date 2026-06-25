@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Exceptions;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Logs;
 using iText.Test;
 using iText.Test.Attributes;
@@ -180,7 +181,7 @@ namespace iText.Commons.Utils {
             using (MemoryStream result = new MemoryStream()) {
                 byte[] buffer = new byte[1024];
                 int length;
-                while ((length = inputStream.Read(buffer)) != -1) {
+                while ((length = inputStream.JRead(buffer, 0, buffer.Length)) > 0) {
                     result.Write(buffer, 0, length);
                 }
                 result.Flush();

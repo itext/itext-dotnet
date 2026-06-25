@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 
 namespace iText.Layout.Font {
@@ -185,7 +186,7 @@ namespace iText.Layout.Font {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal class FullRange : Range {
+        internal class FullRange : iText.Layout.Font.Range {
 //\cond DO_NOT_DOCUMENT
             internal FullRange()
                 : base() {

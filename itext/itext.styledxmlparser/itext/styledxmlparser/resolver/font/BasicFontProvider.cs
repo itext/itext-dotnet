@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Internal.Runtime;
 using iText.IO.Util;
 using iText.Layout.Font;
 using iText.Layout.Renderer;
@@ -45,8 +46,8 @@ namespace iText.StyledXmlParser.Resolver.Font {
         // Mandaic, Syriac Supplement, Arabic Extended-A, Devanagari, Bengali, Gurmukhi, Gujarati,
         // Oriya, Tamil, Telugu, Kannada, Malayalam, Sinhala, Thai unicode blocks.
         // Those blocks either require pdfCalligraph or aren't supported by GNU Free Fonts.
-        private static readonly Range FREE_FONT_RANGE = new RangeBuilder().AddRange(0, 0x058F).AddRange(0x0E80, int.MaxValue
-            ).Create();
+        private static readonly iText.Layout.Font.Range FREE_FONT_RANGE = new RangeBuilder().AddRange(0, 0x058F).AddRange
+            (0x0E80, int.MaxValue).Create();
 
         /// <summary>The path to the html2pdf shipped fonts.</summary>
         private const String HTML_TO_PDF_SHIPPED_FONT_RESOURCE_PATH = "iText.Html2Pdf.font.";
@@ -172,7 +173,7 @@ namespace iText.StyledXmlParser.Resolver.Font {
         /// that excludes the loaded from pdfCalligraph fonts,
         /// i.e. the unicode range that is to be rendered with any other font contained in this FontProvider
         /// </returns>
-        protected internal virtual Range AddCalligraphFonts() {
+        protected internal virtual iText.Layout.Font.Range AddCalligraphFonts() {
             if (TypographyUtils.IsPdfCalligraphAvailable()) {
                 try {
                     IDictionary<String, byte[]> fontStreams = TypographyUtils.LoadShippedFonts();
@@ -200,7 +201,7 @@ namespace iText.StyledXmlParser.Resolver.Font {
         /// <see cref="iText.Layout.Font.Range"/>
         /// to load characters
         /// </param>
-        protected internal virtual void AddShippedFonts(Range rangeToLoad) {
+        protected internal virtual void AddShippedFonts(iText.Layout.Font.Range rangeToLoad) {
             if (!IsResourcePathAvailable()) {
                 return;
             }
@@ -242,7 +243,7 @@ namespace iText.StyledXmlParser.Resolver.Font {
             return true;
         }
 
-        private void AddAllAvailableFonts(Range rangeToLoad) {
+        private void AddAllAvailableFonts(iText.Layout.Font.Range rangeToLoad) {
             AddShippedFonts(rangeToLoad);
             foreach (byte[] fontData in calligraphyFontsTempList) {
                 AddFont(fontData, null);

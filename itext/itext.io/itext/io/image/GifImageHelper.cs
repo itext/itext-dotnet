@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using iText.Commons.Internal.Runtime;
 using iText.IO.Exceptions;
 using iText.IO.Font;
 using iText.IO.Util;
@@ -227,7 +228,7 @@ namespace iText.IO.Image {
         private static void ReadHeader(GifImageHelper.GifParameters gif) {
             StringBuilder id = new StringBuilder("");
             for (int i = 0; i < 6; i++) {
-                id.Append((char)gif.input.Read());
+                id.Append((char)gif.input.ReadByte());
             }
             if (!id.ToString().StartsWith("GIF8")) {
                 throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.GIF_SIGNATURE_NOT_FOUND);
@@ -244,26 +245,26 @@ namespace iText.IO.Image {
             gif.image.SetLogicalWidth(ReadShort(gif));
             gif.image.SetLogicalHeight(ReadShort(gif));
             // packed fields
-            int packed = gif.input.Read();
+            int packed = gif.input.ReadByte();
             // 1   : global color table flag
             gif.gctFlag = (packed & 0x80) != 0;
             gif.m_gbpc = (packed & 7) + 1;
             // background color index
-            gif.bgIndex = gif.input.Read();
+            gif.bgIndex = gif.input.ReadByte();
             // pixel aspect ratio
-            gif.pixelAspect = gif.input.Read();
+            gif.pixelAspect = gif.input.ReadByte();
         }
 
         /// <summary>Reads next 16-bit value, LSB first</summary>
         private static int ReadShort(GifImageHelper.GifParameters gif) {
             // read 16-bit value, LSB first
-            return gif.input.Read() | gif.input.Read() << 8;
+            return gif.input.ReadByte() | gif.input.ReadByte() << 8;
         }
 
         /// <summary>Reads next variable length block from input.</summary>
         /// <returns>number of bytes stored in "buffer"</returns>
         private static int ReadBlock(GifImageHelper.GifParameters gif) {
-            gif.blockSize = gif.input.Read();
+            gif.blockSize = gif.input.ReadByte();
             if (gif.blockSize <= 0) {
                 return gif.blockSize = 0;
             }
@@ -304,7 +305,7 @@ namespace iText.IO.Image {
             bool done = false;
             gif.currentFrame = 0;
             while (!done) {
-                int code = gif.input.Read();
+                int code = gif.input.ReadByte();
                 switch (code) {
                     case 0x2C: {
                         // image separator
@@ -318,7 +319,7 @@ namespace iText.IO.Image {
 
                     case 0x21: {
                         // extension
-                        code = gif.input.Read();
+                        code = gif.input.ReadByte();
                         switch (code) {
                             case 0xf9: {
                                 // graphics control extension
@@ -358,7 +359,7 @@ namespace iText.IO.Image {
             gif.iy = ReadShort(gif);
             gif.iw = ReadShort(gif);
             gif.ih = ReadShort(gif);
-            int packed = gif.input.Read();
+            int packed = gif.input.ReadByte();
             // 1 - local color table flag
             gif.lctFlag = (packed & 0x80) != 0;
             // 2 - interlace flag
@@ -449,7 +450,7 @@ namespace iText.IO.Image {
             int line = 0;
             int xpos = 0;
             //  Initialize GIF data stream decoder.
-            data_size = gif.input.Read();
+            data_size = gif.input.ReadByte();
             clear = 1 << data_size;
             end_of_information = clear + 1;
             available = clear + 2;
@@ -593,9 +594,9 @@ namespace iText.IO.Image {
         /// <summary>Reads Graphics Control Extension values</summary>
         private static void ReadGraphicControlExt(GifImageHelper.GifParameters gif) {
             // block size
-            gif.input.Read();
+            gif.input.ReadByte();
             // packed fields
-            int packed = gif.input.Read();
+            int packed = gif.input.ReadByte();
             // disposal method
             gif.dispose = (packed & 0x1c) >> 2;
             if (gif.dispose == 0) {
@@ -606,9 +607,9 @@ namespace iText.IO.Image {
             // delay in milliseconds
             gif.delay = ReadShort(gif) * 10;
             // transparent color index
-            gif.transIndex = gif.input.Read();
+            gif.transIndex = gif.input.ReadByte();
             // block terminator
-            gif.input.Read();
+            gif.input.ReadByte();
         }
 
         /// <summary>

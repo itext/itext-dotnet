@@ -31,6 +31,7 @@ using iText.Commons.Bouncycastle.Asn1.Esf;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Digest;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
@@ -668,7 +669,7 @@ namespace iText.Signatures {
             IMessageDigest messageDigest = tsa.GetMessageDigest();
             byte[] buf = new byte[4096];
             int n;
-            while ((n = data.Read(buf)) > 0) {
+            while ((n = data.JRead(buf)) > 0) {
                 messageDigest.Update(buf, 0, n);
             }
             byte[] tsImprint = messageDigest.Digest();

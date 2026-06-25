@@ -4,6 +4,7 @@ It may contain modifications beyond the original version.
 */
 using System;
 using System.Text;
+using iText.Commons.Internal.Runtime;
 using iText.StyledXmlParser.Jsoup.Parser;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {

@@ -29,7 +29,6 @@ using iText.Test;
 
 namespace iText.Webpimagesupport {
     [NUnit.Framework.Category("UnitTest")]
-    [iText.Commons.Utils.NoopAnnotation]
     public class WebpUnitTest : ExtendedITextTest {
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/webpimagesupport/image/";

@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.IO.Util;
 using iText.Kernel.Colors;
 
@@ -45,11 +46,11 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         /// <returns>the next word or 0 if the end of the stream has been reached</returns>
         public virtual int ReadWord() {
             length += 2;
-            int k1 = @in.Read();
+            int k1 = @in.ReadByte();
             if (k1 < 0) {
                 return 0;
             }
-            return (k1 + (@in.Read() << 8)) & 0xffff;
+            return (k1 + (@in.ReadByte() << 8)) & 0xffff;
         }
 
         /// <summary>Read the next short from the InputStream.</summary>
@@ -66,20 +67,20 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         /// <returns>the next int</returns>
         public virtual int ReadInt() {
             length += 4;
-            int k1 = @in.Read();
+            int k1 = @in.ReadByte();
             if (k1 < 0) {
                 return 0;
             }
-            int k2 = @in.Read() << 8;
-            int k3 = @in.Read() << 16;
-            return k1 + k2 + k3 + (@in.Read() << 24);
+            int k2 = @in.ReadByte() << 8;
+            int k3 = @in.ReadByte() << 16;
+            return k1 + k2 + k3 + (@in.ReadByte() << 24);
         }
 
         /// <summary>Read the next byte from the InputStream.</summary>
         /// <returns>the next byte</returns>
         public virtual int ReadByte() {
             ++length;
-            return @in.Read() & 0xff;
+            return @in.ReadByte() & 0xff;
         }
 
         /// <summary>Skips "len" amount of bytes from the InputStream.</summary>

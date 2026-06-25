@@ -24,6 +24,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 

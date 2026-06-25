@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using iText.Commons.Internal.Runtime;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;

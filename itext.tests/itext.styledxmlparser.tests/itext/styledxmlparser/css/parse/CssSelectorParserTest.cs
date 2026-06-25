@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Css.Selector;
 using iText.StyledXmlParser.Css.Selector.Item;

@@ -26,8 +26,10 @@ using Microsoft.Extensions.Logging;
 using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Internal.Runtime;
 using iText.Kernel.Crypto;
 using iText.Kernel.Logs;
+using iText.Signatures.Exceptions;
 
 namespace iText.Signatures {
     /// <summary>
@@ -212,6 +214,9 @@ namespace iText.Signatures {
         /// <param name="oid">an id (for instance "1.2.840.113549.1.1.1")</param>
         /// <returns>an algorithm name (for instance "RSA")</returns>
         public static String GetAlgorithm(String oid) {
+            if (oid == null) {
+                throw new ArgumentException(SignExceptionMessageConstant.OID_SHALL_NOT_BE_NULL);
+            }
             String ret = algorithmNames.Get(oid);
             if (ret == null) {
                 return oid;

@@ -19,6 +19,7 @@
 */
 using System;
 using System.Collections;
+using iText.Commons.Internal.Runtime;
 
 namespace iText.Layout.Hyphenation {
     /// <summary><h2>Ternary Search Tree.</h2></summary>

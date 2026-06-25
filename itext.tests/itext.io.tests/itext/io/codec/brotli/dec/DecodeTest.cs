@@ -5,6 +5,7 @@ See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 using System;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.Test;
 
 namespace iText.IO.Codec.Brotli.Dec {
@@ -22,7 +23,7 @@ namespace iText.IO.Codec.Brotli.Dec {
             if (byByte) {
                 byte[] oneByte = new byte[1];
                 while (true) {
-                    int next = brotliInput.Read();
+                    int next = brotliInput.ReadByte();
                     if (next == -1) {
                         break;
                     }

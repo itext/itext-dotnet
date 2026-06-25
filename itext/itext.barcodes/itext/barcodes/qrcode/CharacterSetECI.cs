@@ -15,6 +15,7 @@
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Internal.Runtime;
 
 namespace iText.Barcodes.Qrcode {
 //\cond DO_NOT_DOCUMENT

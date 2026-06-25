@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Internal.Runtime;
 
 namespace iText.IO.Font.Otf {
     /// <summary>Lookup Type 1: Single Adjustment Positioning Subtable</summary>

@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using iText.Commons.Datastructures;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Exceptions;
 using iText.IO.Font.Constants;

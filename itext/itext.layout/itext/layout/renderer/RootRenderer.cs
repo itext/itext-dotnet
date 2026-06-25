@@ -26,6 +26,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Actions;
 using iText.Commons.Actions.Sequence;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Commons.Utils.Collections;
 using iText.Kernel.Actions.Events;

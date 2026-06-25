@@ -5,6 +5,7 @@ It may contain modifications beyond the original version.
 using System;
 using System.Collections.Generic;
 using System.Text;
+using iText.Commons.Internal.Runtime;
 using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Select;
 using iText.Test;

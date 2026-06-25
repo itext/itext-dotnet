@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.Collections.Generic;
+using iText.Commons.Internal.Runtime;
 
 namespace iText.Kernel.Geom {
     /// <summary>As subpath is a part of a path comprising a sequence of connected segments.</summary>

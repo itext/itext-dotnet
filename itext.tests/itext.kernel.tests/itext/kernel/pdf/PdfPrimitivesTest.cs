@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Text;
+using iText.Commons.Internal.Runtime;
 using iText.IO.Source;
 using iText.Kernel.Utils;
 using iText.Test;

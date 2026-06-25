@@ -29,14 +29,14 @@ namespace iText.Layout.Font {
     /// <see cref="Range"/>.
     /// </summary>
     public class RangeBuilder {
-        private static readonly Range fullRangeSingleton = new Range.FullRange();
+        private static readonly iText.Layout.Font.Range fullRangeSingleton = new Range.FullRange();
 
         private IList<Range.SubRange> ranges = new List<Range.SubRange>();
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>Default Range instance.</summary>
         /// <returns>Range that contains any integer</returns>
-        internal static Range GetFullRange() {
+        internal static iText.Layout.Font.Range GetFullRange() {
             return fullRangeSingleton;
         }
 //\endcond
@@ -115,8 +115,8 @@ namespace iText.Layout.Font {
         /// <see cref="Range"/>
         /// instance based on added ranges
         /// </returns>
-        public virtual Range Create() {
-            return new Range(ranges);
+        public virtual iText.Layout.Font.Range Create() {
+            return new iText.Layout.Font.Range(ranges);
         }
     }
 }

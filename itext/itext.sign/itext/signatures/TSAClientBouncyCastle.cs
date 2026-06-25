@@ -30,6 +30,7 @@ using iText.Commons.Bouncycastle.Asn1.Cmp;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Digest;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;

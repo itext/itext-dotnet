@@ -24,6 +24,7 @@ using System;
 using System.IO;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Digest;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Kernel.Crypto;
 using iText.Signatures;

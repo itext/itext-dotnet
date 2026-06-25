@@ -28,6 +28,7 @@ using iText.Commons;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Actions.Sequence;
 using iText.Commons.Datastructures;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Otf;

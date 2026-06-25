@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.IO.Font;
 using iText.IO.Image;
 using iText.IO.Util;
@@ -839,7 +840,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                 imgIn = UrlUtil.OpenStream(image.GetUrl());
                 MemoryStream @out = new MemoryStream();
                 int b = 0;
-                while ((b = imgIn.Read()) != -1) {
+                while ((b = imgIn.ReadByte()) != -1) {
                     @out.Write(b);
                 }
                 imgIn.Dispose();

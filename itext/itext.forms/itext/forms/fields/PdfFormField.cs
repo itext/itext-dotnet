@@ -26,6 +26,7 @@ using System.IO;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Datastructures;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Forms.Fields.Properties;
 using iText.Forms.Logs;

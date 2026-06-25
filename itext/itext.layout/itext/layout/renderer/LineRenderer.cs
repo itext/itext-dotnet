@@ -27,6 +27,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Actions.Sequence;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Font.Otf;
 using iText.IO.Util;

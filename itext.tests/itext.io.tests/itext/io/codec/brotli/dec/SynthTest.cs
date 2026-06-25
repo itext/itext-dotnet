@@ -7,6 +7,7 @@ using System;
 using System.IO;
 using System.Text;
 using NUnit.Framework;
+using iText.Commons.Internal.Runtime;
 using iText.Test;
 
 namespace iText.IO.Codec.Brotli.Dec {

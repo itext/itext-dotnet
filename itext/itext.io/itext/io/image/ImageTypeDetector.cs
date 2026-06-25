@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.IO.Exceptions;
 using iText.IO.Util;
 
@@ -185,7 +186,7 @@ namespace iText.IO.Image {
         private static byte[] ReadImageType(Stream stream) {
             try {
                 byte[] bytes = new byte[12];
-                stream.Read(bytes);
+                stream.JRead(bytes);
                 return bytes;
             }
             catch (System.IO.IOException e) {
@@ -197,7 +198,7 @@ namespace iText.IO.Image {
             try {
                 Stream stream = new MemoryStream(source);
                 byte[] bytes = new byte[12];
-                stream.Read(bytes);
+                stream.JRead(bytes);
                 return bytes;
             }
             catch (System.IO.IOException) {

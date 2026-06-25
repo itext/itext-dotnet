@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 
 namespace iText.Kernel.Utils {

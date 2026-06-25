@@ -25,6 +25,7 @@ using System.IO;
 using System.Security.Cryptography;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Internal.Runtime;
 using iText.IO.Source;
 using iText.Kernel.Crypto;
 using iText.Kernel.Crypto.Securityhandler;

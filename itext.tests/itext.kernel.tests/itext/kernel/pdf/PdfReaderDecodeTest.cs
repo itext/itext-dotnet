@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Xobject;
@@ -39,7 +40,7 @@ namespace iText.Kernel.Pdf {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new MemoryStream()))) {
                 using (Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "stream")) {
                     byte[] b = new byte[51];
-                    @is.Read(b);
+                    @is.JRead(b);
                     PdfArray array = new PdfArray();
                     PdfStream stream = new PdfStream(b);
                     stream.Put(PdfName.Filter, array);

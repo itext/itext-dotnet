@@ -24,6 +24,7 @@ using System;
 using NUnit.Framework;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Internal.Runtime;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;

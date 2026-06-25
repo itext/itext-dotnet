@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Crypto.Securityhandler {

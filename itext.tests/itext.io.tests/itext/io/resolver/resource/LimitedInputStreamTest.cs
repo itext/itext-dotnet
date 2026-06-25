@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.IO.Exceptions;
 using iText.Test;
 
@@ -35,7 +36,7 @@ namespace iText.IO.Resolver.Resource {
                 // The user can call the reading methods as many times as he want, and if the
                 // stream has been read, then should not throw an ReadingByteLimitException exception
                 for (int i = 0; i < 101; i++) {
-                    NUnit.Framework.Assert.DoesNotThrow(() => stream.Read());
+                    NUnit.Framework.Assert.DoesNotThrow(() => stream.ReadByte());
                 }
             }
         }
@@ -46,8 +47,8 @@ namespace iText.IO.Resolver.Resource {
                 ), 100)) {
                 // The user can call the reading methods as many times as he want, and if the
                 // stream has been read, then should not throw an ReadingByteLimitException exception
-                NUnit.Framework.Assert.DoesNotThrow(() => stream.Read(new byte[100]));
-                NUnit.Framework.Assert.DoesNotThrow(() => stream.Read(new byte[1]));
+                NUnit.Framework.Assert.DoesNotThrow(() => stream.JRead(new byte[100]));
+                NUnit.Framework.Assert.DoesNotThrow(() => stream.JRead(new byte[1]));
             }
         }
 
@@ -73,9 +74,9 @@ namespace iText.IO.Resolver.Resource {
             using (Stream stream = new LimitedInputStream(new LimitedInputStreamTest.TestStreamGenerator().OpenStream(
                 ), 88)) {
                 for (int i = 0; i < 88; i++) {
-                    NUnit.Framework.Assert.AreNotEqual(-1, stream.Read());
+                    NUnit.Framework.Assert.AreNotEqual(-1, stream.ReadByte());
                 }
-                NUnit.Framework.Assert.Catch(typeof(ReadingByteLimitException), () => stream.Read());
+                NUnit.Framework.Assert.Catch(typeof(ReadingByteLimitException), () => stream.ReadByte());
             }
         }
 
@@ -84,11 +85,11 @@ namespace iText.IO.Resolver.Resource {
             using (Stream stream = new LimitedInputStream(new LimitedInputStreamTest.TestStreamGenerator().OpenStream(
                 ), 88)) {
                 byte[] bytes = new byte[100];
-                int numOfReadBytes = stream.Read(bytes);
+                int numOfReadBytes = stream.JRead(bytes);
                 NUnit.Framework.Assert.AreEqual(88, numOfReadBytes);
                 NUnit.Framework.Assert.AreEqual(10, bytes[87]);
                 NUnit.Framework.Assert.AreEqual(0, bytes[88]);
-                NUnit.Framework.Assert.Catch(typeof(ReadingByteLimitException), () => stream.Read(new byte[1]));
+                NUnit.Framework.Assert.Catch(typeof(ReadingByteLimitException), () => stream.JRead(new byte[1]));
             }
         }
 
@@ -112,7 +113,7 @@ namespace iText.IO.Resolver.Resource {
                 byte[] bytes = new byte[20];
                 MemoryStream output = new MemoryStream();
                 while (true) {
-                    int read = stream.Read(bytes);
+                    int read = stream.JRead(bytes);
                     if (read < 1) {
                         break;
                     }
@@ -129,9 +130,9 @@ namespace iText.IO.Resolver.Resource {
             using (Stream stream = new LimitedInputStream(new LimitedInputStreamTest.TestStreamGenerator().OpenStream(
                 ), 89)) {
                 byte[] bytes = new byte[100];
-                NUnit.Framework.Assert.AreEqual(89, stream.Read(bytes));
+                NUnit.Framework.Assert.AreEqual(89, stream.JRead(bytes));
                 byte[] tempBytes = (byte[])bytes.Clone();
-                NUnit.Framework.Assert.AreEqual(-1, stream.Read(bytes));
+                NUnit.Framework.Assert.AreEqual(-1, stream.JRead(bytes));
                 // Check that the array has not changed when we have read the entire LimitedInputStream
                 NUnit.Framework.Assert.AreEqual(tempBytes, bytes);
             }
@@ -156,7 +157,7 @@ namespace iText.IO.Resolver.Resource {
                 ), 90)) {
                 byte[] bytes = new byte[100];
                 bytes[89] = 13;
-                NUnit.Framework.Assert.AreEqual(89, stream.Read(bytes));
+                NUnit.Framework.Assert.AreEqual(89, stream.JRead(bytes));
                 // Check that when calling the read(byte[]) method, as many bytes were copied into
                 // the original array as were read, and not all bytes from the auxiliary array.
                 NUnit.Framework.Assert.AreEqual(13, bytes[89]);
@@ -166,7 +167,7 @@ namespace iText.IO.Resolver.Resource {
         [NUnit.Framework.Test]
         public virtual void ReadingByteWithZeroLimitTest() {
             using (LimitedInputStream stream = new LimitedInputStream(new MemoryStream(new byte[1]), 0)) {
-                NUnit.Framework.Assert.Catch(typeof(ReadingByteLimitException), () => stream.Read());
+                NUnit.Framework.Assert.Catch(typeof(ReadingByteLimitException), () => stream.ReadByte());
             }
         }
 
@@ -174,7 +175,7 @@ namespace iText.IO.Resolver.Resource {
         public virtual void ReadingByteArrayWithZeroLimitTest() {
             using (LimitedInputStream stream = new LimitedInputStream(new MemoryStream(new byte[1]), 0)) {
                 byte[] bytes = new byte[100];
-                NUnit.Framework.Assert.Catch(typeof(ReadingByteLimitException), () => stream.Read(bytes));
+                NUnit.Framework.Assert.Catch(typeof(ReadingByteLimitException), () => stream.JRead(bytes));
             }
         }
 
@@ -189,7 +190,7 @@ namespace iText.IO.Resolver.Resource {
         [NUnit.Framework.Test]
         public virtual void ReadingEmptyByteWithZeroLimitTest() {
             using (LimitedInputStream stream = new LimitedInputStream(new MemoryStream(new byte[0]), 0)) {
-                NUnit.Framework.Assert.AreEqual(-1, stream.Read());
+                NUnit.Framework.Assert.AreEqual(-1, stream.ReadByte());
             }
         }
 
@@ -197,7 +198,7 @@ namespace iText.IO.Resolver.Resource {
         public virtual void ReadingEmptyByteArrayWithZeroLimitTest() {
             using (LimitedInputStream stream = new LimitedInputStream(new MemoryStream(new byte[0]), 0)) {
                 byte[] bytes = new byte[100];
-                NUnit.Framework.Assert.AreEqual(-1, stream.Read(bytes));
+                NUnit.Framework.Assert.AreEqual(-1, stream.JRead(bytes));
             }
         }
 

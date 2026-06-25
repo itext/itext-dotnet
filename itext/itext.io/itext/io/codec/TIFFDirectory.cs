@@ -46,6 +46,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.IO.Exceptions;
 using iText.IO.Source;
 

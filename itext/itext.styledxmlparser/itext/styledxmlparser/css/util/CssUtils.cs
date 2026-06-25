@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Internal.Runtime;
 using iText.Layout.Font;
 using iText.Layout.Properties;
 using iText.StyledXmlParser;
@@ -367,7 +368,7 @@ namespace iText.StyledXmlParser.Css.Util {
         /// <see cref="iText.Layout.Font.Range"/>
         /// object
         /// </returns>
-        public static Range ParseUnicodeRange(String unicodeRange) {
+        public static iText.Layout.Font.Range ParseUnicodeRange(String unicodeRange) {
             String[] ranges = iText.Commons.Utils.StringUtil.Split(unicodeRange, ",");
             RangeBuilder builder = new RangeBuilder();
             foreach (String range in ranges) {

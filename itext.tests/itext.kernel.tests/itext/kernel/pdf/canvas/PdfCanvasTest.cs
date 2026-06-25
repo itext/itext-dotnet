@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
@@ -753,10 +754,10 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfPage page = document.AddNewPage();
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "2-frames.gif");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            int reads = @is.Read();
+            int reads = @is.ReadByte();
             while (reads != -1) {
                 baos.Write(reads);
-                reads = @is.Read();
+                reads = @is.ReadByte();
             }
             PdfCanvas canvas = new PdfCanvas(page);
             ImageData img = ImageDataFactory.CreateGifFrame(baos.ToArray(), 1);
@@ -773,10 +774,10 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfPage page = document.AddNewPage();
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "2-frames.gif");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            int reads = @is.Read();
+            int reads = @is.ReadByte();
             while (reads != -1) {
                 baos.Write(reads);
-                reads = @is.Read();
+                reads = @is.ReadByte();
             }
             PdfCanvas canvas = new PdfCanvas(page);
             ImageData img = ImageDataFactory.CreateGifFrame(baos.ToArray(), 2);
@@ -793,10 +794,10 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfPage page = document.AddNewPage();
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "2-frames.gif");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            int reads = @is.Read();
+            int reads = @is.ReadByte();
             while (reads != -1) {
                 baos.Write(reads);
-                reads = @is.Read();
+                reads = @is.ReadByte();
             }
             PdfCanvas canvas = new PdfCanvas(page);
             try {
@@ -814,10 +815,10 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfPage page = document.AddNewPage();
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "animated_fox_dog.gif");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            int reads = @is.Read();
+            int reads = @is.ReadByte();
             while (reads != -1) {
                 baos.Write(reads);
-                reads = @is.Read();
+                reads = @is.ReadByte();
             }
             PdfCanvas canvas = new PdfCanvas(page);
             IList<ImageData> frames = ImageDataFactory.CreateGifFrames(baos.ToArray(), new int[] { 1, 2, 5 });

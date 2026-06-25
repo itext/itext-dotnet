@@ -26,6 +26,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using Paths = System.Collections.Generic.List<System.Collections.Generic.List<iText.Kernel.Pdf.Canvas.Parser.ClipperLib.IntPoint>>;
 using iText.Commons;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;

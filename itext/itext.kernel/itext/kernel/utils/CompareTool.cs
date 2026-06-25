@@ -28,6 +28,7 @@ using System.Xml;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Actions.Contexts;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Util;
@@ -1732,8 +1733,8 @@ namespace iText.Kernel.Utils {
             int len1;
             int len2;
             for (; ; ) {
-                len1 = is1.Read(buffer1);
-                len2 = is2.Read(buffer2);
+                len1 = is1.JRead(buffer1);
+                len2 = is2.JRead(buffer2);
                 if (len1 != len2) {
                     return false;
                 }

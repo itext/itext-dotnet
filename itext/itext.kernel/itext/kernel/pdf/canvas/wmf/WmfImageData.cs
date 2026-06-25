@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Image;
 using iText.IO.Util;
@@ -72,7 +73,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
             try {
                 @is = UrlUtil.OpenStream(source);
                 byte[] bytes = new byte[8];
-                @is.Read(bytes);
+                @is.JRead(bytes);
                 return bytes;
             }
             catch (System.IO.IOException e) {

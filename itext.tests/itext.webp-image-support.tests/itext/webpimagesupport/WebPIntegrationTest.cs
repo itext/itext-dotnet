@@ -34,7 +34,6 @@ using iText.Test;
 
 namespace iText.Webpimagesupport {
     [NUnit.Framework.Category("IntegrationTest")]
-    [iText.Commons.Utils.NoopAnnotation]
     public class WebPIntegrationTest : ExtendedITextTest {
         private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/webpimagesupport/WebpIntegrationTest/";
 

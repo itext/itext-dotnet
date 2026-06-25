@@ -26,6 +26,7 @@ using System.IO;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Colors;
 using iText.IO.Exceptions;
@@ -347,7 +348,7 @@ namespace iText.IO.Image {
 
         private static void ReadPng(Stream pngStream, PngImageHelper.PngParameters png) {
             for (int i = 0; i < PNGID.Length; i++) {
-                if (PNGID[i] != pngStream.Read()) {
+                if (PNGID[i] != pngStream.ReadByte()) {
                     throw new System.IO.IOException("file.is.not.a.valid.png");
                 }
             }
@@ -409,7 +410,7 @@ namespace iText.IO.Image {
                                 if (len > 0) {
                                     png.trans = new byte[len];
                                     for (int k = 0; k < len; ++k) {
-                                        png.trans[k] = (byte)pngStream.Read();
+                                        png.trans[k] = (byte)pngStream.ReadByte();
                                     }
                                     len = 0;
                                 }
@@ -422,18 +423,18 @@ namespace iText.IO.Image {
                         if (IHDR.Equals(marker)) {
                             png.width = GetInt(pngStream);
                             png.height = GetInt(pngStream);
-                            png.bitDepth = pngStream.Read();
-                            png.image.SetColorType(pngStream.Read());
-                            png.compressionMethod = pngStream.Read();
-                            png.filterMethod = pngStream.Read();
-                            png.interlaceMethod = pngStream.Read();
+                            png.bitDepth = pngStream.ReadByte();
+                            png.image.SetColorType(pngStream.ReadByte());
+                            png.compressionMethod = pngStream.ReadByte();
+                            png.filterMethod = pngStream.ReadByte();
+                            png.interlaceMethod = pngStream.ReadByte();
                         }
                         else {
                             if (PLTE.Equals(marker)) {
                                 if (png.image.IsIndexed()) {
                                     ByteBuffer colorTableBuf = new ByteBuffer();
                                     while ((len--) > 0) {
-                                        colorTableBuf.Append(pngStream.Read());
+                                        colorTableBuf.Append(pngStream.ReadByte());
                                     }
                                     png.image.SetColorPalette(colorTableBuf.ToByteArray());
                                 }
@@ -445,7 +446,7 @@ namespace iText.IO.Image {
                                 if (pHYs.Equals(marker)) {
                                     int dx = GetInt(pngStream);
                                     int dy = GetInt(pngStream);
-                                    int unit = pngStream.Read();
+                                    int unit = pngStream.ReadByte();
                                     if (unit == 1) {
                                         png.dpiX = (int)(dx * 0.0254f + 0.5f);
                                         png.dpiY = (int)(dy * 0.0254f + 0.5f);
@@ -470,7 +471,7 @@ namespace iText.IO.Image {
                                     }
                                     else {
                                         if (sRGB.Equals(marker)) {
-                                            int ri = pngStream.Read();
+                                            int ri = pngStream.ReadByte();
                                             png.intent = intents[ri];
                                             png.image.SetGamma(2.2f);
                                             PngChromaticities pngChromaticities = new PngChromaticities(0.3127f, 0.329f, 0.64f, 0.33f, 0.3f, 0.6f, 0.15f
@@ -494,8 +495,8 @@ namespace iText.IO.Image {
                                                     do {
                                                         --len;
                                                     }
-                                                    while (pngStream.Read() != 0);
-                                                    pngStream.Read();
+                                                    while (pngStream.ReadByte() != 0);
+                                                    pngStream.ReadByte();
                                                     --len;
                                                     byte[] icccom = new byte[len];
                                                     int p = 0;
@@ -630,7 +631,7 @@ namespace iText.IO.Image {
                 // Read the filter type byte and a row of data
                 int filter = 0;
                 try {
-                    filter = png.dataStream.Read();
+                    filter = png.dataStream.ReadByte();
                     StreamUtil.ReadFully(png.dataStream, curr, 0, bytesPerRow);
                 }
                 catch (Exception) {
@@ -927,14 +928,15 @@ namespace iText.IO.Image {
         /// <param name="pngStream">an <c>InputStream</c></param>
         /// <returns>the value of an <c>int</c></returns>
         public static int GetInt(Stream pngStream) {
-            return (pngStream.Read() << 24) + (pngStream.Read() << 16) + (pngStream.Read() << 8) + pngStream.Read();
+            return (pngStream.ReadByte() << 24) + (pngStream.ReadByte() << 16) + (pngStream.ReadByte() << 8) + pngStream
+                .ReadByte();
         }
 
         /// <summary>Gets a <c>word</c> from an <c>InputStream</c>.</summary>
         /// <param name="pngStream">an <c>InputStream</c></param>
         /// <returns>the value of an <c>int</c></returns>
         public static int GetWord(Stream pngStream) {
-            return (pngStream.Read() << 8) + pngStream.Read();
+            return (pngStream.ReadByte() << 8) + pngStream.ReadByte();
         }
 
         /// <summary>Gets a <c>String</c> from an <c>InputStream</c>.</summary>
@@ -943,7 +945,7 @@ namespace iText.IO.Image {
         public static String GetString(Stream pngStream) {
             StringBuilder buf = new StringBuilder();
             for (int i = 0; i < 4; i++) {
-                buf.Append((char)pngStream.Read());
+                buf.Append((char)pngStream.ReadByte());
             }
             return buf.ToString();
         }

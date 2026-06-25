@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Exceptions;
 using iText.IO.Font;
@@ -1869,7 +1870,7 @@ namespace iText.Kernel.Pdf {
                 Exception e = NUnit.Framework.Assert.Catch(typeof(iText.IO.Exceptions.IOException), () => new PdfReader(randomAccessSource
                     , new ReaderProperties()));
                 //An exception would be thrown, if stream is closed.
-                NUnit.Framework.Assert.AreEqual(-1, pdfStream.Read());
+                NUnit.Framework.Assert.AreEqual(-1, pdfStream.ReadByte());
             }
         }
 

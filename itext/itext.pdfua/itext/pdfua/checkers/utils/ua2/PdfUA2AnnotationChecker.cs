@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.Kernel.Exceptions;

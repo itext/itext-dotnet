@@ -24,6 +24,7 @@ using System;
 using System.Linq;
 using iText.Commons.Actions;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Kernel.Crypto;
 using iText.Kernel.Pdf;

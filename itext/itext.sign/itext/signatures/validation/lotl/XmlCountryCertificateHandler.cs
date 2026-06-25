@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Internal.Runtime;
 using iText.Signatures;
 using iText.Signatures.Validation.Lotl.Criteria;
 

@@ -29,6 +29,7 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 
 namespace iText.Kernel.XMP.Impl {
     /// <summary>Byte buffer container including length of valid data.</summary>

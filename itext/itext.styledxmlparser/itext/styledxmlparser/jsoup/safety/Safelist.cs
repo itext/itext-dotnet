@@ -5,6 +5,7 @@ It may contain modifications beyond the original version.
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using iText.Commons.Internal.Runtime;
 using iText.StyledXmlParser.Jsoup.Helper;
 using iText.StyledXmlParser.Jsoup.Internal;
 using iText.StyledXmlParser.Jsoup.Nodes;

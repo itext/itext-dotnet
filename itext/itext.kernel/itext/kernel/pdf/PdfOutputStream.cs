@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System.IO;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Crypto;
@@ -596,7 +597,7 @@ namespace iText.Kernel.Pdf {
                     }
                     byte[] buf = new byte[4192];
                     while (true) {
-                        int n = pdfStream.GetInputStream().Read(buf);
+                        int n = pdfStream.GetInputStream().JRead(buf);
                         if (n <= 0) {
                             break;
                         }

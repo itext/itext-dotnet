@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Font.Constants;
 using iText.IO.Util;
@@ -43,7 +44,7 @@ namespace iText.IO.Font {
                 byte[] buf = new byte[1024];
                 MemoryStream stream = new MemoryStream();
                 while (true) {
-                    int size = resource.Read(buf);
+                    int size = resource.JRead(buf);
                     if (size < 0) {
                         break;
                     }
