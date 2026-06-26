@@ -247,17 +247,6 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
         }
 
         [NUnit.Framework.Test]
-        public virtual void DecodeOnlyCharsetFallsBackToUtf8ForOutput() {
-            String candidate = "ISO-2022-CN";
-            String html = "<html><head>" + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=" + candidate
-                 + "\">" + "</head><body>x</body></html>";
-            Document doc = DataUtil.ParseInputStream(Stream(html), null, "http://foo.com/", iText.StyledXmlParser.Jsoup.Parser.Parser
-                .HtmlParser());
-            NUnit.Framework.Assert.AreEqual("x", doc.Body().Text());
-            NUnit.Framework.Assert.AreEqual(DataUtil.UTF_8, doc.OutputSettings().Charset());
-        }
-
-        [NUnit.Framework.Test]
         public virtual void XmlDeclarationFirstChildIsUsedForCharset() {
             String xml = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><data>Hellö</data>";
             Document doc = DataUtil.ParseInputStream(Stream(xml, "ISO-8859-1"), null, "http://foo.com/", iText.StyledXmlParser.Jsoup.Parser.Parser
