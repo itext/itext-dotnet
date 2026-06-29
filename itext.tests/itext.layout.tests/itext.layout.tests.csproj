@@ -9,10 +9,10 @@
     </PropertyGroup>
     <PropertyGroup>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-        <ApplicationIcon/>
+        <ApplicationIcon />
         <OutputTypeEx>library</OutputTypeEx>
-        <StartupObject/>
-        <RootNamespace/>
+        <StartupObject />
+        <RootNamespace />
         <AssemblyName>itext.layout.tests</AssemblyName>
     </PropertyGroup>
     <PropertyGroup>
@@ -21,11 +21,11 @@
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="..\..\itext\itext.hyph\itext.hyph.csproj"/>
-        <ProjectReference Include="..\..\itext\itext.io\itext.io.csproj"/>
-        <ProjectReference Include="..\..\itext\itext.kernel\itext.kernel.csproj"/>
-        <ProjectReference Include="..\..\itext\itext.layout\itext.layout.csproj"/>
-        <ProjectReference Include="..\..\itext\itext.pdftest\itext.pdftest.csproj"/>
-        <ProjectReference Include="..\..\itext\itext.font-asian\itext.font-asian.csproj"/>
+        <ProjectReference Include="..\..\itext\itext.hyph\itext.hyph.csproj" />
+        <ProjectReference Include="..\..\itext\itext.io\itext.io.csproj" />
+        <ProjectReference Include="..\..\itext\itext.kernel\itext.kernel.csproj" />
+        <ProjectReference Include="..\..\itext\itext.layout\itext.layout.csproj" />
+        <ProjectReference Include="..\..\itext\itext.pdftest\itext.pdftest.csproj" />
+        <ProjectReference Include="..\..\itext\itext.font-asian\itext.font-asian.csproj" />
     </ItemGroup>
 </Project>

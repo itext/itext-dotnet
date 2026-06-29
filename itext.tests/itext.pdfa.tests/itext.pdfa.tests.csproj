@@ -9,11 +9,11 @@
     </PropertyGroup>
     <PropertyGroup>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-        <ApplicationIcon/>
+        <ApplicationIcon />
         <OutputTypeEx>library</OutputTypeEx>
-        <StartupObject/>
+        <StartupObject />
         <AssemblyName>itext.pdfa.tests</AssemblyName>
-        <RootNamespace/>
+        <RootNamespace />
     </PropertyGroup>
     <PropertyGroup>
         <NoWarn>1701;1702;1591;1570;1572;1573;1574;1580;1584;1658</NoWarn>
@@ -21,12 +21,12 @@
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="..\..\itext\itext.barcodes\itext.barcodes.csproj"/>
-        <ProjectReference Include="..\..\itext\itext.io\itext.io.csproj"/>
-        <ProjectReference Include="..\..\itext\itext.kernel\itext.kernel.csproj"/>
-        <ProjectReference Include="..\..\itext\itext.pdfa\itext.pdfa.csproj"/>
-        <ProjectReference Include="..\..\itext\itext.pdftest\itext.pdftest.csproj"/>
-        <ProjectReference Include="..\..\itext\itext.forms\itext.forms.csproj"/>
+        <ProjectReference Include="..\..\itext\itext.barcodes\itext.barcodes.csproj" />
+        <ProjectReference Include="..\..\itext\itext.io\itext.io.csproj" />
+        <ProjectReference Include="..\..\itext\itext.kernel\itext.kernel.csproj" />
+        <ProjectReference Include="..\..\itext\itext.pdfa\itext.pdfa.csproj" />
+        <ProjectReference Include="..\..\itext\itext.pdftest\itext.pdftest.csproj" />
+        <ProjectReference Include="..\..\itext\itext.forms\itext.forms.csproj" />
     </ItemGroup>
     <ItemGroup>
     </ItemGroup>
