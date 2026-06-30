@@ -1,0 +1,25 @@
+<Project>
+    <!-- Build.props file evaluated before .csrpoj file processing -->
+    <PropertyGroup Label="Common">
+        <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+        <RootNamespace />
+        
+        <!-- Signing -->
+        <SignAssembly>true</SignAssembly>
+        <DelaySign>false</DelaySign>
+        <AssemblyOriginatorKeyFile>itext.snk</AssemblyOriginatorKeyFile>
+
+        <!-- SDK-generated assembly attributes -->
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+        <!-- Output -->
+        <OutputType>library</OutputType>
+
+        <!-- Compiler -->
+        <WarningLevel>0</WarningLevel>
+
+        <!-- Warnings -->
+        <NoWarn>1701;1702;1591;1570;1572;1573;1574;1580;1584;1658</NoWarn>
+        
+    </PropertyGroup>
+</Project>

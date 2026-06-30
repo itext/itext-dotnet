@@ -1,0 +1,8 @@
+<Project>
+    <!-- Build.targets file evaluated after .csrpoj file processing -->
+    <PropertyGroup Label="Common">
+        <!-- XML documentation, depends on AssemblyName from .csrpoj -->
+        <DocumentationFile>$(TargetDir)\$(AssemblyName).xml</DocumentationFile>
+
+    </PropertyGroup>
+</Project>

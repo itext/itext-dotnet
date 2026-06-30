@@ -1,14 +1,31 @@
 <Project>
-    <PropertyGroup>
+    <!-- Build.props file evaluated before .csrpoj file processing -->
+    <PropertyGroup Label="Common">
         <TargetFrameworks>net8.0;netcoreapp2.0;net461</TargetFrameworks>
-    </PropertyGroup>
+        
+        <!-- Signing -->
+        <SignAssembly>true</SignAssembly>
+        <DelaySign>false</DelaySign>
+        <AssemblyOriginatorKeyFile>itext.snk</AssemblyOriginatorKeyFile>
 
-    <PropertyGroup Condition=" '$(TargetFramework)' == 'net461' ">
+        <!-- SDK-generated assembly attributes -->
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+        <!-- Output -->
         <OutputType>library</OutputType>
-    </PropertyGroup>
 
+        <!-- Compiler -->
+        <WarningLevel>0</WarningLevel>
+
+        <!-- Warnings -->
+        <NoWarn>1701;1702;1591;1570;1572;1573;1574;1580;1584;1658</NoWarn>
+        <!-- TODO DEVSIX-9075: remove this suppression -->
+        <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+
+        <RootNamespace />
+    </PropertyGroup>
+    
     <PropertyGroup Condition=" '$(TargetFramework)' != 'net461' ">
-        <OutputType>Library</OutputType>
         <DefineConstants>NETSTANDARD2_0</DefineConstants>
     </PropertyGroup>
 
@@ -21,9 +38,7 @@
         <Reference Include="System.Xml" />
         <Reference Include="System.Xml.Linq" />
     </ItemGroup>
-
-
-
+    
     <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
         <PackageReference Include="NUnit" Version="3.7.1"/>
         <PackageReference Include="NUnit3TestAdapter" Version="3.10.0"/>
@@ -31,8 +46,7 @@
         <PackageReference Include="Microsoft.CodeCoverage" Version="16.11.0"/>
         <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0"/>
     </ItemGroup>
-
-
+    
     <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
         <PackageReference Include="NUnit" Version="3.14.0"/>
         <PackageReference Include="NUnit3TestAdapter" Version="4.6.0"/>

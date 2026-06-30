@@ -1,23 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
-  <PropertyGroup Label="Configuration">
-    <SignAssembly>True</SignAssembly>
-    <DelaySign>False</DelaySign>
-    <DocumentationFile>$(TargetDir)bin\$(Configuration)\$(TargetFramework)\itext.font_asian.xml</DocumentationFile>
-    <RootNamespace>iText.IO.Font.Cmap</RootNamespace>
+  <!-- The .csrpoj file uses ../Directory.Build.props as a source for some configurations -->
+  <PropertyGroup>
     <AssemblyName>itext.font_asian</AssemblyName>
-    <WarningLevel>0</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
-  </PropertyGroup>
-  <PropertyGroup>
-    <OutputType>library</OutputType>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>itext.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <!-- RootNamespace property from ../Directory.Build.props is overriden -->
+    <RootNamespace>iText.IO.Font.Cmap</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="78-EUC-H" />
