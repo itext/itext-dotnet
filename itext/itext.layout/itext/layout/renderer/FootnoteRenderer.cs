@@ -20,7 +20,10 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Commons.Internal.Runtime;
+using iText.Layout.Properties;
 using iText.Layout.Properties.Margins;
+using iText.Layout.Tagging;
 
 namespace iText.Layout.Renderer {
     /// <summary>
@@ -46,6 +49,17 @@ namespace iText.Layout.Renderer {
         public override IRenderer GetNextRenderer() {
             LogWarningIfGetNextRendererNotOverridden(typeof(iText.Layout.Renderer.FootnoteRenderer), this.GetType());
             return new iText.Layout.Renderer.FootnoteRenderer((Footnote)modelElement);
+        }
+
+        public override void Draw(DrawContext drawContext) {
+            LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+            FootnoteTaggingHelper.RepairFootnoteTagIfNeeded(this, taggingHelper);
+            if (!childRenderers.IsEmpty() && !childRenderers[0].GetChildRenderers().IsEmpty()) {
+                IRenderer footnoteParagraphContainer = childRenderers[0];
+                IRenderer footnoteAnchorContent = footnoteParagraphContainer.GetChildRenderers()[0];
+                FootnoteTaggingHelper.WrapAnchorInsideFootnoteIntoLbl(footnoteAnchorContent, taggingHelper);
+            }
+            base.Draw(drawContext);
         }
     }
 }

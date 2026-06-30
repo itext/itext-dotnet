@@ -50,7 +50,7 @@ namespace iText.Layout {
             String fileName = "relativePositionWithPageMarginTagRoleOverride";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     pdfDocument.SetTagged();
                     Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());

@@ -297,10 +297,10 @@ namespace iText.Layout.Properties.Margins {
         public virtual void Draw(DocumentRenderer documentRenderer, PdfDocument document, int pageNumber) {
             PageFootnotesContent footnotes = this.GetFootnotes(pageNumber);
             if (footnotes != null) {
-                DrawPageContent(documentRenderer, document, pageNumber, footnotes);
+                DrawPageContent(documentRenderer, document, pageNumber, footnotes, true);
             }
             foreach (PageMarginContent margin in margins.Values) {
-                DrawPageContent(documentRenderer, document, pageNumber, margin);
+                DrawPageContent(documentRenderer, document, pageNumber, margin, false);
             }
         }
 
@@ -344,11 +344,7 @@ namespace iText.Layout.Properties.Margins {
                 throw new ArgumentException("Footnotes must be a FootnotesContainer!");
             }
             FootnotesContainer container = (FootnotesContainer)existingFootnotes;
-            foreach (IElement element in ((FootnotesContainer)newFootnotes).GetChildren()) {
-                if (element is Footnote) {
-                    container.Add((Footnote)element);
-                }
-            }
+            container.AddFootnotesFromOtherContainer((FootnotesContainer)newFootnotes);
             return container;
         }
 
@@ -357,7 +353,7 @@ namespace iText.Layout.Properties.Margins {
         }
 
         private void DrawPageContent(DocumentRenderer documentRenderer, PdfDocument document, int pageNumber, AbstractPageContent
-             pageContent) {
+             pageContent, bool tagged) {
             Rectangle rect = pageContent.GetRectangle();
             if (rect == null) {
                 // Margins weren't layouted, we can get here if page is added manually and is empty.
@@ -366,7 +362,9 @@ namespace iText.Layout.Properties.Margins {
                 rect = pageContent.GetRectangle();
             }
             IElement element = pageContent.GetContent();
-            SetPageMarginTagRole(element);
+            if (!tagged) {
+                SetPageMarginTagRole(element);
+            }
             String name = pageContent is PageMarginContent ? (((PageMarginContent)pageContent).GetMarginBoxName().ToString
                 () + " margin box") : "footnotes";
             IRenderer renderer = CreateRendererFromElement(element, documentRenderer, document);

@@ -282,7 +282,7 @@ namespace iText.Layout.Renderer {
                 return layoutResult;
             }
             // Process footnotes that were collected during renderer layout.
-            IDictionary<Footnote, float?> footnotes = footnotesCounterHandler.CollectFootnotes(layoutResult.GetOccupiedArea
+            IDictionary<FootnoteRenderer, float?> footnotes = footnotesCounterHandler.CollectFootnotes(layoutResult.GetOccupiedArea
                 () == null ? currentArea : layoutResult.GetOccupiedArea());
             int footnoteAnchorsNum = footnotes.Count;
             if (footnoteAnchorsNum == 0) {
@@ -342,7 +342,7 @@ namespace iText.Layout.Renderer {
                 pageMarginBoxes = new PageMarginBoxes(JavaCollectionsUtil.EmptyList<PageMarginContent>());
                 document.SetPageMargins(currentArea.GetPageNumber(), pageMarginBoxes);
             }
-            FootnotesUtil.AddFootnotesToPage(pageNum, new List<Footnote>(footnotes.Keys), pageMarginBoxes, footnotesProperties
+            FootnotesUtil.AddFootnotesToPage(pageNum, new List<FootnoteRenderer>(footnotes.Keys), pageMarginBoxes, footnotesProperties
                 );
             latestFootnoteNumber.Put(pageNum, latestFootnoteNumber.ContainsKey(pageNum) ? (latestFootnoteNumber.Get(pageNum
                 ) + footnotes.Count) : footnotes.Count);
@@ -384,10 +384,7 @@ namespace iText.Layout.Renderer {
                 keepWithNextHangingRenderer = null;
                 AddChild(rendererToBeAdded);
             }
-            if (!immediateFlush) {
-                Flush();
-            }
-            FlushWaitingDrawingElements(true);
+            FlushOnClose();
             LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
             if (taggingHelper != null) {
                 taggingHelper.ReleaseAllHints();
@@ -426,7 +423,17 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        [Obsolete]
         protected internal virtual void FlushWaitingDrawingElements() {
+            FlushWaitingDrawingElements(true);
+        }
+
+        /// <summary>Draws (flushes) the content, of this element and all its children that were not yet processed.</summary>
+        /// <seealso cref="AbstractRenderer.Draw(DrawContext)"/>
+        protected internal virtual void FlushOnClose() {
+            if (!immediateFlush) {
+                Flush();
+            }
             FlushWaitingDrawingElements(true);
         }
 

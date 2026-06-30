@@ -21,12 +21,15 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Properties.Margins;
+using iText.Layout.Tagging;
 
 namespace iText.Layout.Renderer {
     /// <summary>
@@ -64,6 +67,12 @@ namespace iText.Layout.Renderer {
             if (this.footnoteRenderer == null) {
                 Footnote footnote = ((FootnoteAnchor)this.modelElement).GetFootnote();
                 this.footnoteRenderer = (FootnoteRenderer)footnote.CreateRendererSubTree().SetParent(this);
+                LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+                if (taggingHelper != null) {
+                    taggingHelper.AddKidsHint(this, JavaCollectionsUtil.SingletonList<IRenderer>(footnoteRenderer));
+                    taggingHelper.AddKidsHint(this, JavaCollectionsUtil.SingletonList<IRenderer>(footnoteAnchor));
+                    LayoutTaggingHelper.AddTreeHints(taggingHelper, footnoteAnchor);
+                }
             }
             int pageNumber = layoutContext.GetArea().GetPageNumber();
             Rectangle pageRectangle = this.GetPdfDocument().GetPage(pageNumber).GetPageSize();
@@ -92,7 +101,27 @@ namespace iText.Layout.Renderer {
         }
 
         public override void Draw(DrawContext drawContext) {
+            LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+            FootnoteTaggingHelper.RepairFootnoteAnchorTagIfNeeded(this, taggingHelper);
+            bool isTagged = drawContext.IsTaggingEnabled();
+            if (isTagged) {
+                taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
+                if (taggingHelper == null) {
+                    isTagged = false;
+                }
+                else {
+                    TagTreePointer tagPointer = taggingHelper.UseAutoTaggingPointerAndRememberItsPosition(this);
+                    taggingHelper.CreateTag(this, tagPointer);
+                }
+            }
             footnoteAnchor.Draw(drawContext);
+            if (isTagged) {
+                if (isLastRendererForModelElement) {
+                    taggingHelper.FinishTaggingHint(this);
+                }
+                taggingHelper.RestoreAutoTaggingPointerPosition(this);
+            }
+            flushed = true;
         }
 
         public override IRenderer GetNextRenderer() {

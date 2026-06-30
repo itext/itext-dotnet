@@ -74,7 +74,8 @@ namespace iText.Layout.Element {
         /// </param>
         public Text(iText.Layout.Element.Text text) {
             this.text = text.text;
-            this.tagProperties = text.tagProperties;
+            this.tagProperties = text.tagProperties == null ? null : new DefaultAccessibilityProperties(text.tagProperties
+                );
             this.properties = new Dictionary<int, Object>(text.properties);
             this.styles = text.styles == null ? null : new LinkedHashSet<Style>(text.styles);
             this.childElements = new List<IElement>(text.childElements);

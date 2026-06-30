@@ -23,7 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 using iText.Commons.Internal.Runtime;
 using iText.Layout;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
+using iText.Layout.Tagging;
 
 namespace iText.Layout.Properties.Margins {
     /// <summary>Utility class to process footnotes for internal usage only.</summary>
@@ -52,14 +54,15 @@ namespace iText.Layout.Properties.Margins {
         /// <see cref="FootnotesProperties"/>
         /// to apply for footnotes
         /// </param>
-        public static void AddFootnotesToPage(int pageNum, IList<Footnote> footnotesToAdd, PageMarginBoxes pageMarginBoxes
-            , FootnotesProperties footnotesProperties) {
+        public static void AddFootnotesToPage(int pageNum, IEnumerable<FootnoteRenderer> footnotesToAdd, PageMarginBoxes
+             pageMarginBoxes, FootnotesProperties footnotesProperties) {
             FootnotesContainer footnotesContainer = new FootnotesContainer(pageNum);
             if (footnotesProperties.GetFootnotesContainerStyle() != null) {
                 footnotesContainer.AddStyle(footnotesProperties.GetFootnotesContainerStyle());
             }
-            foreach (Footnote footnote in footnotesToAdd) {
-                footnotesContainer.Add(footnote);
+            foreach (FootnoteRenderer footnoteRederer in footnotesToAdd) {
+                Footnote footnote = (Footnote)footnoteRederer.GetModelElement();
+                footnotesContainer.Add(footnote, footnoteRederer.GetProperty<TaggingHintKey>(Property.TAGGING_HINT_KEY));
                 if (footnote.footnoteAnchor != null) {
                     footnote.anchors.Put(pageNum, footnote.footnoteAnchor);
                     footnote.ResetFootnoteAnchor();

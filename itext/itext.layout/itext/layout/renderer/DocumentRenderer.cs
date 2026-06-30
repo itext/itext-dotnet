@@ -115,8 +115,8 @@ namespace iText.Layout.Renderer {
             return renderer;
         }
 
-        public override void Close() {
-            base.Close();
+        protected internal override void FlushOnClose() {
+            base.FlushOnClose();
             document.GetPdfDocument().RemoveEventHandler(marginBoxesHandler);
             if (!document.GetPdfDocument().IsClosed()) {
                 for (int i = 1; i <= document.GetPdfDocument().GetNumberOfPages(); ++i) {

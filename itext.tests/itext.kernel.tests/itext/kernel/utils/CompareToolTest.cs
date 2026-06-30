@@ -89,6 +89,31 @@ namespace iText.Kernel.Utils {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CompareTagStructureAgainstXmlNegative() {
+            CompareTool compareTool = new CompareTool();
+            compareTool.SetCompareByContentErrorsLimit(10);
+            compareTool.SetGenerateCompareByContentXmlReport(true);
+            String outPdf = sourceFolder + "tagged_pdf.pdf";
+            String cmpPdf = sourceFolder + "cmp_tagged_xml_neg.xml";
+            String result = compareTool.CompareTagStructureAgainstXml(outPdf, cmpPdf);
+            System.Console.Out.WriteLine("\nRESULT:\n" + result);
+            NUnit.Framework.Assert.IsNotNull(result, "CompareTool must return differences found between the files");
+            NUnit.Framework.Assert.IsTrue(result.Contains("The tag structures are different."));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CompareTagStructureAgainstXmlPositive() {
+            CompareTool compareTool = new CompareTool();
+            compareTool.SetCompareByContentErrorsLimit(10);
+            compareTool.SetGenerateCompareByContentXmlReport(true);
+            String outPdf = sourceFolder + "tagged_pdf.pdf";
+            String cmpXml = sourceFolder + "cmp_tagged_xml_pos.xml";
+            String result = compareTool.CompareTagStructureAgainstXml(outPdf, cmpXml);
+            System.Console.Out.WriteLine("\nRESULT:\n" + result);
+            NUnit.Framework.Assert.IsNull(result);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CompareToolErrorReportTest03() {
             CompareTool compareTool = new CompareTool();
             compareTool.SetCompareByContentErrorsLimit(10);
@@ -261,7 +286,7 @@ namespace iText.Kernel.Utils {
         [NUnit.Framework.Test]
         public virtual void ConvertDocInfoToStringsTest() {
             String inPdf = sourceFolder + "test.pdf";
-            CompareTool compareTool = new _CompareTool_299();
+            CompareTool compareTool = new _CompareTool_326();
             using (PdfReader reader = new PdfReader(inPdf, compareTool.GetOutReaderProperties())) {
                 using (PdfDocument doc = new PdfDocument(reader)) {
                     String[] docInfo = compareTool.ConvertDocInfoToStrings(doc.GetDocumentInfo());
@@ -274,8 +299,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _CompareTool_299 : CompareTool {
-            public _CompareTool_299() {
+        private sealed class _CompareTool_326 : CompareTool {
+            public _CompareTool_326() {
             }
 
             protected internal override String[] ConvertDocInfoToStrings(PdfDocumentInfo info) {

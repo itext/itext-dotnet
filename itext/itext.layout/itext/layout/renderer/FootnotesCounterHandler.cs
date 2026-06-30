@@ -43,7 +43,8 @@ namespace iText.Layout.Renderer {
         private readonly IDictionary<FootnoteAnchor, FootnoteAnchorRenderer> renderers = new Dictionary<FootnoteAnchor
             , FootnoteAnchorRenderer>();
 
-        private readonly IDictionary<Footnote, float?> footnotes = new LinkedDictionary<Footnote, float?>();
+        private readonly IDictionary<FootnoteRenderer, float?> footnotes = new LinkedDictionary<FootnoteRenderer, 
+            float?>();
 
         /// <summary>
         /// Creates a new
@@ -133,7 +134,7 @@ namespace iText.Layout.Renderer {
         /// <see cref="iText.Layout.Properties.Margins.Footnote"/>
         /// and its height float value
         /// </returns>
-        internal virtual IDictionary<Footnote, float?> CollectFootnotes(LayoutArea currentArea) {
+        internal virtual IDictionary<FootnoteRenderer, float?> CollectFootnotes(LayoutArea currentArea) {
             footnotes.Clear();
             IList<FootnoteAnchor> anchors = new List<FootnoteAnchor>(renderers.Keys);
             JavaCollectionsUtil.Sort(anchors, new FootnotesCounterHandler.FootnoteAnchorComparator(this));
@@ -147,8 +148,8 @@ namespace iText.Layout.Renderer {
                 bool isAnchorInsideCurrentArea = currentArea.GetBBox().Overlaps(renderer.occupiedArea.GetBBox(), 0.5F * Math
                     .Min(renderer.occupiedArea.GetBBox().GetWidth(), renderer.occupiedArea.GetBBox().GetHeight()));
                 if (expectedPageNumber == renderer.occupiedArea.GetPageNumber() && isAnchorInsideCurrentArea) {
-                    footnotes.Put(footnoteAnchor.GetFootnote(), renderer.footnoteRenderer.GetOccupiedArea().GetBBox().GetHeight
-                        ());
+                    footnotes.Put(renderer.footnoteRenderer, renderer.footnoteRenderer.GetOccupiedArea().GetBBox().GetHeight()
+                        );
                 }
             }
             return footnotes;

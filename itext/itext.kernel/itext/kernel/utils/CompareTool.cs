@@ -315,17 +315,17 @@ namespace iText.Kernel.Utils {
         /// not checked as objects, but rather simply checked that they have same page numbers in both documents.
         /// This behaviour is intended for the
         /// <see cref="CompareByContent(System.String, System.String, System.String)"/>
-        /// set of methods, because in them documents are compared in page by page basis. Thus, we don't need to check if pages
-        /// are of the same content when they are met in comparison process, we are sure that we will compare their content or
-        /// we have already compared them.
+        /// set of methods, because in them documents are compared in page by page basis.
+        /// Thus, we don't need to check if pages are of the same content when they are met in comparison process,
+        /// we are sure that we will compare their content or we have already compared them.
         /// <para />
         /// However, if you would use
         /// <see cref="CompareByCatalog(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfDocument)"/>
         /// with default behaviour
         /// of pages comparison, pages won't be checked at all, every time when reference to the page dictionary is met,
-        /// only page numbers will be compared for both documents. You can say that in this case, comparison will be performed
-        /// for all document's catalog entries except /Pages (However in fact, document's page tree structures will be compared,
-        /// but pages themselves - won't).
+        /// only page numbers will be compared for both documents. You can say that in this case,
+        /// comparison will be performed for all document's catalog entries except /Pages (However in fact,
+        /// document's page tree structures will be compared, but pages themselves - won't).
         /// </remarks>
         /// <returns>
         /// this
@@ -672,7 +672,8 @@ namespace iText.Kernel.Utils {
         /// corresponding objects which are referenced from them. You can roughly imagine it as depth-first traversal
         /// of the two trees that represent pdf objects structure of the documents.
         /// <para />
-        /// When comparison by content is finished, if any differences were found, visual comparison is automatically started.
+        /// When comparison by content is finished, if any differences were found, visual comparison is
+        /// automatically started.
         /// For this overload, differenceImagePrefix value is generated using diff_%outPdfFileName%_ format.
         /// <para />
         /// For more explanations about what outPdf and cmpPdf are see last paragraph of the
@@ -701,7 +702,8 @@ namespace iText.Kernel.Utils {
         /// corresponding objects which are referenced from them. You can roughly imagine it as depth-first traversal
         /// of the two trees that represent pdf objects structure of the documents.
         /// <para />
-        /// When comparison by content is finished, if any differences were found, visual comparison is automatically started.
+        /// When comparison by content is finished, if any differences were found,
+        /// visual comparison is automatically started.
         /// <para />
         /// For more explanations about what outPdf and cmpPdf are see last paragraph of the
         /// <see cref="CompareTool"/>
@@ -709,8 +711,10 @@ namespace iText.Kernel.Utils {
         /// </remarks>
         /// <param name="outPdf">the absolute path to the output file, which is to be compared to cmp-file.</param>
         /// <param name="cmpPdf">the absolute path to the cmp-file, which is to be compared to output file.</param>
-        /// <param name="outPath">the absolute path to the folder, which will be used to store image files for visual comparison.
-        ///     </param>
+        /// <param name="outPath">
+        /// the absolute path to the folder, which will be used to store image files for
+        /// visual comparison.
+        /// </param>
         /// <param name="differenceImagePrefix">
         /// file name prefix for image files with marked visual differences if there are any;
         /// if it's set to null the prefix defaults to diff_%outPdfFileName%_ format.
@@ -734,7 +738,8 @@ namespace iText.Kernel.Utils {
         /// corresponding objects which are referenced from them. You can roughly imagine it as depth-first traversal
         /// of the two trees that represent pdf objects structure of the documents.
         /// <para />
-        /// When comparison by content is finished, if any differences were found, visual comparison is automatically started.
+        /// When comparison by content is finished, if any differences were found,
+        /// visual comparison is automatically started.
         /// For more info see
         /// <see cref="CompareVisually(System.String, System.String, System.String, System.String)"/>.
         /// <para />
@@ -744,8 +749,10 @@ namespace iText.Kernel.Utils {
         /// </remarks>
         /// <param name="outPdf">the absolute path to the output file, which is to be compared to cmp-file.</param>
         /// <param name="cmpPdf">the absolute path to the cmp-file, which is to be compared to output file.</param>
-        /// <param name="outPath">the absolute path to the folder, which will be used to store image files for visual comparison.
-        ///     </param>
+        /// <param name="outPath">
+        /// the absolute path to the folder, which will be used to store image files
+        /// for visual comparison.
+        /// </param>
         /// <param name="differenceImagePrefix">
         /// file name prefix for image files with marked visual differences if there is any;
         /// if it's set to null the prefix defaults to diff_%outPdfFileName%_ format.
@@ -771,7 +778,8 @@ namespace iText.Kernel.Utils {
         /// corresponding objects which are referenced from them. You can roughly imagine it as depth-first traversal
         /// of the two trees that represent pdf objects structure of the documents.
         /// <para />
-        /// When comparison by content is finished, if any differences were found, visual comparison is automatically started.
+        /// When comparison by content is finished, if any differences were found,
+        /// visual comparison is automatically started.
         /// <para />
         /// For more explanations about what outPdf and cmpPdf are see last paragraph of the
         /// <see cref="CompareTool"/>
@@ -779,8 +787,10 @@ namespace iText.Kernel.Utils {
         /// </remarks>
         /// <param name="outPdf">the absolute path to the output file, which is to be compared to cmp-file.</param>
         /// <param name="cmpPdf">the absolute path to the cmp-file, which is to be compared to output file.</param>
-        /// <param name="outPath">the absolute path to the folder, which will be used to store image files for visual comparison.
-        ///     </param>
+        /// <param name="outPath">
+        /// the absolute path to the folder, which will be used to store image files
+        /// for visual comparison.
+        /// </param>
         /// <param name="differenceImagePrefix">
         /// file name prefix for image files with marked visual differences if there are any;
         /// if it's set to null the prefix defaults to diff_%outPdfFileName%_ format.
@@ -806,7 +816,8 @@ namespace iText.Kernel.Utils {
         /// corresponding objects which are referenced from them. You can roughly imagine it as depth-first traversal
         /// of the two trees that represent pdf objects structure of the documents.
         /// <para />
-        /// When comparison by content is finished, if any differences were found, visual comparison is automatically started.
+        /// When comparison by content is finished, if any differences were found,
+        /// visual comparison is automatically started.
         /// <para />
         /// For more explanations about what outPdf and cmpPdf are see last paragraph of the
         /// <see cref="CompareTool"/>
@@ -814,8 +825,10 @@ namespace iText.Kernel.Utils {
         /// </remarks>
         /// <param name="outPdf">the absolute path to the output file, which is to be compared to cmp-file.</param>
         /// <param name="cmpPdf">the absolute path to the cmp-file, which is to be compared to output file.</param>
-        /// <param name="outPath">the absolute path to the folder, which will be used to store image files for visual comparison.
-        ///     </param>
+        /// <param name="outPath">
+        /// the absolute path to the folder, which will be used to store image files
+        /// for visual comparison.
+        /// </param>
         /// <param name="differenceImagePrefix">
         /// file name prefix for image files with marked visual differences if there are any;
         /// if it's set to null the prefix defaults to diff_%outPdfFileName%_ format.
@@ -860,8 +873,9 @@ namespace iText.Kernel.Utils {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// shall have indirect references.
         /// <para />
-        /// By default page dictionaries are excluded from the comparison when met and are instead compared in a special manner,
-        /// simply comparing their page numbers. This behavior can be disabled by calling
+        /// By default page dictionaries are excluded from the comparison when met
+        /// and are instead compared in a special manner, simply comparing their page numbers.
+        /// This behavior can be disabled by calling
         /// <see cref="DisableCachedPagesComparison()"/>.
         /// <para />
         /// For more explanations about what outPdf and cmpPdf are see last paragraph of the
@@ -871,12 +885,14 @@ namespace iText.Kernel.Utils {
         /// <param name="outDict">
         /// an indirect
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// from the output file, which is to be compared to cmp-file dictionary.
+        /// from the output file,
+        /// which is to be compared to cmp-file dictionary.
         /// </param>
         /// <param name="cmpDict">
         /// an indirect
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// from the cmp-file file, which is to be compared to output file dictionary.
+        /// from the cmp-file file,
+        /// which is to be compared to output file dictionary.
         /// </param>
         /// <returns>
         /// 
@@ -901,8 +917,9 @@ namespace iText.Kernel.Utils {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// shall have indirect references.
         /// <para />
-        /// By default page dictionaries are excluded from the comparison when met and are instead compared in a special manner,
-        /// simply comparing their page numbers. This behavior can be disabled by calling
+        /// By default page dictionaries are excluded from the comparison when met
+        /// and are instead compared in a special manner, simply comparing their page numbers.
+        /// This behavior can be disabled by calling
         /// <see cref="DisableCachedPagesComparison()"/>.
         /// <para />
         /// For more explanations about what outPdf and cmpPdf are see last paragraph of the
@@ -912,12 +929,14 @@ namespace iText.Kernel.Utils {
         /// <param name="outDict">
         /// an indirect
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// from the output file, which is to be compared to cmp-file dictionary.
+        /// from the output file,
+        /// which is to be compared to cmp-file dictionary.
         /// </param>
         /// <param name="cmpDict">
         /// an indirect
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// from the cmp-file file, which is to be compared to output file dictionary.
+        /// from the cmp-file file,
+        /// which is to be compared to output file dictionary.
         /// </param>
         /// <param name="excludedKeys">
         /// a
@@ -1058,8 +1077,14 @@ namespace iText.Kernel.Utils {
         }
 
         /// <summary>Compares xmp metadata of the two given PDF documents.</summary>
-        /// <param name="outPdf">the absolute path to the output file, which xmp is to be compared to cmp-file.</param>
-        /// <param name="cmpPdf">the absolute path to the cmp-file, which xmp is to be compared to output file.</param>
+        /// <param name="outPdf">
+        /// the absolute path to the output file,
+        /// which xmp is to be compared to cmp-file.
+        /// </param>
+        /// <param name="cmpPdf">
+        /// the absolute path to the cmp-file,
+        /// which xmp is to be compared to output file.
+        /// </param>
         /// <param name="ignoreDateAndProducerProperties">
         /// true, if to ignore differences in date or producer xmp metadata
         /// properties.
@@ -1233,8 +1258,9 @@ namespace iText.Kernel.Utils {
         /// <remarks>
         /// Compares tag structures of the two PDF documents.
         /// <para />
-        /// This method creates xml files in the same folder with outPdf file. These xml files contain documents tag structures
-        /// converted into the xml structure. These xml files are compared if they are equal.
+        /// This method creates xml files in the same folder with outPdf file.
+        /// These xml files contain documents tag structures converted into the xml structure.
+        /// These xml files are compared if they are equal.
         /// </remarks>
         /// <param name="outPdf">the absolute path to the output file, which tags are to be compared to cmp-file tags.
         ///     </param>
@@ -1242,7 +1268,7 @@ namespace iText.Kernel.Utils {
         ///     </param>
         /// <returns>text report of the differences in documents tags.</returns>
         public virtual String CompareTagStructures(String outPdf, String cmpPdf) {
-            System.Console.Out.Write("[itext] INFO  Comparing tag structures......");
+            System.Console.Out.WriteLine("[itext] INFO  Comparing tag structures......");
             String outXmlPath = outPdf.Replace(".pdf", ".xml");
             String cmpXmlPath = outPdf.Replace(".pdf", ".cmp.xml");
             String message = null;
@@ -1271,6 +1297,45 @@ namespace iText.Kernel.Utils {
             else {
                 iText.Kernel.Utils.CompareTool.WriteOnDisk(outPdf);
                 iText.Kernel.Utils.CompareTool.WriteOnDiskIfNotExists(cmpPdf);
+                System.Console.Out.WriteLine("Fail");
+            }
+            System.Console.Out.Flush();
+            return message;
+        }
+
+        /// <summary>Compares tag structures of the a PDF document against an xml.</summary>
+        /// <remarks>
+        /// Compares tag structures of the a PDF document against an xml.
+        /// <para />
+        /// This method creates an xml file in the same folder with outPdf file.
+        /// This xml file contain documents tag structures converted into the xml structure.
+        /// This xml files is compared against the provided xml file if they are equal.
+        /// </remarks>
+        /// <param name="outPdf">the absolute path to the output file, which tags are to be compared to cmp-file tags.
+        ///     </param>
+        /// <param name="cmpXml">the absolute path to the compare xml file.</param>
+        /// <returns>text report of the differences in documents tags.</returns>
+        public virtual String CompareTagStructureAgainstXml(String outPdf, String cmpXml) {
+            System.Console.Out.WriteLine("[itext] INFO  Comparing tag structures......");
+            System.Console.Out.WriteLine(OUT_PDF_LOG_PREFIX + UrlUtil.GetNormalizedFileUriString(outPdf));
+            String outXmlPath = outPdf.Replace(".pdf", ".xml");
+            String message = null;
+            using (PdfReader readerOut = iText.Kernel.Utils.CompareTool.CreateOutputReader(outPdf)) {
+                using (PdfDocument docOut = new PdfDocument(readerOut, new DocumentProperties().SetEventCountingMetaInfo(metaInfo
+                    ))) {
+                    using (Stream xmlOut = FileUtil.GetFileOutputStream(outXmlPath)) {
+                        new TaggedPdfReaderTool(docOut).SetRootTag("root").ConvertToXml(xmlOut);
+                    }
+                }
+            }
+            if (!CompareXmls(outXmlPath, cmpXml)) {
+                message = "The tag structures are different.";
+            }
+            if (message == null) {
+                System.Console.Out.WriteLine("OK");
+            }
+            else {
+                iText.Kernel.Utils.CompareTool.WriteOnDisk(outPdf);
                 System.Console.Out.WriteLine("Fail");
             }
             System.Console.Out.Flush();
@@ -1838,15 +1903,15 @@ namespace iText.Kernel.Utils {
                             .NUM_TREE_SHALL_NOT_END_WITH_KEY);
                         if (outLeftover == null) {
                             if (compareResult != null && currentPath != null) {
-                                compareResult.AddError(currentPath, "Number tree was expected to end with a key (although it is invalid according to the specification), but ended with a value"
-                                    );
+                                compareResult.AddError(currentPath, "Number tree was expected to end with a key" + " (although it is invalid according to the specification),"
+                                     + " but ended with a value");
                             }
                             dictsAreSame = false;
                         }
                     }
                     if (outLeftover != null && cmpLeftover != null && !CompareNumbers(outLeftover, cmpLeftover)) {
                         if (compareResult != null && currentPath != null) {
-                            compareResult.AddError(currentPath, "Number tree was expected to end with a different key (although it is invalid according to the specification)"
+                            compareResult.AddError(currentPath, "Number tree was expected to end with " + "a different key (although it is invalid according to the specification)"
                                 );
                         }
                         dictsAreSame = false;
@@ -1855,7 +1920,8 @@ namespace iText.Kernel.Utils {
                     PdfArray cmpArray = new PdfArray(cmpItems, cmpItems.Count);
                     if (!CompareArraysExtended(outArray, cmpArray, currentPath, compareResult)) {
                         if (compareResult != null && currentPath != null) {
-                            compareResult.AddError(currentPath, "Number trees were flattened, compared and found to be different.");
+                            compareResult.AddError(currentPath, "Number trees were flattened, " + "compared and found to be different."
+                                );
                         }
                         dictsAreSame = false;
                     }
@@ -1886,7 +1952,6 @@ namespace iText.Kernel.Utils {
 
         private PdfNumber FlattenNumTree(PdfDictionary dictionary, PdfNumber leftOver, LinkedList<PdfObject> items
             ) {
-            /*Map<PdfNumber, PdfObject> items*/
             PdfArray nums = dictionary.GetAsArray(PdfName.Nums);
             if (nums != null) {
                 for (int k = 0; k < nums.Size(); k++) {
@@ -2006,9 +2071,10 @@ namespace iText.Kernel.Utils {
                         outPagesRef.Add(outRefKey.GetDocument().GetPage(i).GetPdfObject().GetIndirectReference());
                     }
                 }
-                // If at least one of the page dictionaries is in the document's page tree, we don't proceed with deep comparison,
-                // because pages are compared at different level, so we compare only their index.
-                // However only if both page dictionaries are not in the document's page trees, we continue to comparing them as normal dictionaries.
+                // If at least one of the page dictionaries is in the document's page tree, we don't proceed with
+                // deep comparison, because pages are compared at different level, so we compare only their index.
+                // However only if both page dictionaries are not in the document's page trees, we continue to
+                // comparing them as normal dictionaries.
                 if (cmpPagesRef.Contains(cmpRefKey) || outPagesRef.Contains(outRefKey)) {
                     if (cmpPagesRef.Contains(cmpRefKey) && cmpPagesRef.IndexOf(cmpRefKey) == outPagesRef.IndexOf(outRefKey)) {
                         return true;
@@ -2133,9 +2199,9 @@ namespace iText.Kernel.Utils {
                     ] }, iText.Commons.Utils.EncodingUtil.ISO_8859_1);
                 String outBytesNeighbours = iText.Commons.Utils.StringUtil.ReplaceAll(iText.Commons.Utils.JavaUtil.GetStringForBytes
                     (outStreamBytes, lOut, rOut - lOut, iText.Commons.Utils.EncodingUtil.ISO_8859_1), NEW_LINES, " ");
-                bytesDifference = MessageFormatUtil.Format("First bytes difference is encountered at index {0}. Expected: {1} ({2}). Found: {3} ({4}). Total number of different bytes: {5}"
-                    , JavaUtil.IntegerToString(Convert.ToInt32(firstDifferenceOffset)), cmpByte, cmpByteNeighbours, outByte
-                    , outBytesNeighbours, numberOfDifferentBytes);
+                bytesDifference = MessageFormatUtil.Format("First bytes difference is encountered at index {0}. Expected: {1} ({2}). Found: {3} ({4}). "
+                     + "Total number of different bytes: {5}", JavaUtil.IntegerToString(Convert.ToInt32(firstDifferenceOffset
+                    )), cmpByte, cmpByteNeighbours, outByte, outBytesNeighbours, numberOfDifferentBytes);
             }
             else {
                 // lengths are different
@@ -2262,15 +2328,16 @@ namespace iText.Kernel.Utils {
                 String outByte = outString[firstDifferenceOffset].ToString();
                 String outBytesNeighbours = iText.Commons.Utils.StringUtil.ReplaceAll(outString.JSubstring(lOut, rOut), NEW_LINES
                     , " ");
-                stringDifference = MessageFormatUtil.Format("First characters difference is encountered at index {0}.\nExpected: {1} ({2}).\nFound: {3} ({4}).\nTotal number of different characters: {5}"
-                    , JavaUtil.IntegerToString(Convert.ToInt32(firstDifferenceOffset)), cmpByte, cmpByteNeighbours, outByte
-                    , outBytesNeighbours, numberOfDifferentChars);
+                stringDifference = MessageFormatUtil.Format("First characters difference is encountered at index {0}.\n" +
+                     "Expected: {1} ({2}).\nFound: {3} ({4}).\nTotal number of different characters: {5}", JavaUtil.IntegerToString
+                    (Convert.ToInt32(firstDifferenceOffset)), cmpByte, cmpByteNeighbours, outByte, outBytesNeighbours, numberOfDifferentChars
+                    );
             }
             else {
                 // lengths are different
                 firstDifferenceOffset = minLength;
-                stringDifference = MessageFormatUtil.Format("All characters of the shorter string are the same as the first {0} characters of the longer one."
-                    , minLength);
+                stringDifference = MessageFormatUtil.Format("All characters of the shorter string are the same as the " + 
+                    "first {0} characters of the longer one.", minLength);
             }
             errorMessage.Append(stringDifference);
             return firstDifferenceOffset;
@@ -2316,7 +2383,8 @@ namespace iText.Kernel.Utils {
 
         private bool CompareLinkAnnotations(PdfLinkAnnotation cmpLink, PdfLinkAnnotation outLink, PdfDocument cmpDocument
             , PdfDocument outDocument) {
-            // Compare link rectangles, page numbers the links refer to, and simple parameters (non-indirect, non-arrays, non-dictionaries)
+            // Compare link rectangles, page numbers the links refer to,
+            // and simple parameters (non-indirect, non-arrays, non-dictionaries)
             PdfObject cmpDestObject = cmpLink.GetDestinationObject();
             PdfObject outDestObject = outLink.GetDestinationObject();
             if (cmpDestObject != null && outDestObject != null) {

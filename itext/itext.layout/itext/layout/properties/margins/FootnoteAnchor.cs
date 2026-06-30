@@ -39,6 +39,8 @@ namespace iText.Layout.Properties.Margins {
 
         private const int DEFAULT_TEXT_RISE = 7;
 
+        protected internal DefaultAccessibilityProperties tagProperties;
+
         private readonly Footnote footnote;
 
         private IElement footnoteAnchor;
@@ -74,7 +76,8 @@ namespace iText.Layout.Properties.Margins {
         public FootnoteAnchor(String text, Footnote footnote)
             // TODO DEVSIX-10031 Do not specify constant font size by default,
             //  it should depend on parent paragraph font size.
-            : this(new Text(text).SetFontSize(DEFAULT_FONT_SIZE).SetTextRise(DEFAULT_TEXT_RISE), footnote) {
+            : this(new Text(text).SetFontSize(DEFAULT_FONT_SIZE).SetTextRise(DEFAULT_TEXT_RISE).SetNeutralRole(), footnote
+                ) {
         }
 
         /// <summary>
@@ -191,6 +194,18 @@ namespace iText.Layout.Properties.Margins {
             return footnote;
         }
 
+        /// <summary><inheritDoc/></summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        public virtual AccessibilityProperties GetAccessibilityProperties() {
+            if (tagProperties == null) {
+                tagProperties = new DefaultAccessibilityProperties(StandardRoles.REFERENCE);
+            }
+            return tagProperties;
+        }
+
 //\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Gets
@@ -230,16 +245,6 @@ namespace iText.Layout.Properties.Margins {
             return this;
         }
 //\endcond
-
-        /// <summary><inheritDoc/></summary>
-        /// <returns>
-        /// 
-        /// <inheritDoc/>
-        /// </returns>
-        public virtual AccessibilityProperties GetAccessibilityProperties() {
-            // TODO DEVSIX-9997 Support correct footnotes tagging
-            return new DefaultAccessibilityProperties(StandardRoles.REFERENCE);
-        }
 
         /// <summary><inheritDoc/></summary>
         /// <returns>

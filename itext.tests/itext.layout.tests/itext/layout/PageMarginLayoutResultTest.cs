@@ -83,7 +83,7 @@ namespace iText.Layout {
             String fileName = "fullResultSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.Add(new Paragraph("Page 1 — no margin boxes.").Add(TestResourceUtil.GetByronStanza()));
                     document.Add(new SectionBreak(MarginBoxes(100, 80, 0, 0)));
@@ -113,7 +113,7 @@ namespace iText.Layout {
             String fileName = "partialLargeMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.Add(new SectionBreak(MarginBoxes(250, 200, 0, 0)));
                     Div tall = new Div().SetBackgroundColor(new DeviceRgb(209, 247, 29));
@@ -132,7 +132,7 @@ namespace iText.Layout {
             String fileName = "partialAreaBreakMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => true, MarginBoxes(200, 150, 0, 0));
                     Div tall = new Div().SetBackgroundColor(new DeviceRgb(78, 151, 205));
@@ -198,7 +198,7 @@ namespace iText.Layout {
             String fileName = "forcedPlacementExtremeMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.Add(new SectionBreak(ExtremeMarginBoxes()));
                     Div forced = new Div().Add(new Paragraph("FORCED — margin boxes left almost no room.")).SetBackgroundColor
@@ -216,7 +216,7 @@ namespace iText.Layout {
             String fileName = "marginsTransition";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.Add(new SectionBreak(MarginBoxes(50, 50, 0, 0)));
                     document.Add(ContentDiv("SMALL MARGINS — FULL", new DeviceRgb(65, 151, 29)));
@@ -259,7 +259,7 @@ namespace iText.Layout {
             String fileName = "nothingAreaBreakRestoresMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.Add(new SectionBreak(ExtremeMarginBoxes()));
                     Div forced = ContentDiv("PAGE 1 — EXTREME MARGINS (FORCED)", new DeviceRgb(255, 100, 100));
@@ -279,7 +279,7 @@ namespace iText.Layout {
             String fileName = "nothingThenFullTwoSectionBreaks";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.Add(new SectionBreak(ExtremeMarginBoxes()));
                     Div forced = ContentDiv("EXTREME — FORCED PLACEMENT", new DeviceRgb(255, 100, 100));
@@ -298,7 +298,7 @@ namespace iText.Layout {
             String fileName = "alternatingExtremeNormalMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 != 0 ? ExtremeMarginBoxes() : MarginBoxes(80, 80, 0, 0));
                     for (int page = 1; page <= 4; page++) {

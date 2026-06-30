@@ -210,7 +210,8 @@ namespace iText.Layout.Element {
         /// </param>
         public Image(iText.Layout.Element.Image image) {
             this.xObject = image.xObject;
-            this.tagProperties = image.tagProperties;
+            this.tagProperties = image.tagProperties == null ? null : new DefaultAccessibilityProperties(image.tagProperties
+                );
             this.properties = new Dictionary<int, Object>(image.properties);
             this.styles = image.styles == null ? null : new LinkedHashSet<Style>(image.styles);
             this.childElements = new List<IElement>(image.childElements);

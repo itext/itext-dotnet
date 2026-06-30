@@ -37,8 +37,6 @@ namespace iText.Layout.Properties.Margins {
     /// indicated in the text with superscript numbers (or letters or other symbols).
     /// </summary>
     public class Footnote : AbstractElement<iText.Layout.Properties.Margins.Footnote>, IAccessibleElement {
-        protected internal DefaultAccessibilityProperties tagProperties;
-
 //\cond DO_NOT_DOCUMENT
         internal readonly IDictionary<int, IElement> anchors = new Dictionary<int, IElement>();
 //\endcond
@@ -46,6 +44,8 @@ namespace iText.Layout.Properties.Margins {
 //\cond DO_NOT_DOCUMENT
         internal IElement footnoteAnchor = null;
 //\endcond
+
+        private DefaultAccessibilityProperties tagProperties;
 
         /// <summary>
         /// Creates new
@@ -70,6 +70,19 @@ namespace iText.Layout.Properties.Margins {
         public Footnote(Paragraph paragraph)
             : base() {
             childElements.Add(paragraph);
+            paragraph.SetNeutralRole();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        /// <returns>
+        /// 
+        /// <inheritDoc/>
+        /// </returns>
+        public virtual AccessibilityProperties GetAccessibilityProperties() {
+            if (tagProperties == null) {
+                tagProperties = new DefaultAccessibilityProperties(StandardRoles.NOTE);
+            }
+            return tagProperties;
         }
 
 //\cond DO_NOT_DOCUMENT
@@ -157,20 +170,6 @@ namespace iText.Layout.Properties.Margins {
             if (this.footnoteAnchor != null) {
                 paragraph.GetChildren().Remove(this.footnoteAnchor);
             }
-        }
-
-        /// <summary><inheritDoc/></summary>
-        /// <returns>
-        /// 
-        /// <inheritDoc/>
-        /// </returns>
-        public virtual AccessibilityProperties GetAccessibilityProperties() {
-            if (tagProperties == null) {
-                // Although we mark is as P here, it'll be an artifact due to PageMarginBoxes#setPageMarginTagRole method.
-                // TODO DEVSIX-9997 Support correct footnotes tagging
-                tagProperties = new DefaultAccessibilityProperties(StandardRoles.P);
-            }
-            return tagProperties;
         }
 
         /// <summary><inheritDoc/></summary>

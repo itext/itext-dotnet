@@ -20,10 +20,15 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System.Collections.Generic;
+using iText.Commons.Internal.Runtime;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
+using iText.Layout;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
+using iText.Layout.Tagging;
 
 namespace iText.Layout.Properties.Margins {
 //\cond DO_NOT_DOCUMENT
@@ -35,6 +40,9 @@ namespace iText.Layout.Properties.Margins {
     internal class FootnotesContainer : BlockElement<iText.Layout.Properties.Margins.FootnotesContainer> {
         private readonly int pageNumber;
 
+        private readonly IDictionary<IPropertyContainer, TaggingHintKey> footnoteTaggingHints = new Dictionary<IPropertyContainer
+            , TaggingHintKey>();
+
         protected internal DefaultAccessibilityProperties tagProperties;
 
         /// <summary>
@@ -45,6 +53,7 @@ namespace iText.Layout.Properties.Margins {
         /// <param name="pageNum">number of the page to which this container will be added</param>
         public FootnotesContainer(int pageNum) {
             this.pageNumber = pageNum;
+            this.SetNeutralRole();
         }
 
         /// <summary>
@@ -62,9 +71,22 @@ namespace iText.Layout.Properties.Margins {
         /// <see cref="FootnotesContainer"/>
         /// instance
         /// </returns>
-        public virtual iText.Layout.Properties.Margins.FootnotesContainer Add(Footnote footnote) {
+        public virtual iText.Layout.Properties.Margins.FootnotesContainer Add(Footnote footnote, TaggingHintKey taggingHint
+            ) {
             this.childElements.Add(footnote);
+            footnoteTaggingHints.Put(footnote, taggingHint);
             return this;
+        }
+
+        /// <summary>Adds footnoted from another FootnotesContainer.</summary>
+        /// <param name="otherContainer">the other FootnotesContainer to add the footnotes from</param>
+        public virtual void AddFootnotesFromOtherContainer(iText.Layout.Properties.Margins.FootnotesContainer otherContainer
+            ) {
+            foreach (IElement childElement in otherContainer.childElements) {
+                if (childElement is Footnote) {
+                    Add((Footnote)childElement, otherContainer.footnoteTaggingHints.Get(childElement));
+                }
+            }
         }
 
         /// <summary><inheritDoc/></summary>
@@ -79,7 +101,11 @@ namespace iText.Layout.Properties.Margins {
                     Footnote footnote = (Footnote)child;
                     footnote.ApplyFootnoteAnchor(this.pageNumber);
                 }
-                rendererRoot.AddChild(child.CreateRendererSubTree());
+                IRenderer childRenderer = child.CreateRendererSubTree();
+                if (footnoteTaggingHints.ContainsKey(child)) {
+                    childRenderer.SetProperty(Property.TAGGING_HINT_KEY, footnoteTaggingHints.Get(child));
+                }
+                rendererRoot.AddChild(childRenderer);
             }
             return rendererRoot;
         }

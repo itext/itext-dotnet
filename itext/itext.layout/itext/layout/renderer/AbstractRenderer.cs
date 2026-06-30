@@ -238,6 +238,20 @@ namespace iText.Layout.Renderer {
             return childRenderers;
         }
 
+        /// <summary>
+        /// Gets the fixed positioned child
+        /// <see cref="IRenderer"/>
+        /// s.
+        /// </summary>
+        /// <returns>
+        /// a list of direct fixed positioned child
+        /// <see cref="IRenderer">renderers</see>
+        /// of this instance
+        /// </returns>
+        public virtual IEnumerable<IRenderer> GetPositionenRenderers() {
+            return positionedRenderers;
+        }
+
         /// <summary><inheritDoc/></summary>
         public virtual bool HasProperty(int property) {
             return HasOwnProperty(property) || (modelElement != null && modelElement.HasProperty(property)) || (parent
