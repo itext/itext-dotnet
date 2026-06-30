@@ -62,7 +62,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.TestCaseSource("NumberingType")]
         public virtual void FootnoteNumberingTypeTest(FootnoteNumberingType? numberingType) {
-            // TODO DEVSIX-10023 Process partial result for footnote anchor.
             String fileName = "footnoteNumberingType_" + numberingType.ToString();
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";

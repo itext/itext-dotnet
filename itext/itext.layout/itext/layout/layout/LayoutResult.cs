@@ -319,6 +319,21 @@ namespace iText.Layout.Layout {
             return causeOfNothing;
         }
 
+        /// <summary>
+        /// Sets the first renderer to produce
+        /// <see cref="NOTHING"/>
+        /// during
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>.
+        /// </summary>
+        /// <param name="causeOfNothing">
+        /// the first renderer to produce
+        /// <see cref="NOTHING"/>
+        /// layout result
+        /// </param>
+        public virtual void SetCauseOfNothing(IRenderer causeOfNothing) {
+            this.causeOfNothing = causeOfNothing;
+        }
+
         /// <summary><inheritDoc/></summary>
         public override String ToString() {
             String status;

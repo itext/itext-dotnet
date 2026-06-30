@@ -27,6 +27,7 @@ using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 using iText.Layout.Properties.Margins;
 using iText.Layout.Tagging;
@@ -38,7 +39,13 @@ namespace iText.Layout.Renderer {
     /// instance representing an anchor for a footnote.
     /// </summary>
     public class FootnoteAnchorRenderer : AbstractRenderer {
-        private IRenderer footnoteAnchor;
+//\cond DO_NOT_DOCUMENT
+        internal IRenderer footnoteAnchor;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal float yPos = float.NaN;
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         // Create and store footnote renderer once to save its layout result.
@@ -63,6 +70,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
             if (this.footnoteRenderer == null) {
                 Footnote footnote = ((FootnoteAnchor)this.modelElement).GetFootnote();
@@ -77,6 +85,9 @@ namespace iText.Layout.Renderer {
             int pageNumber = layoutContext.GetArea().GetPageNumber();
             Rectangle pageRectangle = this.GetPdfDocument().GetPage(pageNumber).GetPageSize();
             IRenderer parentRenderer = GetParent();
+            if (parentRenderer is LineRenderer) {
+                this.yPos = ((LineRenderer)parentRenderer).occupiedArea.GetBBox().GetTop();
+            }
             while (parentRenderer != null) {
                 if (parentRenderer is DocumentRenderer) {
                     DocumentRenderer documentRenderer = (DocumentRenderer)parentRenderer;
@@ -89,17 +100,31 @@ namespace iText.Layout.Renderer {
                 parentRenderer = parentRenderer.GetParent();
             }
             this.footnoteRenderer.Layout(new LayoutContext(new LayoutArea(pageNumber, pageRectangle)));
-            // TODO DEVSIX-10023 Process partial result. Take it into account in line renderer
-            //  and in case of table header/footer or fixed width.
             LayoutResult layoutResult = footnoteAnchor.Layout(layoutContext);
             this.occupiedArea = layoutResult.GetOccupiedArea();
-            FootnotesCounterHandler.AddFootnoteAnchor(this);
             if (LayoutResult.NOTHING == layoutResult.GetStatus()) {
-                return new LayoutResult(LayoutResult.NOTHING, null, null, layoutResult.GetOverflowRenderer(), this);
+                layoutResult.SetOverflowRenderer(this);
+                layoutResult.SetCauseOfNothing(this);
+            }
+            else {
+                if (float.IsNaN(this.yPos)) {
+                    this.yPos = this.occupiedArea.GetBBox().GetTop();
+                }
+                FootnotesCounterHandler.AddFootnoteAnchor(this);
+            }
+            if (layoutResult.GetSplitRenderer() != null) {
+                iText.Layout.Renderer.FootnoteAnchorRenderer splitRenderer = CreateSplitRenderer(layoutResult);
+                layoutResult.SetSplitRenderer(splitRenderer);
             }
             return layoutResult;
         }
 
+        /// <summary><inheritDoc/></summary>
+        public override void Move(float dxRight, float dyUp) {
+            footnoteAnchor.Move(dxRight, dyUp);
+        }
+
+        /// <summary><inheritDoc/></summary>
         public override void Draw(DrawContext drawContext) {
             LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
             FootnoteTaggingHelper.RepairFootnoteAnchorTagIfNeeded(this, taggingHelper);
@@ -124,8 +149,41 @@ namespace iText.Layout.Renderer {
             flushed = true;
         }
 
+        /// <summary><inheritDoc/></summary>
+        public override MinMaxWidth GetMinMaxWidth() {
+            return GetMinMaxWidth(null);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public override MinMaxWidth GetMinMaxWidth(float? parentBoxWidth) {
+            childRenderers.Clear();
+            childRenderers.Add(footnoteAnchor);
+            MinMaxWidth res = base.GetMinMaxWidth(parentBoxWidth);
+            childRenderers.Clear();
+            return res;
+        }
+
+        /// <summary><inheritDoc/></summary>
         public override IRenderer GetNextRenderer() {
             return new iText.Layout.Renderer.FootnoteAnchorRenderer((FootnoteAnchor)modelElement);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override float? GetFirstYLineRecursively() {
+            childRenderers.Clear();
+            childRenderers.Add(footnoteAnchor);
+            float? res = base.GetFirstYLineRecursively();
+            childRenderers.Clear();
+            return res;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override float? GetLastYLineRecursively() {
+            childRenderers.Clear();
+            childRenderers.Add(footnoteAnchor);
+            float? res = base.GetLastYLineRecursively();
+            childRenderers.Clear();
+            return res;
         }
 
 //\cond DO_NOT_DOCUMENT
@@ -164,6 +222,17 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+        }
+
+        private iText.Layout.Renderer.FootnoteAnchorRenderer CreateSplitRenderer(LayoutResult layoutResult) {
+            iText.Layout.Renderer.FootnoteAnchorRenderer splitRenderer = (iText.Layout.Renderer.FootnoteAnchorRenderer
+                )GetNextRenderer();
+            splitRenderer.occupiedArea = occupiedArea.Clone();
+            splitRenderer.parent = parent;
+            splitRenderer.footnoteRenderer = footnoteRenderer;
+            splitRenderer.AddAllProperties(GetOwnProperties());
+            splitRenderer.footnoteAnchor = layoutResult.GetSplitRenderer().SetParent(splitRenderer);
+            return splitRenderer;
         }
     }
 }

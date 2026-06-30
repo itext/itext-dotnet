@@ -252,10 +252,12 @@ namespace iText.Layout.Renderer {
 
         private sealed class FootnoteAnchorComparator : IComparer<FootnoteAnchor> {
             public int Compare(FootnoteAnchor o1, FootnoteAnchor o2) {
-                Rectangle rectangle1 = this._enclosing.renderers.Get(o1).occupiedArea.GetBBox();
-                Rectangle rectangle2 = this._enclosing.renderers.Get(o2).occupiedArea.GetBBox();
-                int result = JavaUtil.FloatCompare(-rectangle1.GetY(), -rectangle2.GetY());
+                FootnoteAnchorRenderer renderer1 = this._enclosing.renderers.Get(o1);
+                FootnoteAnchorRenderer renderer2 = this._enclosing.renderers.Get(o2);
+                int result = JavaUtil.FloatCompare(-renderer1.yPos, -renderer2.yPos);
                 if (result == 0) {
+                    Rectangle rectangle1 = renderer1.occupiedArea.GetBBox();
+                    Rectangle rectangle2 = renderer2.occupiedArea.GetBBox();
                     result = JavaUtil.FloatCompare(rectangle1.GetX(), rectangle2.GetX());
                 }
                 return result;

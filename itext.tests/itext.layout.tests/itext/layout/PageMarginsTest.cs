@@ -906,6 +906,31 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        public virtual void FootnotesOneByOne2Test() {
+            String fileName = "footnotesOneByOne2";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    pdfDocument.SetTagged();
+                    document.SetFontSize(20);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
+                    Footnote footnote1 = new Footnote(TestResourceUtil.GetByronStanza());
+                    footnote1.SetBackgroundColor(ColorConstants.YELLOW);
+                    FootnoteAnchor anchor1 = new FootnoteAnchor("1", footnote1);
+                    Footnote footnote2 = new Footnote(TestResourceUtil.GetByronStanza());
+                    footnote2.SetBackgroundColor(ColorConstants.PINK);
+                    FootnoteAnchor anchor2 = new FootnoteAnchor("2", footnote2);
+                    p.Add(anchor1).Add(anchor2);
+                    Div div = new Div().Add(p).SetBorder(new SolidBorder(ColorConstants.LIGHT_GRAY, 3));
+                    document.Add(div);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ImageAsFootnoteAnchorTest() {
             String fileName = "imageAsFootnoteAnchor";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";

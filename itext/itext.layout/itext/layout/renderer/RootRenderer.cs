@@ -125,15 +125,7 @@ namespace iText.Layout.Renderer {
                 int rendererLayoutCounter = 0;
                 while (clearanceOverflowsToNextPage || (currentArea != null && renderer != null && (result = LayoutChild(renderer
                     , childMarginsInfo)).GetStatus() != LayoutResult.FULL)) {
-                    rendererLayoutCounter++;
-                    LayoutInfiniteLoopResolver loopResolver = GetPdfDocument().GetDiContainer().GetInstance<LayoutInfiniteLoopResolver
-                        >();
-                    int limit = loopResolver == null ? MAX_AMOUNT_OF_ELEMENT_LAYOUTS : loopResolver.GetMaxPagesCountForSingleElement
-                        ();
-                    if (rendererLayoutCounter > limit) {
-                        throw new PdfException(MessageFormatUtil.Format(LayoutExceptionMessageConstant.INFINITE_LOOP_DETECTED, limit
-                             / 3));
-                    }
+                    rendererLayoutCounter = GetRendererLayoutCounter(rendererLayoutCounter);
                     bool currentAreaNeedsToBeUpdated = false;
                     if (clearanceOverflowsToNextPage) {
                         result = new LayoutResult(LayoutResult.NOTHING, null, null, renderer);
@@ -276,6 +268,7 @@ namespace iText.Layout.Renderer {
             if (footnotesCounterHandler != null) {
                 footnotesCounterHandler.Reset();
             }
+            bool isForcedPlacement = true.Equals(renderer.GetProperty<bool?>(Property.FORCED_PLACEMENT));
             LayoutResult layoutResult = renderer.SetParent(this).Layout(new LayoutContext(currentArea.Clone(), childMarginsInfo
                 , floatRendererAreas));
             if (footnotesCounterHandler == null) {
@@ -301,11 +294,11 @@ namespace iText.Layout.Renderer {
                 ) && latestFootnoteNumber.ContainsKey(pageNum - 1)) {
                 latestFootnoteNumber.Put(pageNum, latestFootnoteNumber.Get(pageNum - 1));
             }
+            int rendererAdditionalLayoutCounter = 0;
             bool footnotesPlaced = false;
             float decreasedHeight = 0;
             bool footnotesNumDefined = false;
             int footnotesNum = 0;
-            // TODO DEVSIX-10030 Support forced placement for footnotes to prevent infinite loops
             while (!footnotesPlaced) {
                 if (footnotesNumDefined) {
                     decreasedHeight = 0;
@@ -324,19 +317,29 @@ namespace iText.Layout.Renderer {
                 footnotesCounterHandler.UpdateFootnoteNumberingAndStyles(footnotesProperties, (int)latestFootnoteNumber.GetOrDefault
                     (pageNum, 0));
                 footnotesCounterHandler.Reset();
+                if (isForcedPlacement) {
+                    renderer.SetProperty(Property.FORCED_PLACEMENT, true);
+                }
                 layoutResult = renderer.SetParent(this).Layout(new LayoutContext(currentArea.Clone(), childMarginsInfo, floatRendererAreas
                     ));
-                footnotes = footnotesCounterHandler.CollectFootnotes(layoutResult.GetOccupiedArea() == null ? currentArea : 
-                    layoutResult.GetOccupiedArea());
+                if (layoutResult.GetStatus() == LayoutResult.NOTHING) {
+                    footnotes.Clear();
+                    footnotesCounterHandler.Reset();
+                }
+                else {
+                    footnotes = footnotesCounterHandler.CollectFootnotes(layoutResult.GetOccupiedArea() == null ? currentArea : 
+                        layoutResult.GetOccupiedArea());
+                }
                 footnoteAnchorsNum = footnotes.Count;
                 // Number of the placed anchors == number of footnotes we reserved the space for before the layout
                 footnotesPlaced = footnoteAnchorsNum == footnotesNum;
                 if (footnoteAnchorsNum > footnotesNum) {
                     footnotesNumDefined = true;
                     // Decrease current area from the bottom until extra anchor will be moved to the next page.
-                    // TODO DEVSIX-10030 This logic can be improved.
+                    // This logic can be improved in the future.
                     currentArea.GetBBox().MoveUp(1).DecreaseHeight(1);
                 }
+                rendererAdditionalLayoutCounter = GetRendererLayoutCounter(rendererAdditionalLayoutCounter);
             }
             if (pageMarginBoxes == null) {
                 pageMarginBoxes = new PageMarginBoxes(JavaCollectionsUtil.EmptyList<PageMarginContent>());
@@ -598,6 +601,19 @@ namespace iText.Layout.Renderer {
             foreach (IRenderer renderer in waitingFloatRenderers) {
                 AddChild(renderer);
             }
+        }
+
+        private int GetRendererLayoutCounter(int rendererLayoutCounter) {
+            rendererLayoutCounter++;
+            LayoutInfiniteLoopResolver loopResolver = GetPdfDocument().GetDiContainer().GetInstance<LayoutInfiniteLoopResolver
+                >();
+            int limit = loopResolver == null ? MAX_AMOUNT_OF_ELEMENT_LAYOUTS : loopResolver.GetMaxPagesCountForSingleElement
+                ();
+            if (rendererLayoutCounter > limit) {
+                throw new PdfException(MessageFormatUtil.Format(LayoutExceptionMessageConstant.INFINITE_LOOP_DETECTED, limit
+                     / 3));
+            }
+            return rendererLayoutCounter;
         }
 
         private bool UpdateForcedPlacement(IRenderer currentRenderer, IRenderer overflowRenderer) {

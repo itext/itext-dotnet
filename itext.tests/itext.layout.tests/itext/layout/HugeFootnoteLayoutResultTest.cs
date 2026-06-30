@@ -156,16 +156,16 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void HugeParagraphWithFootnoteAnchorInDivTest() {
-            String fileName = "hugeParagraphFontWithFootnoteAnchor";
+            String fileName = "hugeParagraphFontWithFootnoteAnchorInDiv";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
-                    // TODO DEVSIX-10030 Support forced placement for footnotes to prevent infinite loops.
-                    //  Set footnote container font size to 27 to reproduce the issue.
+                    pdfDoc.SetTagged();
                     document.SetFootnotesProperties(new FootnotesProperties().SetFootnotesContainerStyle(new Style().SetFontSize
-                        (26f)));
+                        (27f)));
                     Footnote footnote = new Footnote(TestResourceUtil.GetByronStanza());
                     footnote.SetBorder(new DashedBorder(ColorConstants.YELLOW, 3));
                     Paragraph p = new Paragraph().Add("Large paragraph text.").SetFontSize(155f).Add(new FootnoteAnchor("[1]", 
@@ -218,18 +218,21 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void HugeFontAnchorWithMultipleFootnotesTest() {
-            // TODO DEVSIX-10023 Do not split footnote anchor.
-            String fileName = "hugeFontAnchorWithMultipleFootnotes";
+        public virtual void HugeFontAnchorWithMultipleFootnotesInDivTest() {
+            String fileName = "hugeFontAnchorWithMultipleFootnotesInDiv";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
-                    for (int i = 1; i <= 4; i++) {
+                    pdfDoc.SetTagged();
+                    for (int i = 1; i <= 2; i++) {
                         Footnote footnote = new Footnote("Footnote " + i + ": " + TestResourceUtil.GetByronStanza());
                         footnote.SetBorder(new DashedBorder(ColorConstants.YELLOW, 2));
-                        Paragraph p = new Paragraph().Add("Paragraph " + i).Add(new FootnoteAnchor(new Text("Anchor " + i + " with huge font."
-                            ).SetFontSize(48f), footnote));
+                        FootnoteAnchor footnoteAnchor = new FootnoteAnchor(new Text("Anchor " + i + " with huge font.").SetFontSize
+                            (47f), footnote);
+                        footnoteAnchor.SetProperty(Property.FORCED_PLACEMENT, true);
+                        footnoteAnchor.SetProperty(Property.KEEP_TOGETHER, true);
+                        Paragraph p = new Paragraph().Add("Paragraph " + i).Add(footnoteAnchor);
                         Div div = new Div().Add(p).SetBorder(new SolidBorder(CellColor(i - 1), 2));
                         document.Add(div);
                     }
@@ -240,6 +243,55 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        public virtual void HugeFontAnchorWithMultipleFootnotesInDiv2Test() {
+            String fileName = "hugeFontAnchorWithMultipleFootnotesInDiv2";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDoc)) {
+                    pdfDoc.SetTagged();
+                    for (int i = 1; i <= 4; i++) {
+                        Footnote footnote = new Footnote("Footnote " + i + ": " + TestResourceUtil.GetByronStanza());
+                        footnote.SetBorder(new DashedBorder(ColorConstants.YELLOW, 2));
+                        FootnoteAnchor footnoteAnchor = new FootnoteAnchor(new Text("Anchor " + i + " with huge font.").SetFontSize
+                            (48f), footnote);
+                        footnoteAnchor.SetProperty(Property.FORCED_PLACEMENT, true);
+                        footnoteAnchor.SetProperty(Property.KEEP_TOGETHER, true);
+                        Paragraph p = new Paragraph().Add("Paragraph " + i).Add(footnoteAnchor);
+                        Div div = new Div().Add(p).SetBorder(new SolidBorder(CellColor(i - 1), 2));
+                        document.Add(div);
+                    }
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void HugeFontAnchorWithMultipleFootnotesTest() {
+            String fileName = "hugeFontAnchorWithMultipleFootnotes";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDoc)) {
+                    for (int i = 1; i <= 4; i++) {
+                        Footnote footnote = new Footnote("Footnote " + i + ": " + TestResourceUtil.GetByronStanza());
+                        footnote.SetBorder(new DashedBorder(ColorConstants.YELLOW, 2));
+                        FootnoteAnchor footnoteAnchor = new FootnoteAnchor(new Text("Anchor " + i + " with huge font.").SetFontSize
+                            (58f), footnote);
+                        footnoteAnchor.SetProperty(Property.FORCED_PLACEMENT, true);
+                        footnoteAnchor.SetProperty(Property.KEEP_TOGETHER, true);
+                        Paragraph p = new Paragraph().Add("Paragraph " + i).Add(footnoteAnchor);
+                        document.Add(p);
+                    }
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void LargeImageAnchorFootnoteRenderTest() {
             String fileName = "largeImageAnchorFootnote";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
@@ -261,6 +313,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void LargeImageAnchorWithNormalContentRenderTest() {
             String fileName = "largeImageAnchorNormalContent";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";

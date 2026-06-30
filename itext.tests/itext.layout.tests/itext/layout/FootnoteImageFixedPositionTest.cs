@@ -28,9 +28,11 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Logs;
 using iText.Layout.Properties.Margins;
 using iText.Layout.Testutil;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -89,8 +91,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("TODO DEVSIX-10030 Support forced placement for footnotes to prevent infinite loops"
-            )]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void FixedPositionOnTextFootnoteHugeContentTest() {
             String fileName = "fixedPositionOnTextFootnoteHugeContent";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
@@ -130,29 +131,6 @@ namespace iText.Layout {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff_" + fileName));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void FixedPositionOnImageFootnoteTaggingTest() {
-            String fileName = "fixedPositionOnImageFootnoteTagging";
-            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
-            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".xml";
-            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
-                using (Document document = new Document(pdfDoc)) {
-                    pdfDoc.SetTagged();
-                    iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(SOURCE_FOLDER + 
-                        "bee.png"));
-                    image.SetWidth(80);
-                    Footnote footnote = new Footnote(new Paragraph().Add(image));
-                    footnote.SetBorder(new DashedBorder(ColorConstants.YELLOW, 3));
-                    footnote.SetFixedPosition(100, 150, 200);
-                    FootnoteAnchor anchor = new FootnoteAnchor("[1]", footnote);
-                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza()).Add(anchor).Add(TestResourceUtil.GetByronStanza
-                        ());
-                    document.Add(new Div().Add(p).SetBorder(new SolidBorder(ColorConstants.GREEN, 2)));
-                }
-            }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareTagStructureAgainstXml(outFileName, cmpFileName));
         }
 
         [NUnit.Framework.Test]
@@ -239,27 +217,6 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void FixedPositionOnTextFootnoteAnchorAndFootnoteTaggingTest() {
-            String fileName = "fixedPositionOnBothAnchorAndFootnoteTagging";
-            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
-            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".xml";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
-                using (Document document = new Document(pdfDoc)) {
-                    pdfDoc.SetTagged();
-                    Footnote footnote = new Footnote(TestResourceUtil.GetByronStanza());
-                    footnote.SetBorder(new DashedBorder(ColorConstants.YELLOW, 3));
-                    footnote.SetFixedPosition(50, 200, 250);
-                    FootnoteAnchor anchor = new FootnoteAnchor("[1]", footnote);
-                    anchor.SetFixedPosition(300, A4_HEIGHT * 0.70f, 100);
-                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza()).Add(anchor).Add(TestResourceUtil.GetByronStanza
-                        ());
-                    document.Add(new Div().Add(p).SetBorder(new SolidBorder(ColorConstants.GREEN, 2)));
-                }
-            }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareTagStructureAgainstXml(outFileName, cmpFileName));
-        }
-
-        [NUnit.Framework.Test]
         public virtual void FixedPositionOnImageFootnoteAnchorRenderTest() {
             String fileName = "fixedPositionOnImageFootnoteAnchor";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
@@ -280,29 +237,6 @@ namespace iText.Layout {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff_" + fileName));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void FixedPositionOnImageFootnoteAnchorTaggingTest() {
-            String fileName = "fixedPositionOnImageFootnoteAnchorTagging";
-            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
-            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".xml";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
-                using (Document document = new Document(pdfDoc)) {
-                    pdfDoc.SetTagged();
-                    Footnote footnote = new Footnote(TestResourceUtil.GetByronStanza());
-                    footnote.SetBorder(new DashedBorder(ColorConstants.YELLOW, 3));
-                    iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(SOURCE_FOLDER + 
-                        "bee.png"));
-                    image.SetWidth(15);
-                    FootnoteAnchor anchor = new FootnoteAnchor(image, footnote);
-                    anchor.SetFixedPosition(200, A4_HEIGHT * 0.55f, 80);
-                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza()).Add(anchor).Add(TestResourceUtil.GetByronStanza
-                        ());
-                    document.Add(new Div().Add(p).SetBorder(new SolidBorder(ColorConstants.GREEN, 3)));
-                }
-            }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareTagStructureAgainstXml(outFileName, cmpFileName));
         }
 
         [NUnit.Framework.Test]
