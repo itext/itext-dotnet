@@ -2,18 +2,17 @@
   <!-- The .csrpoj file uses ../Directory.Build.props as a source for some configurations -->
   <PropertyGroup>
     <!-- TargetFrameworks property from ../Directory.Build.props is overriden -->
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
     <AssemblyName>itext.brotli-compressor.tests</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-      <PackageReference Include="coverlet.collector" Version="6.0.2" />
+    <PackageReference Include="coverlet.collector" Version="6.0.2"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\itext\itext.brotli-compressor\itext.brotli-compressor.csproj" />
-    <ProjectReference Include="..\..\itext\itext.pdftest\itext.pdftest.csproj" />
-    <ProjectReference Include="..\..\itext\itext.forms\itext.forms.csproj" />
-    <ProjectReference Include="..\..\itext\itext.sign\itext.sign.csproj" />
-    <ProjectReference Include="..\..\itext\itext.bouncy-castle-adapter\itext.bouncy-castle-adapter.csproj" />
+    <ProjectReference Include="..\..\itext\itext.brotli-compressor\itext.brotli-compressor.csproj"/>
+    <ProjectReference Include="..\..\itext\itext.pdftest\itext.pdftest.csproj"/>
+    <ProjectReference Include="..\..\itext\itext.forms\itext.forms.csproj"/>
+    <ProjectReference Include="..\..\itext\itext.sign\itext.sign.csproj"/>
+    <ProjectReference Include="..\..\itext\itext.bouncy-castle-adapter\itext.bouncy-castle-adapter.csproj"/>
   </ItemGroup>
-
 </Project>
