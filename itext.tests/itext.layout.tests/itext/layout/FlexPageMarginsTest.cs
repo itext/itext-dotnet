@@ -394,7 +394,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.FLEX_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK)]
+        [LogMessage(LayoutLogMessageConstant.SECTION_BREAK_IGNORED)]
         public virtual void SectionBreakOnFlexItemChildTest() {
             String fileName = "sectionBreakOnFlexItemChild";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
@@ -416,7 +416,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.FLEX_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK)]
+        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_IGNORED)]
         public virtual void AreaBreakOnFlexItemChildTest() {
             String fileName = "flexItemChildAreaBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
@@ -514,7 +514,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.FLEX_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK)]
+        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_IGNORED)]
         public virtual void AreaBreakOnNestedFlexItemWithDocumentMarginsTest() {
             String fileName = "nestedFlexItemAreaBreakDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
@@ -703,12 +703,8 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        // TODO DEVSIX-10004: Update test after fix.
-        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
-        [LogMessage(LayoutLogMessageConstant.SECTION_BREAK_UNEXPECTED, Count = 3)]
-        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED, Count = 11)]
-        [LogMessage(LayoutLogMessageConstant.FLEX_ITEM_LAYOUT_RESULT_IS_NOT_FULL)]
-        [LogMessage(LayoutLogMessageConstant.SECTION_BREAK_LAYOUT_ON_PAGE_0)]
+        [LogMessage(LayoutLogMessageConstant.SECTION_BREAK_IGNORED, Count = 4)]
+        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_IGNORED, Count = 4)]
         public virtual void FlexWithTableHeaderAndFooterWithAreaBreakAndSectionBreakTest() {
             String fileName = "flexWithTableHeaderAndFooter";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";

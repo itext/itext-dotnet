@@ -1758,6 +1758,7 @@ namespace iText.Layout.Renderer {
             iText.Layout.Renderer.TableRenderer renderer = (iText.Layout.Renderer.TableRenderer)footerOrHeader.CreateRendererSubTree
                 ().SetParent(this);
             EnsureFooterOrHeaderHasTheSamePropertiesAsParentTableRenderer(renderer);
+            renderer.SetProperty(Property.IGNORE_AREA_AND_SECTION_BREAKS, true);
             bool firstHeader = !footer && rowRange.GetStartRow() == 0 && isOriginalNonSplitRenderer;
             LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
             if (taggingHelper != null) {

@@ -26,7 +26,6 @@ using iText.Commons;
 using iText.Kernel.Geom;
 using iText.Layout.Borders;
 using iText.Layout.Element;
-using iText.Layout.Logs;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
@@ -57,13 +56,8 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public override void AddChild(IRenderer renderer) {
-            if (renderer is AreaBreakRenderer || renderer is SectionBreakRenderer) {
-                LOGGER.LogWarning(LayoutLogMessageConstant.GRID_ITEM_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK);
-            }
-            else {
-                this.renderer = renderer;
-                base.AddChild(renderer);
-            }
+            this.renderer = renderer;
+            base.AddChild(renderer);
         }
 
         /// <summary><inheritDoc/></summary>

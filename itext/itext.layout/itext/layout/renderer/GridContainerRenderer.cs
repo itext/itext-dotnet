@@ -50,6 +50,7 @@ namespace iText.Layout.Renderer {
         /// </param>
         public GridContainerRenderer(GridContainer modelElement)
             : base(modelElement) {
+            SetProperty(Property.IGNORE_AREA_AND_SECTION_BREAKS, true);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -103,11 +104,6 @@ namespace iText.Layout.Renderer {
             if (renderer is AreaBreakRenderer || renderer is SectionBreakRenderer) {
                 LOGGER.LogWarning(LayoutLogMessageConstant.GRID_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK);
                 return;
-            }
-            // TODO DEVSIX-10004: Remove after the change
-            bool rendererRemoved = RendererRemovalUtil.RemoveAreaBreakAndSectionBreakDescendants(renderer);
-            if (rendererRemoved) {
-                LOGGER.LogWarning(LayoutLogMessageConstant.GRID_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK);
             }
             // The grid's items are not affected by the 'float' and 'clear' properties.
             // Still let clear them on renderer level not model element

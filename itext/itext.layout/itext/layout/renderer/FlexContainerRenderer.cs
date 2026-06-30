@@ -73,6 +73,7 @@ namespace iText.Layout.Renderer {
         /// </param>
         public FlexContainerRenderer(Div modelElement)
             : base(modelElement) {
+            SetProperty(Property.IGNORE_AREA_AND_SECTION_BREAKS, true);
         }
 
         /// <summary>
@@ -543,11 +544,6 @@ namespace iText.Layout.Renderer {
                 LOGGER.LogWarning(LayoutLogMessageConstant.FLEX_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK);
                 return;
             }
-            // TODO DEVSIX-10004: Remove after the change
-            bool rendererRemoved = RendererRemovalUtil.RemoveAreaBreakAndSectionBreakDescendants(renderer);
-            if (rendererRemoved) {
-                LOGGER.LogWarning(LayoutLogMessageConstant.FLEX_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK);
-            }
             // TODO DEVSIX-5087 Since overflow-fit is an internal iText overflow value, we do not need to support if
             // for html/css objects, such as flex. As for now we will set VISIBLE by default, however, while working
             // on the ticket one may come to some more satifactory approach
@@ -556,11 +552,11 @@ namespace iText.Layout.Renderer {
         }
 
         private static void OrderChildRenderers(IList<IRenderer> renderers) {
-            JavaCollectionsUtil.Sort(renderers, new _IComparer_585());
+            JavaCollectionsUtil.Sort(renderers, new _IComparer_580());
         }
 
-        private sealed class _IComparer_585 : IComparer<IRenderer> {
-            public _IComparer_585() {
+        private sealed class _IComparer_580 : IComparer<IRenderer> {
+            public _IComparer_580() {
             }
 
             public int Compare(IRenderer a, IRenderer b) {

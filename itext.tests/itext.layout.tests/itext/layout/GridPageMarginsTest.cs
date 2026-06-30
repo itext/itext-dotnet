@@ -418,7 +418,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.GRID_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK)]
+        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_IGNORED)]
         public virtual void AreaBreakInsideNestedGridCellWithDocumentMarginsTest() {
             String fileName = "nestedGridCellAreaBreakDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
@@ -623,7 +623,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.GRID_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK)]
+        [LogMessage(LayoutLogMessageConstant.SECTION_BREAK_IGNORED)]
         public virtual void SectionBreakInsideNestedGridCellTest() {
             String fileName = "sectionBreakInNestedGrid";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
@@ -649,7 +649,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.GRID_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK)]
+        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_IGNORED)]
         public virtual void AreaBreakInsideNestedGridCellTest() {
             String fileName = "areaBreakInNestedGrid";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
@@ -708,10 +708,8 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        // TODO DEVSIX-10004: Update test after fix.
-        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
-        [LogMessage(LayoutLogMessageConstant.SECTION_BREAK_UNEXPECTED, Count = 5)]
-        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED, Count = 21)]
+        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_IGNORED, Count = 5)]
+        [LogMessage(LayoutLogMessageConstant.SECTION_BREAK_IGNORED, Count = 5)]
         public virtual void GridWithTableHeaderAndFooterWithAreaBreakAndSectionBreakTest() {
             String fileName = "gridWithTableHeaderAndFooter";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";

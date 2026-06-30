@@ -36,11 +36,13 @@ using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Logs;
 using iText.Layout.Properties;
 using iText.Layout.Properties.Margins;
 using iText.Layout.Renderer;
 using iText.Layout.Testutil;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -1254,6 +1256,99 @@ namespace iText.Layout {
                 }
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareTagStructureAgainstXml(outFileName, cmpFileName));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.SECTION_BREAK_IGNORED)]
+        public virtual void SectionBreakInsideTableHeaderTest() {
+            String fileName = "sectionBreakInsideTableHeader";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDoc)) {
+                    IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
+                    SectionBreak sectionBreak = new SectionBreak(new PageMarginBoxes(elements));
+                    Table table = new Table(4);
+                    table.AddHeaderCell("Header text");
+                    table.AddHeaderCell(new Cell());
+                    table.AddHeaderCell(new Div().Add(new Paragraph("Before section break")).Add(sectionBreak).Add(new Paragraph
+                        ("After section break")));
+                    table.AddHeaderCell(new Cell());
+                    table.AddCell("Table cell content 1");
+                    table.AddCell("Table cell content 2");
+                    table.AddCell("Table cell content 3");
+                    table.AddCell("Table cell content 4");
+                    table.AddFooterCell("Footer text");
+                    table.AddFooterCell(new Cell());
+                    table.AddFooterCell(new Cell());
+                    table.AddFooterCell(new Cell());
+                    document.Add(table);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
+        }
+
+        // TODO DEVSIX-10049 Fix SectionBreak margins not working
+        [NUnit.Framework.Test]
+        public virtual void SectionBreakInsideTableBodyTest() {
+            String fileName = "sectionBreakInsideTableBody";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDoc)) {
+                    IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
+                    SectionBreak sectionBreak = new SectionBreak(new PageMarginBoxes(elements));
+                    Table table = new Table(4);
+                    table.AddHeaderCell("Header text");
+                    table.AddHeaderCell(new Cell());
+                    table.AddHeaderCell(new Cell());
+                    table.AddHeaderCell(new Cell());
+                    table.AddCell("Table cell content 1");
+                    table.AddCell("Table cell content 2");
+                    table.AddCell(new Div().Add(new Paragraph("Before section break")).Add(sectionBreak).Add(new Paragraph("After section break"
+                        )));
+                    table.AddCell("Table cell content 4");
+                    table.AddFooterCell("Footer text");
+                    table.AddFooterCell(new Cell());
+                    table.AddFooterCell(new Cell());
+                    table.AddFooterCell(new Cell());
+                    document.Add(table);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.SECTION_BREAK_IGNORED)]
+        public virtual void SectionBreakInsideTableFooterTest() {
+            String fileName = "sectionBreakInsideTableFooter";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDoc)) {
+                    IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
+                    SectionBreak sectionBreak = new SectionBreak(new PageMarginBoxes(elements));
+                    Table table = new Table(4);
+                    table.AddHeaderCell("Header text");
+                    table.AddHeaderCell(new Cell());
+                    table.AddHeaderCell(new Cell());
+                    table.AddHeaderCell(new Cell());
+                    table.AddCell("Table cell content 1");
+                    table.AddCell("Table cell content 2");
+                    table.AddCell("Table cell content 3");
+                    table.AddCell("Table cell content 4");
+                    table.AddFooterCell("Footer text");
+                    table.AddFooterCell(new Cell());
+                    table.AddFooterCell(new Div().Add(new Paragraph("Before section break")).Add(sectionBreak).Add(new Paragraph
+                        ("After section break")));
+                    table.AddFooterCell(new Cell());
+                    document.Add(table);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
         }
 
         private static iText.Layout.Element.Image LoadImage() {

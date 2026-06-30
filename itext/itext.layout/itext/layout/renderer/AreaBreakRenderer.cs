@@ -21,14 +21,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
-using iText.Commons.Utils;
+using iText.Kernel.Geom;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Logs;
+using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     /// <summary>
@@ -42,8 +42,10 @@ namespace iText.Layout.Renderer {
     /// layout element. Will terminate the
     /// current content area and initialize a new one.
     /// </remarks>
-    public class AreaBreakRenderer : IRenderer {
+    public class AreaBreakRenderer : AbstractBreakRenderer {
         protected internal AreaBreak areaBreak;
+
+        protected internal LayoutArea occupiedArea;
 
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AreaBreakRenderer
             ));
@@ -59,131 +61,75 @@ namespace iText.Layout.Renderer {
         }
 
         /// <summary>
-        /// Throws an UnsupportedOperationException because instances of this
-        /// class are only used for terminating the current content area.
+        /// Logs a warning about unexpected use of
+        /// <see cref="AreaBreakRenderer"/>
+        /// if not ignored,
+        /// because instances of this class are only used for terminating the current content area.
         /// </summary>
         /// <param name="renderer">
         /// 
         /// <inheritDoc/>
         /// </param>
-        public virtual void AddChild(IRenderer renderer) {
-            LOGGER.LogWarning(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED);
+        public override void AddChild(IRenderer renderer) {
+            if (this.GetProperty<bool?>(Property.IGNORE_AREA_AND_SECTION_BREAKS) == null) {
+                LOGGER.LogWarning(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED);
+            }
         }
 
-        public virtual LayoutResult Layout(LayoutContext layoutContext) {
+        public override LayoutResult Layout(LayoutContext layoutContext) {
+            if (true.Equals(this.GetProperty<bool?>(Property.IGNORE_AREA_AND_SECTION_BREAKS))) {
+                if (occupiedArea == null) {
+                    LOGGER.LogWarning(LayoutLogMessageConstant.AREA_BREAK_IGNORED);
+                }
+                Rectangle layoutContextAreaBbox = layoutContext.GetArea().GetBBox();
+                Rectangle occupiedAreaBbox = new Rectangle(layoutContextAreaBbox.GetLeft(), layoutContextAreaBbox.GetTop()
+                    , 0, 0);
+                occupiedArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), occupiedAreaBbox);
+                return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null, this);
+            }
             return new LayoutResult(LayoutResult.NOTHING, null, null, null, this).SetAreaBreak(areaBreak);
         }
 
         /// <summary>
-        /// Throws an UnsupportedOperationException because instances of this
-        /// class are only used for terminating the current content area.
+        /// Logs a warning about unexpected use of
+        /// <see cref="AreaBreakRenderer"/>
+        /// if not ignored,
+        /// because instances of this class are only used for terminating the current content area.
         /// </summary>
         /// <param name="drawContext">
         /// 
         /// <inheritDoc/>
         /// </param>
-        public virtual void Draw(DrawContext drawContext) {
-            LOGGER.LogWarning(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED);
+        public override void Draw(DrawContext drawContext) {
+            if (this.GetProperty<bool?>(Property.IGNORE_AREA_AND_SECTION_BREAKS) == null) {
+                LOGGER.LogWarning(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED);
+            }
         }
 
         /// <summary>
-        /// Throws an UnsupportedOperationException because instances of this
+        /// Throws an UnsupportedOperationException if not ignored, because instances of this
         /// class are only used for terminating the current content area.
         /// </summary>
         /// <returns>
         /// 
         /// <inheritDoc/>
         /// </returns>
-        public virtual LayoutArea GetOccupiedArea() {
+        public override LayoutArea GetOccupiedArea() {
+            if (true.Equals(this.GetProperty<bool?>(Property.IGNORE_AREA_AND_SECTION_BREAKS))) {
+                return occupiedArea;
+            }
             throw new NotSupportedException();
         }
 
-        public virtual bool HasProperty(int property) {
-            return false;
-        }
-
-        public virtual bool HasOwnProperty(int property) {
-            return false;
-        }
-
-        public virtual T1 GetProperty<T1>(int key) {
-            return (T1)(Object)null;
-        }
-
-        public virtual T1 GetOwnProperty<T1>(int property) {
-            return (T1)(Object)null;
-        }
-
-        public virtual T1 GetDefaultProperty<T1>(int property) {
-            return (T1)(Object)null;
-        }
-
-        /// <summary>
-        /// Throws an UnsupportedOperationException because instances of this
-        /// class are only used for terminating the current content area.
-        /// </summary>
-        /// <param name="property">
-        /// 
-        /// <inheritDoc/>
-        /// </param>
-        /// <param name="defaultValue">
-        /// 
-        /// <inheritDoc/>
-        /// </param>
-        /// <typeparam name="T1">
-        /// 
-        /// <inheritDoc/>
-        /// </typeparam>
-        /// <returns>
-        /// 
-        /// <inheritDoc/>
-        /// </returns>
-        public virtual T1 GetProperty<T1>(int property, T1 defaultValue) {
-            return (T1)(Object)null;
-        }
-
-        /// <summary>
-        /// Throws an UnsupportedOperationException because instances of this
-        /// class are only used for terminating the current content area.
-        /// </summary>
-        /// <param name="property">
-        /// 
-        /// <inheritDoc/>
-        /// </param>
-        /// <param name="value">
-        /// 
-        /// <inheritDoc/>
-        /// </param>
-        public virtual void SetProperty(int property, Object value) {
-            LOGGER.LogWarning(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED);
-        }
-
-        public virtual void DeleteOwnProperty(int property) {
-        }
-
-        public virtual IRenderer SetParent(IRenderer parent) {
-            return this;
-        }
-
-        public virtual IPropertyContainer GetModelElement() {
+        public override IPropertyContainer GetModelElement() {
             return null;
         }
 
-        public virtual IRenderer GetParent() {
-            return null;
-        }
-
-        public virtual IList<IRenderer> GetChildRenderers() {
-            return JavaCollectionsUtil.EmptyList<IRenderer>();
-        }
-
-        public virtual bool IsFlushed() {
-            return false;
-        }
-
         /// <summary>
-        /// Throws an UnsupportedOperationException because instances of this
-        /// class are only used for terminating the current content area.
+        /// Logs a warning about unexpected use of
+        /// <see cref="AreaBreakRenderer"/>
+        /// if not ignored,
+        /// because instances of this class are only used for terminating the current content area.
         /// </summary>
         /// <param name="dx">
         /// 
@@ -193,11 +139,13 @@ namespace iText.Layout.Renderer {
         /// 
         /// <inheritDoc/>
         /// </param>
-        public virtual void Move(float dx, float dy) {
-            LOGGER.LogWarning(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED);
+        public override void Move(float dx, float dy) {
+            if (this.GetProperty<bool?>(Property.IGNORE_AREA_AND_SECTION_BREAKS) == null) {
+                LOGGER.LogWarning(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED);
+            }
         }
 
-        public virtual IRenderer GetNextRenderer() {
+        public override IRenderer GetNextRenderer() {
             return null;
         }
     }

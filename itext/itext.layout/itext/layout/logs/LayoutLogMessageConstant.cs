@@ -57,6 +57,10 @@ namespace iText.Layout.Logs {
         public const String TYPOGRAPHY_NOT_FOUND_WARNING = "Cannot find typography module (pdfCalligraph), " + "which was implicitly required by {0}. "
              + "See https://itextpdf.com/products/pdfcalligraph for more information.";
 
+        public const String SECTION_BREAK_IGNORED = "Section break has been ignored. Most likely it was put inside an element that does not support it.";
+
+        public const String AREA_BREAK_IGNORED = "Area break has been ignored. Most likely it was put inside an element that does not support it.";
+
         private LayoutLogMessageConstant() {
         }
         // Private constructor will prevent the instantiation of this class directly.
