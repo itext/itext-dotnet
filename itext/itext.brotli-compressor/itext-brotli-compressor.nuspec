@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
     <metadata>
         <id>itext.brotli-compressor</id>
-        <version>9.7.0-SNAPSHOT</version>
+        <version>9.7.0</version>
         <title>iText brotli-compressor module</title>
         <authors>Apryse Software</authors>
         <owners>Apryse Software</owners>
@@ -17,8 +17,8 @@
         <language>en-US</language>
         <tags>itext itext7 itextsharp c# .net csharp brotli</tags>
         <dependencies>
-            <dependency id="itext.commons" version="9.7.0-SNAPSHOT" />
-            <dependency id="itext" version="9.7.0-SNAPSHOT" />
+            <dependency id="itext.commons" version="9.7.0" />
+            <dependency id="itext" version="9.7.0" />
         </dependencies>
     </metadata>
     <files>
