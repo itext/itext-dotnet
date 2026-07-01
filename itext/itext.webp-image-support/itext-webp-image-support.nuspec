@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
 	<metadata>
 		<id>itext.webp-image-support</id>
-		<version>9.7.0-SNAPSHOT</version>
+		<version>9.8.0-SNAPSHOT</version>
 		<title>iText webp image support module</title>
 		<authors>Apryse Software</authors>
 		<owners>Apryse Software</owners>
@@ -18,12 +18,12 @@
 		<tags>itext itext7 itextsharp c# .net csharp webp</tags>
 		<dependencies>
 			<group targetFramework="net461">
-				<dependency id="itext" version="9.7.0-SNAPSHOT" />
+				<dependency id="itext" version="9.8.0-SNAPSHOT" />
 				<dependency id="SkiaSharp" version="3.119.4" />
 				<dependency id="SkiaSharp.NativeAssets.Linux.NoDependencies" version="3.119.4" />
 			</group>
 			<group targetFramework="netstandard2.0">
-				<dependency id="itext" version="9.7.0-SNAPSHOT" />
+				<dependency id="itext" version="9.8.0-SNAPSHOT" />
 				<dependency id="SkiaSharp" version="3.119.4" />
 				<dependency id="SkiaSharp.NativeAssets.Linux.NoDependencies" version="3.119.4" />
 			</group>
