@@ -142,6 +142,8 @@ namespace iText.Layout.Renderer {
                                 currentAreaNeedsToBeUpdated = true;
                             }
                         }
+                        addedPositionedRenderers = LayoutPositionedRenderersInStaticLoop(addedPositionedRenderers, result.GetSplitRenderer
+                            ());
                     }
                     else {
                         if (result.GetStatus() == LayoutResult.NOTHING && !clearanceOverflowsToNextPage) {
@@ -234,32 +236,53 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            foreach (IRenderer addedPositionedRenderer in addedPositionedRenderers) {
-                positionedRenderers.Add(addedPositionedRenderer);
-                renderer = positionedRenderers[positionedRenderers.Count - 1];
-                int? positionedPageNumber = renderer.GetProperty<int?>(Property.PAGE_NUMBER);
-                if (positionedPageNumber == null) {
-                    positionedPageNumber = currentArea.GetPageNumber();
-                }
-                LayoutArea layoutArea;
-                // For position=absolute, if none of the top, bottom, left, right properties are provided,
-                // the content should be displayed in the flow of the current content, not overlapping it.
-                // The behavior is just if it would be statically positioned except it does not affect other elements
-                if (Convert.ToInt32(LayoutPosition.ABSOLUTE).Equals(renderer.GetProperty<int?>(Property.POSITION)) && AbstractRenderer
-                    .NoAbsolutePositionInfo(renderer)) {
-                    layoutArea = new LayoutArea((int)positionedPageNumber, currentArea.GetBBox().Clone());
+            foreach (IRenderer positionedRenderer in addedPositionedRenderers) {
+                LayoutPositionedRenderer(positionedRenderer);
+            }
+        }
+
+        private IList<IRenderer> LayoutPositionedRenderersInStaticLoop(IList<IRenderer> addedPositionedRenderers, 
+            IRenderer splitRenderer) {
+            IList<IRenderer> remainingAddedPositionedRenderers = new List<IRenderer>();
+            foreach (IRenderer positionedRenderer in addedPositionedRenderers) {
+                if (positionedRenderer.HasProperty(Property.POSITIONED_ELEMENT_WRAPPED) && IsRendererInSplitRendererTree(positionedRenderer
+                    , splitRenderer)) {
+                    // Positioned renderer wrapper, if exists, was already layouted.
+                    // It means we need to layout positioned renderer on the same page.
+                    LayoutPositionedRenderer(positionedRenderer);
                 }
                 else {
-                    layoutArea = new LayoutArea((int)positionedPageNumber, initialCurrentArea.GetBBox().Clone());
+                    remainingAddedPositionedRenderers.Add(positionedRenderer);
                 }
-                Rectangle fullBbox = layoutArea.GetBBox().Clone();
-                PreparePositionedRendererAndAreaForLayout(renderer, fullBbox, layoutArea.GetBBox());
-                renderer.Layout(new PositionedLayoutContext(new LayoutArea(layoutArea.GetPageNumber(), fullBbox), layoutArea
-                    ));
-                if (immediateFlush) {
-                    FlushSingleRenderer(renderer);
-                    positionedRenderers.JRemoveAt(positionedRenderers.Count - 1);
-                }
+            }
+            return remainingAddedPositionedRenderers;
+        }
+
+        private void LayoutPositionedRenderer(IRenderer positionedRenderer) {
+            positionedRenderers.Add(positionedRenderer);
+            int? positionedPageNumber = positionedRenderer.GetProperty<int?>(Property.PAGE_NUMBER);
+            if (positionedPageNumber == null) {
+                positionedPageNumber = currentArea.GetPageNumber();
+            }
+            LayoutArea layoutArea;
+            // For position=absolute, if none of the top, bottom, left, right properties are provided,
+            // the content should be displayed in the flow of the current content, not overlapping it.
+            // The behavior is just if it would be statically positioned except it does not affect other elements
+            if (Convert.ToInt32(LayoutPosition.ABSOLUTE).Equals(positionedRenderer.GetProperty<int?>(Property.POSITION
+                )) && AbstractRenderer.HorizontalCoordinateMissingForAbsolutePosition(positionedRenderer) && AbstractRenderer
+                .VerticalCoordinateMissingForAbsolutePosition(positionedRenderer)) {
+                layoutArea = new LayoutArea((int)positionedPageNumber, currentArea.GetBBox().Clone());
+            }
+            else {
+                layoutArea = new LayoutArea((int)positionedPageNumber, initialCurrentArea.GetBBox().Clone());
+            }
+            Rectangle fullBbox = layoutArea.GetBBox().Clone();
+            PreparePositionedRendererAndAreaForLayout(positionedRenderer, fullBbox, layoutArea.GetBBox());
+            positionedRenderer.Layout(new PositionedLayoutContext(new LayoutArea(layoutArea.GetPageNumber(), fullBbox)
+                , layoutArea));
+            if (immediateFlush) {
+                FlushSingleRenderer(positionedRenderer);
+                positionedRenderers.JRemoveAt(positionedRenderers.Count - 1);
             }
         }
 

@@ -74,6 +74,8 @@ namespace iText.Layout.Exceptions {
         public const String INFINITE_LOOP_DETECTED = "Potential infinite loop detected. " + "Same layout element was layouted more than {0} times. "
              + "If you need to configure this limit use LayoutInfiniteLoopResolver class in" + "DocumentProperties#registerDependency or ConverterProperties#registerDependency methods.";
 
+        public const String INCORRECT_LIST_CHILD = "All children of a ListRenderer are suppose to be ListItemRenderer instances. Instead it was {0}.";
+
         private LayoutExceptionMessageConstant() {
         }
     }

@@ -166,6 +166,10 @@ namespace iText.Layout.Renderer {
             // https://www.webkit.org/blog/116/webcore-rendering-iii-layout-basics
             // "The rules can be summarized as follows:"...
             int? positioning = renderer.GetProperty<int?>(Property.POSITION);
+            bool verticalCoordinateMissing = iText.Layout.Renderer.AbstractRenderer.VerticalCoordinateMissingForAbsolutePosition
+                (renderer);
+            bool horizontalCoordinateMissing = iText.Layout.Renderer.AbstractRenderer.HorizontalCoordinateMissingForAbsolutePosition
+                (renderer);
             if (positioning == null || positioning == LayoutPosition.RELATIVE || positioning == LayoutPosition.STATIC) {
                 childRenderers.Add(renderer);
             }
@@ -184,12 +188,8 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     if (positioning == LayoutPosition.ABSOLUTE) {
-                        // For position=absolute, if none of the top, bottom, left, right properties are provided,
-                        // the content should be displayed in the flow of the current content, not overlapping it.
-                        // The behavior is just if it would be statically positioned except it does not affect other elements
                         iText.Layout.Renderer.AbstractRenderer positionedParent = this;
-                        bool noPositionInfo = iText.Layout.Renderer.AbstractRenderer.NoAbsolutePositionInfo(renderer);
-                        while (!positionedParent.IsPositioned() && !noPositionInfo) {
+                        while (!positionedParent.IsPositioned() && !(verticalCoordinateMissing && horizontalCoordinateMissing)) {
                             IRenderer parent = positionedParent.parent;
                             if (parent is iText.Layout.Renderer.AbstractRenderer) {
                                 positionedParent = (iText.Layout.Renderer.AbstractRenderer)parent;
@@ -207,6 +207,19 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+            if (positioning != null && positioning == LayoutPosition.ABSOLUTE) {
+                // For position=absolute, if properties for certain coordinates are not provided
+                // (there is no strict coordinates where to place the element),
+                // the content should be displayed as if it's in the flow of the current content.
+                // The behavior is just as if it would be statically positioned except it does not affect other elements.
+                if (!(this is FlexContainerRenderer || this is GridContainerRenderer || this is GridItemRenderer)) {
+                    // Static positioning is different for Flex and Grid layout, that's why for now it's not calculated.
+                    if (verticalCoordinateMissing || horizontalCoordinateMissing) {
+                        childRenderers.Add(new AbsolutelyPositionedRenderer(renderer, verticalCoordinateMissing, horizontalCoordinateMissing
+                            ));
+                    }
+                }
+            }
             // Fetch positioned renderers from non-positioned child because they might be stuck there
             // because child's parent was null previously
             if (renderer is iText.Layout.Renderer.AbstractRenderer && !((iText.Layout.Renderer.AbstractRenderer)renderer
@@ -217,7 +230,9 @@ namespace iText.Layout.Renderer {
                 int pos = 0;
                 IList<IRenderer> childPositionedRenderers = ((iText.Layout.Renderer.AbstractRenderer)renderer).positionedRenderers;
                 while (pos < childPositionedRenderers.Count) {
-                    if (iText.Layout.Renderer.AbstractRenderer.NoAbsolutePositionInfo(childPositionedRenderers[pos])) {
+                    if (iText.Layout.Renderer.AbstractRenderer.VerticalCoordinateMissingForAbsolutePosition(childPositionedRenderers
+                        [pos]) && iText.Layout.Renderer.AbstractRenderer.HorizontalCoordinateMissingForAbsolutePosition(childPositionedRenderers
+                        [pos])) {
                         pos++;
                     }
                     else {
@@ -301,6 +316,17 @@ namespace iText.Layout.Renderer {
         }
 
         /// <summary><inheritDoc/></summary>
+        public virtual T1 GetOwnProperty<T1>(int property) {
+            return (T1)properties.Get(property);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual T1 GetProperty<T1>(int property, T1 defaultValue) {
+            T1 result = this.GetProperty<T1>(property);
+            return result != null ? result : defaultValue;
+        }
+
+        /// <summary><inheritDoc/></summary>
         public virtual T1 GetProperty<T1>(int key) {
             Object property;
             if ((property = properties.Get(key)) != null || properties.ContainsKey(key)) {
@@ -319,17 +345,6 @@ namespace iText.Layout.Renderer {
                 return (T1)property;
             }
             return modelElement != null ? modelElement.GetDefaultProperty<T1>(key) : (T1)(Object)null;
-        }
-
-        /// <summary><inheritDoc/></summary>
-        public virtual T1 GetOwnProperty<T1>(int property) {
-            return (T1)properties.Get(property);
-        }
-
-        /// <summary><inheritDoc/></summary>
-        public virtual T1 GetProperty<T1>(int property, T1 defaultValue) {
-            T1 result = this.GetProperty<T1>(property);
-            return result != null ? result : defaultValue;
         }
 
         /// <summary><inheritDoc/></summary>
@@ -489,35 +504,6 @@ namespace iText.Layout.Renderer {
         }
 
         /// <summary>
-        /// Apply
-        /// <c>Property.OPACITY</c>
-        /// property if specified by setting corresponding values in graphic state dictionary
-        /// opacity will be applied to all elements drawn after calling this method and before
-        /// calling
-        /// <see cref="EndElementOpacityApplying(DrawContext)"/>.
-        /// </summary>
-        /// <param name="drawContext">the context (canvas, document, etc.) of this drawing operation.</param>
-        protected internal virtual void BeginElementOpacityApplying(DrawContext drawContext) {
-            float? opacity = this.GetPropertyAsFloat(Property.OPACITY);
-            if (opacity != null && opacity < 1f) {
-                PdfExtGState extGState = new PdfExtGState();
-                extGState.SetStrokeOpacity((float)opacity).SetFillOpacity((float)opacity);
-                drawContext.GetCanvas().SaveState().SetExtGState(extGState);
-            }
-        }
-
-        /// <summary>
-        /// <see cref="BeginElementOpacityApplying(DrawContext)"/>.
-        /// </summary>
-        /// <param name="drawContext">the context (canvas, document, etc.) of this drawing operation.</param>
-        protected internal virtual void EndElementOpacityApplying(DrawContext drawContext) {
-            float? opacity = this.GetPropertyAsFloat(Property.OPACITY);
-            if (opacity != null && opacity < 1f) {
-                drawContext.GetCanvas().RestoreState();
-            }
-        }
-
-        /// <summary>
         /// Draws a background layer if it is defined by a key
         /// <see cref="iText.Layout.Properties.Property.BACKGROUND"/>
         /// in either the layout element or this
@@ -561,6 +547,57 @@ namespace iText.Layout.Renderer {
                 if (isTagged) {
                     drawContext.GetCanvas().CloseTag();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Create a
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// with the given area and containing a linear gradient inside.
+        /// </summary>
+        /// <param name="linearGradientBuilder">the linear gradient builder</param>
+        /// <param name="xObjectArea">the result object area</param>
+        /// <param name="document">the pdf document</param>
+        /// <returns>the xObject with a specified area and a linear gradient</returns>
+        public static PdfFormXObject CreateXObject(AbstractLinearGradientBuilder linearGradientBuilder, Rectangle 
+            xObjectArea, PdfDocument document) {
+            Rectangle formBBox = new Rectangle(0, 0, xObjectArea.GetWidth(), xObjectArea.GetHeight());
+            PdfFormXObject xObject = new PdfFormXObject(formBBox);
+            if (linearGradientBuilder != null) {
+                Color gradientColor = linearGradientBuilder.BuildColor(formBBox, null, document);
+                if (gradientColor != null) {
+                    new PdfCanvas(xObject, document).SetColor(gradientColor, true).Rectangle(formBBox).Fill();
+                }
+            }
+            return xObject;
+        }
+
+        /// <summary>
+        /// Apply
+        /// <c>Property.OPACITY</c>
+        /// property if specified by setting corresponding values in graphic state dictionary
+        /// opacity will be applied to all elements drawn after calling this method and before
+        /// calling
+        /// <see cref="EndElementOpacityApplying(DrawContext)"/>.
+        /// </summary>
+        /// <param name="drawContext">the context (canvas, document, etc.) of this drawing operation.</param>
+        protected internal virtual void BeginElementOpacityApplying(DrawContext drawContext) {
+            float? opacity = this.GetPropertyAsFloat(Property.OPACITY);
+            if (opacity != null && opacity < 1f) {
+                PdfExtGState extGState = new PdfExtGState();
+                extGState.SetStrokeOpacity((float)opacity).SetFillOpacity((float)opacity);
+                drawContext.GetCanvas().SaveState().SetExtGState(extGState);
+            }
+        }
+
+        /// <summary>
+        /// <see cref="BeginElementOpacityApplying(DrawContext)"/>.
+        /// </summary>
+        /// <param name="drawContext">the context (canvas, document, etc.) of this drawing operation.</param>
+        protected internal virtual void EndElementOpacityApplying(DrawContext drawContext) {
+            float? opacity = this.GetPropertyAsFloat(Property.OPACITY);
+            if (opacity != null && opacity < 1f) {
+                drawContext.GetCanvas().RestoreState();
             }
         }
 
@@ -712,28 +749,6 @@ namespace iText.Layout.Renderer {
                 ++counterX;
             }
             while (!backgroundImage.GetRepeat().IsNoRepeatOnXAxis() && (isCurrentOverlaps || isNextOverlaps));
-        }
-
-        /// <summary>
-        /// Create a
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
-        /// with the given area and containing a linear gradient inside.
-        /// </summary>
-        /// <param name="linearGradientBuilder">the linear gradient builder</param>
-        /// <param name="xObjectArea">the result object area</param>
-        /// <param name="document">the pdf document</param>
-        /// <returns>the xObject with a specified area and a linear gradient</returns>
-        public static PdfFormXObject CreateXObject(AbstractLinearGradientBuilder linearGradientBuilder, Rectangle 
-            xObjectArea, PdfDocument document) {
-            Rectangle formBBox = new Rectangle(0, 0, xObjectArea.GetWidth(), xObjectArea.GetHeight());
-            PdfFormXObject xObject = new PdfFormXObject(formBBox);
-            if (linearGradientBuilder != null) {
-                Color gradientColor = linearGradientBuilder.BuildColor(formBBox, null, document);
-                if (gradientColor != null) {
-                    new PdfCanvas(xObject, document).SetColor(gradientColor, true).Rectangle(formBBox).Fill();
-                }
-            }
-            return xObject;
         }
 
         /// <summary>Evaluate the actual background</summary>
@@ -1879,6 +1894,54 @@ namespace iText.Layout.Renderer {
                 .GetValue() : 0, reverse);
         }
 
+        protected internal virtual void ApplyAbsolutePosition(Rectangle parentRect) {
+            float? top = this.GetPropertyAsFloat(Property.TOP);
+            float? bottom = this.GetPropertyAsFloat(Property.BOTTOM);
+            float? left = this.GetPropertyAsFloat(Property.LEFT);
+            float? right = this.GetPropertyAsFloat(Property.RIGHT);
+            if (right == null && left == null && BaseDirection.RIGHT_TO_LEFT == this.GetProperty<BaseDirection?>(Property
+                .BASE_DIRECTION)) {
+                right = 0f;
+            }
+            try {
+                if (right != null) {
+                    Move(parentRect.GetRight() - (float)right - occupiedArea.GetBBox().GetRight(), 0);
+                }
+                if (left != null) {
+                    Move(parentRect.GetLeft() + (float)left - occupiedArea.GetBBox().GetLeft(), 0);
+                }
+                if (top != null) {
+                    Move(0, parentRect.GetTop() - (float)top - occupiedArea.GetBBox().GetTop());
+                }
+                if (bottom != null) {
+                    Move(0, parentRect.GetBottom() + (float)bottom - occupiedArea.GetBBox().GetBottom());
+                }
+                if (left == null && right == null) {
+                    float? leftCalculated = this.GetPropertyAsFloat(Property.LEFT_CALCULATED);
+                    if (leftCalculated == null) {
+                        Move(parentRect.GetLeft() - occupiedArea.GetBBox().GetLeft(), 0);
+                    }
+                    else {
+                        Move((float)leftCalculated - occupiedArea.GetBBox().GetX(), 0);
+                    }
+                }
+                if (top == null && bottom == null) {
+                    float? topCalculated = this.GetPropertyAsFloat(Property.TOP_CALCULATED);
+                    if (topCalculated == null) {
+                        Move(0, parentRect.GetTop() - occupiedArea.GetBBox().GetTop());
+                    }
+                    else {
+                        Move(0, (float)topCalculated - occupiedArea.GetBBox().GetHeight() - occupiedArea.GetBBox().GetY());
+                    }
+                }
+            }
+            catch (Exception) {
+                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                    , "Absolute positioning might be applied incorrectly."));
+            }
+        }
+
         /// <summary>Applies the given border box (borders) on the given rectangle</summary>
         /// <param name="rect">a rectangle paddings will be applied on.</param>
         /// <param name="borders">
@@ -1901,39 +1964,6 @@ namespace iText.Layout.Renderer {
             float bottomWidth = borders[2] != null ? borders[2].GetWidth() : 0;
             float leftWidth = borders[3] != null ? borders[3].GetWidth() : 0;
             return rect.ApplyMargins(topWidth, rightWidth, bottomWidth, leftWidth, reverse);
-        }
-
-        protected internal virtual void ApplyAbsolutePosition(Rectangle parentRect) {
-            float? top = this.GetPropertyAsFloat(Property.TOP);
-            float? bottom = this.GetPropertyAsFloat(Property.BOTTOM);
-            float? left = this.GetPropertyAsFloat(Property.LEFT);
-            float? right = this.GetPropertyAsFloat(Property.RIGHT);
-            if (left == null && right == null && BaseDirection.RIGHT_TO_LEFT.Equals(this.GetProperty<BaseDirection?>(Property
-                .BASE_DIRECTION))) {
-                right = 0f;
-            }
-            if (top == null && bottom == null) {
-                top = 0f;
-            }
-            try {
-                if (right != null) {
-                    Move(parentRect.GetRight() - (float)right - occupiedArea.GetBBox().GetRight(), 0);
-                }
-                if (left != null) {
-                    Move(parentRect.GetLeft() + (float)left - occupiedArea.GetBBox().GetLeft(), 0);
-                }
-                if (top != null) {
-                    Move(0, parentRect.GetTop() - (float)top - occupiedArea.GetBBox().GetTop());
-                }
-                if (bottom != null) {
-                    Move(0, parentRect.GetBottom() + (float)bottom - occupiedArea.GetBBox().GetBottom());
-                }
-            }
-            catch (Exception) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
-                    , "Absolute positioning might be applied incorrectly."));
-            }
         }
 
         protected internal virtual void ApplyRelativePositioningTranslation(bool reverse) {
@@ -2519,9 +2549,14 @@ namespace iText.Layout.Renderer {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal static bool NoAbsolutePositionInfo(IRenderer renderer) {
-            return !renderer.HasProperty(Property.TOP) && !renderer.HasProperty(Property.BOTTOM) && !renderer.HasProperty
-                (Property.LEFT) && !renderer.HasProperty(Property.RIGHT);
+        internal static bool VerticalCoordinateMissingForAbsolutePosition(IRenderer renderer) {
+            return !renderer.HasProperty(Property.TOP) && !renderer.HasProperty(Property.BOTTOM);
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal static bool HorizontalCoordinateMissingForAbsolutePosition(IRenderer renderer) {
+            return !renderer.HasProperty(Property.LEFT) && !renderer.HasProperty(Property.RIGHT);
         }
 //\endcond
 
@@ -3014,6 +3049,21 @@ namespace iText.Layout.Renderer {
             else {
                 return true;
             }
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual bool IsRendererInSplitRendererTree(IRenderer positionedRenderer, IRenderer splitRenderer) {
+            foreach (IRenderer childRenderer in splitRenderer.GetChildRenderers()) {
+                if (childRenderer is AbsolutelyPositionedRenderer && ((AbsolutelyPositionedRenderer)childRenderer).GetWrappedRenderer
+                    () == positionedRenderer) {
+                    return true;
+                }
+                if (IsRendererInSplitRendererTree(positionedRenderer, childRenderer)) {
+                    return true;
+                }
+            }
+            return false;
         }
 //\endcond
 

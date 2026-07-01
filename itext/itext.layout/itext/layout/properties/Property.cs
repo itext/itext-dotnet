@@ -412,6 +412,12 @@ namespace iText.Layout.Properties {
 
         public const int IGNORE_AREA_AND_SECTION_BREAKS = 161;
 
+        public const int TOP_CALCULATED = 162;
+
+        public const int LEFT_CALCULATED = 163;
+
+        public const int POSITIONED_ELEMENT_WRAPPED = 164;
+
         /// <summary>
         /// Some properties must be passed to
         /// <see cref="iText.Layout.IPropertyContainer"/>

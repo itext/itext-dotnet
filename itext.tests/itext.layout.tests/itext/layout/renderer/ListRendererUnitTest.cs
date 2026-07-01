@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout;
@@ -38,13 +39,13 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
         public virtual void GetNextRendererShouldBeOverriddenTest() {
-            ListRenderer listRenderer = new _ListRenderer_56(new List());
+            ListRenderer listRenderer = new _ListRenderer_57(new List());
             // Nothing is overridden
             NUnit.Framework.Assert.AreEqual(typeof(ListRenderer), listRenderer.GetNextRenderer().GetType());
         }
 
-        private sealed class _ListRenderer_56 : ListRenderer {
-            public _ListRenderer_56(List baseArg1)
+        private sealed class _ListRenderer_57 : ListRenderer {
+            public _ListRenderer_57(List baseArg1)
                 : base(baseArg1) {
             }
         }
@@ -139,6 +140,44 @@ namespace iText.Layout.Renderer {
             flexRenderer.Layout(CreateLayoutContext(500, 500));
             NUnit.Framework.Assert.AreEqual(childrenCountAfterFirstLayout, GetFirstParagraphChildrenCount(listRenderer
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IncorrectChildTypeThrows1Test() {
+            using (Document document = CreateDummyDocument()) {
+                List list = new List().SetListSymbol("*");
+                ListRenderer listRenderer = new ListRenderer(list);
+                listRenderer.AddChild(new DivRenderer(new Div()));
+                list.SetNextRenderer(listRenderer);
+                String text = NUnit.Framework.Assert.Catch(typeof(PdfException), () => document.Add(list)).Message;
+                NUnit.Framework.Assert.IsTrue(text.Contains("All children of a ListRenderer are suppose to be ListItemRenderer instances. Instead it was"
+                    ));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IncorrectChildTypeThrows2Test() {
+            using (Document document = CreateDummyDocument()) {
+                List list = new List().SetListSymbol("*");
+                ListRenderer listRenderer = new ListRenderer(list);
+                listRenderer.AddChild(new AbsolutelyPositionedRenderer(new DivRenderer(new Div()), false, false));
+                list.SetNextRenderer(listRenderer);
+                String text = NUnit.Framework.Assert.Catch(typeof(PdfException), () => document.Add(list)).Message;
+                NUnit.Framework.Assert.IsTrue(text.Contains("All children of a ListRenderer are suppose to be ListItemRenderer instances. Instead it was"
+                    ));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IncorrectChildTypeDoesntThrowTest() {
+            using (Document document = CreateDummyDocument()) {
+                List list = new List().SetListSymbol("*");
+                ListRenderer listRenderer = new ListRenderer(list);
+                listRenderer.AddChild(new AbsolutelyPositionedRenderer(new ListItemRenderer(new ListItem()), false, false)
+                    );
+                list.SetNextRenderer(listRenderer);
+                NUnit.Framework.Assert.DoesNotThrow(() => document.Add(list));
+            }
         }
 
         private static ListRenderer CreateInsideListRenderer() {

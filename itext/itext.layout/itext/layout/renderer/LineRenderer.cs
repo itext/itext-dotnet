@@ -146,6 +146,12 @@ namespace iText.Layout.Renderer {
                 LayoutResult childResult = null;
                 Rectangle bbox = new Rectangle(layoutBox.GetX() + curWidth, layoutBox.GetY(), layoutBox.GetWidth() - curWidth
                     , layoutBox.GetHeight());
+                if (childRenderer is AbsolutelyPositionedRenderer) {
+                    childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(), bbox), wasParentsHeightClipped
+                        ));
+                    ++childPos;
+                    continue;
+                }
                 RenderingMode? childRenderingMode = childRenderer.GetProperty<RenderingMode?>(Property.RENDERING_MODE);
                 if (TextSequenceWordWrapping.IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing(childRenderer) && TypographyUtils
                     .IsPdfCalligraphAvailable()) {
