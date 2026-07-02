@@ -32,7 +32,7 @@ namespace iText.Kernel.Pdf.Colorspace.Shading {
     /// and
     /// <see cref="AbstractPdfShadingBlend"/>
     /// classes
-    /// and is in charge of Shading Dictionary with radial type, that defines a colour blend that varies between two circles.
+    /// and is in charge of Shading Dictionary with radial type, that defines a color blend that varies between two circles.
     /// </summary>
     /// <remarks>
     /// The class that extends
@@ -40,9 +40,9 @@ namespace iText.Kernel.Pdf.Colorspace.Shading {
     /// and
     /// <see cref="AbstractPdfShadingBlend"/>
     /// classes
-    /// and is in charge of Shading Dictionary with radial type, that defines a colour blend that varies between two circles.
+    /// and is in charge of Shading Dictionary with radial type, that defines a color blend that varies between two circles.
     /// <para />
-    /// This type of shading shall not be used with an Indexed colour space
+    /// This type of shading shall not be used with an Indexed color space
     /// </remarks>
     public class PdfRadialShading : AbstractPdfShadingBlend {
         /// <summary>
@@ -62,15 +62,15 @@ namespace iText.Kernel.Pdf.Colorspace.Shading {
         /// <param name="cs">
         /// the
         /// <see cref="iText.Kernel.Pdf.Colorspace.PdfColorSpace"/>
-        /// object in which colour values shall be expressed.
+        /// object in which color values shall be expressed.
         /// The Indexed color space isn't excepted
         /// </param>
-        /// <param name="x0">the X coordinate of starting circle's centre, expressed in in the shading’s target coordinate space
+        /// <param name="x0">the X coordinate of starting circle's center, expressed in in the shading’s target coordinate space
         ///     </param>
-        /// <param name="y0">the Y coordinate of starting circle's centre, expressed in in the shading’s target coordinate space
+        /// <param name="y0">the Y coordinate of starting circle's center, expressed in in the shading’s target coordinate space
         ///     </param>
         /// <param name="r0">
-        /// the radius of starting circle's centre, should be greater or equal to 0.
+        /// the radius of starting circle's center, should be greater or equal to 0.
         /// If 0 then starting circle is treated as point.
         /// If both radii are 0, nothing shall be painted
         /// </param>
@@ -79,12 +79,12 @@ namespace iText.Kernel.Pdf.Colorspace.Shading {
         /// <c>float[]</c>
         /// that represents the color in the start circle
         /// </param>
-        /// <param name="x1">the X coordinate of ending circle's centre, expressed in in the shading’s target coordinate space
+        /// <param name="x1">the X coordinate of ending circle's center, expressed in in the shading’s target coordinate space
         ///     </param>
-        /// <param name="y1">the Y coordinate of ending circle's centre, expressed in in the shading’s target coordinate space
+        /// <param name="y1">the Y coordinate of ending circle's center, expressed in in the shading’s target coordinate space
         ///     </param>
         /// <param name="r1">
-        /// the radius of ending circle's centre, should be greater or equal to 0.
+        /// the radius of ending circle's center, should be greater or equal to 0.
         /// If 0 then ending circle is treated as point.
         /// If both radii are 0, nothing shall be painted
         /// </param>
@@ -105,15 +105,15 @@ namespace iText.Kernel.Pdf.Colorspace.Shading {
         /// <param name="cs">
         /// the
         /// <see cref="iText.Kernel.Pdf.Colorspace.PdfColorSpace"/>
-        /// object in which colour values shall be expressed.
+        /// object in which color values shall be expressed.
         /// The Indexed color space isn't excepted
         /// </param>
-        /// <param name="x0">the X coordinate of starting circle's centre, expressed in in the shading’s target coordinate space
+        /// <param name="x0">the X coordinate of starting circle's center, expressed in in the shading’s target coordinate space
         ///     </param>
-        /// <param name="y0">the Y coordinate of starting circle's centre, expressed in in the shading’s target coordinate space
+        /// <param name="y0">the Y coordinate of starting circle's center, expressed in in the shading’s target coordinate space
         ///     </param>
         /// <param name="r0">
-        /// the radius of starting circle's centre, should be greater or equal to 0.
+        /// the radius of starting circle's center, should be greater or equal to 0.
         /// If 0 then starting circle is treated as point.
         /// If both radii are 0, nothing shall be painted
         /// </param>
@@ -122,12 +122,12 @@ namespace iText.Kernel.Pdf.Colorspace.Shading {
         /// <c>float[]</c>
         /// that represents the color in the start circle
         /// </param>
-        /// <param name="x1">the X coordinate of ending circle's centre, expressed in in the shading’s target coordinate space
+        /// <param name="x1">the X coordinate of ending circle's center, expressed in in the shading’s target coordinate space
         ///     </param>
-        /// <param name="y1">the Y coordinate of ending circle's centre, expressed in in the shading’s target coordinate space
+        /// <param name="y1">the Y coordinate of ending circle's center, expressed in in the shading’s target coordinate space
         ///     </param>
         /// <param name="r1">
-        /// the radius of ending circle's centre, should be greater or equal to 0.
+        /// the radius of ending circle's center, should be greater or equal to 0.
         /// If 0 then ending circle is treated as point.
         /// If both radii are 0, nothing shall be painted
         /// </param>
@@ -155,14 +155,14 @@ namespace iText.Kernel.Pdf.Colorspace.Shading {
         /// <param name="cs">
         /// the
         /// <see cref="iText.Kernel.Pdf.Colorspace.PdfColorSpace"/>
-        /// object in which colour values shall be expressed.
+        /// object in which color values shall be expressed.
         /// The Indexed color space isn't excepted
         /// </param>
         /// <param name="coords">
         /// the
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
-        /// of of six numbers [x0 y0 r0 x1 y1 r1],
-        /// specifying the centres and radii of the starting and ending circles,
+        /// of six numbers [x0 y0 r0 x1 y1 r1],
+        /// specifying the centers and radii of the starting and ending circles,
         /// expressed in the shading’s target coordinate space.
         /// The radii r0 and r1 shall both be greater than or equal to 0.
         /// If one radius is 0, the corresponding circle shall be treated as a point;
@@ -174,27 +174,63 @@ namespace iText.Kernel.Pdf.Colorspace.Shading {
         /// object, that is used to calculate color transitions
         /// </param>
         public PdfRadialShading(PdfColorSpace cs, PdfArray coords, IPdfFunction function)
+            : this(cs, coords, null, function) {
+        }
+
+        /// <summary>Creates the new instance of the class.</summary>
+        /// <param name="cs">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Colorspace.PdfColorSpace"/>
+        /// object in which color values shall be expressed.
+        /// The Indexed color space isn't excepted
+        /// </param>
+        /// <param name="coords">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of six numbers [x0 y0 r0 x1 y1 r1],
+        /// specifying the centers and radii of the starting and ending circles,
+        /// expressed in the shading’s target coordinate space.
+        /// The radii r0 and r1 shall both be greater than or equal to 0.
+        /// If one radius is 0, the corresponding circle shall be treated as a point;
+        /// if both are 0, nothing shall be painted
+        /// </param>
+        /// <param name="domain">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of two numbers [t0 t1] specifying the limiting values
+        /// of a parametric variable t which is considered to vary linearly between
+        /// these two values and becomes the input argument to the color function
+        /// </param>
+        /// <param name="function">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Function.IPdfFunction"/>
+        /// object, that is used to calculate color transitions
+        /// </param>
+        public PdfRadialShading(PdfColorSpace cs, PdfArray coords, PdfArray domain, IPdfFunction function)
             : base(new PdfDictionary(), ShadingType.RADIAL, cs) {
             SetCoords(coords);
+            if (domain != null) {
+                SetDomain(domain);
+            }
             SetFunction(function);
         }
 
         /// <summary>Sets the coords object.</summary>
-        /// <param name="x0">the X coordinate of starting circle's centre, expressed in in the shading’s target coordinate space
+        /// <param name="x0">the X coordinate of starting circle's center, expressed in in the shading’s target coordinate space
         ///     </param>
-        /// <param name="y0">the Y coordinate of starting circle's centre, expressed in in the shading’s target coordinate space
+        /// <param name="y0">the Y coordinate of starting circle's center, expressed in in the shading’s target coordinate space
         ///     </param>
         /// <param name="r0">
-        /// the radius of starting circle's centre, should be greater or equal to 0.
+        /// the radius of starting circle's center, should be greater or equal to 0.
         /// If 0 then starting circle is treated as point.
         /// If both radii are 0, nothing shall be painted
         /// </param>
-        /// <param name="x1">the X coordinate of ending circle's centre, expressed in in the shading’s target coordinate space
+        /// <param name="x1">the X coordinate of ending circle's center, expressed in in the shading’s target coordinate space
         ///     </param>
-        /// <param name="y1">the Y coordinate of ending circle's centre, expressed in in the shading’s target coordinate space
+        /// <param name="y1">the Y coordinate of ending circle's center, expressed in in the shading’s target coordinate space
         ///     </param>
         /// <param name="r1">
-        /// the radius of ending circle's centre, should be greater or equal to 0.
+        /// the radius of ending circle's center, should be greater or equal to 0.
         /// If 0 then ending circle is treated as point.
         /// If both radii are 0, nothing shall be painted
         /// </param>

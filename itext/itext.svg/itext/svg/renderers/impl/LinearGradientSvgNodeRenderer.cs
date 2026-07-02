@@ -47,9 +47,9 @@ namespace iText.Svg.Renderers.Impl {
             TemplateResolveUtils.Resolve(this, context);
             LinearGradientBuilder builder = new LinearGradientBuilder();
             foreach (GradientColorStop stopColor in ParseStops(parentOpacity)) {
-                builder.AddColorStop(stopColor);
+                builder.AddStopColor(stopColor);
             }
-            builder.SetSpreadMethod(ParseSpreadMethod());
+            builder.SetSpread(ParseSpreadMethod());
             bool isObjectBoundingBox = IsObjectBoundingBoxUnits();
             Point[] coordinates = GetCoordinates(context, isObjectBoundingBox);
             builder.SetGradientVector(coordinates[0].GetX(), coordinates[0].GetY(), coordinates[1].GetX(), coordinates

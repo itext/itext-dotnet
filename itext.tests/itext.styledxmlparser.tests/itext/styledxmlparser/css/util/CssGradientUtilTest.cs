@@ -2428,8 +2428,8 @@ namespace iText.StyledXmlParser.Css.Util {
             NUnit.Framework.Assert.AreEqual(isCentralRotationStrategy, builder.IsCentralRotationAngleStrategy());
             NUnit.Framework.Assert.AreEqual(rotateVectorAngle, builder.GetRotateVectorAngle(), 1e-10);
             NUnit.Framework.Assert.AreEqual(gradientStrategy, builder.GetGradientStrategy());
-            NUnit.Framework.Assert.AreEqual(spreadMethod, builder.GetSpreadMethod());
-            IList<GradientColorStop> actualStops = builder.GetColorStops();
+            NUnit.Framework.Assert.AreEqual(spreadMethod, builder.GetSpread());
+            IList<GradientColorStop> actualStops = builder.GetStopColors();
             NUnit.Framework.Assert.AreEqual(stops.Count, actualStops.Count);
             for (int i = 0; i < stops.Count; ++i) {
                 NUnit.Framework.Assert.AreEqual(stops[i], actualStops[i]);

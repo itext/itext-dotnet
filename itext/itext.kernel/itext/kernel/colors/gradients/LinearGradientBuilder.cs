@@ -20,6 +20,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
+using iText.Commons.Datastructures;
 using iText.Kernel.Geom;
 
 namespace iText.Kernel.Colors.Gradients {
@@ -38,6 +40,7 @@ namespace iText.Kernel.Colors.Gradients {
         public LinearGradientBuilder() {
         }
 
+        // empty constructor
         /// <summary>
         /// Set coordinates for gradient vector (
         /// <see cref="AbstractLinearGradientBuilder">more info</see>
@@ -78,14 +81,27 @@ namespace iText.Kernel.Colors.Gradients {
             return this;
         }
 
-        protected internal override Point[] GetGradientVector(Rectangle targetBoundingBox, AffineTransform contextTransform
-            ) {
-            return new Point[] { this.coordinates[0].GetLocation(), this.coordinates[1].GetLocation() };
+        /// <summary><inheritDoc/></summary>
+        protected internal override Tuple2<Point[], AffineTransform> GetGradientVectorWithTransform(Rectangle targetBoundingBox
+            , AffineTransform contextTransform) {
+            return new Tuple2<Point[], AffineTransform>(new Point[] { this.coordinates[0].GetLocation(), this.coordinates
+                [1].GetLocation() }, this.transformation);
         }
 
+        /// <summary><inheritDoc/></summary>
+        [System.ObsoleteAttribute(@"use AbstractGradientBuilder{T}.GetGradientVectorWithTransform(iText.Kernel.Geom.Rectangle, iText.Kernel.Geom.AffineTransform)"
+            )]
+        protected internal override Point[] GetGradientVector(Rectangle targetBoundingBox, AffineTransform contextTransform
+            ) {
+            return GetGradientVectorWithTransform(targetBoundingBox, contextTransform).GetFirst();
+        }
+
+        /// <summary><inheritDoc/></summary>
+        [System.ObsoleteAttribute(@"use AbstractGradientBuilder{T}.GetGradientVectorWithTransform(iText.Kernel.Geom.Rectangle, iText.Kernel.Geom.AffineTransform)"
+            )]
         protected internal override AffineTransform GetCurrentSpaceToGradientVectorSpaceTransformation(Rectangle targetBoundingBox
             , AffineTransform contextTransform) {
-            return this.transformation;
+            return GetGradientVectorWithTransform(targetBoundingBox, contextTransform).GetSecond();
         }
     }
 }
