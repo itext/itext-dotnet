@@ -418,6 +418,8 @@ namespace iText.Layout.Properties {
 
         public const int POSITIONED_ELEMENT_WRAPPED = 164;
 
+        public const int POSITIONED_ELEMENT_WRAPPER_LAYOUT = 165;
+
         /// <summary>
         /// Some properties must be passed to
         /// <see cref="iText.Layout.IPropertyContainer"/>
@@ -433,7 +435,7 @@ namespace iText.Layout.Properties {
         /// </remarks>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 161;
+        private const int MAX_INHERITED_PROPERTY_ID = 165;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
@@ -483,6 +485,7 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.ADD_MARKED_CONTENT_TEXT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.TREAT_AS_CONTINUOUS_CONTAINER] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.IGNORE_AREA_AND_SECTION_BREAKS] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.POSITIONED_ELEMENT_WRAPPER_LAYOUT] = true;
         }
 
         private Property() {

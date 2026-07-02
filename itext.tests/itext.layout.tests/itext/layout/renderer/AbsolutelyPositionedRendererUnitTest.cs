@@ -63,6 +63,16 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual(50, absolutelyPositionedRenderer.GetProperty<int?>(Property.LEFT));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void GetPropertyDefaultValueTest() {
+            DivRenderer wrappedRenderer = new DivRenderer(new Div());
+            AbsolutelyPositionedRenderer absolutelyPositionedRenderer = new AbsolutelyPositionedRenderer(wrappedRenderer
+                , false, false);
+            NUnit.Framework.Assert.AreEqual(LayoutPosition.STATIC, absolutelyPositionedRenderer.GetProperty<int?>(Property
+                .POSITION, LayoutPosition.FIXED));
+            NUnit.Framework.Assert.AreEqual(50, absolutelyPositionedRenderer.GetProperty<int?>(Property.LEFT, 50));
+        }
+
 //\cond DO_NOT_DOCUMENT
         internal class CustomRenderer : DivRenderer {
             public int counter = 0;
