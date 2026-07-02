@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using iText.Barcodes.Exceptions;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Commons.Utils.Collections;
 using iText.Kernel.Colors;

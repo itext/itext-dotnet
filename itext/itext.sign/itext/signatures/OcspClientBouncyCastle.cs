@@ -31,6 +31,7 @@ using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Math;
+using iText.Commons.Internal.Runtime;
 using iText.IO.Resolver.Resource;
 using iText.IO.Util;
 using iText.Kernel.Exceptions;

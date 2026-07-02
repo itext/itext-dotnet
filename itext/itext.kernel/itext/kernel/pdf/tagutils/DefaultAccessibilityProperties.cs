@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf.Tagging;
 
@@ -75,6 +76,30 @@ namespace iText.Kernel.Pdf.Tagutils {
             this.role = role;
         }
 
+        /// <summary>
+        /// Instantiates a new
+        /// <see cref="DefaultAccessibilityProperties"/>
+        /// instance as a copy of another instance.
+        /// </summary>
+        /// <param name="other">the instance to copy</param>
+        public DefaultAccessibilityProperties(AccessibilityProperties other) {
+            this.role = other.GetRole();
+            this.language = other.GetLanguage();
+            this.actualText = other.GetActualText();
+            this.alternateDescription = other.GetAlternateDescription();
+            this.expansion = other.GetExpansion();
+            this.attributesList = new List<PdfStructureAttributes>(other.GetAttributesList());
+            this.phoneme = other.GetPhoneme();
+            this.phoneticAlphabet = other.GetPhoneticAlphabet();
+            this.@namespace = other.GetNamespace();
+            this.refs = new List<TagTreePointer>();
+            foreach (TagTreePointer @ref in other.GetRefsList()) {
+                this.refs.Add(new TagTreePointer(@ref));
+            }
+            this.structElemId = other.GetStructureElementId() != null ? JavaUtil.ArraysCopyOf(other.GetStructureElementId
+                (), other.GetStructureElementId().Length) : null;
+        }
+
         public override String GetRole() {
             return role;
         }
@@ -126,6 +151,7 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         public override AccessibilityProperties AddAttributes(int index, PdfStructureAttributes attributes) {
             if (attributes != null) {
+                //TODO: DEVSIX-10054 fix index 0 behaviour
                 if (index > 0) {
                     attributesList.Add(index, attributes);
                 }
@@ -193,7 +219,12 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         /// <summary><inheritDoc/></summary>
         public override AccessibilityProperties SetStructureElementId(byte[] id) {
-            this.structElemId = JavaUtil.ArraysCopyOf(id, id.Length);
+            if (id == null) {
+                this.structElemId = null;
+            }
+            else {
+                this.structElemId = JavaUtil.ArraysCopyOf(id, id.Length);
+            }
             return this;
         }
     }

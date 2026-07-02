@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Internal.Runtime;
 using iText.Kernel.Geom;
 using iText.StyledXmlParser.Node;
 using iText.StyledXmlParser.Node.Impl.Jsoup;
@@ -155,7 +156,6 @@ namespace iText.Svg.Css {
         [NUnit.Framework.Test]
         public virtual void SvgWithExternalCSStoSingleDefaultPage() {
             // TODO: update cmp files when DEVSIX-4396 resolved
-            // TODO: update cmp files when DEVSIX-6405 resolved
             // TODO: update cmp files when DEVSIX-8822 resolved
             // TODO: update cmp files when DEVSIX-8832 resolved
             ConvertAndCompare(sourceFolder, destinationFolder, "externalCss");
@@ -164,7 +164,6 @@ namespace iText.Svg.Css {
         [NUnit.Framework.Test]
         public virtual void SvgWithInternalCSStoSingleDefaultPage() {
             // TODO: update cmp files when DEVSIX-4396 resolved
-            // TODO: update cmp files when DEVSIX-6405 resolved
             // TODO: update cmp files when DEVSIX-8822 resolved
             // TODO: update cmp files when DEVSIX-8832 resolved
             ConvertAndCompare(sourceFolder, destinationFolder, "internalCss");
@@ -180,7 +179,6 @@ namespace iText.Svg.Css {
         [NUnit.Framework.Test]
         public virtual void SvgWithExternalCSStoCustomPage() {
             // TODO: update cmp files when DEVSIX-4396 resolved
-            // TODO: update cmp files when DEVSIX-6405 resolved
             // TODO: update cmp files when DEVSIX-8822 resolved
             // TODO: update cmp files when DEVSIX-8832 resolved
             // Take a note this method differs from the one used in Default Page test
@@ -190,7 +188,6 @@ namespace iText.Svg.Css {
         [NUnit.Framework.Test]
         public virtual void SvgWithInternalCSStoCustomPage() {
             // TODO: update cmp files when DEVSIX-4396 resolved
-            // TODO: update cmp files when DEVSIX-6405 resolved
             // TODO: update cmp files when DEVSIX-8822 resolved
             // TODO: update cmp files when DEVSIX-8832 resolved
             ConvertAndCompare(sourceFolder, destinationFolder, "internalCss_custom", PageSize.A3.Rotate());

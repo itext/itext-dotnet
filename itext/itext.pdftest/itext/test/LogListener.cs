@@ -70,7 +70,7 @@ namespace iText.Test
                     if (foundCount != logMessage.Count && !logMessage.Ignore)
                     {
                         LogListenerHelper.FailWrongMessageCount(logMessage.Count, foundCount,
-                            logMessage.GetMessageTemplate(), testDetails);
+                            logMessage.GetMessageTemplate(), testDetails, TEST_LOGGER_FACTORY.GetLogEvents());
                     }
                     else
                     {
@@ -80,11 +80,11 @@ namespace iText.Test
             }
 
             if (GetLogEventsSize() > checkedMessagesCount)
-            {
-                LogListenerHelper.FailWrongTotalCount(GetLogEventsSize(), checkedMessagesCount, testDetails);
+            {                
+                LogListenerHelper.FailWrongTotalCount(GetLogEventsSize(), checkedMessagesCount, testDetails, TEST_LOGGER_FACTORY.GetLogEvents());
             }
         }
-
+    
         private int Contains(LogMessageAttribute loggingStatement)
         {
             var eventList = TEST_LOGGER_FACTORY.GetLogEvents();

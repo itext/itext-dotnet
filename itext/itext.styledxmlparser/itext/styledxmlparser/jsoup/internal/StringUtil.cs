@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup.Helper;
@@ -289,7 +290,10 @@ namespace iText.StyledXmlParser.Jsoup.Internal {
                 }
                 catch (UriFormatException) {
                     // the base is unsuitable, but the attribute/rel may be abs on its own, so try that
-                    Uri abs = new Uri(relUrl);
+                    Uri abs = new Uri(relUrl, UriKind.Absolute);
+                    if (abs.IsFile){
+                        throw new UriFormatException($"'{relUrl}' is not an absolute URI.");
+                    }
                     return abs.ToExternalForm();
                 }
                 return Resolve(@base, relUrl).ToExternalForm();

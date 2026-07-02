@@ -24,6 +24,7 @@ using System;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Internal.Runtime;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Utils;

@@ -29,6 +29,7 @@ using iText.Bouncycastleconnector.Logs;
 using iText.Bouncycastlefips;
 using iText.Commons;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 
 namespace iText.Bouncycastleconnector {

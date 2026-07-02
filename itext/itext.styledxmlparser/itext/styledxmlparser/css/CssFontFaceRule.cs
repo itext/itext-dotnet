@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.Layout.Font;
 using iText.StyledXmlParser.Css.Util;
 
 namespace iText.StyledXmlParser.Css {
@@ -74,8 +73,8 @@ namespace iText.StyledXmlParser.Css {
         /// <see langword="null"/>
         /// if there is no `unicode-range` property
         /// </returns>
-        public virtual Range ResolveUnicodeRange() {
-            Range range = null;
+        public virtual iText.Layout.Font.Range ResolveUnicodeRange() {
+            iText.Layout.Font.Range range = null;
             foreach (CssDeclaration descriptor in GetProperties()) {
                 if ("unicode-range".Equals(descriptor.GetProperty())) {
                     range = CssUtils.ParseUnicodeRange(descriptor.GetExpression());

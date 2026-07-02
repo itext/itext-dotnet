@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Text;
 using iText.Test;
 
 namespace iText.Commons.Utils {
@@ -32,16 +33,17 @@ namespace iText.Commons.Utils {
             String result = PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.CHARACTERS, amountOfCharacters
                 );
             NUnit.Framework.Assert.AreEqual(amountOfCharacters, result.Length);
-            NUnit.Framework.Assert.AreEqual(result, "Portable Document Format");
+            NUnit.Framework.Assert.AreEqual(GetExpectedPlaceHolderTextByCharacters(amountOfCharacters), result);
         }
 
         [NUnit.Framework.Test]
         public virtual void GetPlaceHolderByCharactersTextOverflow() {
-            int amountOfCharacters = 31222 + 24;
+            int amountOfCharacters = PlaceHolderTextUtil.TEMPLATE.Length + 24;
             String result = PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.CHARACTERS, amountOfCharacters
                 );
             NUnit.Framework.Assert.AreEqual(amountOfCharacters, result.Length);
-            NUnit.Framework.Assert.IsTrue(result.EndsWith("Portable Document Format"));
+            NUnit.Framework.Assert.AreEqual(GetExpectedPlaceHolderTextByCharacters(amountOfCharacters), result);
+            NUnit.Framework.Assert.IsTrue(result.EndsWith(GetExpectedPlaceHolderTextByCharacters(24)));
         }
 
         [NUnit.Framework.Test]
@@ -49,15 +51,38 @@ namespace iText.Commons.Utils {
             int amountOfWords = 5;
             String result = PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, amountOfWords
                 );
-            NUnit.Framework.Assert.AreEqual(44, result.Length);
+            NUnit.Framework.Assert.AreEqual(GetExpectedPlaceHolderTextByWords(amountOfWords), result);
         }
 
         [NUnit.Framework.Test]
         public virtual void GetPlaceHolderByWordsTextOverflow() {
-            int amountOfCharacters = 4000;
-            String result = PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, amountOfCharacters
+            int amountOfWords = iText.Commons.Utils.StringUtil.Split(PlaceHolderTextUtil.TEMPLATE, " ").Length + 5;
+            String result = PlaceHolderTextUtil.GetPlaceHolderText(PlaceHolderTextUtil.PlaceHolderTextBy.WORDS, amountOfWords
                 );
-            NUnit.Framework.Assert.AreEqual(25472, result.Length);
+            NUnit.Framework.Assert.AreEqual(GetExpectedPlaceHolderTextByWords(amountOfWords), result);
+            NUnit.Framework.Assert.IsTrue(result.EndsWith(GetExpectedPlaceHolderTextByWords(5)));
+        }
+
+        private static String GetExpectedPlaceHolderTextByWords(int amount) {
+            String[] words = iText.Commons.Utils.StringUtil.Split(PlaceHolderTextUtil.TEMPLATE, " ");
+            StringBuilder sb = new StringBuilder(amount * 5);
+            for (int i = 0; i < amount; i++) {
+                sb.Append(words[i % words.Length]);
+                if (i + 1 == amount) {
+                    break;
+                }
+                sb.Append(' ');
+            }
+            return sb.ToString();
+        }
+
+        private static String GetExpectedPlaceHolderTextByCharacters(int amount) {
+            String template = PlaceHolderTextUtil.TEMPLATE;
+            StringBuilder sb = new StringBuilder(amount);
+            for (int i = 0; i < amount; i++) {
+                sb.Append(template[i % template.Length]);
+            }
+            return sb.ToString();
         }
     }
 }

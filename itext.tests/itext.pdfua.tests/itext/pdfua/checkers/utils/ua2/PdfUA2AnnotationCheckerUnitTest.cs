@@ -21,8 +21,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Source;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -36,6 +38,16 @@ using iText.Test;
 namespace iText.Pdfua.Checkers.Utils.Ua2 {
     [NUnit.Framework.Category("UnitTest")]
     public class PdfUA2AnnotationCheckerUnitTest : ExtendedITextTest {
+        private const String RICH_TEXT_WITH_XXE = "<?xml version=\"1.0\"?>\n" + "<!DOCTYPE r [ <!ENTITY xxe SYSTEM \"xxe-data.txt\"> ]>\n"
+             + "<body xmlns=\"http://www.w3.org/1999/xhtml\"><p>&xxe;</p></body>";
+
+        [NUnit.Framework.Test]
+        public virtual void RichTextWithXxeIsRejected() {
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfUA2AnnotationChecker.GetRichTextStringValue
+                (new PdfString(RICH_TEXT_WITH_XXE)));
+            NUnit.Framework.Assert.AreEqual(ExceptionTestUtil.GetDoctypeIsDisallowedExceptionMessage(), e.Message);
+        }
+
         [NUnit.Framework.Test]
         public virtual void BasicAnnotationBadParent() {
             PdfLineAnnotation lineAnnotation = new PdfLineAnnotation(new Rectangle(0, 0, 100, 100), new float[] { 2, 3

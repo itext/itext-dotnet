@@ -36,10 +36,10 @@ namespace iText.Kernel.Pdf.Xobject {
         /// <param name="bBox">the form XObject’s bounding box.</param>
         public PdfFormXObject(Rectangle bBox)
             : base(new PdfStream()) {
-            GetPdfObject().Put(PdfName.Type, PdfName.XObject);
-            GetPdfObject().Put(PdfName.Subtype, PdfName.Form);
+            Put(PdfName.Type, PdfName.XObject);
+            Put(PdfName.Subtype, PdfName.Form);
             if (bBox != null) {
-                GetPdfObject().Put(PdfName.BBox, new PdfArray(bBox));
+                Put(PdfName.BBox, new PdfArray(bBox));
             }
         }
 
@@ -65,7 +65,7 @@ namespace iText.Kernel.Pdf.Xobject {
         public PdfFormXObject(PdfStream pdfStream)
             : base(pdfStream) {
             if (!GetPdfObject().ContainsKey(PdfName.Subtype)) {
-                GetPdfObject().Put(PdfName.Subtype, PdfName.Form);
+                Put(PdfName.Subtype, PdfName.Form);
             }
         }
 
@@ -82,7 +82,7 @@ namespace iText.Kernel.Pdf.Xobject {
             : this(page.GetCropBox()) {
             GetPdfObject().GetOutputStream().WriteBytes(page.GetContentBytes());
             resources = new PdfResources((PdfDictionary)page.GetResources().GetPdfObject().Clone());
-            GetPdfObject().Put(PdfName.Resources, resources.GetPdfObject());
+            Put(PdfName.Resources, resources.GetPdfObject());
         }
 
         /// <summary>
@@ -234,7 +234,7 @@ namespace iText.Kernel.Pdf.Xobject {
                 PdfDictionary resourcesDict = GetPdfObject().GetAsDictionary(PdfName.Resources);
                 if (resourcesDict == null) {
                     resourcesDict = new PdfDictionary();
-                    GetPdfObject().Put(PdfName.Resources, resourcesDict);
+                    Put(PdfName.Resources, resourcesDict);
                 }
                 this.resources = new PdfResources(resourcesDict);
             }

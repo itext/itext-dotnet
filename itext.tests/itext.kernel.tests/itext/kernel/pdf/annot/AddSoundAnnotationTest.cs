@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using System.Text;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -153,13 +154,13 @@ namespace iText.Kernel.Pdf.Annot {
             StringBuilder sb = new StringBuilder();
             using (Stream @is = FileUtil.GetInputStreamForFile(audioFile)) {
                 for (int i = 0; i < 4; i++) {
-                    sb.Append((char)@is.Read());
+                    sb.Append((char)@is.ReadByte());
                 }
             }
             bool skipFirstByte = sb.ToString().Equals(RIFF_TAG);
             Stream stream = FileUtil.GetInputStreamForFile(audioFile);
             if (skipFirstByte) {
-                stream.Read();
+                stream.ReadByte();
             }
             return stream;
         }

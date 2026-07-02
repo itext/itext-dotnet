@@ -25,12 +25,44 @@ using System;
 namespace iText.Layout.Logs {
     /// <summary>Class containing constants to be used in layout.</summary>
     public sealed class LayoutLogMessageConstant {
-        public const String AREA_BREAK_UNEXPECTED = "Unexpected use of AreaBreakRenderer detected, which may indicate an issue with layout processing.";
+        public const String AREA_BREAK_UNEXPECTED = "Unexpected use of AreaBreakRenderer detected, " + "which may indicate an issue with layout processing.";
 
         public const String ELEMENT_DOES_NOT_FIT_AREA = "Element does not fit current area. {0}";
 
+        public const String FLEX_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK = "Flex container should not contain area break or section break.";
+
+        public const String FLEX_ITEM_CONTAINS_AREA_BREAK_OR_SECTION_BREAK = "Flex item contains AreaBreak or " + 
+            "SectionBreak causing unexpected layout result. The cross size of the flex item will be 0.";
+
+        public const String FLEX_ITEM_LAYOUT_RESULT_IS_NOT_FULL = "Flex item layout result isn't full, but it must be. The cross size of the flex item will be 0.";
+
+        public const String FOOTNOTE_NUM_PER_DOCUMENT_CANNOT_BE_CHANGED = "Footnote numbering per document " + "cannot be changed once it's specified. New numbering config will be ignored.";
+
+        public const String FOOTNOTE_NUM_PER_DOCUMENT_SHOULD_BE_FIRST = "Footnote numbering per document cannot " 
+            + "be set after other types. Previous numbering config will be used.";
+
+        public const String GRID_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK = "Grid container should not contain area break or section break.";
+
+        public const String GRID_ITEM_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK = "Grid item should not contain area break or section break.";
+
+        public const String PAGE_CONTENT_CANNOT_BE_DRAWN = "Page {0} content cannot be drawn for page {1}.";
+
+        public const String SECTION_BREAK_LAYOUT_ON_PAGE_0 = "An attempt to layout SectionBreak on page 0 " + "happened, which may indicate that SectionBreak was added to an element that does not support it.";
+
+        public const String SECTION_BREAK_UNEXPECTED = "Unexpected use of SectionBreakRenderer detected, " + "which may indicate an issue with layout processing.";
+
+        public const String TYPOGRAPHY_NOT_FOUND_INFO = "Cannot find pdfCalligraph module, " + "some languages in {0} might require this module when the following OpenTypeFont features are "
+             + "obligatory for text rendering {1}";
+
+        public const String TYPOGRAPHY_NOT_FOUND_WARNING = "Cannot find typography module (pdfCalligraph), " + "which was implicitly required by {0}. "
+             + "See https://itextpdf.com/products/pdfcalligraph for more information.";
+
+        public const String SECTION_BREAK_IGNORED = "Section break has been ignored. Most likely it was put inside an element that does not support it.";
+
+        public const String AREA_BREAK_IGNORED = "Area break has been ignored. Most likely it was put inside an element that does not support it.";
+
         private LayoutLogMessageConstant() {
         }
-        //Private constructor will prevent the instantiation of this class directly
+        // Private constructor will prevent the instantiation of this class directly.
     }
 }

@@ -26,6 +26,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Testutil;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -36,11 +37,6 @@ namespace iText.Layout {
             .CurrentContext.TestDirectory) + "/resources/itext/layout/FixedHeightTest/";
 
         private static readonly String destinationFolder = TestUtil.GetOutputPath() + "/layout/FixedHeightTest/";
-
-        private const String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
-             + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
-             + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
-             + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -59,6 +55,7 @@ namespace iText.Layout {
             Div block = new Div();
             block.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
             block.SetHeight(120);
+            String textByron = TestResourceUtil.GetByronStanza();
             foreach (String line in iText.Commons.Utils.StringUtil.Split(textByron, "\n")) {
                 Paragraph p = new Paragraph();
                 p.Add(new Text(line));
@@ -84,6 +81,7 @@ namespace iText.Layout {
             List list = new List();
             list.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
             list.SetHeight(120);
+            String textByron = TestResourceUtil.GetByronStanza();
             foreach (String line in iText.Commons.Utils.StringUtil.Split(textByron, "\n")) {
                 list.Add(line);
             }

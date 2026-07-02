@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using System.util.zlib;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -86,7 +87,7 @@ namespace iText.Kernel.Pdf.Filters {
                 // Read the filter type byte and a row of data
                 int filter;
                 try {
-                    filter = dataStream.Read();
+                    filter = dataStream.ReadByte();
                     if (filter < 0) {
                         return fout.ToArray();
                     }
@@ -210,7 +211,7 @@ namespace iText.Kernel.Pdf.Filters {
             byte[] b = new byte[strict ? 4092 : 1];
             try {
                 int n;
-                while ((n = zip.Read(b)) >= 0) {
+                while ((n = zip.JRead(b)) >= 0) {
                     @out.Write(b, 0, n);
                 }
                 zip.Dispose();

@@ -26,6 +26,7 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Security;
+using iText.Commons.Internal.Runtime;
 using iText.IO.Util;
 
 namespace iText.Signatures {

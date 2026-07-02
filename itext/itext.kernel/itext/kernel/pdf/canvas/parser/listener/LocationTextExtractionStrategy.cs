@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
@@ -182,7 +183,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                 DumpState();
             }
             IList<TextChunk> textChunks = new List<TextChunk>(locationalResult);
-            SortWithMarks(textChunks);
+            SortTextChunks(textChunks);
             StringBuilder sb = new StringBuilder();
             TextChunk lastChunk = null;
             foreach (TextChunk chunk in textChunks) {
@@ -206,6 +207,12 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                 lastChunk = chunk;
             }
             return sb.ToString();
+        }
+
+        /// <summary>Sorts a list of text chunks according to their locations on a page.</summary>
+        /// <param name="textChunks">text chinks to sort</param>
+        protected internal virtual void SortTextChunks(IList<TextChunk> textChunks) {
+            SortWithMarks(textChunks);
         }
 
         /// <summary>Determines if a space character should be inserted between a previous chunk and the current chunk.

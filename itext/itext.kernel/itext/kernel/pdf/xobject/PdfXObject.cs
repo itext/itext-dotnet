@@ -148,6 +148,7 @@ namespace iText.Kernel.Pdf.Xobject {
         /// <param name="layer">the layer this XObject belongs to.</param>
         public virtual void SetLayer(IPdfOCG layer) {
             GetPdfObject().Put(PdfName.OC, layer.GetIndirectReference());
+            SetModified();
         }
 
         /// <summary>Gets width of XObject.</summary>
@@ -182,6 +183,7 @@ namespace iText.Kernel.Pdf.Xobject {
                 GetPdfObject().Put(PdfName.AF, afArray);
             }
             afArray.Add(fs.GetPdfObject());
+            SetModified();
         }
 
         /// <summary>Returns files associated with XObject.</summary>
@@ -192,6 +194,7 @@ namespace iText.Kernel.Pdf.Xobject {
             if (afArray == null && create) {
                 afArray = new PdfArray();
                 GetPdfObject().Put(PdfName.AF, afArray);
+                SetModified();
             }
             return afArray;
         }

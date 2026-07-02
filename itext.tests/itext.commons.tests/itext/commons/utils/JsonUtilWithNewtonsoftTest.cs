@@ -116,11 +116,7 @@ namespace iText.Commons.Utils {
         
         private static MemoryStream ConvertInputStreamToOutput(Stream inputStream) {
             MemoryStream result = new MemoryStream();
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = inputStream.Read(buffer)) != -1) {
-                result.Write(buffer, 0, length);
-            }
+            inputStream.CopyTo(result);
             result.Flush();
             return result;
         }

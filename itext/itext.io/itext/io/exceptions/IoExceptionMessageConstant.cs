@@ -283,6 +283,8 @@ namespace iText.IO.Exceptions {
 
         public const String UNSUPPORTED_JPEG_MARKER = "{0} unsupported jpeg marker {1}.";
 
+        public const String WEBP_IMAGE_EXCEPTION = "WebP image exception.";
+
         public const String WRITE_FAILED = "Writing woff2 exception";
 
         public const String ENCODING_ERROR = "Error during encoding the following code point: {0} in characterset:"

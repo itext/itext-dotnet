@@ -29,7 +29,8 @@ namespace iText.Commons.Utils {
         private static readonly Dictionary<String, String> DEFAULT_CONFIGURATIONS = new Dictionary<String, String>()
         {
             { "iText.Forms", "iText.Forms.Util.RegisterDefaultDiContainer" },
-            { "iText.Kernel","iText.Kernel.Utils.RegisterDefaultDiContainer" }
+            { "iText.Kernel","iText.Kernel.Utils.RegisterDefaultDiContainer" },
+            { "iText.Layout", "iText.Layout.Utils.RegisterDefaultDiContainer" }
         };
 
         public static void LoadDefaultConfigurations() {

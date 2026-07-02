@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
@@ -949,12 +950,7 @@ namespace iText.Pdfua {
                 pdfPage.AddAnnotation(stamp);
             }
             );
-            if (PdfConformance.PDF_UA_1.Equals(conformance)) {
-                framework.AssertBothValid("noViewAnnotation");
-            }
-            else {
-                framework.AssertBothValid("toggleNoViewAnnotation");
-            }
+            framework.AssertBothValid("toggleNoViewAnnotation");
         }
 
         private PdfTextAnnotation CreateRichTextAnnotation() {

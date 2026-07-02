@@ -492,7 +492,6 @@ namespace iText.Layout {
             text.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             AddInlineBlockFloatAndText(doc, text);
             doc.Close();
-            doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
         }

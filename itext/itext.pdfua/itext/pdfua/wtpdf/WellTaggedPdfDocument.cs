@@ -113,12 +113,14 @@ namespace iText.Pdfua.Wtpdf {
         protected internal virtual IList<IValidationChecker> CreateCheckers(PdfConformance conformance) {
             IList<IValidationChecker> checkers = new List<IValidationChecker>();
             ColorContrastChecker contrastChecker = new ColorContrastChecker(false, false);
-            if (conformance.ConformsTo(WellTaggedPdfConformance.FOR_REUSE)) {
-                checkers.Add(new WellTaggedPdfForReuseChecker(this));
+            //Currently if both accessibility and reuse are enabled we only add accessibility checker as it fully covers
+            //reuse checker, but in the future this could change.
+            if (conformance.ConformsTo(WellTaggedPdfConformance.FOR_ACCESSIBILITY)) {
+                checkers.Add(new WellTaggedPdfForAccessibilityChecker(this));
             }
             else {
-                if (conformance.ConformsTo(WellTaggedPdfConformance.FOR_ACCESSIBILITY)) {
-                    checkers.Add(new WellTaggedPdfForAccessibilityChecker(this));
+                if (conformance.ConformsTo(WellTaggedPdfConformance.FOR_REUSE)) {
+                    checkers.Add(new WellTaggedPdfForReuseChecker(this));
                 }
             }
             checkers.Add(new Pdf20Checker(this));

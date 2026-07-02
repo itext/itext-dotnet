@@ -29,6 +29,7 @@ using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Openssl;
+using iText.Commons.Internal.Runtime;
 
 namespace iText.Signatures.Testutils {
     public sealed class PemFileHelper {

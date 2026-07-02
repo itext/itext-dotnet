@@ -27,6 +27,7 @@ namespace iText.Layout.Renderer {
     public class TypographyUtilsTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void VerifyPdfCalligraphIsNotAvailable() {
+            // call is irrelevant now
             NUnit.Framework.Assert.IsFalse(TypographyUtils.IsPdfCalligraphAvailable());
         }
     }

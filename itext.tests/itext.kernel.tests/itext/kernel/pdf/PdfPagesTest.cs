@@ -48,6 +48,10 @@ namespace iText.Kernel.Pdf {
 
         private static readonly PdfName PageNum = new PdfName("PageNum");
 
+        private static ICollection<Object[]> AppendModes() {
+            return JavaUtil.ArraysAsList(new Object[][] { new Object[] { true }, new Object[] { false } });
+        }
+
         [NUnit.Framework.OneTimeSetUp]
         public static void Setup() {
             CreateDestinationFolder(DESTINATION_FOLDER);
@@ -105,11 +109,15 @@ namespace iText.Kernel.Pdf {
             VerifyPagesOrder(DESTINATION_FOLDER + filename, pageCount);
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ReversePagesTest2() {
+        [NUnit.Framework.TestCaseSource("AppendModes")]
+        public virtual void ReversePagesTest2(bool appendMode) {
             String filename = "1000PagesDocument_reversed.pdf";
+            StampingProperties props = new StampingProperties();
+            if (appendMode) {
+                props.UseAppendMode();
+            }
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "1000PagesDocument.pdf"), CompareTool.CreateTestPdfWriter
-                (DESTINATION_FOLDER + filename));
+                (DESTINATION_FOLDER + filename), props);
             int n = pdfDoc.GetNumberOfPages();
             for (int i = n - 1; i > 0; --i) {
                 pdfDoc.MovePage(i, n + 1);
@@ -344,6 +352,19 @@ namespace iText.Kernel.Pdf {
             String sourceFile = SOURCE_FOLDER + "docWithFields.pdf";
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(outPdf
                 ))) {
+                pdfDoc.RemovePage(1);
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_" + testName
+                , DESTINATION_FOLDER));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RemovePageWithFormFieldsAppendModeTest() {
+            String testName = "docWithFieldsRemovePage.pdf";
+            String outPdf = DESTINATION_FOLDER + testName;
+            String sourceFile = SOURCE_FOLDER + "docWithFieldsIndirectKids.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFile), CompareTool.CreateTestPdfWriter(outPdf
+                ), new StampingProperties().UseAppendMode())) {
                 pdfDoc.RemovePage(1);
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, SOURCE_FOLDER + "cmp_" + testName
@@ -594,13 +615,17 @@ namespace iText.Kernel.Pdf {
             document.Close();
         }
 
-        [NUnit.Framework.Test]
-        public virtual void ImplicitPagesTreeRebuildingTest() {
+        [NUnit.Framework.TestCaseSource("AppendModes")]
+        public virtual void ImplicitPagesTreeRebuildingTest(bool appendMode) {
             String inFileName = SOURCE_FOLDER + "implicitPagesTreeRebuilding.pdf";
             String outFileName = DESTINATION_FOLDER + "implicitPagesTreeRebuilding.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_implicitPagesTreeRebuilding.pdf";
+            StampingProperties props = new StampingProperties();
+            if (appendMode) {
+                props.UseAppendMode();
+            }
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inFileName), CompareTool.CreateTestPdfWriter(outFileName
-                ));
+                ), props);
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 ));

@@ -23,7 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Commons.Datastructures;
+using iText.Commons.Internal.Runtime;
 using iText.IO.Font.Constants;
+using iText.IO.Font.Otf;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
@@ -159,6 +161,67 @@ namespace iText.Kernel.Pdf.Canvas {
                 pdfCanvas.SetExtGState(new PdfExtGState());
                 NUnit.Framework.Assert.IsNotNull(checker.gState);
                 NUnit.Framework.Assert.IsNotNull(checker.contentStream);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SimpleTextWritingWithoutOffsetsTest() {
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                PdfStream contentStream = new PdfStream();
+                PdfCanvas pdfCanvas = new PdfCanvas(contentStream, new PdfResources(), doc);
+                pdfCanvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 12);
+                GlyphLine glyphLine = new GlyphLine();
+                Glyph glyph = new Glyph(65, 200, 65);
+                glyphLine.Add(glyph);
+                glyphLine.SetEnd(1);
+                pdfCanvas.ShowText(glyphLine);
+                String expected = "/F1 12 Tf\n" + "(A)Tj\n";
+                NUnit.Framework.Assert.AreEqual(expected, iText.Commons.Utils.JavaUtil.GetStringForBytes(contentStream.GetBytes
+                    (), System.Text.Encoding.UTF8));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextWritingWithAdvanceOffsetTest() {
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                PdfStream contentStream = new PdfStream();
+                PdfCanvas pdfCanvas = new PdfCanvas(contentStream, new PdfResources(), doc);
+                pdfCanvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 12);
+                GlyphLine glyphLine = new GlyphLine();
+                Glyph glyph = new Glyph(65, 200, 65);
+                glyph.SetXAdvance((short)200);
+                glyph.SetYAdvance((short)100);
+                glyphLine.Add(glyph);
+                glyphLine.SetEnd(1);
+                pdfCanvas.ShowText(glyphLine);
+                String expected = "/F1 12 Tf\n" + "(A)Tj\n" + "4.8 1.2 Td\n";
+                NUnit.Framework.Assert.AreEqual(expected, iText.Commons.Utils.JavaUtil.GetStringForBytes(contentStream.GetBytes
+                    (), System.Text.Encoding.UTF8));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextWritingWithAdvanceOffsetAndAnchorDeltaTest() {
+            using (PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()))) {
+                PdfStream contentStream = new PdfStream();
+                PdfCanvas pdfCanvas = new PdfCanvas(contentStream, new PdfResources(), doc);
+                pdfCanvas.SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 12);
+                GlyphLine glyphLine = new GlyphLine();
+                Glyph glyph = new Glyph(65, 200, 65);
+                glyph.SetXPlacement((short)200);
+                glyph.SetYPlacement((short)100);
+                glyphLine.Add(glyph);
+                glyph = new Glyph(66, 250, 66);
+                glyph.SetAnchorDelta((short)-1);
+                glyph.SetXAdvance((short)130);
+                glyph.SetYAdvance((short)50);
+                glyphLine.Add(glyph);
+                glyphLine.SetEnd(2);
+                pdfCanvas.ShowText(glyphLine);
+                String expected = "/F1 12 Tf\n" + "2.4 1.2 Td\n" + "(A)Tj\n" + "-2.4 -1.2 Td\n" + "0 1.2 Td\n" + "(B)Tj\n"
+                     + "0 -1.2 Td\n" + "1.56 0.6 Td\n";
+                NUnit.Framework.Assert.AreEqual(expected, iText.Commons.Utils.JavaUtil.GetStringForBytes(contentStream.GetBytes
+                    (), System.Text.Encoding.UTF8));
             }
         }
 

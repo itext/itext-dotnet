@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
@@ -91,7 +92,7 @@ namespace iText.Layout.Tagging {
             }
             String normalizedParentRole = ResolveToFinalRole(taggingHelper, currentThk, false);
             foreach (IRenderer childRenderer in topRender.GetChildRenderers()) {
-                if (childRenderer is AreaBreakRenderer) {
+                if (childRenderer is AreaBreakRenderer || childRenderer is SectionBreakRenderer) {
                     continue;
                 }
                 TaggingHintKey kid = LayoutTaggingHelper.GetOrCreateHintKey(childRenderer);

@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Exceptions;
 using iText.Test;
@@ -41,7 +42,8 @@ namespace iText.IO.Source {
                 IRandomAccessSource extractedRandomAccessSource = new RandomAccessSourceFactory().ExtractOrCreateSource(rasInputStream
                     );
                 extractedRandomAccessSource.Close();
-                Exception e = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => rasInputStream.Read());
+                Exception e = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => rasInputStream.ReadByte
+                    ());
                 NUnit.Framework.Assert.AreEqual(IoExceptionMessageConstant.ALREADY_CLOSED, e.Message);
                 e = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => randomAccessSource.Get(0));
                 NUnit.Framework.Assert.AreEqual(IoExceptionMessageConstant.ALREADY_CLOSED, e.Message);
@@ -61,7 +63,7 @@ namespace iText.IO.Source {
                 RASInputStream rasInputStream = new RASInputStream(randomAccessSource);
                 IRandomAccessSource extractedRandomAccessSource = new RandomAccessSourceFactory().ExtractOrCreateSource(rasInputStream
                     );
-                NUnit.Framework.Assert.AreEqual(72, rasInputStream.Read());
+                NUnit.Framework.Assert.AreEqual(72, rasInputStream.ReadByte());
                 NUnit.Framework.Assert.AreEqual(72, extractedRandomAccessSource.Get(0));
                 NUnit.Framework.Assert.AreEqual(extractedRandomAccessSource, rasInputStream.GetSource());
             }

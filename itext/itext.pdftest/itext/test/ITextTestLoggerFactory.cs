@@ -28,6 +28,7 @@ using System.Reflection;
 using System.Threading;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
+using Org.BouncyCastle.X509;
 
 namespace iText.Test
 {
@@ -158,11 +159,21 @@ namespace iText.Test
         {
             public readonly LogLevel logLevel;
             public readonly string message;
+            public readonly string categoryName;
+            
             
             public ITextTestLogEvent(LogLevel logLevel, string message)
             {
                 this.logLevel = logLevel;
                 this.message = message;
+                this.categoryName = string.Empty;
+            }
+
+            public ITextTestLogEvent(LogLevel logLevel, string message, string categoryName)
+            {
+                this.logLevel = logLevel;
+                this.message = message;
+                this.categoryName = categoryName;
             }
         }
 
@@ -194,7 +205,7 @@ namespace iText.Test
                 }
                 if (logLevel >= LogLevel.Warning || factory.IsExpectedMessage(state.ToString(), GetThreadID()))
                 {
-                    factory.AddLogEvent(new ITextTestLogEvent(logLevel, state.ToString()));
+                    factory.AddLogEvent(new ITextTestLogEvent(logLevel, state.ToString(), categoryName));
                 }
             }
 

@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.StyledXmlParser.Css;
@@ -139,6 +140,7 @@ namespace iText.StyledXmlParser.Css.Parse {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INCORRECT_CHARACTER_SEQUENCE)]
         public virtual void InvalidCssExampleWithCommaInsideOfPseudoClassTest() {
             String cssFile = sourceFolder + "invalidCssExampleWithCommaInsideOfPseudoClassTest.css";
             String cmpFile = sourceFolder + "cmp_invalidCssExampleWithCommaInsideOfPseudoClassTest.css";

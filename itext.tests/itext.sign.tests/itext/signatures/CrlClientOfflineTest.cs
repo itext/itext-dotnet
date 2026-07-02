@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Internal.Runtime;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Signatures.Testutils;

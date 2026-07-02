@@ -22,6 +22,7 @@ Copyright (c) 1998-2026 Apryse Group NV
  */
 using System;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Threading;
 using iText.IO.Image;
 using iText.Kernel.Pdf;
@@ -34,22 +35,25 @@ namespace iText.Layout {
     // Also this test in only for windows OS 
     public class NetWorkPathTest : ExtendedITextTest {
         
+#if NETSTANDARD2_0
         [NUnit.Framework.Test]
         public virtual void NetworkPathImageTest() {
-            String fullImagePath = @"\\someVeryRandomWords\SomeVeryRandomName.img";
-            String startOfMsg = null;
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-            try {
-                Image drawing = new Image(ImageDataFactory.Create(fullImagePath));
-            } catch (Exception e) {
-                if (e.InnerException != null && e.InnerException.Message.Length > 18)
-                    startOfMsg = e.InnerException.Message.Substring(0, 19);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+                 String fullImagePath = @"\\someVeryRandomWords\SomeVeryRandomName.img";
+                 String startOfMsg = null;
+                 Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+                 Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+                 try {
+                     Image drawing = new Image(ImageDataFactory.Create(fullImagePath));
+                 } catch (Exception e) {
+                     if (e.InnerException != null && e.InnerException.Message.Length > 18)
+                         startOfMsg = e.InnerException.Message.Substring(0, 19);
+                 }
+                 NUnit.Framework.Assert.IsNotNull(startOfMsg);
+                 NUnit.Framework.Assert.AreNotEqual("Could not find file", startOfMsg);
             }
-            NUnit.Framework.Assert.IsNotNull(startOfMsg);
-            NUnit.Framework.Assert.AreNotEqual("Could not find file", startOfMsg);
         }
-        
+#endif        
         [NUnit.Framework.Test]
         [Ignore("Manual run only")]
         public virtual void NetworkPathImageTest02() {

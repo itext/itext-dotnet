@@ -22,6 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Internal.Runtime;
+using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Parse;
 using iText.StyledXmlParser.Css.Selector;
@@ -148,7 +150,15 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
                 }
 
                 case CommonCssConstants.NOT: {
-                    return CreateNotSelectorItem(arguments);
+                    return CssPseudoClassNotSelectorItem.CreateNotSelectorItem(arguments);
+                }
+
+                case CommonCssConstants.IS: {
+                    return CssPseudoClassIsSelectorItem.CreateIsSelectorItem(arguments);
+                }
+
+                case CommonCssConstants.WHERE: {
+                    return CssPseudoClassWhereSelectorItem.CreateWhereSelectorItem(arguments);
                 }
 
                 case CommonCssConstants.ROOT: {
@@ -191,15 +201,76 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             }
         }
 
-        private static CssPseudoClassNotSelectorItem CreateNotSelectorItem(String arguments) {
-            CssSelector selector = new CssSelector(arguments);
-            foreach (ICssSelectorItem item in selector.GetSelectorItems()) {
-                if (item is CssPseudoClassNotSelectorItem || item is CssPseudoElementSelectorItem) {
-                    return null;
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Parses a selector list.</summary>
+        /// <remarks>Parses a selector list. Whether parsing is supposed to be forgiving can be configured.</remarks>
+        /// <param name="arguments">selector list as written inside parentheses</param>
+        /// <param name="forgiving">
+        /// 
+        /// <see langword="true"/>
+        /// if parsing is supposed to be forgiving,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </param>
+        /// <returns>list of valid selectors (possibly empty), or null if arguments are syntactically incorrect</returns>
+        internal static IList<ICssSelector> ParseSelectorListWithoutPseudoElements(String arguments, bool forgiving
+            ) {
+            if (arguments == null || String.IsNullOrEmpty(arguments.Trim())) {
+                // selector list with empty argument is invalid.
+                return null;
+            }
+            IList<String> parts = CssSelectorParser.SplitByTopLevelComma(arguments);
+            if (parts.IsEmpty()) {
+                return null;
+            }
+            IList<ICssSelector> selectors = new List<ICssSelector>();
+            foreach (String rawPart in parts) {
+                String part = rawPart == null ? "" : rawPart.Trim();
+                if (String.IsNullOrEmpty(part)) {
+                    // Empty entries like :is(.a,,.b) are invalid selectors in the list.
+                    if (forgiving) {
+                        continue;
+                    }
+                    else {
+                        return null;
+                    }
+                }
+                try {
+                    CssSelector sel = new CssSelector(CssSelectorParser.ParseSelectorItems(part, false));
+                    if (ContainsPseudoElement(JavaCollectionsUtil.SingletonList<ICssSelector>(sel))) {
+                        if (!forgiving) {
+                            return null;
+                        }
+                    }
+                    else {
+                        selectors.Add(sel);
+                    }
+                }
+                catch (ArgumentException) {
+                    // Invalid/unsupported selector in the list.
+                    if (!forgiving) {
+                        return null;
+                    }
                 }
             }
-            return new CssPseudoClassNotSelectorItem(selector);
+            return selectors;
         }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal static bool ContainsPseudoElement(IList<ICssSelector> selectors) {
+            foreach (ICssSelector sel in selectors) {
+                if (sel is CssSelector) {
+                    foreach (ICssSelectorItem item in ((CssSelector)sel).GetSelectorItems()) {
+                        if (item is CssPseudoElementSelectorItem) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+//\endcond
 
         private static CssPseudoClassHasSelectorItem CreateHasSelectorItem(String arguments) {
             IList<ICssSelector> hasSelectors = CssSelectorParser.ParseCommaSeparatedSelectors(arguments);

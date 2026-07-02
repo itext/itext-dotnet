@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Datastructures;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields.Borders;
@@ -757,12 +758,19 @@ namespace iText.Forms.Fields {
                 return;
             }
             // Rotation
-            PdfPage page = GetWidget().GetPage();
-            int pageRotation = page == null ? 0 : page.GetRotation();
-            int additionalFieldRotation = ((PdfSignatureFormField)parent).IsPageRotationIgnored() ? 0 : -pageRotation;
-            int fieldRotation = GetRotation() + additionalFieldRotation;
-            PdfArray matrix = GetRotationMatrix(fieldRotation, rectangle.GetHeight(), rectangle.GetWidth());
-            rectangle = ApplyRotation(fieldRotation + pageRotation, rectangle);
+            PdfArray matrix;
+            if (((PdfSignatureFormField)parent).IsPageRotationIgnored()) {
+                PdfPage page = GetWidget().GetPage();
+                int pageRotation = page == null ? 0 : page.GetRotation();
+                int additionalFieldRotation = 0;
+                int fieldRotation = GetRotation() + additionalFieldRotation;
+                matrix = GetRotationMatrix(fieldRotation, rectangle.GetHeight(), rectangle.GetWidth());
+                rectangle = ApplyRotation(fieldRotation + pageRotation, rectangle);
+            }
+            else {
+                matrix = GetRotationMatrix(GetRotation(), rectangle.GetHeight(), rectangle.GetWidth());
+                rectangle = ApplyRotation(GetRotation(), rectangle);
+            }
             CreateSigField();
             SetModelElementProperties(rectangle);
             PdfFormXObject normalAppearance_1 = new PdfFormXObject(new Rectangle(0, 0, rectangle.GetWidth(), rectangle
@@ -1505,21 +1513,23 @@ namespace iText.Forms.Fields {
             }
             PdfFormXObject n2LayerXObject = new PdfFormXObject(new Rectangle(0, 0, width, height));
             iText.Layout.Canvas n2LayerCanvas = new iText.Layout.Canvas(n2LayerXObject, this.GetDocument());
-            PdfPage page = GetWidget().GetPage();
-            int rotation = page == null ? 0 : page.GetRotation();
-            float squeezeTransformation = height / width;
-            if (rotation == 90) {
-                n2LayerCanvas.GetPdfCanvas().ConcatMatrix(0, squeezeTransformation, -1 / squeezeTransformation, 0, width, 
-                    0);
-            }
-            else {
-                if (rotation == 180) {
-                    n2LayerCanvas.GetPdfCanvas().ConcatMatrix(-1, 0, 0, -1, width, height);
+            if (((PdfSignatureFormField)parent).IsPageRotationIgnored()) {
+                PdfPage page = GetWidget().GetPage();
+                int rotation = page == null ? 0 : page.GetRotation();
+                float squeezeTransformation = height / width;
+                if (rotation == 90) {
+                    n2LayerCanvas.GetPdfCanvas().ConcatMatrix(0, squeezeTransformation, -1 / squeezeTransformation, 0, width, 
+                        0);
                 }
                 else {
-                    if (rotation == 270) {
-                        n2LayerCanvas.GetPdfCanvas().ConcatMatrix(0, -squeezeTransformation, 1 / squeezeTransformation, 0, 0, height
-                            );
+                    if (rotation == 180) {
+                        n2LayerCanvas.GetPdfCanvas().ConcatMatrix(-1, 0, 0, -1, width, height);
+                    }
+                    else {
+                        if (rotation == 270) {
+                            n2LayerCanvas.GetPdfCanvas().ConcatMatrix(0, -squeezeTransformation, 1 / squeezeTransformation, 0, 0, height
+                                );
+                        }
                     }
                 }
             }

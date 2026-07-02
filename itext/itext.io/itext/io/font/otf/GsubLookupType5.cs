@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Internal.Runtime;
 using iText.IO.Font.Otf.Lookuptype5;
 
 namespace iText.IO.Font.Otf {

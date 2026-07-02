@@ -28,6 +28,7 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
+using iText.Commons.Internal.Runtime;
 
 namespace iText.Kernel.XMP.Impl {
     /// <since>12.10.2006</since>

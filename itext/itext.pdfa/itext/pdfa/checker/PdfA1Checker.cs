@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.IO.Font;
@@ -559,6 +560,16 @@ namespace iText.Pdfa.Checker {
 
         protected internal override void CheckFileSpec(PdfDictionary fileSpec) {
             if (fileSpec.ContainsKey(PdfName.EF)) {
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.FILE_SPECIFICATION_DICTIONARY_SHALL_NOT_CONTAIN_THE_EF_KEY
+                    );
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override void CheckFileSpecEmbeddedStream(PdfStream embeddedFile) {
+            // This method is intended to verify file's specification EF->F stream.
+            // Throw an exception since EF is forbidden for PDF/A-1.
+            if (embeddedFile != null) {
                 throw new PdfAConformanceException(PdfaExceptionMessageConstant.FILE_SPECIFICATION_DICTIONARY_SHALL_NOT_CONTAIN_THE_EF_KEY
                     );
             }

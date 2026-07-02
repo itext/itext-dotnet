@@ -23,17 +23,24 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Logs;
 using iText.Layout.Margincollapse;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class FlexContainerRenderer : DivRenderer {
+        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.FlexContainerRenderer
+            ));
+
         /// <summary>
         /// Used for caching purposes in FlexUtil
         /// We couldn't find the real use case when this map contains more than 1 entry
@@ -66,6 +73,7 @@ namespace iText.Layout.Renderer {
         /// </param>
         public FlexContainerRenderer(Div modelElement)
             : base(modelElement) {
+            SetProperty(Property.IGNORE_AREA_AND_SECTION_BREAKS, true);
         }
 
         /// <summary>
@@ -343,11 +351,11 @@ namespace iText.Layout.Renderer {
             ApplyMargins(occupiedArea.GetBBox(), true);
             if (splitRenderer_1 == null || splitRenderer_1.GetChildRenderers().IsEmpty()) {
                 return new LayoutResult(LayoutResult.NOTHING, null, null, overflowRenderer, result.GetCauseOfNothing()).SetAreaBreak
-                    (result.GetAreaBreak());
+                    (result.GetAreaBreak()).SetSectionBreak(result.GetSectionBreak());
             }
             else {
                 return new LayoutResult(LayoutResult.PARTIAL, layoutContext.GetArea(), splitRenderer_1, overflowRenderer, 
-                    null).SetAreaBreak(result.GetAreaBreak());
+                    null).SetAreaBreak(result.GetAreaBreak()).SetSectionBreak(result.GetSectionBreak());
             }
         }
 //\endcond
@@ -532,21 +540,23 @@ namespace iText.Layout.Renderer {
         // TODO DEVSIX-5087 Support overflow visible/hidden property correctly
         /// <summary><inheritDoc/></summary>
         public override void AddChild(IRenderer renderer) {
+            if (renderer is AreaBreakRenderer || renderer is SectionBreakRenderer) {
+                LOGGER.LogWarning(LayoutLogMessageConstant.FLEX_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK);
+                return;
+            }
             // TODO DEVSIX-5087 Since overflow-fit is an internal iText overflow value, we do not need to support if
             // for html/css objects, such as flex. As for now we will set VISIBLE by default, however, while working
             // on the ticket one may come to some more satifactory approach
-            if (!(renderer is AreaBreakRenderer)) {
-                renderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
-                base.AddChild(renderer);
-            }
+            renderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+            base.AddChild(renderer);
         }
 
         private static void OrderChildRenderers(IList<IRenderer> renderers) {
-            JavaCollectionsUtil.Sort(renderers, new _IComparer_570());
+            JavaCollectionsUtil.Sort(renderers, new _IComparer_580());
         }
 
-        private sealed class _IComparer_570 : IComparer<IRenderer> {
-            public _IComparer_570() {
+        private sealed class _IComparer_580 : IComparer<IRenderer> {
+            public _IComparer_580() {
             }
 
             public int Compare(IRenderer a, IRenderer b) {

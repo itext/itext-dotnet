@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+	<metadata>
+		<id>itext.webp-image-support</id>
+		<version>9.7.0</version>
+		<title>iText webp image support module</title>
+		<authors>Apryse Software</authors>
+		<owners>Apryse Software</owners>
+		<licenseUrl>https://www.gnu.org/licenses/agpl.html</licenseUrl>
+		<projectUrl>https://itextpdf.com/</projectUrl>
+		<icon>ITSC-avatar.png</icon>
+		<requireLicenseAcceptance>true</requireLicenseAcceptance>
+		<description>webp support module</description>
+		<summary />
+		<releaseNotes>https://itextpdf.com/itext7release</releaseNotes>
+		<copyright>Copyright (c) 1998-2026 Apryse Group NV</copyright>
+		<language>en-US</language>
+		<tags>itext itext7 itextsharp c# .net csharp webp</tags>
+		<dependencies>
+			<group targetFramework="net461">
+				<dependency id="itext" version="9.7.0" />
+				<dependency id="SkiaSharp" version="3.119.4" />
+				<dependency id="SkiaSharp.NativeAssets.Linux.NoDependencies" version="3.119.4" />
+			</group>
+			<group targetFramework="netstandard2.0">
+				<dependency id="itext" version="9.7.0" />
+				<dependency id="SkiaSharp" version="3.119.4" />
+				<dependency id="SkiaSharp.NativeAssets.Linux.NoDependencies" version="3.119.4" />
+			</group>
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="bin\Release\net461\itext.webp-image-support.dll" target="lib\net461" />
+		<file src="bin\Release\net461\itext.webp-image-support.xml" target="lib\net461" />
+		<file src="bin\Release\netstandard2.0\itext.webp-image-support.dll" target="lib\netstandard2.0" />
+		<file src="bin\Release\netstandard2.0\itext.webp-image-support.xml" target="lib\netstandard2.0" />
+		<file src="..\..\ITSC-avatar.png" target="" />
+	</files>
+</package>

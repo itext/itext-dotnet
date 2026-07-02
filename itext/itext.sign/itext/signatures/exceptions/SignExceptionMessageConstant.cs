@@ -217,6 +217,8 @@ namespace iText.Signatures.Exceptions {
 
         public const String NO_SIGNATURE_WITH_THAT_NAME = "Signature field with {0} name was not found in the document.";
 
+        public const String OID_SHALL_NOT_BE_NULL = "oid can not be null";
+
         private SignExceptionMessageConstant() {
         }
         // Private constructor will prevent the instantiation of this class directly

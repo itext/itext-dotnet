@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.Collections.Generic;
+using iText.Commons.Internal.Runtime;
 
 namespace iText.IO.Font.Otf {
     /// <summary>
@@ -97,8 +98,8 @@ namespace iText.IO.Font.Otf {
                         GposLookupType2.PairValueFormat pv = m.Get(gi.GetGlyph().GetCode());
                         if (pv != null) {
                             Glyph g2 = gi.GetGlyph();
-                            line.Set(line.GetIdx(), new Glyph(g1, 0, 0, pv.GetFirst().GetXAdvance(), pv.GetFirst().GetYAdvance(), 0));
-                            line.Set(gi.GetIdx(), new Glyph(g2, 0, 0, pv.GetSecond().GetXAdvance(), pv.GetSecond().GetYAdvance(), 0));
+                            line.Set(line.GetIdx(), new Glyph(g1, pv.GetFirst().GetXAdvance(), pv.GetFirst().GetYAdvance()));
+                            line.Set(gi.GetIdx(), new Glyph(g2, pv.GetSecond().GetXAdvance(), pv.GetSecond().GetYAdvance()));
                             line.SetIdx(gi.GetIdx());
                             changed = true;
                         }
@@ -176,8 +177,8 @@ namespace iText.IO.Font.Otf {
                     return false;
                 }
                 GposLookupType2.PairValueFormat pv = pvs[c2];
-                line.Set(line.GetIdx(), new Glyph(g1, 0, 0, pv.GetFirst().GetXAdvance(), pv.GetFirst().GetYAdvance(), 0));
-                line.Set(gi.GetIdx(), new Glyph(g2, 0, 0, pv.GetSecond().GetXAdvance(), pv.GetSecond().GetYAdvance(), 0));
+                line.Set(line.GetIdx(), new Glyph(g1, pv.GetFirst().GetXAdvance(), pv.GetFirst().GetYAdvance()));
+                line.Set(gi.GetIdx(), new Glyph(g2, pv.GetSecond().GetXAdvance(), pv.GetSecond().GetYAdvance()));
                 line.SetIdx(gi.GetIdx());
                 return true;
             }

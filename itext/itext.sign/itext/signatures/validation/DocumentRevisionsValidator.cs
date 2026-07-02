@@ -26,6 +26,7 @@ using System.IO;
 using System.Linq;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Datastructures;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;

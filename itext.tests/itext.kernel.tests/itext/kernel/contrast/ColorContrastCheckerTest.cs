@@ -128,15 +128,15 @@ namespace iText.Kernel.Contrast {
         [NUnit.Framework.Test]
         public virtual void TestValidateWithNonPdfPageContext() {
             ColorContrastChecker checker = new ColorContrastChecker(false, false);
-            IValidationContext context = new _IValidationContext_143();
+            IValidationContext context = new _IValidationContext_145();
             NUnit.Framework.Assert.DoesNotThrow(() => {
                 checker.Validate(context);
             }
             );
         }
 
-        private sealed class _IValidationContext_143 : IValidationContext {
-            public _IValidationContext_143() {
+        private sealed class _IValidationContext_145 : IValidationContext {
+            public _IValidationContext_145() {
             }
 
             public ValidationType GetType() {

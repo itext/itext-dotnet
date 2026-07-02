@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
@@ -67,7 +68,7 @@ namespace iText.Kernel.Pdf {
             <PdfIndirectReference, PdfIndirectReference>();
 
         /// <summary>Is used in smart mode to serialize and store serialized objects content.</summary>
-        private readonly SmartModePdfObjectsSerializer smartModeSerializer = new SmartModePdfObjectsSerializer();
+        private SmartModePdfObjectsSerializer smartModeSerializer;
 
         private Stream originalOutputStream;
 
@@ -335,6 +336,9 @@ namespace iText.Kernel.Pdf {
             SerializedObjectContent serializedContent = null;
             if (properties.smartMode && tryToFindDuplicate && !CheckTypeOfPdfDictionary(obj, PdfName.Page) && !CheckTypeOfPdfDictionary
                 (obj, PdfName.OCG) && !CheckTypeOfPdfDictionary(obj, PdfName.OCMD)) {
+                if (smartModeSerializer == null) {
+                    smartModeSerializer = new SmartModePdfObjectsSerializer();
+                }
                 serializedContent = smartModeSerializer.SerializeObject(obj);
                 PdfIndirectReference objectRef = smartModeSerializer.GetSavedSerializedObject(serializedContent);
                 if (objectRef != null) {

@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Parser;

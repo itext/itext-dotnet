@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using iText.Commons.Utils.Collections;
+using iText.Commons.Internal.Runtime;
 
 namespace iText.Commons.Utils {
     /// <summary>

@@ -228,6 +228,12 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
+        public virtual void TibetanCharacterBelongsToSpecificScripts() {
+            // u0F0C TIBETAN MARK DELIMITER TSHEG BSTAR
+            NUnit.Framework.Assert.IsTrue(TextRenderer.CodePointIsOfSpecialScript(0x0F0C));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CyrillicCharacterDoesntBelongToSpecificScripts() {
             // u0433 Cyrillic Small Letter U
             NUnit.Framework.Assert.IsFalse(TextRenderer.CodePointIsOfSpecialScript(1091));

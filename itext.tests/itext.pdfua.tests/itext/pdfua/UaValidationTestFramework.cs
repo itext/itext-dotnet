@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Kernel.Exceptions;
@@ -68,6 +69,8 @@ namespace iText.Pdfua {
             conformances.Add(new PdfConformance(PdfUAConformance.PDF_UA_2));
             conformances.Add(new PdfConformance(WellTaggedPdfConformance.FOR_REUSE));
             conformances.Add(new PdfConformance(WellTaggedPdfConformance.FOR_ACCESSIBILITY));
+            conformances.Add(new PdfConformance(JavaUtil.ArraysAsList(WellTaggedPdfConformance.FOR_REUSE, WellTaggedPdfConformance
+                .FOR_ACCESSIBILITY)));
             return conformances;
         }
 
@@ -92,8 +95,8 @@ namespace iText.Pdfua {
         }
 
         public virtual void AssertBothFail(String filename, String expectedMsg, bool checkDocClosing) {
-            CheckError(CheckErrorLayout("itext_" + filename + ConformanceToString() + ".pdf"), expectedMsg);
-            String createdFileName = "vera_" + filename + ConformanceToString() + ".pdf";
+            CheckError(CheckErrorLayout("itext_" + filename + PathSafeConformance() + ".pdf"), expectedMsg);
+            String createdFileName = "vera_" + filename + PathSafeConformance() + ".pdf";
             VeraPdfResult(createdFileName, true);
             if (checkDocClosing) {
                 System.Console.Out.WriteLine("Checking closing");
@@ -102,9 +105,9 @@ namespace iText.Pdfua {
         }
 
         public virtual void AssertBothValid(String fileName) {
-            Exception e = CheckErrorLayout("itext_" + fileName + ConformanceToString() + ".pdf");
-            String veraPdf = VeraPdfResult("vera_" + fileName + ConformanceToString() + ".pdf", false);
-            Exception eClosing = CheckErrorOnClosing("vera_" + fileName + ConformanceToString() + ".pdf");
+            Exception e = CheckErrorLayout("itext_" + fileName + PathSafeConformance() + ".pdf");
+            String veraPdf = VeraPdfResult("vera_" + fileName + PathSafeConformance() + ".pdf", false);
+            Exception eClosing = CheckErrorOnClosing("vera_" + fileName + PathSafeConformance() + ".pdf");
             if (e == null && veraPdf == null && eClosing == null) {
                 return;
             }
@@ -139,13 +142,13 @@ namespace iText.Pdfua {
         }
 
         public virtual void AssertOnlyVeraPdfFail(String filename) {
-            VeraPdfResult("vera_" + filename + ConformanceToString() + ".pdf", true);
-            Exception e = CheckErrorLayout("itext_" + filename + ConformanceToString() + ".pdf");
+            VeraPdfResult("vera_" + filename + PathSafeConformance() + ".pdf", true);
+            Exception e = CheckErrorLayout("itext_" + filename + PathSafeConformance() + ".pdf");
             NUnit.Framework.Assert.IsNull(e);
         }
 
         public virtual void AssertVeraPdfValid(String filename) {
-            String veraPdf = VeraPdfResult("vera_" + filename + ConformanceToString() + ".pdf", false);
+            String veraPdf = VeraPdfResult("vera_" + filename + PathSafeConformance() + ".pdf", false);
             if (veraPdf == null) {
                 return;
             }
@@ -153,7 +156,7 @@ namespace iText.Pdfua {
         }
 
         public virtual void AssertOnlyITextFail(String filename, String expectedMsg) {
-            CheckError(CheckErrorLayout("itext_" + filename + ConformanceToString() + ".pdf"), expectedMsg);
+            CheckError(CheckErrorLayout("itext_" + filename + PathSafeConformance() + ".pdf"), expectedMsg);
             AssertVeraPdfValid(filename);
         }
 
@@ -289,21 +292,21 @@ namespace iText.Pdfua {
             return null;
         }
 
-        private String ConformanceToString() {
+        public virtual String PathSafeConformance() {
+            StringBuilder conformanceShortString = new StringBuilder();
             if (conformance.GetUAConformance() != null) {
-                return MessageFormatUtil.Format("_UA_{0}", conformance.GetUAConformance().GetPart());
+                conformanceShortString.Append("_UA_").Append(conformance.GetUAConformance().GetPart());
             }
-            else {
+            if (conformance.IsWtpdf()) {
+                conformanceShortString.Append("_WTPDF");
                 if (conformance.ConformsTo(WellTaggedPdfConformance.FOR_ACCESSIBILITY)) {
-                    return "WTPDF_FOR_ACCESSIBILITY";
+                    conformanceShortString.Append("_A");
                 }
-                else {
-                    if (conformance.ConformsTo(WellTaggedPdfConformance.FOR_REUSE)) {
-                        return "WTPDF_FOR_REUSE";
-                    }
+                if (conformance.ConformsTo(WellTaggedPdfConformance.FOR_REUSE)) {
+                    conformanceShortString.Append("_R");
                 }
             }
-            return null;
+            return conformanceShortString.ToString();
         }
 
         private static String PrintStackTrace(Exception e) {

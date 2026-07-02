@@ -278,6 +278,12 @@ namespace iText.Pdfa.Checker {
                     CheckText(fontContext.GetText(), fontContext.GetFont());
                     break;
                 }
+
+                case ValidationType.FILE_SPEC_DATA: {
+                    PdfFileSpecDataValidationContext fileSpecDataContext = (PdfFileSpecDataValidationContext)context;
+                    CheckFileSpecEmbeddedStream(fileSpecDataContext.GetFileSpecDataStream());
+                    break;
+                }
             }
         }
 
@@ -709,6 +715,17 @@ namespace iText.Pdfa.Checker {
         /// </param>
         protected internal abstract void CheckFileSpec(PdfDictionary fileSpec);
 
+        /// <summary>Verify the conformity of the file specification embedded file stream.</summary>
+        /// <param name="embeddedFile">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+        /// containing file specification embedded stream to be checked
+        /// </param>
+        [System.ObsoleteAttribute(@"will become abstract")]
+        protected internal virtual void CheckFileSpecEmbeddedStream(PdfStream embeddedFile) {
+        }
+
+        // Empty implementation. To become abstract with the next major release.
         /// <summary>Verify the conformity of the form dictionary.</summary>
         /// <param name="form">
         /// the form

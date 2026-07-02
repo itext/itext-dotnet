@@ -100,7 +100,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, Count = 2, LogLevel
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, Count = 3, LogLevel
              = LogLevelConstants.ERROR)]
         public virtual void ParentBoxWrapAroundChildBoxesTest() {
             // TODO DEVSIX-6488 all elements should be layouted first in case when parent box should wrap around child boxes

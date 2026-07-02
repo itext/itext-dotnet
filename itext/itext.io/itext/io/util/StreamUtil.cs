@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Exceptions;
 using iText.IO.Source;
@@ -226,7 +227,7 @@ namespace iText.IO.Util {
             byte[] b = new byte[8192];
             MemoryStream output = new MemoryStream();
             while (true) {
-                int read = stream.Read(b);
+                int read = stream.JRead(b);
                 if (read < 1) {
                     break;
                 }

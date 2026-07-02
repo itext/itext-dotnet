@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Util;
@@ -67,7 +68,7 @@ namespace iText.Layout.Font {
 
         private readonly FontProgramDescriptor descriptor;
 
-        private readonly Range range;
+        private readonly iText.Layout.Font.Range range;
 
         private readonly int hash;
 
@@ -75,7 +76,7 @@ namespace iText.Layout.Font {
 
         private readonly String alias;
 
-        private FontInfo(String fontName, byte[] fontData, String encoding, FontProgramDescriptor descriptor, Range
+        private FontInfo(String fontName, byte[] fontData, String encoding, FontProgramDescriptor descriptor, iText.Layout.Font.Range
              unicodeRange, String alias) {
             this.fontName = fontName;
             this.fontData = fontData;
@@ -86,8 +87,8 @@ namespace iText.Layout.Font {
             this.hash = CalculateHashCode(this.fontName, this.fontData, this.encoding, this.range);
         }
 
-        public static iText.Layout.Font.FontInfo Create(iText.Layout.Font.FontInfo fontInfo, String alias, Range range
-            ) {
+        public static iText.Layout.Font.FontInfo Create(iText.Layout.Font.FontInfo fontInfo, String alias, iText.Layout.Font.Range
+             range) {
             return new iText.Layout.Font.FontInfo(fontInfo.fontName, fontInfo.fontData, fontInfo.encoding, fontInfo.descriptor
                 , range, alias);
         }
@@ -96,7 +97,7 @@ namespace iText.Layout.Font {
             return Create(fontInfo, alias, null);
         }
 
-        public static iText.Layout.Font.FontInfo Create(FontProgram fontProgram, String encoding, String alias, Range
+        public static iText.Layout.Font.FontInfo Create(FontProgram fontProgram, String encoding, String alias, iText.Layout.Font.Range
              range) {
             FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontProgram);
             return new iText.Layout.Font.FontInfo(descriptor.GetFontName(), null, encoding, descriptor, range, alias);
@@ -107,8 +108,8 @@ namespace iText.Layout.Font {
         }
 
 //\cond DO_NOT_DOCUMENT
-        internal static iText.Layout.Font.FontInfo Create(String fontName, String encoding, String alias, Range range
-            ) {
+        internal static iText.Layout.Font.FontInfo Create(String fontName, String encoding, String alias, iText.Layout.Font.Range
+             range) {
             FontCacheKey cacheKey = FontCacheKey.Create(fontName);
             FontProgramDescriptor descriptor = GetFontNamesFromCache(cacheKey);
             if (descriptor == null) {
@@ -121,7 +122,7 @@ namespace iText.Layout.Font {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal static iText.Layout.Font.FontInfo Create(byte[] fontProgram, String encoding, String alias, Range
+        internal static iText.Layout.Font.FontInfo Create(byte[] fontProgram, String encoding, String alias, iText.Layout.Font.Range
              range) {
             FontCacheKey cacheKey = FontCacheKey.Create(fontProgram);
             FontProgramDescriptor descriptor = GetFontNamesFromCache(cacheKey);
@@ -139,7 +140,7 @@ namespace iText.Layout.Font {
         }
 
         //shall not be null
-        public Range GetFontUnicodeRange() {
+        public iText.Layout.Font.Range GetFontUnicodeRange() {
             return range;
         }
 
@@ -211,7 +212,8 @@ namespace iText.Layout.Font {
             return base.ToString();
         }
 
-        private static int CalculateHashCode(String fontName, byte[] bytes, String encoding, Range range) {
+        private static int CalculateHashCode(String fontName, byte[] bytes, String encoding, iText.Layout.Font.Range
+             range) {
             int result = fontName != null ? fontName.GetHashCode() : 0;
             result = 31 * result + ArrayUtil.HashCode(bytes);
             result = 31 * result + (encoding != null ? encoding.GetHashCode() : 0);

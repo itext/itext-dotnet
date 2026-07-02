@@ -87,6 +87,23 @@ namespace iText.Layout.Element {
             return this;
         }
 
+        /// <summary>Adds the section break to the div contents.</summary>
+        /// <param name="sectionBreak">
+        /// 
+        /// <see cref="SectionBreak"/>
+        /// that terminates the current page content
+        /// and creates a new page, optionally with a specified page size and/or page margins
+        /// </param>
+        /// <returns>
+        /// this same
+        /// <see cref="Div"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Layout.Element.Div Add(SectionBreak sectionBreak) {
+            childElements.Add(sectionBreak);
+            return this;
+        }
+
         public override AccessibilityProperties GetAccessibilityProperties() {
             if (tagProperties == null) {
                 tagProperties = new DefaultAccessibilityProperties(StandardRoles.DIV);

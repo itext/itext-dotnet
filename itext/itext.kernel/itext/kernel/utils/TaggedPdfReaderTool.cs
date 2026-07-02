@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Exceptions;
 using iText.Kernel.Exceptions;
@@ -130,6 +131,7 @@ namespace iText.Kernel.Utils {
                     @out.Write("<");
                     @out.Write(tag);
                     InspectAttributes(structElemKid);
+                    InspectId(structElemKid);
                     @out.Write(">" + Environment.NewLine);
                     PdfString alt = (structElemKid).GetAlt();
                     if (alt != null) {
@@ -177,6 +179,23 @@ namespace iText.Kernel.Utils {
                         @out.Write(attrDict.Get(key, false).ToString());
                         @out.Write("\"");
                     }
+                }
+                catch (System.IO.IOException e) {
+                    throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.UNKNOWN_IO_EXCEPTION, e);
+                }
+            }
+        }
+
+        /// <summary>Inspects Id property of the StructTreeRoot child.</summary>
+        /// <param name="kid">the direct kid of the StructTreeRoot</param>
+        protected internal virtual void InspectId(PdfStructElem kid) {
+            if (kid.GetStructureElementId() != null) {
+                try {
+                    @out.Write(' ');
+                    @out.Write("element_id");
+                    @out.Write("=\"");
+                    @out.Write(kid.GetStructureElementId().GetValue());
+                    @out.Write("\"");
                 }
                 catch (System.IO.IOException e) {
                     throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.UNKNOWN_IO_EXCEPTION, e);

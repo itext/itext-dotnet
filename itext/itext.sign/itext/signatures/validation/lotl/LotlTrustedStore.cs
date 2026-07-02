@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Signatures.Exceptions;
 using iText.Signatures.Validation;

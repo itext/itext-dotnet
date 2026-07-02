@@ -30,6 +30,7 @@
 using System;
 using System.Collections;
 using System.Text;
+using iText.Commons.Internal.Runtime;
 using iText.Kernel.XMP;
 using iText.Kernel.XMP.Impl.XPath;
 using iText.Kernel.XMP.Options;

@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
@@ -61,8 +62,8 @@ namespace iText.Kernel.Pdf.Canvas {
 
         private const String TITLE = "Empty iText Document";
 
-        private sealed class _ContentProvider_103 : PdfCanvasTest.ContentProvider {
-            public _ContentProvider_103() {
+        private sealed class _ContentProvider_101 : PdfCanvasTest.ContentProvider {
+            public _ContentProvider_101() {
             }
 
             public void DrawOnCanvas(PdfCanvas canvas, int pageNumber) {
@@ -72,7 +73,7 @@ namespace iText.Kernel.Pdf.Canvas {
             }
         }
 
-        private static readonly PdfCanvasTest.ContentProvider DEFAULT_CONTENT_PROVIDER = new _ContentProvider_103(
+        private static readonly PdfCanvasTest.ContentProvider DEFAULT_CONTENT_PROVIDER = new _ContentProvider_101(
             );
 
         [NUnit.Framework.OneTimeSetUp]
@@ -247,12 +248,12 @@ namespace iText.Kernel.Pdf.Canvas {
             int pageCount = 1000;
             String filename = DESTINATION_FOLDER + "1000PagesDocumentWithText.pdf";
             PdfWriter writer = CompareTool.CreateTestPdfWriter(filename);
-            CreateStandardDocument(writer, pageCount, new _ContentProvider_404());
+            CreateStandardDocument(writer, pageCount, new _ContentProvider_402());
             AssertStandardDocument(filename, pageCount);
         }
 
-        private sealed class _ContentProvider_404 : PdfCanvasTest.ContentProvider {
-            public _ContentProvider_404() {
+        private sealed class _ContentProvider_402 : PdfCanvasTest.ContentProvider {
+            public _ContentProvider_402() {
             }
 
             public void DrawOnCanvas(PdfCanvas canvas, int pageNumber) {
@@ -753,10 +754,10 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfPage page = document.AddNewPage();
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "2-frames.gif");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            int reads = @is.Read();
+            int reads = @is.ReadByte();
             while (reads != -1) {
                 baos.Write(reads);
-                reads = @is.Read();
+                reads = @is.ReadByte();
             }
             PdfCanvas canvas = new PdfCanvas(page);
             ImageData img = ImageDataFactory.CreateGifFrame(baos.ToArray(), 1);
@@ -773,10 +774,10 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfPage page = document.AddNewPage();
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "2-frames.gif");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            int reads = @is.Read();
+            int reads = @is.ReadByte();
             while (reads != -1) {
                 baos.Write(reads);
-                reads = @is.Read();
+                reads = @is.ReadByte();
             }
             PdfCanvas canvas = new PdfCanvas(page);
             ImageData img = ImageDataFactory.CreateGifFrame(baos.ToArray(), 2);
@@ -793,10 +794,10 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfPage page = document.AddNewPage();
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "2-frames.gif");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            int reads = @is.Read();
+            int reads = @is.ReadByte();
             while (reads != -1) {
                 baos.Write(reads);
-                reads = @is.Read();
+                reads = @is.ReadByte();
             }
             PdfCanvas canvas = new PdfCanvas(page);
             try {
@@ -814,10 +815,10 @@ namespace iText.Kernel.Pdf.Canvas {
             PdfPage page = document.AddNewPage();
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "animated_fox_dog.gif");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            int reads = @is.Read();
+            int reads = @is.ReadByte();
             while (reads != -1) {
                 baos.Write(reads);
-                reads = @is.Read();
+                reads = @is.ReadByte();
             }
             PdfCanvas canvas = new PdfCanvas(page);
             IList<ImageData> frames = ImageDataFactory.CreateGifFrames(baos.ToArray(), new int[] { 1, 2, 5 });
@@ -865,7 +866,7 @@ namespace iText.Kernel.Pdf.Canvas {
         [NUnit.Framework.Test]
         public virtual void CanvasStreamFlushedNoException() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-            PdfStream stream = new _PdfStream_1139();
+            PdfStream stream = new _PdfStream_1137();
             stream.Put(PdfName.Filter, new PdfName("FlateDecode"));
             NUnit.Framework.Assert.DoesNotThrow(() => {
                 new PdfCanvas(stream, new PdfResources(), doc);
@@ -873,8 +874,8 @@ namespace iText.Kernel.Pdf.Canvas {
             );
         }
 
-        private sealed class _PdfStream_1139 : PdfStream {
-            public _PdfStream_1139() {
+        private sealed class _PdfStream_1137 : PdfStream {
+            public _PdfStream_1137() {
                 this.isFlushed = false;
             }
 
@@ -894,7 +895,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void CanvasInitializationStampingExistingStreamMemoryLimitAware() {
             String srcFile = SOURCE_FOLDER + "pageWithContent.pdf";
             ReaderProperties properties = new ReaderProperties();
-            MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_1162();
+            MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_1160();
             handler.SetMaxSizeOfSingleDecompressedPdfStream(1);
             properties.SetMemoryLimitsAwareHandler(handler);
             PdfDocument document = new PdfDocument(new PdfReader(srcFile, properties));
@@ -905,8 +906,8 @@ namespace iText.Kernel.Pdf.Canvas {
             );
         }
 
-        private sealed class _MemoryLimitsAwareHandler_1162 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_1162() {
+        private sealed class _MemoryLimitsAwareHandler_1160 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_1160() {
             }
 
             public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {

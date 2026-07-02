@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Forms.Form.Element;
 using iText.IO.Font;
@@ -192,7 +193,8 @@ namespace iText.Pdfua.Checkers {
                         .RC_DIFFERENT_FROM_CONTENTS, false);
                 }
             }
-            if (conformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+            if (conformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE) && !conformance.ConformsTo(PdfConformance
+                .WELL_TAGGED_PDF_FOR_ACCESSIBILITY)) {
                 framework.AssertOnlyITextFail("markupAnnotationRCAndContents_" + annotType.GetValue(), PdfUAExceptionMessageConstants
                     .RC_DIFFERENT_FROM_CONTENTS);
             }
@@ -253,7 +255,8 @@ namespace iText.Pdfua.Checkers {
             }
             );
             if ((annotType == PdfName._3D || annotType == PdfName.RichMedia || annotType == PdfName.Ink) && conformance
-                .ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+                .ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE) && !conformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_ACCESSIBILITY
+                )) {
                 framework.AssertBothValid("annotationNoContents_" + annotType.GetValue());
             }
             else {
@@ -276,7 +279,8 @@ namespace iText.Pdfua.Checkers {
                 pdfPage.AddAnnotation(annotation);
             }
             );
-            if (conformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
+            if (conformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE) && !conformance.ConformsTo(PdfConformance
+                .WELL_TAGGED_PDF_FOR_ACCESSIBILITY)) {
                 if (annotType == PdfName._3D || annotType == PdfName.RichMedia || annotType == PdfName.Ink) {
                     framework.AssertBothValid("annotationEmptyContents_" + annotType.GetValue());
                 }

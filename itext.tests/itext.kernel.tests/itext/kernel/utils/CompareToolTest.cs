@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Exceptions;
 using iText.IO.Font.Constants;
@@ -85,6 +86,31 @@ namespace iText.Kernel.Utils {
             // Comparing the report to the reference one.
             NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(destinationFolder + "tagged_pdf.report.xml", sourceFolder
                  + "cmp_report02.xml"), "CompareTool report differs from the reference one");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CompareTagStructureAgainstXmlNegative() {
+            CompareTool compareTool = new CompareTool();
+            compareTool.SetCompareByContentErrorsLimit(10);
+            compareTool.SetGenerateCompareByContentXmlReport(true);
+            String outPdf = sourceFolder + "tagged_pdf.pdf";
+            String cmpPdf = sourceFolder + "cmp_tagged_xml_neg.xml";
+            String result = compareTool.CompareTagStructureAgainstXml(outPdf, cmpPdf);
+            System.Console.Out.WriteLine("\nRESULT:\n" + result);
+            NUnit.Framework.Assert.IsNotNull(result, "CompareTool must return differences found between the files");
+            NUnit.Framework.Assert.IsTrue(result.Contains("The tag structures are different."));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CompareTagStructureAgainstXmlPositive() {
+            CompareTool compareTool = new CompareTool();
+            compareTool.SetCompareByContentErrorsLimit(10);
+            compareTool.SetGenerateCompareByContentXmlReport(true);
+            String outPdf = sourceFolder + "tagged_pdf.pdf";
+            String cmpXml = sourceFolder + "cmp_tagged_xml_pos.xml";
+            String result = compareTool.CompareTagStructureAgainstXml(outPdf, cmpXml);
+            System.Console.Out.WriteLine("\nRESULT:\n" + result);
+            NUnit.Framework.Assert.IsNull(result);
         }
 
         [NUnit.Framework.Test]
@@ -260,7 +286,7 @@ namespace iText.Kernel.Utils {
         [NUnit.Framework.Test]
         public virtual void ConvertDocInfoToStringsTest() {
             String inPdf = sourceFolder + "test.pdf";
-            CompareTool compareTool = new _T1539206859(this);
+            CompareTool compareTool = new _CompareTool_326();
             using (PdfReader reader = new PdfReader(inPdf, compareTool.GetOutReaderProperties())) {
                 using (PdfDocument doc = new PdfDocument(reader)) {
                     String[] docInfo = compareTool.ConvertDocInfoToStrings(doc.GetDocumentInfo());
@@ -273,19 +299,14 @@ namespace iText.Kernel.Utils {
             }
         }
 
-//\cond DO_NOT_DOCUMENT
-        internal class _T1539206859 : CompareTool {
+        private sealed class _CompareTool_326 : CompareTool {
+            public _CompareTool_326() {
+            }
+
             protected internal override String[] ConvertDocInfoToStrings(PdfDocumentInfo info) {
                 return base.ConvertDocInfoToStrings(info);
             }
-
-            internal _T1539206859(CompareToolTest _enclosing) {
-                this._enclosing = _enclosing;
-            }
-
-            private readonly CompareToolTest _enclosing;
         }
-//\endcond
 
         [NUnit.Framework.Test]
         public virtual void MemoryFirstWriterNoFileTest() {

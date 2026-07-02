@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.util.zlib;
+using iText.Commons.Internal.Runtime;
 
 namespace iText.IO.Font {
 //\cond DO_NOT_DOCUMENT
@@ -166,7 +167,7 @@ namespace iText.IO.Font {
                         }
                         bytesRead += readRes;
                     }
-                    if (zip.Read() >= 0) {
+                    if (zip.ReadByte() >= 0) {
                         throw new ArgumentException();
                     }
                 }

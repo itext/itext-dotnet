@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
@@ -141,7 +142,8 @@ namespace iText.Layout.Font {
         /// </param>
         /// <param name="unicodeRange">sets the specific range of characters to be used from the font.</param>
         /// <returns>true, if font was successfully added, otherwise false.</returns>
-        public virtual bool AddFont(FontProgram fontProgram, String encoding, Range unicodeRange) {
+        public virtual bool AddFont(FontProgram fontProgram, String encoding, iText.Layout.Font.Range unicodeRange
+            ) {
             return fontSet.AddFont(fontProgram, encoding, null, unicodeRange);
         }
 
@@ -212,7 +214,7 @@ namespace iText.Layout.Font {
         /// </param>
         /// <param name="unicodeRange">sets the specific range of characters to be used from the font.</param>
         /// <returns>true, if font was successfully added, otherwise false.</returns>
-        public virtual bool AddFont(String fontPath, String encoding, Range unicodeRange) {
+        public virtual bool AddFont(String fontPath, String encoding, iText.Layout.Font.Range unicodeRange) {
             return fontSet.AddFont(fontPath, encoding, null, unicodeRange);
         }
 
@@ -280,7 +282,7 @@ namespace iText.Layout.Font {
         /// </param>
         /// <param name="unicodeRange">sets the specific range of characters to be used from the font.</param>
         /// <returns>true, if font was successfully added, otherwise false.</returns>
-        public virtual bool AddFont(byte[] fontData, String encoding, Range unicodeRange) {
+        public virtual bool AddFont(byte[] fontData, String encoding, iText.Layout.Font.Range unicodeRange) {
             return fontSet.AddFont(fontData, encoding, null, unicodeRange);
         }
 

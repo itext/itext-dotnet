@@ -24,12 +24,14 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.IO.Colors;
 using iText.IO.Font;
 using iText.IO.Image;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -104,7 +106,7 @@ namespace iText.Pdfa.Checker {
 
         private bool currentStrokeCsIsIccBasedCMYK = false;
 
-        private readonly IDictionary<PdfName, PdfArray> separationColorSpaces = new Dictionary<PdfName, PdfArray>(
+        private readonly PdfA2Checker.SeparationColorMap separationColorMap = new PdfA2Checker.SeparationColorMap(
             );
 
         /// <summary>Creates a PdfA2Checker with the required conformance</summary>
@@ -602,13 +604,20 @@ namespace iText.Pdfa.Checker {
                     logger.LogWarning(PdfAConformanceLogMessageConstant.FILE_SPECIFICATION_DICTIONARY_SHOULD_CONTAIN_DESC_KEY);
                 }
                 PdfDictionary ef = fileSpec.GetAsDictionary(PdfName.EF);
-                PdfStream embeddedFile = ef.GetAsStream(PdfName.F);
-                if (embeddedFile == null) {
-                    throw new PdfAConformanceException(PdfaExceptionMessageConstant.EF_KEY_OF_FILE_SPECIFICATION_DICTIONARY_SHALL_CONTAIN_DICTIONARY_WITH_VALID_F_KEY
-                        );
-                }
+                CheckFileSpecEmbeddedStream(ef.GetAsStream(PdfName.F));
                 // iText doesn't check whether provided file is compliant to PDF-A specs.
                 logger.LogWarning(PdfAConformanceLogMessageConstant.EMBEDDED_FILE_SHALL_BE_COMPLIANT_WITH_SPEC);
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override void CheckFileSpecEmbeddedStream(PdfStream embeddedFile) {
+            if (IsAlreadyChecked(embeddedFile)) {
+                return;
+            }
+            if (embeddedFile == null) {
+                throw new PdfAConformanceException(PdfaExceptionMessageConstant.EF_KEY_OF_FILE_SPECIFICATION_DICTIONARY_SHALL_CONTAIN_DICTIONARY_WITH_VALID_F_KEY
+                    );
             }
         }
 
@@ -1142,10 +1151,10 @@ namespace iText.Pdfa.Checker {
         }
 
         private void CheckSeparationCS(PdfArray separation) {
-            if (separationColorSpaces.ContainsKey(separation.GetAsName(0))) {
+            if (separationColorMap.Contains(separation)) {
                 bool altCSIsTheSame;
                 bool tintTransformIsTheSame;
-                PdfArray sameNameSeparation = separationColorSpaces.Get(separation.GetAsName(0));
+                PdfArray sameNameSeparation = separationColorMap.Get(separation);
                 PdfObject cs1 = separation.Get(2);
                 PdfObject cs2 = sameNameSeparation.Get(2);
                 altCSIsTheSame = IsAltCSIsTheSame(cs1, cs2);
@@ -1165,7 +1174,7 @@ namespace iText.Pdfa.Checker {
                 }
             }
             else {
-                separationColorSpaces.Put(separation.GetAsName(0), separation);
+                separationColorMap.Put(separation);
             }
         }
 
@@ -1256,6 +1265,48 @@ namespace iText.Pdfa.Checker {
         private sealed class UpdateCanvasGraphicsState : CanvasGraphicsState {
             public UpdateCanvasGraphicsState(PdfDictionary extGStateDict) {
                 UpdateFromExtGState(new PdfExtGState(extGStateDict));
+            }
+        }
+
+        private sealed class SeparationColorMap {
+            private readonly IDictionary<PdfName, PdfArray> separationColorsMap = new Dictionary<PdfName, PdfArray>();
+
+            public SeparationColorMap() {
+            }
+
+            //empty constructor
+            public bool Contains(PdfArray separationColor) {
+                PdfName key = GetUniqueIdentifierOfSeparation(separationColor);
+                if (key == null) {
+                    return false;
+                }
+                return separationColorsMap.ContainsKey(key);
+            }
+
+            public void Put(PdfArray separationColor) {
+                PdfName key = GetUniqueIdentifierOfSeparation(separationColor);
+                if (key == null) {
+                    return;
+                }
+                separationColorsMap.Put(key, separationColor);
+            }
+
+            public PdfArray Get(PdfArray separationColor) {
+                PdfName key = GetUniqueIdentifierOfSeparation(separationColor);
+                if (key == null) {
+                    return null;
+                }
+                return separationColorsMap.Get(key);
+            }
+
+            private static PdfName GetUniqueIdentifierOfSeparation(PdfArray separation) {
+                // From PDF spec
+                // A Separation colour space is defined as follows:
+                // [/Separation name alternateSpace tintTransform]
+                if (separation.Size() >= 2) {
+                    return separation.GetAsName(1);
+                }
+                throw new PdfException(PdfaExceptionMessageConstant.SEPARATION_COLOR_ARRAY_DOES_NOT_ADHERE_TO_PDF_SPEC);
             }
         }
     }

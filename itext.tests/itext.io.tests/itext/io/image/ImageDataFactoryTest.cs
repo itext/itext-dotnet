@@ -24,6 +24,7 @@ using System;
 using System.IO;
 using iText.IO.Util;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.IO.Image {
     [NUnit.Framework.Category("UnitTest")]
@@ -86,6 +87,21 @@ namespace iText.IO.Image {
                 NUnit.Framework.Assert.AreEqual(expectedResult, ImageDataFactory.IsSupportedType(StreamUtil.InputStreamToArray
                     (inputStream)));
             }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(WebPLogMessageConstant.WEBP_NOT_FOUND)]
+        public virtual void IsWebPSupportedTypeTest() {
+            NUnit.Framework.Assert.IsFalse(ImageDataFactory.IsSupportedType(ImageType.WEBP));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(WebPLogMessageConstant.WEBP_NOT_FOUND)]
+        public virtual void ReadWebPImageTest() {
+            byte[] webpImageDummy = new byte[] { (byte)'R', (byte)'I', (byte)'F', (byte)'F', 0x00, 0x00, 0x00, 0x00, (
+                byte)'W', (byte)'E', (byte)'B', (byte)'P', 0 };
+            ImageData imageData = ImageDataFactory.CreateWebP(webpImageDummy);
+            NUnit.Framework.Assert.IsNull(imageData);
         }
     }
 }

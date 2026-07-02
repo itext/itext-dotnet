@@ -26,6 +26,7 @@ namespace iText.Kernel.Validation {
         PDF_DOCUMENT,
         CANVAS_STACK,
         FILL_COLOR,
+        FILE_SPEC_DATA,
         EXTENDED_GRAPHICS_STATE,
         INLINE_IMAGE,
         PDF_PAGE,

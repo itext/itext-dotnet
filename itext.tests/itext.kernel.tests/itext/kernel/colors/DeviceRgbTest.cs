@@ -50,7 +50,6 @@ namespace iText.Kernel.Colors {
         }
 
         // Android-Conversion-Skip-Block-Start (java.awt library isn't available on Android)
-        [iText.Commons.Utils.NoopAnnotation]
         // java.awt is not compatible with graalvm
         [NUnit.Framework.Test]
         public virtual void ColorByAWTColorConstantTest() {
@@ -74,7 +73,6 @@ namespace iText.Kernel.Colors {
             NUnit.Framework.Assert.AreEqual(1, rgbColorValue[2], 0.0001);
         }
 
-        [iText.Commons.Utils.NoopAnnotation]
         // java.awt is not compatible with graalvm
         [NUnit.Framework.Test]
         public virtual void ColorByAWTColorTest() {

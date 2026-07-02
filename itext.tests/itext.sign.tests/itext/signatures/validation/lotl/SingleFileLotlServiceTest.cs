@@ -22,8 +22,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Exceptions;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
+using iText.Kernel.Exceptions;
 using iText.Signatures.Logs;
 using iText.Signatures.Validation;
 using iText.Signatures.Validation.Report;
@@ -89,6 +93,42 @@ namespace iText.Signatures.Validation.Lotl {
             NUnit.Framework.Assert.DoesNotThrow(() => {
                 LotlService lotlService = new SingleFileLotlService(props, new CountrySpecificLotl("AR", "https://pki.jgm.gov.ar/TSL/tsl-AR.xml"
                     , "application/vnd.etsi.tsl+xml"), JavaCollectionsUtil.SingletonList(argentinaCertificate));
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SerDeserTest() {
+            LotlFetchingProperties props = new LotlFetchingProperties(new RemoveOnFailingCountryData());
+            SingleFileLotlService lotlService = new SingleFileLotlService(props, new CountrySpecificLotl(), JavaCollectionsUtil
+                .SingletonList(argentinaCertificate));
+            lotlService.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER));
+            NUnit.Framework.Assert.DoesNotThrow(() => {
+                lotlService.LoadFromCache(new MemoryStream("{}".GetBytes(System.Text.Encoding.UTF8)));
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SerDeserTestThrows() {
+            LotlFetchingProperties props = new LotlFetchingProperties(new RemoveOnFailingCountryData());
+            SingleFileLotlService lotlService = new SingleFileLotlService(props, new CountrySpecificLotl(), JavaCollectionsUtil
+                .SingletonList(argentinaCertificate));
+            lotlService.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER));
+            NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
+                lotlService.LoadFromCache(null);
+            }
+            );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SerDeserTestInvalidJson() {
+            LotlFetchingProperties props = new LotlFetchingProperties(new RemoveOnFailingCountryData());
+            SingleFileLotlService lotlService = new SingleFileLotlService(props, new CountrySpecificLotl(), JavaCollectionsUtil
+                .SingletonList(argentinaCertificate));
+            lotlService.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER));
+            NUnit.Framework.Assert.Catch(typeof(ITextException), () => {
+                lotlService.LoadFromCache(new MemoryStream("{".GetBytes(System.Text.Encoding.UTF8)));
             }
             );
         }

@@ -199,7 +199,6 @@ namespace iText.Layout.Element {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND, Count = 553)]
         public virtual void RowWrapRtlStartTest() {
             String outFileName = DESTINATION_FOLDER + "rowWrapRtlStartTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_rowWrapRtlStartTest.pdf";
@@ -218,7 +217,6 @@ namespace iText.Layout.Element {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND, Count = 553)]
         public virtual void ReverseRowWrapRtlStartTest() {
             String outFileName = DESTINATION_FOLDER + "reverseRowWrapRtlStartTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_reverseRowWrapRtlStartTest.pdf";

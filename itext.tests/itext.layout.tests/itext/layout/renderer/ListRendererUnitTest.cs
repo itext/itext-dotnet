@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout;
@@ -111,6 +112,86 @@ namespace iText.Layout.Renderer {
             LayoutResult result = listRenderer.Layout(CreateLayoutContext(100, -10));
             NUnit.Framework.Assert.AreEqual(LayoutResult.NOTHING, result.GetStatus());
             NUnit.Framework.Assert.IsNotNull(result.GetCauseOfNothing());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InsideListSymbolIsNotDuplicatedOnRepeatedGridLayoutTest() {
+            ListRenderer listRenderer = CreateInsideListRenderer();
+            GridContainerRenderer gridRenderer = new GridContainerRenderer(new GridContainer());
+            gridRenderer.AddChild(listRenderer);
+            Document document = CreateDummyDocument();
+            gridRenderer.SetParent(document.GetRenderer());
+            gridRenderer.Layout(CreateLayoutContext(500, 500));
+            int childrenCountAfterFirstLayout = GetFirstParagraphChildrenCount(listRenderer);
+            gridRenderer.Layout(CreateLayoutContext(500, 500));
+            NUnit.Framework.Assert.AreEqual(childrenCountAfterFirstLayout, GetFirstParagraphChildrenCount(listRenderer
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InsideListSymbolIsNotDuplicatedOnRepeatedFlexLayoutTest() {
+            ListRenderer listRenderer = CreateInsideListRenderer();
+            FlexContainerRenderer flexRenderer = new FlexContainerRenderer(new Div());
+            flexRenderer.AddChild(listRenderer);
+            Document document = CreateDummyDocument();
+            flexRenderer.SetParent(document.GetRenderer());
+            flexRenderer.Layout(CreateLayoutContext(500, 500));
+            int childrenCountAfterFirstLayout = GetFirstParagraphChildrenCount(listRenderer);
+            flexRenderer.Layout(CreateLayoutContext(500, 500));
+            NUnit.Framework.Assert.AreEqual(childrenCountAfterFirstLayout, GetFirstParagraphChildrenCount(listRenderer
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IncorrectChildTypeThrows1Test() {
+            using (Document document = CreateDummyDocument()) {
+                List list = new List().SetListSymbol("*");
+                ListRenderer listRenderer = new ListRenderer(list);
+                listRenderer.AddChild(new DivRenderer(new Div()));
+                list.SetNextRenderer(listRenderer);
+                String text = NUnit.Framework.Assert.Catch(typeof(PdfException), () => document.Add(list)).Message;
+                NUnit.Framework.Assert.IsTrue(text.Contains("All children of a ListRenderer are suppose to be ListItemRenderer instances. Instead it was"
+                    ));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IncorrectChildTypeThrows2Test() {
+            using (Document document = CreateDummyDocument()) {
+                List list = new List().SetListSymbol("*");
+                ListRenderer listRenderer = new ListRenderer(list);
+                listRenderer.AddChild(new AbsolutelyPositionedRenderer(new DivRenderer(new Div()), false, false));
+                list.SetNextRenderer(listRenderer);
+                String text = NUnit.Framework.Assert.Catch(typeof(PdfException), () => document.Add(list)).Message;
+                NUnit.Framework.Assert.IsTrue(text.Contains("All children of a ListRenderer are suppose to be ListItemRenderer instances. Instead it was"
+                    ));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void IncorrectChildTypeDoesntThrowTest() {
+            using (Document document = CreateDummyDocument()) {
+                List list = new List().SetListSymbol("*");
+                ListRenderer listRenderer = new ListRenderer(list);
+                listRenderer.AddChild(new AbsolutelyPositionedRenderer(new ListItemRenderer(new ListItem()), false, false)
+                    );
+                list.SetNextRenderer(listRenderer);
+                NUnit.Framework.Assert.DoesNotThrow(() => document.Add(list));
+            }
+        }
+
+        private static ListRenderer CreateInsideListRenderer() {
+            List list = new List();
+            list.SetListSymbol(new iText.Layout.Element.Text("*"));
+            list.SetProperty(Property.LIST_SYMBOL_POSITION, ListSymbolPosition.INSIDE);
+            list.Add((ListItem)new ListItem().Add(new Paragraph("List item")));
+            return (ListRenderer)list.CreateRendererSubTree();
+        }
+
+        private static int GetFirstParagraphChildrenCount(ListRenderer listRenderer) {
+            IRenderer listItemRenderer = listRenderer.GetChildRenderers()[0];
+            IRenderer paragraphRenderer = listItemRenderer.GetChildRenderers()[0];
+            return paragraphRenderer.GetChildRenderers().Count;
         }
 
         private class ListRendererCreatingNotifyingListSymbols : ListRenderer {

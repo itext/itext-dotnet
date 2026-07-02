@@ -26,6 +26,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Signatures.Validation.Report;
 

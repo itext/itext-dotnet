@@ -28,10 +28,12 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Logs;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 using iText.Layout.Tagging;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -59,6 +61,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.FLEX_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK)]
         public virtual void AreaBreakInsideFlexContainerTest() {
             String outFileName = destinationFolder + "areaBreakInsideFlexContainer.pdf";
             String cmpFileName = sourceFolder + "cmp_areaBreakInsideFlexContainer.pdf";
@@ -228,6 +231,93 @@ namespace iText.Layout {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_IGNORED)]
+        public virtual void AreaBreakInsideTableHeaderTest() {
+            String fileName = "areaBreakInsideTableHeader";
+            String outFileName = destinationFolder + fileName + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDoc)) {
+                    Table table = new Table(4);
+                    table.AddHeaderCell("Header text");
+                    table.AddHeaderCell(new Cell());
+                    table.AddHeaderCell(new Div().Add(new Paragraph("Before area break")).Add(new AreaBreak(PageSize.A5)).Add(
+                        new Paragraph("After area break")));
+                    table.AddHeaderCell(new Cell());
+                    table.AddCell("Table cell content 1");
+                    table.AddCell("Table cell content 2");
+                    table.AddCell("Table cell content 3");
+                    table.AddCell("Table cell content 4");
+                    table.AddFooterCell("Footer text");
+                    table.AddFooterCell(new Cell());
+                    table.AddFooterCell(new Cell());
+                    table.AddFooterCell(new Cell());
+                    document.Add(table);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff_" + fileName));
+        }
+
+        // TODO DEVSIX-10049 Fix AreaBreak page size change not working
+        [NUnit.Framework.Test]
+        public virtual void AreaBreakInsideTableBodyTest() {
+            String fileName = "areaBreakInsideTableBody";
+            String outFileName = destinationFolder + fileName + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDoc)) {
+                    Table table = new Table(4);
+                    table.AddHeaderCell("Header text");
+                    table.AddHeaderCell(new Cell());
+                    table.AddHeaderCell(new Cell());
+                    table.AddHeaderCell(new Cell());
+                    table.AddCell("Table cell content 1");
+                    table.AddCell("Table cell content 2");
+                    table.AddCell(new Div().Add(new Paragraph("Before area break")).Add(new AreaBreak(PageSize.A5)).Add(new Paragraph
+                        ("After area break")));
+                    table.AddCell("Table cell content 4");
+                    table.AddFooterCell("Footer text");
+                    table.AddFooterCell(new Cell());
+                    table.AddFooterCell(new Cell());
+                    table.AddFooterCell(new Cell());
+                    document.Add(table);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff_" + fileName));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_IGNORED)]
+        public virtual void AreaBreakInsideTableFooterTest() {
+            String fileName = "areaBreakInsideTableFooter";
+            String outFileName = destinationFolder + fileName + ".pdf";
+            String cmpFileName = sourceFolder + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDoc)) {
+                    Table table = new Table(4);
+                    table.AddHeaderCell("Header text");
+                    table.AddHeaderCell(new Cell());
+                    table.AddHeaderCell(new Cell());
+                    table.AddHeaderCell(new Cell());
+                    table.AddCell("Table cell content 1");
+                    table.AddCell("Table cell content 2");
+                    table.AddCell("Table cell content 3");
+                    table.AddCell("Table cell content 4");
+                    table.AddFooterCell("Footer text");
+                    table.AddFooterCell(new Cell());
+                    table.AddFooterCell(new Div().Add(new Paragraph("Before area break")).Add(new AreaBreak(PageSize.A5)).Add(
+                        new Paragraph("After area break")));
+                    table.AddFooterCell(new Cell());
+                    document.Add(table);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff_" + fileName));
         }
 
         private class DivRendererWithAreas : DivRenderer {

@@ -22,6 +22,7 @@ Copyright (c) 1998-2026 Apryse Group NV
  */
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
@@ -67,7 +68,15 @@ namespace iText.Signatures.Validation.Lotl {
                 RSAParameters? rsaParameters = BouncyCastleFactoryCreator.GetFactory()
                     .GetRsaParametersFromCertificate(keySelector.GetCertificate());
                 if (rsaParameters != null) {
-                    RSACng bcAlgorithm = new RSACng();
+                    RSA bcAlgorithm;
+                    //Currently RSA.Create fails to creat ECDSA hashing algorithm on window .So we need to fall back on
+                    //their specific implementation. On other platforms RSA.Create works fine.
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+                        bcAlgorithm = new RSACng();
+                    } else {
+                        bcAlgorithm = RSA.Create();
+                    }
+
                     bcAlgorithm.ImportParameters((RSAParameters)rsaParameters);
                     return signedXml.CheckSignature(bcAlgorithm);
                 }

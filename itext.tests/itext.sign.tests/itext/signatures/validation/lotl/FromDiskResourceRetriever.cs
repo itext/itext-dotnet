@@ -26,6 +26,7 @@ using System.Text;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Security;
+using iText.Commons.Internal.Runtime;
 using iText.IO.Resolver.Resource;
 using iText.Kernel.Crypto;
 

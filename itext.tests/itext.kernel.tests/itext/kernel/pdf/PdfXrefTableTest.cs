@@ -51,13 +51,13 @@ namespace iText.Kernel.Pdf {
             LogLevel = LogLevelConstants.ERROR)]
         public virtual void OpenInvalidDocWithHugeRefTest() {
             String inputFile = SOURCE_FOLDER + "invalidDocWithHugeRef.pdf";
-            MemoryLimitsAwareHandler memoryLimitsAwareHandler = new _MemoryLimitsAwareHandler_70();
+            MemoryLimitsAwareHandler memoryLimitsAwareHandler = new _MemoryLimitsAwareHandler_69();
             NUnit.Framework.Assert.DoesNotThrow(() => new PdfDocument(new PdfReader(inputFile, new ReaderProperties().
                 SetMemoryLimitsAwareHandler(memoryLimitsAwareHandler))));
         }
 
-        private sealed class _MemoryLimitsAwareHandler_70 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_70() {
+        private sealed class _MemoryLimitsAwareHandler_69 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_69() {
             }
 
             public override void CheckIfXrefStructureExceedsTheLimit(int requestedCapacity) {

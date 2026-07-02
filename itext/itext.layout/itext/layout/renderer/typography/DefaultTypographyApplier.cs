@@ -22,20 +22,30 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Actions.Sequence;
+using iText.Commons.Datastructures;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
-using iText.Layout.Properties;
-using iText.Layout.Renderer;
+using iText.Layout.Logs;
 
 namespace iText.Layout.Renderer.Typography {
     public sealed class DefaultTypographyApplier : AbstractTypographyApplier {
+        private const String SCRIPT = "script";
+
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.Typography.DefaultTypographyApplier
             ));
+
+        private static readonly ConcurrentWeakMap<SequenceId, ICollection<String>> IDS_WITH_WARNING = new ConcurrentWeakMap
+            <SequenceId, ICollection<String>>();
+
+        private static readonly ConcurrentWeakMap<SequenceId, ICollection<String>> IDS_WITH_INFO = new ConcurrentWeakMap
+            <SequenceId, ICollection<String>>();
 
         public DefaultTypographyApplier() {
         }
@@ -44,48 +54,113 @@ namespace iText.Layout.Renderer.Typography {
             return false;
         }
 
-        public override bool ApplyOtfScript(TrueTypeFont font, GlyphLine glyphLine, UnicodeScript? script, Object 
-            configurator, SequenceId id, IMetaInfo metaInfo) {
-            LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND);
-            return base.ApplyOtfScript(font, glyphLine, script, configurator, id, metaInfo);
-        }
-
         public override ICollection<UnicodeScript> GetSupportedScripts() {
-            LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND);
-            return base.GetSupportedScripts();
+            return ScriptInfo.GetSupportedScripts();
         }
 
         public override ICollection<UnicodeScript> GetSupportedScripts(Object configurator) {
-            LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND);
-            return base.GetSupportedScripts(configurator);
+            return ScriptInfo.GetSupportedScripts();
+        }
+
+        public override bool ApplyOtfScript(TrueTypeFont font, GlyphLine glyphLine, UnicodeScript? script, Object 
+            configurator, SequenceId id, IMetaInfo metaInfo) {
+            CheckTypographyRequired(font, script, id);
+            return base.ApplyOtfScript(font, glyphLine, script, configurator, id, metaInfo);
         }
 
         public override bool ApplyKerning(FontProgram fontProgram, GlyphLine text, SequenceId sequenceId, IMetaInfo
              metaInfo) {
-            LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND);
+            if (fontProgram.HasKernPairs()) {
+                LogWarning(sequenceId, "kerning", "kerning enabled");
+            }
             return base.ApplyKerning(fontProgram, text, sequenceId, metaInfo);
         }
 
-        public override byte[] GetBidiLevels(BaseDirection? baseDirection, int[] unicodeIds, SequenceId sequenceId
-            , IMetaInfo metaInfo) {
-            LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND);
-            return base.GetBidiLevels(baseDirection, unicodeIds, sequenceId, metaInfo);
-        }
-
-        public override int[] ReorderLine(IList<LineRenderer.RendererGlyph> line, byte[] lineLevels, byte[] levels
-            ) {
-            LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND);
-            return base.ReorderLine(line, lineLevels, levels);
-        }
-
         public override IList<int> GetPossibleBreaks(String str) {
-            LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND);
-            return base.GetPossibleBreaks(str);
+            return JavaCollectionsUtil.EmptyList<int>();
         }
 
         public override IDictionary<String, byte[]> LoadShippedFonts() {
-            LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND);
-            return base.LoadShippedFonts();
+            return new Dictionary<String, byte[]>();
+        }
+
+        private static void CheckTypographyRequired(TrueTypeFont font, UnicodeScript? script, SequenceId id) {
+            if (ScriptInfo.ScriptSupported(script)) {
+                ScriptRequirements reqs = ScriptInfo.GetRequirements(script);
+                if (!HasWarning(id, script.ToString())) {
+                    if (reqs.IsHardCodedHandling()) {
+                        LogWarning(id, script.ToString(), SCRIPT, script.ToString(), "which requires special handling.");
+                    }
+                    else {
+                        if (FontHasFeature(font, reqs.GetOtfScriptNames(), reqs.GetRequiredFeatures())) {
+                            LogWarning(id, script.ToString(), SCRIPT, script.ToString(), "with required features", reqs.GetRequiredFeatures
+                                ().ToString());
+                        }
+                    }
+                    if (!HasInfo(id, script.ToString()) && FontHasFeature(font, reqs.GetOtfScriptNames(), reqs.GetAffectingFeatures
+                        ())) {
+                        LogInfo(id, script.ToString(), reqs.GetAffectingFeatures().ToString());
+                    }
+                }
+            }
+        }
+
+        private static bool FontHasFeature(TrueTypeFont font, ICollection<String> otfScriptNames, ICollection<String
+            > features) {
+            IDictionary<String, IList<OpenTableLookup>> featuresFound = new Dictionary<String, IList<OpenTableLookup>>
+                ();
+            font.ExtractFeatures(otfScriptNames, featuresFound);
+            foreach (String feature in features) {
+                if (featuresFound.ContainsKey(feature)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static bool HasWarning(SequenceId id, String script) {
+            return IDS_WITH_WARNING.ContainsKey(id) && IDS_WITH_WARNING.Get(id).Contains(script);
+        }
+
+        private static bool HasInfo(SequenceId id, String script) {
+            return (IDS_WITH_INFO.ContainsKey(id) && IDS_WITH_INFO.Get(id).Contains(script)) || HasWarning(id, script);
+        }
+
+        private static void LogWarning(SequenceId id, String script, params String[] messageParts) {
+            if (LOGGER.IsEnabled(LogLevel.Warning)) {
+                if (IDS_WITH_WARNING.ContainsKey(id)) {
+                    if (IDS_WITH_WARNING.Get(id).Contains(script)) {
+                        return;
+                    }
+                    IDS_WITH_WARNING.Get(id).Add(script);
+                }
+                else {
+                    IDS_WITH_WARNING.Put(id, new HashSet<String>(JavaCollectionsUtil.Singleton(script)));
+                }
+                StringBuilder message = new StringBuilder();
+                foreach (String part in messageParts) {
+                    message.Append(part).Append(' ');
+                }
+                LOGGER.LogWarning(MessageFormatUtil.Format(LayoutLogMessageConstant.TYPOGRAPHY_NOT_FOUND_WARNING, message)
+                    );
+            }
+        }
+
+        private static void LogInfo(SequenceId id, String script, String features) {
+            if (LOGGER.IsEnabled(LogLevel.Information)) {
+                if ((IDS_WITH_WARNING.ContainsKey(id) && IDS_WITH_WARNING.Get(id).Contains(script)) || (IDS_WITH_INFO.ContainsKey
+                    (id) && IDS_WITH_INFO.Get(id).Contains(script))) {
+                    return;
+                }
+                if (IDS_WITH_INFO.ContainsKey(id)) {
+                    IDS_WITH_INFO.Get(id).Add(script);
+                }
+                else {
+                    IDS_WITH_INFO.Put(id, new HashSet<String>(JavaCollectionsUtil.Singleton(script)));
+                }
+                LOGGER.LogInformation(MessageFormatUtil.Format(LayoutLogMessageConstant.TYPOGRAPHY_NOT_FOUND_INFO, script, 
+                    features));
+            }
         }
     }
 }

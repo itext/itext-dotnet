@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -202,6 +203,7 @@ namespace iText.Svg.Renderers.Impl {
             return CssDimensionParsingUtils.ParseAbsoluteFontSize(fontSizeAttribute);
         }
 
+        // TODO DEVSIX-9984 Fix the link being lowercase in C#
         /// <summary>Gets the viewbox from the first parent element which can define it.</summary>
         /// <remarks>
         /// Gets the viewbox from the first parent element which can define it.

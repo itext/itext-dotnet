@@ -31,6 +31,7 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Font;
 using iText.Layout.Properties;
+using iText.Layout.Testutil;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -41,16 +42,6 @@ namespace iText.Layout {
             .CurrentContext.TestDirectory) + "/resources/itext/layout/BlockTest/";
 
         public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/layout/BlockTest/";
-
-        private const String textByronNarrow = "When a man hath no freedom to fight for at home, " + "Let him combat for that of his neighbours; "
-             + "Let him think of the glories of Greece and of Rome, " + "And get knocked on the head for his labours. "
-             + "\n" + "To do good to Mankind is the chivalrous plan, " + "And is always as nobly requited; " + "Then battle for Freedom wherever you can, "
-             + "And, if not shot or hanged, you'll get knighted.";
-
-        private const String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
-             + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
-             + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
-             + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -64,9 +55,9 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_blockWithSetHeightProperties01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
-            Paragraph p = new Paragraph(textByron);
+            Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
             for (int i = 0; i < 10; i++) {
-                p.Add(textByron);
+                p.Add(TestResourceUtil.GetByronStanza());
             }
             p.SetBorder(new SolidBorder(0.5f));
             doc.Add(new Paragraph("Default layout:"));
@@ -112,7 +103,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_blockWithSetHeightProperties02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
-            Paragraph p = new Paragraph(textByron);
+            Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
             Div div = new Div();
             div.SetBorder(new SolidBorder(ColorConstants.RED, 2));
             for (int i = 0; i < 5; i++) {
@@ -167,7 +158,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDocument);
             float parentHeight = 650;
             Div d = new Div();
-            d.Add(new Paragraph(textByron));
+            d.Add(new Paragraph(TestResourceUtil.GetByronStanza()));
             d.SetBorder(new SolidBorder(0.5f));
             doc.Add(new Paragraph("Default layout:"));
             Div parent = new Div();
@@ -250,7 +241,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDocument);
             float parentHeight = 650;
             Paragraph p = new Paragraph();
-            p.Add(new Text(textByron));
+            p.Add(new Text(TestResourceUtil.GetByronStanza()));
             p.SetBorder(new SolidBorder(0.5f));
             doc.Add(new Paragraph("Default layout:"));
             Div parent = new Div();
@@ -333,7 +324,7 @@ namespace iText.Layout {
             Paragraph explanation = new Paragraph("In this sample iText will not try to fit text in container's width, because overflow property is set. However no text is hidden."
                 );
             doc.Add(explanation);
-            Paragraph p = new Paragraph(textByronNarrow);
+            Paragraph p = new Paragraph(TestResourceUtil.GetByronStanzaNarrow());
             p.SetWidth(200);
             p.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
             p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.HIDDEN);
@@ -360,7 +351,7 @@ namespace iText.Layout {
             p.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
             p.SetBackgroundColor(ColorConstants.YELLOW);
             for (int i = 0; i < 10; i++) {
-                p.Add(textByronNarrow);
+                p.Add(TestResourceUtil.GetByronStanzaNarrow());
             }
             p.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
             doc.Add(p);
@@ -382,7 +373,7 @@ namespace iText.Layout {
             p.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
             p.SetBackgroundColor(ColorConstants.YELLOW);
             for (int i = 0; i < 100; i++) {
-                p.Add(textByronNarrow);
+                p.Add(TestResourceUtil.GetByronStanzaNarrow());
             }
             p.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
             p.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
@@ -456,7 +447,7 @@ namespace iText.Layout {
             div.SetHeight(100);
             div.SetBackgroundColor(ColorConstants.GREEN);
             div.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
-            div.Add(new Paragraph(textByron));
+            div.Add(new Paragraph(TestResourceUtil.GetByronStanza()));
             doc.Add(div);
             doc.Add(new Paragraph("Hello!!!").SetBackgroundColor(ColorConstants.RED));
             doc.Close();
@@ -469,13 +460,10 @@ namespace iText.Layout {
             String outFileName = destinationFolder + "blockFillAvailableArea01.pdf";
             String cmpFileName = sourceFolder + "cmp_blockFillAvailableArea01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
-            String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
-                 + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
-                 + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
-                 + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted."
+            String textByron = TestResourceUtil.GetByronStanza() + "To do good to Mankind is the chivalrous plan,\n" +
+                 "    And is always as nobly requited;\n" + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted."
                  + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n" + "Then battle for Freedom wherever you can,\n"
-                 + "    And, if not shot or hanged, you'll get knighted." + "To do good to Mankind is the chivalrous plan,\n"
-                 + "    And is always as nobly requited;\n" + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
+                 + "    And, if not shot or hanged, you'll get knighted.";
             textByron = textByron + textByron;
             Document doc = new Document(pdfDocument);
             DeviceRgb blue = new DeviceRgb(80, 114, 153);

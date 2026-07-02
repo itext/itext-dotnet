@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
 using iText.Test;
@@ -56,19 +57,19 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void OverridenMemoryHandler() {
             MemoryLimitsAwareHandler defaultHandler = new MemoryLimitsAwareHandler();
-            MemoryLimitsAwareHandler customHandler = new _MemoryLimitsAwareHandler_73();
+            MemoryLimitsAwareHandler customHandler = new _MemoryLimitsAwareHandler_71();
             PdfArray filters = new PdfArray();
             filters.Add(PdfName.FlateDecode);
-            NUnit.Framework.Assert.IsFalse(defaultHandler.IsMemoryLimitsAwarenessRequiredOnDecompression(filters));
-            NUnit.Framework.Assert.IsTrue(customHandler.IsMemoryLimitsAwarenessRequiredOnDecompression(filters));
+            NUnit.Framework.Assert.IsTrue(defaultHandler.IsMemoryLimitsAwarenessRequiredOnDecompression(filters));
+            NUnit.Framework.Assert.IsFalse(customHandler.IsMemoryLimitsAwarenessRequiredOnDecompression(filters));
         }
 
-        private sealed class _MemoryLimitsAwareHandler_73 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_73() {
+        private sealed class _MemoryLimitsAwareHandler_71 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_71() {
             }
 
             public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {
-                return true;
+                return false;
             }
         }
 
@@ -157,7 +158,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         [LogMessage(KernelLogMessageConstant.MEMORYLIMITAWAREHANDLER_OVERRIDE_CREATENEWINSTANCE_METHOD)]
         public virtual void CreateCopyMemoryHandlerWarningTest() {
-            MemoryLimitsAwareHandler customHandler = new _MemoryLimitsAwareHandler_182();
+            MemoryLimitsAwareHandler customHandler = new _MemoryLimitsAwareHandler_180();
             customHandler.SetMaxNumberOfElementsInXrefStructure(1);
             customHandler.SetMaxXObjectsSizePerPage(2);
             customHandler.SetMaxSizeOfDecompressedPdfStreamsSum(3);
@@ -169,14 +170,14 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(4, copy.GetMaxSizeOfSingleDecompressedPdfStream());
         }
 
-        private sealed class _MemoryLimitsAwareHandler_182 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_182() {
+        private sealed class _MemoryLimitsAwareHandler_180 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_180() {
             }
         }
 
         [NUnit.Framework.Test]
         public virtual void CreateCopyMemoryHandlerNoWarningTest() {
-            MemoryLimitsAwareHandler customHandler = new _MemoryLimitsAwareHandler_199();
+            MemoryLimitsAwareHandler customHandler = new _MemoryLimitsAwareHandler_197();
             customHandler.SetMaxNumberOfElementsInXrefStructure(1);
             customHandler.SetMaxXObjectsSizePerPage(2);
             customHandler.SetMaxSizeOfDecompressedPdfStreamsSum(3);
@@ -188,8 +189,8 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(4, copy.GetMaxSizeOfSingleDecompressedPdfStream());
         }
 
-        private sealed class _MemoryLimitsAwareHandler_199 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_199() {
+        private sealed class _MemoryLimitsAwareHandler_197 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_197() {
             }
 
             public override MemoryLimitsAwareHandler CreateNewInstance() {
@@ -203,7 +204,8 @@ namespace iText.Kernel.Pdf {
         }
 
         private static void TestSingleStream(MemoryLimitsAwareHandler handler) {
-            String expectedExceptionMessage = KernelExceptionMessageConstant.DURING_DECOMPRESSION_SINGLE_STREAM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED;
+            String expectedExceptionMessage = MessageFormatUtil.Format(KernelExceptionMessageConstant.DURING_DECOMPRESSION_SINGLE_STREAM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED
+                , handler.GetMaxSizeOfSingleDecompressedPdfStream() / 1024 / 1024 + "MB");
             int expectedFailureIndex = 10;
             String occuredExceptionMessage = null;
             int limit = handler.GetMaxSizeOfSingleDecompressedPdfStream();
@@ -224,7 +226,8 @@ namespace iText.Kernel.Pdf {
         }
 
         private static void TestMultipleStreams(MemoryLimitsAwareHandler handler) {
-            String expectedExceptionMessage = KernelExceptionMessageConstant.DURING_DECOMPRESSION_MULTIPLE_STREAMS_IN_SUM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED;
+            String expectedExceptionMessage = MessageFormatUtil.Format(KernelExceptionMessageConstant.DURING_DECOMPRESSION_MULTIPLE_STREAMS_IN_SUM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED
+                , handler.GetMaxSizeOfDecompressedPdfStreamsSum() / 1024 / 1024 + "MB");
             int expectedFailureIndex = 10;
             String occuredExceptionMessage = null;
             int i = 0;

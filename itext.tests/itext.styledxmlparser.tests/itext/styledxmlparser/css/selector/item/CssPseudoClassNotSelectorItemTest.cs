@@ -38,8 +38,8 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         [NUnit.Framework.Test]
         public virtual void CssPseudoClassNotSelectorItemWithSelectorsListTest() {
             String filename = SOURCE_FOLDER + "cssPseudoClassNotSelectorItemTest.html";
-            CssPseudoClassNotSelectorItem item = new CssPseudoClassNotSelectorItem(new CssSelector("p > :not(strong, b.important)"
-                ));
+            CssPseudoClassNotSelectorItem item = new CssPseudoClassNotSelectorItem(JavaCollectionsUtil.SingletonList<ICssSelector
+                >(new CssSelector("p > :not(strong, b.important)")), "p > :not(strong, b.important)");
             IXmlParser htmlParser = new JsoupHtmlParser();
             IDocumentNode documentNode = htmlParser.Parse(FileUtil.GetInputStreamForFile(filename), "UTF-8");
             IElementNode body = new JsoupElementNode(((JsoupDocumentNode)documentNode).GetDocument().GetElementsByTag(

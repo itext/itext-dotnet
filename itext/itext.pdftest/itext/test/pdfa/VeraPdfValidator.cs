@@ -43,7 +43,7 @@ namespace iText.Test.Pdfa {
     /// The server has 3 endpoints:
     ///  /api/validate?pathB64={pathB64Encoded} - validates the PDF file at the given path
     ///  /api/status - checks if the server is online
-    ///  /api/shutdown - shuts down the server
+    ///  /api/stop - shuts down the server
     ///
     /// The enduser is responsible for shutting down the server after you are done with it.
     /// 
@@ -52,7 +52,6 @@ namespace iText.Test.Pdfa {
         private const string ITEXT_VERAPDFVALIDATOR_PORT_VAR = "ITEXT_VERAPDFVALIDATOR_PORT";
         private const string ITEXT_VERAPDFVALIDATOR_ENABLE_SERVER_VAR = "ITEXT_VERAPDFVALIDATOR_ENABLE_SERVER";
 
-       
         private static readonly string PORT_VALUE = Environment.GetEnvironmentVariable(ITEXT_VERAPDFVALIDATOR_PORT_VAR);
         private static readonly string ENABLE_SERVER_VALUE = Environment.GetEnvironmentVariable(ITEXT_VERAPDFVALIDATOR_ENABLE_SERVER_VAR);
         
@@ -93,7 +92,6 @@ namespace iText.Test.Pdfa {
             return int.Parse(port);
         }
 
-
         private bool IsServerOnline() {
             try {
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(GetBaseUri() + "status");
@@ -108,10 +106,9 @@ namespace iText.Test.Pdfa {
             }
         }
 
-
         private void StartServer() {
             string command = "java -jar " + TestContext.CurrentContext.TestDirectory +
-                             "\\lib\\VeraPdf\\VeraPdfValidatorApp.jar server " + GetPort() + " " + specification;
+                             "/lib/verapdf/VeraPdfValidatorApp.jar server " + GetPort() + " " + specification;
             Process p = new Process();
 
 
@@ -188,14 +185,28 @@ namespace iText.Test.Pdfa {
             return cliResult;
         }
 
+        private static bool IsWindows() {
+            PlatformID p = Environment.OSVersion.Platform;
+            return p == PlatformID.Win32NT
+                   || p == PlatformID.Win32S
+                   || p == PlatformID.Win32Windows
+                   || p == PlatformID.WinCE;
+        }
+        
         private static void SetCorrectExecutor(Process p, string command) {
             // Currently we only support windows 
-            p.StartInfo = new ProcessStartInfo("cmd", "/c " + command);
+            if (IsWindows()) {
+                p.StartInfo = new ProcessStartInfo("cmd", "/c " + command);
+            } else {
+                //Use shell to execute 
+                string arguments = "-c \"" + command.Replace("\"", "\\\"") + "\"";
+               p.StartInfo = new ProcessStartInfo("/bin/sh", arguments);
+            }
         }
 
         private string RunCli(string dest) {
             string command = "java -jar " + TestContext.CurrentContext.TestDirectory +
-                             "\\lib\\VeraPdf\\VeraPdfValidatorApp.jar cli " +
+                             "/lib/verapdf/VeraPdfValidatorApp.jar cli " +
                              Convert.ToBase64String(Encoding.UTF8.GetBytes(dest)) + " " + specification;
 
             Process p = new Process();

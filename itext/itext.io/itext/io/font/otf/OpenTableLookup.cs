@@ -21,13 +21,40 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.IO.Font.Otf {
+    /// <summary>
+    /// A Lookup table defines the specific conditions, type, and results of
+    /// substitution or positioning actions that are used to implement a feature.
+    /// </summary>
+    /// <remarks>
+    /// A Lookup table defines the specific conditions, type, and results of
+    /// substitution or positioning actions that are used to implement a feature.
+    /// <para />
+    /// The data describing the actions of a lookup are contained in one or more lookup subtables.
+    /// Different lookup types support different types of operation; for example, positioning
+    /// adjustment on a single glyph versus positioning adjustments on pairs of glyphs.
+    /// <para />
+    /// For more information see <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+    /// </remarks>
     public abstract class OpenTableLookup {
+        /// <summary>Indicates to a text-processing client certain processing options to use when substituting or positioning glyphs.
+        ///     </summary>
         protected internal int lookupFlag;
 
+        /// <summary>Subtables locations.</summary>
         protected internal int[] subTableLocations;
 
+        /// <summary>OpenType font table reader.</summary>
         protected internal OpenTypeFontTableReader openReader;
 
+        private int indexInLookupList;
+
+        /// <summary>
+        /// Instantiates a new instance of
+        /// <see cref="OpenTableLookup"/>.
+        /// </summary>
+        /// <param name="openReader">the OpenType font table reader</param>
+        /// <param name="lookupFlag">the lookup flag</param>
+        /// <param name="subTableLocations">the subtables locations</param>
         protected internal OpenTableLookup(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations
             ) {
             this.lookupFlag = lookupFlag;
@@ -35,12 +62,38 @@ namespace iText.IO.Font.Otf {
             this.openReader = openReader;
         }
 
+        /// <summary>Gets the lookup flag.</summary>
+        /// <remarks>
+        /// Gets the lookup flag.
+        /// <para />
+        /// The flag indicates to a text-processing client certain processing
+        /// options to use when substituting or positioning glyphs.
+        /// </remarks>
+        /// <returns>the lookup flag</returns>
         public virtual int GetLookupFlag() {
             return lookupFlag;
         }
 
+        /// <summary>Apply transformation to only one glyph from the glyph line.</summary>
+        /// <param name="line">the glyph line to transform</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if transformation was applied,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public abstract bool TransformOne(GlyphLine line);
 
+        /// <summary>Apply transformation to the glyph line.</summary>
+        /// <param name="line">the glyph line to transform</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if transformation was applied,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public virtual bool TransformLine(GlyphLine line) {
             bool changed = false;
             line.SetIdx(line.GetStart());
@@ -50,18 +103,54 @@ namespace iText.IO.Font.Otf {
             return changed;
         }
 
+        /// <summary>
+        /// Checks whether there is a substitution (replacement) for the specified index in
+        /// <c>this</c>
+        /// lookup table.
+        /// </summary>
+        /// <param name="index">the index to check for a substitution</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if there is substitution,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public virtual bool HasSubstitution(int index) {
             return false;
         }
 
+        /// <summary>Reads subtables.</summary>
         protected internal virtual void ReadSubTables() {
             foreach (int subTableLocation in subTableLocations) {
                 ReadSubTable(subTableLocation);
             }
         }
 
+        /// <summary>Reads subtable from the specified location.</summary>
+        /// <param name="subTableLocation">the subtable location</param>
         protected internal abstract void ReadSubTable(int subTableLocation);
 
+        /// <summary>
+        /// Gets
+        /// <c>this</c>
+        /// lookup table index in the LookupList.
+        /// </summary>
+        /// <returns>the table index in the LookupList</returns>
+        public virtual int GetIndexInLookupList() {
+            return indexInLookupList;
+        }
+
+        /// <summary>Sets lookup table index in the LookupList.</summary>
+        /// <param name="indexInLookupList">the table index in the LookupList</param>
+        public virtual void SetIndexInLookupList(int indexInLookupList) {
+            this.indexInLookupList = indexInLookupList;
+        }
+
+        /// <summary>
+        /// Utility class to iterate over
+        /// <see cref="GlyphLine"/>.
+        /// </summary>
         public class GlyphIndexer {
             private GlyphLine line;
 
@@ -105,6 +194,9 @@ namespace iText.IO.Font.Otf {
                 this.idx = idx;
             }
 
+            /// <summary>Reads the next glyph taking into account glyph class and lookup flag.</summary>
+            /// <param name="openReader">the OpenType reader to check glyph class against lookup flag</param>
+            /// <param name="lookupFlag">the lookup flag</param>
             public virtual void NextGlyph(OpenTypeFontTableReader openReader, int lookupFlag) {
                 glyph = null;
                 while (++idx < line.GetEnd()) {
@@ -116,6 +208,9 @@ namespace iText.IO.Font.Otf {
                 }
             }
 
+            /// <summary>Reads the previous glyph taking into account glyph class and lookup flag.</summary>
+            /// <param name="openReader">the OpenType reader to check glyph class against lookup flag</param>
+            /// <param name="lookupFlag">the lookup flag</param>
             public virtual void PreviousGlyph(OpenTypeFontTableReader openReader, int lookupFlag) {
                 glyph = null;
                 while (--idx >= line.GetStart()) {

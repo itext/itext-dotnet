@@ -94,6 +94,12 @@ new iText.FontAsian.FontAsianDummyInitializer(); // Font asian
 new iText.Hyph.HyphDummyInitializer(); // Hyph module
 ```
 
+4. Similar with some of the default modules, if you are using the `webp-image-support` module, we recommend adding following entry to the `ILLink descriptors file`:
+```xml
+<assembly fullname="itext.webp-image-support">
+    <type fullname="iText.Webpimagesupport.WebPLoader" preserve="all" />
+</assembly>
+```
 
 
 

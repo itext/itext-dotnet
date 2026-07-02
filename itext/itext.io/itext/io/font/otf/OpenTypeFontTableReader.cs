@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Internal.Runtime;
 using iText.IO.Source;
 using iText.IO.Util;
 
@@ -261,7 +262,11 @@ namespace iText.IO.Font.Otf {
             int lookupFlag = rf.ReadUnsignedShort();
             int subTableCount = rf.ReadUnsignedShort();
             int[] subTableLocations = ReadUShortArray(subTableCount, lookupTableLocation);
-            lookupList.Add(ReadLookupTable(lookupType, lookupFlag, subTableLocations));
+            OpenTableLookup lookup = ReadLookupTable(lookupType, lookupFlag, subTableLocations);
+            if (lookup != null) {
+                lookup.SetIndexInLookupList(lookupList.Count);
+            }
+            lookupList.Add(lookup);
         }
     }
 }

@@ -429,12 +429,46 @@ namespace iText.Kernel.Pdf {
             if (conformanceList == null) {
                 return false;
             }
-            foreach (Object conformance in conformanceList) {
-                if (this.Equals(conformance)) {
+            foreach (iText.Kernel.Pdf.PdfConformance conformance in conformanceList) {
+                if (this.Includes(conformance)) {
                     return true;
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Checks if passed conformance is fully included into this
+        /// <see cref="PdfConformance"/>
+        /// </summary>
+        /// <param name="conformance">the conformance to check</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if conformance is fully included into this conformance,
+        /// otherwise
+        /// <see langword="false"/>
+        /// </returns>
+        public virtual bool Includes(iText.Kernel.Pdf.PdfConformance conformance) {
+            return (conformance.uaConformance == null || conformance.uaConformance.Equals(this.uaConformance)) && (conformance
+                .aConformance == null || conformance.aConformance.Equals(this.aConformance)) && IsWellTaggedConformanceIncluded
+                (conformance);
+        }
+
+        /// <summary>
+        /// Checks if well tagged conformance part of passed conformance is included into this
+        /// <see cref="PdfConformance"/>
+        /// </summary>
+        /// <param name="conformance">the conformance to check</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if well tagged conformance of this conformance is included,
+        /// otherwise
+        /// <see langword="false"/>
+        /// </returns>
+        public virtual bool IsWellTaggedConformanceIncluded(iText.Kernel.Pdf.PdfConformance conformance) {
+            return (this.wtpdfFlag & conformance.wtpdfFlag) == conformance.wtpdfFlag;
         }
 
         /// <summary>Checks if any PDF/A or PDF/UA conformance is specified.</summary>

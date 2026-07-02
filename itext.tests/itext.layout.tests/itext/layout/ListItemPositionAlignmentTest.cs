@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Kernel.Colors;
@@ -31,7 +32,6 @@ using iText.Kernel.Utils;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Test;
-using iText.Test.Attributes;
 
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -78,7 +78,6 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.TestCaseSource("BaseDirectionAndSymbolAlignmentProperties")]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TYPOGRAPHY_NOT_FOUND, Count = 8)]
         public virtual void DefaultListIemPositionAlignmentTest(BaseDirection? listBaseDirection, BaseDirection? listItemBaseDirection
             , ListSymbolAlignment listSymbolAlignment, ListSymbolPosition listSymbolPosition, int? comparisonPdfId
             ) {

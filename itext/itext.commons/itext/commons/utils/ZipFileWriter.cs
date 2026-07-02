@@ -26,6 +26,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 using iText.Commons.Exceptions;
+using iText.Commons.Internal.Runtime;
 
 namespace iText.Commons.Utils {
     /// <summary>Allows writing entries into a zip file.</summary>
@@ -81,7 +82,7 @@ namespace iText.Commons.Utils {
             AddEntryToZip(fileName, zos => {
                 byte[] bytes = new byte[1024];
                 int length;
-                while ((length = inputStream.Read(bytes)) > 0) {
+                while ((length = inputStream.JRead(bytes)) > 0) {
                     zos.Write(bytes, 0, length);
                 }
             });

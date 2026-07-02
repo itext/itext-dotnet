@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Kernel.Crypto.Pdfencryption;
 using iText.Kernel.Exceptions;
@@ -45,9 +46,8 @@ namespace iText.Kernel.Pdf {
                 .USER, PdfEncryptionTestUtils.OWNER, 0, EncryptionConstants.ENCRYPTION_AES_256 | EncryptionConstants.EMBEDDED_FILES_ONLY
                 ));
             PdfDocument document = new PdfOutputStreamTest.CustomPdfDocument1(writer);
-            document.AddFileAttachment("descripton", PdfFileSpec.CreateEmbeddedFileSpec(document, "TEST".GetBytes(System.Text.Encoding
-                .UTF8), "descripton", "test.txt", null, null));
-            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => document.Close());
+            Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => PdfFileSpec.CreateEmbeddedFileSpec(
+                document, "TEST".GetBytes(System.Text.Encoding.UTF8), "descripton", "test.txt", null, null));
             NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.THIS_DECODE_PARAMETER_TYPE_IS_NOT_SUPPORTED
                 , typeof(PdfName)), e.Message);
         }

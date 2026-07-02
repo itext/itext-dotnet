@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Forms.Exceptions;
 using iText.Forms.Fields;
@@ -469,8 +470,7 @@ namespace iText.Forms {
         public virtual iText.Forms.PdfAcroForm SetNeedAppearances(bool needAppearances) {
             if (VersionConforming.ValidatePdfVersionForDeprecatedFeatureLogError(document, PdfVersion.PDF_2_0, VersionConforming
                 .DEPRECATED_NEED_APPEARANCES_IN_ACROFORM)) {
-                GetPdfObject().Remove(PdfName.NeedAppearances);
-                SetModified();
+                Remove(PdfName.NeedAppearances);
             }
             else {
                 Put(PdfName.NeedAppearances, PdfBoolean.ValueOf(needAppearances));
@@ -826,8 +826,7 @@ namespace iText.Forms {
         /// <param name="generateAppearance">a boolean</param>
         public virtual void SetGenerateAppearance(bool generateAppearance) {
             if (generateAppearance) {
-                GetPdfObject().Remove(PdfName.NeedAppearances);
-                SetModified();
+                Remove(PdfName.NeedAppearances);
             }
             this.generateAppearance = generateAppearance;
         }
@@ -909,9 +908,17 @@ namespace iText.Forms {
                         else {
                             if (normal.IsDictionary()) {
                                 PdfName @as = fieldObject.GetAsName(PdfName.AS);
-                                if (((PdfDictionary)normal).GetAsStream(@as) != null) {
-                                    xObject = new PdfFormXObject(((PdfDictionary)normal).GetAsStream(@as));
-                                    xObject.MakeIndirect(document);
+                                if (@as == null) {
+                                    LOGGER.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.FORMFIELD_DOES_NOT_CONTAIN_AS, formField
+                                        .GetFieldName()));
+                                }
+                                else {
+                                    PdfDictionary normalDict = (PdfDictionary)normal;
+                                    PdfStream asStream = normalDict.GetAsStream(@as);
+                                    if (asStream != null) {
+                                        xObject = new PdfFormXObject(asStream);
+                                        xObject.MakeIndirect(document);
+                                    }
                                 }
                             }
                         }
@@ -930,7 +937,7 @@ namespace iText.Forms {
                             PdfObject xObjectResources = xObject.GetPdfObject().Get(PdfName.Resources);
                             PdfObject pageResources = page.GetResources().GetPdfObject();
                             if (xObjectResources != null && xObjectResources == pageResources) {
-                                xObject.GetPdfObject().Put(PdfName.Resources, initialPageResourceClones.Get(document.GetPageNumber(page)));
+                                xObject.Put(PdfName.Resources, initialPageResourceClones.Get(document.GetPageNumber(page)));
                             }
                             if (tagPointer != null) {
                                 tagPointer.SetPageForTagging(page);
@@ -956,7 +963,7 @@ namespace iText.Forms {
                     RemoveFieldFromParentAndAcroForm(fFields, fieldObject);
                 }
             }
-            GetPdfObject().Remove(PdfName.NeedAppearances);
+            Remove(PdfName.NeedAppearances);
             if (fieldsForFlattening.Count == 0) {
                 GetFields().Clear();
             }
@@ -1147,7 +1154,7 @@ namespace iText.Forms {
             if (fields == null) {
                 LOGGER.LogWarning(FormsLogMessageConstants.NO_FIELDS_IN_ACROFORM);
                 fields = new PdfArray();
-                GetPdfObject().Put(PdfName.Fields, fields);
+                Put(PdfName.Fields, fields);
             }
             return fields;
         }
@@ -1299,6 +1306,23 @@ namespace iText.Forms {
         /// </returns>
         public virtual iText.Forms.PdfAcroForm Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
+            SetModified();
+            return this;
+        }
+
+        /// <summary>
+        /// Removes the specified key from the
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// of the acroform.
+        /// </summary>
+        /// <param name="key">key to be removed</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfAcroForm"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Forms.PdfAcroForm Remove(PdfName key) {
+            GetPdfObject().Remove(key);
             SetModified();
             return this;
         }

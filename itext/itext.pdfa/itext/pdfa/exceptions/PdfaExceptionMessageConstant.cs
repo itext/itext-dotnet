@@ -342,6 +342,9 @@ namespace iText.Pdfa.Exceptions {
 
         public const String OUTPUTINTENT_SHALL_NOT_CONTAIN_DESTOUTPUTPROFILEREF_KEY = "DestOutputProfileRef " + "shall not be present in output intent";
 
+        public const String SEPARATION_COLOR_ARRAY_DOES_NOT_ADHERE_TO_PDF_SPEC = "Separation color space array does "
+             + "not adhere to the form [/Separation name alternateSpace tintTransform].";
+
         private PdfaExceptionMessageConstant() {
         }
     }

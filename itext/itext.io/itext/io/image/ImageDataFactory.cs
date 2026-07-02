@@ -25,6 +25,11 @@ using System.Collections.Generic;
 #if !NETSTANDARD2_0
 using System.Drawing;
 #endif // !NETSTANDARD2_0
+using System.IO;
+using System.Reflection;
+using Microsoft.Extensions.Logging;
+using iText.Commons;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Codec;
 using iText.IO.Exceptions;
@@ -32,7 +37,45 @@ using iText.IO.Util;
 
 namespace iText.IO.Image {
     public sealed class ImageDataFactory {
+        private static AbstractWebPLoader webpLoader = null;
+
+        private const String WEBP_PACKAGE = "iText.Webpimagesupport.";
+
+        private const String WEBP_APPLIER = "WebPLoader,itext.webp-image-support";
+
+        private const String WEBP_APPLIER_INITIALIZE = "RegisterForIo";
+
         private ImageDataFactory() {
+        }
+
+        static ImageDataFactory() {
+            // Android-Conversion-Skip-Block-Start
+            try {
+                Type type = GetWebPClass(WEBP_PACKAGE + WEBP_APPLIER);
+                if (type != null) {
+                    MethodInfo method = type.GetMethod(WEBP_APPLIER_INITIALIZE, new Type[] {  });
+                    if (method != null) {
+                        method.Invoke(null, new Object[] {  });
+                    }
+                }
+            }
+            catch (Exception) {
+            }
+            // do nothing
+            // Android-Conversion-Skip-Block-End
+            if (webpLoader == null) {
+                webpLoader = new NoWebPLoader();
+            }
+        }
+
+        /// <summary>
+        /// Sets
+        /// <see cref="AbstractWebPLoader"/>
+        /// instance to use.
+        /// </summary>
+        /// <param name="newInstance">the instance to set</param>
+        public static void SetWebPLoaderInstance(AbstractWebPLoader newInstance) {
+            webpLoader = newInstance;
         }
 
         /// <summary>Create an ImageData instance representing the image from the image bytes.</summary>
@@ -150,7 +193,7 @@ namespace iText.IO.Image {
 
 #if !NETSTANDARD2_0
         // Android-Conversion-Skip-Block-Start (java.awt library isn't available on Android)
-        /// <summary>Gets an instance of an Image from a java.awt.Image</summary>
+        /// <summary>Gets an instance of an Image from a java.awt.Image.</summary>
         /// <param name="image">the java.awt.Image to convert</param>
         /// <param name="color">if different from <c>null</c> the transparency pixels are replaced by this color</param>
         /// <returns>RawImage</returns>
@@ -171,9 +214,9 @@ namespace iText.IO.Image {
 #endif // !NETSTANDARD2_0
 
         // Android-Conversion-Skip-Block-End
-        /// <summary>Get a bitmap ImageData instance from the specified url.</summary>
-        /// <param name="url">location of the image.</param>
-        /// <param name="noHeader">Whether the image contains a header.</param>
+        /// <summary>Gets a bitmap ImageData instance from the specified URL.</summary>
+        /// <param name="url">location of the image</param>
+        /// <param name="noHeader">whether the image contains a header</param>
         /// <returns>created ImageData</returns>
         public static ImageData CreateBmp(Uri url, bool noHeader) {
             ValidateImageType(url, ImageType.BMP);
@@ -182,7 +225,7 @@ namespace iText.IO.Image {
             return image;
         }
 
-        /// <summary>Get a bitmap ImageData instance from the provided bytes.</summary>
+        /// <summary>Gets a bitmap ImageData instance from the provided bytes.</summary>
         /// <param name="bytes">array containing the raw image data</param>
         /// <param name="noHeader">Whether the image contains a header.</param>
         /// <returns>created ImageData</returns>
@@ -206,7 +249,7 @@ namespace iText.IO.Image {
             return image;
         }
 
-        /// <summary>Returns a specified frame of the gif image</summary>
+        /// <summary>Returns a specified frame of the gif image.</summary>
         /// <param name="url">url of gif image</param>
         /// <param name="frame">number of frame to be returned, 1-based</param>
         /// <returns>GifImageData instance.</returns>
@@ -214,7 +257,7 @@ namespace iText.IO.Image {
             return CreateGifFrames(url, new int[] { frame })[0];
         }
 
-        /// <summary>Returns a specified frame of the gif image</summary>
+        /// <summary>Returns a specified frame of the gif image.</summary>
         /// <param name="bytes">byte array of gif image</param>
         /// <param name="frame">number of frame to be returned, 1-based</param>
         /// <returns>GifImageData instance</returns>
@@ -222,7 +265,7 @@ namespace iText.IO.Image {
             return CreateGifFrames(bytes, new int[] { frame })[0];
         }
 
-        /// <summary>Returns <c>List</c> of gif image frames</summary>
+        /// <summary>Returns <c>List</c> of gif image frames.</summary>
         /// <param name="bytes">byte array of gif image</param>
         /// <param name="frameNumbers">array of frame numbers of gif image, 1-based</param>
         /// <returns>all frames of gif image</returns>
@@ -232,7 +275,7 @@ namespace iText.IO.Image {
             return ProcessGifImageAndExtractFrames(frameNumbers, image);
         }
 
-        /// <summary>Returns <c>List</c> of gif image frames</summary>
+        /// <summary>Returns <c>List</c> of gif image frames.</summary>
         /// <param name="url">url of gif image</param>
         /// <param name="frameNumbers">array of frame numbers of gif image, 1-based</param>
         /// <returns>all frames of gif image</returns>
@@ -242,7 +285,7 @@ namespace iText.IO.Image {
             return ProcessGifImageAndExtractFrames(frameNumbers, image);
         }
 
-        /// <summary>Returns <c>List</c> of gif image frames</summary>
+        /// <summary>Returns <c>List</c> of gif image frames.</summary>
         /// <param name="bytes">byte array of gif image</param>
         /// <returns>all frames of gif image</returns>
         public static IList<ImageData> CreateGifFrames(byte[] bytes) {
@@ -252,7 +295,7 @@ namespace iText.IO.Image {
             return image.GetFrames();
         }
 
-        /// <summary>Returns <c>List</c> of gif image frames</summary>
+        /// <summary>Returns <c>List</c> of gif image frames.</summary>
         /// <param name="url">url of gif image</param>
         /// <returns>all frames of gif image</returns>
         public static IList<ImageData> CreateGifFrames(Uri url) {
@@ -285,9 +328,9 @@ namespace iText.IO.Image {
         /// <summary>
         /// Create an
         /// <see cref="ImageData"/>
-        /// instance from a Jpeg image url
+        /// instance from a JPEG image URL.
         /// </summary>
-        /// <param name="url">URL</param>
+        /// <param name="url">URL to create JPEG image data from</param>
         /// <returns>the created JPEG image</returns>
         public static ImageData CreateJpeg(Uri url) {
             ValidateImageType(url, ImageType.JPEG);
@@ -296,6 +339,13 @@ namespace iText.IO.Image {
             return image;
         }
 
+        /// <summary>
+        /// Creates an
+        /// <see cref="ImageData"/>
+        /// instance from a JPEG image raw bytes.
+        /// </summary>
+        /// <param name="bytes">raw bytes to create JPEG image data from</param>
+        /// <returns>the created JPEG image</returns>
         public static ImageData CreateJpeg(byte[] bytes) {
             ValidateImageType(bytes, ImageType.JPEG);
             ImageData image = new JpegImageData(bytes);
@@ -303,6 +353,13 @@ namespace iText.IO.Image {
             return image;
         }
 
+        /// <summary>
+        /// Creates an
+        /// <see cref="ImageData"/>
+        /// instance from a JPEG2000 image URL.
+        /// </summary>
+        /// <param name="url">URL to create JPEG2000 image data from</param>
+        /// <returns>the created JPEG2000 image</returns>
         public static ImageData CreateJpeg2000(Uri url) {
             ValidateImageType(url, ImageType.JPEG2000);
             ImageData image = new Jpeg2000ImageData(url);
@@ -310,6 +367,13 @@ namespace iText.IO.Image {
             return image;
         }
 
+        /// <summary>
+        /// Creates an
+        /// <see cref="ImageData"/>
+        /// instance from a JPEG2000 image raw bytes.
+        /// </summary>
+        /// <param name="bytes">raw bytes to create JPEG2000 image data from</param>
+        /// <returns>the created JPEG2000 image</returns>
         public static ImageData CreateJpeg2000(byte[] bytes) {
             ValidateImageType(bytes, ImageType.JPEG2000);
             ImageData image = new Jpeg2000ImageData(bytes);
@@ -317,6 +381,13 @@ namespace iText.IO.Image {
             return image;
         }
 
+        /// <summary>
+        /// Creates an
+        /// <see cref="ImageData"/>
+        /// instance from a PNG image URL.
+        /// </summary>
+        /// <param name="url">URL to create PNG image data from</param>
+        /// <returns>the created PNG image</returns>
         public static ImageData CreatePng(Uri url) {
             ValidateImageType(url, ImageType.PNG);
             ImageData image = new PngImageData(url);
@@ -324,6 +395,13 @@ namespace iText.IO.Image {
             return image;
         }
 
+        /// <summary>
+        /// Creates an
+        /// <see cref="ImageData"/>
+        /// instance from a PNG image raw bytes.
+        /// </summary>
+        /// <param name="bytes">raw bytes to create PNG image data from</param>
+        /// <returns>the created PNG image</returns>
         public static ImageData CreatePng(byte[] bytes) {
             ValidateImageType(bytes, ImageType.PNG);
             ImageData image = new PngImageData(bytes);
@@ -347,6 +425,30 @@ namespace iText.IO.Image {
 
         public static ImageData CreateRawImage(byte[] bytes) {
             return new RawImageData(bytes, ImageType.RAW);
+        }
+
+        /// <summary>
+        /// Creates an
+        /// <see cref="ImageData"/>
+        /// instance from a WebP image URL.
+        /// </summary>
+        /// <param name="url">URL to create WebP image data from</param>
+        /// <returns>the created WebP image</returns>
+        public static ImageData CreateWebP(Uri url) {
+            ValidateImageType(url, ImageType.WEBP);
+            return webpLoader.GetImageData(url);
+        }
+
+        /// <summary>
+        /// Creates an
+        /// <see cref="ImageData"/>
+        /// instance from a WebP image raw bytes.
+        /// </summary>
+        /// <param name="bytes">raw bytes to create WebP image data from</param>
+        /// <returns>the created WebP image</returns>
+        public static ImageData CreateWebP(byte[] bytes) {
+            ValidateImageType(bytes, ImageType.WEBP);
+            return webpLoader.GetImageData(bytes);
         }
 
         /// <summary>Checks if the type of image (based on first 8 bytes) is supported by factory.</summary>
@@ -422,7 +524,7 @@ namespace iText.IO.Image {
         public static bool IsSupportedType(ImageType imageType) {
             return imageType == ImageType.GIF || imageType == ImageType.JPEG || imageType == ImageType.JPEG2000 || imageType
                  == ImageType.PNG || imageType == ImageType.BMP || imageType == ImageType.TIFF || imageType == ImageType
-                .JBIG2;
+                .JBIG2 || (imageType == ImageType.WEBP && webpLoader.IsWebPSupported());
         }
 
         private static ImageData CreateImageInstance(Uri source, bool recoverImage) {
@@ -468,6 +570,10 @@ namespace iText.IO.Image {
                     ImageData image = new Jbig2ImageData(source, 1);
                     Jbig2ImageHelper.ProcessImage(image);
                     return image;
+                }
+
+                case ImageType.WEBP: {
+                    return webpLoader.GetImageData(source);
                 }
 
                 default: {
@@ -521,6 +627,10 @@ namespace iText.IO.Image {
                     return image;
                 }
 
+                case ImageType.WEBP: {
+                    return webpLoader.GetImageData(bytes);
+                }
+
                 default: {
                     throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.IMAGE_FORMAT_CANNOT_BE_RECOGNIZED);
                 }
@@ -551,6 +661,54 @@ namespace iText.IO.Image {
                 throw new ArgumentException(expectedType.ToString() + " image expected. Detected image type: " + detectedType
                     .ToString());
             }
+        }
+
+        private static Type GetWebPClass(String partialName) {
+            String classFullName = null;
+
+            Assembly ioAssembly = typeof(ImageDataFactory).GetAssembly();
+            try {
+                string webPVersion = ioAssembly.GetName().Version.ToString();
+                string format = "{0}, Version={1}, Culture=neutral, PublicKeyToken=8354ae6d2174ddca";
+                classFullName = String.Format(format, partialName, webPVersion);
+            } catch (Exception ignored) {
+            }
+
+            Type type = null;
+            if (classFullName != null) {
+                String fileLoadExceptionMessage = null;
+                try {
+                    type = System.Type.GetType(classFullName);
+                } catch (FileLoadException fileLoadException) {
+                    fileLoadExceptionMessage = fileLoadException.Message;
+                }
+                if (type == null) {
+                    // try to find webp-image-support assembly by it's partial name and check if it refers to current version of itext core
+                    try {
+                        type = System.Type.GetType(partialName);
+                    } catch {
+                        // ignore
+                    }
+                    if (type != null) {
+                        bool doesReferToCurrentVersionOfCore = false;
+                        foreach (AssemblyName assemblyName in type.GetAssembly().GetReferencedAssemblies()) {
+                            if ("itext.io".Equals(assemblyName.Name)) {
+                                doesReferToCurrentVersionOfCore = assemblyName.Version.Equals(ioAssembly.GetName().Version);
+                                break;
+                            }
+                        }
+                        if (!doesReferToCurrentVersionOfCore) {
+                            type = null;
+                        }
+                    }
+                    if (type == null && fileLoadExceptionMessage != null) {
+                        ILogger logger = ITextLogManager.GetLogger(typeof(ImageDataFactory));
+                        logger.LogError(fileLoadExceptionMessage);
+                    }
+                }
+            }
+
+            return type;
         }
     }
 }

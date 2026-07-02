@@ -48,9 +48,7 @@ namespace iText.Pdfa {
             PdfArray names = new PdfArray();
             fileNames.Put(PdfName.Names, names);
             names.Add(new PdfString("some/file/path"));
-            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, sourceFolder + "sample.wav", "sample.wav"
-                , "sample", null, null);
-            names.Add(spec.GetPdfObject());
+            names.Add(new PdfDictionary());
             pdfDocument.AddNewPage();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDocument.Close());
             NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.A_NAME_DICTIONARY_SHALL_NOT_CONTAIN_THE_EMBEDDED_FILES_KEY
@@ -66,9 +64,7 @@ namespace iText.Pdfa {
             PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformance.PDF_A_1B, outputIntent);
             PdfStream stream = new PdfStream();
             pdfDocument.GetCatalog().Put(new PdfName("testStream"), stream);
-            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, sourceFolder + "sample.wav", "sample.wav"
-                , "sample", null, null);
-            stream.Put(PdfName.F, spec.GetPdfObject());
+            stream.Put(PdfName.F, new PdfDictionary());
             pdfDocument.AddNewPage();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDocument.Close());
             NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.STREAM_OBJECT_DICTIONARY_SHALL_NOT_CONTAIN_THE_F_FFILTER_OR_FDECODEPARAMS_KEYS
@@ -84,13 +80,30 @@ namespace iText.Pdfa {
             PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformance.PDF_A_1B, outputIntent);
             PdfStream stream = new PdfStream();
             pdfDocument.GetCatalog().Put(new PdfName("testStream"), stream);
-            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDocument, sourceFolder + "sample.wav", "sample.wav"
-                , "sample", null, null);
-            stream.Put(new PdfName("fileData"), spec.GetPdfObject());
+            PdfDictionary embeddedFile = new PdfDictionary();
+            stream.Put(new PdfName("fileData"), embeddedFile);
+            embeddedFile.Put(PdfName.Type, PdfName.Filespec);
+            embeddedFile.Put(PdfName.EF, new PdfDictionary());
             pdfDocument.AddNewPage();
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => pdfDocument.Close());
             NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.FILE_SPECIFICATION_DICTIONARY_SHALL_NOT_CONTAIN_THE_EF_KEY
                 , e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FileSpecCreationForbiddenTest() {
+            using (PdfWriter writer = new PdfWriter(new MemoryStream())) {
+                using (Stream @is = FileUtil.GetInputStreamForFile(sourceFolder + "sRGB Color Space Profile.icm")) {
+                    PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
+                        , @is);
+                    using (PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformance.PDF_A_1B, outputIntent)) {
+                        Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => PdfFileSpec.CreateEmbeddedFileSpec
+                            (pdfDocument, sourceFolder + "sample.wav", "sample.wav", "sample", null, null));
+                        NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.FILE_SPECIFICATION_DICTIONARY_SHALL_NOT_CONTAIN_THE_EF_KEY
+                            , e.Message);
+                    }
+                }
+            }
         }
     }
 }

@@ -4,6 +4,9 @@ It may contain modifications beyond the original version.
 */
 using System;
 using System.IO;
+using System.Text;
+using iText.Commons.Internal.Runtime;
+using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Integration;
 using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.Test;
@@ -181,7 +184,6 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
 
         [NUnit.Framework.Test]
         public virtual void LoadsZGzipFile() {
-            // compressed on win, with z suffix
             FileInfo @in = iText.StyledXmlParser.Jsoup.PortTestUtil.GetFile("/htmltests/gzip.html.z");
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(@in, null);
             NUnit.Framework.Assert.AreEqual("Gzip test", doc.Title());
@@ -194,6 +196,101 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(@in, null);
             NUnit.Framework.Assert.AreEqual("This is not gzipped", doc.Title());
             NUnit.Framework.Assert.AreEqual("And should still be readable.", doc.SelectFirst("p").Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LoadWithParserOverloadUsesGivenParser() {
+            String html = "<html><head><title>One</title></head><body>Two</body></html>";
+            Document doc = DataUtil.Load(Stream(html), "UTF-8", "http://foo.com/", iText.StyledXmlParser.Jsoup.Parser.Parser
+                .HtmlParser());
+            NUnit.Framework.Assert.AreEqual("One", doc.Head().Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ParseInputStreamWithNullReturnsEmptyDocument() {
+            Document doc = DataUtil.ParseInputStream(null, "UTF-8", "http://foo.com/", iText.StyledXmlParser.Jsoup.Parser.Parser
+                .HtmlParser());
+            NUnit.Framework.Assert.AreEqual("http://foo.com/", doc.BaseUri());
+            NUnit.Framework.Assert.AreEqual("", doc.Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CrossStreamsCopiesAllBytes() {
+            byte[] data = new byte[1024 * 64 + 7];
+            for (int i = 0; i < data.Length; i++) {
+                data[i] = (byte)(i % 251);
+            }
+            MemoryStream @in = new MemoryStream(data);
+            MemoryStream @out = new MemoryStream();
+            DataUtil.CrossStreams(@in, @out);
+            NUnit.Framework.Assert.AreEqual(data, @out.ToArray());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ShortStreamUnderBomLengthIsHandled() {
+            Document doc = DataUtil.ParseInputStream(Stream("ab"), null, "http://foo.com/", iText.StyledXmlParser.Jsoup.Parser.Parser
+                .HtmlParser());
+            NUnit.Framework.Assert.AreEqual("ab", doc.Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LargeCharsetlessStreamTriggersReread() {
+            StringBuilder sb = new StringBuilder(10000).Append("<html><head><title>Big</title></head><body>");
+            while (sb.Length < (1024 * 5) + 1024) {
+                sb.Append("<p>filler filler filler filler filler</p>");
+            }
+            sb.Append("</body></html>");
+            Document doc = DataUtil.ParseInputStream(Stream(sb.ToString()), null, "http://foo.com/", iText.StyledXmlParser.Jsoup.Parser.Parser
+                .HtmlParser());
+            NUnit.Framework.Assert.AreEqual("Big", doc.Head().Select("title").Text());
+            NUnit.Framework.Assert.AreEqual("UTF-8", doc.OutputSettings().Charset().DisplayName());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void XmlDeclarationFirstChildIsUsedForCharset() {
+            String xml = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><data>Hellö</data>";
+            Document doc = DataUtil.ParseInputStream(Stream(xml, "ISO-8859-1"), null, "http://foo.com/", iText.StyledXmlParser.Jsoup.Parser.Parser
+                .XmlParser());
+            NUnit.Framework.Assert.AreEqual("Hellö", doc.Text());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UncheckedIoExceptionDuringFirstParseIsRethrown() {
+            iText.StyledXmlParser.Jsoup.Parser.Parser throwingParser = new DataUtilTest.ThrowingParser("boom-first");
+            Exception ex = NUnit.Framework.Assert.Catch(typeof(Exception), () => DataUtil.ParseInputStream(Stream("<html></html>"
+                ), null, "http://foo.com/", throwingParser));
+            NUnit.Framework.Assert.AreEqual("boom-first", ex.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UncheckedIoExceptionDuringReaderParseIsRethrown() {
+            iText.StyledXmlParser.Jsoup.Parser.Parser throwingParser = new DataUtilTest.ThrowingParser("boom-reader");
+            Exception ex = NUnit.Framework.Assert.Catch(typeof(Exception), () => DataUtil.ParseInputStream(Stream("<html></html>"
+                ), "UTF-8", "http://foo.com/", throwingParser));
+            NUnit.Framework.Assert.AreEqual("boom-reader", ex.Message);
+        }
+
+        /// <summary>
+        /// A Parser whose parseInput always throws an UncheckedIOException wrapping an IOException,
+        /// used to exercise DataUtil's UncheckedIOException catch/rethrow paths.
+        /// </summary>
+        private sealed class ThrowingParser : iText.StyledXmlParser.Jsoup.Parser.Parser {
+            private readonly String message;
+
+//\cond DO_NOT_DOCUMENT
+            internal ThrowingParser(String message)
+                : base(iText.StyledXmlParser.Jsoup.Parser.Parser.HtmlParser().GetTreeBuilder()) {
+                this.message = message;
+            }
+//\endcond
+
+            public override Document ParseInput(TextReader inputHtml, String baseUri) {
+                throw new UncheckedIOException(new System.IO.IOException(message));
+            }
+
+            public override Document ParseInput(String html, String baseUri) {
+                throw new UncheckedIOException(new System.IO.IOException(message));
+            }
         }
     }
 }

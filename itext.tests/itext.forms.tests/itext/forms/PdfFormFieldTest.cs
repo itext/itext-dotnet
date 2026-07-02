@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.Forms.Fields;
 using iText.Forms.Logs;
 using iText.IO.Font;
@@ -38,6 +39,7 @@ using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Element;
+using iText.Layout.Logs;
 using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
@@ -618,6 +620,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.TYPOGRAPHY_NOT_FOUND_WARNING, LogLevel = LogLevelConstants.WARN)]
         public virtual void FillFieldWithHebrewCase1() {
             //Create a document with formfields and paragraphs in both fonts, and fill them before closing the document
             String testName = "fillFieldWithHebrewCase1";
@@ -643,6 +646,8 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.TYPOGRAPHY_NOT_FOUND_WARNING, LogLevel = LogLevelConstants.WARN, Count
+             = 2)]
         public virtual void FillFieldWithHebrewCase2() {
             //Create a document with formfields and paragraphs in both fonts, and fill them after closing and reopening the document
             String testName = "fillFieldWithHebrewCase2";
@@ -673,6 +678,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.TYPOGRAPHY_NOT_FOUND_WARNING)]
         public virtual void FillFieldWithHebrewCase3() {
             //Create a document with formfields in both fonts, and fill them before closing the document
             String testName = "fillFieldWithHebrewCase3";
@@ -695,6 +701,7 @@ namespace iText.Forms {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.TYPOGRAPHY_NOT_FOUND_WARNING)]
         public virtual void FillFieldWithHebrewCase4() {
             //Create a document with formfields in both fonts, and fill them after closing and reopening the document
             String testName = "fillFieldWithHebrewCase4";

@@ -24,9 +24,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Json;
 using iText.Commons.Utils;
-using iText.Commons.Utils.Collections;
 
 namespace iText.Signatures.Validation.Report {
     /// <summary>Validation report, which contains detailed validation results.</summary>

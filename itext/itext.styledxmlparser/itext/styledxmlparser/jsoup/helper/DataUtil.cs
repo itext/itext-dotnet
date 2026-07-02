@@ -7,6 +7,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 using System.Text.RegularExpressions;
+using iText.Commons;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.StyledXmlParser.Jsoup.Internal;
@@ -58,7 +60,7 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
             if (name.EndsWith(".gz") || name.EndsWith(".z")) {
                 // unfortunately file input streams don't support marks (why not?), so we will close and reopen after read
                 // gzip magic bytes
-                bool zipped = (stream.Read() == 0x1f && stream.Read() == 0x8b);
+                bool zipped = (stream.ReadByte() == 0x1f && stream.ReadByte() == 0x8b);
                 stream.Dispose();
                 stream = zipped ?
                     CreateSeekableStream(new GZipStream(FileUtil.GetInputStreamForFile(@in.FullName), CompressionMode.Decompress))
@@ -107,7 +109,7 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
         internal static void CrossStreams(Stream @in, Stream @out) {
             byte[] buffer = new byte[bufferSize];
             int len;
-            while ((len = @in.Read(buffer)) != -1) {
+            while ((len = @in.JRead(buffer)) > 0) {
                 @out.Write(buffer, 0, len);
             }
         }
@@ -124,7 +126,7 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
             long currentPosition = input.Position;
             ByteBuffer firstBytes = ReadToByteBuffer(input, firstReadBufferSize - 1);
             // -1 because we read one more to see if completed. First read is < buffer size, so can't be invalid.
-            bool fullyRead = (input.Read() == -1);
+            bool fullyRead = (input.ReadByte() == -1);
             input.Position = currentPosition;
             // look for BOM - overrides any other header or input
             DataUtil.BomCharset bomCharset = DetectCharsetFromBom(firstBytes);
@@ -309,5 +311,44 @@ namespace iText.StyledXmlParser.Jsoup.Helper {
                 this.offset = offset;
             }
         }
+    }
+
+    internal static class BufferExtensions
+    {
+        public static String Decode(this Encoding encoding, ByteBuffer byteBuffer) {
+            byte[] bom;
+            int offset = 0;
+            Encoding temp = null;
+            if (encoding.CodePage == Encoding.Unicode.CodePage && byteBuffer.Remaining() >= 2) {
+                bom = new byte[2];
+                byteBuffer.Peek(bom);
+                if (bom[0] == (byte) 0xFE && bom[1] == (byte) 0xFF) {
+                    temp = Encoding.BigEndianUnicode;
+                    offset = 2;
+                }
+                if (bom[0] == (byte) 0xFF && bom[1] == (byte) 0xFE) {
+                    offset = 2;
+                }
+            }
+            if (encoding.CodePage == Encoding.UTF32.CodePage && byteBuffer.Remaining() >= 4) {
+                bom = new byte[4];
+                byteBuffer.Peek(bom);
+                if (bom[0] == 0x00 && bom[1] == 0x00 && bom[2] == (byte) 0xFE && bom[3] == (byte) 0xFF) {
+                    temp = EncodingUtil.GetEncoding("utf-32be");
+                    offset = 4;
+                }
+                if (bom[0] == (byte) 0xFF && bom[1] == (byte) 0xFE && bom[2] == 0x00 && bom[3] == 0x00) {
+                    offset = 4;
+                }
+            }
+            if (temp == null) {
+                temp = EncodingUtil.GetEncoding(encoding.CodePage, EncoderFallback.ReplacementFallback,
+                    DecoderFallback.ReplacementFallback);
+            }
+            var result = temp.GetString(byteBuffer.buffer, byteBuffer.position + offset, byteBuffer.Remaining() - offset);
+            byteBuffer.Position(byteBuffer.buffer.Length - 1);
+            return result;
+        }
+
     }
 }

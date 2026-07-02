@@ -16,6 +16,7 @@
 */
 using System;
 using System.Text;
+using iText.Commons.Internal.Runtime;
 
 namespace iText.Layout.Hyphenation {
     /// <summary>This class represents a hyphenated word.</summary>

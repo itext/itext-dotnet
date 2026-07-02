@@ -5,6 +5,7 @@ See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 using System;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 
 namespace iText.IO.Codec.Brotli.Dec {
 //\cond DO_NOT_DOCUMENT

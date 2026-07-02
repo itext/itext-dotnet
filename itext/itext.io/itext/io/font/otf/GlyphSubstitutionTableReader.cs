@@ -32,6 +32,23 @@ namespace iText.IO.Font.Otf {
     /// This has been written according to the OPenTypeFont specifications. This may be found <a href="http://www.microsoft.com/typography/otspec/gsub.htm">here</a>.
     /// </remarks>
     public class GlyphSubstitutionTableReader : OpenTypeFontTableReader {
+        /// <summary>
+        /// Instantiates a new instance of
+        /// <see cref="GlyphSubstitutionTableReader"/>.
+        /// </summary>
+        /// <param name="rf">
+        /// the
+        /// <c>RandomAccessFileOrArray</c>
+        /// containing the OpenType font
+        /// </param>
+        /// <param name="gsubTableLocation">the GSUB table location</param>
+        /// <param name="gdef">the GDEF table reader</param>
+        /// <param name="indexGlyphMap">the glyph index to glyph map</param>
+        /// <param name="unitsPerEm">
+        /// the
+        /// <c>head.unitsPerEm</c>
+        /// value from the OpenType font
+        /// </param>
         public GlyphSubstitutionTableReader(RandomAccessFileOrArray rf, int gsubTableLocation, OpenTypeGdefTableReader
              gdef, IDictionary<int, Glyph> indexGlyphMap, int unitsPerEm)
             : base(rf, gsubTableLocation, gdef, indexGlyphMap, unitsPerEm) {

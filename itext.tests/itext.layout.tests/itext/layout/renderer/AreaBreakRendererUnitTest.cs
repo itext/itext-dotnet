@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Commons.Internal.Runtime;
 using iText.IO.Source;
 using iText.Kernel.Pdf;
 using iText.Layout.Element;
@@ -37,7 +38,8 @@ namespace iText.Layout.Renderer {
         [LogMessage(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED)]
         public virtual void AddChildTestUnsupported() {
             AreaBreakRenderer areaBreakRenderer = new AreaBreakRenderer(new AreaBreak());
-            NUnit.Framework.Assert.IsNull(areaBreakRenderer.GetChildRenderers());
+            NUnit.Framework.Assert.IsNotNull(areaBreakRenderer.GetChildRenderers());
+            NUnit.Framework.Assert.IsTrue(areaBreakRenderer.GetChildRenderers().IsEmpty());
             NUnit.Framework.Assert.DoesNotThrow(() => areaBreakRenderer.AddChild(new TextRenderer(new Text("Test"))));
         }
 
@@ -58,63 +60,50 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
-        public virtual void GetOccupiedAreaTestUnsupported() {
+        public virtual void GetOccupiedAreaTest() {
             AreaBreakRenderer areaBreakRenderer = new AreaBreakRenderer(new AreaBreak());
             NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => areaBreakRenderer.GetOccupiedArea());
         }
 
         [NUnit.Framework.Test]
         public virtual void HasPropertyTest() {
-            //Properties are not supported for AbstractRenderer, and it's expected that the result is false for all the properties.
-            //The AREA_BREAK_TYPE property is chosen without any specific intention. It could be replaced with any other property.
             AreaBreakRenderer areaBreakRenderer = new AreaBreakRenderer(new AreaBreak());
             NUnit.Framework.Assert.IsFalse(areaBreakRenderer.HasProperty(Property.AREA_BREAK_TYPE));
         }
 
         [NUnit.Framework.Test]
         public virtual void HasOwnPropertyTest() {
-            //Properties are not supported for AbstractRenderer, and it's expected that the result is false for all the properties.
-            //The AREA_BREAK_TYPE property is chosen without any specific intention. It could be replaced with any other property.
             AreaBreakRenderer areaBreakRenderer = new AreaBreakRenderer(new AreaBreak());
             NUnit.Framework.Assert.IsFalse(areaBreakRenderer.HasOwnProperty(Property.AREA_BREAK_TYPE));
         }
 
         [NUnit.Framework.Test]
         public virtual void GetPropertyTest() {
-            //Properties are not supported for AbstractRenderer, and it's expected that the result is null for all the properties.
-            //The AREA_BREAK_TYPE property is chosen without any specific intention. It could be replaced with any other property.
             AreaBreakRenderer areaBreakRenderer = new AreaBreakRenderer(new AreaBreak());
             NUnit.Framework.Assert.IsNull(areaBreakRenderer.GetProperty<Property>(Property.AREA_BREAK_TYPE));
         }
 
         [NUnit.Framework.Test]
         public virtual void GetOwnPropertyTest() {
-            //Properties are not supported for AbstractRenderer, and it's expected that the result is null for all the properties.
-            //The AREA_BREAK_TYPE property is chosen without any specific intention. It could be replaced with any other property.
             AreaBreakRenderer areaBreakRenderer = new AreaBreakRenderer(new AreaBreak());
             NUnit.Framework.Assert.IsNull(areaBreakRenderer.GetOwnProperty<Property>(Property.AREA_BREAK_TYPE));
         }
 
         [NUnit.Framework.Test]
         public virtual void GetDefaultPropertyTest() {
-            //Properties are not supported for AbstractRenderer, and it's expected that the result is null for all the properties.
-            //The AREA_BREAK_TYPE property is chosen without any specific intention. It could be replaced with any other property.
             AreaBreakRenderer areaBreakRenderer = new AreaBreakRenderer(new AreaBreak());
             NUnit.Framework.Assert.IsNull(areaBreakRenderer.GetDefaultProperty<Property>(Property.AREA_BREAK_TYPE));
         }
 
         [NUnit.Framework.Test]
-        public virtual void GetPropertyWithDefaultValueTestUnsupported() {
-            //The BORDER_BOTTOM_LEFT_RADIUS property is chosen without any specific intention. It could be replaced with any other property.
+        public virtual void GetPropertyWithDefaultValueTest() {
             AreaBreakRenderer areaBreakRenderer = new AreaBreakRenderer(new AreaBreak());
-            NUnit.Framework.Assert.Catch(typeof(NotSupportedException), () => areaBreakRenderer.GetProperty(Property.BORDER_BOTTOM_LEFT_RADIUS
-                , 3));
+            NUnit.Framework.Assert.AreEqual(3, areaBreakRenderer.GetProperty<int?>(Property.BORDER_BOTTOM_LEFT_RADIUS, 
+                3));
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED)]
-        public virtual void SetPropertyTestUnsupported() {
-            //The BORDER_BOTTOM_LEFT_RADIUS property is chosen without any specific intention. It could be replaced with any other property.
+        public virtual void SetPropertyTest() {
             AreaBreakRenderer areaBreakRenderer = new AreaBreakRenderer(new AreaBreak());
             NUnit.Framework.Assert.DoesNotThrow(() => areaBreakRenderer.SetProperty(Property.BORDER_BOTTOM_LEFT_RADIUS
                 , 5));
@@ -122,8 +111,6 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void DeleteOwnProperty() {
-            //The AREA_BREAK_TYPE property is chosen without any specific intention. It could be replaced with any other property.
-            //Here we just check that no exception has been thrown.
             AreaBreakRenderer areaBreakRenderer = new AreaBreakRenderer(new AreaBreak());
             NUnit.Framework.Assert.DoesNotThrow(() => areaBreakRenderer.DeleteOwnProperty(Property.AREA_BREAK_TYPE));
         }

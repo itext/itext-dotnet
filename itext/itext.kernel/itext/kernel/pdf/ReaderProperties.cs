@@ -73,7 +73,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Defines the certificate which will be used if the document is encrypted with public key
-        /// encryption (see Pdf 1.7 specification, 7.6.4. Public-Key Security Handlers)
+        /// encryption (see Pdf 1.7 specification, 7.6.4. Public-Key Security Handlers).
         /// </summary>
         /// <param name="certificate">
         /// the recipient
@@ -101,7 +101,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>
         /// Defines the certificate which will be used if the document is encrypted with public key
-        /// encryption (see Pdf 1.7 specification, 7.6.4. Public-Key Security Handlers)
+        /// encryption (see Pdf 1.7 specification, 7.6.4. Public-Key Security Handlers).
         /// </summary>
         /// <param name="certificate">
         /// the recipient
@@ -121,6 +121,15 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Sets the memory handler which will be used to handle decompressed PDF streams.</summary>
+        /// <remarks>
+        /// Sets the memory handler which will be used to handle decompressed PDF streams.
+        /// <para />
+        /// Note that
+        /// <see cref="MemoryLimitsAwareHandler"/>
+        /// must not be shared between different
+        /// <see cref="PdfDocument"/>
+        /// instances.
+        /// </remarks>
         /// <param name="memoryLimitsAwareHandler">the memory handler which will be used to handle decompressed PDF streams
         ///     </param>
         /// <returns>

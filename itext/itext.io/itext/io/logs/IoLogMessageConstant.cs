@@ -147,6 +147,7 @@ namespace iText.IO.Logs {
 
         public const String FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY = "Value \"{0}\" is not contained in /Opt array of field \"{1}\".";
 
+        [Obsolete]
         public const String FLEX_ITEM_LAYOUT_RESULT_IS_NOT_FULL = "Flex item layout result isn't full, but it must be. The cross size of the flex item will be 0.";
 
         public const String FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE = "Flushed object contains indirect reference which is free. Null object will be written instead.";
@@ -330,6 +331,9 @@ namespace iText.IO.Logs {
 
         public const String TYPE3_FONT_INITIALIZATION_ISSUE = "Type 3 font issue. Font cannot be initialized correctly.";
 
+        /// <summary>Old log message when Typography module was not found</summary>
+        [System.ObsoleteAttribute(@"since 9.7.0, replaced by com.itextpdf.kernel.logs.KernelLogMessageConstant.TYPOGRAPHY_NOT_FOUND_WARNING and com.itextpdf.kernel.logs.KernelLogMessageConstant.TYPOGRAPHY_NOT_FOUND_INFO"
+            )]
         public const String TYPOGRAPHY_NOT_FOUND = "Cannot find pdfCalligraph module, which was implicitly " + "required by one of the layout properties";
 
         public const String UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN = "Unable to apply page dependent property, because the page on which element is drawn is unknown. Usually "

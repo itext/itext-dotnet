@@ -28,8 +28,10 @@ using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Datastructures;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Json;
 using iText.Commons.Utils;
+using iText.Kernel.Exceptions;
 using iText.Signatures;
 using iText.Signatures.Logs;
 using iText.Signatures.Validation.Report;
@@ -95,12 +97,12 @@ namespace iText.Signatures.Validation.Lotl {
             StringBuilder sb = new StringBuilder();
             try {
                 int bytesRead;
-                while ((bytesRead = @in.Read(buffer)) != -1) {
+                while ((bytesRead = @in.JRead(buffer, 0, buffer.Length)) > 0) {
                     sb.Append(iText.Commons.Utils.JavaUtil.GetStringForBytes(buffer, 0, bytesRead, System.Text.Encoding.UTF8));
                 }
             }
             catch (Exception e) {
-                throw new Exception("Error reading from cache input stream", e);
+                throw new PdfException("Error reading from cache input stream", e);
             }
             String jsonString = sb.ToString();
             JsonValue json = JsonValue.FromJson(jsonString);

@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Font.Otf;
 using iText.Test;
@@ -147,6 +148,29 @@ namespace iText.IO.Font {
             trueTypeFontProgram.UpdateUsedGlyphs(usedGlyphs, false, subsetRanges);
             NUnit.Framework.Assert.AreEqual(1, usedGlyphs.Count);
             NUnit.Framework.Assert.AreSame(trueTypeFontProgram.GetGlyphByCode(10), usedGlyphs.Get(1));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetFontFeatureFromPrimitiveFontTest() {
+            TrueTypeFont trueTypeFontProgram = (TrueTypeFont)FontProgramFactory.CreateFont(FONT_FOLDER + "FreeSansBold.ttf"
+                );
+            IDictionary<String, IList<OpenTableLookup>> extractedFeatures = new Dictionary<String, IList<OpenTableLookup
+                >>();
+            String script = trueTypeFontProgram.ExtractFeatures(JavaCollectionsUtil.Singleton("cyrl"), extractedFeatures
+                );
+            // No Cyrillic features, so default script should be returned
+            NUnit.Framework.Assert.AreEqual("DFLT", script);
+            // default only contains kerning and fractional features, so only those should be extracted
+            NUnit.Framework.Assert.AreEqual(2, extractedFeatures.Count);
+            NUnit.Framework.Assert.IsTrue(extractedFeatures.ContainsKey("kern"));
+            NUnit.Framework.Assert.IsTrue(extractedFeatures.ContainsKey("frac"));
+            script = trueTypeFontProgram.ExtractFeatures(JavaCollectionsUtil.Singleton("latn"), extractedFeatures);
+            NUnit.Framework.Assert.AreEqual("latn", script);
+            // Latin adds a ligatures feature
+            NUnit.Framework.Assert.AreEqual(3, extractedFeatures.Count);
+            NUnit.Framework.Assert.IsTrue(extractedFeatures.ContainsKey("kern"));
+            NUnit.Framework.Assert.IsTrue(extractedFeatures.ContainsKey("frac"));
+            NUnit.Framework.Assert.IsTrue(extractedFeatures.ContainsKey("liga"));
         }
 
         private void CheckCmapTableEntry(FontProgram fontProgram, char uniChar, int expectedGlyphId) {

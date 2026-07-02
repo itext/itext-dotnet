@@ -5,6 +5,7 @@ See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 using System;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.Test;
 
 namespace iText.IO.Codec.Brotli.Dec {

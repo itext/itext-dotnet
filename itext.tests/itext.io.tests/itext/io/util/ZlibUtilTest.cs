@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Test;
@@ -48,7 +49,7 @@ namespace iText.IO.Util {
                     using (Stream os = FileUtil.GetFileOutputStream(DESTINATION_FOLDER + "jzlib.fail")) {
                         byte[] buf = new byte[8192];
                         int length;
-                        while ((length = @is.Read(buf)) != -1) {
+                        while ((length = @is.JRead(buf, 0, buf.Length)) > 0) {
                             os.Write(buf, 0, length);
                         }
                     }
@@ -61,7 +62,7 @@ namespace iText.IO.Util {
                     using (DeflaterOutputStream zip = new DeflaterOutputStream(os_1, -1)) {
                         byte[] buf = new byte[8192];
                         int length;
-                        while ((length = is_1.Read(buf)) != -1) {
+                        while ((length = is_1.JRead(buf, 0, buf.Length)) > 0) {
                             zip.Write(buf, 0, length);
                         }
                     }

@@ -26,24 +26,28 @@ namespace iText.IO.Font.Otf {
     [NUnit.Framework.Category("UnitTest")]
     public class GlyphTest : ExtendedITextTest {
         [NUnit.Framework.Test]
-        public virtual void HasPlacementIfAnchorDeltaNonZeroTest() {
+        public virtual void NotHasPlacementIfAnchorDeltaNonZeroTest() {
             Glyph glyph = CreateDummyGlyph();
             NUnit.Framework.Assert.AreEqual(0, glyph.GetXPlacement());
             NUnit.Framework.Assert.AreEqual(0, glyph.GetYPlacement());
             NUnit.Framework.Assert.AreEqual(0, glyph.GetAnchorDelta());
             NUnit.Framework.Assert.IsFalse(glyph.HasPlacement());
             glyph.SetAnchorDelta((short)10);
+            NUnit.Framework.Assert.IsFalse(glyph.HasPlacement());
+            glyph.SetXPlacement((short)10);
             NUnit.Framework.Assert.IsTrue(glyph.HasPlacement());
         }
 
         [NUnit.Framework.Test]
-        public virtual void HasOffsetsIfAnchorDeltaNonZeroTest() {
+        public virtual void NotHasOffsetsIfAnchorDeltaNonZeroTest() {
             Glyph glyph = CreateDummyGlyph();
             NUnit.Framework.Assert.AreEqual(0, glyph.GetXPlacement());
             NUnit.Framework.Assert.AreEqual(0, glyph.GetYPlacement());
             NUnit.Framework.Assert.AreEqual(0, glyph.GetAnchorDelta());
             NUnit.Framework.Assert.IsFalse(glyph.HasOffsets());
             glyph.SetAnchorDelta((short)10);
+            NUnit.Framework.Assert.IsFalse(glyph.HasOffsets());
+            glyph.SetYPlacement((short)10);
             NUnit.Framework.Assert.IsTrue(glyph.HasOffsets());
         }
 

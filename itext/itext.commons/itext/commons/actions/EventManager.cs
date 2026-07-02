@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Commons.Actions.Processors;
 using iText.Commons.Datastructures;
 using iText.Commons.Exceptions;
+using iText.Commons.Internal.Runtime;
 
 namespace iText.Commons.Actions {
     /// <summary>Entry point for event handling mechanism.</summary>

@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Security;
+using iText.Commons.Internal.Runtime;
 
 namespace iText.Signatures {
     /// <summary>

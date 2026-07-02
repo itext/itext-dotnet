@@ -22,6 +22,7 @@ Copyright (c) 1998-2026 Apryse Group NV
  */
 using System;
 using System.IO;
+using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Exceptions;
@@ -95,16 +96,22 @@ namespace iText.Kernel.Pdf {
             }
             if (minCapacity > maxStreamSize) {
                 throw new MemoryLimitsAwareException(
-                    KernelExceptionMessageConstant.DURING_DECOMPRESSION_SINGLE_STREAM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED
+                    MessageFormatUtil.Format(KernelExceptionMessageConstant.DURING_DECOMPRESSION_SINGLE_STREAM_OCCUPIED_MORE_MEMORY_THAN_ALLOWED, maxStreamSize / 1024 / 1024 + "MB")
                     );
             }
+            
             // calculate new capacity
-            int oldCapacity = this.GetBuffer().Length;
-            int newCapacity = oldCapacity << 1;
-            if (newCapacity < 0 || newCapacity - minCapacity < 0) {
-                // overflow
-                newCapacity = minCapacity;
+            int newCapacity = this.GetBuffer().Length;
+            // Here we "predict" how buf is going to grow in MemoryStream
+            // to not allow it to grow over maxStreamSize
+            if (newCapacity < minCapacity) {
+                newCapacity = this.GetBuffer().Length << 1;
+                if (newCapacity < 0 || newCapacity - minCapacity < 0) {
+                    // overflow
+                    newCapacity = minCapacity;
+                }
             }
+
             if (newCapacity - maxStreamSize > 0) {
                 newCapacity = maxStreamSize;
                 this.Capacity = newCapacity;

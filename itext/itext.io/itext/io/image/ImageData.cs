@@ -313,13 +313,12 @@ namespace iText.IO.Image {
             return true;
         }
 
-//\cond DO_NOT_DOCUMENT
         /// <summary>Load data from URL.</summary>
         /// <remarks>
         /// Load data from URL. url must be not null.
         /// Note, this method doesn't check if data or url is null.
         /// </remarks>
-        internal virtual void LoadData() {
+        protected internal virtual void LoadData() {
             RandomAccessFileOrArray raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(url
                 ));
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -327,7 +326,6 @@ namespace iText.IO.Image {
             raf.Close();
             data = stream.ToArray();
         }
-//\endcond
 
         /// <summary>Creates a new serial id.</summary>
         /// <returns>the new serialId</returns>

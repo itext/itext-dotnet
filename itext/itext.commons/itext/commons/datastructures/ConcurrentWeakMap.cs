@@ -24,6 +24,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using iText.Commons.Internal.Runtime;
 
 namespace iText.Commons.Datastructures {
     /// <summary>Concurrent weak hash map implementation.</summary>

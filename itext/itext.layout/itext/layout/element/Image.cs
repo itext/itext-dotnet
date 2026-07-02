@@ -21,14 +21,17 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
+using iText.Commons.Utils;
 using iText.IO.Image;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Canvas.Wmf;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
+using iText.Layout;
 using iText.Layout.Exceptions;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
@@ -193,6 +196,25 @@ namespace iText.Layout.Element {
         public Image(ImageData img, float left, float bottom, float width)
             : this(new PdfImageXObject(CheckImageType(img)), left, bottom, width) {
             SetProperty(Property.FLUSH_ON_DRAW, true);
+        }
+
+        /// <summary>
+        /// Creates new
+        /// <see cref="Image"/>
+        /// instance by copying an existing one.
+        /// </summary>
+        /// <param name="image">
+        /// 
+        /// <see cref="Image"/>
+        /// instance to copy
+        /// </param>
+        public Image(iText.Layout.Element.Image image) {
+            this.xObject = image.xObject;
+            this.tagProperties = image.tagProperties == null ? null : new DefaultAccessibilityProperties(image.tagProperties
+                );
+            this.properties = new Dictionary<int, Object>(image.properties);
+            this.styles = image.styles == null ? null : new LinkedHashSet<Style>(image.styles);
+            this.childElements = new List<IElement>(image.childElements);
         }
 
         /// <summary>Gets the XObject contained in this image object</summary>

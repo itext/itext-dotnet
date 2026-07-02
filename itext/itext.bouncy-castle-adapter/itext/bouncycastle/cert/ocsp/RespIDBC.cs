@@ -63,6 +63,15 @@ namespace iText.Bouncycastle.Cert.Ocsp {
             : this(new RespID(((X509NameBC)x500Name).GetX509Name())) {
         }
 
+        /// <summary>
+        /// Creates new wrapper instance for
+        /// <see cref="ResponderID"/>.
+        /// </summary>
+        /// <param name="responderId">
+        /// 
+        /// <see cref="ResponderID"/>
+        /// to be wrapped
+        /// </param>
         public RespIDBC(ResponderID responderId) {
             this.respID = new RespID(responderId);
         }

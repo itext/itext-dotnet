@@ -28,6 +28,7 @@ using iText.Bouncycastleconnector;
 using iText.Commons;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Digest;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
@@ -215,7 +216,7 @@ namespace iText.Kernel.Crypto {
         public static byte[] Digest(Stream data, IMessageDigest messageDigest) {
             byte[] buf = new byte[8192];
             int n;
-            while ((n = data.Read(buf)) > 0) {
+            while ((n = data.JRead(buf)) > 0) {
                 messageDigest.Update(buf, 0, n);
             }
             return messageDigest.Digest();

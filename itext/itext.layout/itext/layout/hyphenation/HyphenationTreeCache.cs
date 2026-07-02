@@ -16,6 +16,7 @@
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Internal.Runtime;
 
 namespace iText.Layout.Hyphenation {
     /// <summary>This is a cache for HyphenationTree instances.</summary>

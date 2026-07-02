@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Json;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
@@ -77,7 +78,7 @@ namespace iText.Signatures.Validation.Lotl {
                     using (MemoryStream buffer = new MemoryStream()) {
                         byte[] data = new byte[4096];
                         int bytesRead;
-                        while ((bytesRead = @is.JRead(data, 0, data.Length)) != -1) {
+                        while ((bytesRead = @is.JRead(data, 0, data.Length)) > 0) {
                             buffer.Write(data, 0, bytesRead);
                         }
                         byte[] json = buffer.ToArray();

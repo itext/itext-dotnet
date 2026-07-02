@@ -28,6 +28,7 @@ using iText.Commons;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Actions.Sequence;
 using iText.Commons.Datastructures;
+using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
@@ -684,7 +685,7 @@ namespace iText.Layout.Renderer {
         public virtual void ApplyOtf() {
             UpdateFontAndText();
             UnicodeScript? script = this.GetProperty<UnicodeScript?>(Property.FONT_SCRIPT);
-            if (!otfFeaturesApplied && TypographyUtils.IsPdfCalligraphAvailable() && text.GetStart() < text.GetEnd()) {
+            if (!otfFeaturesApplied && text.GetStart() < text.GetEnd()) {
                 PdfDocument pdfDocument = GetPdfDocument();
                 SequenceId sequenceId = pdfDocument == null ? null : pdfDocument.GetDocumentIdWrapper();
                 MetaInfoContainer metaInfoContainer = this.GetProperty<MetaInfoContainer>(Property.META_INFO);
@@ -1296,7 +1297,7 @@ namespace iText.Layout.Renderer {
             int count = 0;
             for (int i = line.GetStart(); i < line.GetEnd(); i++) {
                 Glyph glyph = line.Get(i);
-                if (!glyph.HasPlacement()) {
+                if (glyph.GetAnchorDelta() == 0) {
                     count++;
                 }
             }
@@ -1653,7 +1654,7 @@ namespace iText.Layout.Renderer {
         internal static bool CodePointIsOfSpecialScript(int codePoint) {
             UnicodeScript? glyphScript = UnicodeScriptUtil.Of(codePoint);
             return UnicodeScript.THAI == glyphScript || UnicodeScript.KHMER == glyphScript || UnicodeScript.LAO == glyphScript
-                 || UnicodeScript.MYANMAR == glyphScript;
+                 || UnicodeScript.MYANMAR == glyphScript || UnicodeScript.TIBETAN == glyphScript;
         }
 //\endcond
 

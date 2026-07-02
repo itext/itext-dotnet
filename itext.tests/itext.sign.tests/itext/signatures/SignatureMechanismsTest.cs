@@ -20,11 +20,17 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Test;
 
 namespace iText.Signatures {
     [NUnit.Framework.Category("UnitTest")]
     public class SignatureMechanismsTest : ExtendedITextTest {
+        [NUnit.Framework.Test]
+        public virtual void GetNull() {
+            NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => SignatureMechanisms.GetAlgorithm(null));
+        }
+
         [NUnit.Framework.Test]
         public virtual void GetAlgorithmRSATest() {
             NUnit.Framework.Assert.AreEqual("RSA", SignatureMechanisms.GetAlgorithm("1.2.840.113549.1.1.1"));
