@@ -55,9 +55,13 @@ namespace iText.Layout.Renderer {
 
         public virtual LayoutResult Layout(LayoutContext layoutContext) {
             LayoutContext copiedContext = CopyContext(layoutContext);
+            if (wrappedRenderer.HasProperty(Property.POSITIONED_ELEMENT_WRAPPER_LAYOUT)) {
+                return dummyRenderer.Layout(copiedContext);
+            }
             Object positioning = wrappedRenderer.GetOwnProperty<int?>(Property.POSITION);
             wrappedRenderer.SetProperty(Property.POSITION, LayoutPosition.STATIC);
             wrappedRenderer.SetProperty(Property.FLOAT, FloatPropertyValue.NONE);
+            wrappedRenderer.SetProperty(Property.POSITIONED_ELEMENT_WRAPPER_LAYOUT, new Object());
             LayoutResult result = wrappedRenderer.Layout(copiedContext);
             if (result.GetStatus() == LayoutResult.NOTHING) {
                 wrappedRenderer.SetProperty(Property.FORCED_PLACEMENT, true);
@@ -70,6 +74,7 @@ namespace iText.Layout.Renderer {
             else {
                 wrappedRenderer.SetProperty(Property.POSITION, positioning);
             }
+            wrappedRenderer.DeleteOwnProperty(Property.POSITIONED_ELEMENT_WRAPPER_LAYOUT);
             if (verticalCoordinateMissing) {
                 wrappedRenderer.SetProperty(Property.TOP_CALCULATED, result.GetOccupiedArea().GetBBox().GetTop());
             }
@@ -84,6 +89,24 @@ namespace iText.Layout.Renderer {
 
         public virtual IRenderer GetWrappedRenderer() {
             return wrappedRenderer;
+        }
+
+        public virtual T1 GetProperty<T1>(int property, T1 defaultValue) {
+            if (Property.POSITION == property) {
+                // This absolutely positioned renderer wrapper is never supposed to be treated as absolutely positioned.
+                // The whole idea of this wrapper is to calculate it's potential static coordinates.
+                return (T1)(Object)LayoutPosition.STATIC;
+            }
+            return wrappedRenderer.GetProperty<T1>(property, defaultValue);
+        }
+
+        public virtual T1 GetProperty<T1>(int property) {
+            if (Property.POSITION == property) {
+                // This absolutely positioned renderer wrapper is never supposed to be treated as absolutely positioned.
+                // The whole idea of this wrapper is to calculate it's potential static coordinates.
+                return (T1)(Object)LayoutPosition.STATIC;
+            }
+            return wrappedRenderer.GetProperty<T1>(property);
         }
 
         public virtual IRenderer GetNextRenderer() {
@@ -109,24 +132,6 @@ namespace iText.Layout.Renderer {
 
         public virtual bool HasOwnProperty(int property) {
             return wrappedRenderer.HasOwnProperty(property);
-        }
-
-        public virtual T1 GetProperty<T1>(int property) {
-            if (Property.POSITION == property) {
-                // This absolutely positioned renderer wrapper is never supposed to be treated as absolutely positioned.
-                // The whole idea of this wrapper is to calculate it's potential static coordinates.
-                return (T1)(Object)LayoutPosition.STATIC;
-            }
-            return wrappedRenderer.GetProperty<T1>(property);
-        }
-
-        public virtual T1 GetProperty<T1>(int property, T1 defaultValue) {
-            if (Property.POSITION == property) {
-                // This absolutely positioned renderer wrapper is never supposed to be treated as absolutely positioned.
-                // The whole idea of this wrapper is to calculate it's potential static coordinates.
-                return (T1)(Object)LayoutPosition.STATIC;
-            }
-            return wrappedRenderer.GetProperty<T1>(property, defaultValue);
         }
 
         public virtual T1 GetOwnProperty<T1>(int property) {
