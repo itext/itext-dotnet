@@ -212,9 +212,8 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
-        // TODO DEVSIX-10012 Extra misleading log messages are produced when WebP module is missing
         [LogMessage(WebPLogMessageConstant.WEBP_NOT_FOUND)]
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_PROCESS_IMAGE_WITH_GIVEN_BASE_URI
             )]
         public virtual void WebPImageWithoutWebPModuleTest() {
             ConvertToSinglePage(new FileInfo(sourceFolder + "webPImageWithoutWebPModule.svg"), new FileInfo(destinationFolder

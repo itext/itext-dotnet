@@ -89,7 +89,9 @@ namespace iText.StyledXmlParser.Logs {
         public const String UNABLE_TO_RETRIEVE_RESOURCE_WITH_GIVEN_RESOURCE_SIZE_BYTE_LIMIT = "Unable to retrieve resource with given URL ({0}) and resource size byte limit ({1}).";
 
         /// <summary>The Constant UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI.</summary>
-        public const String UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI = "Unable to retrieve image with given base URI ({0}) and image source path ({1})";
+        public const String UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI = "Unable to load image with given base URI ({0}) and image source path ({1})";
+
+        public const String UNABLE_TO_PROCESS_IMAGE_WITH_GIVEN_BASE_URI = "Unable to process image with given base URI ({0}) and image source path ({1})";
 
         public const String UNABLE_TO_RESOLVE_IMAGE_URL = "Unable to resolve image path with given base URI ({0}) and image source path ({1})";
 

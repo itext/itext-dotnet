@@ -168,8 +168,21 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                     , src));
             }
             else {
-                logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI
-                    , uriResolver.GetBaseUri(), src));
+                byte[] bytes = null;
+                try {
+                    bytes = retriever.GetByteArrayByUrl(uriResolver.ResolveAgainstBaseUri(src));
+                }
+                catch (Exception) {
+                }
+                //ignore exception
+                if (bytes == null) {
+                    logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI
+                        , uriResolver.GetBaseUri(), src));
+                }
+                else {
+                    logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_PROCESS_IMAGE_WITH_GIVEN_BASE_URI
+                        , uriResolver.GetBaseUri(), src));
+                }
             }
             return null;
         }
