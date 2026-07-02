@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using iText.Commons.Utils;
+using iText.Kernel.Colors.Gradients;
 using iText.Kernel.DI.Pagetree;
 using iText.Kernel.Mac;
 using iText.Kernel.Pdf;
@@ -35,6 +36,7 @@ namespace iText.Kernel.Utils {
                 ));
             DIContainer.RegisterDefault(typeof(IMacContainerLocator), () => new StandaloneMacContainerLocator());
             DIContainer.RegisterDefault(typeof(IStreamCompressionStrategy), () => new FlateCompressionStrategy());
+            DIContainer.RegisterDefault(typeof(GradientPropertiesResolver), () => new GradientPropertiesResolver());
         }
 
         /// <summary>
