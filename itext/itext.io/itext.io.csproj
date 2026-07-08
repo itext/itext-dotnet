@@ -11,6 +11,8 @@
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="10.0.2" />
     <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="1.1.0" />
+    <!-- Explicitly specify transitive dependency to avoid version conflict created by Microsoft.DotNet.PlatformAbstractions. -->
+    <PackageReference Include="System.IO.FileSystem.Primitives" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\itext.commons\itext.commons.csproj" />
