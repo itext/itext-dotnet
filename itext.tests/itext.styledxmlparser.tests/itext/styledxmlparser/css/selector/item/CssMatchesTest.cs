@@ -373,6 +373,31 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         }
 
         [NUnit.Framework.Test]
+        public virtual void SpecialCharactersTest() {
+            IXmlParser htmlParser = new JsoupHtmlParser();
+            for (int i = 0; i < CssAttributeSelectorItem.SPECIAL_CHARACTERS.Length; i++) {
+                CssAttributeSelectorItem item = new CssAttributeSelectorItem("[data-info~=\"" + CssAttributeSelectorItem.SPECIAL_CHARACTERS
+                    [i] + "\"]");
+                IDocumentNode documentNode = htmlParser.Parse("<div data-info=\" " + CssAttributeSelectorItem.SPECIAL_CHARACTERS
+                    [i] + "\"></div>");
+                INode bodyNode = documentNode.ChildNodes()[0].ChildNodes()[1];
+                INode divNode = bodyNode.ChildNodes()[0];
+                NUnit.Framework.Assert.IsTrue(item.Matches(divNode));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DashCharacterTest() {
+            // '-' is special character on dotnet but only if used inside brackets
+            CssAttributeSelectorItem item = new CssAttributeSelectorItem("[data-info~=\"[1-9]\"]");
+            IXmlParser htmlParser = new JsoupHtmlParser();
+            IDocumentNode documentNode = htmlParser.Parse("<div data-info=\" [1-9]\"></div>");
+            INode bodyNode = documentNode.ChildNodes()[0].ChildNodes()[1];
+            INode divNode = bodyNode.ChildNodes()[0];
+            NUnit.Framework.Assert.IsTrue(item.Matches(divNode));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CssPageTypeSelectorItemMatchesTest() {
             CssPageTypeSelectorItem item = new CssPageTypeSelectorItem("customPageName");
             NUnit.Framework.Assert.IsFalse(item.Matches(new CssPseudoElementNode(null, "after")));
