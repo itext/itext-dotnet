@@ -343,6 +343,36 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         }
 
         [NUnit.Framework.Test]
+        public virtual void MatchesAttributeContainsWordTreatsValueAsLiteralTest() {
+            CssAttributeSelectorItem item = new CssAttributeSelectorItem("[data-info~=\"a.c\"]");
+            IXmlParser htmlParser = new JsoupHtmlParser();
+            IDocumentNode documentNode = htmlParser.Parse("<div data-info=\" abc\"></div>");
+            INode bodyNode = documentNode.ChildNodes()[0].ChildNodes()[1];
+            INode divNode = bodyNode.ChildNodes()[0];
+            NUnit.Framework.Assert.IsFalse(item.Matches(divNode));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MatchesAttributeContainsWordLiteralValueTest() {
+            CssAttributeSelectorItem item = new CssAttributeSelectorItem("[data-info~=\"abc\"]");
+            IXmlParser htmlParser = new JsoupHtmlParser();
+            IDocumentNode documentNode = htmlParser.Parse("<div data-info=\" abc\"></div>");
+            INode bodyNode = documentNode.ChildNodes()[0].ChildNodes()[1];
+            INode divNode = bodyNode.ChildNodes()[0];
+            NUnit.Framework.Assert.IsTrue(item.Matches(divNode));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MatchesAttributeContainsWordInvalidRegexValueTest() {
+            CssAttributeSelectorItem item = new CssAttributeSelectorItem("[data-info~=\"(\"]");
+            IXmlParser htmlParser = new JsoupHtmlParser();
+            IDocumentNode documentNode = htmlParser.Parse("<div data-info=\" abc\"></div>");
+            INode bodyNode = documentNode.ChildNodes()[0].ChildNodes()[1];
+            INode divNode = bodyNode.ChildNodes()[0];
+            NUnit.Framework.Assert.IsFalse(item.Matches(divNode));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CssPageTypeSelectorItemMatchesTest() {
             CssPageTypeSelectorItem item = new CssPageTypeSelectorItem("customPageName");
             NUnit.Framework.Assert.IsFalse(item.Matches(new CssPseudoElementNode(null, "after")));
