@@ -19,6 +19,9 @@ using NUnit.Framework;
 [assembly: AssemblyVersion("9.8.0.0")]
 [assembly: AssemblyFileVersion("9.8.0.0")]
 [assembly: AssemblyInformationalVersion("9.8.0-SNAPSHOT")]
+
+[assembly: Parallelizable(ParallelScope.ContextMask)]
+
 #if !NETSTANDARD2_0
 [assembly: NUnit.Framework.Timeout(300000)]
 #endif
