@@ -41,6 +41,7 @@ using Microsoft.Extensions.Logging;
 namespace iText.Commons.Utils
 {
     /// <summary>Utility class for JSON serialization and deserialization operations. Not for public use.</summary>
+    [Obsolete(@"Use iText.Commons.Json.JsonValue and related classes for JSON operations instead.")]
     public sealed class JsonUtil
     {
         private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(JsonUtil));

@@ -27,7 +27,7 @@ using System.Collections.Generic;
 namespace iText.Commons.Utils.Collections
 {
     //\cond DO_NOT_DOCUMENT 
-    internal class UnmodifiableDictionary<TKey, TValue> : IDictionary<TKey, TValue> {
+    public class UnmodifiableDictionary<TKey, TValue> : IDictionary<TKey, TValue> {
         private IDictionary<TKey, TValue> _dict;
 
         public UnmodifiableDictionary(IDictionary<TKey, TValue> backingDict) {
