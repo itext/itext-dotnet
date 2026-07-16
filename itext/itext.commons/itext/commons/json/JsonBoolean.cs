@@ -21,7 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.Commons.Json {
-    /// <summary>Class representing json boolean value.</summary>
+    /// <summary>Class representing JSON boolean value.</summary>
     public sealed class JsonBoolean : JsonValue {
         private readonly bool value;
 

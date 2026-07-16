@@ -21,9 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.Commons.Json {
-    /// <summary>Class representing json null value.</summary>
+    /// <summary>Class representing JSON null value.</summary>
     public sealed class JsonNull : JsonValue {
-        /// <summary>A single null instance of this class.</summary>
+        /// <summary>A single NULL instance of this class.</summary>
         public static readonly iText.Commons.Json.JsonNull JSON_NULL = new iText.Commons.Json.JsonNull();
 
         private JsonNull()
