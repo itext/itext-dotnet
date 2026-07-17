@@ -1079,8 +1079,7 @@ namespace iText.Kernel.Pdf {
             String txt = "The quick brown fox";
             PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page = doc.AddNewPage();
-            // TODO DEVSIX-9682 Replace uming.ttc in kernel
-            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "uming.ttc,1");
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoSerifCJK-VF.ttf.ttc,1");
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 680).SetFontAndSize(font, 12).ShowText(txt).EndText().RestoreState
                 ();
@@ -1098,8 +1097,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            // TODO DEVSIX-9682 Replace uming.ttc in kernel
-            String font = FONTS_FOLDER + "uming.ttc";
+            String font = FONTS_FOLDER + "NotoSerifCJK-VF.ttf.ttc";
             PdfFont pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(font, 0, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED, false);
             pdfTrueTypeFont.SetSubset(true);
@@ -1134,8 +1132,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            // TODO DEVSIX-9682 Replace uming.ttc in kernel
-            String font = FONTS_FOLDER + "uming.ttc";
+            String font = FONTS_FOLDER + "NotoSerifCJK-VF.ttf.ttc";
             PdfFont pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(font, 0, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
                 .FORCE_NOT_EMBEDDED, false);
             pdfTrueTypeFont.SetSubset(true);
@@ -1354,9 +1351,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestCheckTTCSize() {
-            // TODO DEVSIX-9682 Replace uming.ttc in kernel
-            TrueTypeCollection collection = new TrueTypeCollection(FONTS_FOLDER + "uming.ttc");
-            NUnit.Framework.Assert.IsTrue(collection.GetTTCSize() == 4);
+            TrueTypeCollection collection = new TrueTypeCollection(FONTS_FOLDER + "NotoSerifCJK-VF.ttf.ttc");
+            NUnit.Framework.Assert.IsTrue(collection.GetTTCSize() == 5);
         }
 
         [NUnit.Framework.Test]
