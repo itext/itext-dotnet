@@ -1030,7 +1030,7 @@ namespace iText.Kernel.Pdf {
             byte[] afm = StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(FONTS_FOLDER + "cmr10.afm"));
             PdfFont font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(afm, afm, false), null);
             byte[] streamContent = ((Type1Font)((PdfType1Font)font).GetFontProgram()).GetFontStreamBytes();
-            NUnit.Framework.Assert.IsTrue(streamContent == null, "Empty stream content expected");
+            NUnit.Framework.Assert.IsNull(streamContent, "Empty stream content expected");
         }
 
         [NUnit.Framework.Test]
@@ -1352,7 +1352,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void TestCheckTTCSize() {
             TrueTypeCollection collection = new TrueTypeCollection(FONTS_FOLDER + "NotoSerifCJK-VF.ttf.ttc");
-            NUnit.Framework.Assert.IsTrue(collection.GetTTCSize() == 5);
+            NUnit.Framework.Assert.AreEqual(5, collection.GetTTCSize());
         }
 
         [NUnit.Framework.Test]
@@ -1400,10 +1400,10 @@ namespace iText.Kernel.Pdf {
         public virtual void TestSplitString() {
             PdfFont font = PdfFontFactory.CreateFont();
             IList<String> list1 = font.SplitString("Hello", 12f, 10);
-            NUnit.Framework.Assert.IsTrue(list1.Count == 3);
+            NUnit.Framework.Assert.AreEqual(3, list1.Count);
             IList<String> list2 = font.SplitString("Digitally signed by Dmitry Trusevich\nDate: 2015.10.25 14:43:56 MSK\nReason: Test 1\nLocation: Ghent"
                 , 12f, 176);
-            NUnit.Framework.Assert.IsTrue(list2.Count == 5);
+            NUnit.Framework.Assert.AreEqual(5, list2.Count);
         }
 
         [NUnit.Framework.Test]
