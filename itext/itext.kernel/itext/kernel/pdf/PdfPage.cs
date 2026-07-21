@@ -1706,12 +1706,14 @@ namespace iText.Kernel.Pdf {
             if (annotation is PdfLinkAnnotation) {
                 // "Link" and "Reference" tags were added starting from PDF 1.4
                 if (PdfVersion.PDF_1_3.CompareTo(GetDocument().GetPdfVersion()) < 0) {
-                    if (StandardRoles.REFERENCE.Equals(tagPointer.GetRole()) || StandardRoles.LINK.Equals(tagPointer.GetRole()
-                        )) {
+                    if (StandardRoles.LINK.Equals(tagPointer.GetRole())) {
                         return false;
                     }
                     String linkRole = ((PdfLinkAnnotation)annotation).GetRoleBasedOnDestination(GetDocument());
                     if (StandardRoles.REFERENCE.Equals(linkRole) && IsReferenceAllowed(tagPointer.GetRole())) {
+                        if (StandardRoles.REFERENCE.Equals(tagPointer.GetRole())) {
+                            return false;
+                        }
                         PdfNamespace currentNamespace = tagPointer.GetNamespaceForNewTags();
                         if (PdfVersion.PDF_2_0.CompareTo(GetDocument().GetPdfVersion()) <= 0) {
                             tagPointer.SetNamespaceForNewTags(PdfNamespace.GetDefault(GetDocument()));

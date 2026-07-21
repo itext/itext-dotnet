@@ -996,16 +996,16 @@ namespace iText.Kernel.Pdf {
                             catalog.Put(PdfName.PageLabels, catalog.pageLabels.BuildTree());
                         }
                         catalog.GetPdfObject().Put(PdfName.Pages, catalog.GetPageTree().GenerateTree());
-                        foreach (KeyValuePair<PdfName, PdfNameTree> entry in catalog.nameTrees) {
-                            PdfNameTree tree = entry.Value;
-                            if (tree.IsModified()) {
-                                EnsureTreeRootAddedToNames(tree.BuildTree().MakeIndirect(this), entry.Key);
-                            }
-                        }
                         for (int pageNum = 1; pageNum <= GetNumberOfPages(); pageNum++) {
                             PdfPage page = GetPage(pageNum);
                             if (page != null) {
                                 page.Flush();
+                            }
+                        }
+                        foreach (KeyValuePair<PdfName, PdfNameTree> entry in catalog.nameTrees) {
+                            PdfNameTree tree = entry.Value;
+                            if (tree.IsModified()) {
+                                EnsureTreeRootAddedToNames(tree.BuildTree().MakeIndirect(this), entry.Key);
                             }
                         }
                         if (structTreeRoot != null) {

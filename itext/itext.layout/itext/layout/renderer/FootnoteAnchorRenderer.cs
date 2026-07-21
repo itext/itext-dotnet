@@ -21,8 +21,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
+using iText.Commons.Datastructures;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Action;
+using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Element;
@@ -129,6 +134,7 @@ namespace iText.Layout.Renderer {
             LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
             FootnoteTaggingHelper.RepairFootnoteAnchorTagIfNeeded(this, taggingHelper);
             bool isTagged = drawContext.IsTaggingEnabled();
+            bool tagCreated = false;
             if (isTagged) {
                 taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
                 if (taggingHelper == null) {
@@ -136,8 +142,14 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     TagTreePointer tagPointer = taggingHelper.UseAutoTaggingPointerAndRememberItsPosition(this);
-                    taggingHelper.CreateTag(this, tagPointer);
+                    tagCreated = taggingHelper.CreateTag(this, tagPointer);
                 }
+            }
+            if (tagCreated || !isTagged) {
+                // We only don't set up links if tagging is enabled, but tag was not created,
+                // meaning this content is in fact an artifact. This happens because links contain annotations,
+                // and annotations need to be tagged. But since this content is an artifact, we can't properly tag it.
+                SetUpLinks(drawContext);
             }
             footnoteAnchor.Draw(drawContext);
             if (isTagged) {
@@ -201,6 +213,42 @@ namespace iText.Layout.Renderer {
             }
             if (element is Text) {
                 footnoteAnchor.SetFootnoteAnchor((Text)element);
+            }
+        }
+
+        private static void SetUpLinks(IPropertyContainer from, IPropertyContainer to, String name, String altDescription
+            , PdfDocument document) {
+            int amountOfNamedDestinations = 0;
+            if (document.GetCatalog().GetNameTree(PdfName.Dests).GetNames() != null) {
+                amountOfNamedDestinations = document.GetCatalog().GetNameTree(PdfName.Dests).GetNames().Count;
+            }
+            PdfLinkAnnotation footnoteAnnotation = (PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0)).SetAction
+                (PdfAction.CreateGoTo(name + amountOfNamedDestinations)).SetFlags(PdfAnnotation.PRINT);
+            footnoteAnnotation.SetBorder(new PdfArray(new float[] { 0, 0, 0 }));
+            footnoteAnnotation.SetContents(altDescription);
+            from.SetProperty(Property.LINK_ANNOTATION, footnoteAnnotation);
+            ICollection<Object> footnoteDestinations = to.GetProperty<ICollection<Object>>(Property.DESTINATION);
+            if (footnoteDestinations == null) {
+                footnoteDestinations = new HashSet<Object>();
+            }
+            footnoteDestinations.Add(new Tuple2<String, PdfDictionary>(name + amountOfNamedDestinations, footnoteAnnotation
+                .GetAction()));
+            to.SetProperty(Property.DESTINATION, footnoteDestinations);
+        }
+
+        private void SetUpLinks(DrawContext drawContext) {
+            IPropertyContainer footnoteLabel = FootnotesUtil.GetInjectedFootnoteAnchor((Footnote)footnoteRenderer.GetModelElement
+                ());
+            if (footnoteLabel == null) {
+                // Footnote label is not supposed to be null. If it is, something is broken, and we don't add links.
+                return;
+            }
+            // We don't want to override existing link annotations, if any.
+            if (footnoteAnchor.GetProperty<PdfLinkAnnotation>(Property.LINK_ANNOTATION) == null && footnoteLabel.GetProperty
+                <PdfLinkAnnotation>(Property.LINK_ANNOTATION) == null) {
+                SetUpLinks(footnoteAnchor, footnoteLabel, "footnoteAnchor", "Go to footnote.", drawContext.GetDocument());
+                SetUpLinks(footnoteLabel, footnoteAnchor, "footnoteContent", "Go to footnote anchor.", drawContext.GetDocument
+                    ());
             }
         }
 

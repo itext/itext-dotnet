@@ -57,6 +57,13 @@ namespace iText.Layout.Renderer {
             if (!childRenderers.IsEmpty() && !childRenderers[0].GetChildRenderers().IsEmpty()) {
                 IRenderer footnoteParagraphContainer = childRenderers[0];
                 IRenderer footnoteAnchorContent = footnoteParagraphContainer.GetChildRenderers()[0];
+                if (taggingHelper != null && taggingHelper.IsArtifact(this)) {
+                    // We remove these properties in case tagging is enabled, but tag is marked as artifact.
+                    // We need to do that in order to not create link annotation and destinations,
+                    // because annotations need to be tagged. But since this content is artifact, we can't properly tag it.
+                    footnoteAnchorContent.SetProperty(Property.LINK_ANNOTATION, null);
+                    footnoteAnchorContent.SetProperty(Property.DESTINATION, null);
+                }
                 FootnoteTaggingHelper.WrapAnchorInsideFootnoteIntoLbl(footnoteAnchorContent, taggingHelper);
             }
             base.Draw(drawContext);

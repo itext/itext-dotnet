@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 using iText.Commons.Internal.Runtime;
 using iText.Layout;
+using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 using iText.Layout.Tagging;
@@ -63,8 +64,8 @@ namespace iText.Layout.Properties.Margins {
             foreach (FootnoteRenderer footnoteRederer in footnotesToAdd) {
                 Footnote footnote = (Footnote)footnoteRederer.GetModelElement();
                 footnotesContainer.Add(footnote, footnoteRederer.GetProperty<TaggingHintKey>(Property.TAGGING_HINT_KEY));
-                if (footnote.footnoteAnchor != null) {
-                    footnote.anchors.Put(pageNum, footnote.footnoteAnchor);
+                if (footnote.GetInjectedFootnoteAnchor() != null) {
+                    footnote.anchors.Put(pageNum, footnote.GetInjectedFootnoteAnchor());
                     footnote.ResetFootnoteAnchor();
                 }
             }
@@ -114,6 +115,17 @@ namespace iText.Layout.Properties.Margins {
         /// </param>
         public static void ApplyFootnoteAnchorStyle(FootnoteAnchor anchor, Style footnoteAnchorLabelStyle) {
             anchor.SetFootnoteAnchorLabelStyle(footnoteAnchorLabelStyle);
+        }
+
+        /// <summary>Gets injected footnote anchor element, which is a copy of a footnote anchor in the main content.</summary>
+        /// <param name="footnote">
+        /// 
+        /// <see cref="Footnote"/>
+        /// from which injected footnote anchor is retrieved
+        /// </param>
+        /// <returns>injected footnote anchor element</returns>
+        public static IElement GetInjectedFootnoteAnchor(Footnote footnote) {
+            return footnote.GetInjectedFootnoteAnchor();
         }
     }
 }
