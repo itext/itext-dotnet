@@ -99,6 +99,30 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Adds a new
+        /// <see cref="iText.Layout.Element.List"/>
+        /// (nested list) to the bottom of the List.
+        /// </summary>
+        /// <param name="list">a nested list</param>
+        /// <returns>this list.</returns>
+        public virtual iText.Layout.Element.List Add(iText.Layout.Element.List list) {
+            childElements.Add(list);
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a new
+        /// <see cref="IBlockElement"/>
+        /// to the bottom of the List.
+        /// </summary>
+        /// <param name="element">a block element (e.g. Paragraph)</param>
+        /// <returns>this list.</returns>
+        public virtual iText.Layout.Element.List Add(IBlockElement element) {
+            childElements.Add(element);
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a new
         /// <see cref="ListItem"/>
         /// to the bottom of the List.
         /// </summary>
@@ -231,6 +255,24 @@ namespace iText.Layout.Element {
         /// <returns>this list.</returns>
         public virtual iText.Layout.Element.List SetSymbolIndent(float symbolIndent) {
             SetProperty(Property.LIST_SYMBOL_INDENT, symbolIndent);
+            return this;
+        }
+
+         /// <summary>
+        /// Gets the indent (left margin) applied to nested lists that are direct children of this list.
+        /// </summary>
+        /// <returns>the nested list indent as a <c>float</c>, or <c>null</c> if not set.</returns>
+        public virtual float? GetListIndent() {
+            return this.GetProperty<float?>(Property.LIST_INDENT);
+        }
+
+        /// <summary>
+        /// Sets the indent (left margin) applied to nested lists that are direct children of this list.
+        /// </summary>
+        /// <param name="listIndent">the indent offset for nested lists.</param>
+        /// <returns>this list.</returns>
+        public virtual iText.Layout.Element.List SetListIndent(float listIndent) {
+            SetProperty(Property.LIST_INDENT, listIndent);
             return this;
         }
 
