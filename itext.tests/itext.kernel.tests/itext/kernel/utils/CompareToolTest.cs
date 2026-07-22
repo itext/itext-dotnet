@@ -93,7 +93,9 @@ namespace iText.Kernel.Utils {
             CompareTool compareTool = new CompareTool();
             compareTool.SetCompareByContentErrorsLimit(10);
             compareTool.SetGenerateCompareByContentXmlReport(true);
-            String outPdf = sourceFolder + "tagged_pdf.pdf";
+            String outRefPdf = sourceFolder + "tagged_pdf.pdf";
+            String outPdf = destinationFolder + "tagged_pdf.pdf";
+            FileUtil.Copy(outRefPdf, outPdf);
             String cmpPdf = sourceFolder + "cmp_tagged_xml_neg.xml";
             String result = compareTool.CompareTagStructureAgainstXml(outPdf, cmpPdf);
             System.Console.Out.WriteLine("\nRESULT:\n" + result);
@@ -106,7 +108,9 @@ namespace iText.Kernel.Utils {
             CompareTool compareTool = new CompareTool();
             compareTool.SetCompareByContentErrorsLimit(10);
             compareTool.SetGenerateCompareByContentXmlReport(true);
-            String outPdf = sourceFolder + "tagged_pdf.pdf";
+            String outRefPdf = sourceFolder + "tagged_pdf.pdf";
+            String outPdf = destinationFolder + "tagged_pdf.pdf";
+            FileUtil.Copy(outRefPdf, outPdf);
             String cmpXml = sourceFolder + "cmp_tagged_xml_pos.xml";
             String result = compareTool.CompareTagStructureAgainstXml(outPdf, cmpXml);
             System.Console.Out.WriteLine("\nRESULT:\n" + result);
@@ -286,7 +290,7 @@ namespace iText.Kernel.Utils {
         [NUnit.Framework.Test]
         public virtual void ConvertDocInfoToStringsTest() {
             String inPdf = sourceFolder + "test.pdf";
-            CompareTool compareTool = new _CompareTool_326();
+            CompareTool compareTool = new _CompareTool_331();
             using (PdfReader reader = new PdfReader(inPdf, compareTool.GetOutReaderProperties())) {
                 using (PdfDocument doc = new PdfDocument(reader)) {
                     String[] docInfo = compareTool.ConvertDocInfoToStrings(doc.GetDocumentInfo());
@@ -299,8 +303,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _CompareTool_326 : CompareTool {
-            public _CompareTool_326() {
+        private sealed class _CompareTool_331 : CompareTool {
+            public _CompareTool_331() {
             }
 
             protected internal override String[] ConvertDocInfoToStrings(PdfDocumentInfo info) {

@@ -66,9 +66,84 @@ namespace iText.IO.Font {
         }
 
         protected internal Type1Font(String metricsPath, String binaryPath, byte[] afm, byte[] pfb)
+            : this(metricsPath, binaryPath, afm, pfb, null) {
+        }
+
+        /// <summary>
+        /// Creates a
+        /// <see cref="Type1Font"/>
+        /// by parsing the AFM/PFM metrics and, optionally, the PFB binary
+        /// data, then applying an explicit encoding to the resulting glyph maps.
+        /// </summary>
+        /// <remarks>
+        /// Creates a
+        /// <see cref="Type1Font"/>
+        /// by parsing the AFM/PFM metrics and, optionally, the PFB binary
+        /// data, then applying an explicit encoding to the resulting glyph maps.
+        /// <para />
+        /// The font source may be supplied either as file-system paths or as raw byte arrays; one pair
+        /// (
+        /// <paramref name="metricsPath"/>
+        /// /
+        /// <paramref name="binaryPath"/>
+        /// or
+        /// <paramref name="afm"/>
+        /// /
+        /// <paramref name="pfb"/>
+        /// ) must be non-
+        /// <see langword="null"/>.
+        /// After parsing, if
+        /// <paramref name="fontEncoding"/>
+        /// is non-
+        /// <see langword="null"/>
+        /// ,
+        /// <see cref="InitializeGlyphs(FontEncoding)"/>
+        /// is called to remap character codes according to that encoding.
+        /// </remarks>
+        /// <param name="metricsPath">
+        /// path to the AFM or PFM metrics file, or a built-in standard font name,
+        /// or
+        /// <see langword="null"/>
+        /// if
+        /// <paramref name="afm"/>
+        /// bytes are provided instead
+        /// </param>
+        /// <param name="binaryPath">
+        /// path to the PFB binary file, or
+        /// <see langword="null"/>
+        /// if
+        /// <paramref name="pfb"/>
+        /// bytes are
+        /// provided or if the font is a built-in standard font
+        /// </param>
+        /// <param name="afm">
+        /// byte contents of the AFM or PFM metrics file, or
+        /// <see langword="null"/>
+        /// if
+        /// <paramref name="metricsPath"/>
+        /// is provided instead
+        /// </param>
+        /// <param name="pfb">
+        /// byte contents of the PFB binary file, or
+        /// <see langword="null"/>
+        /// if
+        /// <paramref name="binaryPath"/>
+        /// is provided or if the font is a built-in standard font
+        /// </param>
+        /// <param name="fontEncoding">
+        /// the encoding used to remap character codes to Unicode values after the font
+        /// has been parsed; may be
+        /// <see langword="null"/>
+        /// to skip glyph remapping
+        /// </param>
+        protected internal Type1Font(String metricsPath, String binaryPath, byte[] afm, byte[] pfb, FontEncoding fontEncoding
+            )
             : this() {
             fontParser = new Type1Parser(metricsPath, binaryPath, afm, pfb);
             Process();
+            if (fontEncoding != null) {
+                InitializeGlyphs(fontEncoding);
+            }
         }
 
         protected internal Type1Font(String baseFont)
@@ -82,6 +157,7 @@ namespace iText.IO.Font {
         /// map.
         /// </summary>
         /// <param name="fontEncoding">to be used to map unicode values to character codes.</param>
+        [System.ObsoleteAttribute(@"to make private")]
         public virtual void InitializeGlyphs(FontEncoding fontEncoding) {
             for (int i = 0; i < 256; i++) {
                 int unicode = fontEncoding.GetUnicode(i);

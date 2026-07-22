@@ -176,7 +176,7 @@ namespace iText.IO.Font {
 
         private static FontProgram CreateFont(String name, String cmap, byte[] fontProgram, bool cached) {
             String baseName = FontProgram.TrimFontStyle(name);
-            //yes, we trying to find built-in standard font with original name, not baseName.
+            // Yes, we are trying to find built-in standard font with original name, not baseName
             bool isBuiltinFonts14 = StandardFonts.IsStandardFont(name);
             bool isCidFont = !isBuiltinFonts14 && CjkResourceLoader.IsPredefinedCidFont(baseName);
             FontProgram fontFound;
@@ -315,7 +315,7 @@ namespace iText.IO.Font {
         /// instance
         /// </returns>
         public static FontProgram CreateType1Font(byte[] afm, byte[] pfb, bool cached) {
-            return CreateType1Font(null, null, afm, pfb, cached);
+            return CreateType1Font(null, null, afm, pfb, cached, null);
         }
 
         /// <summary>Creates a new Type 1 font by the corresponding AFM/PFM and PFB files</summary>
@@ -344,7 +344,29 @@ namespace iText.IO.Font {
         /// instance
         /// </returns>
         public static FontProgram CreateType1Font(String metricsPath, String binaryPath, bool cached) {
-            return CreateType1Font(metricsPath, binaryPath, null, null, cached);
+            return CreateType1Font(metricsPath, binaryPath, null, null, cached, null);
+        }
+
+        /// <summary>Creates a new Type 1 font by the corresponding AFM/PFM and PFB files</summary>
+        /// <param name="metricsPath">path to the AFM or PFM metrics file</param>
+        /// <param name="fontEncoding">
+        /// the encoding used to remap character codes to Unicode values after the font
+        /// has been parsed; may be
+        /// <see langword="null"/>
+        /// to skip glyph remapping
+        /// </param>
+        /// <param name="cached">
+        /// specifies whether to cache the created
+        /// <see cref="FontProgram"/>
+        /// or not
+        /// </param>
+        /// <returns>
+        /// created
+        /// <see cref="FontProgram"/>
+        /// instance
+        /// </returns>
+        public static FontProgram CreateType1Font(String metricsPath, FontEncoding fontEncoding, bool cached) {
+            return CreateType1Font(metricsPath, null, null, null, cached, fontEncoding);
         }
 
         /// <summary>Creates a new TrueType font program from ttc (TrueType Collection) file.</summary>
@@ -535,17 +557,19 @@ namespace iText.IO.Font {
         }
 
         private static FontProgram CreateType1Font(String metricsPath, String binaryPath, byte[] afm, byte[] pfb, 
-            bool cached) {
+            bool cached, FontEncoding fontEncoding) {
             FontProgram fontProgram;
             FontCacheKey fontKey = null;
             if (cached) {
-                fontKey = CreateFontCacheKey(metricsPath, afm);
+                String encKeyNamePart = fontEncoding == null ? "" : fontEncoding.GetBaseEncoding();
+                fontKey = CreateFontCacheKey(metricsPath == null ? null : (metricsPath + encKeyNamePart), afm == null ? pfb
+                     : afm);
                 fontProgram = FontCache.GetFont(fontKey);
                 if (fontProgram != null) {
                     return fontProgram;
                 }
             }
-            fontProgram = new Type1Font(metricsPath, binaryPath, afm, pfb);
+            fontProgram = new Type1Font(metricsPath, binaryPath, afm, pfb, fontEncoding);
             return cached ? FontCache.SaveFont(fontProgram, fontKey) : fontProgram;
         }
 

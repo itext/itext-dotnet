@@ -33,9 +33,7 @@ namespace iText.IO.Font {
         [NUnit.Framework.Test]
         public virtual void FillUsingEncodingTest() {
             FontEncoding fontEncoding = FontEncoding.CreateFontEncoding("WinAnsiEncoding");
-            Type1Font type1StdFont = (Type1Font)FontProgramFactory.CreateFont("Helvetica", true);
-            NUnit.Framework.Assert.AreEqual(149, type1StdFont.codeToGlyph.Count);
-            type1StdFont.InitializeGlyphs(fontEncoding);
+            Type1Font type1StdFont = (Type1Font)FontProgramFactory.CreateType1Font("Helvetica", fontEncoding, true);
             NUnit.Framework.Assert.AreEqual(217, type1StdFont.codeToGlyph.Count);
             NUnit.Framework.Assert.AreEqual(0x2013, type1StdFont.codeToGlyph.Get(150).GetUnicode());
             NUnit.Framework.Assert.AreEqual(new char[] { (char)0x2013 }, type1StdFont.codeToGlyph.Get(150).GetChars());
@@ -46,6 +44,24 @@ namespace iText.IO.Font {
             FontProgram fp = FontProgramFactory.CreateType1Font(FONTS_FOLDER + "cmr10.afm", FONTS_FOLDER + "cmr10.pfb"
                 );
             NUnit.Framework.Assert.AreEqual(26864, ((Type1Font)fp).GetFontStreamBytes().Length);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DifferentEncodingsTest() {
+            FontEncoding fontEncoding = FontEncoding.CreateFontEncoding("Cp1252");
+            FontEncoding fontEncoding2 = FontEncoding.CreateFontEncoding("MacRoman");
+            Type1Font font1 = (Type1Font)FontProgramFactory.CreateType1Font("Helvetica", fontEncoding, true);
+            Type1Font font2 = (Type1Font)FontProgramFactory.CreateType1Font("Helvetica", fontEncoding2, true);
+            NUnit.Framework.Assert.AreNotSame(font1, font2);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SameEncodingsTest() {
+            FontEncoding fontEncoding = FontEncoding.CreateFontEncoding("Cp1252");
+            FontEncoding fontEncoding2 = FontEncoding.CreateFontEncoding("Cp1252");
+            Type1Font font1 = (Type1Font)FontProgramFactory.CreateType1Font("Helvetica", fontEncoding, true);
+            Type1Font font2 = (Type1Font)FontProgramFactory.CreateType1Font("Helvetica", fontEncoding2, true);
+            NUnit.Framework.Assert.AreSame(font1, font2);
         }
     }
 }

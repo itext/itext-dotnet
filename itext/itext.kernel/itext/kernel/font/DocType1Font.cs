@@ -49,12 +49,12 @@ namespace iText.Kernel.Font {
              toUnicode) {
             String baseFont = GetBaseFont(fontDictionary);
             if (!fontDictionary.ContainsKey(PdfName.FontDescriptor)) {
-                Type1Font type1StdFont = GetType1Font(baseFont);
+                Type1Font type1StdFont = GetType1Font(baseFont, fontEncoding);
                 if (type1StdFont != null) {
-                    type1StdFont.InitializeGlyphs(fontEncoding);
                     return type1StdFont;
                 }
             }
+            // Here we don't cache font program on kernel level
             iText.Kernel.Font.DocType1Font fontProgram = new iText.Kernel.Font.DocType1Font(baseFont);
             PdfDictionary fontDesc = fontDictionary.GetAsDictionary(PdfName.FontDescriptor);
             fontProgram.subtype = fontDesc != null ? fontDesc.GetAsName(PdfName.Subtype) : null;
@@ -109,11 +109,9 @@ namespace iText.Kernel.Font {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal static Type1Font GetType1Font(String baseFont) {
+        internal static Type1Font GetType1Font(String baseFont, FontEncoding fontEncoding) {
             try {
-                //if there are no font modifiers, cached font could be used,
-                //otherwise a new instance should be created.
-                return (Type1Font)FontProgramFactory.CreateFont(baseFont, false);
+                return (Type1Font)FontProgramFactory.CreateType1Font(baseFont, fontEncoding, true);
             }
             catch (Exception) {
                 return null;
