@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Utils;
+using iText.IO.Font.Constants;
 using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
@@ -35,6 +36,8 @@ using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Exceptions;
+using iText.Layout.Font;
 using iText.Layout.Layout;
 using iText.Layout.Logs;
 using iText.Layout.Properties;
@@ -51,6 +54,9 @@ namespace iText.Layout {
             .CurrentContext.TestDirectory) + "/resources/itext/layout/PageMarginsTest/";
 
         private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/PageMarginsTest/";
+
+        private static readonly String FONTS = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/";
 
         private static readonly String DOG = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/PageMarginsTest/DOG.bmp";
@@ -98,6 +104,85 @@ namespace iText.Layout {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff_" + fileName));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT, LogLevel = LogLevelConstants
+            .ERROR)]
+        public virtual void FootnoteWithFontFamilyTest() {
+            String fileName = "footnoteWithFontFamily";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    FontProvider provider = new FontProvider();
+                    provider.GetFontSet().AddFont(StandardFonts.HELVETICA, null, "helvetica");
+                    provider.GetFontSet().AddFont(StandardFonts.COURIER, null, "courier");
+                    Footnote footnote = new Footnote("Footnote text");
+                    footnote.SetBackgroundColor(ColorConstants.CYAN);
+                    FootnoteAnchor anchor = new FootnoteAnchor("[1]", footnote);
+                    anchor.SetProperty(Property.FONT, new String[] { "helvetica" });
+                    anchor.SetProperty(Property.FONT_PROVIDER, provider);
+                    Footnote footnote2 = new Footnote(new Paragraph("Footnote text 2").SetMargin(0));
+                    footnote2.SetBackgroundColor(ColorConstants.ORANGE);
+                    FootnoteAnchor anchor2 = new FootnoteAnchor("[2]", footnote2);
+                    Footnote footnote3 = new Footnote("Footnote text 3\nSecond line\nThird line\nFourth line");
+                    footnote3.SetBackgroundColor(ColorConstants.RED);
+                    FootnoteAnchor anchor3 = new FootnoteAnchor("[3]", footnote3);
+                    Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
+                    p.Add(anchor);
+                    p.Add("\n\n");
+                    p.Add(TestResourceUtil.GetByronStanza());
+                    p.Add(anchor2);
+                    p.Add("\n\n");
+                    p.Add(TestResourceUtil.GetByronStanza());
+                    p.Add(anchor3);
+                    for (int i = 0; i < 5; i++) {
+                        p.Add("\n\n");
+                        p.Add(TestResourceUtil.GetByronStanza());
+                    }
+                    SectionBreak sectionBreak = new SectionBreak().SetPageMargins(new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1
+                        ()));
+                    Div div1 = new Div();
+                    div1.Add(p).SetBorder(new SolidBorder(ColorConstants.MAGENTA, 5));
+                    document.Add(sectionBreak);
+                    document.Add(div1);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FootnoteAnchorWithMultipleResolvedFontTest() {
+            String fileName = "footnoteAnchorFonts";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => {
+                using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                    using (Document document = new Document(pdfDocument)) {
+                        FontProvider provider = new FontProvider();
+                        // This font only contains latin script
+                        provider.GetFontSet().AddFont(FONTS + "NotoSansCJKjp-Regular.otf", null, "NotoSansCJK");
+                        // This font does contains Cyrillic script
+                        provider.GetFontSet().AddFont(FONTS + "NotoSans-Regular.ttf", null, "NotoSans");
+                        Footnote footnote = new Footnote("Footnote text");
+                        footnote.SetBackgroundColor(ColorConstants.CYAN);
+                        FootnoteAnchor anchor = new FootnoteAnchor("Д H", footnote);
+                        anchor.SetProperty(Property.FONT, new String[] { "NotoSansCJK", "NotoSans" });
+                        anchor.SetProperty(Property.FONT_PROVIDER, provider);
+                        Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza());
+                        p.Add(anchor);
+                        p.Add("\n\n");
+                        p.Add(TestResourceUtil.GetByronStanza());
+                        Div div1 = new Div();
+                        div1.Add(p).SetBorder(new SolidBorder(ColorConstants.MAGENTA, 5));
+                        document.Add(div1);
+                    }
+                }
+            }
+            );
+            NUnit.Framework.Assert.AreEqual(LayoutExceptionMessageConstant.FOOTNOTE_ANCHOR_LAYOUT_CONSISTENCY, exception
+                .Message);
         }
 
         [NUnit.Framework.Test]

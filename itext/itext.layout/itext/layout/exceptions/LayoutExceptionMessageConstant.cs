@@ -76,6 +76,8 @@ namespace iText.Layout.Exceptions {
 
         public const String INCORRECT_LIST_CHILD = "All children of a ListRenderer are suppose to be ListItemRenderer instances. Instead it was {0}.";
 
+        public const String FOOTNOTE_ANCHOR_LAYOUT_CONSISTENCY = "The content of a footnote anchor should have one uniform layout. Multiple fonts are not allowed.";
+
         private LayoutExceptionMessageConstant() {
         }
     }

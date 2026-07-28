@@ -1626,15 +1626,20 @@ namespace iText.Layout.Renderer {
             IList<IRenderer> newChildRenderers = new List<IRenderer>(GetChildRenderers().Count);
             bool updateChildRenderers = false;
             foreach (IRenderer child in GetChildRenderers()) {
-                IRenderer rendererToCheck = UnwrapChildRendererIfNeeded(child);
-                if (rendererToCheck is TextRenderer) {
-                    TextRenderer textRenderer = (TextRenderer)rendererToCheck;
+                if (child is TextRenderer) {
+                    TextRenderer textRenderer = (TextRenderer)child;
                     if (textRenderer.ResolveFonts(newChildRenderers)) {
                         updateChildRenderers = true;
                     }
                 }
                 else {
-                    newChildRenderers.Add(child);
+                    if (child is FootnoteAnchorRenderer) {
+                        FootnoteAnchorRenderer textRenderer = (FootnoteAnchorRenderer)child;
+                        textRenderer.ResolveFonts(newChildRenderers);
+                    }
+                    else {
+                        newChildRenderers.Add(child);
+                    }
                 }
             }
             // This means that some TextRenderer has been replaced.

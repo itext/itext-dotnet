@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using iText.Commons.Datastructures;
 using iText.Commons.Utils;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
@@ -31,6 +32,7 @@ using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Element;
+using iText.Layout.Exceptions;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
@@ -179,6 +181,27 @@ namespace iText.Layout.Renderer {
         public override IRenderer GetNextRenderer() {
             return new iText.Layout.Renderer.FootnoteAnchorRenderer((FootnoteAnchor)modelElement);
         }
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Resolve
+        /// <see cref="iText.Layout.Properties.Property.FONT"/>
+        /// String[] value.
+        /// </summary>
+        /// <param name="newChildRenderers">all processed renderers are added to this list.</param>
+        internal virtual void ResolveFonts(ICollection<IRenderer> newChildRenderers) {
+            if (footnoteAnchor != null) {
+                IList<IRenderer> addedRenderers = new List<IRenderer>();
+                if (footnoteAnchor is TextRenderer) {
+                    ((TextRenderer)footnoteAnchor).ResolveFonts(addedRenderers);
+                    if (addedRenderers.Count > 1) {
+                        throw new PdfException(LayoutExceptionMessageConstant.FOOTNOTE_ANCHOR_LAYOUT_CONSISTENCY);
+                    }
+                    newChildRenderers.Add(this);
+                }
+            }
+        }
+//\endcond
 
         /// <summary><inheritDoc/></summary>
         protected internal override float? GetFirstYLineRecursively() {
