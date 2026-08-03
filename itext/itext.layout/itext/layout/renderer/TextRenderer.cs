@@ -23,12 +23,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Actions.Sequence;
 using iText.Commons.Datastructures;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
@@ -68,6 +67,8 @@ namespace iText.Layout.Renderer {
     /// <see cref="DrawContext"/>.
     /// </remarks>
     public class TextRenderer : AbstractRenderer, ILeafElementRenderer {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Renderer.TextRenderer));
+
         protected internal const float TEXT_SPACE_COEFF = FontProgram.UNITS_NORMALIZATION;
 
 //\cond DO_NOT_DOCUMENT
@@ -200,8 +201,7 @@ namespace iText.Layout.Renderer {
             int currentTextPos = text.GetStart();
             UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
             if (!fontSize.IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.FONT_SIZE));
             }
             float textRise = (float)this.GetPropertyAsFloat(Property.TEXT_RISE);
@@ -767,8 +767,7 @@ namespace iText.Layout.Renderer {
 
         public override void Draw(DrawContext drawContext) {
             if (occupiedArea == null) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
                     , "Drawing won't be performed."));
                 return;
             }
@@ -801,8 +800,7 @@ namespace iText.Layout.Renderer {
             if (line.GetEnd() > line.GetStart() || savedWordBreakAtLineEnding != null) {
                 UnitValue fontSize = this.GetPropertyAsUnitValue(Property.FONT_SIZE);
                 if (!fontSize.IsPointValue()) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                         , Property.FONT_SIZE));
                 }
                 TransparentColor fontColor = GetPropertyAsTransparentColor(Property.FONT_COLOR);
@@ -932,8 +930,7 @@ namespace iText.Layout.Renderer {
             }
             UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
             if (!fontSize.IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.FONT_SIZE));
             }
             float? characterSpacing = this.GetPropertyAsFloat(Property.CHARACTER_SPACING);
@@ -1478,8 +1475,7 @@ namespace iText.Layout.Renderer {
         protected internal virtual float CalculateLineWidth() {
             UnitValue fontSize = this.GetPropertyAsUnitValue(Property.FONT_SIZE);
             if (!fontSize.IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.FONT_SIZE));
             }
             return GetGlyphLineWidth(line, fontSize.GetValue(), (float)this.GetPropertyAsFloat(Property.HORIZONTAL_SCALING
@@ -1600,8 +1596,7 @@ namespace iText.Layout.Renderer {
         /// </returns>
         protected internal virtual iText.Layout.Renderer.TextRenderer CreateCopy(GlyphLine gl, PdfFont font) {
             if (typeof(iText.Layout.Renderer.TextRenderer) != this.GetType()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.CREATE_COPY_SHOULD_BE_OVERRIDDEN
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.CREATE_COPY_SHOULD_BE_OVERRIDDEN
                     ));
             }
             iText.Layout.Renderer.TextRenderer copy = new iText.Layout.Renderer.TextRenderer(this);
@@ -1908,8 +1903,7 @@ namespace iText.Layout.Renderer {
                 catch (InvalidCastException) {
                     newFont = ResolveFirstPdfFont();
                     if (!String.IsNullOrEmpty(strToBeConverted)) {
-                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TextRenderer));
-                        logger.LogError(iText.IO.Logs.IoLogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT);
+                        LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.FONT_PROPERTY_MUST_BE_PDF_FONT_OBJECT);
                     }
                 }
                 GlyphLine newText = newFont.CreateGlyphLine(strToBeConverted);

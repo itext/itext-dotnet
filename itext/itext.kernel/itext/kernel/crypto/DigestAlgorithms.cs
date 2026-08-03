@@ -23,12 +23,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Extensions.Logging;
 using iText.Bouncycastleconnector;
-using iText.Commons;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Digest;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
@@ -96,7 +95,7 @@ namespace iText.Kernel.Crypto {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
 
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(DigestAlgorithms));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(DigestAlgorithms));
 
         static DigestAlgorithms() {
             digestNames.Put("1.2.840.113549.2.5", "MD5");
@@ -230,7 +229,7 @@ namespace iText.Kernel.Crypto {
             if (ret == null) {
                 try {
                     String digest = GetMessageDigest(oid).GetAlgorithmName();
-                    LOGGER.LogWarning(KernelLogMessageConstant.ALGORITHM_NOT_FROM_SPEC);
+                    LOGGER.Warn(() => KernelLogMessageConstant.ALGORITHM_NOT_FROM_SPEC);
                     return digest;
                 }
                 catch (Exception) {
@@ -258,7 +257,7 @@ namespace iText.Kernel.Crypto {
             }
             allowedDigest = BOUNCY_CASTLE_FACTORY.GetDigestAlgorithmOid(StringNormalizer.ToUpperCase(name));
             if (allowedDigest != null) {
-                LOGGER.LogWarning(KernelLogMessageConstant.ALGORITHM_NOT_FROM_SPEC);
+                LOGGER.Warn(() => KernelLogMessageConstant.ALGORITHM_NOT_FROM_SPEC);
             }
             return allowedDigest;
         }

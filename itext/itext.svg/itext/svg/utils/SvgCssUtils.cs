@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.StyledXmlParser.Css.Util;
@@ -36,7 +35,7 @@ using iText.Svg.Renderers.Impl;
 namespace iText.Svg.Utils {
     /// <summary>Utility class that facilitates parsing values from CSS.</summary>
     public sealed class SvgCssUtils {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Svg.Utils.SvgCssUtils));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Svg.Utils.SvgCssUtils));
 
         private SvgCssUtils() {
         }
@@ -162,19 +161,17 @@ namespace iText.Svg.Utils {
             if (values != null) {
                 // the value for viewBox should be 4 numbers according to the viewBox documentation
                 if (values.Length != SvgConstants.Values.VIEWBOX_VALUES_NUMBER) {
-                    if (LOGGER.IsEnabled(LogLevel.Warning)) {
-                        LOGGER.LogWarning(MessageFormatUtil.Format(SvgLogMessageConstant.VIEWBOX_VALUE_MUST_BE_FOUR_NUMBERS, vbString
-                            ));
-                    }
+                    String vbStringToLog = vbString;
+                    LOGGER.Warn(() => MessageFormatUtil.Format(SvgLogMessageConstant.VIEWBOX_VALUE_MUST_BE_FOUR_NUMBERS, vbStringToLog
+                        ));
                     return null;
                 }
                 // in case when viewBox width or height is negative value is an error and
                 // invalidates the ‘viewBox’ attribute (according to the viewBox documentation)
                 if (values[2] < 0 || values[3] < 0) {
-                    if (LOGGER.IsEnabled(LogLevel.Warning)) {
-                        LOGGER.LogWarning(MessageFormatUtil.Format(SvgLogMessageConstant.VIEWBOX_WIDTH_AND_HEIGHT_CANNOT_BE_NEGATIVE
-                            , vbString));
-                    }
+                    String vbStringToLog = vbString;
+                    LOGGER.Warn(() => MessageFormatUtil.Format(SvgLogMessageConstant.VIEWBOX_WIDTH_AND_HEIGHT_CANNOT_BE_NEGATIVE
+                        , vbStringToLog));
                     return null;
                 }
             }

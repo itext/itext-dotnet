@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Image;
 using iText.Kernel.Pdf.Xobject;
@@ -38,7 +37,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <summary>Identifier string used to detect that the source is under data URI scheme.</summary>
         public const String DATA_SCHEMA_PREFIX = "data:";
 
-        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Resolver.Resource.ResourceResolver
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.StyledXmlParser.Resolver.Resource.ResourceResolver
             ));
 
         /// <summary>
@@ -164,7 +163,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                 }
             }
             if (IsDataSrc(src)) {
-                logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_DATA_URI
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_DATA_URI
                     , src));
             }
             else {
@@ -176,11 +175,11 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                 }
                 //ignore exception
                 if (bytes == null) {
-                    logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI
+                    LOGGER.Error(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI
                         , uriResolver.GetBaseUri(), src));
                 }
                 else {
-                    logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_PROCESS_IMAGE_WITH_GIVEN_BASE_URI
+                    LOGGER.Error(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_PROCESS_IMAGE_WITH_GIVEN_BASE_URI
                         , uriResolver.GetBaseUri(), src));
                 }
             }
@@ -204,8 +203,8 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                 return retriever.GetByteArrayByUrl(url);
             }
             catch (Exception e) {
-                logger.LogError(e, MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
-                    , uriResolver.GetBaseUri(), src));
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
+                    , uriResolver.GetBaseUri(), src), e);
                 return null;
             }
         }
@@ -223,8 +222,8 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                 return retriever.GetInputStreamByUrl(url);
             }
             catch (Exception e) {
-                logger.LogError(e, MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
-                    , uriResolver.GetBaseUri(), src));
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_STREAM_WITH_GIVEN_BASE_URI
+                    , uriResolver.GetBaseUri(), src), e);
                 return null;
             }
         }

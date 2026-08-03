@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font.Cmap;
 using iText.IO.Source;
@@ -31,6 +30,8 @@ using iText.IO.Source;
 namespace iText.IO.Font {
     /// <summary>Class representing CMap encoding in pdf document.</summary>
     public class CMapEncoding {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.IO.Font.CMapEncoding));
+
         private static readonly IList<byte[]> IDENTITY_H_V_CODESPACE_RANGES = JavaUtil.ArraysAsList(new byte[] { 0
             , 0 }, new byte[] { (byte)0xff, (byte)0xff });
 
@@ -88,8 +89,7 @@ namespace iText.IO.Font {
                 this.codeSpaceRanges = cid2Code.GetCodeSpaceRanges();
             }
             catch (System.IO.IOException) {
-                ITextLogManager.GetLogger(GetType()).LogError(iText.IO.Logs.IoLogMessageConstant.FAILED_TO_PARSE_ENCODING_STREAM
-                    );
+                LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.FAILED_TO_PARSE_ENCODING_STREAM);
             }
         }
 

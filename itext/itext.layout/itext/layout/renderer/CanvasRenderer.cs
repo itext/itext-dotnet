@@ -20,8 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Layout;
@@ -34,6 +33,8 @@ namespace iText.Layout.Renderer {
     /// layout element.
     /// </summary>
     public class CanvasRenderer : RootRenderer {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Renderer.CanvasRenderer));
+
         protected internal Canvas canvas;
 
         /// <summary>Creates a CanvasRenderer from its corresponding layout object.</summary>
@@ -73,8 +74,7 @@ namespace iText.Layout.Renderer {
 
         public override void AddChild(IRenderer renderer) {
             if (true.Equals(GetPropertyAsBoolean(Property.FULL))) {
-                ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.CanvasRenderer)).LogWarning(iText.IO.Logs.IoLogMessageConstant
-                    .CANVAS_ALREADY_FULL_ELEMENT_WILL_BE_SKIPPED);
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.CANVAS_ALREADY_FULL_ELEMENT_WILL_BE_SKIPPED);
             }
             else {
                 base.AddChild(renderer);

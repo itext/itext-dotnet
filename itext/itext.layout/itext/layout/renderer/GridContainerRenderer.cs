@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Kernel.Geom;
 using iText.Layout.Element;
 using iText.Layout.Layout;
@@ -35,7 +34,7 @@ using iText.Layout.Properties.Grid;
 namespace iText.Layout.Renderer {
     /// <summary>Represents a renderer for a grid.</summary>
     public class GridContainerRenderer : BlockRenderer {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.GridContainerRenderer
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Renderer.GridContainerRenderer
             ));
 
         private float containerHeight = 0.0f;
@@ -102,7 +101,7 @@ namespace iText.Layout.Renderer {
         /// <summary><inheritDoc/></summary>
         public override void AddChild(IRenderer renderer) {
             if (renderer is AreaBreakRenderer || renderer is SectionBreakRenderer) {
-                LOGGER.LogWarning(LayoutLogMessageConstant.GRID_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK);
+                LOGGER.Warn(() => LayoutLogMessageConstant.GRID_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK);
                 return;
             }
             // The grid's items are not affected by the 'float' and 'clear' properties.

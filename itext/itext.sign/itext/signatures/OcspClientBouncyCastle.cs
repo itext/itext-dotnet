@@ -23,15 +23,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Extensions.Logging;
 using iText.Bouncycastleconnector;
-using iText.Commons;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.IO.Resolver.Resource;
 using iText.IO.Util;
 using iText.Kernel.Exceptions;
@@ -44,8 +43,8 @@ namespace iText.Signatures {
             ();
 
         /// <summary>The Logger instance.</summary>
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.OcspClientBouncyCastle
-            ));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Signatures.OcspClientBouncyCastle)
+            );
 
         private IAdvancedResourceRetriever resourceRetriever = new DefaultResourceRetriever();
 
@@ -72,7 +71,7 @@ namespace iText.Signatures {
                 return BOUNCY_CASTLE_FACTORY.CreateBasicOCSPResponse(ocspResponse.GetResponseObject());
             }
             catch (Exception ex) {
-                LOGGER.LogError(ex.Message);
+                LOGGER.Error(() => ex.Message);
             }
             return null;
         }
@@ -88,10 +87,10 @@ namespace iText.Signatures {
                         ICertStatus status = resp.GetCertStatus();
                         if (!BOUNCY_CASTLE_FACTORY.CreateCertificateStatus().GetGood().Equals(status)) {
                             if (BOUNCY_CASTLE_FACTORY.CreateRevokedStatus(status) == null) {
-                                LOGGER.LogInformation(iText.IO.Logs.IoLogMessageConstant.OCSP_STATUS_IS_UNKNOWN);
+                                LOGGER.Info(() => iText.IO.Logs.IoLogMessageConstant.OCSP_STATUS_IS_UNKNOWN);
                             }
                             else {
-                                LOGGER.LogInformation(iText.IO.Logs.IoLogMessageConstant.OCSP_STATUS_IS_REVOKED);
+                                LOGGER.Info(() => iText.IO.Logs.IoLogMessageConstant.OCSP_STATUS_IS_REVOKED);
                             }
                         }
                         return basicResponse.GetEncoded();
@@ -99,7 +98,7 @@ namespace iText.Signatures {
                 }
             }
             catch (Exception ex) {
-                LOGGER.LogError(ex.Message);
+                LOGGER.Error(() => ex.Message);
             }
             return null;
         }
@@ -195,7 +194,7 @@ namespace iText.Signatures {
         /// </returns>
         protected internal virtual Stream CreateRequestAndResponse(IX509Certificate checkCert, IX509Certificate rootCert
             , String url) {
-            LOGGER.LogInformation("Getting OCSP from " + url);
+            LOGGER.Info(() => "Getting OCSP from " + url);
             IOcspRequest request = GenerateOCSPRequest(rootCert, checkCert.GetSerialNumber());
             byte[] array = request.GetEncoded();
             Uri urlt = new Uri(url);

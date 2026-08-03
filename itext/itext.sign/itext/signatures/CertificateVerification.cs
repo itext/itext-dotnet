@@ -22,11 +22,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Tsp;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Crypto;
 using iText.Signatures.Exceptions;
@@ -42,7 +41,7 @@ namespace iText.Signatures {
         public const String CERTIFICATE_REVOKED = "Certificate revoked";
 
         /// <summary>The Logger instance.</summary>
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(CertificateVerification));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(CertificateVerification));
 
         /// <summary>Verifies a single certificate for the current date.</summary>
         /// <param name="cert">the certificate to verify</param>
@@ -266,7 +265,7 @@ namespace iText.Signatures {
 
         private static void LogExceptionMessages(IList<Exception> exceptionsThrown) {
             foreach (Exception ex in exceptionsThrown) {
-                LOGGER.LogError(ex, ex.Message == null ? SignLogMessageConstant.EXCEPTION_WITHOUT_MESSAGE : ex.Message);
+                LOGGER.Error(() => ex.Message == null ? SignLogMessageConstant.EXCEPTION_WITHOUT_MESSAGE : ex.Message, ex);
             }
         }
     }

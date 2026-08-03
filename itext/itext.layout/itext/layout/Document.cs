@@ -22,10 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Datastructures;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -52,7 +51,7 @@ namespace iText.Layout {
     /// <see cref="SetRenderer(iText.Layout.Renderer.DocumentRenderer)"></see>.
     /// </remarks>
     public class Document : RootElement<iText.Layout.Document> {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Layout.Document));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Document));
 
         private readonly IDictionary<int, PageMarginBoxes> pageMargins = new Dictionary<int, PageMarginBoxes>();
 
@@ -477,13 +476,13 @@ namespace iText.Layout {
                 if (FootnoteNumberingConfig.PER_DOCUMENT == footnotesProperties.GetFootnoteNumberingConfig()) {
                     if (this.HasOwnProperty(Property.FOOTNOTES_PROPERTIES) && FootnoteNumberingConfig.PER_DOCUMENT != footnoteNumberingConfig
                         ) {
-                        LOGGER.LogWarning(LayoutLogMessageConstant.FOOTNOTE_NUM_PER_DOCUMENT_SHOULD_BE_FIRST);
+                        LOGGER.Warn(() => LayoutLogMessageConstant.FOOTNOTE_NUM_PER_DOCUMENT_SHOULD_BE_FIRST);
                         footnotesProperties.SetFootnoteNumberingConfig(footnoteNumberingConfig);
                     }
                 }
                 else {
                     if (FootnoteNumberingConfig.PER_DOCUMENT == footnoteNumberingConfig) {
-                        LOGGER.LogWarning(LayoutLogMessageConstant.FOOTNOTE_NUM_PER_DOCUMENT_CANNOT_BE_CHANGED);
+                        LOGGER.Warn(() => LayoutLogMessageConstant.FOOTNOTE_NUM_PER_DOCUMENT_CANNOT_BE_CHANGED);
                         footnotesProperties.SetFootnoteNumberingConfig(FootnoteNumberingConfig.PER_DOCUMENT);
                     }
                 }

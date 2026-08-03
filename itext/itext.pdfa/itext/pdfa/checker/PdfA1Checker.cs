@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.IO.Font;
@@ -78,7 +77,7 @@ namespace iText.Pdfa.Checker {
 
         private const int MAX_NUMBER_OF_DEVICEN_COLOR_COMPONENTS = 8;
 
-        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(PdfAChecker));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(PdfAChecker));
 
         /// <summary>Creates a PdfA1Checker with the required conformance</summary>
         /// <param name="aConformance">
@@ -433,7 +432,7 @@ namespace iText.Pdfa.Checker {
                         );
                 }
                 if (!catalog.ContainsKey(PdfName.Lang)) {
-                    logger.LogWarning(PdfAConformanceLogMessageConstant.CATALOG_SHOULD_CONTAIN_LANG_ENTRY);
+                    LOGGER.Warn(() => PdfAConformanceLogMessageConstant.CATALOG_SHOULD_CONTAIN_LANG_ENTRY);
                 }
             }
         }
@@ -642,7 +641,7 @@ namespace iText.Pdfa.Checker {
             }
             if (CheckStructure(conformance)) {
                 if (contentAnnotations.Contains(subtype) && !annotDic.ContainsKey(PdfName.Contents)) {
-                    logger.LogWarning(MessageFormatUtil.Format(PdfAConformanceLogMessageConstant.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY
+                    LOGGER.Warn(() => MessageFormatUtil.Format(PdfAConformanceLogMessageConstant.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY
                         , subtype.GetValue()));
                 }
             }

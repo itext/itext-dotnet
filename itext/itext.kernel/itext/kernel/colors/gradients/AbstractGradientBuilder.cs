@@ -22,10 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Datastructures;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -153,7 +152,7 @@ namespace iText.Kernel.Colors.Gradients {
                     shadingTransform.Concatenate(gradientTransformation);
                 }
                 catch (NoninvertibleTransformException) {
-                    ITextLogManager.GetLogger(GetType()).LogError(iText.IO.Logs.IoLogMessageConstant.UNABLE_TO_INVERT_GRADIENT_TRANSFORMATION
+                    new LazyLogger(GetType()).Error(() => iText.IO.Logs.IoLogMessageConstant.UNABLE_TO_INVERT_GRADIENT_TRANSFORMATION
                         );
                 }
             }
@@ -346,75 +345,6 @@ namespace iText.Kernel.Colors.Gradients {
                 ), ConstructFunction(stopsToConstruct));
         }
 
-        private IList<GradientColorStop> AdjustNormalizedStopsToCoverDomain(IList<GradientColorStop> normalizedStops
-            , double[] targetDomain, GradientSpreadMethod spreadMethod, PdfDocument pdfDocument) {
-            IList<GradientColorStop> adjustedStops = new List<GradientColorStop>();
-            GradientColorStop lastColorStop = normalizedStops[normalizedStops.Count - 1];
-            double originalIntervalEnd = lastColorStop.GetOffset();
-            double originalIntervalStart = normalizedStops[0].GetOffset();
-            double originalIntervalLength = originalIntervalEnd - originalIntervalStart;
-            if (originalIntervalLength <= ZERO_EPSILON) {
-                return JavaUtil.ArraysAsList(new GradientColorStop(lastColorStop, targetDomain[0], GradientColorStop.OffsetType
-                    .RELATIVE), new GradientColorStop(lastColorStop, targetDomain[1], GradientColorStop.OffsetType.RELATIVE
-                    ));
-            }
-            double startIntervalsShift = Math.Floor((targetDomain[0] - originalIntervalStart) / originalIntervalLength
-                );
-            double iterationOffset = originalIntervalStart + (originalIntervalLength * startIntervalsShift);
-            bool isIterationInverse = spreadMethod == GradientSpreadMethod.REFLECT && Math.Abs(startIntervalsShift) % 
-                2 != 0;
-            int currentIterationIndex = isIterationInverse ? normalizedStops.Count - 1 : 0;
-            int maxStopCount = GetMaxStopCountForRepeatAndReflect(pdfDocument);
-            double lastComputedOffset = iterationOffset;
-            while (lastComputedOffset <= targetDomain[1]) {
-                GradientColorStop currentStop = normalizedStops[currentIterationIndex];
-                lastComputedOffset = isIterationInverse ? iterationOffset + originalIntervalEnd - currentStop.GetOffset() : 
-                    iterationOffset + currentStop.GetOffset() - originalIntervalStart;
-                GradientColorStop computedStop = new GradientColorStop(currentStop, lastComputedOffset, GradientColorStop.OffsetType
-                    .RELATIVE);
-                if (lastComputedOffset < targetDomain[0] && !adjustedStops.IsEmpty()) {
-                    adjustedStops[0] = computedStop;
-                }
-                else {
-                    adjustedStops.Add(computedStop);
-                }
-                if (adjustedStops.Count > maxStopCount) {
-                    ITextLogManager.GetLogger(GetType()).LogWarning(MessageFormatUtil.Format(KernelLogMessageConstant.GRADIENT_MAX_COLOR_STOPS
-                        , maxStopCount));
-                    return AdjustStopsForPadIfNeeded(normalizedStops, targetDomain);
-                }
-                if (isIterationInverse) {
-                    --currentIterationIndex;
-                    if (currentIterationIndex < 0) {
-                        iterationOffset += originalIntervalLength;
-                        isIterationInverse = false;
-                        currentIterationIndex = 1;
-                    }
-                }
-                else {
-                    ++currentIterationIndex;
-                    if (currentIterationIndex == normalizedStops.Count) {
-                        iterationOffset += originalIntervalLength;
-                        isIterationInverse = spreadMethod == GradientSpreadMethod.REFLECT;
-                        currentIterationIndex = isIterationInverse ? normalizedStops.Count - 2 : 0;
-                    }
-                }
-                // check the next iteration type to set the correct stop color hint for just added stop
-                if (isIterationInverse) {
-                    GradientColorStop nextColor = normalizedStops[currentIterationIndex];
-                    // this method should be invoked only after the normalization. it means that
-                    // the hint offset type for each stop is either relative to colors interval
-                    // (i.e. for inverse iteration we need to inverse the hint offset), or is none
-                    // (i.e. the hint offset value should be ignored)
-                    computedStop.SetHint(1 - nextColor.GetHintOffset(), nextColor.GetHintOffsetType());
-                }
-                else {
-                    computedStop.SetHint(currentStop.GetHintOffset(), currentStop.GetHintOffsetType());
-                }
-            }
-            return adjustedStops;
-        }
-
         // the result list would have the same list of stop colors as the original one
         // with all offsets on coordinates domain dimension and adjusted for ascending values
         private static IList<GradientColorStop> NormalizeStops(IList<GradientColorStop> toNormalize, double baseVectorLength
@@ -577,6 +507,75 @@ namespace iText.Kernel.Colors.Gradients {
                     ));
             }
             return stopsToConstruct;
+        }
+
+        private IList<GradientColorStop> AdjustNormalizedStopsToCoverDomain(IList<GradientColorStop> normalizedStops
+            , double[] targetDomain, GradientSpreadMethod spreadMethod, PdfDocument pdfDocument) {
+            IList<GradientColorStop> adjustedStops = new List<GradientColorStop>();
+            GradientColorStop lastColorStop = normalizedStops[normalizedStops.Count - 1];
+            double originalIntervalEnd = lastColorStop.GetOffset();
+            double originalIntervalStart = normalizedStops[0].GetOffset();
+            double originalIntervalLength = originalIntervalEnd - originalIntervalStart;
+            if (originalIntervalLength <= ZERO_EPSILON) {
+                return JavaUtil.ArraysAsList(new GradientColorStop(lastColorStop, targetDomain[0], GradientColorStop.OffsetType
+                    .RELATIVE), new GradientColorStop(lastColorStop, targetDomain[1], GradientColorStop.OffsetType.RELATIVE
+                    ));
+            }
+            double startIntervalsShift = Math.Floor((targetDomain[0] - originalIntervalStart) / originalIntervalLength
+                );
+            double iterationOffset = originalIntervalStart + (originalIntervalLength * startIntervalsShift);
+            bool isIterationInverse = spreadMethod == GradientSpreadMethod.REFLECT && Math.Abs(startIntervalsShift) % 
+                2 != 0;
+            int currentIterationIndex = isIterationInverse ? normalizedStops.Count - 1 : 0;
+            int maxStopCount = GetMaxStopCountForRepeatAndReflect(pdfDocument);
+            double lastComputedOffset = iterationOffset;
+            while (lastComputedOffset <= targetDomain[1]) {
+                GradientColorStop currentStop = normalizedStops[currentIterationIndex];
+                lastComputedOffset = isIterationInverse ? iterationOffset + originalIntervalEnd - currentStop.GetOffset() : 
+                    iterationOffset + currentStop.GetOffset() - originalIntervalStart;
+                GradientColorStop computedStop = new GradientColorStop(currentStop, lastComputedOffset, GradientColorStop.OffsetType
+                    .RELATIVE);
+                if (lastComputedOffset < targetDomain[0] && !adjustedStops.IsEmpty()) {
+                    adjustedStops[0] = computedStop;
+                }
+                else {
+                    adjustedStops.Add(computedStop);
+                }
+                if (adjustedStops.Count > maxStopCount) {
+                    new LazyLogger(GetType()).Warn(() => MessageFormatUtil.Format(KernelLogMessageConstant.GRADIENT_MAX_COLOR_STOPS
+                        , maxStopCount));
+                    return AdjustStopsForPadIfNeeded(normalizedStops, targetDomain);
+                }
+                if (isIterationInverse) {
+                    --currentIterationIndex;
+                    if (currentIterationIndex < 0) {
+                        iterationOffset += originalIntervalLength;
+                        isIterationInverse = false;
+                        currentIterationIndex = 1;
+                    }
+                }
+                else {
+                    ++currentIterationIndex;
+                    if (currentIterationIndex == normalizedStops.Count) {
+                        iterationOffset += originalIntervalLength;
+                        isIterationInverse = spreadMethod == GradientSpreadMethod.REFLECT;
+                        currentIterationIndex = isIterationInverse ? normalizedStops.Count - 2 : 0;
+                    }
+                }
+                // check the next iteration type to set the correct stop color hint for just added stop
+                if (isIterationInverse) {
+                    GradientColorStop nextColor = normalizedStops[currentIterationIndex];
+                    // this method should be invoked only after the normalization. it means that
+                    // the hint offset type for each stop is either relative to colors interval
+                    // (i.e. for inverse iteration we need to inverse the hint offset), or is none
+                    // (i.e. the hint offset value should be ignored)
+                    computedStop.SetHint(1 - nextColor.GetHintOffset(), nextColor.GetHintOffsetType());
+                }
+                else {
+                    computedStop.SetHint(currentStop.GetHintOffset(), currentStop.GetHintOffsetType());
+                }
+            }
+            return adjustedStops;
         }
 
         private static IPdfFunction ConstructFunction(IList<GradientColorStop> toConstruct) {

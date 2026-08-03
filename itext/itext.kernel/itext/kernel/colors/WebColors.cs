@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 
 namespace iText.Kernel.Colors {
@@ -38,6 +37,8 @@ namespace iText.Kernel.Colors {
     /// http://en.wikipedia.org/wiki/Web_colors )
     /// </remarks>
     public class WebColors : Dictionary<String, int[]> {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(WebColors));
+
         /// <summary>HashMap containing all the names and corresponding color values.</summary>
         public static readonly WebColors NAMES = new WebColors();
 
@@ -283,8 +284,7 @@ namespace iText.Kernel.Colors {
                             color[2] = (float)(Convert.ToInt32(colorName.Substring(4), 16) / RGB_MAX_VAL);
                         }
                         else {
-                            ILogger logger = ITextLogManager.GetLogger(typeof(WebColors));
-                            logger.LogError(iText.IO.Logs.IoLogMessageConstant.UNKNOWN_COLOR_FORMAT_MUST_BE_RGB_OR_RRGGBB);
+                            LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.UNKNOWN_COLOR_FORMAT_MUST_BE_RGB_OR_RRGGBB);
                         }
                     }
                 }

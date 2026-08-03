@@ -23,9 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Layout.Borders;
@@ -38,7 +37,7 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class FlexContainerRenderer : DivRenderer {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.FlexContainerRenderer
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Renderer.FlexContainerRenderer
             ));
 
         /// <summary>
@@ -541,7 +540,7 @@ namespace iText.Layout.Renderer {
         /// <summary><inheritDoc/></summary>
         public override void AddChild(IRenderer renderer) {
             if (renderer is AreaBreakRenderer || renderer is SectionBreakRenderer) {
-                LOGGER.LogWarning(LayoutLogMessageConstant.FLEX_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK);
+                LOGGER.Warn(() => LayoutLogMessageConstant.FLEX_CONTAINER_SHOULD_NOT_CONTAIN_AREA_OR_SECTION_BREAK);
                 return;
             }
             // TODO DEVSIX-5087 Since overflow-fit is an internal iText overflow value, we do not need to support if
@@ -552,11 +551,11 @@ namespace iText.Layout.Renderer {
         }
 
         private static void OrderChildRenderers(IList<IRenderer> renderers) {
-            JavaCollectionsUtil.Sort(renderers, new _IComparer_580());
+            JavaCollectionsUtil.Sort(renderers, new _IComparer_578());
         }
 
-        private sealed class _IComparer_580 : IComparer<IRenderer> {
-            public _IComparer_580() {
+        private sealed class _IComparer_578 : IComparer<IRenderer> {
+            public _IComparer_578() {
             }
 
             public int Compare(IRenderer a, IRenderer b) {

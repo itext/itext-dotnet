@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Contrast;
 using iText.Kernel.Pdf;
@@ -39,8 +38,8 @@ namespace iText.Pdfua.Wtpdf {
     /// It will add necessary validation to guide the user to create a Well Tagged compliant document.
     /// </remarks>
     public class WellTaggedPdfDocument : PdfDocument {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Pdfua.Wtpdf.WellTaggedPdfDocument
-            ));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Pdfua.Wtpdf.WellTaggedPdfDocument)
+            );
 
         /// <summary>Creates a WellTaggedPdfDocument instance.</summary>
         /// <param name="writer">The writer to write the PDF document</param>
@@ -85,7 +84,7 @@ namespace iText.Pdfua.Wtpdf {
              config)
             : base(reader, writer, properties) {
             if (!GetConformance().IsWtpdf()) {
-                LOGGER.LogWarning(PdfUALogMessageConstants.PDF_TO_WTPDF_CONVERSION_IS_NOT_SUPPORTED);
+                LOGGER.Warn(() => PdfUALogMessageConstants.PDF_TO_WTPDF_CONVERSION_IS_NOT_SUPPORTED);
             }
             SetupWtpdfConfiguration(config);
             ValidationContainer validationContainer = new ValidationContainer();
@@ -141,7 +140,7 @@ namespace iText.Pdfua.Wtpdf {
             ) {
             writer.GetProperties().AddWtpdfXmpMetadata(wtpdfConformance);
             if (writer.GetPdfVersion() != null && !PdfVersion.PDF_2_0.Equals(writer.GetPdfVersion())) {
-                LOGGER.LogWarning(MessageFormatUtil.Format(PdfUALogMessageConstants.WRITER_PROPERTIES_PDF_VERSION_WAS_OVERRIDDEN
+                LOGGER.Warn(() => MessageFormatUtil.Format(PdfUALogMessageConstants.WRITER_PROPERTIES_PDF_VERSION_WAS_OVERRIDDEN
                     , PdfVersion.PDF_2_0));
                 writer.GetProperties().SetPdfVersion(PdfVersion.PDF_2_0);
             }

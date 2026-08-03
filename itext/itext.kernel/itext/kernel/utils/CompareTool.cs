@@ -25,10 +25,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Util;
@@ -65,6 +64,8 @@ namespace iText.Kernel.Utils {
     /// for the content of the cmpDoc and "but was" part stands for the content of the outDoc.
     /// </remarks>
     public class CompareTool {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Utils.CompareTool));
+
         private const String FILE_PROTOCOL = "file://";
 
         private const String UNEXPECTED_NUMBER_OF_PAGES = "Unexpected number of pages for <filename>.";
@@ -1463,7 +1464,7 @@ namespace iText.Kernel.Utils {
             catch (ArgumentException e) {
                 compareExecIsOk = false;
                 imageMagickInitError = e.Message;
-                ITextLogManager.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).LogWarning(e.Message);
+                LOGGER.Warn(() => e.Message);
             }
             IList<int> diffPages = new List<int>();
             String differentPagesFail = null;
@@ -1889,8 +1890,7 @@ namespace iText.Kernel.Utils {
                     PdfNumber outLeftover = FlattenNumTree(outNumTree, null, outItems);
                     PdfNumber cmpLeftover = FlattenNumTree(cmpNumTree, null, cmpItems);
                     if (outLeftover != null) {
-                        ITextLogManager.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).LogWarning(iText.IO.Logs.IoLogMessageConstant
-                            .NUM_TREE_SHALL_NOT_END_WITH_KEY);
+                        LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.NUM_TREE_SHALL_NOT_END_WITH_KEY);
                         if (cmpLeftover == null) {
                             if (compareResult != null && currentPath != null) {
                                 compareResult.AddError(currentPath, "Number tree unexpectedly ends with a key");
@@ -1899,8 +1899,7 @@ namespace iText.Kernel.Utils {
                         }
                     }
                     if (cmpLeftover != null) {
-                        ITextLogManager.GetLogger(typeof(iText.Kernel.Utils.CompareTool)).LogWarning(iText.IO.Logs.IoLogMessageConstant
-                            .NUM_TREE_SHALL_NOT_END_WITH_KEY);
+                        LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.NUM_TREE_SHALL_NOT_END_WITH_KEY);
                         if (outLeftover == null) {
                             if (compareResult != null && currentPath != null) {
                                 compareResult.AddError(currentPath, "Number tree was expected to end with a key" + " (although it is invalid according to the specification),"

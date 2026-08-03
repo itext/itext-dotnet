@@ -22,12 +22,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.IO.Source;
 
 namespace iText.IO.Font.Cmap {
     public class CMapParser {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(CMapParser));
+
         private const String def = "def";
 
         private const String endcidrange = "endcidrange";
@@ -143,8 +144,7 @@ namespace iText.IO.Font.Cmap {
                 }
             }
             catch (Exception) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(CMapParser));
-                logger.LogError(iText.IO.Logs.IoLogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
+                LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
             }
             finally {
                 inp.Close();

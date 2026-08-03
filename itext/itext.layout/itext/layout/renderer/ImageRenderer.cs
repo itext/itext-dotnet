@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
@@ -39,6 +38,8 @@ using iText.Layout.Tagging;
 
 namespace iText.Layout.Renderer {
     public class ImageRenderer : AbstractRenderer, ILeafElementRenderer {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Renderer.ImageRenderer));
+
         protected internal float? fixedXPosition;
 
         protected internal float? fixedYPosition;
@@ -191,14 +192,12 @@ namespace iText.Layout.Renderer {
             occupiedArea.GetBBox().SetWidth((float)width);
             UnitValue leftMargin = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
             if (!leftMargin.IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.MARGIN_LEFT));
             }
             UnitValue topMargin = this.GetPropertyAsUnitValue(Property.MARGIN_TOP);
             if (!topMargin.IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.MARGIN_TOP));
             }
             if (0 != leftMargin.GetValue() || 0 != topMargin.GetValue()) {
@@ -236,8 +235,7 @@ namespace iText.Layout.Renderer {
 
         public override void Draw(DrawContext drawContext) {
             if (occupiedArea == null) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
                     , "Drawing won't be performed."));
                 return;
             }

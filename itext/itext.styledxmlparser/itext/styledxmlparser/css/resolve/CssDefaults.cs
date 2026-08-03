@@ -22,15 +22,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 
 namespace iText.StyledXmlParser.Css.Resolve {
     /// <summary>Helper class that allows you to get the default values of CSS properties.</summary>
     public class CssDefaults {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(CssDefaults));
+
         /// <summary>A map with properties and their default values.</summary>
         private static readonly IDictionary<String, String> defaultValues = new Dictionary<String, String>();
 
@@ -129,8 +130,7 @@ namespace iText.StyledXmlParser.Css.Resolve {
         public static String GetDefaultValue(String property) {
             String defaultVal = defaultValues.Get(property);
             if (defaultVal == null) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(CssDefaults));
-                logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.DEFAULT_VALUE_OF_CSS_PROPERTY_UNKNOWN
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.DEFAULT_VALUE_OF_CSS_PROPERTY_UNKNOWN
                     , property));
             }
             return defaultVal;

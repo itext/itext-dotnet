@@ -23,8 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve;
@@ -38,7 +37,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
     /// implementation for flex-flow.
     /// </summary>
     public class FlexFlowShorthandResolver : IShorthandResolver {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(FlexFlowShorthandResolver));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(FlexFlowShorthandResolver));
 
         /// <summary><inheritDoc/></summary>
         public virtual IList<CssDeclaration> ResolveShorthand(String shorthandExpression) {
@@ -113,7 +112,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
 
         private static IList<CssDeclaration> HandleExpressionError(String logMessage, String attribute, String shorthandExpression
             ) {
-            LOGGER.LogWarning(MessageFormatUtil.Format(logMessage, attribute, shorthandExpression));
+            LOGGER.Warn(() => MessageFormatUtil.Format(logMessage, attribute, shorthandExpression));
             return JavaCollectionsUtil.EmptyList<CssDeclaration>();
         }
 

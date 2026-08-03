@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Image;
 using iText.Kernel.Exceptions;
@@ -41,6 +40,8 @@ using iText.Layout.Tagging;
 namespace iText.Layout.Element {
     /// <summary>A layout element that represents an image for inclusion in the document model.</summary>
     public class Image : AbstractElement<iText.Layout.Element.Image>, ILeafElement, IAccessibleElement {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Element.Image));
+
         protected internal PdfXObject xObject;
 
         protected internal DefaultAccessibilityProperties tagProperties;
@@ -465,8 +466,7 @@ namespace iText.Layout.Element {
             if (HasProperty(Property.AUTO_SCALE_WIDTH) && HasProperty(Property.AUTO_SCALE_HEIGHT) && autoScale && ((bool
                 )this.GetProperty<bool?>(Property.AUTO_SCALE_WIDTH) || (bool)this.GetProperty<bool?>(Property.AUTO_SCALE_HEIGHT
                 ))) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Element.Image));
-                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_AMBIGUOUS_SCALE);
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_AMBIGUOUS_SCALE);
             }
             SetProperty(Property.AUTO_SCALE, autoScale);
             return this;

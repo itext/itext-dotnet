@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
@@ -35,6 +34,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
     /// implementation for borders.
     /// </summary>
     public class BorderShorthandResolver : AbstractBorderShorthandResolver {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(BorderShorthandResolver));
+
         /* (non-Javadoc)
         * @see com.itextpdf.styledxmlparser.css.resolve.shorthand.impl.AbstractBorderShorthandResolver#getPrefix()
         */
@@ -54,9 +55,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
                     resolvedProps.AddAll(shorthandResolver.ResolveShorthand(prop.GetExpression()));
                 }
                 else {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(BorderShorthandResolver));
-                    logger.LogError(MessageFormatUtil.Format("Cannot find a shorthand resolver for the \"{0}\" property. " + "Expected border-width, border-style or border-color properties."
-                        , prop.GetProperty()));
+                    LOGGER.Error(() => MessageFormatUtil.Format("Cannot find a shorthand resolver for the \"{0}\" property. " 
+                        + "Expected border-width, border-style or border-color properties.", prop.GetProperty()));
                 }
             }
             return resolvedProps;

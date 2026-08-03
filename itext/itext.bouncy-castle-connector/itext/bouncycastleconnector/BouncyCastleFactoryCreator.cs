@@ -23,13 +23,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Extensions.Logging;
 using iText.Bouncycastle;
 using iText.Bouncycastleconnector.Logs;
 using iText.Bouncycastlefips;
-using iText.Commons;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 
 namespace iText.Bouncycastleconnector {
@@ -54,7 +53,7 @@ namespace iText.Bouncycastleconnector {
 
         private const String FACTORY_ENVIRONMENT_VARIABLE_NAME = "ITEXT_BOUNCY_CASTLE_FACTORY_NAME";
 
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Bouncycastleconnector.BouncyCastleFactoryCreator
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Bouncycastleconnector.BouncyCastleFactoryCreator
             ));
 
         static BouncyCastleFactoryCreator() {
@@ -71,7 +70,7 @@ namespace iText.Bouncycastleconnector {
                 TryCreateFactory(factorySupplier);
             }
             if (factory == null) {
-                LOGGER.LogError(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+                LOGGER.Error(() => BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
                 factory = new BouncyCastleDefaultFactory();
             }
         }

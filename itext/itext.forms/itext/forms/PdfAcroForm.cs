@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Forms.Exceptions;
 using iText.Forms.Fields;
@@ -42,7 +41,7 @@ using iText.Kernel.Pdf.Xobject;
 namespace iText.Forms {
     /// <summary>This class represents the static form technology AcroForm on a PDF file.</summary>
     public class PdfAcroForm : PdfObjectWrapper<PdfDictionary> {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Forms.PdfAcroForm));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Forms.PdfAcroForm));
 
         /// <summary>
         /// To be used with
@@ -284,7 +283,7 @@ namespace iText.Forms {
                     throw new PdfException(FormsExceptionMessageConstant.FORM_FIELD_MUST_HAVE_A_NAME);
                 }
                 else {
-                    LOGGER.LogWarning(FormsLogMessageConstants.FORM_FIELD_MUST_HAVE_A_NAME);
+                    LOGGER.Warn(() => FormsLogMessageConstants.FORM_FIELD_MUST_HAVE_A_NAME);
                     return;
                 }
             }
@@ -909,7 +908,7 @@ namespace iText.Forms {
                             if (normal.IsDictionary()) {
                                 PdfName @as = fieldObject.GetAsName(PdfName.AS);
                                 if (@as == null) {
-                                    LOGGER.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.FORMFIELD_DOES_NOT_CONTAIN_AS, formField
+                                    LOGGER.Warn(() => MessageFormatUtil.Format(FormsLogMessageConstants.FORMFIELD_DOES_NOT_CONTAIN_AS, formField
                                         .GetFieldName()));
                                 }
                                 else {
@@ -954,7 +953,7 @@ namespace iText.Forms {
                         }
                     }
                     else {
-                        LOGGER.LogWarning(FormsLogMessageConstants.N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY);
+                        LOGGER.Warn(() => FormsLogMessageConstants.N_ENTRY_IS_REQUIRED_FOR_APPEARANCE_DICTIONARY);
                     }
                     PdfArray fFields = GetFields();
                     if (annotation != null) {
@@ -1050,7 +1049,7 @@ namespace iText.Forms {
         public virtual void RenameField(String oldName, String newName) {
             PdfFormField oldField = GetField(oldName);
             if (oldField == null) {
-                LOGGER.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.FIELDNAME_NOT_FOUND_OPERATION_CAN_NOT_BE_COMPLETED
+                LOGGER.Warn(() => MessageFormatUtil.Format(FormsLogMessageConstants.FIELDNAME_NOT_FOUND_OPERATION_CAN_NOT_BE_COMPLETED
                     , oldName));
                 return;
             }
@@ -1107,7 +1106,7 @@ namespace iText.Forms {
         /// </param>
         public virtual void ReplaceField(String name, PdfFormField field) {
             if (name == null) {
-                LOGGER.LogWarning(FormsLogMessageConstants.PROVIDE_FORMFIELD_NAME);
+                LOGGER.Warn(() => FormsLogMessageConstants.PROVIDE_FORMFIELD_NAME);
                 return;
             }
             RemoveField(name);
@@ -1152,7 +1151,7 @@ namespace iText.Forms {
         protected internal virtual PdfArray GetFields() {
             PdfArray fields = GetPdfObject().GetAsArray(PdfName.Fields);
             if (fields == null) {
-                LOGGER.LogWarning(FormsLogMessageConstants.NO_FIELDS_IN_ACROFORM);
+                LOGGER.Warn(() => FormsLogMessageConstants.NO_FIELDS_IN_ACROFORM);
                 fields = new PdfArray();
                 Put(PdfName.Fields, fields);
             }
@@ -1169,14 +1168,14 @@ namespace iText.Forms {
             PdfArray shouldBeRemoved = new PdfArray();
             foreach (PdfObject field in rawFields) {
                 if (field.IsFlushed()) {
-                    LOGGER.LogInformation(FormsLogMessageConstants.FORM_FIELD_WAS_FLUSHED);
+                    LOGGER.Info(() => FormsLogMessageConstants.FORM_FIELD_WAS_FLUSHED);
                     continue;
                 }
                 PdfFormField formField = PdfFormField.MakeFormField(field, document);
                 if (formField == null) {
                     // Pure annotation can't be in AcroForm dictionary
                     // Ok, let's just skip them, they were (will be) processed with their parents if any
-                    LOGGER.LogWarning(FormsLogMessageConstants.ANNOTATION_IN_ACROFORM_DICTIONARY);
+                    LOGGER.Warn(() => FormsLogMessageConstants.ANNOTATION_IN_ACROFORM_DICTIONARY);
                     continue;
                 }
                 PdfFormFieldMergeUtil.MergeKidsWithSameNames(formField, false);

@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Colors;
 using iText.IO.Font;
@@ -39,6 +38,9 @@ namespace iText.Kernel.Pdf.Xobject {
     /// <summary>A wrapper for Image XObject.</summary>
     /// <remarks>A wrapper for Image XObject. ISO 32000-1, 8.9 Images.</remarks>
     public class PdfImageXObject : PdfXObject {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject
+            ));
+
         private bool newImage = false;
 
         private float width;
@@ -548,25 +550,24 @@ namespace iText.Kernel.Pdf.Xobject {
                 if (colorSpaceObject != null) {
                     PdfColorSpace cs = PdfColorSpace.MakeColorSpace(colorSpaceObject);
                     if (cs == null) {
-                        ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).LogError(iText.IO.Logs.IoLogMessageConstant
-                            .IMAGE_HAS_INCORRECT_OR_UNSUPPORTED_COLOR_SPACE_OVERRIDDEN_BY_ICC_PROFILE);
+                        LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_INCORRECT_OR_UNSUPPORTED_COLOR_SPACE_OVERRIDDEN_BY_ICC_PROFILE
+                            );
                     }
                     else {
                         if (cs is PdfSpecialCs.Indexed) {
                             PdfColorSpace baseCs = ((PdfSpecialCs.Indexed)cs).GetBaseCs();
                             if (baseCs == null) {
-                                ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).LogError(iText.IO.Logs.IoLogMessageConstant
-                                    .IMAGE_HAS_INCORRECT_OR_UNSUPPORTED_BASE_COLOR_SPACE_IN_INDEXED_COLOR_SPACE_OVERRIDDEN_BY_ICC_PROFILE);
+                                LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_INCORRECT_OR_UNSUPPORTED_BASE_COLOR_SPACE_IN_INDEXED_COLOR_SPACE_OVERRIDDEN_BY_ICC_PROFILE
+                                    );
                             }
                             else {
-                                if (baseCs.GetNumberOfComponents() != iccProfile.GetNumComponents()) {
-                                    ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).LogError(iText.IO.Logs.IoLogMessageConstant
-                                        .IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS_COMPARED_TO_BASE_COLOR_SPACE_IN_INDEXED_COLOR_SPACE
-                                        );
-                                    iccProfileShouldBeApplied = false;
+                                if (baseCs.GetNumberOfComponents() == iccProfile.GetNumComponents()) {
+                                    iccProfileStream.Put(PdfName.Alternate, baseCs.GetPdfObject());
                                 }
                                 else {
-                                    iccProfileStream.Put(PdfName.Alternate, baseCs.GetPdfObject());
+                                    LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS_COMPARED_TO_BASE_COLOR_SPACE_IN_INDEXED_COLOR_SPACE
+                                        );
+                                    iccProfileShouldBeApplied = false;
                                 }
                             }
                             if (iccProfileShouldBeApplied) {
@@ -575,13 +576,13 @@ namespace iText.Kernel.Pdf.Xobject {
                             }
                         }
                         else {
-                            if (cs.GetNumberOfComponents() != iccProfile.GetNumComponents()) {
-                                ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfImageXObject)).LogError(iText.IO.Logs.IoLogMessageConstant
-                                    .IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS_COMPARED_TO_COLOR_SPACE);
-                                iccProfileShouldBeApplied = false;
+                            if (cs.GetNumberOfComponents() == iccProfile.GetNumComponents()) {
+                                iccProfileStream.Put(PdfName.Alternate, colorSpaceObject);
                             }
                             else {
-                                iccProfileStream.Put(PdfName.Alternate, colorSpaceObject);
+                                LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS_COMPARED_TO_COLOR_SPACE
+                                    );
+                                iccProfileShouldBeApplied = false;
                             }
                         }
                     }

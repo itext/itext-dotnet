@@ -27,9 +27,8 @@ using System.Drawing;
 #endif // !NETSTANDARD2_0
 using System.IO;
 using System.Reflection;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Codec;
 using iText.IO.Exceptions;
@@ -702,8 +701,8 @@ namespace iText.IO.Image {
                         }
                     }
                     if (type == null && fileLoadExceptionMessage != null) {
-                        ILogger logger = ITextLogManager.GetLogger(typeof(ImageDataFactory));
-                        logger.LogError(fileLoadExceptionMessage);
+                        LazyLogger logger = new LazyLogger(typeof(ImageDataFactory));
+                        logger.Error(() => fileLoadExceptionMessage);
                     }
                 }
             }

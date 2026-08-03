@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -47,6 +46,8 @@ namespace iText.Layout {
     /// API and the low-level <em>kernel</em> API.
     /// </remarks>
     public class Canvas : RootElement<iText.Layout.Canvas> {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Canvas));
+
         protected internal PdfCanvas pdfCanvas;
 
         protected internal Rectangle rootArea;
@@ -176,8 +177,8 @@ namespace iText.Layout {
         /// <param name="page">the page, on which this canvas will be rendered.</param>
         public virtual void EnableAutoTagging(PdfPage page) {
             if (IsCanvasOfPage() && this.page != page) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Canvas));
-                logger.LogError(iText.IO.Logs.IoLogMessageConstant.PASSED_PAGE_SHALL_BE_ON_WHICH_CANVAS_WILL_BE_RENDERED);
+                LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.PASSED_PAGE_SHALL_BE_ON_WHICH_CANVAS_WILL_BE_RENDERED
+                    );
             }
             this.page = page;
             this.pdfCanvas.SetDrawingOnPage(this.IsAutoTaggingEnabled());

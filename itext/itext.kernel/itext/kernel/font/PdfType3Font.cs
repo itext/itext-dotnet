@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
@@ -67,6 +66,8 @@ namespace iText.Kernel.Font {
     /// must be indirect.
     /// </remarks>
     public class PdfType3Font : PdfSimpleFont<Type3Font> {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Font.PdfType3Font));
+
         private const int FONT_BBOX_LLX = 0;
 
         private const int FONT_BBOX_LLY = 1;
@@ -138,8 +139,7 @@ namespace iText.Kernel.Font {
             PdfDictionary encoding = fontDictionary.GetAsDictionary(PdfName.Encoding);
             PdfArray differences = encoding != null ? encoding.GetAsArray(PdfName.Differences) : null;
             if (charProcsDic == null || differences == null) {
-                ITextLogManager.GetLogger(GetType()).LogWarning(iText.IO.Logs.IoLogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE
-                    );
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.TYPE3_FONT_INITIALIZATION_ISSUE);
             }
             FillFontDescriptor(fontDictionary.GetAsDictionary(PdfName.FontDescriptor));
             Normalize1000UnitsToGlyphSpaceUnits(fontMatrixArray);
@@ -344,8 +344,7 @@ namespace iText.Kernel.Font {
             else {
                 if (GetPdfObject().GetIndirectReference() != null && GetPdfObject().GetIndirectReference().GetDocument().IsTagged
                     ()) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.PdfType3Font));
-                    logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.TYPE3_FONT_ISSUE_TAGGED_PDF);
+                    LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.TYPE3_FONT_ISSUE_TAGGED_PDF);
                 }
             }
             return null;

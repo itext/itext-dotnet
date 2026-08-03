@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Borders;
@@ -193,8 +192,8 @@ namespace iText.Layout.Renderer {
                 borders[j] = borderToAdd;
             }
             else {
-                ILogger logger = ITextLogManager.GetLogger(typeof(TableRenderer));
-                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING);
+                LazyLogger logger = new LazyLogger(typeof(TableRenderer));
+                logger.Warn(() => iText.IO.Logs.IoLogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING);
             }
             return true;
         }

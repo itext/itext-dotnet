@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Forms.Logs;
 using iText.IO.Font;
 using iText.IO.Source;
@@ -56,8 +55,8 @@ namespace iText.Forms.Fields {
         private static readonly PdfName[] TERMINAL_FIELDS = new PdfName[] { PdfName.Btn, PdfName.Tx, PdfName.Ch, PdfName
             .Sig };
 
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.AbstractPdfFormField
-            ));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Forms.Fields.AbstractPdfFormField)
+            );
 
         /// <summary>Index of font value in default appearance element.</summary>
         private const int DA_FONT = 0;
@@ -473,7 +472,7 @@ namespace iText.Forms.Fields {
                     }
                 }
                 else {
-                    LOGGER.LogWarning(FormsLogMessageConstants.FORM_FIELD_HAS_CYCLED_PARENT_STRUCTURE);
+                    LOGGER.Warn(() => FormsLogMessageConstants.FORM_FIELD_HAS_CYCLED_PARENT_STRUCTURE);
                     Remove(PdfName.Parent);
                     this.parent = null;
                 }

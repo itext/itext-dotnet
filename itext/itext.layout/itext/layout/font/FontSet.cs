@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.Kernel.Font;
@@ -40,6 +39,8 @@ namespace iText.Layout.Font {
     /// </remarks>
     /// <seealso cref="FontProvider"/>
     public sealed class FontSet {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Font.FontSet));
+
         // FontSet MUST be final to avoid overriding #add(FontInfo) method or remove functionality.
         private static readonly AtomicLong lastId = new AtomicLong();
 
@@ -129,8 +130,7 @@ namespace iText.Layout.Font {
                 return false;
             }
             if (fontProgram is Type3Font) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Font.FontSet));
-                logger.LogError(iText.IO.Logs.IoLogMessageConstant.TYPE3_FONT_CANNOT_BE_ADDED);
+                LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.TYPE3_FONT_CANNOT_BE_ADDED);
                 return false;
             }
             FontInfo fi = FontInfo.Create(fontProgram, encoding, alias, unicodeRange);

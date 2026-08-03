@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
@@ -35,7 +34,7 @@ using iText.Kernel.Pdf.Annot;
 namespace iText.Forms.Xfdf {
 //\cond DO_NOT_DOCUMENT
     internal class XfdfReader {
-        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(XfdfReader));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(XfdfReader));
 
         private readonly IDictionary<AnnotObject, PdfTextAnnotation> annotationsWithInReplyTo = new Dictionary<AnnotObject
             , PdfTextAnnotation>();
@@ -49,15 +48,15 @@ namespace iText.Forms.Xfdf {
             ) {
             if (xfdfObject.GetF() != null && xfdfObject.GetF().GetHref() != null) {
                 if (pdfDocumentName.EqualsIgnoreCase(xfdfObject.GetF().GetHref())) {
-                    logger.LogInformation("Xfdf href and pdf name are equal. Continue merge");
+                    LOGGER.Info(() => "Xfdf href and pdf name are equal. Continue merge");
                 }
                 else {
-                    logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT
+                    LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT
                         );
                 }
             }
             else {
-                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.XFDF_NO_F_OBJECT_TO_COMPARE);
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.XFDF_NO_F_OBJECT_TO_COMPARE);
             }
             //TODO DEVSIX-4026 check for ids original/modified compatability with those in pdf document
             PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDocument, false);
@@ -83,7 +82,7 @@ namespace iText.Forms.Xfdf {
                         formFields.Get(name).SetValue(xfdfField.GetValue());
                     }
                     else {
-                        logger.LogError(iText.IO.Logs.IoLogMessageConstant.XFDF_NO_SUCH_FIELD_IN_PDF_DOCUMENT);
+                        LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.XFDF_NO_SUCH_FIELD_IN_PDF_DOCUMENT);
                     }
                 }
             }
@@ -421,7 +420,7 @@ namespace iText.Forms.Xfdf {
                         //XfdfConstants.LINK
                         //XfdfConstants.REDACT
                         //XfdfConstants.PROJECTION
-                        logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.XFDF_ANNOTATION_IS_NOT_SUPPORTED
+                        LOGGER.Warn(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.XFDF_ANNOTATION_IS_NOT_SUPPORTED
                             , annotName));
                         break;
                     }

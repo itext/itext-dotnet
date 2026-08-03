@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Borders;
@@ -199,8 +198,8 @@ namespace iText.Layout.Renderer {
                             // delete current row
                             rows.JRemoveAt(row - numOfRowsToRemove);
                             SetFinishRow(finishRow - 1);
-                            ILogger logger = ITextLogManager.GetLogger(typeof(TableRenderer));
-                            logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
+                            LazyLogger logger = new LazyLogger(typeof(TableRenderer));
+                            logger.Warn(() => iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
                         }
                         else {
                             numOfRowsToRemove++;

@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -44,6 +43,8 @@ namespace iText.Kernel.Pdf.Tagging {
     /// are structure elements. Structure elements are other structure elements or content items.
     /// </remarks>
     public class PdfStructElem : PdfObjectWrapper<PdfDictionary>, IStructureNode {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.Tagging.PdfStructElem));
+
         public PdfStructElem(PdfDictionary pdfObject)
             : base(pdfObject) {
             SetForbidRelease();
@@ -583,8 +584,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <param name="fs">file specification dictionary of associated file</param>
         public virtual void AddAssociatedFile(String description, PdfFileSpec fs) {
             if (null == ((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship)) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfStructElem));
-                logger.LogError(iText.IO.Logs.IoLogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
+                LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
             }
             if (null != description) {
                 GetDocument().GetCatalog().GetNameTree(PdfName.EmbeddedFiles).AddEntry(description, fs.GetPdfObject());

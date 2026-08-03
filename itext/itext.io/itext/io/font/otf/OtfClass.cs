@@ -20,14 +20,15 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.IO.Util;
 
 namespace iText.IO.Font.Otf {
     public class OtfClass {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.IO.Font.Otf.OtfClass));
+
         public const int GLYPH_BASE = 1;
 
         public const int GLYPH_LIGATURE = 2;
@@ -73,9 +74,8 @@ namespace iText.IO.Font.Otf {
                 otfClass = new iText.IO.Font.Otf.OtfClass(rf, classLocation);
             }
             catch (System.IO.IOException e) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Font.Otf.OtfClass));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OPENTYPE_GDEF_TABLE_ERROR, e.Message
-                    ));
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OPENTYPE_GDEF_TABLE_ERROR, 
+                    e.Message));
                 otfClass = null;
             }
             return otfClass;

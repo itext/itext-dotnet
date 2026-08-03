@@ -23,8 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
 using iText.Layout.Font;
 using iText.Layout.Properties;
@@ -37,9 +35,6 @@ namespace iText.StyledXmlParser.Css.Util {
     /// <summary>Utilities class for CSS operations.</summary>
     public class CssUtils {
         private const float EPSILON = 1e-6f;
-
-        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Util.CssUtils
-            ));
 
         private const int QUANTITY_OF_PARAMS_WITH_FALLBACK_OR_TYPE = 2;
 

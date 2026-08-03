@@ -24,9 +24,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Colors;
 using iText.IO.Exceptions;
@@ -36,6 +35,8 @@ using iText.IO.Util;
 namespace iText.IO.Image {
 //\cond DO_NOT_DOCUMENT
     internal class PngImageHelper {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(PngImageHelper));
+
         private class PngParameters {
 //\cond DO_NOT_DOCUMENT
             internal PngParameters(PngImageData image) {
@@ -229,7 +230,7 @@ namespace iText.IO.Image {
             int colorType = png.image.GetColorType();
             if (png.iccProfile != null && png.iccProfile.GetNumComponents() != GetExpectedNumberOfColorComponents(png)
                 ) {
-                ITextLogManager.GetLogger(typeof(PngImageHelper)).LogWarning(iText.IO.Logs.IoLogMessageConstant.PNG_IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.PNG_IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS
                     );
             }
             try {

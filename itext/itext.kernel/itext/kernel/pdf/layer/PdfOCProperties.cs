@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.Kernel.Logs;
@@ -46,6 +45,8 @@ namespace iText.Kernel.Pdf.Layer {
     /// must be indirect.
     /// </remarks>
     public class PdfOCProperties : PdfObjectWrapper<PdfDictionary> {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.Layer.PdfOCProperties));
+
 //\cond DO_NOT_DOCUMENT
         internal const String OC_CONFIG_NAME_PATTERN = "OCConfigName";
 //\endcond
@@ -297,10 +298,8 @@ namespace iText.Kernel.Pdf.Layer {
                     toDictionary.Put(fieldToAdd, value);
                 }
                 else {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Layer.PdfOCProperties));
-                    String warnText = MessageFormatUtil.Format(KernelLogMessageConstant.INVALID_DDICTIONARY_FIELD_VALUE, fieldToAdd
-                        , value);
-                    logger.LogWarning(warnText);
+                    LOGGER.Warn(() => MessageFormatUtil.Format(KernelLogMessageConstant.INVALID_DDICTIONARY_FIELD_VALUE, fieldToAdd
+                        , value));
                 }
             }
         }
@@ -343,22 +342,21 @@ namespace iText.Kernel.Pdf.Layer {
                     }
                 }
             }
-            if (arr.IsEmpty()) {
-                return;
+            if (!arr.IsEmpty()) {
+                PdfDictionary d = GetPdfObject().GetAsDictionary(PdfName.D);
+                PdfArray arras = d.GetAsArray(PdfName.AS);
+                if (arras == null) {
+                    arras = new PdfArray();
+                    d.Put(PdfName.AS, arras);
+                }
+                PdfDictionary @as = new PdfDictionary();
+                @as.Put(PdfName.Event, @event);
+                PdfArray categoryArray = new PdfArray();
+                categoryArray.Add(category);
+                @as.Put(PdfName.Category, categoryArray);
+                @as.Put(PdfName.OCGs, arr);
+                arras.Add(@as);
             }
-            PdfDictionary d = GetPdfObject().GetAsDictionary(PdfName.D);
-            PdfArray arras = d.GetAsArray(PdfName.AS);
-            if (arras == null) {
-                arras = new PdfArray();
-                d.Put(PdfName.AS, arras);
-            }
-            PdfDictionary @as = new PdfDictionary();
-            @as.Put(PdfName.Event, @event);
-            PdfArray categoryArray = new PdfArray();
-            categoryArray.Add(category);
-            @as.Put(PdfName.Category, categoryArray);
-            @as.Put(PdfName.OCGs, arr);
-            arras.Add(@as);
         }
 
         /// <summary>Reads the layers from the document to be able to modify them in the future.</summary>
@@ -477,7 +475,7 @@ namespace iText.Kernel.Pdf.Layer {
             int uniqueID = 0;
             ICollection<String> usedNames = new HashSet<String>();
             PdfArray configs = GetPdfObject().GetAsArray(PdfName.Configs);
-            if (null != configs) {
+            if (configs != null) {
                 for (int i = 0; i < configs.Size(); i++) {
                     PdfDictionary alternateDictionary = configs.GetAsDictionary(i);
                     if (null != alternateDictionary && alternateDictionary.ContainsKey(PdfName.Name)) {

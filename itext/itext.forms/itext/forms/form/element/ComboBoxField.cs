@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Exceptions;
@@ -35,8 +34,7 @@ using iText.Layout.Renderer;
 namespace iText.Forms.Form.Element {
     /// <summary>A field that represents a control for selecting one of the provided options.</summary>
     public class ComboBoxField : AbstractSelectField {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Forms.Form.Element.ComboBoxField
-            ));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Forms.Form.Element.ComboBoxField));
 
         private String selectedExportValue;
 
@@ -88,7 +86,7 @@ namespace iText.Forms.Form.Element {
                         found = true;
                     }
                     else {
-                        LOGGER.LogWarning(FormsLogMessageConstants.DUPLICATE_EXPORT_VALUE);
+                        LOGGER.Warn(() => FormsLogMessageConstants.DUPLICATE_EXPORT_VALUE);
                     }
                 }
             }
@@ -128,7 +126,7 @@ namespace iText.Forms.Form.Element {
                 }
             }
             if (found) {
-                LOGGER.LogWarning(FormsLogMessageConstants.DUPLICATE_EXPORT_VALUE);
+                LOGGER.Warn(() => FormsLogMessageConstants.DUPLICATE_EXPORT_VALUE);
             }
             base.AddOption(option);
         }

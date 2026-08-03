@@ -24,9 +24,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
@@ -40,7 +39,7 @@ namespace iText.Forms.Xfdf {
     /// objects.
     /// </summary>
     public class XfdfObjectFactory {
-        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(XfdfObjectFactory));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(XfdfObjectFactory));
 
         /// <summary>Extracts data from pdf document acroform and annotations into XfdfObject.</summary>
         /// <param name="document">Pdf document for data extraction</param>
@@ -102,7 +101,7 @@ namespace iText.Forms.Xfdf {
                     xfdfObject.SetF(new FObject(href.Value));
                 }
                 else {
-                    logger.LogInformation(XfdfConstants.EMPTY_F_LEMENT);
+                    LOGGER.Info(() => XfdfConstants.EMPTY_F_LEMENT);
                 }
             }
         }
@@ -121,7 +120,7 @@ namespace iText.Forms.Xfdf {
                 xfdfObject.SetIds(idsObject);
             }
             else {
-                logger.LogInformation(XfdfConstants.EMPTY_IDS_ELEMENT);
+                LOGGER.Info(() => XfdfConstants.EMPTY_IDS_ELEMENT);
             }
         }
 
@@ -301,7 +300,7 @@ namespace iText.Forms.Xfdf {
                     }
 
                     default: {
-                        logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE);
+                        LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.XFDF_UNSUPPORTED_ANNOTATION_ATTRIBUTE);
                         break;
                     }
                 }
@@ -340,7 +339,7 @@ namespace iText.Forms.Xfdf {
                     parentField.SetValue(valueTextNode.InnerText);
                 }
                 else {
-                    logger.LogInformation(XfdfConstants.EMPTY_FIELD_VALUE_ELEMENT);
+                    LOGGER.Info(() => XfdfConstants.EMPTY_FIELD_VALUE_ELEMENT);
                 }
                 return;
             }
@@ -356,13 +355,13 @@ namespace iText.Forms.Xfdf {
         }
 
         private void VisitInnerFields(FieldObject parentField, XmlNode parentNode, FieldsObject fieldsObject) {
-            if (parentNode.Attributes.Count != 0) {
+            if (parentNode.Attributes.Count == 0) {
+                LOGGER.Info(() => XfdfConstants.EMPTY_FIELD_NAME_ELEMENT);
+            }
+            else {
                 if (parentField.GetName() == null) {
                     parentField.SetName(parentNode.Attributes.Item(0).Value);
                 }
-            }
-            else {
-                logger.LogInformation(XfdfConstants.EMPTY_FIELD_NAME_ELEMENT);
             }
             XmlNodeList children = parentNode.ChildNodes;
             for (int temp = 0; temp < children.Count; temp++) {

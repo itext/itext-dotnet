@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -51,7 +50,7 @@ namespace iText.Svg.Renderers.Impl {
         private static readonly MarkerVertexType[] MARKER_VERTEX_TYPES = new MarkerVertexType[] { MarkerVertexType
             .MARKER_START, MarkerVertexType.MARKER_MID, MarkerVertexType.MARKER_END };
 
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(AbstractSvgNodeRenderer));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(AbstractSvgNodeRenderer));
 
         /// <summary>Map that contains attributes and styles used for drawing operations.</summary>
         protected internal IDictionary<String, String> attributesAndStyles;
@@ -342,7 +341,7 @@ namespace iText.Svg.Renderers.Impl {
                     context.GetCurrentCanvas().ConcatMatrix(transform.CreateInverse());
                 }
                 catch (NoninvertibleTransformException) {
-                    LOGGER.LogWarning(SvgLogMessageConstant.NON_INVERTIBLE_TRANSFORMATION_MATRIX_FOR_NON_SCALING_STROKE);
+                    LOGGER.Warn(() => SvgLogMessageConstant.NON_INVERTIBLE_TRANSFORMATION_MATRIX_FOR_NON_SCALING_STROKE);
                     transform = null;
                 }
             }

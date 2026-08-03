@@ -24,8 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Actions;
 using iText.Commons.Actions.Confirmations;
 using iText.Commons.Actions.Processors;
@@ -37,7 +35,7 @@ using iText.Commons.Utils;
 namespace iText.Commons.Actions.Producer {
     /// <summary>Class is used for producer line building.</summary>
     public sealed class ProducerBuilder : AbstractITextConfigurationEvent {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Commons.Actions.Producer.ProducerBuilder
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Commons.Actions.Producer.ProducerBuilder
             ));
 
         private static readonly iText.Commons.Actions.Producer.ProducerBuilder INSTANCE = new iText.Commons.Actions.Producer.ProducerBuilder
@@ -180,8 +178,8 @@ namespace iText.Commons.Actions.Producer {
                 }
                 IPlaceholderPopulator populator = PLACEHOLDER_POPULATORS.Get(placeholderName);
                 if (populator == null) {
-                    LOGGER.LogInformation(MessageFormatUtil.Format(CommonsLogMessageConstant.UNKNOWN_PLACEHOLDER_WAS_IGNORED, 
-                        placeholderName));
+                    LOGGER.Info(() => MessageFormatUtil.Format(CommonsLogMessageConstant.UNKNOWN_PLACEHOLDER_WAS_IGNORED, placeholderName
+                        ));
                 }
                 else {
                     builder.Append(populator.Populate(events, parameter));

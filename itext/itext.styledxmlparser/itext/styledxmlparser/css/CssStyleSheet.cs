@@ -23,9 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.StyledXmlParser;
 using iText.StyledXmlParser.Css.Media;
@@ -159,8 +158,8 @@ namespace iText.StyledXmlParser.Css {
                 stylesMap.Put(cssDeclaration.GetProperty(), cssDeclaration);
             }
             else {
-                ILogger logger = ITextLogManager.GetLogger(typeof(ICssResolver));
-                logger.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                LazyLogger logger = new LazyLogger(typeof(ICssResolver));
+                logger.Warn(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
                     , cssDeclaration));
             }
         }

@@ -22,12 +22,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using Microsoft.Extensions.Logging;
 using iText.Bouncycastleconnector;
-using iText.Commons;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Forms.Fields.Properties;
 using iText.Forms.Form.Element;
@@ -61,7 +60,7 @@ namespace iText.Signatures {
         private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/font/FreeSans.ttf";
 
-        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(PdfUASignerTest));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(PdfUASignerTest));
 
         public static readonly String CERTIFICATE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
@@ -361,7 +360,7 @@ namespace iText.Signatures {
             signingAction(signer);
             signer.SignDetached(new BouncyCastleDigest(), pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard
                 .CADES);
-            logger.LogInformation("Out pdf: " + UrlUtil.GetNormalizedFileUriString(outPdf));
+            LOGGER.Info(() => "Out pdf: " + UrlUtil.GetNormalizedFileUriString(outPdf));
             return outPdf;
         }
 
@@ -376,7 +375,7 @@ namespace iText.Signatures {
             signingAction(signer);
             signer.SignDetached(new BouncyCastleDigest(), pks, signChain, null, null, null, 0, PdfSigner.CryptoStandard
                 .CADES);
-            logger.LogInformation("Out pdf: " + UrlUtil.GetNormalizedFileUriString(outPdf));
+            LOGGER.Info(() => "Out pdf: " + UrlUtil.GetNormalizedFileUriString(outPdf));
             return outPdf;
         }
 

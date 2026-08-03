@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.IO.Colors;
@@ -98,7 +97,7 @@ namespace iText.Pdfa.Checker {
 
         private const int MAX_NUMBER_OF_DEVICEN_COLOR_COMPONENTS = 32;
 
-        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(PdfAChecker));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(PdfAChecker));
 
         private const String TRANSPARENCY_ERROR_MESSAGE = PdfaExceptionMessageConstant.THE_DOCUMENT_DOES_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE;
 
@@ -423,7 +422,7 @@ namespace iText.Pdfa.Checker {
             CheckAnnotationAgainstActions(annotDic);
             if (CheckStructure(conformance)) {
                 if (contentAnnotations.Contains(subtype) && !annotDic.ContainsKey(PdfName.Contents)) {
-                    logger.LogWarning(MessageFormatUtil.Format(PdfAConformanceLogMessageConstant.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY
+                    LOGGER.Warn(() => MessageFormatUtil.Format(PdfAConformanceLogMessageConstant.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY
                         , subtype.GetValue()));
                 }
             }
@@ -601,12 +600,12 @@ namespace iText.Pdfa.Checker {
                         );
                 }
                 if (!fileSpec.ContainsKey(PdfName.Desc)) {
-                    logger.LogWarning(PdfAConformanceLogMessageConstant.FILE_SPECIFICATION_DICTIONARY_SHOULD_CONTAIN_DESC_KEY);
+                    LOGGER.Warn(() => PdfAConformanceLogMessageConstant.FILE_SPECIFICATION_DICTIONARY_SHOULD_CONTAIN_DESC_KEY);
                 }
                 PdfDictionary ef = fileSpec.GetAsDictionary(PdfName.EF);
                 CheckFileSpecEmbeddedStream(ef.GetAsStream(PdfName.F));
                 // iText doesn't check whether provided file is compliant to PDF-A specs.
-                logger.LogWarning(PdfAConformanceLogMessageConstant.EMBEDDED_FILE_SHALL_BE_COMPLIANT_WITH_SPEC);
+                LOGGER.Warn(() => PdfAConformanceLogMessageConstant.EMBEDDED_FILE_SHALL_BE_COMPLIANT_WITH_SPEC);
             }
         }
 
@@ -1144,7 +1143,7 @@ namespace iText.Pdfa.Checker {
             ) {
             if (!IsAltCSIsTheSame(separation.Get(2), deviceNColorSpace) || !deviceNTintTransform.Equals(separation.Get
                 (3))) {
-                logger.LogWarning(PdfAConformanceLogMessageConstant.TINT_TRANSFORM_AND_ALTERNATE_SPACE_OF_SEPARATION_ARRAYS_IN_THE_COLORANTS_OF_DEVICE_N_SHOULD_BE_CONSISTENT_WITH_SAME_ATTRIBUTES_OF_DEVICE_N
+                LOGGER.Warn(() => PdfAConformanceLogMessageConstant.TINT_TRANSFORM_AND_ALTERNATE_SPACE_OF_SEPARATION_ARRAYS_IN_THE_COLORANTS_OF_DEVICE_N_SHOULD_BE_CONSISTENT_WITH_SAME_ATTRIBUTES_OF_DEVICE_N
                     );
             }
             CheckSeparationCS(separation);

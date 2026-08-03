@@ -23,9 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.StyledXmlParser;
 
@@ -33,6 +32,8 @@ namespace iText.StyledXmlParser.Css.Util {
 //\cond DO_NOT_DOCUMENT
     /// <summary>Utilities class with functionality to normalize CSS properties.</summary>
     internal class CssPropertyNormalizer {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(CssPropertyNormalizer));
+
         private static readonly Regex URL_PATTERN = PortUtil.CreateRegexPatternWithDotMatchingNewlines("^[uU][rR][lL]\\("
             );
 
@@ -96,8 +97,8 @@ namespace iText.StyledXmlParser.Css.Util {
             int end = CssUtils.FindNextUnescapedChar(source, endQuoteSymbol, start + 1);
             if (end == -1) {
                 end = source.Length;
-                ITextLogManager.GetLogger(typeof(CssPropertyNormalizer)).LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant
-                    .QUOTE_IS_NOT_CLOSED_IN_CSS_EXPRESSION, source));
+                LOGGER.Warn(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.QUOTE_IS_NOT_CLOSED_IN_CSS_EXPRESSION
+                    , source));
             }
             else {
                 ++end;
@@ -124,8 +125,8 @@ namespace iText.StyledXmlParser.Css.Util {
                 else {
                     curr = CssUtils.FindNextUnescapedChar(source, ')', curr);
                     if (curr == -1) {
-                        ITextLogManager.GetLogger(typeof(CssPropertyNormalizer)).LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant
-                            .URL_IS_NOT_CLOSED_IN_CSS_EXPRESSION, source));
+                        LOGGER.Warn(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.URL_IS_NOT_CLOSED_IN_CSS_EXPRESSION
+                            , source));
                         return source.Length;
                     }
                     else {
@@ -136,8 +137,8 @@ namespace iText.StyledXmlParser.Css.Util {
                 }
             }
             else {
-                ITextLogManager.GetLogger(typeof(CssPropertyNormalizer)).LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant
-                    .URL_IS_EMPTY_IN_CSS_EXPRESSION, source));
+                LOGGER.Warn(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.URL_IS_EMPTY_IN_CSS_EXPRESSION
+                    , source));
                 return source.Length;
             }
         }

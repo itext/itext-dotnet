@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -37,7 +36,7 @@ using iText.Svg.Utils;
 namespace iText.Svg.Renderers.Impl {
     /// <summary>Implementation for the svg &lt;pattern&gt; tag.</summary>
     public class PatternSvgNodeRenderer : AbstractBranchSvgNodeRenderer, ISvgPaintServer {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(PatternSvgNodeRenderer));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(PatternSvgNodeRenderer));
 
         private const double CONVERT_COEFF = 0.75;
 
@@ -215,8 +214,9 @@ namespace iText.Svg.Renderers.Impl {
             }
             else {
                 if (patternUnits != null && !SvgConstants.Values.OBJECT_BOUNDING_BOX.Equals(patternUnits)) {
-                    ITextLogManager.GetLogger(this.GetType()).LogWarning(MessageFormatUtil.Format(SvgLogMessageConstant.PATTERN_INVALID_PATTERN_UNITS_LOG
-                        , patternUnits));
+                    String patternUnitsToLog = patternUnits;
+                    LOGGER.Warn(() => MessageFormatUtil.Format(SvgLogMessageConstant.PATTERN_INVALID_PATTERN_UNITS_LOG, patternUnitsToLog
+                        ));
                 }
             }
             return true;
@@ -233,8 +233,9 @@ namespace iText.Svg.Renderers.Impl {
             }
             else {
                 if (patternContentUnits != null && !SvgConstants.Values.USER_SPACE_ON_USE.Equals(patternContentUnits)) {
-                    ITextLogManager.GetLogger(this.GetType()).LogWarning(MessageFormatUtil.Format(SvgLogMessageConstant.PATTERN_INVALID_PATTERN_CONTENT_UNITS_LOG
-                        , patternContentUnits));
+                    String patternContentUnitsToLog = patternContentUnits;
+                    LOGGER.Warn(() => MessageFormatUtil.Format(SvgLogMessageConstant.PATTERN_INVALID_PATTERN_CONTENT_UNITS_LOG
+                        , patternContentUnitsToLog));
                 }
             }
             return false;
@@ -265,16 +266,12 @@ namespace iText.Svg.Renderers.Impl {
 
         private static bool XStepYStepAreValid(double xStep, double yStep) {
             if (xStep < 0 || yStep < 0) {
-                if (LOGGER.IsEnabled(LogLevel.Warning)) {
-                    LOGGER.LogWarning(MessageFormatUtil.Format(SvgLogMessageConstant.PATTERN_WIDTH_OR_HEIGHT_IS_NEGATIVE));
-                }
+                LOGGER.Warn(() => MessageFormatUtil.Format(SvgLogMessageConstant.PATTERN_WIDTH_OR_HEIGHT_IS_NEGATIVE));
                 return false;
             }
             else {
                 if (xStep == 0 || yStep == 0) {
-                    if (LOGGER.IsEnabled(LogLevel.Information)) {
-                        LOGGER.LogInformation(MessageFormatUtil.Format(SvgLogMessageConstant.PATTERN_WIDTH_OR_HEIGHT_IS_ZERO));
-                    }
+                    LOGGER.Info(() => MessageFormatUtil.Format(SvgLogMessageConstant.PATTERN_WIDTH_OR_HEIGHT_IS_ZERO));
                     return false;
                 }
                 else {
@@ -287,9 +284,7 @@ namespace iText.Svg.Renderers.Impl {
             // if viewBox width or height is zero we should disable rendering
             // of the element (according to the viewBox documentation)
             if (viewBoxValues[2] == 0 || viewBoxValues[3] == 0) {
-                if (LOGGER.IsEnabled(LogLevel.Information)) {
-                    LOGGER.LogInformation(SvgLogMessageConstant.VIEWBOX_WIDTH_OR_HEIGHT_IS_ZERO);
-                }
+                LOGGER.Info(() => SvgLogMessageConstant.VIEWBOX_WIDTH_OR_HEIGHT_IS_ZERO);
                 return true;
             }
             else {

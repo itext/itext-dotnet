@@ -22,14 +22,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Text;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Exceptions;
 
 namespace iText.IO.Source {
     public class PdfTokenizer : IDisposable {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.IO.Source.PdfTokenizer));
+
         public enum TokenType {
             Number,
             String,
@@ -354,9 +355,11 @@ namespace iText.IO.Source {
                                 catch (Exception) {
                                     //warn about incorrect reference number
                                     //Exception: NumberFormatException for java, FormatException or OverflowException for .NET
-                                    ILogger logger = ITextLogManager.GetLogger(typeof(PdfTokenizer));
-                                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE, iText.Commons.Utils.JavaUtil.GetStringForBytes
-                                        (n1), iText.Commons.Utils.JavaUtil.GetStringForBytes(n2)));
+                                    byte[] logN1 = n1;
+                                    byte[] logN2 = n2;
+                                    LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE, 
+                                        iText.Commons.Utils.JavaUtil.GetStringForBytes(logN1, iText.Commons.Utils.EncodingUtil.ISO_8859_1), iText.Commons.Utils.JavaUtil.GetStringForBytes
+                                        (logN2, iText.Commons.Utils.EncodingUtil.ISO_8859_1)));
                                     reference = -1;
                                     generation = 0;
                                 }

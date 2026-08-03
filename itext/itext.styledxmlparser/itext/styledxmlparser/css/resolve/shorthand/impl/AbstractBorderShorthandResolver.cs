@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
@@ -36,6 +35,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
     /// implementation for borders.
     /// </summary>
     public abstract class AbstractBorderShorthandResolver : IShorthandResolver {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(AbstractBorderShorthandResolver));
+
         /// <summary>The template for -width properties.</summary>
         private const String _0_WIDTH = "{0}-width";
 
@@ -67,8 +68,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             String borderWidthValue = null;
             foreach (String value in props) {
                 if (CommonCssConstants.INITIAL.Equals(value) || CommonCssConstants.INHERIT.Equals(value)) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(AbstractBorderShorthandResolver));
-                    logger.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                    LOGGER.Warn(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
                         , shorthandExpression));
                     return JavaCollectionsUtil.EmptyList<CssDeclaration>();
                 }

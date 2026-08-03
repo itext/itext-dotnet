@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.IO.Colors;
 using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
@@ -58,6 +57,8 @@ namespace iText.Pdfa.Checker {
     /// iText - pdfa project.
     /// </remarks>
     public abstract class PdfAChecker : IValidationChecker {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Pdfa.Checker.PdfAChecker));
+
         /// <summary>
         /// The Red-Green-Blue color profile as defined by the International Color
         /// Consortium.
@@ -298,16 +299,14 @@ namespace iText.Pdfa.Checker {
                 if (!alreadyLoggedThatPageFlushingWasNotPerformed) {
                     alreadyLoggedThatPageFlushingWasNotPerformed = true;
                     // This log message will be printed once for one instance of the document.
-                    ITextLogManager.GetLogger(typeof(iText.Pdfa.Checker.PdfAChecker)).LogWarning(PdfALogMessageConstant.PDFA_PAGE_FLUSHING_WAS_NOT_PERFORMED
-                        );
+                    LOGGER.Warn(() => PdfALogMessageConstant.PDFA_PAGE_FLUSHING_WAS_NOT_PERFORMED);
                 }
             }
             else {
                 if (!alreadyLoggedThatObjectFlushingWasNotPerformed) {
                     alreadyLoggedThatObjectFlushingWasNotPerformed = true;
                     // This log message will be printed once for one instance of the document.
-                    ITextLogManager.GetLogger(typeof(iText.Pdfa.Checker.PdfAChecker)).LogWarning(PdfALogMessageConstant.PDFA_OBJECT_FLUSHING_WAS_NOT_PERFORMED
-                        );
+                    LOGGER.Warn(() => PdfALogMessageConstant.PDFA_OBJECT_FLUSHING_WAS_NOT_PERFORMED);
                 }
             }
             return false;

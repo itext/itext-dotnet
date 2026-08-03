@@ -23,9 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.Forms.Form;
@@ -50,6 +49,9 @@ namespace iText.Forms.Form.Renderer {
     /// implementation for input fields.
     /// </summary>
     public class InputFieldRenderer : AbstractOneLineTextFieldRenderer {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Forms.Form.Renderer.InputFieldRenderer
+            ));
+
         private const float DEFAULT_COMB_PADDING = 0;
 
         /// <summary>
@@ -150,7 +152,7 @@ namespace iText.Forms.Form.Renderer {
             Rectangle flatBBox = flatRenderer.GetOccupiedArea().GetBBox();
             UpdatePdfFont((ParagraphRenderer)flatRenderer);
             if (flatLines.IsEmpty() || font == null) {
-                ITextLogManager.GetLogger(GetType()).LogError(MessageFormatUtil.Format(FormsLogMessageConstants.ERROR_WHILE_LAYOUT_OF_FORM_FIELD_WITH_TYPE
+                LOGGER.Error(() => MessageFormatUtil.Format(FormsLogMessageConstants.ERROR_WHILE_LAYOUT_OF_FORM_FIELD_WITH_TYPE
                     , "text input"));
                 SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flatBBox.SetY(flatBBox.GetTop()).SetHeight(0);
@@ -180,8 +182,7 @@ namespace iText.Forms.Form.Renderer {
             String name = GetModelId();
             UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
             if (!fontSize.IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Form.Renderer.InputFieldRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.FONT_SIZE));
             }
             PdfDocument doc = drawContext.GetDocument();
@@ -233,8 +234,7 @@ namespace iText.Forms.Form.Renderer {
                 if (width == null) {
                     UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
                     if (!fontSize.IsPointValue()) {
-                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Form.Renderer.InputFieldRenderer));
-                        logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                        LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                             , Property.FONT_SIZE));
                     }
                     int size = GetSize();

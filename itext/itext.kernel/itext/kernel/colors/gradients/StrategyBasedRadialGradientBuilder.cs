@@ -208,12 +208,6 @@ namespace iText.Kernel.Colors.Gradients {
             return new Tuple2<RadialGradientPoint, AffineTransform>(new RadialGradientPoint(center, rX), transform);
         }
 
-        private double[] GetRadiusForManualStrategy(Rectangle targetBoundingBox) {
-            double rX = EvaluateValueOnSegment(0, targetBoundingBox.GetWidth(), true, xRadius, xRadiusRelative);
-            double rY = EvaluateValueOnSegment(0, targetBoundingBox.GetHeight(), true, yRadius, yRadiusRelative);
-            return new double[] { rX, rY };
-        }
-
         private double[] GetRadiusForCenterBasedStrategy(Rectangle targetBoundingBox, Point center) {
             switch (gradientStrategy) {
                 case StrategyBasedRadialGradientBuilder.GradientStrategy.CLOSEST_SIDE: {
@@ -234,6 +228,28 @@ namespace iText.Kernel.Colors.Gradients {
                     return EvaluateFarthestCornerRadius(targetBoundingBox, center);
                 }
             }
+        }
+
+        private double[] EvaluateClosestCornerRadius(Rectangle targetBoundingBox, Point center) {
+            Point[] vertices = targetBoundingBox.ToPointsArray();
+            Point closestCorner = vertices[0];
+            for (int i = 1; i < vertices.Length; ++i) {
+                if (center.Distance(closestCorner) > center.Distance(vertices[i])) {
+                    closestCorner = vertices[i];
+                }
+            }
+            return EvaluateRadiusForCorner(center, closestCorner);
+        }
+
+        private double[] EvaluateFarthestCornerRadius(Rectangle targetBoundingBox, Point center) {
+            Point[] vertices = targetBoundingBox.ToPointsArray();
+            Point farthestCorner = vertices[0];
+            for (int i = 1; i < vertices.Length; ++i) {
+                if (center.Distance(farthestCorner) < center.Distance(vertices[i])) {
+                    farthestCorner = vertices[i];
+                }
+            }
+            return EvaluateRadiusForCorner(center, farthestCorner);
         }
 
         private double[] EvaluateClosestSideRadius(Rectangle targetBoundingBox, Point center) {
@@ -268,28 +284,6 @@ namespace iText.Kernel.Colors.Gradients {
             }
         }
 
-        private double[] EvaluateClosestCornerRadius(Rectangle targetBoundingBox, Point center) {
-            Point[] vertices = targetBoundingBox.ToPointsArray();
-            Point closestCorner = vertices[0];
-            for (int i = 1; i < vertices.Length; ++i) {
-                if (center.Distance(closestCorner) > center.Distance(vertices[i])) {
-                    closestCorner = vertices[i];
-                }
-            }
-            return EvaluateRadiusForCorner(center, closestCorner);
-        }
-
-        private double[] EvaluateFarthestCornerRadius(Rectangle targetBoundingBox, Point center) {
-            Point[] vertices = targetBoundingBox.ToPointsArray();
-            Point farthestCorner = vertices[0];
-            for (int i = 1; i < vertices.Length; ++i) {
-                if (center.Distance(farthestCorner) < center.Distance(vertices[i])) {
-                    farthestCorner = vertices[i];
-                }
-            }
-            return EvaluateRadiusForCorner(center, farthestCorner);
-        }
-
         private double[] EvaluateRadiusForCorner(Point center, Point corner) {
             if (isCircular) {
                 double distance = center.Distance(corner);
@@ -303,6 +297,12 @@ namespace iText.Kernel.Colors.Gradients {
                 double yR = aspectRatio * xR;
                 return new double[] { xR, yR };
             }
+        }
+
+        private double[] GetRadiusForManualStrategy(Rectangle targetBoundingBox) {
+            double rX = EvaluateValueOnSegment(0, targetBoundingBox.GetWidth(), true, xRadius, xRadiusRelative);
+            double rY = EvaluateValueOnSegment(0, targetBoundingBox.GetHeight(), true, yRadius, yRadiusRelative);
+            return new double[] { rX, rY };
         }
 
         private static double EvaluateValueOnSegment(double segmentStart, double segmentEnd, bool isFromStart, double

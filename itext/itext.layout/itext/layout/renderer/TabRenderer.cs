@@ -20,8 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
@@ -32,6 +31,8 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class TabRenderer : AbstractRenderer {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Renderer.TabRenderer));
+
         /// <summary>Creates a TabRenderer from its corresponding layout object</summary>
         /// <param name="tab">
         /// the
@@ -54,8 +55,7 @@ namespace iText.Layout.Renderer {
 
         public override void Draw(DrawContext drawContext) {
             if (occupiedArea == null) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TabRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
                     , "Drawing won't be performed."));
                 return;
             }

@@ -94,25 +94,25 @@ namespace iText.Kernel.Pdf {
 
         public virtual bool Add(float number) {
             // adding zero doesn't modify the TextArray at all
-            if (number != 0) {
-                if (!float.IsNaN(lastNumber)) {
-                    lastNumber = number + lastNumber;
-                    if (lastNumber != 0) {
-                        Set(Size() - 1, new PdfNumber(lastNumber));
-                    }
-                    else {
-                        Remove(Size() - 1);
-                        lastNumber = float.NaN;
-                    }
+            if (number == 0) {
+                return false;
+            }
+            if (float.IsNaN(lastNumber)) {
+                lastNumber = number;
+                base.Add(new PdfNumber(lastNumber));
+            }
+            else {
+                lastNumber = number + lastNumber;
+                if (lastNumber == 0) {
+                    Remove(Size() - 1);
+                    lastNumber = float.NaN;
                 }
                 else {
-                    lastNumber = number;
-                    base.Add(new PdfNumber(lastNumber));
+                    Set(Size() - 1, new PdfNumber(lastNumber));
                 }
-                lastString = null;
-                return true;
             }
-            return false;
+            lastString = null;
+            return true;
         }
 
         public virtual bool Add(String text, PdfFont font) {
@@ -125,19 +125,19 @@ namespace iText.Kernel.Pdf {
         }
 
         protected internal virtual bool Add(String text) {
-            if (text.Length > 0) {
-                if (lastString != null) {
-                    lastString.Append(text);
-                    Set(Size() - 1, new PdfString(lastString.ToString()));
-                }
-                else {
-                    lastString = new StringBuilder(text);
-                    base.Add(new PdfString(lastString.ToString()));
-                }
-                lastNumber = float.NaN;
-                return true;
+            if (text.Length == 0) {
+                return false;
             }
-            return false;
+            if (lastString == null) {
+                lastString = new StringBuilder(text);
+                base.Add(new PdfString(lastString.ToString()));
+            }
+            else {
+                lastString.Append(text);
+                Set(Size() - 1, new PdfString(lastString.ToString()));
+            }
+            lastNumber = float.NaN;
+            return true;
         }
     }
 }

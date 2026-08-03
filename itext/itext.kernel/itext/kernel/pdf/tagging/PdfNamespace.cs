@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
@@ -36,6 +35,8 @@ namespace iText.Kernel.Pdf.Tagging {
     /// This pdf entity is meaningful only for the PDF documents of version <b>2.0 and higher</b>.
     /// </remarks>
     public class PdfNamespace : PdfObjectWrapper<PdfDictionary> {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.Tagging.PdfNamespace));
+
         /// <summary>
         /// Constructs namespace from the given
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
@@ -310,13 +311,15 @@ namespace iText.Kernel.Pdf.Tagging {
 
         private void LogOverwritingOfMappingIfNeeded(String thisNsRole, PdfObject prevVal) {
             if (prevVal != null) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfNamespace));
-                String nsNameStr = GetNamespaceName();
-                if (nsNameStr == null) {
-                    nsNameStr = "this";
+                LOGGER.Warn(() => {
+                    String nsNameStr = GetNamespaceName();
+                    if (nsNameStr == null) {
+                        nsNameStr = "this";
+                    }
+                    return MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.MAPPING_IN_NAMESPACE_OVERWRITTEN, thisNsRole
+                        , nsNameStr);
                 }
-                logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.MAPPING_IN_NAMESPACE_OVERWRITTEN
-                    , thisNsRole, nsNameStr));
+                );
             }
         }
     }

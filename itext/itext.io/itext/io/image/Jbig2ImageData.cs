@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.IO.Codec;
 using iText.IO.Exceptions;
 using iText.IO.Source;
@@ -72,8 +71,8 @@ namespace iText.IO.Image {
         }
 
         public override bool CanImageBeInline() {
-            ILogger logger = ITextLogManager.GetLogger(typeof(ImageData));
-            logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER);
+            LazyLogger logger = new LazyLogger(typeof(ImageData));
+            logger.Warn(() => iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER);
             return false;
         }
     }

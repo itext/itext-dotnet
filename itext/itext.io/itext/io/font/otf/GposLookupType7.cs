@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font.Otf.Lookuptype7;
 
@@ -33,8 +32,7 @@ namespace iText.IO.Font.Otf {
     /// Contextual Positioning Subtables
     /// </summary>
     public class GposLookupType7 : OpenTableLookup {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.IO.Font.Otf.GposLookupType7
-            ));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.IO.Font.Otf.GposLookupType7));
 
         protected internal IList<ContextualTable<ContextualPositionRule>> subTables;
 
@@ -90,7 +88,7 @@ namespace iText.IO.Font.Otf {
 
                 case 1:
                 case 3: {
-                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.GPOS_LOOKUP_SUBTABLE_FORMAT_NOT_SUPPORTED
+                    LOGGER.Warn(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.GPOS_LOOKUP_SUBTABLE_FORMAT_NOT_SUPPORTED
                         , substFormat, 7));
                     break;
                 }

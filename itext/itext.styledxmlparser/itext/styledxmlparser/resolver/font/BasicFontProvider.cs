@@ -23,9 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.IO.Util;
 using iText.Layout.Font;
 using iText.Layout.Renderer;
@@ -37,7 +36,7 @@ namespace iText.StyledXmlParser.Resolver.Font {
     /// that allows configuring in the constructor which fonts are loaded by default.
     /// </summary>
     public class BasicFontProvider : FontProvider {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Resolver.Font.BasicFontProvider
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.StyledXmlParser.Resolver.Font.BasicFontProvider
             ));
 
         private const String DEFAULT_FONT_FAMILY = "Times";
@@ -183,7 +182,7 @@ namespace iText.StyledXmlParser.Resolver.Font {
                     return FREE_FONT_RANGE;
                 }
                 catch (Exception e) {
-                    LOGGER.LogError(e, iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.ERROR_LOADING_FONT);
+                    LOGGER.Error(() => iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.ERROR_LOADING_FONT, e);
                 }
             }
             return null;
@@ -213,7 +212,7 @@ namespace iText.StyledXmlParser.Resolver.Font {
                     }
                 }
                 catch (Exception e) {
-                    LOGGER.LogError(e, iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.ERROR_LOADING_FONT);
+                    LOGGER.Error(() => iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.ERROR_LOADING_FONT, e);
                 }
             }
         }

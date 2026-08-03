@@ -20,14 +20,15 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Utils;
 using iText.Kernel.Validation.Context;
 
 namespace iText.Kernel.Pdf {
     public abstract class PdfObject {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(PdfObject));
+
         public const byte ARRAY = 1;
 
         public const byte BOOLEAN = 2;
@@ -132,15 +133,14 @@ namespace iText.Kernel.Pdf {
             if (IsFlushed() || GetIndirectReference() == null || GetIndirectReference().IsFree()) {
                 // TODO DEVSIX-744: here we should take into account and log the case when object is MustBeIndirect,
                 //  but has no indirect reference
-                //            Logger logger = LoggerFactory.getLogger(PdfObject.class);
                 //            if (isFlushed()) {
-                //                logger.warn("Meaningless call, the object has already flushed");
+                //                LOGGER.warn(() -> "Meaningless call, the object has already flushed");
                 //            } else if (isIndirect()){
-                //                logger.warn("Meaningless call, the object will be transformed into indirect on closing," +
+                //                LOGGER.warn(() -> "Meaningless call, the object will be transformed into indirect on closing," +
                 //                " but at the moment it doesn't have an indirect reference and therefore couldn't be flushed. " +
                 //                        "To flush it now call makeIndirect(PdfDocument) method before calling flush() method.");
                 //            } else {
-                //                logger.warn("Meaningless call, the object is direct object. It will be flushed along with" +
+                //                LOGGER.warn(() -> "Meaningless call, the object is direct object. It will be flushed along with" +
                 //                " the indirect object that contains it.");
                 //            }
                 return;
@@ -149,8 +149,7 @@ namespace iText.Kernel.Pdf {
                 PdfDocument document = GetIndirectReference().GetDocument();
                 if (document != null) {
                     if (document.IsAppendMode() && !IsModified()) {
-                        ILogger logger = ITextLogManager.GetLogger(typeof(PdfObject));
-                        logger.LogInformation(iText.IO.Logs.IoLogMessageConstant.PDF_OBJECT_FLUSHING_NOT_PERFORMED);
+                        LOGGER.Info(() => iText.IO.Logs.IoLogMessageConstant.PDF_OBJECT_FLUSHING_NOT_PERFORMED);
                         return;
                     }
                     document.CheckIsoConformance(new PdfObjectValidationContext(this));
@@ -452,8 +451,7 @@ namespace iText.Kernel.Pdf {
         public virtual void Release() {
             // In case ForbidRelease flag is set, release will not be performed.
             if (IsReleaseForbidden()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(PdfObject));
-                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.FORBID_RELEASE_IS_SET);
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.FORBID_RELEASE_IS_SET);
             }
             else {
                 if (indirectReference != null && indirectReference.GetReader() != null && !indirectReference.CheckState(FLUSHED

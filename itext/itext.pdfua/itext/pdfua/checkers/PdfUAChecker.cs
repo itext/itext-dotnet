@@ -22,10 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Datastructures;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
@@ -53,6 +52,8 @@ namespace iText.Pdfua.Checkers {
     /// pdfua project.
     /// </remarks>
     public abstract class PdfUAChecker : IValidationChecker {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Pdfua.Checkers.PdfUAChecker));
+
 //\cond DO_NOT_DOCUMENT
         internal static readonly Func<String, PdfException> EXCEPTION_SUPPLIER = (msg) => new PdfUAConformanceException
             (msg);
@@ -72,8 +73,7 @@ namespace iText.Pdfua.Checkers {
         /// <summary>Logs a warn on page flushing that page flushing is disabled in PDF/UA mode.</summary>
         public virtual void WarnOnPageFlush() {
             if (!warnedOnPageFlush) {
-                ITextLogManager.GetLogger(typeof(iText.Pdfua.Checkers.PdfUAChecker)).LogWarning(PdfUALogMessageConstants.PAGE_FLUSHING_DISABLED
-                    );
+                LOGGER.Warn(() => PdfUALogMessageConstants.PAGE_FLUSHING_DISABLED);
                 warnedOnPageFlush = true;
             }
         }

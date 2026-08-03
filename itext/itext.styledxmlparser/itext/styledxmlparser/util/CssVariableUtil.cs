@@ -23,9 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Parse;
@@ -36,7 +35,7 @@ using iText.StyledXmlParser.Exceptions;
 namespace iText.StyledXmlParser.Util {
     /// <summary>Utility class for resolving css variables in declarations.</summary>
     public class CssVariableUtil {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Util.CssVariableUtil
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.StyledXmlParser.Util.CssVariableUtil
             ));
 
         /// <summary>Max count of css var expressions in single declaration.</summary>
@@ -59,7 +58,7 @@ namespace iText.StyledXmlParser.Util {
                     result = ResolveSingleVar(entry.Key, entry.Value, styles);
                 }
                 catch (StyledXMLParserException exception) {
-                    LOGGER.LogWarning(MessageFormatUtil.Format(exception.Message, new CssDeclaration(entry.Key, entry.Value)));
+                    LOGGER.Warn(() => MessageFormatUtil.Format(exception.Message, new CssDeclaration(entry.Key, entry.Value)));
                 }
                 varExpressions.Add(result);
             }

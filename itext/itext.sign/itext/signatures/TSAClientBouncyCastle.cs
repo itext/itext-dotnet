@@ -22,15 +22,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using Microsoft.Extensions.Logging;
 using iText.Bouncycastleconnector;
-using iText.Commons;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1.Cmp;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Digest;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
@@ -59,8 +58,7 @@ namespace iText.Signatures {
         public const int DEFAULTTOKENSIZE = 10240;
 
         /// <summary>The Logger instance.</summary>
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.TSAClientBouncyCastle
-            ));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Signatures.TSAClientBouncyCastle));
 
         /// <summary>URL of the Time Stamp Authority</summary>
         protected internal String tsaURL;
@@ -200,7 +198,7 @@ namespace iText.Signatures {
             ITimeStampTokenInfo tsTokenInfo = tsToken.GetTimeStampInfo();
             // to view details
             byte[] encoded = tsToken.GetEncoded();
-            LOGGER.LogInformation("Timestamp generated: " + tsTokenInfo.GetGenTime());
+            LOGGER.Info(() => "Timestamp generated: " + tsTokenInfo.GetGenTime());
             if (tsaInfo != null) {
                 tsaInfo.InspectTimeStampTokenInfo(tsTokenInfo);
             }

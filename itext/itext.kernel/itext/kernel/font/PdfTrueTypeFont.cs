@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
@@ -37,6 +36,8 @@ namespace iText.Kernel.Font {
     /// <remarks>Note. For TrueType FontNames.getStyle() is the same to Subfamily(). So, we shouldn't add style to /BaseFont.
     ///     </remarks>
     public class PdfTrueTypeFont : PdfSimpleFont<TrueTypeFont> {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Font.PdfTrueTypeFont));
+
 //\cond DO_NOT_DOCUMENT
         internal PdfTrueTypeFont(TrueTypeFont ttf, String encoding, bool embedded)
             : base() {
@@ -158,8 +159,7 @@ namespace iText.Kernel.Font {
                             fontStream.Put(PdfName.Subtype, new PdfName("Type1C"));
                         }
                         catch (PdfException e) {
-                            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.PdfTrueTypeFont));
-                            logger.LogError(e.Message);
+                            LOGGER.Error(() => e.Message);
                             fontStream = null;
                         }
                     }
@@ -188,8 +188,7 @@ namespace iText.Kernel.Font {
                             fontStream = GetPdfFontStream(fontStreamBytes, new int[] { fontStreamBytes.Length });
                         }
                         catch (PdfException e) {
-                            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.PdfTrueTypeFont));
-                            logger.LogError(e.Message);
+                            LOGGER.Error(() => e.Message);
                             fontStream = null;
                         }
                     }

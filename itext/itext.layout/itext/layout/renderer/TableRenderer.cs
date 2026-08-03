@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
@@ -57,8 +56,7 @@ namespace iText.Layout.Renderer {
     /// </remarks>
     public class TableRenderer : AbstractRenderer {
         /// <summary>The Logger instance.</summary>
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.TableRenderer
-            ));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Renderer.TableRenderer));
 
         protected internal IList<CellRenderer[]> rows = new List<CellRenderer[]>();
 
@@ -124,7 +122,7 @@ namespace iText.Layout.Renderer {
                 rows[cell.GetRow() - rowRange.GetStartRow() + cell.GetRowspan() - 1][cell.GetCol()] = (CellRenderer)renderer;
             }
             else {
-                LOGGER.LogError("Only CellRenderer could be added");
+                LOGGER.Error(() => "Only CellRenderer could be added");
             }
         }
 
@@ -927,7 +925,7 @@ namespace iText.Layout.Renderer {
                         if ((status == LayoutResult.NOTHING && true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) || wasHeightClipped
                             ) {
                             if (wasHeightClipped) {
-                                LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT);
+                                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT);
                                 // Process borders
                                 if (status == LayoutResult.NOTHING) {
                                     bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, childRenderers.IsEmpty(), true, false
@@ -981,7 +979,7 @@ namespace iText.Layout.Renderer {
                 }
                 if (lastInRow < 0 || lastRow.Length != lastInRow + (int)lastRow[lastInRow].GetPropertyAsInteger(Property.COLSPAN
                     )) {
-                    LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
+                    LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
                 }
             }
             // process footer renderer with collapsed borders
@@ -1343,12 +1341,12 @@ namespace iText.Layout.Renderer {
             float leftMaxBorder = bordersHandler.GetLeftBorderMaxWidth();
             UnitValue marginRightUV = this.GetPropertyAsUnitValue(Property.MARGIN_RIGHT);
             if (!marginRightUV.IsPointValue()) {
-                LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.MARGIN_RIGHT));
             }
             UnitValue marginLeftUV = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
             if (!marginLeftUV.IsPointValue()) {
-                LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.MARGIN_LEFT));
             }
             float additionalWidth = marginLeftUV.GetValue() + marginRightUV.GetValue() + rightMaxBorder / 2 + leftMaxBorder
@@ -1428,7 +1426,7 @@ namespace iText.Layout.Renderer {
             if (HasProperty(Property.MARGIN_TOP)) {
                 UnitValue topMargin = this.GetPropertyAsUnitValue(Property.MARGIN_TOP);
                 if (null != topMargin && !topMargin.IsPointValue()) {
-                    LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                         , Property.MARGIN_LEFT));
                 }
                 startY -= null == topMargin ? 0 : topMargin.GetValue();
@@ -1436,7 +1434,7 @@ namespace iText.Layout.Renderer {
             if (HasProperty(Property.MARGIN_LEFT)) {
                 UnitValue leftMargin = this.GetPropertyAsUnitValue(Property.MARGIN_LEFT);
                 if (null != leftMargin && !leftMargin.IsPointValue()) {
-                    LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                         , Property.MARGIN_LEFT));
                 }
                 startX += (null == leftMargin ? 0 : leftMargin.GetValue());
@@ -1716,7 +1714,7 @@ namespace iText.Layout.Renderer {
                 }
                 catch (NullReferenceException) {
                     // TODO Remove try-catch when DEVSIX-1655 is resolved.
-                    LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                    LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
                         , "Some of the cell's content might not end up placed correctly."));
                 }
             }
@@ -2006,20 +2004,20 @@ namespace iText.Layout.Renderer {
         internal virtual void ApplyMarginsAndPaddingsAndCalculateColumnWidths(Rectangle layoutBox) {
             UnitValue[] margins = GetMargins();
             if (!margins[1].IsPointValue()) {
-                LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.MARGIN_RIGHT));
             }
             if (!margins[3].IsPointValue()) {
-                LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.MARGIN_LEFT));
             }
             UnitValue[] paddings = GetPaddings();
             if (!paddings[1].IsPointValue()) {
-                LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.PADDING_RIGHT));
             }
             if (!paddings[3].IsPointValue()) {
-                LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.PADDING_LEFT));
             }
             CalculateColumnWidths(layoutBox.GetWidth() - margins[1].GetValue() - margins[3].GetValue() - paddings[1].GetValue

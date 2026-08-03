@@ -21,13 +21,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 
 namespace iText.IO.Image {
     /// <summary>A no-op class for WebP image data handling.</summary>
     public sealed class NoWebPLoader : AbstractWebPLoader {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.IO.Image.NoWebPLoader));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.IO.Image.NoWebPLoader));
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>Standard constructor.</summary>
@@ -37,19 +36,19 @@ namespace iText.IO.Image {
 
         /// <summary><inheritDoc/></summary>
         protected internal override ImageData GetImageData(byte[] bytes) {
-            LOGGER.LogWarning(WebPLogMessageConstant.WEBP_NOT_FOUND);
+            LOGGER.Warn(() => WebPLogMessageConstant.WEBP_NOT_FOUND);
             return null;
         }
 
         /// <summary><inheritDoc/></summary>
         protected internal override ImageData GetImageData(Uri url) {
-            LOGGER.LogWarning(WebPLogMessageConstant.WEBP_NOT_FOUND);
+            LOGGER.Warn(() => WebPLogMessageConstant.WEBP_NOT_FOUND);
             return null;
         }
 
         /// <summary><inheritDoc/></summary>
         protected internal override bool IsWebPSupported() {
-            LOGGER.LogWarning(WebPLogMessageConstant.WEBP_NOT_FOUND);
+            LOGGER.Warn(() => WebPLogMessageConstant.WEBP_NOT_FOUND);
             return false;
         }
     }

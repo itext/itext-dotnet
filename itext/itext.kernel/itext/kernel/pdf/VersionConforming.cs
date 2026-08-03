@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 
 namespace iText.Kernel.Pdf {
     public class VersionConforming {
@@ -36,12 +35,12 @@ namespace iText.Kernel.Pdf {
 
         public const String NOT_SUPPORTED_AES_GCM = "Advanced Encryption Standard-Galois/Counter Mode " + "(AES-GCM) encryption algorithm is supported starting from PDF 2.0.";
 
-        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(VersionConforming));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(VersionConforming));
 
         public static bool ValidatePdfVersionForDictEntry(PdfDocument document, PdfVersion expectedVersion, PdfName
              entryKey, PdfName dictType) {
             if (document != null && document.GetPdfVersion().CompareTo(expectedVersion) < 0) {
-                logger.LogWarning(String.Format(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY
+                LOGGER.Warn(() => String.Format(iText.IO.Logs.IoLogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY
                     , entryKey, dictType, expectedVersion, document.GetPdfVersion()));
                 return true;
             }
@@ -53,7 +52,7 @@ namespace iText.Kernel.Pdf {
         public static bool ValidatePdfVersionForDeprecatedFeatureLogWarn(PdfDocument document, PdfVersion expectedVersion
             , String deprecatedFeatureLogMessage) {
             if (document.GetPdfVersion().CompareTo(expectedVersion) >= 0) {
-                logger.LogWarning(deprecatedFeatureLogMessage);
+                LOGGER.Warn(() => deprecatedFeatureLogMessage);
                 return true;
             }
             else {
@@ -64,7 +63,7 @@ namespace iText.Kernel.Pdf {
         public static bool ValidatePdfVersionForDeprecatedFeatureLogError(PdfDocument document, PdfVersion expectedVersion
             , String deprecatedFeatureLogMessage) {
             if (document.GetPdfVersion().CompareTo(expectedVersion) >= 0) {
-                logger.LogError(deprecatedFeatureLogMessage);
+                LOGGER.Error(() => deprecatedFeatureLogMessage);
                 return true;
             }
             else {
@@ -89,7 +88,7 @@ namespace iText.Kernel.Pdf {
             if (document.GetPdfVersion().CompareTo(expectedStartVersion) >= 0) {
                 return true;
             }
-            logger.LogError(notSupportedFeatureLogMessage);
+            LOGGER.Error(() => notSupportedFeatureLogMessage);
             return false;
         }
     }

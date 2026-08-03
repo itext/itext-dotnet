@@ -24,9 +24,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
@@ -38,6 +37,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
     /// implementation for fonts.
     /// </summary>
     public class FontShorthandResolver : IShorthandResolver {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(FontShorthandResolver));
+
         /// <summary>Unsupported shorthand values.</summary>
         private static readonly ICollection<String> UNSUPPORTED_VALUES_OF_FONT_SHORTHAND = JavaCollectionsUtil.UnmodifiableSet
             (new HashSet<String>(JavaUtil.ArraysAsList(CommonCssConstants.CAPTION, CommonCssConstants.ICON, CommonCssConstants
@@ -60,8 +61,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
         */
         public virtual IList<CssDeclaration> ResolveShorthand(String shorthandExpression) {
             if (UNSUPPORTED_VALUES_OF_FONT_SHORTHAND.Contains(shorthandExpression)) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(FontShorthandResolver));
-                logger.LogError(MessageFormatUtil.Format("The \"{0}\" value of CSS shorthand property \"font\" is not supported"
+                LOGGER.Error(() => MessageFormatUtil.Format("The \"{0}\" value of CSS shorthand property \"font\" is not supported"
                     , shorthandExpression));
             }
             if (CommonCssConstants.INITIAL.Equals(shorthandExpression) || CommonCssConstants.INHERIT.Equals(shorthandExpression

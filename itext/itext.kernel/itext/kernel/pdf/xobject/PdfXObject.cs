@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -34,6 +33,8 @@ namespace iText.Kernel.Pdf.Xobject {
     /// <seealso cref="PdfFormXObject"/>
     /// <seealso cref="PdfImageXObject"/>
     public abstract class PdfXObject : PdfObjectWrapper<PdfStream> {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.Xobject.PdfXObject));
+
         protected internal PdfXObject(PdfStream pdfObject)
             : base(pdfObject) {
         }
@@ -174,8 +175,7 @@ namespace iText.Kernel.Pdf.Xobject {
         /// <param name="fs">file specification dictionary of associated file</param>
         public virtual void AddAssociatedFile(PdfFileSpec fs) {
             if (null == ((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship)) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Xobject.PdfXObject));
-                logger.LogError(iText.IO.Logs.IoLogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
+                LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
             }
             PdfArray afArray = GetPdfObject().GetAsArray(PdfName.AF);
             if (afArray == null) {

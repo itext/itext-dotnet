@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 
 namespace iText.IO.Image {
     public class Jpeg2000ImageData : ImageData {
@@ -140,8 +139,8 @@ namespace iText.IO.Image {
         }
 
         public override bool CanImageBeInline() {
-            ILogger logger = ITextLogManager.GetLogger(typeof(ImageData));
-            logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER);
+            LazyLogger logger = new LazyLogger(typeof(ImageData));
+            logger.Warn(() => iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER);
             return false;
         }
 

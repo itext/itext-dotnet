@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.StyledXmlParser.Exceptions;
@@ -37,7 +36,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
     /// </summary>
     [System.ObsoleteAttribute(@"In favor of iText.IO.Resolver.Resource.DefaultResourceRetriever")]
     public class DefaultResourceRetriever : IResourceRetriever {
-        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Resolver.Resource.DefaultResourceRetriever
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.StyledXmlParser.Resolver.Resource.DefaultResourceRetriever
             ));
 
         private iText.IO.Resolver.Resource.DefaultResourceRetriever proxy;
@@ -146,7 +145,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
         /// <returns>the limited input stream or null if the URL was filtered</returns>
         public virtual Stream GetInputStreamByUrl(Uri url) {
             if (!UrlFilter(url)) {
-                logger.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT
+                LOGGER.Warn(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT
                     , url));
                 return null;
             }
@@ -170,7 +169,7 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                 }
             }
             catch (ReadingByteLimitException) {
-                logger.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_RESOURCE_WITH_GIVEN_RESOURCE_SIZE_BYTE_LIMIT
+                LOGGER.Warn(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_RESOURCE_WITH_GIVEN_RESOURCE_SIZE_BYTE_LIMIT
                     , url, proxy.GetResourceSizeByteLimit()));
             }
             return null;

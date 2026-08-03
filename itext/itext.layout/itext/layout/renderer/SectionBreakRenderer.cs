@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout;
@@ -45,7 +44,7 @@ namespace iText.Layout.Renderer {
     /// Will terminate the current page content if any and start a new page.
     /// </remarks>
     public class SectionBreakRenderer : AbstractBreakRenderer {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.SectionBreakRenderer
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Renderer.SectionBreakRenderer
             ));
 
         private readonly SectionBreak sectionBreak;
@@ -78,14 +77,14 @@ namespace iText.Layout.Renderer {
         /// </param>
         public override void AddChild(IRenderer renderer) {
             if (this.GetProperty<bool?>(Property.IGNORE_AREA_AND_SECTION_BREAKS) == null) {
-                LOGGER.LogWarning(LayoutLogMessageConstant.SECTION_BREAK_UNEXPECTED);
+                LOGGER.Warn(() => LayoutLogMessageConstant.SECTION_BREAK_UNEXPECTED);
             }
         }
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
             if (true.Equals(this.GetProperty<bool?>(Property.IGNORE_AREA_AND_SECTION_BREAKS))) {
                 if (occupiedArea == null) {
-                    LOGGER.LogWarning(LayoutLogMessageConstant.SECTION_BREAK_IGNORED);
+                    LOGGER.Warn(() => LayoutLogMessageConstant.SECTION_BREAK_IGNORED);
                 }
                 Rectangle layoutContextAreaBbox = layoutContext.GetArea().GetBBox();
                 Rectangle occupiedAreaBbox = new Rectangle(layoutContextAreaBbox.GetLeft(), layoutContextAreaBbox.GetTop()
@@ -98,7 +97,7 @@ namespace iText.Layout.Renderer {
             bool pageSizeChanged = false;
             int pageNumber = layoutContext.GetArea().GetPageNumber();
             if (pageNumber == 0) {
-                LOGGER.LogWarning(LayoutLogMessageConstant.SECTION_BREAK_LAYOUT_ON_PAGE_0);
+                LOGGER.Warn(() => LayoutLogMessageConstant.SECTION_BREAK_LAYOUT_ON_PAGE_0);
                 pageNumber = 1;
             }
             IRenderer parentRenderer = GetParent();
@@ -145,7 +144,7 @@ namespace iText.Layout.Renderer {
         /// </param>
         public override void Draw(DrawContext drawContext) {
             if (this.GetProperty<bool?>(Property.IGNORE_AREA_AND_SECTION_BREAKS) == null) {
-                LOGGER.LogWarning(LayoutLogMessageConstant.SECTION_BREAK_UNEXPECTED);
+                LOGGER.Warn(() => LayoutLogMessageConstant.SECTION_BREAK_UNEXPECTED);
             }
         }
 
@@ -184,7 +183,7 @@ namespace iText.Layout.Renderer {
         /// </param>
         public override void Move(float dx, float dy) {
             if (this.GetProperty<bool?>(Property.IGNORE_AREA_AND_SECTION_BREAKS) == null) {
-                LOGGER.LogWarning(LayoutLogMessageConstant.SECTION_BREAK_UNEXPECTED);
+                LOGGER.Warn(() => LayoutLogMessageConstant.SECTION_BREAK_UNEXPECTED);
             }
         }
 

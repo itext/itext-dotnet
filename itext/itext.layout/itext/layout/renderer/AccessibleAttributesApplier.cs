@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -40,6 +39,8 @@ namespace iText.Layout.Renderer {
     /// based on the layout element properties and renderer layout results.
     /// </summary>
     public class AccessibleAttributesApplier {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(AccessibleAttributesApplier));
+
         public static PdfStructureAttributes GetLayoutAttributes(AbstractRenderer renderer, TagTreePointer taggingPointer
             ) {
             IRoleMappingResolver resolvedMapping = ResolveMappingToStandard(taggingPointer);
@@ -141,8 +142,7 @@ namespace iText.Layout.Renderer {
             UnitValue spaceBefore = margins[marginsOrder[0]];
             if (spaceBefore != null) {
                 if (!spaceBefore.IsPointValue()) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(AccessibleAttributesApplier));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                         , Property.MARGIN_TOP));
                 }
                 if (0 != spaceBefore.GetValue()) {
@@ -152,8 +152,7 @@ namespace iText.Layout.Renderer {
             UnitValue spaceAfter = margins[marginsOrder[1]];
             if (spaceAfter != null) {
                 if (!spaceAfter.IsPointValue()) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(AccessibleAttributesApplier));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                         , Property.MARGIN_BOTTOM));
                 }
                 if (0 != spaceAfter.GetValue()) {
@@ -163,8 +162,7 @@ namespace iText.Layout.Renderer {
             UnitValue startIndent = margins[marginsOrder[2]];
             if (startIndent != null) {
                 if (!startIndent.IsPointValue()) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(AccessibleAttributesApplier));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                         , Property.MARGIN_LEFT));
                 }
                 if (0 != startIndent.GetValue()) {
@@ -174,8 +172,7 @@ namespace iText.Layout.Renderer {
             UnitValue endIndent = margins[marginsOrder[3]];
             if (endIndent != null) {
                 if (!endIndent.IsPointValue()) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(AccessibleAttributesApplier));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                         , Property.MARGIN_RIGHT));
                 }
                 if (0 != endIndent.GetValue()) {
@@ -236,8 +233,7 @@ namespace iText.Layout.Renderer {
             if (underlines != null) {
                 UnitValue fontSize = renderer.GetPropertyAsUnitValue(Property.FONT_SIZE);
                 if (!fontSize.IsPointValue()) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(AccessibleAttributesApplier));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                    LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                         , Property.FONT_SIZE));
                 }
                 Underline underline = null;
@@ -286,23 +282,19 @@ namespace iText.Layout.Renderer {
                 .GetPropertyAsUnitValue(Property.PADDING_RIGHT), renderer.GetPropertyAsUnitValue(Property.PADDING_BOTTOM
                 ), renderer.GetPropertyAsUnitValue(Property.PADDING_LEFT) };
             if (!paddingsUV[0].IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(AccessibleAttributesApplier));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.PADDING_TOP));
             }
             if (!paddingsUV[1].IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(AccessibleAttributesApplier));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.PADDING_RIGHT));
             }
             if (!paddingsUV[2].IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(AccessibleAttributesApplier));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.PADDING_BOTTOM));
             }
             if (!paddingsUV[3].IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(AccessibleAttributesApplier));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.PADDING_LEFT));
             }
             float[] paddings = new float[] { paddingsUV[0].GetValue(), paddingsUV[1].GetValue(), paddingsUV[2].GetValue

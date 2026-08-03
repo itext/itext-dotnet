@@ -23,9 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Layout.Borders;
@@ -53,6 +52,9 @@ namespace iText.Layout.Renderer {
     /// <see cref="DrawContext"/>.
     /// </remarks>
     public class ParagraphRenderer : BlockRenderer {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Renderer.ParagraphRenderer)
+            );
+
         protected internal IList<LineRenderer> lines = null;
 
         /// <summary>Creates a ParagraphRenderer from its corresponding layout object.</summary>
@@ -450,8 +452,8 @@ namespace iText.Layout.Renderer {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
                 if (IsNotFittingLayoutArea(layoutContext.GetArea())) {
                     if (IsNotFittingWidth(layoutContext.GetArea()) && !IsNotFittingHeight(layoutContext.GetArea())) {
-                        ITextLogManager.GetLogger(GetType()).LogWarning(MessageFormatUtil.Format(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA
-                            , "It fits by height so it will be forced placed"));
+                        LOGGER.Warn(() => MessageFormatUtil.Format(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "It fits by height so it will be forced placed"
+                            ));
                     }
                     else {
                         if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
@@ -537,9 +539,8 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public override void Move(float dxRight, float dyUp) {
-            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ParagraphRenderer));
             if (occupiedArea == null) {
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
                     , "Moving won't be performed."));
                 return;
             }

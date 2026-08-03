@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Node;
 using iText.Svg.Exceptions;
@@ -63,8 +62,8 @@ namespace iText.Svg.Renderers.Factories {
             }
             DefaultSvgNodeRendererMapper.ISvgNodeRendererCreator svgNodeRendererCreator = rendererMap.Get(tag.Name());
             if (svgNodeRendererCreator == null) {
-                ILogger logger = ITextLogManager.GetLogger(this.GetType());
-                logger.LogWarning(MessageFormatUtil.Format(SvgLogMessageConstant.UNMAPPED_TAG, tag.Name()));
+                LazyLogger logger = new LazyLogger(this.GetType());
+                logger.Warn(() => MessageFormatUtil.Format(SvgLogMessageConstant.UNMAPPED_TAG, tag.Name()));
                 return null;
             }
             result = svgNodeRendererCreator();

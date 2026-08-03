@@ -20,9 +20,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css;
@@ -40,6 +39,8 @@ namespace iText.Svg.Renderers.Impl {
     /// thus, we need to draw the clipped elements multiple times if the clipping path consists of multiple elements.
     /// </remarks>
     public class ClipPathSvgNodeRenderer : AbstractBranchSvgNodeRenderer {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(ClipPathSvgNodeRenderer));
+
         private AbstractSvgNodeRenderer clippedRenderer;
 
         public override ISvgNodeRenderer CreateDeepCopy() {
@@ -90,8 +91,7 @@ namespace iText.Svg.Renderers.Impl {
                     context.GetCurrentCanvas().ConcatMatrix(context.GetClippingElementTransform().CreateInverse());
                 }
                 catch (NoninvertibleTransformException) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(ClipPathSvgNodeRenderer));
-                    logger.LogWarning(SvgLogMessageConstant.NONINVERTIBLE_TRANSFORMATION_MATRIX_USED_IN_CLIP_PATH);
+                    LOGGER.Warn(() => SvgLogMessageConstant.NONINVERTIBLE_TRANSFORMATION_MATRIX_USED_IN_CLIP_PATH);
                 }
             }
             clippedRenderer.PreDraw(context);

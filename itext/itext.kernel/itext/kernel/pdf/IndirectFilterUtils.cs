@@ -20,7 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using Microsoft.Extensions.Logging;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 
@@ -38,9 +38,9 @@ namespace iText.Kernel.Pdf {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal static void LogFilterWasAlreadyFlushed(ILogger logger, PdfStream stream) {
-            logger.LogInformation(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.FILTER_WAS_ALREADY_FLUSHED
-                , stream.GetIndirectReference().GetObjNumber(), stream.GetIndirectReference().GetGenNumber()));
+        internal static void LogFilterWasAlreadyFlushed(LazyLogger logger, PdfStream stream) {
+            logger.Info(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.FILTER_WAS_ALREADY_FLUSHED, 
+                stream.GetIndirectReference().GetObjNumber(), stream.GetIndirectReference().GetGenNumber()));
         }
 //\endcond
     }

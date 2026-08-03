@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.IO.Font;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -37,6 +36,8 @@ namespace iText.Kernel.Pdf.Annot {
     /// different standard types of annotations. See ISO-320001 12.5.6, "Annotation Types."
     /// </remarks>
     public abstract class PdfAnnotation : PdfObjectWrapper<PdfDictionary> {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.Annot.PdfAnnotation));
+
         /// <summary>Annotation flag.</summary>
         /// <remarks>
         /// Annotation flag.
@@ -1553,8 +1554,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <param name="fs">file specification dictionary of associated file</param>
         public virtual void AddAssociatedFile(PdfFileSpec fs) {
             if (null == ((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship)) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Annot.PdfAnnotation));
-                logger.LogError(iText.IO.Logs.IoLogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
+                LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
             }
             PdfArray afArray = GetPdfObject().GetAsArray(PdfName.AF);
             if (afArray == null) {

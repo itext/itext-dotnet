@@ -20,8 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -67,7 +66,7 @@ namespace iText.Kernel.Pdf.Annot {
 
         public virtual iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetVertices(PdfArray vertices) {
             if (GetPdfObject().ContainsKey(PdfName.Path)) {
-                ITextLogManager.GetLogger(GetType()).LogWarning(iText.IO.Logs.IoLogMessageConstant.PATH_KEY_IS_PRESENT_VERTICES_WILL_BE_IGNORED
+                new LazyLogger(GetType()).Warn(() => iText.IO.Logs.IoLogMessageConstant.PATH_KEY_IS_PRESENT_VERTICES_WILL_BE_IGNORED
                     );
             }
             return (iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.Vertices, vertices);
@@ -75,7 +74,7 @@ namespace iText.Kernel.Pdf.Annot {
 
         public virtual iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetVertices(float[] vertices) {
             if (GetPdfObject().ContainsKey(PdfName.Path)) {
-                ITextLogManager.GetLogger(GetType()).LogWarning(iText.IO.Logs.IoLogMessageConstant.PATH_KEY_IS_PRESENT_VERTICES_WILL_BE_IGNORED
+                new LazyLogger(GetType()).Warn(() => iText.IO.Logs.IoLogMessageConstant.PATH_KEY_IS_PRESENT_VERTICES_WILL_BE_IGNORED
                     );
             }
             return (iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.Vertices, new PdfArray(vertices));
@@ -134,7 +133,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetPath(PdfArray path) {
             if (GetPdfObject().ContainsKey(PdfName.Vertices)) {
-                ITextLogManager.GetLogger(GetType()).LogError(iText.IO.Logs.IoLogMessageConstant.IF_PATH_IS_SET_VERTICES_SHALL_NOT_BE_PRESENT
+                new LazyLogger(GetType()).Error(() => iText.IO.Logs.IoLogMessageConstant.IF_PATH_IS_SET_VERTICES_SHALL_NOT_BE_PRESENT
                     );
             }
             return (iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.Path, path);

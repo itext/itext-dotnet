@@ -24,15 +24,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Extensions.Logging;
 using iText.Bouncycastleconnector;
-using iText.Commons;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Resolver.Resource;
 using iText.Kernel.Crypto;
@@ -48,7 +47,7 @@ namespace iText.Signatures {
     public class IssuingCertificateRetriever : IIssuingCertificateRetriever {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.IssuingCertificateRetriever
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Signatures.IssuingCertificateRetriever
             ));
 
         private readonly TrustedCertificatesStore trustedCertificatesStore = new TrustedCertificatesStore();
@@ -592,7 +591,7 @@ namespace iText.Signatures {
                 }
             }
             catch (Exception) {
-                LOGGER.LogWarning(SignLogMessageConstant.UNABLE_TO_PARSE_AIA_CERT);
+                LOGGER.Warn(() => SignLogMessageConstant.UNABLE_TO_PARSE_AIA_CERT);
                 return null;
             }
         }

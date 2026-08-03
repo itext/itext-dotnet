@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Forms.Logs;
 using iText.IO.Util;
@@ -34,8 +33,7 @@ using iText.Kernel.Pdf.Xobject;
 namespace iText.Forms.Fields {
     /// <summary>An interactive control on the screen that raises events and/or can retain data.</summary>
     public class PdfButtonFormField : PdfFormField {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfButtonFormField
-            ));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Forms.Fields.PdfButtonFormField));
 
         /// <summary>If true, clicking the selected button deselects it, leaving no button selected.</summary>
         /// <remarks>
@@ -284,7 +282,7 @@ namespace iText.Forms.Fields {
                     annotation.SetAppearanceState(new PdfName(PdfFormAnnotation.OFF_STATE_VALUE));
                 }
                 if (annotation.GetRectangle() == null) {
-                    LOGGER.LogWarning(FormsLogMessageConstants.RADIO_HAS_NO_RECTANGLE);
+                    LOGGER.Warn(() => FormsLogMessageConstants.RADIO_HAS_NO_RECTANGLE);
                     return base.AddKid(kid);
                 }
                 kidAsFormAnnotation.DrawRadioButtonAndSaveAppearance(appearanceState.GetValue());

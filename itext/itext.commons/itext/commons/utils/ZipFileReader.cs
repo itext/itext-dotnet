@@ -27,12 +27,11 @@ using System.IO.Compression;
 using System.Text;
 using iText.Commons.Exceptions;
 using iText.Commons.Logs;
-using Microsoft.Extensions.Logging;
 
 namespace iText.Commons.Utils  {
     /// <summary>Allows reading entries from a zip file.</summary>
     public class ZipFileReader : IDisposable {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(ZipFileReader));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(ZipFileReader));
 
         private readonly ZipArchive zipArchive;
 
@@ -81,17 +80,17 @@ namespace iText.Commons.Utils  {
                         }
                     }
                     if (zipBombSuspicious) {
-                        LOGGER.LogWarning(MessageFormatUtil.Format(CommonsLogMessageConstant.RATIO_IS_HIGHLY_SUSPICIOUS, 
+                        LOGGER.Warn(() => MessageFormatUtil.Format(CommonsLogMessageConstant.RATIO_IS_HIGHLY_SUSPICIOUS, 
                             thresholdRatio));
                         break;
                     }
                     if (totalSizeArchive > thresholdSize) {
-                        LOGGER.LogWarning(MessageFormatUtil.Format(CommonsLogMessageConstant.UNCOMPRESSED_DATA_SIZE_IS_TOO_MUCH,
+                        LOGGER.Warn(() => MessageFormatUtil.Format(CommonsLogMessageConstant.UNCOMPRESSED_DATA_SIZE_IS_TOO_MUCH,
                             thresholdSize));
                         break;
                     }
                     if (totalEntryArchive > thresholdEntries) {
-                        LOGGER.LogWarning(MessageFormatUtil.Format(CommonsLogMessageConstant.TOO_MUCH_ENTRIES_IN_ARCHIVE, 
+                        LOGGER.Warn(() => MessageFormatUtil.Format(CommonsLogMessageConstant.TOO_MUCH_ENTRIES_IN_ARCHIVE, 
                             thresholdEntries));
                         break;
                     }

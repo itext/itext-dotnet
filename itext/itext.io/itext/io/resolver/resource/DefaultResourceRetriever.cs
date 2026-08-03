@@ -23,9 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Exceptions;
 using iText.IO.Util;
@@ -38,7 +37,7 @@ namespace iText.IO.Resolver.Resource {
     /// on the size of retrieved resources using input stream with a limit on the number of bytes read.
     /// </summary>
     public class DefaultResourceRetriever : IAdvancedResourceRetriever {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.IO.Resolver.Resource.DefaultResourceRetriever
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.IO.Resolver.Resource.DefaultResourceRetriever
             ));
 
         private const int DEFAULT_CONNECT_TIMEOUT = 300_000;
@@ -174,7 +173,7 @@ namespace iText.IO.Resolver.Resource {
                 return new LimitedInputStream(UrlUtil.GetInputStreamOfFinalConnection(url, connectTimeout, readTimeout, requestHeaders
                     ), resourceSizeByteLimit);
             }
-            LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT
+            LOGGER.Warn(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT
                 , url));
             return null;
         }
@@ -190,7 +189,7 @@ namespace iText.IO.Resolver.Resource {
                 }
             }
             catch (ReadingByteLimitException) {
-                LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.UNABLE_TO_RETRIEVE_RESOURCE_WITH_GIVEN_RESOURCE_SIZE_BYTE_LIMIT
+                LOGGER.Warn(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.UNABLE_TO_RETRIEVE_RESOURCE_WITH_GIVEN_RESOURCE_SIZE_BYTE_LIMIT
                     , url, resourceSizeByteLimit));
                 return null;
             }
@@ -209,7 +208,7 @@ namespace iText.IO.Resolver.Resource {
                 return new LimitedInputStream(UrlUtil.Get(url, request, finalHeaders, connectTimeout, readTimeout), resourceSizeByteLimit
                     );
             }
-            LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT
+            LOGGER.Warn(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT
                 , url));
             return null;
         }

@@ -21,13 +21,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Layout.Element;
 
 namespace iText.Layout.Renderer {
     public class LinkRenderer : TextRenderer {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Renderer.LinkRenderer));
+
         /// <summary>Creates a LinkRenderer from its corresponding layout object.</summary>
         /// <param name="link">
         /// the
@@ -55,8 +56,7 @@ namespace iText.Layout.Renderer {
 
         public override void Draw(DrawContext drawContext) {
             if (occupiedArea == null) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.LinkRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
                     , "Drawing won't be performed."));
                 return;
             }

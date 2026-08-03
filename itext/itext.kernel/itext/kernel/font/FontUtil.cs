@@ -24,9 +24,8 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
@@ -38,12 +37,12 @@ using iText.Kernel.Pdf;
 namespace iText.Kernel.Font {
     /// <summary>Utility class for font processing.</summary>
     public class FontUtil {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Font.FontUtil));
+
         private static readonly RNGCryptoServiceProvider NUMBER_GENERATOR = new RNGCryptoServiceProvider();
 
         private static readonly Dictionary<String, CMapToUnicode> uniMaps = new Dictionary<String, CMapToUnicode>(
             );
-
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.FontUtil));
 
         private const String UNIVERSAL_CMAP_DIR = "ToUnicode.";
 
@@ -89,7 +88,7 @@ namespace iText.Kernel.Font {
                     CMapParser.ParseCid("", cMapToUnicode, lb);
                 }
                 catch (Exception e) {
-                    LOGGER.LogError(e, iText.IO.Logs.IoLogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
+                    LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP, e);
                     cMapToUnicode = CMapToUnicode.EMPTY_CMAP;
                 }
             }
@@ -225,7 +224,7 @@ namespace iText.Kernel.Font {
                 CMapParser.ParseCid(cmapRelPath, cMapToUnicode, new CMapLocationResource());
             }
             catch (Exception e) {
-                LOGGER.LogError(e, iText.IO.Logs.IoLogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
+                LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP, e);
                 return null;
             }
             return cMapToUnicode;
@@ -266,8 +265,7 @@ namespace iText.Kernel.Font {
             int[] res = new int[256];
             JavaUtil.Fill(res, missingWidth);
             if (widthsArray == null) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.FontUtil));
-                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.FONT_DICTIONARY_WITH_NO_WIDTHS);
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.FONT_DICTIONARY_WITH_NO_WIDTHS);
                 return res;
             }
             for (int i = 0; i < widthsArray.Size() && first + i < 256; i++) {

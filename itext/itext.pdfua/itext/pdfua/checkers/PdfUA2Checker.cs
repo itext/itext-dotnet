@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.Kernel.Pdf;
@@ -56,6 +55,8 @@ namespace iText.Pdfua.Checkers {
     /// The specification implemented by this class is ISO 14289-2.
     /// </remarks>
     public class PdfUA2Checker : PdfUAChecker {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Pdfua.Checkers.PdfUA2Checker));
+
         private readonly PdfDocument pdfDocument;
 
         private readonly PdfUAValidationContext context;
@@ -287,8 +288,7 @@ namespace iText.Pdfua.Checkers {
                         int maxIters = 100;
                         while (roleMappingResolver.ResolveNextMapping()) {
                             if (++i > maxIters) {
-                                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Pdfua.Checkers.PdfUA2Checker));
-                                logger.LogError(MessageFormatUtil.Format(PdfUALogMessageConstants.CANNOT_RESOLVE_ROLE_IN_NAMESPACE_TOO_MUCH_TRANSITIVE_MAPPINGS
+                                LOGGER.Error(() => MessageFormatUtil.Format(PdfUALogMessageConstants.CANNOT_RESOLVE_ROLE_IN_NAMESPACE_TOO_MUCH_TRANSITIVE_MAPPINGS
                                     , role, @namespace));
                                 break;
                             }

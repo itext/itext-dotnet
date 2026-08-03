@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Layout.Renderer;
 
@@ -42,6 +41,9 @@ namespace iText.Layout.Properties {
     /// key.
     /// </remarks>
     public class ParagraphWidowsControl {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Properties.ParagraphWidowsControl
+            ));
+
         private int minWidows;
 
         private int maxLinesToMove;
@@ -132,16 +134,17 @@ namespace iText.Layout.Properties {
         /// explaining the reason for violation
         /// </param>
         public virtual void HandleViolatedWidows(ParagraphRenderer widowsRenderer, String message) {
-            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Properties.ParagraphWidowsControl));
-            if (widowsRenderer.GetOccupiedArea() != null && widowsRenderer.GetLines() != null) {
-                int pageNumber = widowsRenderer.GetOccupiedArea().GetPageNumber();
-                String warnText = MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.WIDOWS_CONSTRAINT_VIOLATED, 
-                    pageNumber, minWidows, widowsRenderer.GetLines().Count, message);
-                logger.LogWarning(warnText);
+            LOGGER.Warn(() => {
+                if (widowsRenderer.GetOccupiedArea() != null && widowsRenderer.GetLines() != null) {
+                    int pageNumber = widowsRenderer.GetOccupiedArea().GetPageNumber();
+                    return MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.WIDOWS_CONSTRAINT_VIOLATED, pageNumber, 
+                        minWidows, widowsRenderer.GetLines().Count, message);
+                }
+                else {
+                    return iText.IO.Logs.IoLogMessageConstant.PREMATURE_CALL_OF_HANDLE_VIOLATION_METHOD;
+                }
             }
-            else {
-                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.PREMATURE_CALL_OF_HANDLE_VIOLATION_METHOD);
-            }
+            );
         }
     }
 }

@@ -24,9 +24,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Extensions.Logging;
 using iText.Bouncycastleconnector;
-using iText.Commons;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
@@ -36,6 +34,7 @@ using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Openssl;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Util;
 using iText.Kernel.Crypto;
@@ -51,7 +50,7 @@ namespace iText.Signatures {
     public class CertificateUtil {
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(CertificateUtil));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(CertificateUtil));
 
         // Certificate Revocation Lists
         /// <summary>Gets a CRLs from the X509 certificate.</summary>
@@ -290,7 +289,7 @@ namespace iText.Signatures {
                         crls.AddAll(SignUtils.ReadAllCRLs(s.GetEncoded()));
                     }
                     catch (AbstractCrlException) {
-                        LOGGER.LogWarning(SignLogMessageConstant.UNABLE_TO_PARSE_REV_INFO);
+                        LOGGER.Warn(() => SignLogMessageConstant.UNABLE_TO_PARSE_REV_INFO);
                         otherRevocationInfoFormats.Add(s);
                     }
                 }

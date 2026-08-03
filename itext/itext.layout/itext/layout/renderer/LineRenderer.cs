@@ -23,11 +23,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Actions.Sequence;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
@@ -44,7 +43,7 @@ namespace iText.Layout.Renderer {
         // AbstractRenderer.EPS is not enough here
         private const float MIN_MAX_WIDTH_CORRECTION_EPS = 0.001f;
 
-        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(LineRenderer));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(LineRenderer));
 
         protected internal float maxAscent;
 
@@ -336,9 +335,7 @@ namespace iText.Layout.Renderer {
                             }
                             bbox.SetWidth(inlineBlockWidth);
                             if (childBlockMinMaxWidth.GetMinWidth() > bbox.GetWidth()) {
-                                if (logger.IsEnabled(LogLevel.Warning)) {
-                                    logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED);
-                                }
+                                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED);
                                 childRenderer.SetProperty(Property.FORCED_PLACEMENT, true);
                             }
                         }
@@ -564,9 +561,7 @@ namespace iText.Layout.Renderer {
                             else {
                                 if (isInlineBlockChild && childResult.GetOverflowRenderer().GetChildRenderers().IsEmpty() && childResult.GetStatus
                                     () == LayoutResult.PARTIAL) {
-                                    if (logger.IsEnabled(LogLevel.Warning)) {
-                                        logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED);
-                                    }
+                                    LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED);
                                 }
                                 else {
                                     split[1].AddChildRenderer(childResult.GetOverflowRenderer());
@@ -949,7 +944,7 @@ namespace iText.Layout.Renderer {
                 case Leading.MULTIPLIED: {
                     UnitValue fontSize = this.GetProperty<UnitValue>(Property.FONT_SIZE, UnitValue.CreatePointValue(0f));
                     if (!fontSize.IsPointValue()) {
-                        logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                        LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                             , Property.FONT_SIZE));
                     }
                     // In HTML, depending on whether <!DOCTYPE html> is present or not, and if present then depending
@@ -983,7 +978,7 @@ namespace iText.Layout.Renderer {
                 case Leading.MULTIPLIED: {
                     UnitValue fontSize = this.GetProperty<UnitValue>(Property.FONT_SIZE, UnitValue.CreatePointValue(0f));
                     if (!fontSize.IsPointValue()) {
-                        logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                        LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                             , Property.FONT_SIZE));
                     }
                     // In HTML, depending on whether <!DOCTYPE html> is present or not, and if present then depending
@@ -1080,21 +1075,21 @@ namespace iText.Layout.Renderer {
                     if (child is TextRenderer) {
                         currentWidth = ((TextRenderer)child).CalculateLineWidth();
                         UnitValue[] margins = ((TextRenderer)child).GetMargins();
-                        if (!margins[1].IsPointValue() && logger.IsEnabled(LogLevel.Error)) {
-                            logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                        if (!margins[1].IsPointValue()) {
+                            LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                                 , "right margin"));
                         }
-                        if (!margins[3].IsPointValue() && logger.IsEnabled(LogLevel.Error)) {
-                            logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                        if (!margins[3].IsPointValue()) {
+                            LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                                 , "left margin"));
                         }
                         UnitValue[] paddings = ((TextRenderer)child).GetPaddings();
-                        if (!paddings[1].IsPointValue() && logger.IsEnabled(LogLevel.Error)) {
-                            logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                        if (!paddings[1].IsPointValue()) {
+                            LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                                 , "right padding"));
                         }
-                        if (!paddings[3].IsPointValue() && logger.IsEnabled(LogLevel.Error)) {
-                            logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                        if (!paddings[3].IsPointValue()) {
+                            LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                                 , "left padding"));
                         }
                         currentWidth += margins[1].GetValue() + margins[3].GetValue() + paddings[1].GetValue() + paddings[3].GetValue

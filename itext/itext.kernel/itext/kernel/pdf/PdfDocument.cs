@@ -22,13 +22,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Actions;
 using iText.Commons.Actions.Confirmations;
 using iText.Commons.Actions.Data;
 using iText.Commons.Actions.Sequence;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Actions.Data;
@@ -59,7 +58,7 @@ namespace iText.Kernel.Pdf {
             , PdfName.Size, PdfName.Prev, PdfName.Root, PdfName.Info, PdfName.ID, PdfName.XRefStm, PdfName.AuthCode
              };
 
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.PdfDocument));
 
         protected internal readonly StampingProperties properties;
 
@@ -254,10 +253,10 @@ namespace iText.Kernel.Pdf {
             this.properties = properties;
             bool writerHasEncryption = WriterHasEncryption();
             if (properties.appendMode && writerHasEncryption) {
-                LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_APPEND);
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_APPEND);
             }
             if (properties.preserveEncryption && writerHasEncryption) {
-                LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_PRESERVE);
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_PRESERVE);
             }
             Open(writer.properties.pdfVersion);
         }
@@ -317,7 +316,7 @@ namespace iText.Kernel.Pdf {
                 GetXmpMetadata();
             }
             catch (XMPException e) {
-                LOGGER.LogError(e, iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA);
+                LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, e);
             }
         }
 
@@ -1072,7 +1071,7 @@ namespace iText.Kernel.Pdf {
                         writer.Finish();
                     }
                     catch (Exception e) {
-                        LOGGER.LogError(e, iText.IO.Logs.IoLogMessageConstant.PDF_WRITER_CLOSING_FAILED);
+                        LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.PDF_WRITER_CLOSING_FAILED, e);
                     }
                 }
                 if (reader != null && IsCloseReader()) {
@@ -1080,7 +1079,7 @@ namespace iText.Kernel.Pdf {
                         reader.Close();
                     }
                     catch (Exception e) {
-                        LOGGER.LogError(e, iText.IO.Logs.IoLogMessageConstant.PDF_READER_CLOSING_FAILED);
+                        LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.PDF_READER_CLOSING_FAILED, e);
                     }
                 }
             }
@@ -1435,7 +1434,7 @@ namespace iText.Kernel.Pdf {
                     }
                 }
                 else {
-                    LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT);
+                    LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT);
                 }
             }
             if (catalog.IsOutlineMode()) {
@@ -1658,7 +1657,7 @@ namespace iText.Kernel.Pdf {
         public virtual void AddNamedDestination(PdfString key, PdfObject value) {
             CheckClosingStatus();
             if (value.IsArray() && ((PdfArray)value).Get(0).IsNumber()) {
-                LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.INVALID_DESTINATION_TYPE);
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.INVALID_DESTINATION_TYPE);
             }
             catalog.AddNamedDestination(key, value);
         }
@@ -1757,7 +1756,7 @@ namespace iText.Kernel.Pdf {
         /// <seealso cref="AddFileAttachment(System.String, iText.Kernel.Pdf.Filespec.PdfFileSpec)"/>
         public virtual void AddAssociatedFile(String description, PdfFileSpec fs) {
             if (null == ((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship)) {
-                LOGGER.LogError(iText.IO.Logs.IoLogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
+                LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
             }
             PdfArray afArray = catalog.GetPdfObject().GetAsArray(PdfName.AF);
             if (afArray == null) {
@@ -1807,7 +1806,7 @@ namespace iText.Kernel.Pdf {
                         }
                     }
                     catch (PdfException e) {
-                        LOGGER.LogError(e.Message);
+                        LOGGER.Error(() => e.Message);
                     }
                 }
             }
@@ -1834,7 +1833,7 @@ namespace iText.Kernel.Pdf {
                 throw new PdfException(KernelExceptionMessageConstant.CANNOT_SET_ENCRYPTED_PAYLOAD_TO_ENCRYPTED_DOCUMENT);
             }
             if (!PdfName.EncryptedPayload.Equals(((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship))) {
-                LOGGER.LogError(iText.IO.Logs.IoLogMessageConstant.ENCRYPTED_PAYLOAD_FILE_SPEC_SHALL_HAVE_AFRELATIONSHIP_FILED_EQUAL_TO_ENCRYPTED_PAYLOAD
+                LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.ENCRYPTED_PAYLOAD_FILE_SPEC_SHALL_HAVE_AFRELATIONSHIP_FILED_EQUAL_TO_ENCRYPTED_PAYLOAD
                     );
             }
             PdfEncryptedPayload encryptedPayload = PdfEncryptedPayload.ExtractFrom(fs);
@@ -1844,7 +1843,7 @@ namespace iText.Kernel.Pdf {
             }
             PdfCollection collection = GetCatalog().GetCollection();
             if (collection != null) {
-                LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.COLLECTION_DICTIONARY_ALREADY_EXISTS_IT_WILL_BE_MODIFIED
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.COLLECTION_DICTIONARY_ALREADY_EXISTS_IT_WILL_BE_MODIFIED
                     );
             }
             else {
@@ -2340,7 +2339,7 @@ namespace iText.Kernel.Pdf {
                 }
             }
             catch (XMPException e) {
-                LOGGER.LogError(e, iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA);
+                LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, e);
             }
         }
 
@@ -2456,7 +2455,7 @@ namespace iText.Kernel.Pdf {
             catch (Exception e) {
                 structTreeRoot = null;
                 structParentIndex = -1;
-                LOGGER.LogError(e, iText.IO.Logs.IoLogMessageConstant.TAG_STRUCTURE_INIT_FAILED);
+                LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.TAG_STRUCTURE_INIT_FAILED, e);
             }
         }
 
@@ -2679,7 +2678,7 @@ namespace iText.Kernel.Pdf {
 
         private void ProcessReadingError(String errorMessage) {
             if (PdfReader.StrictnessLevel.CONSERVATIVE.IsStricter(reader.GetStrictnessLevel())) {
-                LOGGER.LogError(errorMessage);
+                LOGGER.Error(() => errorMessage);
             }
             else {
                 throw new PdfException(errorMessage);
@@ -2689,11 +2688,11 @@ namespace iText.Kernel.Pdf {
         private static void OverrideFullCompressionInWriterProperties(WriterProperties properties, bool readerHasXrefStream
             ) {
             if (true == properties.isFullCompression && !readerHasXrefStream) {
-                LOGGER.LogWarning(KernelLogMessageConstant.FULL_COMPRESSION_APPEND_MODE_XREF_TABLE_INCONSISTENCY);
+                LOGGER.Warn(() => KernelLogMessageConstant.FULL_COMPRESSION_APPEND_MODE_XREF_TABLE_INCONSISTENCY);
             }
             else {
                 if (false == properties.isFullCompression && readerHasXrefStream) {
-                    LOGGER.LogWarning(KernelLogMessageConstant.FULL_COMPRESSION_APPEND_MODE_XREF_STREAM_INCONSISTENCY);
+                    LOGGER.Warn(() => KernelLogMessageConstant.FULL_COMPRESSION_APPEND_MODE_XREF_STREAM_INCONSISTENCY);
                 }
             }
             properties.isFullCompression = readerHasXrefStream;

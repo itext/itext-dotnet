@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
@@ -32,6 +31,8 @@ using iText.IO.Source;
 
 namespace iText.IO.Font {
     public class Type1Font : FontProgram {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.IO.Font.Type1Font));
+
         private Type1Parser fontParser;
 
         private String characterSet;
@@ -267,13 +268,11 @@ namespace iText.IO.Font {
                 int bytePtr = 0;
                 for (int k = 0; k < 3; ++k) {
                     if (raf.Read() != 0x80) {
-                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Font.Type1Font));
-                        logger.LogError(iText.IO.Logs.IoLogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE);
+                        LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE);
                         return null;
                     }
                     if (raf.Read() != PFB_TYPES[k]) {
-                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Font.Type1Font));
-                        logger.LogError("incorrect.segment.type.in.pfb.file");
+                        LOGGER.Error(() => "incorrect.segment.type.in.pfb.file");
                         return null;
                     }
                     int size = raf.Read();
@@ -284,8 +283,7 @@ namespace iText.IO.Font {
                     while (size != 0) {
                         int got = raf.Read(fontStreamBytes, bytePtr, size);
                         if (got < 0) {
-                            ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Font.Type1Font));
-                            logger.LogError("premature.end.in.pfb.file");
+                            LOGGER.Error(() => "premature.end.in.pfb.file");
                             return null;
                         }
                         bytePtr += got;
@@ -295,8 +293,7 @@ namespace iText.IO.Font {
                 return fontStreamBytes;
             }
             catch (Exception) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Font.Type1Font));
-                logger.LogError("type1.font.file.exception");
+                LOGGER.Error(() => "type1.font.file.exception");
                 return null;
             }
             finally {

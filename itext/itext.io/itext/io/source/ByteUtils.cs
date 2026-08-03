@@ -21,13 +21,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.IO.Util;
 
 namespace iText.IO.Source {
     public sealed class ByteUtils {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(ByteUtils));
+
 //\cond DO_NOT_DOCUMENT
         internal static bool HighPrecision = false;
 //\endcond
@@ -130,8 +131,7 @@ namespace iText.IO.Source {
                     }
                 }
                 if (double.IsNaN(d)) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(ByteUtils));
-                    logger.LogError(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_PROCESS_NAN);
+                    LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.ATTEMPT_PROCESS_NAN);
                     d = 0;
                 }
                 byte[] result = DecimalFormatUtil.FormatNumber(d, "0.######").GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
@@ -261,8 +261,7 @@ namespace iText.IO.Source {
                     }
                     else {
                         if (double.IsNaN(d)) {
-                            ILogger logger = ITextLogManager.GetLogger(typeof(ByteUtils));
-                            logger.LogError(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_PROCESS_NAN);
+                            LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.ATTEMPT_PROCESS_NAN);
                             // in java NaN casted to long results in 0, but in .NET it results in long.MIN_VALUE
                             d = 0;
                         }

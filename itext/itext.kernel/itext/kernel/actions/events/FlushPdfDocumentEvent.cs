@@ -22,8 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Actions;
 using iText.Commons.Actions.Confirmations;
 using iText.Commons.Actions.Data;
@@ -31,6 +29,7 @@ using iText.Commons.Actions.Processors;
 using iText.Commons.Actions.Producer;
 using iText.Commons.Actions.Sequence;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Actions.Data;
 using iText.Kernel.Logs;
@@ -43,7 +42,7 @@ namespace iText.Kernel.Actions.Events {
     /// was flushed.
     /// </summary>
     public sealed class FlushPdfDocumentEvent : AbstractITextConfigurationEvent {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Actions.Events.FlushPdfDocumentEvent
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Actions.Events.FlushPdfDocumentEvent
             ));
 
         private readonly WeakReference document;
@@ -81,8 +80,8 @@ namespace iText.Kernel.Actions.Events {
                 }
                 foreach (String product in products) {
                     ITextProductEventProcessor processor = GetActiveProcessor(product);
-                    if (processor == null && LOGGER.IsEnabled(LogLevel.Warning)) {
-                        LOGGER.LogWarning(MessageFormatUtil.Format(KernelLogMessageConstant.UNKNOWN_PRODUCT_INVOLVED, product));
+                    if (processor == null) {
+                        LOGGER.Warn(() => MessageFormatUtil.Format(KernelLogMessageConstant.UNKNOWN_PRODUCT_INVOLVED, product));
                     }
                 }
                 newProducer = ProducerBuilder.ModifyProducer(GetConfirmedEvents(pdfDocument.GetDocumentIdWrapper()), oldProducer
@@ -99,7 +98,7 @@ namespace iText.Kernel.Actions.Events {
                     confirmedEvents.Add((ConfirmedEventWrapper)@event);
                 }
                 else {
-                    LOGGER.LogWarning(MessageFormatUtil.Format(KernelLogMessageConstant.UNCONFIRMED_EVENT, @event.GetProductName
+                    LOGGER.Warn(() => MessageFormatUtil.Format(KernelLogMessageConstant.UNCONFIRMED_EVENT, @event.GetProductName
                         (), @event.GetEventType()));
                 }
             }

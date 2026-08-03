@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.IO.Colors;
 using iText.IO.Exceptions;
 using iText.IO.Source;
@@ -31,6 +30,8 @@ using iText.IO.Util;
 
 namespace iText.IO.Image {
     public abstract class ImageData {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.IO.Image.ImageData));
+
         /// <summary>a static that is used for attributing a unique id to each image.</summary>
         private static long serialId = 0;
 
@@ -301,13 +302,12 @@ namespace iText.IO.Image {
         /// <summary>Checks if image can be inline</summary>
         /// <returns>if the image can be inline</returns>
         public virtual bool CanImageBeInline() {
-            ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Image.ImageData));
             if (imageSize > 4096) {
-                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB);
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB);
                 return false;
             }
             if (imageMask != null) {
-                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_MASK);
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_MASK);
                 return false;
             }
             return true;

@@ -24,11 +24,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Internal.Runtime;
 using iText.Commons.Json;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Signatures.Exceptions;
@@ -40,7 +39,7 @@ using iText.Signatures.Validation.Report;
 namespace iText.Signatures.Validation.Lotl {
     /// <summary>This class fetches and validates pivot files from a List of Trusted Lists (Lotl) XML.</summary>
     public class PivotFetcher {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.Validation.Lotl.PivotFetcher
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Signatures.Validation.Lotl.PivotFetcher
             ));
 
         private readonly LotlService service;
@@ -83,7 +82,7 @@ namespace iText.Signatures.Validation.Lotl {
             if (ojUris.Count > 1) {
                 //This means we are in a transition period but the user has already updated, so no need to log.
                 if (ojUris.IndexOf(currentJournalUri) != 0) {
-                    LOGGER.LogWarning(SignLogMessageConstant.OJ_TRANSITION_PERIOD);
+                    LOGGER.Warn(() => SignLogMessageConstant.OJ_TRANSITION_PERIOD);
                 }
             }
             result.SetPivotUrls(pivotsUrlList);

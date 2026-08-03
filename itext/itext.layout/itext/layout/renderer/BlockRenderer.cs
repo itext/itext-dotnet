@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
@@ -44,6 +43,8 @@ using iText.Layout.Tagging;
 namespace iText.Layout.Renderer {
     /// <summary>Represents a renderer for block elements.</summary>
     public abstract class BlockRenderer : AbstractRenderer {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Renderer.BlockRenderer));
+
         // Use that value so that layout is independent of whether we are in the bottom of the page or in the
         // top of the page
         private const float POSITIONED_CHILDREN_LAYOUT_MIN_HEIGHT = 1000F;
@@ -386,8 +387,8 @@ namespace iText.Layout.Renderer {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
                 if (IsNotFittingLayoutArea(layoutContext.GetArea())) {
                     if (IsNotFittingWidth(layoutContext.GetArea()) && !IsNotFittingHeight(layoutContext.GetArea())) {
-                        ITextLogManager.GetLogger(GetType()).LogWarning(MessageFormatUtil.Format(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA
-                            , "It fits by height so it will be forced placed"));
+                        LOGGER.Warn(() => MessageFormatUtil.Format(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "It fits by height so it will be forced placed"
+                            ));
                     }
                     else {
                         if (!initialForcePlacementForRotationAdjustments) {
@@ -416,9 +417,8 @@ namespace iText.Layout.Renderer {
         }
 
         public override void Draw(DrawContext drawContext) {
-            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
             if (occupiedArea == null) {
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
                     , "Drawing won't be performed."));
                 return;
             }
@@ -464,7 +464,7 @@ namespace iText.Layout.Renderer {
                     // TODO DEVSIX-1655 This check is necessary because, in some cases, our renderer's hierarchy may contain
                     //  a renderer from the different page that was already flushed
                     if (page.IsFlushed()) {
-                        logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PAGE_WAS_FLUSHED_ACTION_WILL_NOT_BE_PERFORMED
+                        LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PAGE_WAS_FLUSHED_ACTION_WILL_NOT_BE_PERFORMED
                             , "area clipping"));
                         clippedArea = new Rectangle(-INF / 2, -INF / 2, INF, INF);
                     }
@@ -506,14 +506,13 @@ namespace iText.Layout.Renderer {
             Rectangle bBox = occupiedArea.GetBBox().Clone();
             float? rotationAngle = this.GetProperty<float?>(Property.ROTATION_ANGLE);
             if (rotationAngle != null) {
-                if (!HasOwnProperty(Property.ROTATION_INITIAL_WIDTH) || !HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT)) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER
-                        , GetType().Name));
-                }
-                else {
+                if (HasOwnProperty(Property.ROTATION_INITIAL_WIDTH) && HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT)) {
                     bBox.SetWidth((float)this.GetPropertyAsFloat(Property.ROTATION_INITIAL_WIDTH));
                     bBox.SetHeight((float)this.GetPropertyAsFloat(Property.ROTATION_INITIAL_HEIGHT));
+                }
+                else {
+                    LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER
+                        , GetType().Name));
                 }
             }
             return bBox;
@@ -703,14 +702,13 @@ namespace iText.Layout.Renderer {
         protected internal virtual void BeginRotationIfApplied(PdfCanvas canvas) {
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             if (angle != null) {
-                if (!HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT)) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
-                    logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER
-                        , GetType().Name));
-                }
-                else {
+                if (HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT)) {
                     AffineTransform transform = CreateRotationTransformInsideOccupiedArea();
                     canvas.SaveState().ConcatMatrix(transform);
+                }
+                else {
+                    LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER
+                        , GetType().Name));
                 }
             }
         }

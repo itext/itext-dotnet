@@ -24,8 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Resolver.Resource;
 using iText.Kernel.Exceptions;
@@ -579,14 +578,14 @@ namespace iText.Signatures.Validation.Lotl {
         }
 
         private sealed class LoggableResourceRetriever : DefaultResourceRetriever {
-            private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(LotlService));
+            private static readonly LazyLogger LOGGER = new LazyLogger(typeof(LotlService));
 
             public LoggableResourceRetriever() {
             }
 
             // Default constructor
             public override byte[] GetByteArrayByUrl(Uri url) {
-                LOGGER.LogInformation(MessageFormatUtil.Format("Fetching resource from URL: {0}", url));
+                LOGGER.Info(() => MessageFormatUtil.Format("Fetching resource from URL: {0}", url));
                 return base.GetByteArrayByUrl(url);
             }
         }

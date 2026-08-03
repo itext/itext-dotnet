@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -43,7 +42,7 @@ using iText.Layout.Tagging;
 namespace iText.Layout.Properties.Margins {
     /// <summary>Class to store information about all page margin boxes for a single page.</summary>
     public class PageMarginBoxes {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Layout.Properties.Margins.PageMarginBoxes
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Properties.Margins.PageMarginBoxes
             ));
 
         private readonly IDictionary<MarginBoxName, PageMarginContent> margins = new LinkedDictionary<MarginBoxName
@@ -114,7 +113,7 @@ namespace iText.Layout.Properties.Margins {
             if (rendererToDraw == null) {
                 // Margin box elements have overflow property set to HIDDEN, therefore it is expected to neither get
                 // LayoutResult other than FULL nor get no split renderer (result NOTHING) even if result is not FULL.
-                LOGGER.LogError(MessageFormatUtil.Format(LayoutLogMessageConstant.PAGE_CONTENT_CANNOT_BE_DRAWN, marginBoxName
+                LOGGER.Error(() => MessageFormatUtil.Format(LayoutLogMessageConstant.PAGE_CONTENT_CANNOT_BE_DRAWN, marginBoxName
                     , pageNumber));
                 return;
             }

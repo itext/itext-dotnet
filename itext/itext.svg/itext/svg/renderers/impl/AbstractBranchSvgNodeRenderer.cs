@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -42,7 +41,7 @@ namespace iText.Svg.Renderers.Impl {
     /// as a parent.
     /// </summary>
     public abstract class AbstractBranchSvgNodeRenderer : AbstractSvgNodeRenderer, IBranchSvgNodeRenderer {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(AbstractBranchSvgNodeRenderer));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(AbstractBranchSvgNodeRenderer));
 
         /// <summary>The number of viewBox values.</summary>
         /// <remarks>
@@ -170,9 +169,7 @@ namespace iText.Svg.Renderers.Impl {
             ) {
             // If viewBox width or height is zero we should disable rendering of the element.
             if (Math.Abs(values[2]) < EPS || Math.Abs(values[3]) < EPS) {
-                if (LOGGER.IsEnabled(LogLevel.Information)) {
-                    LOGGER.LogInformation(SvgLogMessageConstant.VIEWBOX_WIDTH_OR_HEIGHT_IS_ZERO);
-                }
+                LOGGER.Info(() => SvgLogMessageConstant.VIEWBOX_WIDTH_OR_HEIGHT_IS_ZERO);
                 context.GetCurrentCanvas().ConcatMatrix(AffineTransform.GetScaleInstance(0, 0));
                 return;
             }
@@ -246,8 +243,7 @@ namespace iText.Svg.Renderers.Impl {
                 transform = transform.CreateInverse();
             }
             catch (NoninvertibleTransformException) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(AbstractBranchSvgNodeRenderer));
-                logger.LogWarning(SvgLogMessageConstant.UNABLE_TO_GET_INVERSE_MATRIX_DUE_TO_ZERO_DETERMINANT);
+                LOGGER.Warn(() => SvgLogMessageConstant.UNABLE_TO_GET_INVERSE_MATRIX_DUE_TO_ZERO_DETERMINANT);
                 // Case with zero determiner (see PDF 32000-1:2008 - 8.3.4 Transformation Matrices - NOTE 3)
                 // for example with a, b, c, d in cm equal to 0
                 return new Rectangle(0, 0, 0, 0);

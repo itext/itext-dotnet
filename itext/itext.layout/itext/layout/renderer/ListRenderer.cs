@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font.Constants;
 using iText.Kernel.Exceptions;
@@ -41,6 +40,8 @@ using iText.Layout.Tagging;
 
 namespace iText.Layout.Renderer {
     public class ListRenderer : BlockRenderer {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Renderer.ListRenderer));
+
         /// <summary>Creates a ListRenderer from its corresponding layout object.</summary>
         /// <param name="modelElement">
         /// the
@@ -416,8 +417,7 @@ namespace iText.Layout.Renderer {
                     UnitValue marginToSetUV = childRenderer.GetProperty<UnitValue>(marginToSet, UnitValue.CreatePointValue(0f)
                         );
                     if (!marginToSetUV.IsPointValue()) {
-                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.ListRenderer));
-                        logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                        LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                             , marginToSet));
                     }
                     float calculatedMargin = marginToSetUV.GetValue();

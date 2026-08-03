@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css;
@@ -37,6 +36,8 @@ namespace iText.Svg.Renderers.Impl {
     /// <summary>Renderer implementing the use tag.</summary>
     /// <remarks>Renderer implementing the use tag. This tag allows you to reuse previously defined elements.</remarks>
     public class UseSvgNodeRenderer : AbstractSvgNodeRenderer {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(UseSvgNodeRenderer));
+
         protected internal override void DoDraw(SvgDrawContext context) {
             if (this.attributesAndStyles != null) {
                 String elementToReUse = GetAttribute(SvgConstants.Attributes.HREF);
@@ -65,8 +66,7 @@ namespace iText.Svg.Renderers.Impl {
                                         inverseMatrix = translation.CreateInverse();
                                     }
                                     catch (NoninvertibleTransformException ex) {
-                                        ITextLogManager.GetLogger(typeof(UseSvgNodeRenderer)).LogWarning(ex, SvgLogMessageConstant.NONINVERTIBLE_TRANSFORMATION_MATRIX_USED_IN_CLIP_PATH
-                                            );
+                                        LOGGER.Warn(() => SvgLogMessageConstant.NONINVERTIBLE_TRANSFORMATION_MATRIX_USED_IN_CLIP_PATH, ex);
                                     }
                                 }
                             }

@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.Kernel.Pdf;
@@ -36,6 +35,8 @@ namespace iText.Forms.Fields {
     /// are to be represented by a viewer as a list box or a combo box.
     /// </remarks>
     public class PdfChoiceFormField : PdfFormField {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Forms.Fields.PdfChoiceFormField));
+
         /// <summary>If true, the field is a combo box.</summary>
         /// <remarks>
         /// If true, the field is a combo box.
@@ -187,8 +188,7 @@ namespace iText.Forms.Fields {
         public virtual iText.Forms.Fields.PdfChoiceFormField SetListSelected(String[] optionValues, bool generateAppearance
             ) {
             if (optionValues.Length > 1 && !IsMultiSelect()) {
-                ILogger logger = ITextLogManager.GetLogger(this.GetType());
-                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.MULTIPLE_VALUES_ON_A_NON_MULTISELECT_FIELD);
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.MULTIPLE_VALUES_ON_A_NON_MULTISELECT_FIELD);
             }
             PdfArray options = GetOptions();
             PdfArray indices = new PdfArray();
@@ -206,8 +206,7 @@ namespace iText.Forms.Fields {
                 }
                 else {
                     if (!(this.IsCombo() && this.IsEdit())) {
-                        ILogger logger = ITextLogManager.GetLogger(this.GetType());
-                        logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY
+                        LOGGER.Warn(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.FIELD_VALUE_IS_NOT_CONTAINED_IN_OPT_ARRAY
                             , element, this.GetFieldName()));
                     }
                     values.Add(new PdfString(element, PdfEncodings.UNICODE_BIG));
@@ -243,8 +242,7 @@ namespace iText.Forms.Fields {
         /// </returns>
         public virtual iText.Forms.Fields.PdfChoiceFormField SetListSelected(int[] optionNumbers) {
             if (optionNumbers.Length > 1 && !IsMultiSelect()) {
-                ILogger logger = ITextLogManager.GetLogger(this.GetType());
-                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.MULTIPLE_VALUES_ON_A_NON_MULTISELECT_FIELD);
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.MULTIPLE_VALUES_ON_A_NON_MULTISELECT_FIELD);
             }
             PdfArray indices = new PdfArray();
             PdfArray values = new PdfArray();

@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Util;
@@ -32,6 +31,8 @@ using iText.IO.Util;
 namespace iText.IO.Font.Cmap {
     /// <summary>This class represents a CMap file.</summary>
     public class CMapToUnicode : AbstractCMap {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.IO.Font.Cmap.CMapToUnicode));
+
         public static readonly iText.IO.Font.Cmap.CMapToUnicode EMPTY_CMAP = new iText.IO.Font.Cmap.CMapToUnicode(
             true);
 
@@ -179,8 +180,7 @@ namespace iText.IO.Font.Cmap {
                     byteMappings.Put((mark[0] << 8) + mark[1], dest);
                 }
                 else {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Font.Cmap.CMapToUnicode));
-                    logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.TOUNICODE_CMAP_MORE_THAN_2_BYTES_NOT_SUPPORTED);
+                    LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.TOUNICODE_CMAP_MORE_THAN_2_BYTES_NOT_SUPPORTED);
                 }
             }
         }

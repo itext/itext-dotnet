@@ -23,11 +23,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Datastructures;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Signatures.Exceptions;
@@ -44,7 +43,7 @@ namespace iText.Signatures.Validation.Lotl {
     /// It also allows for setting custom resource retrievers and cache timeouts.
     /// </remarks>
     public class EuropeanLotlService : LotlService {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.Validation.Lotl.EuropeanLotlService
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Signatures.Validation.Lotl.EuropeanLotlService
             ));
 
         private EuropeanLotlFetcher lotlByteFetcher;
@@ -123,7 +122,7 @@ namespace iText.Signatures.Validation.Lotl {
                     }
                     else {
                         resultToAddToCache.JRemove(key);
-                        LOGGER.LogWarning(MessageFormatUtil.Format(SignLogMessageConstant.COUNTRY_NOT_REQUIRED_BY_CONFIGURATION, countryCode
+                        LOGGER.Warn(() => MessageFormatUtil.Format(SignLogMessageConstant.COUNTRY_NOT_REQUIRED_BY_CONFIGURATION, countryCode
                             ));
                     }
                 }
@@ -333,14 +332,14 @@ namespace iText.Signatures.Validation.Lotl {
                 currentJournalUri = europeanResourceFetcherEUJournalCertificates.GetCurrentlySupportedPublication();
                 if (europeanResourceFetcherEUJournalCertificates.GetLocalReport().GetValidationResult() != ValidationReport.ValidationResult
                     .VALID) {
-                    LOGGER.LogWarning(MessageFormatUtil.Format(SignLogMessageConstant.FAILED_TO_FETCH_EU_JOURNAL_CERTIFICATES, 
+                    LOGGER.Warn(() => MessageFormatUtil.Format(SignLogMessageConstant.FAILED_TO_FETCH_EU_JOURNAL_CERTIFICATES, 
                         europeanResourceFetcherEUJournalCertificates.GetLocalReport().GetFailures()[0].GetMessage()));
                     return;
                 }
                 europeanResourceFetcherEUJournalCertificatesToUse = europeanResourceFetcherEUJournalCertificates;
             }
             catch (Exception e) {
-                LOGGER.LogWarning(MessageFormatUtil.Format(SignLogMessageConstant.FAILED_TO_FETCH_EU_JOURNAL_CERTIFICATES, 
+                LOGGER.Warn(() => MessageFormatUtil.Format(SignLogMessageConstant.FAILED_TO_FETCH_EU_JOURNAL_CERTIFICATES, 
                     e.Message));
                 return;
             }
@@ -372,13 +371,15 @@ namespace iText.Signatures.Validation.Lotl {
                 }
             }
             else {
-                LOGGER.LogWarning(MessageFormatUtil.Format(SignLogMessageConstant.UPDATING_MAIN_LOTL_TO_CACHE_FAILED, mainLotlFetchException
-                     == null ? "" : mainLotlFetchException.Message));
+                String mainLotlExceptionMessagePart = mainLotlFetchException == null ? "" : mainLotlFetchException.Message;
+                LOGGER.Warn(() => MessageFormatUtil.Format(SignLogMessageConstant.UPDATING_MAIN_LOTL_TO_CACHE_FAILED, mainLotlExceptionMessagePart
+                    ));
             }
             // Only update main LOTL and pivot result if both are successful.
             if (!fetchPivotFilesSuccessful) {
-                LOGGER.LogWarning(MessageFormatUtil.Format(SignLogMessageConstant.UPDATING_PIVOT_TO_CACHE_FAILED, pivotFetchException
-                     == null ? "" : pivotFetchException.Message));
+                String pivotExceptionMessagePart = pivotFetchException == null ? "" : pivotFetchException.Message;
+                LOGGER.Warn(() => MessageFormatUtil.Format(SignLogMessageConstant.UPDATING_PIVOT_TO_CACHE_FAILED, pivotExceptionMessagePart
+                    ));
             }
             if (!mainLotlFetchSuccessful) {
                 // if main LOTL is null we do not proceed with country specific LOTL fetch because it depends on main LOTL
@@ -391,13 +392,13 @@ namespace iText.Signatures.Validation.Lotl {
                     (), this);
             }
             catch (Exception e) {
-                LOGGER.LogWarning(MessageFormatUtil.Format(SignLogMessageConstant.FAILED_TO_FETCH_COUNTRY_SPECIFIC_LOTL, e
+                LOGGER.Warn(() => MessageFormatUtil.Format(SignLogMessageConstant.FAILED_TO_FETCH_COUNTRY_SPECIFIC_LOTL, e
                     .Message));
                 return;
             }
             // If an error happened don't update the cache value, if the warning is too stale we will throw an exception
             if (allCountries == null || allCountries.IsEmpty()) {
-                LOGGER.LogWarning(SignLogMessageConstant.NO_COUNTRY_SPECIFIC_LOTL_FETCHED);
+                LOGGER.Warn(() => SignLogMessageConstant.NO_COUNTRY_SPECIFIC_LOTL_FETCHED);
                 return;
             }
             IDictionary<String, CountrySpecificLotlFetcher.Result> countrySpecificLotlResultsToUse = new Dictionary<String
@@ -405,7 +406,7 @@ namespace iText.Signatures.Validation.Lotl {
             foreach (CountrySpecificLotlFetcher.Result countrySpecificResult in allCountries.Values) {
                 bool wasCountryFetchedSuccessfully = countrySpecificResult.GetLocalReport().GetFailures().IsEmpty();
                 if (!wasCountryFetchedSuccessfully) {
-                    LOGGER.LogWarning(MessageFormatUtil.Format(SignLogMessageConstant.COUNTRY_SPECIFIC_FETCHING_FAILED, countrySpecificResult
+                    LOGGER.Warn(() => MessageFormatUtil.Format(SignLogMessageConstant.COUNTRY_SPECIFIC_FETCHING_FAILED, countrySpecificResult
                         .GetCountrySpecificLotl().GetSchemeTerritory(), countrySpecificResult.GetLocalReport()));
                     continue;
                 }

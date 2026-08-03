@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
@@ -50,6 +49,9 @@ namespace iText.Forms.Form.Renderer {
     /// implementation for buttons.
     /// </summary>
     public class ButtonRenderer : AbstractOneLineTextFieldRenderer {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Forms.Form.Renderer.ButtonRenderer
+            ));
+
         /// <summary>Default padding Y offset for an input button.</summary>
         private const float DEFAULT_Y_OFFSET = 4;
 
@@ -86,7 +88,7 @@ namespace iText.Forms.Form.Renderer {
                 Rectangle flatBBox = flatRenderer.GetOccupiedArea().GetBBox();
                 UpdatePdfFont(renderer);
                 if (flatLines.IsEmpty() || font == null) {
-                    ITextLogManager.GetLogger(GetType()).LogError(MessageFormatUtil.Format(FormsLogMessageConstants.ERROR_WHILE_LAYOUT_OF_FORM_FIELD_WITH_TYPE
+                    LOGGER.Error(() => MessageFormatUtil.Format(FormsLogMessageConstants.ERROR_WHILE_LAYOUT_OF_FORM_FIELD_WITH_TYPE
                         , "button"));
                     SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                     flatBBox.SetY(flatBBox.GetTop()).SetHeight(0);
@@ -223,8 +225,7 @@ namespace iText.Forms.Form.Renderer {
             String name = GetModelId();
             UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
             if (!fontSize.IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Form.Renderer.ButtonRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.FONT_SIZE));
             }
             PdfDocument doc = drawContext.GetDocument();
