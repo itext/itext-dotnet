@@ -176,7 +176,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             PdfObject outShDictionary = outPdf.GetPage(1).GetResources().GetResourceObject(PdfName.Shading, resName);
             PdfObject cmpShDictionary = cmpPdf.GetPage(1).GetResources().GetResourceObject(PdfName.Shading, resName);
             NUnit.Framework.Assert.IsTrue(outShDictionary.IsDictionary());
-            CompareTool.CompareResult compareResult = new CompareTool().CompareDictionariesStructure((PdfDictionary)outShDictionary
+            CompareToolResult compareResult = new CompareTool().CompareDictionariesByStructure((PdfDictionary)outShDictionary
                 , (PdfDictionary)cmpShDictionary);
             NUnit.Framework.Assert.IsNull(compareResult);
             outPdf.Close();

@@ -79,7 +79,7 @@ namespace iText.Kernel.Pdf.Xobject
             PdfStream outStream = firstPage.GetResources().GetResource(PdfName.XObject).GetAsStream(new PdfName("Im1"));
             PdfStream cmpStream = cmpDoc.GetFirstPage().GetResources().GetResource(PdfName.XObject).GetAsStream(new PdfName("Im1"));
             
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareStreamsStructure(outStream, cmpStream));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareStreamsByStructure(outStream, cmpStream));
             
             cmpDoc.Close();
             pdfDocument.Close();
@@ -117,7 +117,7 @@ namespace iText.Kernel.Pdf.Xobject
             PdfStream outStream = firstPage.GetResources().GetResource(PdfName.XObject).GetAsStream(new PdfName("Im1"));
             PdfStream cmpStream = cmpDoc.GetFirstPage().GetResources().GetResource(PdfName.XObject).GetAsStream(new PdfName("Im1"));
             
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareStreamsStructure(outStream, cmpStream));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareStreamsByStructure(outStream, cmpStream));
             
             cmpDoc.Close();
             pdfDocument.Close();

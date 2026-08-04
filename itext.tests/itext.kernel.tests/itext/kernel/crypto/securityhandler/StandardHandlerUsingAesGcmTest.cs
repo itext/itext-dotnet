@@ -253,7 +253,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
     // Outside test class for porting
     internal class CToolNoDeveloperExtension : CompareTool {
         protected internal override bool CompareObjects(PdfObject outObj, PdfObject cmpObj, ObjectPath currentPath
-            , CompareTool.CompareResult compareResult) {
+            , CompareToolResult compareResult) {
             if (outObj != null && outObj.IsDictionary()) {
                 if (((PdfDictionary)outObj).Get(PdfName.ISO_) != null) {
                     return true;

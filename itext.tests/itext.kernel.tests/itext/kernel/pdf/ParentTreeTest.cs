@@ -483,7 +483,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument outDocument = new PdfDocument(outReader);
             PdfReader cmpReader = CompareTool.CreateOutputReader(cmpFileName);
             PdfDocument cmpDocument = new PdfDocument(cmpReader);
-            CompareTool.CompareResult result = new CompareTool().CompareByCatalog(outDocument, cmpDocument);
+            CompareToolResult result = new CompareTool().CompareDocumentsByCatalog(outDocument, cmpDocument);
             if (!result.IsOk()) {
                 System.Console.Out.WriteLine(result.GetReport());
             }
