@@ -352,19 +352,56 @@ namespace iText.Layout.Element {
             return (T)(Object)this;
         }
 
-        /// <summary>Sets the rotation radAngle.</summary>
-        /// <param name="angleInRadians">the new rotation radAngle, as a <c>float</c>, in radians</param>
+        /// <summary>Sets the rotation angle for this element.</summary>
+        /// <remarks>
+        /// Sets the rotation angle for this element.
+        /// <para />
+        /// The angle is specified in radians and stored in
+        /// <see cref="iText.Layout.Properties.Property.ROTATION_ANGLE"/>.
+        /// Positive values rotate counter-clockwise; negative values rotate clockwise.
+        /// <para />
+        /// Rotation is applied during rendering, and layout calculates an occupied area
+        /// that encloses the rotated content, so neighboring content is positioned according
+        /// to the rotated bounding box.
+        /// <para />
+        /// For positioned elements, a custom pivot can be provided via
+        /// <see cref="iText.Layout.Properties.Property.ROTATION_POINT_X"/>
+        /// and
+        /// <see cref="iText.Layout.Properties.Property.ROTATION_POINT_Y"/>
+        /// ; otherwise
+        /// the renderer uses its default pivot behavior.
+        /// </remarks>
+        /// <param name="angleInRadians">the rotation angle, in radians</param>
         /// <returns>this element</returns>
         public virtual T SetRotationAngle(float angleInRadians) {
             SetProperty(Property.ROTATION_ANGLE, angleInRadians);
             return (T)(Object)this;
         }
 
-        /// <summary>Sets the rotation angle.</summary>
-        /// <param name="angleInRadians">the new rotation angle, as a <c>double</c>, in radians</param>
+        /// <summary>Sets the rotation angle for this element.</summary>
+        /// <remarks>
+        /// Sets the rotation angle for this element.
+        /// <para />
+        /// Convenience overload of
+        /// <see cref="BlockElement{T}.SetRotationAngle(float)"/>.
+        /// </remarks>
+        /// <param name="angleInRadians">the rotation angle, in radians</param>
         /// <returns>this element</returns>
         public virtual T SetRotationAngle(double angleInRadians) {
             SetProperty(Property.ROTATION_ANGLE, (float)angleInRadians);
+            return (T)(Object)this;
+        }
+
+        /// <summary>Sets a transformation to be applied to this block element during rendering.</summary>
+        /// <param name="transform">
+        /// a
+        /// <see cref="iText.Layout.Properties.Transform"/>
+        /// describing the sequence of transform operations
+        /// (for example, translate, scale, rotate, skew)
+        /// </param>
+        /// <returns>this element</returns>
+        public virtual T SetTransform(Transform transform) {
+            SetProperty(Property.TRANSFORM, transform);
             return (T)(Object)this;
         }
 

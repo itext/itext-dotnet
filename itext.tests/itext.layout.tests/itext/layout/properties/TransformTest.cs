@@ -67,14 +67,14 @@ namespace iText.Layout.Properties {
         public virtual void GetAffineTransformDiffSingleTransformTest() {
             float txUnitValue = 20f;
             float tyUnitValue2 = 30f;
-            Transform transform = new Transform(4);
-            transform.AddSingleTransform(CreateSingleTransform(UnitValue.CreatePercentValue(txUnitValue), UnitValue.CreatePointValue
+            Transform transform = new Transform();
+            transform.AddTransform(CreateSingleTransform(UnitValue.CreatePercentValue(txUnitValue), UnitValue.CreatePointValue
                 (tyUnitValue2)));
-            transform.AddSingleTransform(CreateSingleTransform(UnitValue.CreatePointValue(txUnitValue), UnitValue.CreatePercentValue
+            transform.AddTransform(CreateSingleTransform(UnitValue.CreatePointValue(txUnitValue), UnitValue.CreatePercentValue
                 (tyUnitValue2)));
-            transform.AddSingleTransform(CreateSingleTransform(UnitValue.CreatePercentValue(txUnitValue), UnitValue.CreatePercentValue
+            transform.AddTransform(CreateSingleTransform(UnitValue.CreatePercentValue(txUnitValue), UnitValue.CreatePercentValue
                 (tyUnitValue2)));
-            transform.AddSingleTransform(CreateSingleTransform(UnitValue.CreatePointValue(txUnitValue), UnitValue.CreatePointValue
+            transform.AddTransform(CreateSingleTransform(UnitValue.CreatePointValue(txUnitValue), UnitValue.CreatePointValue
                 (tyUnitValue2)));
             NUnit.Framework.Assert.AreEqual(new AffineTransform(new float[] { -524f, -105f, 140f, -419f, -788f, 2220f, 
                 type }), Transform.GetAffineTransform(transform, 60f, 80f));
@@ -82,21 +82,21 @@ namespace iText.Layout.Properties {
 
         [NUnit.Framework.Test]
         public virtual void GetAffineTransformOneSingleTransformFewTimesTest() {
-            Transform transform = new Transform(4);
+            Transform transform = new Transform();
             Transform.SingleTransform singleTransform = CreateSingleTransform(UnitValue.CreatePointValue(20f), UnitValue
                 .CreatePointValue(30f));
-            transform.AddSingleTransform(singleTransform);
-            transform.AddSingleTransform(singleTransform);
-            transform.AddSingleTransform(singleTransform);
-            transform.AddSingleTransform(singleTransform);
+            transform.AddTransform(singleTransform);
+            transform.AddTransform(singleTransform);
+            transform.AddTransform(singleTransform);
+            transform.AddTransform(singleTransform);
             NUnit.Framework.Assert.AreEqual(new AffineTransform(new float[] { -524f, -105f, 140f, -419f, -700f, 2100f, 
                 type }), Transform.GetAffineTransform(transform, 60f, 60f));
         }
 
         [NUnit.Framework.Test]
         public virtual void GetAffineTransformDifferentWidthHeightTest() {
-            Transform transform = new Transform(1);
-            transform.AddSingleTransform(CreateSingleTransform(UnitValue.CreatePercentValue(20f), UnitValue.CreatePercentValue
+            Transform transform = new Transform();
+            transform.AddTransform(CreateSingleTransform(UnitValue.CreatePercentValue(20f), UnitValue.CreatePercentValue
                 (30f)));
             NUnit.Framework.Assert.AreEqual(new AffineTransform(new float[] { -2f, 3f, -4f, -5f, -10f, -6f, type }), Transform
                 .GetAffineTransform(transform, -50f, -20f));
@@ -114,9 +114,9 @@ namespace iText.Layout.Properties {
             float width = 60f;
             float height = 80f;
             // create Transform
-            Transform transform = new Transform(1);
-            transform.AddSingleTransform(CreateSingleTransform(new UnitValue(txUnitValueType, txUnitValue), new UnitValue
-                (tyUnitValueType, tyUnitValue)));
+            Transform transform = new Transform();
+            transform.AddTransform(CreateSingleTransform(new UnitValue(txUnitValueType, txUnitValue), new UnitValue(tyUnitValueType
+                , tyUnitValue)));
             // get AffineTransform
             return Transform.GetAffineTransform(transform, width, height);
         }

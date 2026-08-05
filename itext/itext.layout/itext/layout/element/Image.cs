@@ -227,11 +227,34 @@ namespace iText.Layout.Element {
             return xObject;
         }
 
-        /// <summary>Sets the rotation radAngle.</summary>
-        /// <param name="radAngle">a value in radians</param>
+        /// <summary>Sets the rotation angle for this image.</summary>
+        /// <remarks>
+        /// Sets the rotation angle for this image.
+        /// <para />
+        /// The angle is specified in radians and stored in
+        /// <see cref="iText.Layout.Properties.Property.ROTATION_ANGLE"/>.
+        /// Positive values rotate counter-clockwise; negative values rotate clockwise.
+        /// <para />
+        /// Rotation is applied during rendering, and layout computes an occupied area that
+        /// encloses the rotated image.
+        /// </remarks>
+        /// <param name="radAngle">the rotation angle, in radians</param>
         /// <returns>this element</returns>
         public virtual iText.Layout.Element.Image SetRotationAngle(double radAngle) {
             SetProperty(Property.ROTATION_ANGLE, radAngle);
+            return this;
+        }
+
+        /// <summary>Sets a transformation to be applied to this block element during rendering.</summary>
+        /// <param name="transform">
+        /// a
+        /// <see cref="iText.Layout.Properties.Transform"/>
+        /// describing the sequence of transform operations
+        /// (for example, translate, scale, rotate, skew)
+        /// </param>
+        /// <returns>this element</returns>
+        public virtual iText.Layout.Element.Image SetTransform(Transform transform) {
+            SetProperty(Property.TRANSFORM, transform);
             return this;
         }
 
