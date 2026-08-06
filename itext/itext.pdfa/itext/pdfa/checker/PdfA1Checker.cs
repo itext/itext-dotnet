@@ -328,21 +328,25 @@ namespace iText.Pdfa.Checker {
 
         protected internal override void CheckContentStream(PdfStream contentStream, PdfResources resources) {
             if (IsFullCheckMode() || contentStream.IsModified()) {
-                byte[] contentBytes = contentStream.GetBytes();
-                PdfTokenizer tokenizer = new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource
-                    (contentBytes)));
-                PdfCanvasParser parser = new PdfCanvasParser(tokenizer, resources);
-                IList<PdfObject> operands = new List<PdfObject>();
-                try {
-                    while (parser.Parse(operands).Count > 0) {
-                        foreach (PdfObject operand in operands) {
-                            CheckContentStreamObject(operand);
-                        }
+                CheckContentStream(contentStream.GetBytes(), resources);
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override void CheckContentStream(byte[] streamContent, PdfResources resources) {
+            PdfTokenizer tokenizer = new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource
+                (streamContent)));
+            PdfCanvasParser parser = new PdfCanvasParser(tokenizer, resources);
+            IList<PdfObject> operands = new List<PdfObject>();
+            try {
+                while (parser.Parse(operands).Count > 0) {
+                    foreach (PdfObject operand in operands) {
+                        CheckContentStreamObject(operand);
                     }
                 }
-                catch (System.IO.IOException e) {
-                    throw new PdfException(PdfaExceptionMessageConstant.CANNOT_PARSE_CONTENT_STREAM, e);
-                }
+            }
+            catch (System.IO.IOException e) {
+                throw new PdfException(PdfaExceptionMessageConstant.CANNOT_PARSE_CONTENT_STREAM, e);
             }
         }
 

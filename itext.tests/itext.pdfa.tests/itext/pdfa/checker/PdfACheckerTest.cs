@@ -23,7 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.Commons.Internal.Runtime;
 using iText.Kernel.Colors;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -83,6 +85,53 @@ namespace iText.Pdfa.Checker {
             testChecker.SetFullCheckMode(true);
             NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => testChecker.CheckContentStream(firstContentStream
                 ), "NullPointer was not thrown on inline image.");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckMalformedModifiedPageContentStreamWhenFullCheckModeIsDisabledTest() {
+            using (MemoryStream bos = new MemoryStream()) {
+                using (PdfWriter writer = new PdfWriter(bos)) {
+                    using (PdfDocument document = new PdfDocument(writer)) {
+                        PdfPage page = document.AddNewPage();
+                        SetPageContentStreams(document, page, new String[] { "<<" });
+                        PdfAChecker checker = new PdfACheckerTest.PageContentOnlyPdfAChecker();
+                        checker.SetFullCheckMode(false);
+                        PdfCatalog catalog = document.GetCatalog();
+                        Exception e = NUnit.Framework.Assert.Catch(typeof(PdfException), () => checker.CheckDocument(catalog));
+                        NUnit.Framework.Assert.AreEqual(KernelExceptionMessageConstant.UNEXPECTED_END_OF_FILE, e.Message);
+                    }
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CheckUnmodifiedPageContentStreamsAreSkippedWhenFullCheckModeIsDisabledTest() {
+            byte[] pdfBytes = CreateDocumentWithContentStreams(new String[] { "<<" });
+            using (PdfDocument document = new PdfDocument(new PdfReader(new MemoryStream(pdfBytes)))) {
+                PdfAChecker checker = new PdfACheckerTest.PageContentOnlyPdfAChecker();
+                checker.SetFullCheckMode(false);
+                NUnit.Framework.Assert.DoesNotThrow(() => checker.CheckDocument(document.GetCatalog()));
+                NUnit.Framework.Assert.IsFalse(document.GetPage(1).GetContentStream(0).IsModified());
+            }
+        }
+
+        private static byte[] CreateDocumentWithContentStreams(String[] contentStreams) {
+            MemoryStream bos = new MemoryStream();
+            using (PdfWriter writer = new PdfWriter(bos)) {
+                using (PdfDocument document = new PdfDocument(writer)) {
+                    SetPageContentStreams(document, document.AddNewPage(), contentStreams);
+                }
+            }
+            return bos.ToArray();
+        }
+
+        private static void SetPageContentStreams(PdfDocument document, PdfPage page, String[] contentStreams) {
+            PdfArray contents = new PdfArray();
+            foreach (String contentStream in contentStreams) {
+                contents.Add(new PdfStream(contentStream.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1)).MakeIndirect
+                    (document));
+            }
+            page.GetPdfObject().Put(PdfName.Contents, contents);
         }
 
         private class EmptyPdfAChecker : PdfAChecker {
@@ -224,6 +273,17 @@ namespace iText.Pdfa.Checker {
 
             protected internal override void CheckPageTransparency(PdfDictionary pageDict, PdfDictionary pageResources
                 ) {
+            }
+        }
+
+        private class PageContentOnlyPdfAChecker : PdfACheckerTest.EmptyPdfAChecker {
+            protected internal PageContentOnlyPdfAChecker()
+                : base() {
+            }
+
+            protected internal override void CheckContentStream(byte[] streamContent, PdfResources resources) {
+                PdfAChecker checker = new PdfA1Checker(PdfAConformance.PDF_A_1A);
+                checker.CheckContentStream(streamContent, resources);
             }
         }
     }
