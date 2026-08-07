@@ -89,14 +89,26 @@ namespace iText.Kernel.Geom {
         /// <summary>
         /// Rotates
         /// <see cref="PageSize"/>
-        /// clockwise.
+        /// 90 degrees clockwise around the origin
+        /// <c>(0, 0)</c>.
         /// </summary>
+        /// <remarks>
+        /// Rotates
+        /// <see cref="PageSize"/>
+        /// 90 degrees clockwise around the origin
+        /// <c>(0, 0)</c>.
+        /// <para />
+        /// This method applies the clockwise point transform to the page origin itself:
+        /// <c>(x, y) -&gt; (y, -x)</c>
+        /// , and swaps width and height. The resulting page is therefore anchored
+        /// at the rotated origin point.
+        /// </remarks>
         /// <returns>
         /// the rotated
-        /// <see cref="PageSize"/>.
+        /// <see cref="PageSize"/>
         /// </returns>
         public virtual iText.Kernel.Geom.PageSize Rotate() {
-            return new iText.Kernel.Geom.PageSize(height, width);
+            return new iText.Kernel.Geom.PageSize(new Rectangle(y, -x, height, width));
         }
 
         /// <summary>

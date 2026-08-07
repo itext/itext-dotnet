@@ -110,10 +110,20 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Gets page size, considering page rotation.</summary>
+        /// <remarks>
+        /// Gets page size, considering page rotation.
+        /// <para />
+        /// Rotation is applied as successive 90-degree clockwise quarter-turns using
+        /// <see cref="iText.Kernel.Geom.PageSize.Rotate()"/>
+        /// . The resulting rectangle is anchored at the rotated
+        /// origin point (its lower-left corner is rotated together with the page), rather
+        /// than being rebased to the lower-left corner of an enclosing axis-aligned
+        /// bounding box.
+        /// </remarks>
         /// <returns>
         /// 
         /// <see cref="iText.Kernel.Geom.Rectangle"/>
-        /// that specify size of rotated page.
+        /// that specifies size and position of the rotated page
         /// </returns>
         public virtual Rectangle GetPageSizeWithRotation() {
             PageSize rect = new PageSize(GetPageSize());
