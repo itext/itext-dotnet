@@ -2340,8 +2340,12 @@ namespace iText.Kernel.Utils {
 
         private bool CompareStreamsExtended(PdfStream outStream, PdfStream cmpStream, ObjectPath currentPath, CompareToolResult
              compareResult) {
-            bool toDecodeOut = PdfName.FlateDecode.Equals(outStream.Get(PdfName.Filter));
-            bool toDecodeCmp = PdfName.FlateDecode.Equals(cmpStream.Get(PdfName.Filter));
+            PdfObject outStreamFilter = outStream.Get(PdfName.Filter);
+            PdfObject cmpStreamFilter = cmpStream.Get(PdfName.Filter);
+            bool toDecodeOut = PdfName.FlateDecode.Equals(outStreamFilter) || PdfName.BrotliDecode.Equals(outStreamFilter
+                );
+            bool toDecodeCmp = PdfName.FlateDecode.Equals(cmpStreamFilter) || PdfName.BrotliDecode.Equals(cmpStreamFilter
+                );
             byte[] outStreamBytes = decompressedStreams.Get(outStream);
             if (outStreamBytes == null) {
                 outStreamBytes = outStream.GetBytes(toDecodeOut);
