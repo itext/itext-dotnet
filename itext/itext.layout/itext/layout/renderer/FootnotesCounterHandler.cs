@@ -22,13 +22,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Numbering;
 using iText.Layout;
 using iText.Layout.Element;
-using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Properties.Margins;
 
@@ -40,11 +40,8 @@ namespace iText.Layout.Renderer {
 
         private const int DEFAULT_TEXT_RISE = 7;
 
-        private readonly IDictionary<FootnoteAnchor, FootnoteAnchorRenderer> renderers = new Dictionary<FootnoteAnchor
-            , FootnoteAnchorRenderer>();
-
-        private readonly IDictionary<FootnoteRenderer, float?> footnotes = new LinkedDictionary<FootnoteRenderer, 
-            float?>();
+        private readonly IDictionary<Footnote, FootnoteRenderer> footnotes = new LinkedDictionary<Footnote, FootnoteRenderer
+            >();
 
         /// <summary>
         /// Creates a new
@@ -56,27 +53,6 @@ namespace iText.Layout.Renderer {
 
 //\cond DO_NOT_DOCUMENT
         // Empty constructor.
-        /// <summary>
-        /// Adds footnote anchor info after
-        /// <see cref="iText.Layout.Properties.Margins.FootnoteAnchor"/>
-        /// layout.
-        /// </summary>
-        /// <param name="renderer">
-        /// renderer for
-        /// <see cref="iText.Layout.Properties.Margins.FootnoteAnchor"/>
-        /// which stores layout information
-        /// </param>
-        internal static void AddFootnoteAnchor(FootnoteAnchorRenderer renderer) {
-            iText.Layout.Renderer.FootnotesCounterHandler footnotesCounterHandler = GetFootnotesCounterHandler(renderer
-                );
-            if (footnotesCounterHandler != null) {
-                FootnoteAnchor footnoteAnchor = (FootnoteAnchor)renderer.modelElement;
-                footnotesCounterHandler.renderers.Put(footnoteAnchor, renderer);
-            }
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Gets
         /// <see cref="FootnotesCounterHandler"/>
@@ -114,7 +90,6 @@ namespace iText.Layout.Renderer {
         /// before collecting placed footnotes.
         /// </summary>
         internal virtual void Reset() {
-            renderers.Clear();
             footnotes.Clear();
         }
 //\endcond
@@ -124,34 +99,18 @@ namespace iText.Layout.Renderer {
         /// Collects footnotes which anchors are placed in the current area
         /// in order their anchors are placed on a page from top to bottom and left to right.
         /// </summary>
-        /// <param name="currentArea">
-        /// 
-        /// <see cref="iText.Layout.Layout.LayoutArea"/>
-        /// area to collect placed footnote anchors
-        /// </param>
+        /// <param name="renderer">parent renderer to collect footnotes from</param>
+        /// <param name="footnotesAnchorsFound">a list to store the encountered footnote anchors</param>
         /// <returns>
         /// linked map of
         /// <see cref="iText.Layout.Properties.Margins.Footnote"/>
-        /// and its height float value
+        /// and corresponding renderers.
         /// </returns>
-        internal virtual IDictionary<FootnoteRenderer, float?> CollectFootnotes(LayoutArea currentArea) {
+        internal virtual IDictionary<Footnote, FootnoteRenderer> CollectFootnotes(IRenderer renderer, IList<FootnoteAnchorRenderer
+            > footnotesAnchorsFound) {
+            footnotesAnchorsFound.Clear();
             footnotes.Clear();
-            IList<FootnoteAnchor> anchors = new List<FootnoteAnchor>(renderers.Keys);
-            JavaCollectionsUtil.Sort(anchors, new FootnotesCounterHandler.FootnoteAnchorComparator(this));
-            foreach (FootnoteAnchor footnoteAnchor in anchors) {
-                FootnoteAnchorRenderer renderer = renderers.Get(footnoteAnchor);
-                if (renderer.occupiedArea == null) {
-                    continue;
-                }
-                int expectedPageNumber = currentArea.GetPageNumber();
-                // Check whether footnote anchor is inside the currentArea (if the overlap is greater than 50 percent).
-                bool isAnchorInsideCurrentArea = currentArea.GetBBox().Overlaps(renderer.occupiedArea.GetBBox(), 0.5F * Math
-                    .Min(renderer.occupiedArea.GetBBox().GetWidth(), renderer.occupiedArea.GetBBox().GetHeight()));
-                if (expectedPageNumber == renderer.occupiedArea.GetPageNumber() && isAnchorInsideCurrentArea) {
-                    footnotes.Put(renderer.footnoteRenderer, renderer.footnoteRenderer.GetOccupiedArea().GetBBox().GetHeight()
-                        );
-                }
-            }
+            CollectFromTree(renderer, footnotes, footnotesAnchorsFound);
             return footnotes;
         }
 //\endcond
@@ -172,32 +131,71 @@ namespace iText.Layout.Renderer {
         /// the number of the previous placed footnote based on
         /// <see cref="iText.Layout.Properties.Margins.FootnoteNumberingConfig"/>
         /// </param>
+        /// <param name="anchorsToNumber">the list of anchors to apply the renumbering on</param>
         internal virtual void UpdateFootnoteNumberingAndStyles(FootnotesProperties footnotesProperties, int latestFootnoteNum
-            ) {
+            , ICollection<FootnoteAnchorRenderer> anchorsToNumber) {
             if (footnotesProperties == null) {
                 return;
             }
             Style footnoteAnchorLabelStyle = footnotesProperties.GetFootnoteAnchorLabelStyle();
             if (footnoteAnchorLabelStyle != null) {
-                foreach (FootnoteAnchor anchor in renderers.Keys) {
-                    FootnotesUtil.ApplyFootnoteAnchorStyle(anchor, footnoteAnchorLabelStyle);
+                foreach (FootnoteAnchorRenderer renderer in anchorsToNumber) {
+                    FootnotesUtil.ApplyFootnoteAnchorStyle((FootnoteAnchor)renderer.GetModelElement(), footnoteAnchorLabelStyle
+                        );
                 }
             }
             if (footnotesProperties.GetFootnoteNumberingType() == null) {
                 return;
             }
             FootnoteNumberingType? footnoteNumberingType = footnotesProperties.GetFootnoteNumberingType();
-            IList<FootnoteAnchor> anchors = new List<FootnoteAnchor>(renderers.Keys);
-            JavaCollectionsUtil.Sort(anchors, new FootnotesCounterHandler.FootnoteAnchorComparator(this));
+            IList<FootnoteAnchorRenderer> anchors = anchorsToNumber.Sorted((renderer1, renderer2) => {
+                int result = JavaUtil.FloatCompare(-renderer1.yPos, -renderer2.yPos);
+                if (result == 0) {
+                    Rectangle rectangle1 = renderer1.occupiedArea.GetBBox();
+                    Rectangle rectangle2 = renderer2.occupiedArea.GetBBox();
+                    result = JavaUtil.FloatCompare(rectangle1.GetX(), rectangle2.GetX());
+                }
+                return result;
+            }
+            ).ToList();
             int footnoteNum = latestFootnoteNum + 1;
-            foreach (FootnoteAnchor anchor in anchors) {
-                FootnoteAnchorRenderer renderer = renderers.Get(anchor);
+            foreach (FootnoteAnchorRenderer renderer in anchors) {
                 IRenderer currentSymbolRenderer = MakeFootnoteNumSymbolRenderer(footnoteNum, footnoteNumberingType);
                 ++footnoteNum;
                 renderer.AddSymbolRenderer(currentSymbolRenderer);
             }
         }
 //\endcond
+
+        private static void CollectFromTree(IRenderer renderer, IDictionary<Footnote, FootnoteRenderer> footnotes, 
+            IList<FootnoteAnchorRenderer> footnotesAnchorsFound) {
+            if (renderer == null) {
+                return;
+            }
+            TableRenderer tableRenderer = null;
+            if (renderer is TableRenderer) {
+                tableRenderer = (TableRenderer)renderer;
+                if (tableRenderer.headerRenderer != null) {
+                    CollectFromTree(tableRenderer.headerRenderer, footnotes, footnotesAnchorsFound);
+                }
+            }
+            foreach (IRenderer child in renderer.GetChildRenderers()) {
+                if (child is FootnoteAnchorRenderer) {
+                    footnotesAnchorsFound.Add((FootnoteAnchorRenderer)child);
+                    FootnoteRenderer footnoteRenderer = ((FootnoteAnchorRenderer)child).footnoteRenderer;
+                    if (footnoteRenderer == null) {
+                        continue;
+                    }
+                    footnotes.Put((Footnote)footnoteRenderer.GetModelElement(), footnoteRenderer);
+                }
+                else {
+                    CollectFromTree(child, footnotes, footnotesAnchorsFound);
+                }
+            }
+            if (tableRenderer != null && tableRenderer.footerRenderer != null) {
+                CollectFromTree(tableRenderer.footerRenderer, footnotes, footnotesAnchorsFound);
+            }
+        }
 
         private static IRenderer MakeFootnoteNumSymbolRenderer(int index, FootnoteNumberingType? numberingType) {
             String numberText;
@@ -248,26 +246,6 @@ namespace iText.Layout.Renderer {
             defaultStyle.SetProperty(Property.TEXT_RISE, DEFAULT_TEXT_RISE);
             Text textElement = new Text(numberText).AddStyle(defaultStyle);
             return new TextRenderer(textElement);
-        }
-
-        private sealed class FootnoteAnchorComparator : IComparer<FootnoteAnchor> {
-            public int Compare(FootnoteAnchor o1, FootnoteAnchor o2) {
-                FootnoteAnchorRenderer renderer1 = this._enclosing.renderers.Get(o1);
-                FootnoteAnchorRenderer renderer2 = this._enclosing.renderers.Get(o2);
-                int result = JavaUtil.FloatCompare(-renderer1.yPos, -renderer2.yPos);
-                if (result == 0) {
-                    Rectangle rectangle1 = renderer1.occupiedArea.GetBBox();
-                    Rectangle rectangle2 = renderer2.occupiedArea.GetBBox();
-                    result = JavaUtil.FloatCompare(rectangle1.GetX(), rectangle2.GetX());
-                }
-                return result;
-            }
-
-            internal FootnoteAnchorComparator(FootnotesCounterHandler _enclosing) {
-                this._enclosing = _enclosing;
-            }
-
-            private readonly FootnotesCounterHandler _enclosing;
         }
     }
 //\endcond

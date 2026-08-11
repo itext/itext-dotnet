@@ -296,9 +296,10 @@ namespace iText.Layout.Renderer {
             if (footnotesCounterHandler == null) {
                 return layoutResult;
             }
+            IList<FootnoteAnchorRenderer> footnoteAnchors = new List<FootnoteAnchorRenderer>();
             // Process footnotes that were collected during renderer layout.
-            IDictionary<FootnoteRenderer, float?> footnotes = footnotesCounterHandler.CollectFootnotes(layoutResult.GetOccupiedArea
-                () == null ? currentArea : layoutResult.GetOccupiedArea());
+            IDictionary<Footnote, FootnoteRenderer> footnotes = footnotesCounterHandler.CollectFootnotes(renderer, footnoteAnchors
+                );
             int footnoteAnchorsNum = footnotes.Count;
             if (footnoteAnchorsNum == 0) {
                 return layoutResult;
@@ -320,8 +321,10 @@ namespace iText.Layout.Renderer {
             bool footnotesPlaced = false;
             float decreasedHeight = 0;
             bool footnotesNumDefined = false;
+            // We need to run the layout once again for table footers containing footnotes.
+            bool extraRun = false;
             int footnotesNum = 0;
-            while (!footnotesPlaced) {
+            while (!footnotesPlaced || extraRun) {
                 if (footnotesNumDefined) {
                     decreasedHeight = 0;
                 }
@@ -331,13 +334,14 @@ namespace iText.Layout.Renderer {
                     // Decrease current area from the bottom to the height of footnotes.
                     footnotesNum = footnoteAnchorsNum;
                     decreasedHeight = 0;
-                    foreach (float? footnoteHeight in footnotes.Values) {
+                    foreach (FootnoteRenderer footnoteRenderer in footnotes.Values) {
+                        float footnoteHeight = footnoteRenderer.GetOccupiedArea().GetBBox().GetHeight();
                         currentArea.GetBBox().MoveUp((float)footnoteHeight).DecreaseHeight((float)footnoteHeight);
                         decreasedHeight += (float)footnoteHeight;
                     }
                 }
                 footnotesCounterHandler.UpdateFootnoteNumberingAndStyles(footnotesProperties, (int)latestFootnoteNumber.GetOrDefault
-                    (pageNum, 0));
+                    (pageNum, 0), footnoteAnchors);
                 footnotesCounterHandler.Reset();
                 if (isForcedPlacement) {
                     renderer.SetProperty(Property.FORCED_PLACEMENT, true);
@@ -349,17 +353,23 @@ namespace iText.Layout.Renderer {
                     footnotesCounterHandler.Reset();
                 }
                 else {
-                    footnotes = footnotesCounterHandler.CollectFootnotes(layoutResult.GetOccupiedArea() == null ? currentArea : 
-                        layoutResult.GetOccupiedArea());
+                    footnotes = footnotesCounterHandler.CollectFootnotes(layoutResult.GetStatus() == LayoutResult.PARTIAL ? layoutResult
+                        .GetSplitRenderer() : renderer, footnoteAnchors);
                 }
-                footnoteAnchorsNum = footnotes.Count;
-                // Number of the placed anchors == number of footnotes we reserved the space for before the layout
-                footnotesPlaced = footnoteAnchorsNum == footnotesNum;
-                if (footnoteAnchorsNum > footnotesNum) {
-                    footnotesNumDefined = true;
-                    // Decrease current area from the bottom until extra anchor will be moved to the next page.
-                    // This logic can be improved in the future.
-                    currentArea.GetBBox().MoveUp(1).DecreaseHeight(1);
+                if (extraRun) {
+                    extraRun = false;
+                }
+                else {
+                    footnoteAnchorsNum = footnotes.Count;
+                    // Number of the placed anchors == number of footnotes we reserved the space for before the layout
+                    footnotesPlaced = footnoteAnchorsNum == footnotesNum;
+                    extraRun = footnotesPlaced;
+                    if (footnoteAnchorsNum > footnotesNum) {
+                        footnotesNumDefined = true;
+                        // Decrease current area from the bottom until extra anchor will be moved to the next page.
+                        // This logic can be improved in the future.
+                        currentArea.GetBBox().MoveUp(1).DecreaseHeight(1);
+                    }
                 }
                 rendererAdditionalLayoutCounter = GetRendererLayoutCounter(rendererAdditionalLayoutCounter);
             }
@@ -367,7 +377,7 @@ namespace iText.Layout.Renderer {
                 pageMarginBoxes = new PageMarginBoxes(JavaCollectionsUtil.EmptyList<PageMarginContent>());
                 document.SetPageMargins(currentArea.GetPageNumber(), pageMarginBoxes);
             }
-            FootnotesUtil.AddFootnotesToPage(pageNum, new List<FootnoteRenderer>(footnotes.Keys), pageMarginBoxes, footnotesProperties
+            FootnotesUtil.AddFootnotesToPage(pageNum, new List<FootnoteRenderer>(footnotes.Values), pageMarginBoxes, footnotesProperties
                 );
             latestFootnoteNumber.Put(pageNum, latestFootnoteNumber.ContainsKey(pageNum) ? (latestFootnoteNumber.Get(pageNum
                 ) + footnotes.Count) : footnotes.Count);

@@ -122,6 +122,170 @@ namespace iText.Layout {
                 , "diff_" + fileName));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void FootnoteTableFooterNewPageTest() {
+            String fileName = "footnoteTableFooterNewPage";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            FootnoteNumberingType? numberingType = FootnoteNumberingType.DECIMAL;
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    document.SetFootnotesProperties(new FootnotesProperties().SetFootnoteNumberingType(numberingType).SetFootnoteNumberingConfig
+                        (FootnoteNumberingConfig.PER_DOCUMENT));
+                    Footnote footnote = new Footnote("Footnote text");
+                    FootnoteAnchor anchor = new FootnoteAnchor(footnote);
+                    Footnote footnote2 = new Footnote("Footnote text 2");
+                    FootnoteAnchor anchor2 = new FootnoteAnchor(footnote2);
+                    Table table = new Table(4);
+                    for (int i = 0; i < 24; ++i) {
+                        Paragraph paragraph = new Paragraph("Cell " + i);
+                        if (i == 5) {
+                            paragraph.Add(anchor).SetBorder(new SolidBorder(ColorConstants.GREEN, 1));
+                        }
+                        if (i == 19) {
+                            paragraph.Add(anchor2).SetBorder(new SolidBorder(ColorConstants.GREEN, 1));
+                        }
+                        table.AddCell(paragraph);
+                    }
+                    document.Add(table);
+                    footnote = new Footnote("Footnote text 3");
+                    anchor = new FootnoteAnchor(footnote);
+                    footnote2 = new Footnote("Footnote text 5");
+                    anchor2 = new FootnoteAnchor(footnote2);
+                    table = new Table(4);
+                    for (int i = 0; i < 24; ++i) {
+                        Paragraph paragraph = new Paragraph("Cell " + i);
+                        if (i == 1) {
+                            paragraph.Add(anchor).SetBorder(new SolidBorder(ColorConstants.GREEN, 1));
+                        }
+                        if (i == 15) {
+                            paragraph.Add(new FootnoteAnchor(new Footnote("Footnote text 4\n\n")));
+                        }
+                        if (i == 23) {
+                            paragraph.Add(anchor2).SetBorder(new SolidBorder(ColorConstants.GREEN, 1));
+                        }
+                        if (i < 4) {
+                            table.AddHeaderCell(new Cell().Add(paragraph).SetBorder(new SolidBorder(ColorConstants.CYAN, 2)));
+                        }
+                        else {
+                            if (i > 19) {
+                                table.AddFooterCell(new Cell().Add(paragraph).SetBorder(new SolidBorder(ColorConstants.BLUE, 2)));
+                            }
+                            else {
+                                table.AddCell(paragraph);
+                            }
+                        }
+                    }
+                    document.Add(new Paragraph(TestResourceUtil.GetByronStanza() + "\n\n" + TestResourceUtil.GetByronStanza() 
+                        + "\n\n" + "Two more \nlines"));
+                    document.Add(table);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FootnoteTableFooterNewPage3Test() {
+            String fileName = "footnoteTableFooterNewPage3";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            FootnoteNumberingType? numberingType = FootnoteNumberingType.DECIMAL;
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    document.SetFootnotesProperties(new FootnotesProperties().SetFootnoteNumberingType(numberingType).SetFootnoteNumberingConfig
+                        (FootnoteNumberingConfig.PER_DOCUMENT));
+                    Footnote footnote = new Footnote("Footnote text");
+                    FootnoteAnchor anchor = new FootnoteAnchor(footnote);
+                    Footnote footnote2 = new Footnote("Footnote text 2");
+                    FootnoteAnchor anchor2 = new FootnoteAnchor(footnote2);
+                    Table table = new Table(4);
+                    for (int i = 0; i < 24; ++i) {
+                        Paragraph paragraph = new Paragraph("Cell " + i);
+                        if (i == 5) {
+                            paragraph.Add(anchor).SetBorder(new SolidBorder(ColorConstants.GREEN, 1));
+                        }
+                        if (i == 19) {
+                            paragraph.Add(anchor2).SetBorder(new SolidBorder(ColorConstants.GREEN, 1));
+                        }
+                        table.AddCell(paragraph);
+                    }
+                    document.Add(table);
+                    footnote = new Footnote("Footnote text 3");
+                    anchor = new FootnoteAnchor(footnote);
+                    footnote2 = new Footnote("Footnote text 5");
+                    anchor2 = new FootnoteAnchor(footnote2);
+                    table = new Table(4);
+                    for (int i = 0; i < 24; ++i) {
+                        Paragraph paragraph = new Paragraph("Cell " + i);
+                        if (i == 1) {
+                            paragraph.Add(anchor).SetBorder(new SolidBorder(ColorConstants.GREEN, 1));
+                        }
+                        if (i == 15) {
+                            paragraph.Add(new FootnoteAnchor(new Footnote("Footnote\ntext\n4"))).SetBorder(new SolidBorder(ColorConstants
+                                .GREEN, 1));
+                        }
+                        if (i == 23) {
+                            paragraph.Add(anchor2).SetBorder(new SolidBorder(ColorConstants.GREEN, 1));
+                        }
+                        table.AddCell(paragraph);
+                    }
+                    document.Add(new Paragraph(TestResourceUtil.GetByronStanza() + "\n\n" + TestResourceUtil.GetByronStanza() 
+                        + "\n\n" + "Two more \nlines"));
+                    document.Add(table);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FootnoteTableFooterNewPage2Test() {
+            String fileName = "footnoteTableFooterNewPage2";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            FootnoteNumberingType? numberingType = FootnoteNumberingType.DECIMAL;
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    document.SetFootnotesProperties(new FootnotesProperties().SetFootnoteNumberingType(numberingType).SetFootnoteNumberingConfig
+                        (FootnoteNumberingConfig.PER_DOCUMENT));
+                    document.Add(new Div().SetHeight(580).SetWidth(500).SetBackgroundColor(ColorConstants.LIGHT_GRAY));
+                    Footnote footnote = new Footnote("Footnote text 1");
+                    FootnoteAnchor anchor = new FootnoteAnchor(footnote);
+                    Footnote footnote2 = new Footnote("Footnote text 3");
+                    FootnoteAnchor anchor2 = new FootnoteAnchor(footnote2);
+                    Table table = new Table(4);
+                    for (int i = 0; i < 24; ++i) {
+                        Paragraph paragraph = new Paragraph("Cell " + i);
+                        if (i == 1) {
+                            paragraph.Add(anchor).SetBorder(new SolidBorder(ColorConstants.GREEN, 1));
+                        }
+                        if (i == 15) {
+                            paragraph.Add(new FootnoteAnchor(new Footnote("Footnote\ntext\n2"))).SetBorder(new SolidBorder(ColorConstants
+                                .GREEN, 1));
+                        }
+                        if (i == 23) {
+                            paragraph.Add(anchor2).SetBorder(new SolidBorder(ColorConstants.GREEN, 1));
+                        }
+                        if (i < 4) {
+                            table.AddHeaderCell(new Cell().Add(paragraph).SetBorder(new SolidBorder(ColorConstants.CYAN, 2)));
+                        }
+                        else {
+                            if (i > 19) {
+                                table.AddFooterCell(new Cell().Add(paragraph).SetBorder(new SolidBorder(ColorConstants.BLUE, 2)));
+                            }
+                            else {
+                                table.AddCell(paragraph);
+                            }
+                        }
+                    }
+                    document.Add(table);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
+        }
+
         [NUnit.Framework.TestCaseSource("NumberingConfig")]
         public virtual void FootnoteNumberingConfigTest(FootnoteNumberingConfig numberingConfig) {
             String fileName = "footnoteNumberingConfig_" + numberingConfig.ToString();
