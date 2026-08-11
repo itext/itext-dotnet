@@ -111,8 +111,12 @@ namespace iText.Layout.Renderer {
             iText.Layout.Renderer.DocumentRenderer renderer = new iText.Layout.Renderer.DocumentRenderer(document, immediateFlush
                 );
             renderer.targetCounterHandler = new TargetCounterHandler(targetCounterHandler);
-            renderer.marginBoxesHandler = marginBoxesHandler.SetDocumentRenderer(renderer);
             return renderer;
+        }
+
+        /// <summary>Removes renderer-owned event handlers before relayout replaces this renderer instance.</summary>
+        public virtual void RemoveEventHandlersForRelayout() {
+            document.GetPdfDocument().RemoveEventHandler(marginBoxesHandler);
         }
 
         protected internal override void FlushOnClose() {
