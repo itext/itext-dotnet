@@ -667,5 +667,10 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void LinearGradHrefTransitiveSpreadMethod2Test() {
             ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefTransitiveSpreadMethod2");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void LowerCaseGradientUnitsTest() {
+            ConvertAndCompare(sourceFolder, destinationFolder, "lowerCaseGradientUnits");
+        }
     }
 }

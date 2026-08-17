@@ -118,7 +118,7 @@ namespace iText.Layout.Properties {
                 ().AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue())).AddStopColor(new GradientColorStop
                 (ColorConstants.GREEN.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue
                 ()));
-            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetLinearGradientBuilder
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetGradientBuilder
                 (gradientBuilder).Build();
             BackgroundImageGenericTest("backgroundImageWithLinearGradient", backgroundImage);
         }
@@ -129,7 +129,7 @@ namespace iText.Layout.Properties {
                 ().AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue())).AddStopColor(new GradientColorStop
                 (ColorConstants.GREEN.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue
                 ()));
-            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetLinearGradientBuilder
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetGradientBuilder
                 (gradientBuilder).SetBackgroundPosition(new BackgroundPosition().SetYShift(UnitValue.CreatePointValue(
                 30)).SetXShift(UnitValue.CreatePointValue(50))).Build();
             BackgroundImageGenericTest("backgroundImageWithLinearGradientAndPosition", backgroundImage);
@@ -141,7 +141,7 @@ namespace iText.Layout.Properties {
                 ().AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue())).AddStopColor(new GradientColorStop
                 (ColorConstants.GREEN.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue
                 ()));
-            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetLinearGradientBuilder
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetGradientBuilder
                 (gradientBuilder).SetBackgroundRepeat(new BackgroundRepeat()).Build();
             BackgroundImageGenericTest("backgroundImageWithLinearGradientAndRepeat", backgroundImage);
         }
@@ -152,7 +152,7 @@ namespace iText.Layout.Properties {
                 ().AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue())).AddStopColor(new GradientColorStop
                 (ColorConstants.GREEN.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue
                 ()));
-            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetLinearGradientBuilder
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetGradientBuilder
                 (gradientBuilder).SetBackgroundRepeat(new BackgroundRepeat()).SetBackgroundPosition(new BackgroundPosition
                 ().SetYShift(UnitValue.CreatePointValue(30)).SetXShift(UnitValue.CreatePointValue(50))).Build();
             BackgroundImageGenericTest("backgroundImageWithLinearGradientAndPositionAndRepeat", backgroundImage);
@@ -165,7 +165,7 @@ namespace iText.Layout.Properties {
                 ().AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue())).AddStopColor(new GradientColorStop
                 (ColorConstants.GREEN.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue
                 ()));
-            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetLinearGradientBuilder
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetGradientBuilder
                 (gradientBuilder).Build();
             BackgroundImageGenericTest("backgroundImageWithLinearGradientAndTransform", backgroundImage, Math.PI / 4);
         }
@@ -685,13 +685,13 @@ namespace iText.Layout.Properties {
             StrategyBasedLinearGradientBuilder gradientBuilder = (StrategyBasedLinearGradientBuilder)new StrategyBasedLinearGradientBuilder
                 ().AddStopColor(new GradientColorStop(ColorConstants.BLACK.GetColorValue())).AddStopColor(new GradientColorStop
                 (ColorConstants.WHITE.GetColorValue()));
-            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetLinearGradientBuilder
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetGradientBuilder
                 (gradientBuilder).Build();
             StrategyBasedLinearGradientBuilder topGradientBuilder = (StrategyBasedLinearGradientBuilder)new StrategyBasedLinearGradientBuilder
                 ().SetGradientDirectionAsStrategy(StrategyBasedLinearGradientBuilder.GradientStrategy.TO_RIGHT).AddStopColor
                 (new GradientColorStop(ColorConstants.RED.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue()));
-            iText.Layout.Properties.BackgroundImage topBackgroundImage = new BackgroundImage.Builder().SetLinearGradientBuilder
+            iText.Layout.Properties.BackgroundImage topBackgroundImage = new BackgroundImage.Builder().SetGradientBuilder
                 (topGradientBuilder).SetBackgroundBlendMode(blendMode).Build();
             BackgroundImageGenericTest("backgroundImageWithLinearGradientAndBlendMode_" + blendMode.GetPdfRepresentation
                 ().GetValue(), JavaUtil.ArraysAsList(topBackgroundImage, backgroundImage));

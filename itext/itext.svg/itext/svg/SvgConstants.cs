@@ -391,6 +391,15 @@ namespace iText.Svg {
             /// <summary>Attribute defining the transformations for a color gradient.</summary>
             public const String GRADIENT_TRANSFORM = "gradientTransform";
 
+            /// <summary>Attribute defining the radius of radial gradient focal point.</summary>
+            public const String FR = "fr";
+
+            /// <summary>Attribute defining the x value of radial gradient focal point.</summary>
+            public const String FX = "fx";
+
+            /// <summary>Attribute defining the y value of radial gradient focal point.</summary>
+            public const String FY = "fy";
+
             /// <summary>Attribute defining the height.</summary>
             /// <remarks>Attribute defining the height. Used in several elements.</remarks>
             public const String HEIGHT = "height";

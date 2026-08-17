@@ -554,23 +554,39 @@ namespace iText.Layout.Renderer {
         /// <summary>
         /// Create a
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// with the given area and containing a gradient inside.
+        /// </summary>
+        /// <param name="gradientBuilder">the gradient builder</param>
+        /// <param name="xObjectArea">the result object area</param>
+        /// <param name="document">the pdf document</param>
+        /// <returns>the xObject with a specified area and a gradient</returns>
+        public static PdfFormXObject CreateXObject(IGradientBuilder gradientBuilder, Rectangle xObjectArea, PdfDocument
+             document) {
+            Rectangle formBBox = new Rectangle(0, 0, xObjectArea.GetWidth(), xObjectArea.GetHeight());
+            PdfFormXObject xObject = new PdfFormXObject(formBBox);
+            if (gradientBuilder != null) {
+                Color gradientColor = gradientBuilder.BuildColor(formBBox, null, document);
+                if (gradientColor != null) {
+                    new PdfCanvas(xObject, document).SetColor(gradientColor, true).Rectangle(formBBox).Fill();
+                }
+            }
+            return xObject;
+        }
+
+        /// <summary>
+        /// Create a
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
         /// with the given area and containing a linear gradient inside.
         /// </summary>
         /// <param name="linearGradientBuilder">the linear gradient builder</param>
         /// <param name="xObjectArea">the result object area</param>
         /// <param name="document">the pdf document</param>
         /// <returns>the xObject with a specified area and a linear gradient</returns>
+        [System.ObsoleteAttribute(@"use CreateXObject(iText.Kernel.Colors.Gradients.IGradientBuilder, iText.Kernel.Geom.Rectangle, iText.Kernel.Pdf.PdfDocument) instead"
+            )]
         public static PdfFormXObject CreateXObject(AbstractLinearGradientBuilder linearGradientBuilder, Rectangle 
             xObjectArea, PdfDocument document) {
-            Rectangle formBBox = new Rectangle(0, 0, xObjectArea.GetWidth(), xObjectArea.GetHeight());
-            PdfFormXObject xObject = new PdfFormXObject(formBBox);
-            if (linearGradientBuilder != null) {
-                Color gradientColor = linearGradientBuilder.BuildColor(formBBox, null, document);
-                if (gradientColor != null) {
-                    new PdfCanvas(xObject, document).SetColor(gradientColor, true).Rectangle(formBBox).Fill();
-                }
-            }
-            return xObject;
+            return CreateXObject((IGradientBuilder)linearGradientBuilder, xObjectArea, document);
         }
 
         /// <summary>
@@ -663,11 +679,11 @@ namespace iText.Layout.Renderer {
             UnitValue xPosition = UnitValue.CreatePointValue(0);
             UnitValue yPosition = UnitValue.CreatePointValue(0);
             if (backgroundXObject == null) {
-                AbstractLinearGradientBuilder gradientBuilder = backgroundImage.GetLinearGradientBuilder();
+                IGradientBuilder gradientBuilder = backgroundImage.GetGradientBuilder();
                 if (gradientBuilder == null) {
                     return;
                 }
-                // fullWidth and fullHeight is 0 because percentage shifts are ignored for linear-gradients
+                // fullWidth and fullHeight is 0 because percentage shifts are ignored for gradient backgrounds
                 backgroundImage.GetBackgroundPosition().CalculatePositionValues(0, 0, xPosition, yPosition);
                 backgroundXObject = CreateXObject(gradientBuilder, originBackgroundArea, drawContext.GetDocument());
             }

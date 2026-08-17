@@ -51,7 +51,7 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
-        public virtual void CreateXObjectTest() {
+        public virtual void CreateXObjectWithLinearGradientTest() {
             StrategyBasedLinearGradientBuilder gradientBuilder = (StrategyBasedLinearGradientBuilder)new StrategyBasedLinearGradientBuilder
                 ().SetGradientDirectionAsStrategy(StrategyBasedLinearGradientBuilder.GradientStrategy.TO_BOTTOM_LEFT).
                 AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue(), 0d, GradientColorStop.OffsetType
@@ -64,15 +64,28 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
-        public virtual void CreateXObjectWithNullLinearGradientTest() {
+        public virtual void CreateXObjectWithNullGradientTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-            PdfXObject pdfXObject = AbstractRenderer.CreateXObject(null, new Rectangle(0, 0, 20, 20), pdfDocument);
+            PdfXObject pdfXObject = AbstractRenderer.CreateXObject((IGradientBuilder)null, new Rectangle(0, 0, 20, 20)
+                , pdfDocument);
             NUnit.Framework.Assert.IsNull(pdfXObject.GetPdfObject().Get(PdfName.Resources));
         }
 
         [NUnit.Framework.Test]
+        public virtual void CreateXObjectWithRadialGradientTest() {
+            RadialGradientBuilder gradientBuilder = (RadialGradientBuilder)new RadialGradientBuilder().SetGradientVector
+                (10, 10, 0, 10, 10, 10).AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue(), 0d, GradientColorStop.OffsetType
+                .RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 1d, GradientColorStop.OffsetType
+                .RELATIVE));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            PdfXObject pdfXObject = AbstractRenderer.CreateXObject(gradientBuilder, new Rectangle(0, 0, 20, 20), pdfDocument
+                );
+            NUnit.Framework.Assert.IsNotNull(pdfXObject.GetPdfObject().Get(PdfName.Resources));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CreateXObjectWithInvalidColorTest() {
-            AbstractLinearGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder();
+            IGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder();
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             PdfXObject pdfXObject = AbstractRenderer.CreateXObject(gradientBuilder, new Rectangle(0, 0, 20, 20), pdfDocument
                 );
@@ -81,22 +94,22 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void DrawBackgroundImageTest() {
-            AbstractRenderer renderer = new _DivRenderer_123(new Div());
+            AbstractRenderer renderer = new _DivRenderer_137(new Div());
             byte[] bytes = new byte[] { 54, 25, 47, 15, 2, 2, 2, 44, 55, 77, 86, 24 };
             int[] counter = new int[] { 0 };
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
             document.AddNewPage();
-            DrawContext context = new DrawContext(document, new _PdfCanvas_133(counter, bytes, document, 1));
+            DrawContext context = new DrawContext(document, new _PdfCanvas_147(counter, bytes, document, 1));
             IList<BackgroundImage> images = new List<BackgroundImage>();
-            images.Add(new BackgroundImage.Builder().SetImage(new _PdfImageXObject_151(ImageDataFactory.CreateRawImage
+            images.Add(new BackgroundImage.Builder().SetImage(new _PdfImageXObject_165(ImageDataFactory.CreateRawImage
                 (bytes))).Build());
             renderer.SetProperty(Property.BACKGROUND_IMAGE, images);
             renderer.DrawBackground(context);
             NUnit.Framework.Assert.AreEqual(50, counter[0]);
         }
 
-        private sealed class _DivRenderer_123 : DivRenderer {
-            public _DivRenderer_123(Div baseArg1)
+        private sealed class _DivRenderer_137 : DivRenderer {
+            public _DivRenderer_137(Div baseArg1)
                 : base(baseArg1) {
             }
 
@@ -105,8 +118,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _PdfCanvas_133 : PdfCanvas {
-            public _PdfCanvas_133(int[] counter, byte[] bytes, PdfDocument baseArg1, int baseArg2)
+        private sealed class _PdfCanvas_147 : PdfCanvas {
+            public _PdfCanvas_147(int[] counter, byte[] bytes, PdfDocument baseArg1, int baseArg2)
                 : base(baseArg1, baseArg2) {
                 this.counter = counter;
                 this.bytes = bytes;
@@ -134,8 +147,8 @@ namespace iText.Layout.Renderer {
             private readonly byte[] bytes;
         }
 
-        private sealed class _PdfImageXObject_151 : PdfImageXObject {
-            public _PdfImageXObject_151(ImageData baseArg1)
+        private sealed class _PdfImageXObject_165 : PdfImageXObject {
+            public _PdfImageXObject_165(ImageData baseArg1)
                 : base(baseArg1) {
             }
 
@@ -150,14 +163,14 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void DrawBackgroundImageWithNoRepeatXTest() {
-            AbstractRenderer renderer = new _DivRenderer_169(new Div());
+            AbstractRenderer renderer = new _DivRenderer_183(new Div());
             byte[] bytes = new byte[] { 54, 25, 47, 15, 2, 2, 2, 44, 55, 77, 86, 24 };
             int[] counter = new int[] { 0 };
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
             document.AddNewPage();
-            DrawContext context = new DrawContext(document, new _PdfCanvas_179(counter, bytes, document, 1));
+            DrawContext context = new DrawContext(document, new _PdfCanvas_193(counter, bytes, document, 1));
             IList<BackgroundImage> images = new List<BackgroundImage>();
-            images.Add(new BackgroundImage.Builder().SetImage(new _PdfImageXObject_197(ImageDataFactory.CreateRawImage
+            images.Add(new BackgroundImage.Builder().SetImage(new _PdfImageXObject_211(ImageDataFactory.CreateRawImage
                 (bytes))).SetBackgroundRepeat(new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT, BackgroundRepeat.BackgroundRepeatValue
                 .REPEAT)).Build());
             renderer.SetProperty(Property.BACKGROUND_IMAGE, images);
@@ -165,8 +178,8 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual(5, counter[0]);
         }
 
-        private sealed class _DivRenderer_169 : DivRenderer {
-            public _DivRenderer_169(Div baseArg1)
+        private sealed class _DivRenderer_183 : DivRenderer {
+            public _DivRenderer_183(Div baseArg1)
                 : base(baseArg1) {
             }
 
@@ -175,8 +188,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _PdfCanvas_179 : PdfCanvas {
-            public _PdfCanvas_179(int[] counter, byte[] bytes, PdfDocument baseArg1, int baseArg2)
+        private sealed class _PdfCanvas_193 : PdfCanvas {
+            public _PdfCanvas_193(int[] counter, byte[] bytes, PdfDocument baseArg1, int baseArg2)
                 : base(baseArg1, baseArg2) {
                 this.counter = counter;
                 this.bytes = bytes;
@@ -204,8 +217,8 @@ namespace iText.Layout.Renderer {
             private readonly byte[] bytes;
         }
 
-        private sealed class _PdfImageXObject_197 : PdfImageXObject {
-            public _PdfImageXObject_197(ImageData baseArg1)
+        private sealed class _PdfImageXObject_211 : PdfImageXObject {
+            public _PdfImageXObject_211(ImageData baseArg1)
                 : base(baseArg1) {
             }
 
@@ -220,14 +233,14 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void DrawBackgroundImageWithNoRepeatYTest() {
-            AbstractRenderer renderer = new _DivRenderer_217(new Div());
+            AbstractRenderer renderer = new _DivRenderer_231(new Div());
             byte[] bytes = new byte[] { 54, 25, 47, 15, 2, 2, 2, 44, 55, 77, 86, 24 };
             int[] counter = new int[] { 0 };
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
             document.AddNewPage();
-            DrawContext context = new DrawContext(document, new _PdfCanvas_227(counter, bytes, document, 1));
+            DrawContext context = new DrawContext(document, new _PdfCanvas_241(counter, bytes, document, 1));
             IList<BackgroundImage> images = new List<BackgroundImage>();
-            images.Add(new BackgroundImage.Builder().SetImage(new _PdfImageXObject_245(ImageDataFactory.CreateRawImage
+            images.Add(new BackgroundImage.Builder().SetImage(new _PdfImageXObject_259(ImageDataFactory.CreateRawImage
                 (bytes))).SetBackgroundRepeat(new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue.REPEAT, BackgroundRepeat.BackgroundRepeatValue
                 .NO_REPEAT)).Build());
             renderer.SetProperty(Property.BACKGROUND_IMAGE, images);
@@ -235,8 +248,8 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual(10, counter[0]);
         }
 
-        private sealed class _DivRenderer_217 : DivRenderer {
-            public _DivRenderer_217(Div baseArg1)
+        private sealed class _DivRenderer_231 : DivRenderer {
+            public _DivRenderer_231(Div baseArg1)
                 : base(baseArg1) {
             }
 
@@ -245,8 +258,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _PdfCanvas_227 : PdfCanvas {
-            public _PdfCanvas_227(int[] counter, byte[] bytes, PdfDocument baseArg1, int baseArg2)
+        private sealed class _PdfCanvas_241 : PdfCanvas {
+            public _PdfCanvas_241(int[] counter, byte[] bytes, PdfDocument baseArg1, int baseArg2)
                 : base(baseArg1, baseArg2) {
                 this.counter = counter;
                 this.bytes = bytes;
@@ -274,8 +287,8 @@ namespace iText.Layout.Renderer {
             private readonly byte[] bytes;
         }
 
-        private sealed class _PdfImageXObject_245 : PdfImageXObject {
-            public _PdfImageXObject_245(ImageData baseArg1)
+        private sealed class _PdfImageXObject_259 : PdfImageXObject {
+            public _PdfImageXObject_259(ImageData baseArg1)
                 : base(baseArg1) {
             }
 
@@ -290,14 +303,14 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void DrawBackgroundImageWithNoRepeatTest() {
-            AbstractRenderer renderer = new _DivRenderer_265(new Div());
+            AbstractRenderer renderer = new _DivRenderer_279(new Div());
             byte[] bytes = new byte[] { 54, 25, 47, 15, 2, 2, 2, 44, 55, 77, 86, 24 };
             int[] counter = new int[] { 0 };
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
             document.AddNewPage();
-            DrawContext context = new DrawContext(document, new _PdfCanvas_275(counter, bytes, document, 1));
+            DrawContext context = new DrawContext(document, new _PdfCanvas_289(counter, bytes, document, 1));
             IList<BackgroundImage> images = new List<BackgroundImage>();
-            images.Add(new BackgroundImage.Builder().SetImage(new _PdfImageXObject_293(ImageDataFactory.CreateRawImage
+            images.Add(new BackgroundImage.Builder().SetImage(new _PdfImageXObject_307(ImageDataFactory.CreateRawImage
                 (bytes))).SetBackgroundRepeat(new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT)).
                 Build());
             renderer.SetProperty(Property.BACKGROUND_IMAGE, images);
@@ -305,8 +318,8 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual(1, counter[0]);
         }
 
-        private sealed class _DivRenderer_265 : DivRenderer {
-            public _DivRenderer_265(Div baseArg1)
+        private sealed class _DivRenderer_279 : DivRenderer {
+            public _DivRenderer_279(Div baseArg1)
                 : base(baseArg1) {
             }
 
@@ -315,8 +328,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _PdfCanvas_275 : PdfCanvas {
-            public _PdfCanvas_275(int[] counter, byte[] bytes, PdfDocument baseArg1, int baseArg2)
+        private sealed class _PdfCanvas_289 : PdfCanvas {
+            public _PdfCanvas_289(int[] counter, byte[] bytes, PdfDocument baseArg1, int baseArg2)
                 : base(baseArg1, baseArg2) {
                 this.counter = counter;
                 this.bytes = bytes;
@@ -344,8 +357,8 @@ namespace iText.Layout.Renderer {
             private readonly byte[] bytes;
         }
 
-        private sealed class _PdfImageXObject_293 : PdfImageXObject {
-            public _PdfImageXObject_293(ImageData baseArg1)
+        private sealed class _PdfImageXObject_307 : PdfImageXObject {
+            public _PdfImageXObject_307(ImageData baseArg1)
                 : base(baseArg1) {
             }
 
@@ -360,21 +373,21 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void DrawBackgroundImageWithPositionTest() {
-            AbstractRenderer renderer = new _DivRenderer_313(new Div());
+            AbstractRenderer renderer = new _DivRenderer_327(new Div());
             byte[] bytes = new byte[] { 54, 25, 47, 15, 2, 2, 2, 44, 55, 77, 86, 24 };
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
             document.AddNewPage();
-            DrawContext context = new DrawContext(document, new _PdfCanvas_322(bytes, document, 1));
+            DrawContext context = new DrawContext(document, new _PdfCanvas_336(bytes, document, 1));
             IList<BackgroundImage> images = new List<BackgroundImage>();
-            images.Add(new BackgroundImage.Builder().SetImage(new _PdfImageXObject_341(ImageDataFactory.CreateRawImage
+            images.Add(new BackgroundImage.Builder().SetImage(new _PdfImageXObject_355(ImageDataFactory.CreateRawImage
                 (bytes))).SetBackgroundPosition(new BackgroundPosition().SetXShift(new UnitValue(UnitValue.PERCENT, 30
                 ))).Build());
             renderer.SetProperty(Property.BACKGROUND_IMAGE, images);
             renderer.DrawBackground(context);
         }
 
-        private sealed class _DivRenderer_313 : DivRenderer {
-            public _DivRenderer_313(Div baseArg1)
+        private sealed class _DivRenderer_327 : DivRenderer {
+            public _DivRenderer_327(Div baseArg1)
                 : base(baseArg1) {
             }
 
@@ -383,8 +396,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _PdfCanvas_322 : PdfCanvas {
-            public _PdfCanvas_322(byte[] bytes, PdfDocument baseArg1, int baseArg2)
+        private sealed class _PdfCanvas_336 : PdfCanvas {
+            public _PdfCanvas_336(byte[] bytes, PdfDocument baseArg1, int baseArg2)
                 : base(baseArg1, baseArg2) {
                 this.bytes = bytes;
                 this.@object = null;
@@ -410,8 +423,8 @@ namespace iText.Layout.Renderer {
             private readonly byte[] bytes;
         }
 
-        private sealed class _PdfImageXObject_341 : PdfImageXObject {
-            public _PdfImageXObject_341(ImageData baseArg1)
+        private sealed class _PdfImageXObject_355 : PdfImageXObject {
+            public _PdfImageXObject_355(ImageData baseArg1)
                 : base(baseArg1) {
             }
 
@@ -426,24 +439,24 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void DrawGradientWithPositionTest() {
-            AbstractRenderer renderer = new _DivRenderer_360(new Div());
+            AbstractRenderer renderer = new _DivRenderer_374(new Div());
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
             document.AddNewPage();
-            DrawContext context = new DrawContext(document, new _PdfCanvas_368(document, 1));
+            DrawContext context = new DrawContext(document, new _PdfCanvas_382(document, 1));
             IList<BackgroundImage> images = new List<BackgroundImage>();
             StrategyBasedLinearGradientBuilder linearGradientBuilder = (StrategyBasedLinearGradientBuilder)new StrategyBasedLinearGradientBuilder
                 ().AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue())).AddStopColor(new GradientColorStop
                 (ColorConstants.GREEN.GetColorValue()));
-            images.Add(new BackgroundImage.Builder().SetLinearGradientBuilder(linearGradientBuilder).SetBackgroundPosition
-                (new BackgroundPosition().SetPositionX(BackgroundPosition.PositionX.RIGHT).SetPositionY(BackgroundPosition.PositionY
+            images.Add(new BackgroundImage.Builder().SetGradientBuilder(linearGradientBuilder).SetBackgroundPosition(new 
+                BackgroundPosition().SetPositionX(BackgroundPosition.PositionX.RIGHT).SetPositionY(BackgroundPosition.PositionY
                 .BOTTOM).SetYShift(UnitValue.CreatePointValue(100)).SetXShift(UnitValue.CreatePointValue(30))).Build()
                 );
             renderer.SetProperty(Property.BACKGROUND_IMAGE, images);
             renderer.DrawBackground(context);
         }
 
-        private sealed class _DivRenderer_360 : DivRenderer {
-            public _DivRenderer_360(Div baseArg1)
+        private sealed class _DivRenderer_374 : DivRenderer {
+            public _DivRenderer_374(Div baseArg1)
                 : base(baseArg1) {
             }
 
@@ -452,8 +465,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _PdfCanvas_368 : PdfCanvas {
-            public _PdfCanvas_368(PdfDocument baseArg1, int baseArg2)
+        private sealed class _PdfCanvas_382 : PdfCanvas {
+            public _PdfCanvas_382(PdfDocument baseArg1, int baseArg2)
                 : base(baseArg1, baseArg2) {
                 this.@object = null;
             }
@@ -476,24 +489,24 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void DrawGradientWithPercentagePositionTest() {
-            AbstractRenderer renderer = new _DivRenderer_399(new Div());
+            AbstractRenderer renderer = new _DivRenderer_413(new Div());
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
             document.AddNewPage();
-            DrawContext context = new DrawContext(document, new _PdfCanvas_407(document, 1));
+            DrawContext context = new DrawContext(document, new _PdfCanvas_421(document, 1));
             IList<BackgroundImage> images = new List<BackgroundImage>();
             StrategyBasedLinearGradientBuilder linearGradientBuilder = (StrategyBasedLinearGradientBuilder)new StrategyBasedLinearGradientBuilder
                 ().AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue())).AddStopColor(new GradientColorStop
                 (ColorConstants.GREEN.GetColorValue()));
-            images.Add(new BackgroundImage.Builder().SetLinearGradientBuilder(linearGradientBuilder).SetBackgroundPosition
-                (new BackgroundPosition().SetPositionX(BackgroundPosition.PositionX.RIGHT).SetPositionY(BackgroundPosition.PositionY
+            images.Add(new BackgroundImage.Builder().SetGradientBuilder(linearGradientBuilder).SetBackgroundPosition(new 
+                BackgroundPosition().SetPositionX(BackgroundPosition.PositionX.RIGHT).SetPositionY(BackgroundPosition.PositionY
                 .BOTTOM).SetYShift(UnitValue.CreatePercentValue(70)).SetXShift(UnitValue.CreatePercentValue(33))).Build
                 ());
             renderer.SetProperty(Property.BACKGROUND_IMAGE, images);
             renderer.DrawBackground(context);
         }
 
-        private sealed class _DivRenderer_399 : DivRenderer {
-            public _DivRenderer_399(Div baseArg1)
+        private sealed class _DivRenderer_413 : DivRenderer {
+            public _DivRenderer_413(Div baseArg1)
                 : base(baseArg1) {
             }
 
@@ -502,8 +515,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _PdfCanvas_407 : PdfCanvas {
-            public _PdfCanvas_407(PdfDocument baseArg1, int baseArg2)
+        private sealed class _PdfCanvas_421 : PdfCanvas {
+            public _PdfCanvas_421(PdfDocument baseArg1, int baseArg2)
                 : base(baseArg1, baseArg2) {
                 this.@object = null;
             }
@@ -526,23 +539,23 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void DrawBackgroundImagesTest() {
-            AbstractRenderer renderer = new _DivRenderer_438(new Div());
+            AbstractRenderer renderer = new _DivRenderer_452(new Div());
             IList<byte[]> listBytes = JavaUtil.ArraysAsList(new byte[] { 54, 25, 47, 15, 2, 2, 2, 44, 55, 77, 86, 24 }
                 , new byte[] { 4, 15, 41, 23, 3, 2, 7, 14, 55, 27, 46, 12, 14, 14, 7, 7, 24, 25 });
             int[] counter = new int[] { 0 };
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
             document.AddNewPage();
-            DrawContext context = new DrawContext(document, new _PdfCanvas_450(listBytes, counter, document, 1));
+            DrawContext context = new DrawContext(document, new _PdfCanvas_464(listBytes, counter, document, 1));
             renderer.SetProperty(Property.BACKGROUND_IMAGE, JavaUtil.ArraysAsList((BackgroundImage)new BackgroundImage.Builder
-                ().SetImage(new _PdfImageXObject_467(ImageDataFactory.CreateRawImage(listBytes[1]))).Build(), (BackgroundImage
-                )new BackgroundImage.Builder().SetImage(new _PdfImageXObject_479(ImageDataFactory.CreateRawImage(listBytes
+                ().SetImage(new _PdfImageXObject_481(ImageDataFactory.CreateRawImage(listBytes[1]))).Build(), (BackgroundImage
+                )new BackgroundImage.Builder().SetImage(new _PdfImageXObject_493(ImageDataFactory.CreateRawImage(listBytes
                 [0]))).Build()));
             renderer.DrawBackground(context);
             NUnit.Framework.Assert.AreEqual(listBytes.Count, counter[0]);
         }
 
-        private sealed class _DivRenderer_438 : DivRenderer {
-            public _DivRenderer_438(Div baseArg1)
+        private sealed class _DivRenderer_452 : DivRenderer {
+            public _DivRenderer_452(Div baseArg1)
                 : base(baseArg1) {
             }
 
@@ -551,8 +564,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _PdfCanvas_450 : PdfCanvas {
-            public _PdfCanvas_450(IList<byte[]> listBytes, int[] counter, PdfDocument baseArg1, int baseArg2)
+        private sealed class _PdfCanvas_464 : PdfCanvas {
+            public _PdfCanvas_464(IList<byte[]> listBytes, int[] counter, PdfDocument baseArg1, int baseArg2)
                 : base(baseArg1, baseArg2) {
                 this.listBytes = listBytes;
                 this.counter = counter;
@@ -579,8 +592,8 @@ namespace iText.Layout.Renderer {
             private readonly int[] counter;
         }
 
-        private sealed class _PdfImageXObject_467 : PdfImageXObject {
-            public _PdfImageXObject_467(ImageData baseArg1)
+        private sealed class _PdfImageXObject_481 : PdfImageXObject {
+            public _PdfImageXObject_481(ImageData baseArg1)
                 : base(baseArg1) {
             }
 
@@ -593,8 +606,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _PdfImageXObject_479 : PdfImageXObject {
-            public _PdfImageXObject_479(ImageData baseArg1)
+        private sealed class _PdfImageXObject_493 : PdfImageXObject {
+            public _PdfImageXObject_493(ImageData baseArg1)
                 : base(baseArg1) {
             }
 
@@ -609,7 +622,7 @@ namespace iText.Layout.Renderer {
 
         [NUnit.Framework.Test]
         public virtual void DrawBackgroundImagesWithPositionsTest() {
-            AbstractRenderer renderer = new _DivRenderer_496(new Div());
+            AbstractRenderer renderer = new _DivRenderer_510(new Div());
             IList<byte[]> listBytes = JavaUtil.ArraysAsList(new byte[] { 54, 25, 47, 15, 2, 2, 2, 44, 55, 77, 86, 24 }
                 , new byte[] { 4, 15, 41, 23, 3, 2, 7, 14, 55, 27, 46, 12, 14, 14, 7, 7, 24, 25 });
             float widthHeight = 10.0f;
@@ -618,11 +631,11 @@ namespace iText.Layout.Renderer {
             int[] counter = new int[] { 0 };
             PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
             document.AddNewPage();
-            DrawContext context = new DrawContext(document, new _PdfCanvas_513(listBytes, counter, listRectangles, document
+            DrawContext context = new DrawContext(document, new _PdfCanvas_527(listBytes, counter, listRectangles, document
                 , 1));
             renderer.SetProperty(Property.BACKGROUND_IMAGE, JavaUtil.ArraysAsList((BackgroundImage)new BackgroundImage.Builder
-                ().SetImage(new _PdfImageXObject_532(widthHeight, ImageDataFactory.CreateRawImage(listBytes[1]))).Build
-                (), (BackgroundImage)new BackgroundImage.Builder().SetImage(new _PdfImageXObject_544(widthHeight, ImageDataFactory
+                ().SetImage(new _PdfImageXObject_546(widthHeight, ImageDataFactory.CreateRawImage(listBytes[1]))).Build
+                (), (BackgroundImage)new BackgroundImage.Builder().SetImage(new _PdfImageXObject_558(widthHeight, ImageDataFactory
                 .CreateRawImage(listBytes[0]))).SetBackgroundPosition(new BackgroundPosition().SetPositionX(BackgroundPosition.PositionX
                 .RIGHT).SetPositionY(BackgroundPosition.PositionY.CENTER).SetXShift(new UnitValue(UnitValue.PERCENT, 10
                 ))).Build()));
@@ -630,8 +643,8 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.AreEqual(listBytes.Count, counter[0]);
         }
 
-        private sealed class _DivRenderer_496 : DivRenderer {
-            public _DivRenderer_496(Div baseArg1)
+        private sealed class _DivRenderer_510 : DivRenderer {
+            public _DivRenderer_510(Div baseArg1)
                 : base(baseArg1) {
             }
 
@@ -640,8 +653,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _PdfCanvas_513 : PdfCanvas {
-            public _PdfCanvas_513(IList<byte[]> listBytes, int[] counter, IList<Rectangle> listRectangles, PdfDocument
+        private sealed class _PdfCanvas_527 : PdfCanvas {
+            public _PdfCanvas_527(IList<byte[]> listBytes, int[] counter, IList<Rectangle> listRectangles, PdfDocument
                  baseArg1, int baseArg2)
                 : base(baseArg1, baseArg2) {
                 this.listBytes = listBytes;
@@ -674,8 +687,8 @@ namespace iText.Layout.Renderer {
             private readonly IList<Rectangle> listRectangles;
         }
 
-        private sealed class _PdfImageXObject_532 : PdfImageXObject {
-            public _PdfImageXObject_532(float widthHeight, ImageData baseArg1)
+        private sealed class _PdfImageXObject_546 : PdfImageXObject {
+            public _PdfImageXObject_546(float widthHeight, ImageData baseArg1)
                 : base(baseArg1) {
                 this.widthHeight = widthHeight;
             }
@@ -691,8 +704,8 @@ namespace iText.Layout.Renderer {
             private readonly float widthHeight;
         }
 
-        private sealed class _PdfImageXObject_544 : PdfImageXObject {
-            public _PdfImageXObject_544(float widthHeight, ImageData baseArg1)
+        private sealed class _PdfImageXObject_558 : PdfImageXObject {
+            public _PdfImageXObject_558(float widthHeight, ImageData baseArg1)
                 : base(baseArg1) {
                 this.widthHeight = widthHeight;
             }
@@ -711,7 +724,7 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         public virtual void BackgroundColorClipTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-            PdfCanvas pdfCanvas = new _PdfCanvas_565(pdfDocument.AddNewPage());
+            PdfCanvas pdfCanvas = new _PdfCanvas_579(pdfDocument.AddNewPage());
             DrawContext drawContext = new DrawContext(pdfDocument, pdfCanvas);
             AbstractRenderer renderer = new DivRenderer(new Div().SetPadding(20).SetBorder(new DashedBorder(10)));
             renderer.occupiedArea = new LayoutArea(1, new Rectangle(100f, 200f, 300f, 400f));
@@ -719,8 +732,8 @@ namespace iText.Layout.Renderer {
             renderer.DrawBackground(drawContext);
         }
 
-        private sealed class _PdfCanvas_565 : PdfCanvas {
-            public _PdfCanvas_565(PdfPage baseArg1)
+        private sealed class _PdfCanvas_579 : PdfCanvas {
+            public _PdfCanvas_579(PdfPage baseArg1)
                 : base(baseArg1) {
             }
 
@@ -737,8 +750,8 @@ namespace iText.Layout.Renderer {
         public virtual void BackgroundImageClipOriginNoRepeatTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             byte[] bytes = new byte[] { 54, 25, 47, 15, 2, 2, 2, 44, 55, 77, 86, 24 };
-            PdfXObject rawImage = new _PdfImageXObject_586(ImageDataFactory.CreateRawImage(bytes));
-            PdfCanvas pdfCanvas = new _PdfCanvas_597(rawImage, pdfDocument.AddNewPage());
+            PdfXObject rawImage = new _PdfImageXObject_600(ImageDataFactory.CreateRawImage(bytes));
+            PdfCanvas pdfCanvas = new _PdfCanvas_611(rawImage, pdfDocument.AddNewPage());
             DrawContext drawContext = new DrawContext(pdfDocument, pdfCanvas);
             AbstractRenderer renderer = new DivRenderer(new Div().SetPadding(20).SetBorder(new DashedBorder(10)));
             renderer.occupiedArea = new LayoutArea(1, new Rectangle(100f, 200f, 300f, 400f));
@@ -751,8 +764,8 @@ namespace iText.Layout.Renderer {
             renderer.DrawBackground(drawContext);
         }
 
-        private sealed class _PdfImageXObject_586 : PdfImageXObject {
-            public _PdfImageXObject_586(ImageData baseArg1)
+        private sealed class _PdfImageXObject_600 : PdfImageXObject {
+            public _PdfImageXObject_600(ImageData baseArg1)
                 : base(baseArg1) {
             }
 
@@ -765,8 +778,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _PdfCanvas_597 : PdfCanvas {
-            public _PdfCanvas_597(PdfXObject rawImage, PdfPage baseArg1)
+        private sealed class _PdfCanvas_611 : PdfCanvas {
+            public _PdfCanvas_611(PdfXObject rawImage, PdfPage baseArg1)
                 : base(baseArg1) {
                 this.rawImage = rawImage;
             }
@@ -795,7 +808,7 @@ namespace iText.Layout.Renderer {
         public virtual void BackgroundLinearGradientClipOriginNoRepeatTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             byte[] bytes = new byte[] { 54, 25, 47, 15, 2, 2, 2, 44, 55, 77, 86, 24 };
-            PdfCanvas pdfCanvas = new _PdfCanvas_635(pdfDocument.AddNewPage());
+            PdfCanvas pdfCanvas = new _PdfCanvas_649(pdfDocument.AddNewPage());
             DrawContext drawContext = new DrawContext(pdfDocument, pdfCanvas);
             AbstractRenderer renderer = new DivRenderer(new Div().SetPadding(20).SetBorder(new DashedBorder(10)));
             renderer.occupiedArea = new LayoutArea(1, new Rectangle(100f, 200f, 300f, 400f));
@@ -805,17 +818,17 @@ namespace iText.Layout.Renderer {
                 ) - 100f, targetBoundingBox.GetTop() - 100f).SetSpread(GradientSpreadMethod.PAD).AddStopColor(new GradientColorStop
                 (ColorConstants.RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
                 (ColorConstants.BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType.RELATIVE));
-            BackgroundImage backgroundImage = new BackgroundImage.Builder().SetLinearGradientBuilder(gradientBuilder).
-                SetBackgroundRepeat(new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT)).SetBackgroundClip
-                (BackgroundBox.CONTENT_BOX).SetBackgroundOrigin(BackgroundBox.BORDER_BOX).Build();
+            BackgroundImage backgroundImage = new BackgroundImage.Builder().SetGradientBuilder(gradientBuilder).SetBackgroundRepeat
+                (new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT)).SetBackgroundClip(BackgroundBox
+                .CONTENT_BOX).SetBackgroundOrigin(BackgroundBox.BORDER_BOX).Build();
             IList<BackgroundImage> images = new List<BackgroundImage>();
             images.Add(backgroundImage);
             renderer.SetProperty(Property.BACKGROUND_IMAGE, images);
             renderer.DrawBackground(drawContext);
         }
 
-        private sealed class _PdfCanvas_635 : PdfCanvas {
-            public _PdfCanvas_635(PdfPage baseArg1)
+        private sealed class _PdfCanvas_649 : PdfCanvas {
+            public _PdfCanvas_649(PdfPage baseArg1)
                 : base(baseArg1) {
             }
 

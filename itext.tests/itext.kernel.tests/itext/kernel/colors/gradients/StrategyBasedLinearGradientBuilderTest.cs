@@ -69,17 +69,16 @@ namespace iText.Kernel.Colors.Gradients {
 
         [NUnit.Framework.Test]
         public virtual void NoStrategyProvidedTest() {
-            AbstractGradientBuilder<Point> gradientBuilder = new StrategyBasedLinearGradientBuilder().AddStopColor(new 
-                GradientColorStop(ColorConstants.RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor
-                (new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE
-                )).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType
-                .RELATIVE));
+            IGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().AddStopColor(new GradientColorStop
+                (ColorConstants.RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
+                (ColorConstants.GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
+                (ColorConstants.BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType.RELATIVE));
             GenerateAndComparePdfs("noStrategyProvided.pdf", null, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
         public virtual void BuilderToRightTest() {
-            AbstractGradientBuilder<Point> gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
+            IGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
                 (StrategyBasedLinearGradientBuilder.GradientStrategy.TO_RIGHT).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
@@ -89,7 +88,7 @@ namespace iText.Kernel.Colors.Gradients {
 
         [NUnit.Framework.Test]
         public virtual void BuilderToLeftTest() {
-            AbstractGradientBuilder<Point> gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
+            IGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
                 (StrategyBasedLinearGradientBuilder.GradientStrategy.TO_LEFT).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
@@ -99,7 +98,7 @@ namespace iText.Kernel.Colors.Gradients {
 
         [NUnit.Framework.Test]
         public virtual void BuilderToBottomTest() {
-            AbstractGradientBuilder<Point> gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
+            IGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
                 (StrategyBasedLinearGradientBuilder.GradientStrategy.TO_BOTTOM).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
@@ -109,7 +108,7 @@ namespace iText.Kernel.Colors.Gradients {
 
         [NUnit.Framework.Test]
         public virtual void BuilderToBottomRightTest() {
-            AbstractGradientBuilder<Point> gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
+            IGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
                 (StrategyBasedLinearGradientBuilder.GradientStrategy.TO_BOTTOM_RIGHT).AddStopColor(new GradientColorStop
                 (ColorConstants.RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
                 (ColorConstants.GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
@@ -119,7 +118,7 @@ namespace iText.Kernel.Colors.Gradients {
 
         [NUnit.Framework.Test]
         public virtual void BuilderToBottomLeftTest() {
-            AbstractGradientBuilder<Point> gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
+            IGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
                 (StrategyBasedLinearGradientBuilder.GradientStrategy.TO_BOTTOM_LEFT).AddStopColor(new GradientColorStop
                 (ColorConstants.RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
                 (ColorConstants.GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
@@ -129,7 +128,7 @@ namespace iText.Kernel.Colors.Gradients {
 
         [NUnit.Framework.Test]
         public virtual void BuilderToTopTest() {
-            AbstractGradientBuilder<Point> gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
+            IGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
                 (StrategyBasedLinearGradientBuilder.GradientStrategy.TO_TOP).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
@@ -139,7 +138,7 @@ namespace iText.Kernel.Colors.Gradients {
 
         [NUnit.Framework.Test]
         public virtual void BuilderToTopRightTest() {
-            AbstractGradientBuilder<Point> gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
+            IGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
                 (StrategyBasedLinearGradientBuilder.GradientStrategy.TO_TOP_RIGHT).AddStopColor(new GradientColorStop(
                 ColorConstants.RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
                 (ColorConstants.GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
@@ -149,7 +148,7 @@ namespace iText.Kernel.Colors.Gradients {
 
         [NUnit.Framework.Test]
         public virtual void BuilderToTopLeftTest() {
-            AbstractGradientBuilder<Point> gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
+            IGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
                 (StrategyBasedLinearGradientBuilder.GradientStrategy.TO_TOP_LEFT).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
@@ -159,7 +158,7 @@ namespace iText.Kernel.Colors.Gradients {
 
         [NUnit.Framework.Test]
         public virtual void BuilderZeroAngleTest() {
-            AbstractGradientBuilder<Point> gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsCentralRotationAngle
+            IGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsCentralRotationAngle
                 (0d).AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue(), 0d, GradientColorStop.OffsetType
                 .RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType
                 .RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType
@@ -169,7 +168,7 @@ namespace iText.Kernel.Colors.Gradients {
 
         [NUnit.Framework.Test]
         public virtual void BuilderPositiveAngleTest() {
-            AbstractGradientBuilder<Point> gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsCentralRotationAngle
+            IGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsCentralRotationAngle
                 (Math.PI / 3).AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue(), 0d, GradientColorStop.OffsetType
                 .RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType
                 .RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType
@@ -179,7 +178,7 @@ namespace iText.Kernel.Colors.Gradients {
 
         [NUnit.Framework.Test]
         public virtual void BuilderNegativeAngleTest() {
-            AbstractGradientBuilder<Point> gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsCentralRotationAngle
+            IGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsCentralRotationAngle
                 (-Math.PI / 3).AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue(), 0d, GradientColorStop.OffsetType
                 .RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType
                 .RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType
@@ -189,7 +188,7 @@ namespace iText.Kernel.Colors.Gradients {
 
         [NUnit.Framework.Test]
         public virtual void BuilderWithNoneSpreadingAndCanvasTransformTest() {
-            AbstractGradientBuilder<Point> gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
+            IGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
                 (StrategyBasedLinearGradientBuilder.GradientStrategy.TO_RIGHT).SetSpread(GradientSpreadMethod.NONE).AddStopColor
                 (new GradientColorStop(ColorConstants.RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE))
                 .AddStopColor(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType
@@ -203,7 +202,7 @@ namespace iText.Kernel.Colors.Gradients {
 
         [NUnit.Framework.Test]
         public virtual void BuilderWithToCornerAndInnerStopsAndNoneSpreadingTest() {
-            AbstractGradientBuilder<Point> gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
+            IGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
                 (StrategyBasedLinearGradientBuilder.GradientStrategy.TO_TOP_RIGHT).SetSpread(GradientSpreadMethod.NONE
                 ).AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue(), 0.3d, GradientColorStop.OffsetType
                 .RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 0.4, GradientColorStop.OffsetType
@@ -214,7 +213,7 @@ namespace iText.Kernel.Colors.Gradients {
 
         [NUnit.Framework.Test]
         public virtual void BuilderWithToCornerAndInnerStopsAndPadSpreadingTest() {
-            AbstractGradientBuilder<Point> gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
+            IGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
                 (StrategyBasedLinearGradientBuilder.GradientStrategy.TO_TOP_RIGHT).SetSpread(GradientSpreadMethod.PAD)
                 .AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue(), 0.3d, GradientColorStop.OffsetType
                 .RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 0.4, GradientColorStop.OffsetType
@@ -225,7 +224,7 @@ namespace iText.Kernel.Colors.Gradients {
 
         [NUnit.Framework.Test]
         public virtual void BuilderWithToCornerAndInnerStopsAndReflectSpreadingTest() {
-            AbstractGradientBuilder<Point> gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
+            IGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
                 (StrategyBasedLinearGradientBuilder.GradientStrategy.TO_TOP_RIGHT).SetSpread(GradientSpreadMethod.REFLECT
                 ).AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue(), 0.3d, GradientColorStop.OffsetType
                 .RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 0.4, GradientColorStop.OffsetType
@@ -236,7 +235,7 @@ namespace iText.Kernel.Colors.Gradients {
 
         [NUnit.Framework.Test]
         public virtual void BuilderWithToCornerAndInnerStopsAndRepeatSpreadingTest() {
-            AbstractGradientBuilder<Point> gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
+            IGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
                 (StrategyBasedLinearGradientBuilder.GradientStrategy.TO_TOP_RIGHT).SetSpread(GradientSpreadMethod.REPEAT
                 ).AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue(), 0.3d, GradientColorStop.OffsetType
                 .RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 0.4, GradientColorStop.OffsetType
@@ -245,8 +244,8 @@ namespace iText.Kernel.Colors.Gradients {
             GenerateAndComparePdfs("toCornerInnerStopsRepeatSpreading.pdf", null, gradientBuilder);
         }
 
-        private void GenerateAndComparePdfs(String fileName, AffineTransform transform, AbstractGradientBuilder<Point
-            > gradientBuilder) {
+        private void GenerateAndComparePdfs(String fileName, AffineTransform transform, IGradientBuilder gradientBuilder
+            ) {
             String outPdfPath = DESTINATION_FOLDER + fileName;
             using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdfPath))) {
                 PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());

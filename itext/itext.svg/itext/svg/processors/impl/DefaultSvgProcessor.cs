@@ -163,10 +163,10 @@ namespace iText.Svg.Processors.Impl {
                             namedObjects.Put(attribute, renderer);
                         }
                         if (renderer is StopSvgNodeRenderer) {
-                            if (parentRenderer is LinearGradientSvgNodeRenderer) {
-                                // It is necessary to add StopSvgNodeRenderer only as a child of LinearGradientSvgNodeRenderer,
+                            if (parentRenderer is AbstractGradientSvgNodeRenderer) {
+                                // It is necessary to add StopSvgNodeRenderer only as a child of gradient renderer,
                                 // because StopSvgNodeRenderer performs an auxiliary function and should not be drawn at all
-                                ((LinearGradientSvgNodeRenderer)parentRenderer).AddChild(renderer);
+                                ((AbstractGradientSvgNodeRenderer)parentRenderer).AddChild(renderer);
                             }
                         }
                         else {

@@ -40,6 +40,9 @@ namespace iText.Svg.Renderers.Factories {
         private static readonly String LINEAR_GRADIENT_LC = StringNormalizer.ToLowerCase(SvgConstants.Tags.LINEAR_GRADIENT
             );
 
+        private static readonly String RADIAL_GRADIENT_LC = StringNormalizer.ToLowerCase(SvgConstants.Tags.RADIAL_GRADIENT
+            );
+
         private static readonly String TEXT_LEAF_LC = StringNormalizer.ToLowerCase(SvgConstants.Tags.TEXT_LEAF);
 
 //\cond DO_NOT_DOCUMENT
@@ -72,6 +75,7 @@ namespace iText.Svg.Renderers.Factories {
             result.Put(SvgConstants.Tags.PATH, () => new PathSvgNodeRenderer());
             result.Put(SvgConstants.Tags.POLYGON, () => new PolygonSvgNodeRenderer());
             result.Put(SvgConstants.Tags.POLYLINE, () => new PolylineSvgNodeRenderer());
+            result.Put(SvgConstants.Tags.RADIAL_GRADIENT, () => new RadialGradientSvgNodeRenderer());
             result.Put(SvgConstants.Tags.RECT, () => new RectangleSvgNodeRenderer());
             result.Put(SvgConstants.Tags.STOP, () => new StopSvgNodeRenderer());
             result.Put(SvgConstants.Tags.SVG, () => new SvgTagSvgNodeRenderer());
@@ -83,6 +87,7 @@ namespace iText.Svg.Renderers.Factories {
             // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
             result.Put(CLIP_PATH_LC, () => new ClipPathSvgNodeRenderer());
             result.Put(LINEAR_GRADIENT_LC, () => new LinearGradientSvgNodeRenderer());
+            result.Put(RADIAL_GRADIENT_LC, () => new RadialGradientSvgNodeRenderer());
             result.Put(TEXT_LEAF_LC, () => new TextLeafSvgNodeRenderer());
             mapping = JavaCollectionsUtil.UnmodifiableMap(result);
             // Not supported tags as of yet
@@ -131,7 +136,6 @@ namespace iText.Svg.Renderers.Factories {
             ignoredTags.Add(SvgConstants.Tags.MASK);
             ignoredTags.Add(SvgConstants.Tags.METADATA);
             ignoredTags.Add(SvgConstants.Tags.MISSING_GLYPH);
-            ignoredTags.Add(SvgConstants.Tags.RADIAL_GRADIENT);
             ignoredTags.Add(SvgConstants.Tags.STYLE);
             ignoredTags.Add(SvgConstants.Tags.TITLE);
             ignored = JavaCollectionsUtil.UnmodifiableCollection(ignoredTags);

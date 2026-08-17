@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Kernel.Colors.Gradients;
 using iText.Kernel.Pdf.Xobject;
 
@@ -34,6 +35,10 @@ namespace iText.Layout.Properties {
 
         protected internal PdfXObject image;
 
+        protected internal IGradientBuilder gradientBuilder;
+
+        // This field should still be set for supporting deprecated methods
+        [Obsolete]
         protected internal AbstractLinearGradientBuilder linearGradientBuilder;
 
         private BlendMode blendMode = DEFAULT_BLEND_MODE;
@@ -59,10 +64,76 @@ namespace iText.Layout.Properties {
         /// for cloning
         /// </param>
         public BackgroundImage(iText.Layout.Properties.BackgroundImage backgroundImage)
-            : this(backgroundImage.GetImage() == null ? (PdfXObject)backgroundImage.GetForm() : backgroundImage.GetImage
-                (), backgroundImage.GetRepeat(), backgroundImage.GetBackgroundPosition(), backgroundImage.GetBackgroundSize
-                (), backgroundImage.GetLinearGradientBuilder(), backgroundImage.GetBlendMode(), backgroundImage.GetBackgroundClip
+            : this(backgroundImage.GetImage() == null ? (PdfXObject)backgroundImage.GetForm() : (PdfXObject)backgroundImage
+                .GetImage(), backgroundImage.GetRepeat(), backgroundImage.GetBackgroundPosition(), backgroundImage.GetBackgroundSize
+                (), backgroundImage.GetGradientBuilder(), backgroundImage.GetBlendMode(), backgroundImage.GetBackgroundClip
                 (), backgroundImage.GetBackgroundOrigin()) {
+        }
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="BackgroundImage"/>
+        /// instance.
+        /// </summary>
+        /// <param name="image">
+        /// background-image property.
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
+        /// instance.
+        /// </param>
+        /// <param name="repeat">
+        /// background-repeat property.
+        /// <see cref="BackgroundRepeat"/>
+        /// instance.
+        /// </param>
+        /// <param name="position">
+        /// background-position property.
+        /// <see cref="BackgroundPosition"/>
+        /// instance.
+        /// </param>
+        /// <param name="backgroundSize">
+        /// background-size property.
+        /// <see cref="BackgroundSize"/>
+        /// instance.
+        /// </param>
+        /// <param name="gradientBuilder">
+        /// background-image property.
+        /// <see cref="iText.Kernel.Colors.Gradients.IGradientBuilder"/>
+        /// instance.
+        /// </param>
+        /// <param name="blendMode">
+        /// the image's blend mode.
+        /// <see cref="BlendMode"/>
+        /// instance.
+        /// </param>
+        /// <param name="clip">
+        /// background-clip property.
+        /// <see cref="BackgroundBox"/>
+        /// instance.
+        /// </param>
+        /// <param name="origin">
+        /// background-origin property.
+        /// <see cref="BackgroundBox"/>
+        /// instance.
+        /// </param>
+        private BackgroundImage(PdfXObject image, BackgroundRepeat repeat, BackgroundPosition position, BackgroundSize
+             backgroundSize, IGradientBuilder gradientBuilder, BlendMode blendMode, BackgroundBox clip, BackgroundBox
+             origin) {
+            this.image = image;
+            this.repeat = repeat;
+            this.position = position;
+            this.backgroundSize = backgroundSize;
+            this.gradientBuilder = gradientBuilder;
+            if (gradientBuilder is AbstractLinearGradientBuilder) {
+                this.linearGradientBuilder = (AbstractLinearGradientBuilder)gradientBuilder;
+            }
+            else {
+                this.linearGradientBuilder = null;
+            }
+            if (blendMode != null) {
+                this.blendMode = blendMode;
+            }
+            this.backgroundClip = clip;
+            this.backgroundOrigin = origin;
         }
 
         /// <summary>
@@ -91,73 +162,13 @@ namespace iText.Layout.Properties {
             return image is PdfFormXObject ? (PdfFormXObject)image : null;
         }
 
-        /// <summary>
-        /// Creates a new
-        /// <see cref="BackgroundImage"/>
-        /// instance.
-        /// </summary>
-        /// <param name="image">
-        /// background-image property.
-        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
-        /// instance.
-        /// </param>
-        /// <param name="repeat">
-        /// background-repeat property.
-        /// <see cref="BackgroundRepeat"/>
-        /// instance.
-        /// </param>
-        /// <param name="position">
-        /// background-position property.
-        /// <see cref="BackgroundPosition"/>
-        /// instance.
-        /// </param>
-        /// <param name="backgroundSize">
-        /// background-size property.
-        /// <see cref="BackgroundSize"/>
-        /// instance.
-        /// </param>
-        /// <param name="linearGradientBuilder">
-        /// background-image property.
-        /// <see cref="iText.Kernel.Colors.Gradients.AbstractLinearGradientBuilder"/>
-        /// instance.
-        /// </param>
-        /// <param name="blendMode">
-        /// the image's blend mode.
-        /// <see cref="BlendMode"/>
-        /// instance.
-        /// </param>
-        /// <param name="clip">
-        /// background-clip property.
-        /// <see cref="BackgroundBox"/>
-        /// instance.
-        /// </param>
-        /// <param name="origin">
-        /// background-origin property.
-        /// <see cref="BackgroundBox"/>
-        /// instance.
-        /// </param>
-        private BackgroundImage(PdfXObject image, BackgroundRepeat repeat, BackgroundPosition position, BackgroundSize
-             backgroundSize, AbstractLinearGradientBuilder linearGradientBuilder, BlendMode blendMode, BackgroundBox
-             clip, BackgroundBox origin) {
-            this.image = image;
-            this.repeat = repeat;
-            this.position = position;
-            this.backgroundSize = backgroundSize;
-            this.linearGradientBuilder = linearGradientBuilder;
-            if (blendMode != null) {
-                this.blendMode = blendMode;
-            }
-            this.backgroundClip = clip;
-            this.backgroundOrigin = origin;
-        }
-
         /// <summary>Calculates width and height values for background image with a given area params.</summary>
         /// <param name="areaWidth">width of the area of this images</param>
         /// <param name="areaHeight">height of the area of this images</param>
         /// <returns>array of two float values. NOTE that first value defines width, second defines height</returns>
         public virtual float[] CalculateBackgroundImageSize(float areaWidth, float areaHeight) {
             BackgroundSize size;
-            if (GetLinearGradientBuilder() == null && GetBackgroundSize().IsSpecificSize()) {
+            if (GetGradientBuilder() == null && GetBackgroundSize().IsSpecificSize()) {
                 size = CalculateBackgroundSizeForArea(this, areaWidth, areaHeight);
             }
             else {
@@ -185,11 +196,24 @@ namespace iText.Layout.Properties {
             return position;
         }
 
-        /// <summary>Gets linearGradientBuilder.</summary>
+        /// <summary>Gets gradient builder.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Colors.Gradients.IGradientBuilder"/>
+        /// </returns>
+        public virtual IGradientBuilder GetGradientBuilder() {
+            return this.gradientBuilder;
+        }
+
+        /// <summary>Gets linear gradient builder.</summary>
         /// <returns>
         /// 
         /// <see cref="iText.Kernel.Colors.Gradients.AbstractLinearGradientBuilder"/>
+        /// or
+        /// <see langword="null"/>
+        /// if current gradient is not linear
         /// </returns>
+        [System.ObsoleteAttribute(@"use GetGradientBuilder() instead")]
         public virtual AbstractLinearGradientBuilder GetLinearGradientBuilder() {
             return this.linearGradientBuilder;
         }
@@ -201,7 +225,7 @@ namespace iText.Layout.Properties {
         /// if background is specified, otherwise false
         /// </returns>
         public virtual bool IsBackgroundSpecified() {
-            return image is PdfFormXObject || image is PdfImageXObject || linearGradientBuilder != null;
+            return image is PdfFormXObject || image is PdfImageXObject || gradientBuilder != null;
         }
 
         /// <summary>Gets the background size property.</summary>
@@ -272,7 +296,7 @@ namespace iText.Layout.Properties {
         /// <returns>the final size of the background image</returns>
         protected internal virtual float[] ResolveWidthAndHeight(float? width, float? height, float areaWidth, float
              areaHeight) {
-            bool isGradient = GetLinearGradientBuilder() != null;
+            bool isGradient = GetGradientBuilder() != null;
             float?[] widthAndHeight = new float?[2];
             if (width != null) {
                 widthAndHeight[0] = width;
@@ -332,7 +356,7 @@ namespace iText.Layout.Properties {
         public class Builder {
             private PdfXObject image;
 
-            private AbstractLinearGradientBuilder linearGradientBuilder;
+            private IGradientBuilder gradientBuilder;
 
             private BackgroundPosition position = new BackgroundPosition();
 
@@ -358,7 +382,7 @@ namespace iText.Layout.Properties {
             /// <remarks>
             /// Sets image.
             /// <para />
-            /// Makes linearGradientBuilder null as far as we can't have them both.
+            /// Makes gradientBuilder null as far as we can't have them both.
             /// </remarks>
             /// <param name="image">
             /// 
@@ -371,13 +395,35 @@ namespace iText.Layout.Properties {
             /// </returns>
             public virtual BackgroundImage.Builder SetImage(PdfXObject image) {
                 this.image = image;
-                this.linearGradientBuilder = null;
+                this.gradientBuilder = null;
                 return this;
             }
 
-            /// <summary>Sets linearGradientBuilder.</summary>
+            /// <summary>Sets gradient builder.</summary>
             /// <remarks>
-            /// Sets linearGradientBuilder.
+            /// Sets gradient builder.
+            /// <para />
+            /// Makes image null as far as we can't have them both. It also makes background-repeat: no-repeat.
+            /// </remarks>
+            /// <param name="gradientBuilder">
+            /// 
+            /// <see cref="iText.Kernel.Colors.Gradients.IGradientBuilder"/>
+            /// to be set.
+            /// </param>
+            /// <returns>
+            /// this
+            /// <see cref="Builder"/>.
+            /// </returns>
+            public virtual BackgroundImage.Builder SetGradientBuilder(IGradientBuilder gradientBuilder) {
+                this.gradientBuilder = gradientBuilder;
+                this.repeat = new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT);
+                this.image = null;
+                return this;
+            }
+
+            /// <summary>Sets linear gradient builder.</summary>
+            /// <remarks>
+            /// Sets linear gradient builder.
             /// <para />
             /// Makes image null as far as we can't have them both. It also makes background-repeat: no-repeat.
             /// </remarks>
@@ -390,12 +436,10 @@ namespace iText.Layout.Properties {
             /// this
             /// <see cref="Builder"/>.
             /// </returns>
+            [System.ObsoleteAttribute(@"use BackgroundImage.GetGradientBuilder() instead")]
             public virtual BackgroundImage.Builder SetLinearGradientBuilder(AbstractLinearGradientBuilder linearGradientBuilder
                 ) {
-                this.linearGradientBuilder = linearGradientBuilder;
-                this.repeat = new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT);
-                this.image = null;
-                return this;
+                return SetGradientBuilder(linearGradientBuilder);
             }
 
             /// <summary>Sets background-repeat.</summary>
@@ -502,8 +546,8 @@ namespace iText.Layout.Properties {
             /// <see cref="BackgroundImage"/>.
             /// </returns>
             public virtual BackgroundImage Build() {
-                return new BackgroundImage(image, repeat, position, backgroundSize, linearGradientBuilder, blendMode, clip
-                    , origin);
+                return new BackgroundImage(image, repeat, position, backgroundSize, gradientBuilder, blendMode, clip, origin
+                    );
             }
         }
     }

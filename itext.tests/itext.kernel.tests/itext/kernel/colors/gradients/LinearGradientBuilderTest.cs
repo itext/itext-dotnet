@@ -51,15 +51,15 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithNullArgumentsAndWithoutSettersTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder();
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder();
             NUnit.Framework.Assert.IsNull(gradientBuilder.BuildColor(targetBoundingBox, null, null));
         }
 
         [NUnit.Framework.Test]
         public virtual void BuildWithOneStopTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.PAD).AddStopColor(new GradientColorStop(ColorConstants
                 .BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType.RELATIVE));
             GenerateAndComparePdfs("oneStop.pdf", targetBoundingBox, null, gradientBuilder);
@@ -68,8 +68,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithTwoStopsTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.PAD).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType.RELATIVE));
@@ -79,8 +79,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithTwoStopsAtTheBeginningTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.PAD).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .BLUE.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE));
@@ -90,8 +90,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithTwoStopsAtTheEndTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.PAD).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 1d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .BLUE.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE));
@@ -101,8 +101,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithTwoStopsInTheMiddleTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.PAD).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0.5d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
                 (ColorConstants.BLUE.GetColorValue(), 0.5d, GradientColorStop.OffsetType.RELATIVE));
@@ -112,8 +112,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithTwoStopsBeforeTheBeginningTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.PAD).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), -0.1d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
                 (ColorConstants.BLUE.GetColorValue(), -0.2d, GradientColorStop.OffsetType.RELATIVE));
@@ -123,8 +123,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithTwoStopsAfterTheEndTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.PAD).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 1.2d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
                 (ColorConstants.BLUE.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE));
@@ -134,8 +134,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void PadCaseWithVeryCloseCornerStopsTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.PAD).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue(), 0.01d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
@@ -147,8 +147,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithDoublingStopsAtEndsAndPadTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.PAD).AddStopColor(new GradientColorStop(ColorConstants
                 .MAGENTA.GetColorValue(), -0.2, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
                 (ColorConstants.ORANGE.GetColorValue(), -0.2, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new 
@@ -163,8 +163,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithDoublingStopsAtEndsAndEndsOfCoordinatesAndPadTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.PAD).AddStopColor(new GradientColorStop(ColorConstants
                 .MAGENTA.GetColorValue(), -0.2, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
                 (ColorConstants.ORANGE.GetColorValue(), -0.2, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new 
@@ -182,9 +182,9 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithoutCoordinatesTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetSpread(GradientSpreadMethod
-                .PAD).AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue(), 0d, GradientColorStop.OffsetType
-                .RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetSpread(GradientSpreadMethod.PAD).AddStopColor
+                (new GradientColorStop(ColorConstants.RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE))
+                .AddStopColor(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType
                 .RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType
                 .RELATIVE));
             GenerateAndComparePdfs("withoutCoordinates.pdf", targetBoundingBox, null, gradientBuilder);
@@ -193,8 +193,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithZeroVectorTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetLeft() + 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetLeft() + 100f, targetBoundingBox
                 .GetBottom() + 100f).SetSpread(GradientSpreadMethod.PAD).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
@@ -205,8 +205,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithNullArgumentsAndWithoutStopsTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.PAD);
             NUnit.Framework.Assert.IsNull(gradientBuilder.BuildColor(null, null, null));
         }
@@ -214,8 +214,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithNullArgumentsAndNoneSpreadingTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
@@ -227,8 +227,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithNullArgumentsAndPadSpreadingTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.PAD).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
@@ -240,8 +240,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithNullArgumentsAndReflectSpreadingTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.REFLECT).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
@@ -253,8 +253,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithNullArgumentsAndRepeatSpreadingTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.REPEAT).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
@@ -266,8 +266,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuilderWithNoneSpreadingTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
@@ -278,8 +278,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuilderWithNoneSpreadingAndCanvasTransformTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
@@ -297,8 +297,8 @@ namespace iText.Kernel.Colors.Gradients {
             AffineTransform gradientTransform = AffineTransform.GetTranslateInstance(150, -50);
             gradientTransform.Scale(0.5, 1.5);
             gradientTransform.Rotate(Math.PI / 3, 400f, 550f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetCurrentSpaceToGradientVectorSpaceTransformation(gradientTransform).SetSpread(GradientSpreadMethod
                 .NONE).AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue(), 0d, GradientColorStop.OffsetType
                 .RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType
@@ -314,8 +314,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuilderWithPadSpreadingTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.PAD).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
@@ -326,8 +326,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuilderWithReflectSpreadingTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.REFLECT).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
@@ -338,8 +338,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuilderWithRepeatSpreadingTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.REPEAT).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
@@ -353,8 +353,8 @@ namespace iText.Kernel.Colors.Gradients {
             AffineTransform gradientTransform = AffineTransform.GetTranslateInstance(150, -50);
             gradientTransform.Scale(0.5, 1.5);
             gradientTransform.Rotate(Math.PI / 3, 400f, 550f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetCurrentSpaceToGradientVectorSpaceTransformation(gradientTransform).SetSpread(GradientSpreadMethod
                 .REPEAT).AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue(), 0d, GradientColorStop.OffsetType
                 .RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 0.5, GradientColorStop.OffsetType
@@ -370,81 +370,75 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuilderWithRepeatSpreadingAndToRightVectorTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetRight() + 100f, 0f, targetBoundingBox.GetRight() + 300f, 0f).SetSpread(GradientSpreadMethod.REPEAT
-                ).AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue())).AddStopColor(new GradientColorStop
-                (ColorConstants.GREEN.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue
-                ()));
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetRight
+                () + 100f, 0f, targetBoundingBox.GetRight() + 300f, 0f).SetSpread(GradientSpreadMethod.REPEAT).AddStopColor
+                (new GradientColorStop(ColorConstants.RED.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants
+                .GREEN.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue()));
             GenerateAndComparePdfs("repeatSpreadingToRightVector.pdf", targetBoundingBox, null, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
         public virtual void BuilderWithRepeatSpreadingAndToLeftVectorTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetRight() + 300f, 0f, targetBoundingBox.GetRight() + 100f, 0f).SetSpread(GradientSpreadMethod.REPEAT
-                ).AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue())).AddStopColor(new GradientColorStop
-                (ColorConstants.GREEN.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue
-                ()));
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetRight
+                () + 300f, 0f, targetBoundingBox.GetRight() + 100f, 0f).SetSpread(GradientSpreadMethod.REPEAT).AddStopColor
+                (new GradientColorStop(ColorConstants.RED.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants
+                .GREEN.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue()));
             GenerateAndComparePdfs("repeatSpreadingToLeftVector.pdf", targetBoundingBox, null, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
         public virtual void BuilderWithRepeatSpreadingAndToTopVectorTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(0f, targetBoundingBox
-                .GetBottom() - 300f, 0f, targetBoundingBox.GetBottom() - 100f).SetSpread(GradientSpreadMethod.REPEAT).
-                AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue())).AddStopColor(new GradientColorStop
-                (ColorConstants.GREEN.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue
-                ()));
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(0f, targetBoundingBox.GetBottom
+                () - 300f, 0f, targetBoundingBox.GetBottom() - 100f).SetSpread(GradientSpreadMethod.REPEAT).AddStopColor
+                (new GradientColorStop(ColorConstants.RED.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants
+                .GREEN.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue()));
             GenerateAndComparePdfs("repeatSpreadingToTopVector.pdf", targetBoundingBox, null, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
         public virtual void BuilderWithRepeatSpreadingAndToBottomVectorTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(0f, targetBoundingBox
-                .GetBottom() - 100f, 0f, targetBoundingBox.GetBottom() - 300f).SetSpread(GradientSpreadMethod.REPEAT).
-                AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue())).AddStopColor(new GradientColorStop
-                (ColorConstants.GREEN.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue
-                ()));
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(0f, targetBoundingBox.GetBottom
+                () - 100f, 0f, targetBoundingBox.GetBottom() - 300f).SetSpread(GradientSpreadMethod.REPEAT).AddStopColor
+                (new GradientColorStop(ColorConstants.RED.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants
+                .GREEN.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue()));
             GenerateAndComparePdfs("repeatSpreadingToBottomVector.pdf", targetBoundingBox, null, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
         public virtual void BuildWithAutoStopAndAbsoluteOnCoordinatesHintTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft(), targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight(), targetBoundingBox.GetBottom
-                () + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants.RED.
-                GetColorValue(), 0.1d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
-                .GREEN.GetColorValue()).SetHint(100f, GradientColorStop.HintOffsetType.ABSOLUTE_ON_GRADIENT)).AddStopColor
-                (new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 0.9d, GradientColorStop.OffsetType.RELATIVE
-                ));
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                (), targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight(), targetBoundingBox.GetBottom() 
+                + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue
+                (), 0.1d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants.GREEN
+                .GetColorValue()).SetHint(100f, GradientColorStop.HintOffsetType.ABSOLUTE_ON_GRADIENT)).AddStopColor(new 
+                GradientColorStop(ColorConstants.BLUE.GetColorValue(), 0.9d, GradientColorStop.OffsetType.RELATIVE));
             GenerateAndComparePdfs("autoStopAbsoluteOnCoordinatesHint.pdf", targetBoundingBox, null, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
         public virtual void BuildWithAutoStopAndRelativeOnCoordinatesHintTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft(), targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight(), targetBoundingBox.GetBottom
-                () + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants.RED.
-                GetColorValue(), 0.1d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
-                .GREEN.GetColorValue()).SetHint(0.2f, GradientColorStop.HintOffsetType.RELATIVE_ON_GRADIENT)).AddStopColor
-                (new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 0.9d, GradientColorStop.OffsetType.RELATIVE
-                ));
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                (), targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight(), targetBoundingBox.GetBottom() 
+                + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue
+                (), 0.1d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants.GREEN
+                .GetColorValue()).SetHint(0.2f, GradientColorStop.HintOffsetType.RELATIVE_ON_GRADIENT)).AddStopColor(new 
+                GradientColorStop(ColorConstants.BLUE.GetColorValue(), 0.9d, GradientColorStop.OffsetType.RELATIVE));
             GenerateAndComparePdfs("autoStopRelativeOnCoordinatesHint.pdf", targetBoundingBox, null, gradientBuilder);
         }
 
         [NUnit.Framework.Test]
         public virtual void BuildWithAutoStopAndRelativeBetweenColorsHintTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft(), targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight(), targetBoundingBox.GetBottom
-                () + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants.RED.
-                GetColorValue(), 0.1d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
-                .GREEN.GetColorValue()).SetHint(0.2f, GradientColorStop.HintOffsetType.RELATIVE_BETWEEN_COLORS)).AddStopColor
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                (), targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight(), targetBoundingBox.GetBottom() 
+                + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue
+                (), 0.1d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants.GREEN
+                .GetColorValue()).SetHint(0.2f, GradientColorStop.HintOffsetType.RELATIVE_BETWEEN_COLORS)).AddStopColor
                 (new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 0.9d, GradientColorStop.OffsetType.RELATIVE
                 ));
             GenerateAndComparePdfs("autoStopRelativeBetweenColorsHint.pdf", targetBoundingBox, null, gradientBuilder);
@@ -453,12 +447,12 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithAutoStopAndRelativeBetweenColorsZeroHintTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft(), targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight(), targetBoundingBox.GetBottom
-                () + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants.RED.
-                GetColorValue(), 0.1d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
-                .GREEN.GetColorValue()).SetHint(0f, GradientColorStop.HintOffsetType.RELATIVE_BETWEEN_COLORS)).AddStopColor
-                (new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 0.9d, GradientColorStop.OffsetType.RELATIVE
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                (), targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight(), targetBoundingBox.GetBottom() 
+                + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue
+                (), 0.1d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants.GREEN
+                .GetColorValue()).SetHint(0f, GradientColorStop.HintOffsetType.RELATIVE_BETWEEN_COLORS)).AddStopColor(
+                new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 0.9d, GradientColorStop.OffsetType.RELATIVE
                 ));
             GenerateAndComparePdfs("autoStopRelativeBetweenColorsZeroHint.pdf", targetBoundingBox, null, gradientBuilder
                 );
@@ -467,12 +461,12 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithAutoStopAndRelativeBetweenColorsOneHintTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft(), targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight(), targetBoundingBox.GetBottom
-                () + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants.RED.
-                GetColorValue(), 0.1d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
-                .GREEN.GetColorValue()).SetHint(1f, GradientColorStop.HintOffsetType.RELATIVE_BETWEEN_COLORS)).AddStopColor
-                (new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 0.9d, GradientColorStop.OffsetType.RELATIVE
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                (), targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight(), targetBoundingBox.GetBottom() 
+                + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue
+                (), 0.1d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants.GREEN
+                .GetColorValue()).SetHint(1f, GradientColorStop.HintOffsetType.RELATIVE_BETWEEN_COLORS)).AddStopColor(
+                new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 0.9d, GradientColorStop.OffsetType.RELATIVE
                 ));
             GenerateAndComparePdfs("autoStopRelativeBetweenColorsOneHint.pdf", targetBoundingBox, null, gradientBuilder
                 );
@@ -481,9 +475,9 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithPadSpreadingAndRelativeBetweenColorsZeroHintTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft(), targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight(), targetBoundingBox.GetBottom
-                () + 100f).SetSpread(GradientSpreadMethod.PAD).AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                (), targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight(), targetBoundingBox.GetBottom() 
+                + 100f).SetSpread(GradientSpreadMethod.PAD).AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue
                 (), 0.1d, GradientColorStop.OffsetType.RELATIVE).SetHint(0f, GradientColorStop.HintOffsetType.RELATIVE_BETWEEN_COLORS
                 )).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 0.9d, GradientColorStop.OffsetType
                 .RELATIVE));
@@ -494,9 +488,9 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithPadSpreadingAndRelativeBetweenColorsOneHintTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft(), targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight(), targetBoundingBox.GetBottom
-                () + 100f).SetSpread(GradientSpreadMethod.PAD).AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                (), targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight(), targetBoundingBox.GetBottom() 
+                + 100f).SetSpread(GradientSpreadMethod.PAD).AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue
                 (), 0.1d, GradientColorStop.OffsetType.RELATIVE).SetHint(1f, GradientColorStop.HintOffsetType.RELATIVE_BETWEEN_COLORS
                 )).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 0.9d, GradientColorStop.OffsetType
                 .RELATIVE));
@@ -507,11 +501,11 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithAutoStopAndNoneHintTypeTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft(), targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight(), targetBoundingBox.GetBottom
-                () + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants.RED.
-                GetColorValue(), 0.1d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
-                .GREEN.GetColorValue()).SetHint(0.2f, GradientColorStop.HintOffsetType.NONE)).AddStopColor(new GradientColorStop
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                (), targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight(), targetBoundingBox.GetBottom() 
+                + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue
+                (), 0.1d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants.GREEN
+                .GetColorValue()).SetHint(0.2f, GradientColorStop.HintOffsetType.NONE)).AddStopColor(new GradientColorStop
                 (ColorConstants.BLUE.GetColorValue(), 0.9d, GradientColorStop.OffsetType.RELATIVE));
             GenerateAndComparePdfs("autoStopNoneHintType.pdf", targetBoundingBox, null, gradientBuilder);
         }
@@ -519,8 +513,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithReflectSpreadingAndStopsOutsideCoordinatesTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetBottom() + 100f).SetSpread(GradientSpreadMethod.REFLECT).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), -0.5d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
                 (ColorConstants.BLUE.GetColorValue(), 1.5d, GradientColorStop.OffsetType.RELATIVE));
@@ -531,9 +525,9 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithSingleAutoStopsAtStartAndEndTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 10f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 10f, targetBoundingBox
-                .GetBottom() + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 10f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 10f, targetBoundingBox.
+                GetBottom() + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue()).SetHint(0.1, GradientColorStop.HintOffsetType.RELATIVE_BETWEEN_COLORS)).AddStopColor
                 (new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 0.5d, GradientColorStop.OffsetType.RELATIVE
                 )).AddStopColor(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 200d, GradientColorStop.OffsetType
@@ -545,9 +539,9 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithSingleAutoStopsAtStartAndEndWithHintsTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 10f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 10f, targetBoundingBox
-                .GetBottom() + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 10f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 10f, targetBoundingBox.
+                GetBottom() + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue()).SetHint(0.1, GradientColorStop.HintOffsetType.RELATIVE_ON_GRADIENT)).AddStopColor
                 (new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 0.5d, GradientColorStop.OffsetType.RELATIVE
                 )).AddStopColor(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 200d, GradientColorStop.OffsetType
@@ -560,9 +554,9 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithMultipleAutoStopsAtStartAndEndWithHintsTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 10f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 10f, targetBoundingBox
-                .GetBottom() + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 10f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 10f, targetBoundingBox.
+                GetBottom() + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants.GREEN.GetColorValue())).AddStopColor
                 (new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 0.5d, GradientColorStop.OffsetType.RELATIVE
                 )).AddStopColor(new GradientColorStop(ColorConstants.GREEN.GetColorValue(), 200d, GradientColorStop.OffsetType
@@ -575,9 +569,9 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithAutoStopsInTheMiddleTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 10f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 10f, targetBoundingBox
-                .GetBottom() + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 10f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 10f, targetBoundingBox.
+                GetBottom() + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE).SetHint(0.3d, GradientColorStop.HintOffsetType
                 .RELATIVE_BETWEEN_COLORS)).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue()).SetHint
                 (0.3d, GradientColorStop.HintOffsetType.RELATIVE_BETWEEN_COLORS)).AddStopColor(new GradientColorStop(ColorConstants
@@ -589,9 +583,9 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithAutoStopsInTheMiddleWithHintsTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 10f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 10f, targetBoundingBox
-                .GetBottom() + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 10f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 10f, targetBoundingBox.
+                GetBottom() + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE).SetHint(0.2d, GradientColorStop.HintOffsetType
                 .RELATIVE_ON_GRADIENT)).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue())).AddStopColor
                 (new GradientColorStop(ColorConstants.GREEN.GetColorValue()).SetHint(0.7d, GradientColorStop.HintOffsetType
@@ -603,9 +597,9 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithDecreasingOffsetsTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 10f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 10f, targetBoundingBox
-                .GetBottom() + 100f).SetSpread(GradientSpreadMethod.PAD).AddStopColor(new GradientColorStop(ColorConstants
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 10f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 10f, targetBoundingBox.
+                GetBottom() + 100f).SetSpread(GradientSpreadMethod.PAD).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0.5d, GradientColorStop.OffsetType.RELATIVE).SetHint(0.4d, GradientColorStop.HintOffsetType
                 .RELATIVE_ON_GRADIENT)).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 0.6d, 
                 GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants.GREEN.GetColorValue
@@ -619,9 +613,9 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuilderWithZeroColorsLengthAndReflect() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 10f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 10f, targetBoundingBox
-                .GetBottom() + 100f).SetSpread(GradientSpreadMethod.REFLECT).AddStopColor(new GradientColorStop(ColorConstants
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 10f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 10f, targetBoundingBox.
+                GetBottom() + 100f).SetSpread(GradientSpreadMethod.REFLECT).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0.8d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
                 (ColorConstants.BLUE.GetColorValue(), 0.5d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
                 (ColorConstants.GREEN.GetColorValue(), 0.2d, GradientColorStop.OffsetType.RELATIVE));
@@ -631,8 +625,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithTwoStopsBeforeTheBeginningAndNoneTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), -10d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
                 (ColorConstants.BLUE.GetColorValue(), -5d, GradientColorStop.OffsetType.RELATIVE));
@@ -642,8 +636,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithTwoStopsAfterEndAndNoneTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 5d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .BLUE.GetColorValue(), 10d, GradientColorStop.OffsetType.RELATIVE));
@@ -653,8 +647,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithTwoEqualOffsetsStopsAndNoneTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0.5d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
                 (ColorConstants.BLUE.GetColorValue(), 0.5d, GradientColorStop.OffsetType.RELATIVE));
@@ -664,8 +658,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithTwoStopsInCenterAndNoneTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0.2d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
                 (ColorConstants.BLUE.GetColorValue(), 0.8d, GradientColorStop.OffsetType.RELATIVE));
@@ -675,8 +669,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildWithTwoStopsOutsideAndNoneTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetRight() - 100f, targetBoundingBox
                 .GetTop() - 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), -1.5d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
                 (ColorConstants.BLUE.GetColorValue(), 2.5d, GradientColorStop.OffsetType.RELATIVE));
@@ -688,8 +682,8 @@ namespace iText.Kernel.Colors.Gradients {
             1)]
         public virtual void BuildStopsDefaultLimitRepeatTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetLeft() + 100.15f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetLeft() + 100.15f, targetBoundingBox
                 .GetBottom() + 100f).SetSpread(GradientSpreadMethod.REPEAT).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .GREEN.GetColorValue(), 0.2d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop
@@ -706,8 +700,8 @@ namespace iText.Kernel.Colors.Gradients {
             1)]
         public virtual void BuildStopsLimitReachedRepeatTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetLeft() + 150f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetLeft() + 150f, targetBoundingBox
                 .GetBottom() + 100f).SetSpread(GradientSpreadMethod.REPEAT).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType.RELATIVE));
@@ -721,8 +715,8 @@ namespace iText.Kernel.Colors.Gradients {
             1)]
         public virtual void BuildStopsLimitReachedReflectTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetLeft() + 150f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetLeft() + 150f, targetBoundingBox
                 .GetBottom() + 100f).SetSpread(GradientSpreadMethod.REFLECT).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType.RELATIVE));
@@ -734,8 +728,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildStopsLimitReachedPadTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetLeft() + 150f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetLeft() + 150f, targetBoundingBox
                 .GetBottom() + 100f).SetSpread(GradientSpreadMethod.PAD).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType.RELATIVE));
@@ -747,8 +741,8 @@ namespace iText.Kernel.Colors.Gradients {
         [NUnit.Framework.Test]
         public virtual void BuildStopsLimitReachedNoneTest() {
             Rectangle targetBoundingBox = new Rectangle(50f, 450f, 300f, 300f);
-            AbstractGradientBuilder<Point> gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox
-                .GetLeft() + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetLeft() + 150f, targetBoundingBox
+            IGradientBuilder gradientBuilder = new LinearGradientBuilder().SetGradientVector(targetBoundingBox.GetLeft
+                () + 100f, targetBoundingBox.GetBottom() + 100f, targetBoundingBox.GetLeft() + 150f, targetBoundingBox
                 .GetBottom() + 100f).SetSpread(GradientSpreadMethod.NONE).AddStopColor(new GradientColorStop(ColorConstants
                 .RED.GetColorValue(), 0d, GradientColorStop.OffsetType.RELATIVE)).AddStopColor(new GradientColorStop(ColorConstants
                 .BLUE.GetColorValue(), 1d, GradientColorStop.OffsetType.RELATIVE));
@@ -757,13 +751,13 @@ namespace iText.Kernel.Colors.Gradients {
                 );
         }
 
-        private void GenerateAndComparePdfs(String fileName, Rectangle toDraw, AffineTransform transform, AbstractGradientBuilder
-            <Point> gradientBuilder) {
+        private void GenerateAndComparePdfs(String fileName, Rectangle toDraw, AffineTransform transform, IGradientBuilder
+             gradientBuilder) {
             GenerateAndComparePdfs(fileName, toDraw, transform, gradientBuilder, null);
         }
 
-        private void GenerateAndComparePdfs(String fileName, Rectangle toDraw, AffineTransform transform, AbstractGradientBuilder
-            <Point> gradientBuilder, GradientPropertiesResolver gradientPropertiesResolver) {
+        private void GenerateAndComparePdfs(String fileName, Rectangle toDraw, AffineTransform transform, IGradientBuilder
+             gradientBuilder, GradientPropertiesResolver gradientPropertiesResolver) {
             DocumentProperties properties = new DocumentProperties();
             if (gradientPropertiesResolver != null) {
                 properties.RegisterDependency(typeof(GradientPropertiesResolver), () => gradientPropertiesResolver);
@@ -781,8 +775,8 @@ namespace iText.Kernel.Colors.Gradients {
                 , DESTINATION_FOLDER, "diff"));
         }
 
-        private void GenerateAndComparePdfsWithoutArgumentToBuild(String fileName, Rectangle toDraw, AbstractGradientBuilder
-            <Point> gradientBuilder) {
+        private void GenerateAndComparePdfsWithoutArgumentToBuild(String fileName, Rectangle toDraw, IGradientBuilder
+             gradientBuilder) {
             String outPdfPath = DESTINATION_FOLDER + fileName;
             PdfWriter writer = CompareTool.CreateTestPdfWriter(outPdfPath);
             using (PdfDocument pdfDoc = new PdfDocument(writer)) {
