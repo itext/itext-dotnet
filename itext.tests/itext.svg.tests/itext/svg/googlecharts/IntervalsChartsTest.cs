@@ -27,74 +27,74 @@ using iText.Test;
 namespace iText.Svg.Googlecharts {
     [NUnit.Framework.Category("IntegrationTest")]
     public class IntervalsChartsTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/IntervalsChartsTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/googlecharts/IntervalsChartsTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/googlecharts/IntervalsChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void IntervalsAreaChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "intervalsAreaChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "intervalsAreaChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void IntervalsBackgroundBoxChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "intervalsBackgroundBoxChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "intervalsBackgroundBoxChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void IntervalsBoxChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "intervalsBoxChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "intervalsBoxChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void IntervalsBoxPlotChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "intervalsBoxPlotChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "intervalsBoxPlotChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void IntervalsBoxThickChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "intervalsBoxThickChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "intervalsBoxThickChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void IntervalsCombiningChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "intervalsCombiningChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "intervalsCombiningChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void IntervalsLineChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "intervalsLineChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "intervalsLineChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void IntervalsPointsChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "intervalsPointsChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "intervalsPointsChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void IntervalsPointsWhiskersChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "intervalsPointsWhiskersChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "intervalsPointsWhiskersChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void IntervalsStickChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "intervalsStickChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "intervalsStickChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void IntervalsSticksHorizontalChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "intervalsSticksHorizontalChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "intervalsSticksHorizontalChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void IntervalsTailoredChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "intervalsTailoredChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "intervalsTailoredChart");
         }
     }
 }

@@ -36,14 +36,14 @@ using iText.Test.Attributes;
 namespace iText.Svg.Css {
     [NUnit.Framework.Category("IntegrationTest")]
     public class SvgStyleResolverIntegrationTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/css/SvgStyleResolver/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/css/SvgStyleResolver/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/css/SvgStyleResolver/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
@@ -122,56 +122,56 @@ namespace iText.Svg.Css {
 
         [NUnit.Framework.Test]
         public virtual void FontResolverIntegrationTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "fontssvg");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "fontssvg");
         }
 
         [NUnit.Framework.Test]
         public virtual void ValidLocalFontTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "validLocalFontTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "validLocalFontTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void FontWeightTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "fontWeightTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "fontWeightTest");
         }
 
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, LogLevel = LogLevelConstants.WARN)]
         public virtual void ExternalStyleSheetWithFillStyleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "externalStyleSheetWithFillStyleTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "externalStyleSheetWithFillStyleTest");
         }
 
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, LogLevel = LogLevelConstants.WARN)]
         public virtual void ExternalStyleSheetWithStrokeStyleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "externalStyleSheetWithStrokeStyleTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "externalStyleSheetWithStrokeStyleTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void GoogleFontsTest() {
             // Android-Conversion-Ignore-Test (TODO DEVSIX-6459 Android: fix the SecurityException(Permission denied) from UrlUtil method)
-            ConvertAndCompare(sourceFolder, destinationFolder, "googleFontsTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "googleFontsTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void SvgWithExternalCSStoSingleDefaultPage() {
             // TODO: update cmp files when DEVSIX-8822 resolved
             // TODO: update cmp files when DEVSIX-8832 resolved
-            ConvertAndCompare(sourceFolder, destinationFolder, "externalCss");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "externalCss");
         }
 
         [NUnit.Framework.Test]
         public virtual void SvgWithInternalCSStoSingleDefaultPage() {
             // TODO: update cmp files when DEVSIX-8822 resolved
             // TODO: update cmp files when DEVSIX-8832 resolved
-            ConvertAndCompare(sourceFolder, destinationFolder, "internalCss");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "internalCss");
         }
 
         [NUnit.Framework.Test]
         public virtual void SvgWithInternalCSSWithoutOverlapTest() {
             // TODO: update cmp files when DEVSIX-8822 resolved
             // TODO: update cmp files when DEVSIX-8832 resolved
-            ConvertAndCompare(sourceFolder, destinationFolder, "internalCssNoOverlap");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "internalCssNoOverlap");
         }
 
         [NUnit.Framework.Test]
@@ -179,151 +179,151 @@ namespace iText.Svg.Css {
             // TODO: update cmp files when DEVSIX-8822 resolved
             // TODO: update cmp files when DEVSIX-8832 resolved
             // Take a note this method differs from the one used in Default Page test
-            ConvertAndCompare(sourceFolder, destinationFolder, "externalCss_custom", PageSize.A3.Rotate());
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "externalCss_custom", PageSize.A3.Rotate());
         }
 
         [NUnit.Framework.Test]
         public virtual void SvgWithInternalCSStoCustomPage() {
             // TODO: update cmp files when DEVSIX-8822 resolved
             // TODO: update cmp files when DEVSIX-8832 resolved
-            ConvertAndCompare(sourceFolder, destinationFolder, "internalCss_custom", PageSize.A3.Rotate());
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "internalCss_custom", PageSize.A3.Rotate());
         }
 
         [NUnit.Framework.Test]
         public virtual void MultipleSVGtagsWithDiffStylesFromExternalCSS() {
             // TODO: update cmp files when DEVSIX-8823 resolved
             // TODO: update cmp files when DEVSIX-8832 resolved
-            ConvertAndCompare(sourceFolder, destinationFolder, "externalCss_palette", PageSize.A3.Rotate());
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "externalCss_palette", PageSize.A3.Rotate());
         }
 
         [NUnit.Framework.Test]
         public virtual void RelativeStyleInheritanceTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "relativeStyleInheritanceTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "relativeStyleInheritanceTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextTagNoFontSizeTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "textTagNoFontSize");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textTagNoFontSize");
         }
 
         [NUnit.Framework.Test]
         public virtual void ChartWithText1Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "chartWithText1");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "chartWithText1");
         }
 
         [NUnit.Framework.Test]
         public virtual void ChartWithText2Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "chartWithText2");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "chartWithText2");
         }
 
         [NUnit.Framework.Test]
         public virtual void ImportStyleSheetWithStrokeStyleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "importStyleSheetWithStrokeStyleTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "importStyleSheetWithStrokeStyleTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void StyleInCdataTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "styleInCDATA");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "styleInCDATA");
         }
 
         [NUnit.Framework.Test]
         public virtual void StyleInCdataWithNewLineBeforeTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "styleInCdataWithNewLineBefore");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "styleInCdataWithNewLineBefore");
         }
 
         [NUnit.Framework.Test]
         public virtual void CssStylesResolverOrder1Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder1");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cssStylesResolverOrder1");
         }
 
         [NUnit.Framework.Test]
         public virtual void CssStylesResolverOrder2Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder2");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cssStylesResolverOrder2");
         }
 
         [NUnit.Framework.Test]
         public virtual void CssStylesResolverOrder3Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder3");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cssStylesResolverOrder3");
         }
 
         [NUnit.Framework.Test]
         public virtual void CssStylesResolverOrder4Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder4");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cssStylesResolverOrder4");
         }
 
         [NUnit.Framework.Test]
         public virtual void CssStylesResolverOrder5Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder5");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cssStylesResolverOrder5");
         }
 
         [NUnit.Framework.Test]
         public virtual void CssStylesResolverOrder6Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder6");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cssStylesResolverOrder6");
         }
 
         [NUnit.Framework.Test]
         public virtual void CssStylesResolverOrder7Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder7");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cssStylesResolverOrder7");
         }
 
         [NUnit.Framework.Test]
         public virtual void CssStylesResolverOrder8Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder8");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cssStylesResolverOrder8");
         }
 
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, LogLevel = LogLevelConstants.WARN)]
         public virtual void CssStylesResolverOrder9Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder9");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cssStylesResolverOrder9");
         }
 
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, LogLevel = LogLevelConstants.WARN)]
         public virtual void CssStylesResolverOrder10Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder10");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cssStylesResolverOrder10");
         }
 
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, LogLevel = LogLevelConstants.WARN)]
         public virtual void CssStylesResolverOrder11Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder11");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cssStylesResolverOrder11");
         }
 
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, LogLevel = LogLevelConstants.WARN)]
         public virtual void CssStylesResolverOrder12Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder12");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cssStylesResolverOrder12");
         }
 
         [NUnit.Framework.Test]
         public virtual void CssStylesResolverOrder13Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder13");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cssStylesResolverOrder13");
         }
 
         [NUnit.Framework.Test]
         public virtual void CssStylesResolverOrder14Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder14");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cssStylesResolverOrder14");
         }
 
         [NUnit.Framework.Test]
         public virtual void CssStylesResolverOrder15Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder15");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cssStylesResolverOrder15");
         }
 
         [NUnit.Framework.Test]
         public virtual void CssStylesResolverOrder16Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder16");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cssStylesResolverOrder16");
         }
 
         [NUnit.Framework.Test]
         public virtual void CssStylesResolverOrder17Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "cssStylesResolverOrder17");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cssStylesResolverOrder17");
         }
 
         [NUnit.Framework.Test]
         public virtual void HeightWidthSvgStyleTest() {
             //TODO DEVSIX-8823: update after issue is fixed
-            ConvertAndCompare(sourceFolder, destinationFolder, "height-width-style");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "height-width-style");
         }
     }
 }

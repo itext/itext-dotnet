@@ -43,10 +43,10 @@ using iText.Test.Attributes;
 namespace iText.Svg.Renderers {
     [NUnit.Framework.Category("IntegrationTest")]
     public class SvgImageRendererTest : SvgIntegrationTest {
-        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/SvgImageRendererTest/";
 
-        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/SvgImageRendererTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/SvgImageRendererTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

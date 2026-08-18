@@ -30,86 +30,86 @@ using iText.Test;
 namespace iText.Svg.Googlecharts {
     [NUnit.Framework.Category("IntegrationTest")]
     public class GoogleChartsTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/GoogleChartsTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/googlecharts/GoogleChartsTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/googlecharts/GoogleChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void BarChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "barChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "barChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void AnnotationChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "annotationChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "annotationChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void AreaChart() {
             PageSize pageSize = PageSize.A4;
-            TestUtils.ConvertSVGtoPDF(destinationFolder + "areaChart.pdf", sourceFolder + "areaChart.svg", 1, pageSize
+            TestUtils.ConvertSVGtoPDF(DESTINATION_FOLDER + "areaChart.pdf", SOURCE_FOLDER + "areaChart.svg", 1, pageSize
                 );
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "areaChart.pdf", sourceFolder
-                 + "cmp_areaChart.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + "areaChart.pdf", SOURCE_FOLDER
+                 + "cmp_areaChart.pdf", DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void BubbleChart() {
             PageSize pageSize = PageSize.A4;
-            TestUtils.ConvertSVGtoPDF(destinationFolder + "bubbleChart.pdf", sourceFolder + "bubbleChart.svg", 1, pageSize
+            TestUtils.ConvertSVGtoPDF(DESTINATION_FOLDER + "bubbleChart.pdf", SOURCE_FOLDER + "bubbleChart.svg", 1, pageSize
                 );
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "bubbleChart.pdf", sourceFolder
-                 + "cmp_bubbleChart.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + "bubbleChart.pdf", SOURCE_FOLDER
+                 + "cmp_bubbleChart.pdf", DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CalendarChart() {
             //TODO DEVSIX-4857 support stroke-linecap attribute
             PageSize pageSize = PageSize.A4;
-            TestUtils.ConvertSVGtoPDF(destinationFolder + "calendarChart.pdf", sourceFolder + "calendarChart.svg", 1, 
-                pageSize);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "calendarChart.pdf", 
-                sourceFolder + "cmp_calendarChart.pdf", destinationFolder, "diff_"));
+            TestUtils.ConvertSVGtoPDF(DESTINATION_FOLDER + "calendarChart.pdf", SOURCE_FOLDER + "calendarChart.svg", 1
+                , pageSize);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + "calendarChart.pdf", 
+                SOURCE_FOLDER + "cmp_calendarChart.pdf", DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void CandlestickChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "candlestickChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "candlestickChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void ComboChart() {
             PageSize pageSize = PageSize.A4;
-            TestUtils.ConvertSVGtoPDF(destinationFolder + "comboChart.pdf", sourceFolder + "comboChart.svg", 1, pageSize
+            TestUtils.ConvertSVGtoPDF(DESTINATION_FOLDER + "comboChart.pdf", SOURCE_FOLDER + "comboChart.svg", 1, pageSize
                 );
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "comboChart.pdf", sourceFolder
-                 + "cmp_comboChart.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + "comboChart.pdf", SOURCE_FOLDER
+                 + "cmp_comboChart.pdf", DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void DiffChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "diffChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "diffChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void DonutChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "donutChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "donutChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void WaterfallChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "waterfallChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "waterfallChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void HistogramChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "histogramChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "histogramChart");
         }
     }
 }

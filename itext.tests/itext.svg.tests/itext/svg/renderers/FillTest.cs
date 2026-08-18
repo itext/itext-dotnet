@@ -30,9 +30,9 @@ namespace iText.Svg.Renderers {
     [NUnit.Framework.Category("IntegrationTest")]
     public class FillTest : SvgIntegrationTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/FillTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/FillTest/";
 
-        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/renderers/impl/FillTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/renderers/FillTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

@@ -27,9 +27,9 @@ namespace iText.Svg.Renderers {
     [NUnit.Framework.Category("IntegrationTest")]
     public class StrokeTest : SvgIntegrationTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/StrokeTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/StrokeTest/";
 
-        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/renderers/impl/StrokeTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/renderers/StrokeTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

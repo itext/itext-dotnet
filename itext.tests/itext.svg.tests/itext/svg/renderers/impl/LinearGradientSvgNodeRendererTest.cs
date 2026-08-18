@@ -30,478 +30,481 @@ using iText.Test.Attributes;
 namespace iText.Svg.Renderers.Impl {
     [NUnit.Framework.Category("IntegrationTest")]
     public class LinearGradientSvgNodeRendererTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/LinearGradientSvgNodeRendererTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/renderers/impl/LinearGradientSvgNodeRendererTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/renderers/impl/LinearGradientSvgNodeRendererTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateOrClearDestinationFolder(destinationFolder);
+            ITextTest.CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void CircleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "circle");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "circle");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipseTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipse");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipse");
         }
 
         [NUnit.Framework.Test]
         public virtual void LineTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "line");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "line");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathLinesBasedTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathLinesBased");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pathLinesBased");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathLinesBasedTransformedTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathLinesBasedTransformed");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pathLinesBasedTransformed");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathLinesBasedWithMoveTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathLinesBasedWithMove");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pathLinesBasedWithMove");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathLinesBasedWithTwoFiguresTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathLinesBasedWithTwoFigures");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pathLinesBasedWithTwoFigures");
         }
 
         [NUnit.Framework.Test]
         public virtual void CubicBezierTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "cubicBezier");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cubicBezier");
         }
 
         [NUnit.Framework.Test]
         public virtual void CubicBezier2Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "cubicBezier2");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cubicBezier2");
         }
 
         [NUnit.Framework.Test]
         public virtual void CubicBezier3Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "cubicBezier3");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cubicBezier3");
         }
 
         [NUnit.Framework.Test]
         public virtual void CubicBezier4Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "cubicBezier4");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cubicBezier4");
         }
 
         [NUnit.Framework.Test]
         public virtual void CubicBezierZeroDiscriminantTest() {
             // See CurveTo#calculateTValues to see which discriminant is mentioned.
-            ConvertAndCompare(sourceFolder, destinationFolder, "cubicBezierZeroDiscriminant");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cubicBezierZeroDiscriminant");
         }
 
         [NUnit.Framework.Test]
         public virtual void CubicBezierNegativeDiscriminantTest() {
             // See CurveTo#calculateTValues to see which discriminant is mentioned.
-            ConvertAndCompare(sourceFolder, destinationFolder, "cubicBezierNegativeDiscriminant");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cubicBezierNegativeDiscriminant");
         }
 
         [NUnit.Framework.Test]
         public virtual void CubicBezierInsideOtherCubicBezierTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "cubicBezierInsideOtherCubicBezier");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "cubicBezierInsideOtherCubicBezier");
         }
 
         [NUnit.Framework.Test]
         public virtual void SmoothCubicBezierWithAbsoluteCoordinatesTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "smoothCubicBezierWithAbsoluteCoordinates");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "smoothCubicBezierWithAbsoluteCoordinates");
         }
 
         [NUnit.Framework.Test]
         public virtual void SmoothCubicBezierWithRelativeCoordinatesTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "smoothCubicBezierWithRelativeCoordinates");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "smoothCubicBezierWithRelativeCoordinates");
         }
 
         [NUnit.Framework.Test]
         public virtual void SmoothCubicBezierRelativeAndAbsoluteCoordWithMoveTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "smoothCubicBezierRelativeAndAbsoluteCoordWithMove");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "smoothCubicBezierRelativeAndAbsoluteCoordWithMove");
         }
 
         [NUnit.Framework.Test]
         public virtual void SmoothCubicBezierRelativeAndAbsoluteCoordNoZOperatorTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "smoothCubicBezierRelativeAndAbsoluteCoordNoZOperator");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "smoothCubicBezierRelativeAndAbsoluteCoordNoZOperator"
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void QuadraticBezierTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "quadraticBezier");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "quadraticBezier");
         }
 
         [NUnit.Framework.Test]
         public virtual void QuadraticBezier2Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "quadraticBezier2");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "quadraticBezier2");
         }
 
         [NUnit.Framework.Test]
         public virtual void QuadraticBezier3Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "quadraticBezier3");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "quadraticBezier3");
         }
 
         [NUnit.Framework.Test]
         public virtual void QuadraticBezierInsideOtherQuadraticBezierTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "quadraticBezierInsideOtherQuadraticBezier");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "quadraticBezierInsideOtherQuadraticBezier");
         }
 
         [NUnit.Framework.Test]
         public virtual void SmoothQuadraticBezierWithAbsoluteCoordinatesTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "smoothQuadraticBezierWithAbsoluteCoordinates");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "smoothQuadraticBezierWithAbsoluteCoordinates");
         }
 
         [NUnit.Framework.Test]
         public virtual void SmoothQuadraticBezierWithRelativeCoordinatesTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "smoothQuadraticBezierWithRelativeCoordinates");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "smoothQuadraticBezierWithRelativeCoordinates");
         }
 
         [NUnit.Framework.Test]
         public virtual void SmoothQuadraticBezierAbsoluteAndRelativeCoordWithMoveTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "smoothQuadraticBezierAbsoluteAndRelativeCoordWithMove"
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "smoothQuadraticBezierAbsoluteAndRelativeCoordWithMove"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void SmoothQuadraticBezierRelativeAndAbsoluteCoordNoZOperatorTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "smoothQuadraticBezierRelativeAndAbsoluteCoordNoZOperator"
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "smoothQuadraticBezierRelativeAndAbsoluteCoordNoZOperator"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipticalArcsTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcs");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipticalArcs");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipticalArcsNegativeRxRyTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcsNegativeRxRy");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipticalArcsNegativeRxRy");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipticalArcZeroRxRyTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcZeroRxRy");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipticalArcZeroRxRy");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipticalArcsWithPhiTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcsWithPhi", PageSize.A3.Rotate());
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipticalArcsWithPhi", PageSize.A3.Rotate());
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipticalArcsWithPhi0Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcsWithPhi0");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipticalArcsWithPhi0");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipticalArcsWithPhi90Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcsWithPhi90");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipticalArcsWithPhi90");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipticalArcsWithPhi180Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcsWithPhi180");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipticalArcsWithPhi180");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipticalArcsWithPhi270Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcsWithPhi270");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipticalArcsWithPhi270");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipticalArcsWithPhiRelativeTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcsWithPhiRelative");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipticalArcsWithPhiRelative");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipticalArcsWithPhiAbsoluteTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcsWithPhiAbsolute");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipticalArcsWithPhiAbsolute");
         }
 
         [NUnit.Framework.Test]
         public virtual void EllipticalArcsRelativeCoordinatesTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "ellipticalArcsRelativeCoordinates");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "ellipticalArcsRelativeCoordinates");
         }
 
         [NUnit.Framework.Test]
         public virtual void ArcInsideOtherEllipticalArcTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "arcInsideOtherEllipticalArc");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "arcInsideOtherEllipticalArc");
         }
 
         [NUnit.Framework.Test]
         public virtual void PolygonTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "polygon");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "polygon");
         }
 
         [NUnit.Framework.Test]
         public virtual void PolylineTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "polyline");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "polyline");
         }
 
         [NUnit.Framework.Test]
         public virtual void RectTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rect");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rect");
         }
 
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.GRADIENT_INVALID_SPREAD_METHOD_LOG, LogLevel = LogLevelConstants.WARN)]
         public virtual void RectWithInvalidSpreadMethodValueTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rectWithInvalidSpreadMethodValue");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectWithInvalidSpreadMethodValue");
         }
 
         [NUnit.Framework.Test]
         public virtual void RectsWithFallBackColorsTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rectsWithFallBackColors");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectsWithFallBackColors");
         }
 
         [NUnit.Framework.Test]
         public virtual void RectMultipleStopsWithSameOffsetPadTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rectMultipleStopsWithSameOffsetPad");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectMultipleStopsWithSameOffsetPad");
         }
 
         [NUnit.Framework.Test]
         public virtual void RectMultipleStopsWithSameOffsetReflectTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rectMultipleStopsWithSameOffsetReflect");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectMultipleStopsWithSameOffsetReflect");
         }
 
         [NUnit.Framework.Test]
         public virtual void RectMultipleStopsWithSameOffsetRepeatTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rectMultipleStopsWithSameOffsetRepeat");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectMultipleStopsWithSameOffsetRepeat");
         }
 
         // TODO: DEVSIX-4136 update cmp_ after fix
         //  (opacity is not implemented. No stops defines no color, i.e. transparent color or black with 100% opacity)
         [NUnit.Framework.Test]
         public virtual void RectNoStopsTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rectNoStops");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectNoStops");
         }
 
         [NUnit.Framework.Test]
         public virtual void RectSingle0StopTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rectSingle0Stop");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectSingle0Stop");
         }
 
         [NUnit.Framework.Test]
         public virtual void RectSingle1StopTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rectSingle1Stop");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectSingle1Stop");
         }
 
         [NUnit.Framework.Test]
         public virtual void RectStopWithoutColorTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rectStopWithoutColor");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectStopWithoutColor");
         }
 
         [NUnit.Framework.Test]
         public virtual void RectTransformedTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rectTransformed");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectTransformed");
         }
 
         [NUnit.Framework.Test]
         public virtual void RectWithGradientTransformTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rectWithGradientTransform");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectWithGradientTransform");
         }
 
         [NUnit.Framework.Test]
         public virtual void RectWithMultipleTransformsTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rectWithMultipleTransforms");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectWithMultipleTransforms");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "text");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "text");
         }
 
         [NUnit.Framework.Test]
         public virtual void TspanTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "tspan");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "tspan");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextNestedTSpansTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "textNestedTSpansTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textNestedTSpansTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextRotatedTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "textRotatedTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textRotatedTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextDxTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "textDxTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textDxTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void ChineseTextDxTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "chineseTextDxTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "chineseTextDxTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void ChineseTextDxVerticalTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "chineseTextDxVerticalTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "chineseTextDxVerticalTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextAnchorTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "textAnchorTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textAnchorTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextDyTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "textDyTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textDyTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextXYOffset() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "textXYOffset");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textXYOffset");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextXOffset() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "textXOffset");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textXOffset");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextXYDxDyOffset() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "textXYDxDyOffset");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textXYDxDyOffset");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextGradientEmUnits() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "textGradientEmUnits");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textGradientEmUnits");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextGradientEmUnitsRelated() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "textGradientEmUnitsRelated");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textGradientEmUnitsRelated");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextGradientEmUnitsRelatedNotDefs() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "textGradientEmUnitsRelatedNotDefs");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textGradientEmUnitsRelatedNotDefs");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextGradientEmUnitsRelatedDefault() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "textGradientEmUnitsRelatedDefault");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textGradientEmUnitsRelatedDefault");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextGradientExUnits() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "textGradientExUnits");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textGradientExUnits");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextGradientRemUnits() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "textGradientRemUnits");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textGradientRemUnits");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextGradientRemUnitsNestedSvg() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "textGradientRemUnitsNestedSvg");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textGradientRemUnitsNestedSvg");
         }
 
         [NUnit.Framework.Test]
         public virtual void RectMultipleStopsWithSameOffsetAndZeroCoordLengthPadTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rectMultipleStopsWithSameOffsetAndZeroCoordLengthPad");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectMultipleStopsWithSameOffsetAndZeroCoordLengthPad"
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void RectMultipleStopsWithSameOffsetAndZeroCoordLengthReflectTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rectMultipleStopsWithSameOffsetAndZeroCoordLengthReflect"
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectMultipleStopsWithSameOffsetAndZeroCoordLengthReflect"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void RectMultipleStopsWithSameOffsetAndZeroCoordLengthRepeatTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rectMultipleStopsWithDiffOffsetAndZeroCoordLengthRepeat"
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectMultipleStopsWithDiffOffsetAndZeroCoordLengthRepeat"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void RectMultipleStopsWithDiffOffsetAndZeroCoordLengthPadTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rectMultipleStopsWithDiffOffsetAndZeroCoordLengthPad");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectMultipleStopsWithDiffOffsetAndZeroCoordLengthPad"
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void RectMultipleStopsWithDiffOffsetAndZeroCoordLengthReflectTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rectMultipleStopsWithDiffOffsetAndZeroCoordLengthReflect"
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectMultipleStopsWithDiffOffsetAndZeroCoordLengthReflect"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void RectMultipleStopsWithDiffOffsetAndZeroCoordLengthRepeatTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rectMultipleStopsWithSameOffsetAndZeroCoordLengthRepeat"
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectMultipleStopsWithSameOffsetAndZeroCoordLengthRepeat"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void RectInvalidStopsSequenceTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rectInvalidStopsSequence");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectInvalidStopsSequence");
         }
 
         [NUnit.Framework.Test]
         public virtual void RectInvalidCoordinatesMetricsTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rectInvalidCoordinatesMetrics");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectInvalidCoordinatesMetrics");
         }
 
         [NUnit.Framework.Test]
         public virtual void RectInvalidStopsSequenceWithoutBoundingStopsTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rectInvalidStopsSequenceWithoutBoundingStops");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectInvalidStopsSequenceWithoutBoundingStops");
         }
 
         [NUnit.Framework.Test]
         public virtual void UserSpaceOnUseWithAbsoluteCoordinatesTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "userSpaceOnUseWithAbsoluteCoordinates");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "userSpaceOnUseWithAbsoluteCoordinates");
         }
 
         [NUnit.Framework.Test]
         public virtual void UserSpaceOnUseDiffAbsoluteUnitsInGradientTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "userSpaceOnUseDiffAbsoluteUnitsInGradient");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "userSpaceOnUseDiffAbsoluteUnitsInGradient");
         }
 
         [NUnit.Framework.Test]
         public virtual void UserSpaceOnUseWithChUnitTest() {
             // TODO: DEVSIX-3596 update cmp_ after fix ("ch" unit is not implemented yet)
-            ConvertAndCompare(sourceFolder, destinationFolder, "userSpaceOnUseWithChUnit");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "userSpaceOnUseWithChUnit");
         }
 
         [NUnit.Framework.Test]
         public virtual void UserSpaceOnUseWithUnitsRelativeToFontTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "userSpaceOnUseWithUnitsRelativeToFont");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "userSpaceOnUseWithUnitsRelativeToFont");
         }
 
         [NUnit.Framework.Test]
         public virtual void UserSpaceOnUseWithUnitsRelativeToViewportTest() {
             // TODO: DEVSIX-3596 update cmp_ after fix ("vh" "vw" "vmin" "vmax" units are not implemented yet)
-            ConvertAndCompare(sourceFolder, destinationFolder, "userSpaceOnUseWithUnitsRelativeToViewport");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "userSpaceOnUseWithUnitsRelativeToViewport");
         }
 
         [NUnit.Framework.Test]
         public virtual void UserSpaceOnUseDiffRelativeUnitsInGradientTest() {
             // TODO: DEVSIX-3596 update cmp_ after fix ("ch" "vmin"+"vmax"+"vw"+"vh" not implemented yet)
-            ConvertAndCompare(sourceFolder, destinationFolder, "userSpaceOnUseDiffRelativeUnitsInGradient");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "userSpaceOnUseDiffRelativeUnitsInGradient");
         }
 
         [NUnit.Framework.Test]
         public virtual void ObjectBoundingBoxWithAbsoluteCoordinatesTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "objectBoundingBoxWithAbsoluteCoordinates");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "objectBoundingBoxWithAbsoluteCoordinates");
         }
 
         [NUnit.Framework.Test]
         public virtual void ObjectBoundingBoxDifferentAbsoluteUnitsInGradientTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "objectBoundingBoxDifferentAbsoluteUnitsInGradient");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "objectBoundingBoxDifferentAbsoluteUnitsInGradient");
         }
 
         [NUnit.Framework.Test]
         public virtual void ObjectBoundingBoxWithUnitsRelativeToFontTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "objectBoundingBoxWithUnitsRelativeToFont");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "objectBoundingBoxWithUnitsRelativeToFont");
         }
 
         [NUnit.Framework.Test]
@@ -510,7 +513,7 @@ namespace iText.Svg.Renderers.Impl {
             //  actually the value type should not affect on the objectBoundingBox coordinate, but as
             //  we are not recognize these values as valid relative type,
             //  we get the the resulted coordinate uses defaults
-            ConvertAndCompare(sourceFolder, destinationFolder, "objectBoundingBoxWithChUnit");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "objectBoundingBoxWithChUnit");
         }
 
         [NUnit.Framework.Test]
@@ -519,7 +522,7 @@ namespace iText.Svg.Renderers.Impl {
             //  actually the value type should not affect on the objectBoundingBox coordinate, but as
             //  we are not recognize these values as valid relative type,
             //  we get the the resulted coordinate uses defaults
-            ConvertAndCompare(sourceFolder, destinationFolder, "objectBoundingBoxWithUnitsRelativeToViewport");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "objectBoundingBoxWithUnitsRelativeToViewport");
         }
 
         [NUnit.Framework.Test]
@@ -528,149 +531,150 @@ namespace iText.Svg.Renderers.Impl {
             //  actually the value type should not affect on the objectBoundingBox coordinate, but as
             //  we are not recognize these values as valid relative type,
             //  we get the the resulted coordinate uses defaults
-            ConvertAndCompare(sourceFolder, destinationFolder, "objectBoundingBoxDifferentRelativeUnitsInGradient");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "objectBoundingBoxDifferentRelativeUnitsInGradient");
         }
 
         [NUnit.Framework.Test]
         public virtual void TranslateTransformInGradientWithObjectBoundingBoxUnitsTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "translateTransformInGradientWithObjectBoundingBoxUnits"
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "translateTransformInGradientWithObjectBoundingBoxUnits"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void MatrixTransformInGradientWithObjectBoundingBoxUnitsTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "matrixTransformInGradientWithObjectBoundingBoxUnits");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "matrixTransformInGradientWithObjectBoundingBoxUnits"
+                );
         }
 
         [NUnit.Framework.Test]
         public virtual void SeveralTransformsInGradientWithObjectBoundingBoxUnitsTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "severalTransformsInGradientWithObjectBoundingBoxUnits"
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "severalTransformsInGradientWithObjectBoundingBoxUnits"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void HrefBasicReferenceTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "hrefBasicReference");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "hrefBasicReference");
         }
 
         [NUnit.Framework.Test]
         public virtual void TransitiveHrefBasicReferenceTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "transitiveHrefBasicReference");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "transitiveHrefBasicReference");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradXlinkTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHref");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradHref");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradXlink3StopsTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHref3Stops");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradHref3Stops");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradXlinkGradientTransformTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefGradientTransform");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradHrefGradientTransform");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradXlinkNegativeOffsetTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefNegativeOffset");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradHrefNegativeOffset");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradXlinkNegativeOpacityTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefNegativeOpacity");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradHrefNegativeOpacity");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradXlinkOpacityTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefOpacity");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradHrefOpacity");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradXlinkOpacity2Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefOpacity2");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradHrefOpacity2");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradXlinkSpreadMethodTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefSpreadMethod1");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradHrefSpreadMethod1");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradXlinkSpreadMethod2Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefSpreadMethod2");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradHrefSpreadMethod2");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradXlinkSpreadMethod3Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefSpreadMethod3");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradHrefSpreadMethod3");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradXlinkHrefXYvalsTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefXYvals1");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradHrefXYvals1");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradXlinkHrefXYvals2Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefXYvals2");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradHrefXYvals2");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradXlinkHrefXYvals3Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefXYvals3");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradHrefXYvals3");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradXlinkHreOffsetSwapTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHreOffsetSwap");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradHreOffsetSwap");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradTransitiveHrefOpacityTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradTransitiveHrefOpacity");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradTransitiveHrefOpacity");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradTransitiveHrefNegativeOpacityTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradTransitiveHrefNegativeOpacity");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradTransitiveHrefNegativeOpacity");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradTransitiveHrefNegativeOffsetTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradTransitiveHrefNegativeOffset");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradTransitiveHrefNegativeOffset");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradTransitiveHref3stopsTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradTransitiveHref3stops");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradTransitiveHref3stops");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradHrefTransitiveSpreadMethodTopLayerTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefTransitiveSpreadMethodTopLayer");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradHrefTransitiveSpreadMethodTopLayer");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradHrefTransitiveSpreadMethodBottomLayerTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefTransitiveSpreadMethodBottomLayer");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradHrefTransitiveSpreadMethodBottomLayer");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradHrefTransitiveSpreadMethod3Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefTransitiveSpreadMethod3");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradHrefTransitiveSpreadMethod3");
         }
 
         [NUnit.Framework.Test]
         public virtual void LinearGradHrefTransitiveSpreadMethod2Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "linearGradHrefTransitiveSpreadMethod2");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradHrefTransitiveSpreadMethod2");
         }
 
         [NUnit.Framework.Test]
         public virtual void LowerCaseGradientUnitsTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "lowerCaseGradientUnits");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "lowerCaseGradientUnits");
         }
     }
 }

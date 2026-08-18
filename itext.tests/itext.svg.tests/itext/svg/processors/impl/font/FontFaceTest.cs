@@ -36,70 +36,70 @@ using iText.Test.Attributes;
 namespace iText.Svg.Processors.Impl.Font {
     [NUnit.Framework.Category("IntegrationTest")]
     public class FontFaceTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/processors/impl/font/FontFaceTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/processors/impl/font/FontFaceTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/processors/impl/font/FontFaceTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void UnicodeRangeTest() {
             // Unicode range is processed correctly: in case Droid Serif font doesn't include current glyph, Times font is used.
-            ConvertAndCompare(sourceFolder, destinationFolder, "unicodeRangeTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "unicodeRangeTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void RobotoSerifSingleQuotesTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "robotoSerifSingleQuotesTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "robotoSerifSingleQuotesTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void RobotoSerifWebFontTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "robotoSerifWebFontTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "robotoSerifWebFontTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void RobotoSerifLocalFontTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "robotoSerifLocalFontTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "robotoSerifLocalFontTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void RobotoSerifLocalLocalFontTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "robotoSerifLocalLocalFontTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "robotoSerifLocalLocalFontTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void RobotoSerifLocalWithMediaFontTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "robotoSerifLocalWithMediaFontTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "robotoSerifLocalWithMediaFontTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void RobotoSerifLocalWithMediaRuleFontTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "robotoSerifLocalWithMediaRuleFontTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "robotoSerifLocalWithMediaRuleFontTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void FontSelectorTest01() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "fontSelectorTest01");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "fontSelectorTest01");
         }
 
         [NUnit.Framework.Test]
         public virtual void FontSelectorTest03() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "fontSelectorTest03");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "fontSelectorTest03");
         }
 
         [NUnit.Framework.Test]
         public virtual void FontSelectorMissingFontWithSize() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "fontSelectorMissingWithFontSize");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "fontSelectorMissingWithFontSize");
         }
 
         [NUnit.Framework.Test]
         public virtual void FontFaceGrammarTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "fontFaceGrammarTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "fontFaceGrammarTest");
         }
 
         [NUnit.Framework.Test]
@@ -227,18 +227,18 @@ namespace iText.Svg.Processors.Impl.Font {
             String fileName = "fontSelectorTest";
             ISvgConverterProperties properties = new SvgConverterProperties().SetFontProvider(new BasicFontProvider())
                 .SetMediaDeviceDescription(new MediaDeviceDescription(MediaType.ALL));
-            ConvertToSinglePage(new FileInfo(sourceFolder + fileName + ".svg"), new FileInfo(destinationFolder + fileName
+            ConvertToSinglePage(new FileInfo(SOURCE_FOLDER + fileName + ".svg"), new FileInfo(DESTINATION_FOLDER + fileName
                  + ".pdf"), properties);
-            Compare(fileName, sourceFolder, destinationFolder);
+            Compare(fileName, SOURCE_FOLDER, DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void ResolveFontsWithoutConverterPropertiesAndWriterProperties() {
             String fileName = "resolveFonts_WithoutConverterPropertiesAndWriterProperties";
             String svgFile = "fontSelectorTest";
-            ConvertToSinglePage(new FileInfo(sourceFolder + svgFile + ".svg"), new FileInfo(destinationFolder + fileName
+            ConvertToSinglePage(new FileInfo(SOURCE_FOLDER + svgFile + ".svg"), new FileInfo(DESTINATION_FOLDER + fileName
                  + ".pdf"));
-            Compare(fileName, sourceFolder, destinationFolder);
+            Compare(fileName, SOURCE_FOLDER, DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
@@ -246,12 +246,12 @@ namespace iText.Svg.Processors.Impl.Font {
             String fileName = "resolveFonts_WithAllProperties";
             String svgFile = "fontSelectorTest";
             WriterProperties writerprops = new WriterProperties().SetCompressionLevel(0);
-            String baseUri = FileUtil.GetParentDirectoryUri(new FileInfo(sourceFolder + svgFile + ".svg"));
+            String baseUri = FileUtil.GetParentDirectoryUri(new FileInfo(SOURCE_FOLDER + svgFile + ".svg"));
             ISvgConverterProperties properties = new SvgConverterProperties().SetBaseUri(baseUri).SetFontProvider(new 
                 BasicFontProvider()).SetMediaDeviceDescription(new MediaDeviceDescription(MediaType.ALL));
-            ConvertToSinglePage(new FileInfo(sourceFolder + svgFile + ".svg"), new FileInfo(destinationFolder + fileName
+            ConvertToSinglePage(new FileInfo(SOURCE_FOLDER + svgFile + ".svg"), new FileInfo(DESTINATION_FOLDER + fileName
                  + ".pdf"), properties, writerprops);
-            Compare(fileName, sourceFolder, destinationFolder);
+            Compare(fileName, SOURCE_FOLDER, DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
@@ -259,9 +259,9 @@ namespace iText.Svg.Processors.Impl.Font {
             String fileName = "resolveFonts_WithWriterProperties";
             String svgFile = "fontSelectorTest";
             WriterProperties writerprops = new WriterProperties().SetCompressionLevel(0);
-            ConvertToSinglePage(new FileInfo(sourceFolder + svgFile + ".svg"), new FileInfo(destinationFolder + fileName
+            ConvertToSinglePage(new FileInfo(SOURCE_FOLDER + svgFile + ".svg"), new FileInfo(DESTINATION_FOLDER + fileName
                  + ".pdf"), writerprops);
-            Compare(fileName, sourceFolder, destinationFolder);
+            Compare(fileName, SOURCE_FOLDER, DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
@@ -269,12 +269,12 @@ namespace iText.Svg.Processors.Impl.Font {
             String fileName = "resolveFonts_WithConverterPropsAndWriterProps";
             String svgFile = "fontSelectorTest";
             WriterProperties writerprops = new WriterProperties().SetCompressionLevel(0);
-            String baseUri = FileUtil.GetParentDirectoryUri(new FileInfo(sourceFolder + svgFile + ".svg"));
+            String baseUri = FileUtil.GetParentDirectoryUri(new FileInfo(SOURCE_FOLDER + svgFile + ".svg"));
             ISvgConverterProperties properties = new SvgConverterProperties().SetBaseUri(baseUri).SetFontProvider(new 
                 BasicFontProvider()).SetMediaDeviceDescription(new MediaDeviceDescription(MediaType.ALL));
-            ConvertToSinglePage(FileUtil.GetInputStreamForFile(sourceFolder + svgFile + ".svg"), FileUtil.GetFileOutputStream
-                (destinationFolder + fileName + ".pdf"), properties, writerprops);
-            Compare(fileName, sourceFolder, destinationFolder);
+            ConvertToSinglePage(FileUtil.GetInputStreamForFile(SOURCE_FOLDER + svgFile + ".svg"), FileUtil.GetFileOutputStream
+                (DESTINATION_FOLDER + fileName + ".pdf"), properties, writerprops);
+            Compare(fileName, SOURCE_FOLDER, DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
@@ -283,9 +283,9 @@ namespace iText.Svg.Processors.Impl.Font {
             String svgFile = "fontSelectorTest";
             ISvgConverterProperties properties = new SvgConverterProperties().SetBaseUri("").SetFontProvider(new BasicFontProvider
                 ()).SetMediaDeviceDescription(new MediaDeviceDescription(MediaType.ALL));
-            ConvertToSinglePage(new FileInfo(sourceFolder + svgFile + ".svg"), new FileInfo(destinationFolder + fileName
+            ConvertToSinglePage(new FileInfo(SOURCE_FOLDER + svgFile + ".svg"), new FileInfo(DESTINATION_FOLDER + fileName
                  + ".pdf"), properties);
-            Compare(fileName, sourceFolder, destinationFolder);
+            Compare(fileName, SOURCE_FOLDER, DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
@@ -294,22 +294,22 @@ namespace iText.Svg.Processors.Impl.Font {
             String svgFile = "fontSelectorTest";
             ISvgConverterProperties properties = new SvgConverterProperties().SetBaseUri(null).SetFontProvider(new BasicFontProvider
                 ()).SetMediaDeviceDescription(new MediaDeviceDescription(MediaType.ALL));
-            ConvertToSinglePage(new FileInfo(sourceFolder + svgFile + ".svg"), new FileInfo(destinationFolder + fileName
+            ConvertToSinglePage(new FileInfo(SOURCE_FOLDER + svgFile + ".svg"), new FileInfo(DESTINATION_FOLDER + fileName
                  + ".pdf"), properties);
-            Compare(fileName, sourceFolder, destinationFolder);
+            Compare(fileName, SOURCE_FOLDER, DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void ResolveFontsDefaultUri() {
             String fileName = "fontSelectorTest02";
-            ConvertToSinglePage(new FileInfo(sourceFolder + fileName + ".svg"), new FileInfo(destinationFolder + fileName
+            ConvertToSinglePage(new FileInfo(SOURCE_FOLDER + fileName + ".svg"), new FileInfo(DESTINATION_FOLDER + fileName
                  + ".pdf"));
-            Compare(fileName, sourceFolder, destinationFolder);
+            Compare(fileName, SOURCE_FOLDER, DESTINATION_FOLDER);
         }
 
         private void RunTest(String fileName) {
-            Convert(sourceFolder + fileName + ".svg", destinationFolder + fileName + ".pdf");
-            Compare(fileName, sourceFolder, destinationFolder);
+            Convert(SOURCE_FOLDER + fileName + ".svg", DESTINATION_FOLDER + fileName + ".pdf");
+            Compare(fileName, SOURCE_FOLDER, DESTINATION_FOLDER);
         }
     }
 }

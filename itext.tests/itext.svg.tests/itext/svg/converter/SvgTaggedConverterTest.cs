@@ -36,10 +36,10 @@ using iText.Test.Pdfa;
 namespace iText.Svg.Converter {
     [NUnit.Framework.Category("IntegrationTest")]
     public class SvgTaggedConverterTest : ExtendedITextTest {
-        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/converter/SvgTaggedConverterTest/";
 
-        public static readonly String DEST_FOLDER = TestUtil.GetOutputPath() + "/svg/converter/SvgTaggedConverterTest/";
+        private static readonly String DEST_FOLDER = TestUtil.GetOutputPath() + "/svg/converter/SvgTaggedConverterTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

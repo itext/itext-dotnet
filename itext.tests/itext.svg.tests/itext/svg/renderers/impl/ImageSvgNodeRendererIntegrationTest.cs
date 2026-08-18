@@ -33,182 +33,182 @@ using iText.Test.Attributes;
 namespace iText.Svg.Renderers.Impl {
     [NUnit.Framework.Category("IntegrationTest")]
     public class ImageSvgNodeRendererIntegrationTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/ImageSvgNodeRendererTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/renderers/impl/ImageSvgNodeRendererTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/renderers/impl/ImageSvgNodeRendererTest/";
 
         private ISvgConverterProperties properties;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.SetUp]
         public virtual void Before() {
-            properties = new SvgConverterProperties().SetBaseUri(sourceFolder);
+            properties = new SvgConverterProperties().SetBaseUri(SOURCE_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void SingleImageTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "singleImage", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "singleImage", properties);
         }
 
         [NUnit.Framework.Test]
         public virtual void SingleImageHrefTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "singleImageHref", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "singleImageHref", properties);
         }
 
         [NUnit.Framework.Test]
         public virtual void ImageWithRectangleTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "imageWithRectangle", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "imageWithRectangle", properties);
         }
 
         [NUnit.Framework.Test]
         public virtual void ImageWithMultipleShapesTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "imageWithMultipleShapes", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "imageWithMultipleShapes", properties);
         }
 
         [NUnit.Framework.Test]
         public virtual void ImageXYTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "imageXY", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "imageXY", properties);
         }
 
         [NUnit.Framework.Test]
         public virtual void MultipleImagesTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "multipleImages", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "multipleImages", properties);
         }
 
         [NUnit.Framework.Test]
         public virtual void NonSquareImageTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "nonSquareImage", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "nonSquareImage", properties);
         }
 
         [NUnit.Framework.Test]
         public virtual void SingleImageTranslateTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "singleImageTranslate", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "singleImageTranslate", properties);
         }
 
         [NUnit.Framework.Test]
         public virtual void SingleImageRotateTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "singleImageRotate", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "singleImageRotate", properties);
         }
 
         [NUnit.Framework.Test]
         public virtual void SingleImageScaleUpTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "singleImageScaleUp", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "singleImageScaleUp", properties);
         }
 
         [NUnit.Framework.Test]
         public virtual void SingleImageScaleDownTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "singleImageScaleDown", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "singleImageScaleDown", properties);
         }
 
         [NUnit.Framework.Test]
         public virtual void SingleImageMultipleTransformationsTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "singleImageMultipleTransformations", properties
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "singleImageMultipleTransformations", properties
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void TwoImagesWithTransformationsTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "twoImagesWithTransformations", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "twoImagesWithTransformations", properties);
         }
 
         [NUnit.Framework.Test]
         public virtual void DifferentDimensionsTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "differentDimensions", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "differentDimensions", properties);
         }
 
         [NUnit.Framework.Test]
         public virtual void ImageWithTransparencyTest() {
             //TODO: update cmp_ when DEVSIX-2258 fixed
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "imageWithTransparency", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "imageWithTransparency", properties);
         }
 
         [NUnit.Framework.Test]
         public virtual void ImageWithPreserveAspectRatioNoneTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "imageWithPreserveAspectRatioNone", properties
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "imageWithPreserveAspectRatioNone", properties
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void ImageWithPreserveAspectRatioInvalidValueTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "imageWithPreserveAspectRatioInvalidValue", properties
-                );
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "imageWithPreserveAspectRatioInvalidValue", 
+                properties);
         }
 
         [NUnit.Framework.Test]
         public virtual void ImageWithPreserveAspectRatioXMinYMinTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "imageWithPreserveAspectRatioXMinYMin", properties
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "imageWithPreserveAspectRatioXMinYMin", properties
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void ImageWithPreserveAspectRatioXMinYMidTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "imageWithPreserveAspectRatioXMinYMid", properties
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "imageWithPreserveAspectRatioXMinYMid", properties
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void ImageWithPreserveAspectRatioXMinYMaxTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "imageWithPreserveAspectRatioXMinYMax", properties
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "imageWithPreserveAspectRatioXMinYMax", properties
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void ImageWithPreserveAspectRatioXMidYMinTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "imageWithPreserveAspectRatioXMidYMin", properties
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "imageWithPreserveAspectRatioXMidYMin", properties
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void ImageWithPreserveAspectRatioXMidYMidTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "imageWithPreserveAspectRatioXMidYMid", properties
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "imageWithPreserveAspectRatioXMidYMid", properties
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void ImageWithPreserveAspectRatioXMidYMaxTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "imageWithPreserveAspectRatioXMidYMax", properties
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "imageWithPreserveAspectRatioXMidYMax", properties
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void ImageWithPreserveAspectRatioXMaxYMinTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "imageWithPreserveAspectRatioXMaxYMin", properties
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "imageWithPreserveAspectRatioXMaxYMin", properties
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void ImageWithPreserveAspectRatioXMaxYMidTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "imageWithPreserveAspectRatioXMaxYMid", properties
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "imageWithPreserveAspectRatioXMaxYMid", properties
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void ImageWithPreserveAspectRatioXMaxYMaxTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "imageWithPreserveAspectRatioXMaxYMax", properties
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "imageWithPreserveAspectRatioXMaxYMax", properties
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void ImageRenderingTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "image-rendering", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "image-rendering", properties);
         }
 
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG)]
         public virtual void ImageWithDescriptionsTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "image-descriptions", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "image-descriptions", properties);
         }
 
         //TODO DEVSIX-4589: update after supporting
         //TODO DEVSIX-4901: update after supporting
         [NUnit.Framework.Test]
         public virtual void ImageBase64WithUrlTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "base64Image", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "base64Image", properties);
         }
 
         [NUnit.Framework.Test]
@@ -216,7 +216,7 @@ namespace iText.Svg.Renderers.Impl {
         [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_PROCESS_IMAGE_WITH_GIVEN_BASE_URI
             )]
         public virtual void WebPImageWithoutWebPModuleTest() {
-            ConvertToSinglePage(new FileInfo(sourceFolder + "webPImageWithoutWebPModule.svg"), new FileInfo(destinationFolder
+            ConvertToSinglePage(new FileInfo(SOURCE_FOLDER + "webPImageWithoutWebPModule.svg"), new FileInfo(DESTINATION_FOLDER
                  + "webPImageWithoutWebPModule.pdf"), properties);
         }
     }

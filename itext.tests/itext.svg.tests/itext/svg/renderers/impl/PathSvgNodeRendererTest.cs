@@ -39,27 +39,27 @@ using iText.Test;
 namespace iText.Svg.Renderers.Impl {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PathSvgNodeRendererTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/PathSvgNodeRendererTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/renderers/impl/PathSvgNodeRendererTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/renderers/impl/PathSvgNodeRendererTest/";
 
         private ISvgConverterProperties properties;
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.SetUp]
         public virtual void Before() {
-            properties = new SvgConverterProperties().SetBaseUri(sourceFolder);
+            properties = new SvgConverterProperties().SetBaseUri(SOURCE_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void PathNodeRendererMoveToTest() {
             String filename = "pathNodeRendererMoveToTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             IDictionary<String, String> pathShapes = new Dictionary<String, String>();
             pathShapes.Put("d", "M 100,100, L300,100,L200,300,z");
@@ -70,8 +70,8 @@ namespace iText.Svg.Renderers.Impl {
             context.PushCanvas(cv);
             pathRenderer.Draw(context);
             doc.Close();
-            String result = new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename
-                , destinationFolder, "diff_");
+            String result = new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER + "cmp_" +
+                 filename, DESTINATION_FOLDER, "diff_");
             if (result != null && !result.Contains("No visual differences")) {
                 NUnit.Framework.Assert.Fail(result);
             }
@@ -80,7 +80,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void PathNodeRendererMoveToTest1() {
             String filename = "pathNodeRendererMoveToTest1.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             IDictionary<String, String> pathShapes = new Dictionary<String, String>();
             pathShapes.Put("d", "M 100 100 l300 100 L200 300 z");
@@ -91,8 +91,8 @@ namespace iText.Svg.Renderers.Impl {
             context.PushCanvas(cv);
             pathRenderer.Draw(context);
             doc.Close();
-            String result = new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename
-                , destinationFolder, "diff_");
+            String result = new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER + "cmp_" +
+                 filename, DESTINATION_FOLDER, "diff_");
             if (result != null && !result.Contains("No visual differences")) {
                 NUnit.Framework.Assert.Fail(result);
             }
@@ -101,7 +101,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void PathNodeRendererCurveToTest() {
             String filename = "pathNodeRendererCurveToTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             IDictionary<String, String> pathShapes = new Dictionary<String, String>();
             pathShapes.Put("d", "M100,200 C100,100 250,100 250,200 S400,300 400,200,z");
@@ -112,8 +112,8 @@ namespace iText.Svg.Renderers.Impl {
             context.PushCanvas(cv);
             pathRenderer.Draw(context);
             doc.Close();
-            String result = new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename
-                , destinationFolder, "diff_");
+            String result = new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER + "cmp_" +
+                 filename, DESTINATION_FOLDER, "diff_");
             if (result != null && !result.Contains("No visual differences")) {
                 NUnit.Framework.Assert.Fail(result);
             }
@@ -122,7 +122,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void PathNodeRendererCurveToTest1() {
             String filename = "pathNodeRendererCurveToTest1.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             IDictionary<String, String> pathShapes = new Dictionary<String, String>();
             pathShapes.Put("d", "M100 200 C100 300 250 300 250 200 S400 100 400 200 z");
@@ -133,8 +133,8 @@ namespace iText.Svg.Renderers.Impl {
             context.PushCanvas(cv);
             pathRenderer.Draw(context);
             doc.Close();
-            String result = new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename
-                , destinationFolder, "diff_");
+            String result = new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER + "cmp_" +
+                 filename, DESTINATION_FOLDER, "diff_");
             if (result != null && !result.Contains("No visual differences")) {
                 NUnit.Framework.Assert.Fail(result);
             }
@@ -143,7 +143,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void PathNodeRendererQCurveToCurveToTest() {
             String filename = "pathNodeRendererQCurveToCurveToTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             IDictionary<String, String> pathShapes = new Dictionary<String, String>();
             pathShapes.Put("d", "M200,300 Q400,50 600,300,z");
@@ -154,8 +154,8 @@ namespace iText.Svg.Renderers.Impl {
             context.PushCanvas(cv);
             pathRenderer.Draw(context);
             doc.Close();
-            String result = new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename
-                , destinationFolder, "diff_");
+            String result = new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER + "cmp_" +
+                 filename, DESTINATION_FOLDER, "diff_");
             if (result != null && !result.Contains("No visual differences")) {
                 NUnit.Framework.Assert.Fail(result);
             }
@@ -164,7 +164,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void PathNodeRendererQCurveToCurveToTest1() {
             String filename = "pathNodeRendererQCurveToCurveToTest1.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             IDictionary<String, String> pathShapes = new Dictionary<String, String>();
             pathShapes.Put("d", "M200 300 Q400 50 600 300 z");
@@ -175,8 +175,8 @@ namespace iText.Svg.Renderers.Impl {
             context.PushCanvas(cv);
             pathRenderer.Draw(context);
             doc.Close();
-            String result = new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename
-                , destinationFolder, "diff_");
+            String result = new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER + "cmp_" +
+                 filename, DESTINATION_FOLDER, "diff_");
             if (result != null && !result.Contains("No visual differences")) {
                 NUnit.Framework.Assert.Fail(result);
             }
@@ -185,10 +185,10 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void SmoothCurveTest1() {
             String filename = "smoothCurveTest1.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             String svgFilename = "smoothCurveTest1.svg";
-            Stream xmlStream = FileUtil.GetInputStreamForFile(sourceFolder + svgFilename);
+            Stream xmlStream = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + svgFilename);
             IElementNode rootTag = new JsoupXmlParser().Parse(xmlStream, "ISO-8859-1");
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
             IBranchSvgNodeRenderer root = (IBranchSvgNodeRenderer)processor.Process(rootTag, null).GetRootRenderer();
@@ -203,10 +203,10 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void SmoothCurveTest2() {
             String filename = "smoothCurveTest2.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             String svgFilename = "smoothCurveTest2.svg";
-            Stream xmlStream = FileUtil.GetInputStreamForFile(sourceFolder + svgFilename);
+            Stream xmlStream = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + svgFilename);
             IElementNode rootTag = new JsoupXmlParser().Parse(xmlStream, "ISO-8859-1");
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
             IBranchSvgNodeRenderer root = (IBranchSvgNodeRenderer)processor.Process(rootTag, null).GetRootRenderer();
@@ -221,10 +221,10 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void SmoothCurveTest3() {
             String filename = "smoothCurveTest3.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             String svgFilename = "smoothCurveTest3.svg";
-            Stream xmlStream = FileUtil.GetInputStreamForFile(sourceFolder + svgFilename);
+            Stream xmlStream = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + svgFilename);
             IElementNode rootTag = new JsoupXmlParser().Parse(xmlStream, "ISO-8859-1");
             DefaultSvgProcessor processor = new DefaultSvgProcessor();
             IBranchSvgNodeRenderer root = (IBranchSvgNodeRenderer)processor.Process(rootTag, null).GetRootRenderer();
@@ -238,201 +238,201 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void PathNodeRendererCurveComplexTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "curves");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "curves");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathZOperatorMultipleZTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathZOperatorMultipleZTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pathZOperatorMultipleZTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathZOperatorSingleZTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathZOperatorSingleZTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pathZOperatorSingleZTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathZOperatorSingleZInstructionsAfterTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathZOperatorSingleZInstructionsAfterTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pathZOperatorSingleZInstructionsAfterTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidZOperatorTest() {
-            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => ConvertAndCompare(sourceFolder, destinationFolder
+            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER
                 , "invalidZOperatorTest01"));
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidOperatorTest() {
-            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => ConvertAndCompare(sourceFolder, destinationFolder
+            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER
                 , "invalidOperatorTest01"));
         }
 
         [NUnit.Framework.Test]
         public virtual void PathLOperatorMultipleCoordinates() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathLOperatorMultipleCoordinates");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pathLOperatorMultipleCoordinates");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathVOperatorTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathVOperatorTest01");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pathVOperatorTest01");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathZOperatorContinuePathingTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathZOperatorContinuePathingTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pathZOperatorContinuePathingTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathVOperatorMultipleArgumentsTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathVOperatorMultipleArgumentsTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pathVOperatorMultipleArgumentsTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathHOperatorSimpleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathHOperatorSimpleTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pathHOperatorSimpleTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathHandVOperatorTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathHandVOperatorTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pathHandVOperatorTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void CurveToContinuePathingTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "curveToContinuePathingTest");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "curveToContinuePathingTest");
         }
 
         [NUnit.Framework.Test]
         public virtual void RelativeHorizontalLineToTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "relativeHorizontalLineTo");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "relativeHorizontalLineTo");
         }
 
         [NUnit.Framework.Test]
         public virtual void RelativeVerticalLineToTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "relativeVerticalLineTo");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "relativeVerticalLineTo");
         }
 
         [NUnit.Framework.Test]
         public virtual void CombinedRelativeVerticalLineToAndRelativeHorizontalLineToTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "combinedRelativeVerticalLineToAndRelativeHorizontalLineTo"
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "combinedRelativeVerticalLineToAndRelativeHorizontalLineTo"
                 );
         }
 
         [NUnit.Framework.Test]
         public virtual void MultipleRelativeHorizontalLineToTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "multipleRelativeHorizontalLineTo");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "multipleRelativeHorizontalLineTo");
         }
 
         [NUnit.Framework.Test]
         public virtual void MultipleRelativeVerticalLineToTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "multipleRelativeVerticalLineTo");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "multipleRelativeVerticalLineTo");
         }
 
         [NUnit.Framework.Test]
         public virtual void MoveToRelativeMultipleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "moveToRelativeMultiple");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "moveToRelativeMultiple");
         }
 
         [NUnit.Framework.Test]
         public virtual void MoveToAbsoluteMultipleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "moveToAbsoluteMultiple");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "moveToAbsoluteMultiple");
         }
 
         [NUnit.Framework.Test]
         public virtual void ITextLogoTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "iTextLogo");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "iTextLogo");
         }
 
         [NUnit.Framework.Test]
         public virtual void EofillUnsuportedPathTest() {
-            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => ConvertAndCompare(sourceFolder, destinationFolder
+            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER
                 , "eofillUnsuportedPathTest"));
         }
 
         [NUnit.Framework.Test]
         public virtual void MultiplePairsAfterMoveToRelativeTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "multiplePairsAfterMoveToRelative");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "multiplePairsAfterMoveToRelative");
         }
 
         [NUnit.Framework.Test]
         public virtual void MultiplePairsAfterMoveToAbsoluteTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "multiplePairsAfterMoveToAbsolute");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "multiplePairsAfterMoveToAbsolute");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathHOperatorAbsoluteAfterMultiplePairsTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathHOperatorAbsoluteAfterMultiplePairs");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pathHOperatorAbsoluteAfterMultiplePairs");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathHOperatorRelativeAfterMultiplePairsTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathHOperatorRelativeAfterMultiplePairs");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pathHOperatorRelativeAfterMultiplePairs");
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternXlinkTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "patternHref");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternHref");
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternXlinkHrefPatternContentUnits1Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "patternHrefPatternContentUnits1");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternHrefPatternContentUnits1");
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternXlinkHrefPatternContentUnits2Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "patternHrefPatternContentUnits2");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternHrefPatternContentUnits2");
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternXlinkHrefPatternUnitsTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "patternHrefPatternUnits");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternHrefPatternUnits");
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternXlinkHrefPreserveAR1Test() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "patternHrefPreserveAR1", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "patternHrefPreserveAR1", properties);
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternXlinkHrefPreserveAR2Test() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "patternHrefPreserveAR2", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "patternHrefPreserveAR2", properties);
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternHrefTransitivePatternUnitsTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "patternHrefTransitivePatternUnits");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternHrefTransitivePatternUnits");
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternHrefTransitivePCUTopLayerTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "patternHrefTransitivePCUTopLayer");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternHrefTransitivePCUTopLayer");
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternHrefTransitivePCUBottomLayerTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "patternHrefTransitivePCUBottomLayer");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternHrefTransitivePCUBottomLayer");
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternHrefTransitivePCU2Test() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "patternHrefTransitivePCU2");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "patternHrefTransitivePCU2");
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternHrefTransitivePresAR1Test() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "patternHrefTransitivePresAR1", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "patternHrefTransitivePresAR1", properties);
         }
 
         [NUnit.Framework.Test]
         public virtual void PatternHrefTransitivePresAR2Test() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "patternHrefTransitivePresAR2", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "patternHrefTransitivePresAR2", properties);
         }
 
         [NUnit.Framework.Test]
         public virtual void ClosedPathIsCutTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "closedPathIsCutTest", properties);
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "closedPathIsCutTest", properties);
         }
     }
 }

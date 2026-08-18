@@ -27,39 +27,39 @@ using iText.Test;
 namespace iText.Svg.Googlecharts {
     [NUnit.Framework.Category("IntegrationTest")]
     public class GeoChartsTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/GeoChartsTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/googlecharts/GeoChartsTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/googlecharts/GeoChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void GeoChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "geoChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "geoChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void GeoColoredChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "geoColoredChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "geoColoredChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void GeoMarkerChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "geoMarkerChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "geoMarkerChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void GeoPropontionalChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "geoPropontionalChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "geoPropontionalChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void GeoTextChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "geoTextChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "geoTextChart");
         }
     }
 }

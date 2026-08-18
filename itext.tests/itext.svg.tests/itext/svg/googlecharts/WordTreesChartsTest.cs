@@ -28,37 +28,37 @@ using iText.Test;
 namespace iText.Svg.Googlecharts {
     [NUnit.Framework.Category("IntegrationTest")]
     public class WordTreesChartsTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/WordTreesChartsTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/googlecharts/WordTreesChartsTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/googlecharts/WordTreesChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void WordTreesChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "wordTreesChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "wordTreesChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void WordTrees2Chart() {
             //TODO update cmp file after DEVSIX-4136 will be fixed (opacity gradient)
-            ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees2Chart", PageSize.A1);
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "wordTrees2Chart", PageSize.A1);
         }
 
         [NUnit.Framework.Test]
         public virtual void WordTrees3Chart() {
             //TODO update cmp file after DEVSIX-4136 will be fixed (opacity gradient)
-            ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees3Chart", PageSize.A1);
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "wordTrees3Chart", PageSize.A1);
         }
 
         [NUnit.Framework.Test]
         public virtual void WordTrees4Chart() {
             //TODO update cmp file after DEVSIX-4136 will be fixed (opacity gradient)
-            ConvertAndCompare(sourceFolder, destinationFolder, "wordTrees4Chart", PageSize.A1);
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "wordTrees4Chart", PageSize.A1);
         }
     }
 }

@@ -40,10 +40,10 @@ using iText.Test;
 
 namespace iText.Svg.Customization {
     public class CustomizeTextLeafSvgNodeRendererTest : SvgIntegrationTest {
-        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/customization/CustomizeTextLeafSvgNodeRendererTest/";
 
-        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/customization/CustomizeTextLeafSvgNodeRendererTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/customization/CustomizeTextLeafSvgNodeRendererTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

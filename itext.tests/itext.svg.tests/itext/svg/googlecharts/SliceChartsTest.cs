@@ -27,24 +27,24 @@ using iText.Test;
 namespace iText.Svg.Googlecharts {
     [NUnit.Framework.Category("IntegrationTest")]
     public class SliceChartsTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/SliceChartsTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/googlecharts/SliceChartsTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/googlecharts/SliceChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void ExplodingSliceChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "explodingSliceChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "explodingSliceChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void RemovingSliceChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "removingSliceChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "removingSliceChart");
         }
     }
 }

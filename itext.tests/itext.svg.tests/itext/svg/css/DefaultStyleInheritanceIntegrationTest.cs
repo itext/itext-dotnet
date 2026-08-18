@@ -27,104 +27,104 @@ using iText.Test;
 namespace iText.Svg.Css {
     [NUnit.Framework.Category("IntegrationTest")]
     public class DefaultStyleInheritanceIntegrationTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/css/DefaultInheritance/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/css/DefaultInheritance/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/css/DefaultInheritance/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         //Css inheritance
         [NUnit.Framework.Test]
         public virtual void SimpleGroupInheritanceTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "simpleGroupInheritance");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "simpleGroupInheritance");
         }
 
         //Inheritance in use tags
         [NUnit.Framework.Test]
         public virtual void UseFillInheritanceTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "useFillInheritance");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "useFillInheritance");
         }
 
         //Inheritance and g-tags
         [NUnit.Framework.Test]
         public virtual void GroupInheritanceTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "groupInheritance");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "groupInheritance");
         }
 
         [NUnit.Framework.Test]
         public virtual void UseInheritanceNotOverridingTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "useInheritanceNotOverriding");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "useInheritanceNotOverriding");
         }
 
         [NUnit.Framework.Test]
         public virtual void UsePropertiesInheritanceTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "usePropertiesInheritance");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "usePropertiesInheritance");
         }
 
         [NUnit.Framework.Test]
         public virtual void FillOpacityInheritanceTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "fillOpacityInheritance");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "fillOpacityInheritance");
         }
 
         [NUnit.Framework.Test]
         public virtual void FillRuleInheritanceTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "fillRuleInheritance");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "fillRuleInheritance");
         }
 
         [NUnit.Framework.Test]
         public virtual void StrokeInheritanceTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "strokeInheritance");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeInheritance");
         }
 
         [NUnit.Framework.Test]
         public virtual void StrokeWidthInheritanceTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "strokeWidthInheritance");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeWidthInheritance");
         }
 
         [NUnit.Framework.Test]
         public virtual void StrokeOpacityInheritanceTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "strokeOpacityInheritance");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeOpacityInheritance");
         }
 
         [NUnit.Framework.Test]
         public virtual void StrokeLinecapInheritanceTest() {
             //TODO DEVSIX-4857 support stroke-linecap attribute
-            ConvertAndCompare(sourceFolder, destinationFolder, "strokeLinecapInheritance");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeLinecapInheritance");
         }
 
         [NUnit.Framework.Test]
         public virtual void StrokeLinejoinInheritanceTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "strokeLinejoinInheritance");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeLinejoinInheritance");
         }
 
         [NUnit.Framework.Test]
         public virtual void StrokeDasharrayInheritanceTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "strokeDasharrayInheritance");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeDasharrayInheritance");
         }
 
         [NUnit.Framework.Test]
         public virtual void StrokeDashoffsetInheritanceTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "strokeDashoffsetInheritance");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeDashoffsetInheritance");
         }
 
         [NUnit.Framework.Test]
         public virtual void OpacityInheritanceTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "opacityInheritance");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "opacityInheritance");
         }
 
         [NUnit.Framework.Test]
         public virtual void TextPropertiesInheritanceTest() {
             //TODO DEVSIX-4114 support vertical text attribute
-            ConvertAndCompare(sourceFolder, destinationFolder, "textPropertiesInheritance");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textPropertiesInheritance");
         }
 
         [NUnit.Framework.Test]
         public virtual void NestedInheritanceTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "nestedInheritance");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "nestedInheritance");
         }
     }
 }

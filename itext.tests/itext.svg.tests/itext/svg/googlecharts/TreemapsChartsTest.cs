@@ -27,24 +27,24 @@ using iText.Test;
 namespace iText.Svg.Googlecharts {
     [NUnit.Framework.Category("IntegrationTest")]
     public class TreemapsChartsTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/TreemapsChartsTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/googlecharts/TreemapsChartsTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/googlecharts/TreemapsChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void TreemapsChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "treemapsChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "treemapsChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void Treemaps2Chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "treemaps2Chart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "treemaps2Chart");
         }
     }
 }

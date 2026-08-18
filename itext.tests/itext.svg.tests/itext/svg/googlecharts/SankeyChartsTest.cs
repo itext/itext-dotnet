@@ -27,44 +27,44 @@ using iText.Test;
 namespace iText.Svg.Googlecharts {
     [NUnit.Framework.Category("IntegrationTest")]
     public class SankeyChartsTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/SankeyChartsTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/googlecharts/SankeyChartsTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/googlecharts/SankeyChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void SankeyBordersChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "sankeyBordersChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "sankeyBordersChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void SankeyChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "sankeyChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "sankeyChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void SankeyColoredChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "sankeyColoredChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "sankeyColoredChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void SankeyFontsChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "sankeyFontsChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "sankeyFontsChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void SankeyMultilevelChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "sankeyMultilevelChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "sankeyMultilevelChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void SankeyNodesChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "sankeyNodesChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "sankeyNodesChart");
         }
     }
 }

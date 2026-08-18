@@ -27,9 +27,9 @@ namespace iText.Svg.Renderers {
     [NUnit.Framework.Category("IntegrationTest")]
     public class WhiteSpaceTest : SvgIntegrationTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/WhiteSpaceTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/WhiteSpaceTest/";
 
-        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/renderers/impl/WhiteSpaceTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/renderers/WhiteSpaceTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

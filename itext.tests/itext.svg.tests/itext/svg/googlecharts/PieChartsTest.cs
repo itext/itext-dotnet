@@ -27,39 +27,39 @@ using iText.Test;
 namespace iText.Svg.Googlecharts {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PieChartsTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/PieChartsTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/googlecharts/PieChartsTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/googlecharts/PieChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void PieChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pieChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pieChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void Pie3DChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pie3DChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pie3DChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void PieHoleChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pieHoleChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pieHoleChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void RotatingPieChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rotatingPieChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rotatingPieChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void Pie1Chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pie1Chart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pie1Chart");
         }
     }
 }

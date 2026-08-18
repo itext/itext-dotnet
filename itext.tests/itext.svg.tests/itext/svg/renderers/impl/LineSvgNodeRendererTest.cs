@@ -32,20 +32,20 @@ using iText.Test;
 namespace iText.Svg.Renderers.Impl {
     [NUnit.Framework.Category("IntegrationTest")]
     public class LineSvgNodeRendererTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/LineSvgNodeRendererTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/renderers/impl/LineSvgNodeRendererTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/renderers/impl/LineSvgNodeRendererTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void LineRendererTest() {
             String filename = "lineSvgRendererTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             IDictionary<String, String> lineProperties = new Dictionary<String, String>();
             lineProperties.Put("x1", "100");
@@ -61,14 +61,14 @@ namespace iText.Svg.Renderers.Impl {
             context.PushCanvas(cv);
             root.Draw(context);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void LineWithEmpyAttributesTest() {
             String filename = "lineWithEmpyAttributesTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             IDictionary<String, String> lineProperties = new Dictionary<String, String>();
             LineSvgNodeRenderer root = new LineSvgNodeRenderer();
@@ -78,14 +78,14 @@ namespace iText.Svg.Renderers.Impl {
             context.PushCanvas(cv);
             root.Draw(context);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidAttributeTest01() {
             String filename = "invalidAttributeTest01.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             ISvgNodeRenderer root = new LineSvgNodeRenderer();
             IDictionary<String, String> lineProperties = new Dictionary<String, String>();
@@ -99,8 +99,8 @@ namespace iText.Svg.Renderers.Impl {
             context.PushCanvas(cv);
             root.Draw(context);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]
@@ -112,7 +112,7 @@ namespace iText.Svg.Renderers.Impl {
             lineProperties.Put("y2", "0 2 0");
             lineProperties.Put("stroke", "orange");
             String filename = "invalidAttributes02.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             LineSvgNodeRenderer root = new LineSvgNodeRenderer();
             root.SetAttributesAndStyles(lineProperties);
@@ -126,7 +126,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void EmptyPointsListTest() {
             String filename = "lineEmptyPointsListTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(destinationFolder + filename));
+            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             ISvgNodeRenderer root = new LineSvgNodeRenderer();
             IDictionary<String, String> lineProperties = new Dictionary<String, String>();
@@ -138,8 +138,8 @@ namespace iText.Svg.Renderers.Impl {
             doc.Close();
             int numPoints = ((LineSvgNodeRenderer)root).attributesAndStyles.Count;
             NUnit.Framework.Assert.AreEqual(numPoints, 0);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
-                 + "cmp_" + filename, destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + filename, SOURCE_FOLDER
+                 + "cmp_" + filename, DESTINATION_FOLDER, "diff_"));
         }
 
         [NUnit.Framework.Test]

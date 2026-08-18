@@ -28,10 +28,10 @@ namespace iText.Svg.Css {
     [NUnit.Framework.Category("IntegrationTest")]
     public class OpacityTest : SvgIntegrationTest {
         //TODO DEVSIX-8822: update cmp after supporting
-        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/css/OpacityTest/";
 
-        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/css/OpacityTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/css/OpacityTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
