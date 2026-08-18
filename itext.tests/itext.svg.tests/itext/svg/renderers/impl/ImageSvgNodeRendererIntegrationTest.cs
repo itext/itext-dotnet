@@ -123,7 +123,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void ImageWithTransparencyTest() {
-            //TODO: update cmp_ when DEVSIX-2258 fixed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "imageWithTransparency", properties);
         }
 

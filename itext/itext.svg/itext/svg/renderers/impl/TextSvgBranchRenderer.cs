@@ -466,6 +466,11 @@ namespace iText.Svg.Renderers.Impl {
                 if (!CssUtils.CompareFloats(strokeProperties.GetOpacity(), 1f)) {
                     context.GetSvgTextProperties().SetStrokeOpacity(strokeProperties.GetOpacity());
                 }
+                context.GetSvgTextProperties().SetLineCapStyle(strokeProperties.GetLineCapStyle());
+                context.GetSvgTextProperties().SetLineJoinStyle(strokeProperties.GetLineJoinStyle());
+                if (strokeProperties.GetLineJoinStyle() == PdfCanvasConstants.LineJoinStyle.MITER) {
+                    context.GetSvgTextProperties().SetMiterLimit(strokeProperties.GetMiterLimit());
+                }
             }
         }
 //\endcond

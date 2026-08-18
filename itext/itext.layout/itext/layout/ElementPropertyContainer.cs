@@ -752,6 +752,90 @@ namespace iText.Layout {
             return (T)(Object)this;
         }
 
+        /// <summary>Gets the line cap style for the current element.</summary>
+        /// <remarks>
+        /// Gets the line cap style for the current element.
+        /// <para />
+        /// The line cap style is the shape used at the end of open subpaths when they are stroked.
+        /// <para />
+        /// For values see
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.LineCapStyle"/>
+        /// </remarks>
+        /// <returns>the current line cap style</returns>
+        public virtual int? GetLineCapStyle() {
+            return this.GetProperty<int?>(Property.LINE_CAP_STYLE);
+        }
+
+        /// <summary>Sets the line cap style for the current element.</summary>
+        /// <remarks>
+        /// Sets the line cap style for the current element.
+        /// <para />
+        /// The line cap style is the shape used at the end of open subpaths when they are stroked.
+        /// <para />
+        /// For values see
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.LineCapStyle"/>
+        /// </remarks>
+        /// <param name="lineCapStyle">a new line cap style</param>
+        /// <returns>this Element</returns>
+        public virtual T SetLineCapStyle(int lineCapStyle) {
+            SetProperty(Property.LINE_CAP_STYLE, lineCapStyle);
+            return (T)(Object)this;
+        }
+
+        /// <summary>Gets the line join style for the current element.</summary>
+        /// <remarks>
+        /// Gets the line join style for the current element.
+        /// <para />
+        /// The line join style is the shape used at the corners of paths when they are stroked.
+        /// <para />
+        /// For values see
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.LineJoinStyle"/>
+        /// </remarks>
+        /// <returns>the current line join style</returns>
+        public virtual int? GetLineJoinStyle() {
+            return this.GetProperty<int?>(Property.LINE_JOIN_STYLE);
+        }
+
+        /// <summary>Sets the line join style for the current element.</summary>
+        /// <remarks>
+        /// Sets the line join style for the current element.
+        /// <para />
+        /// The line join style is the shape used at the corners of paths when they are stroked.
+        /// <para />
+        /// For values see
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.LineJoinStyle"/>
+        /// </remarks>
+        /// <param name="lineJoinStyle">a new line join style</param>
+        /// <returns>this Element</returns>
+        public virtual T SetLineJoinStyle(int lineJoinStyle) {
+            SetProperty(Property.LINE_JOIN_STYLE, lineJoinStyle);
+            return (T)(Object)this;
+        }
+
+        /// <summary>Gets the miter limit for the current element.</summary>
+        /// <remarks>
+        /// Gets the miter limit for the current element.
+        /// <para />
+        /// The miter limit is the maximum ratio of miter length to stroke width used to draw a miter join.
+        /// </remarks>
+        /// <returns>the current miter limit</returns>
+        public virtual float? GetMiterLimit() {
+            return this.GetProperty<float?>(Property.MITER_LIMIT);
+        }
+
+        /// <summary>Sets the miter limit for the current element.</summary>
+        /// <remarks>
+        /// Sets the miter limit for the current element.
+        /// <para />
+        /// The miter limit is the maximum ratio of miter length to stroke width used to draw a miter join.
+        /// </remarks>
+        /// <param name="miterLimit">a new miter limit</param>
+        /// <returns>this Element</returns>
+        public virtual T SetMiterLimit(float miterLimit) {
+            SetProperty(Property.MITER_LIMIT, miterLimit);
+            return (T)(Object)this;
+        }
+
         /// <summary>Simulates bold style for a font.</summary>
         /// <remarks>
         /// Simulates bold style for a font.

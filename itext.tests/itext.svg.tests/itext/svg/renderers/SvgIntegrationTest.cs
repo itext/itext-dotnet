@@ -133,7 +133,7 @@ namespace iText.Svg.Renderers {
             System.Console.Out.WriteLine("SVG: " + UrlUtil.GetNormalizedFileUriString(sourceFolder + filename + ".svg"
                 ) + "\n");
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename + ".pdf", sourceFolder
-                 + "cmp_" + filename + ".pdf", destinationFolder, "diff_"));
+                 + "cmp_" + filename + ".pdf", destinationFolder));
         }
     }
 }

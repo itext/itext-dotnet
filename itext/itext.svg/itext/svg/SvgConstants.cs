@@ -630,11 +630,22 @@ namespace iText.Svg {
             /// <summary>Value representing reverse automatic orientation for the start marker.</summary>
             public const String AUTO_START_REVERSE = "auto-start-reverse";
 
+            public const String BEVEL = "bevel";
+
             /// <summary>Value representing the default value for the stroke linecap.</summary>
             public const String BUTT = "butt";
 
             /// <summary>Value representing the default aspect ratio: xmidymid.</summary>
             public const String DEFAULT_ASPECT_RATIO = SvgConstants.Values.XMID_YMID;
+
+            /// <summary>Value representing the default miter limit.</summary>
+            /// <remarks>
+            /// Value representing the default miter limit.
+            /// <para />
+            /// Default miter limit in PDF is 10, but in SVG it's 4, see
+            /// <a href="https://w3c.github.io/svgwg/svg2-draft/painting.html#strokemiterlimitproperty">SVG specification</a>.
+            /// </remarks>
+            public const float DEFAULT_MITER_LIMIT = 4f;
 
             /// <summary>Default svg view port width value (300px * 0.75 = 225).</summary>
             /// <remarks>
@@ -678,6 +689,8 @@ namespace iText.Svg {
             /// <summary>Value representing the units relation "objectBoundingBox".</summary>
             public const String OBJECT_BOUNDING_BOX = "objectBoundingBox";
 
+            public const String ROUND = "round";
+
             /// <summary>The value representing slice for the preserve aspect ratio calculations;</summary>
             public const String SLICE = "slice";
 
@@ -702,6 +715,8 @@ namespace iText.Svg {
             /// <summary>The value for markerUnits that represent values in a coordinate system which has a single unit equal the size in user units of the current stroke width.
             ///     </summary>
             public const String STROKEWIDTH = "strokeWidth";
+
+            public const String SQUARE = "square";
 
             /// <summary>Value representing the units relation "userSpaceOnUse".</summary>
             public const String USER_SPACE_ON_USE = "userSpaceOnUse";

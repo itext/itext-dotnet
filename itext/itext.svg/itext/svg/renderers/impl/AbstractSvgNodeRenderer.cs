@@ -483,6 +483,11 @@ namespace iText.Svg.Renderers.Impl {
                     currentCanvas.SetStrokeColor(strokeProperties.GetColor());
                 }
                 currentCanvas.SetLineWidth(strokeProperties.GetWidth());
+                currentCanvas.SetLineCapStyle(strokeProperties.GetLineCapStyle());
+                currentCanvas.SetLineJoinStyle(strokeProperties.GetLineJoinStyle());
+                if (strokeProperties.GetLineJoinStyle() == PdfCanvasConstants.LineJoinStyle.MITER) {
+                    currentCanvas.SetMiterLimit(strokeProperties.GetMiterLimit());
+                }
                 if (!CssUtils.CompareFloats(strokeProperties.GetOpacity(), 1f)) {
                     // TODO DEVSIX-8854 Draw SVG elements with transparent stroke in 2 steps
                     opacityGraphicsState.SetStrokeOpacity(strokeProperties.GetOpacity());
@@ -758,10 +763,16 @@ namespace iText.Svg.Renderers.Impl {
                 String strokeDashOffsetRawValue = GetAttribute(SvgConstants.Attributes.STROKE_DASHOFFSET);
                 SvgStrokeParameterConverter.PdfLineDashParameters lineDashParameters = SvgStrokeParameterConverter.ConvertStrokeDashParameters
                     (strokeDashArrayRawValue, strokeDashOffsetRawValue, GetCurrentFontSize(context), context);
+                int lineCap = SvgStrokeParameterConverter.ConvertStrokeLineCapStyle(GetAttribute(SvgConstants.Attributes.STROKE_LINECAP
+                    ));
+                int lineJoin = SvgStrokeParameterConverter.ConvertStrokeLineJoinStyle(GetAttribute(SvgConstants.Attributes
+                    .STROKE_LINEJOIN));
+                float miterLimit = SvgStrokeParameterConverter.ConvertStrokeMiterLimit(GetAttribute(SvgConstants.Attributes
+                    .STROKE_MITERLIMIT));
                 if (strokeWidth > 0) {
                     doStroke = true;
                     return new AbstractSvgNodeRenderer.StrokeProperties(strokeColor, strokeWidth, strokeOpacity, lineDashParameters
-                        );
+                        , lineCap, lineJoin, miterLimit);
                 }
             }
             return null;
@@ -810,29 +821,72 @@ namespace iText.Svg.Renderers.Impl {
             internal readonly SvgStrokeParameterConverter.PdfLineDashParameters lineDashParameters;
 //\endcond
 
-            public StrokeProperties(Color color, float width, float opacity, SvgStrokeParameterConverter.PdfLineDashParameters
-                 lineDashParameters) {
+//\cond DO_NOT_DOCUMENT
+            internal readonly int lineCapStyle;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal readonly int lineJoinStyle;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal readonly float miterLimit;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal StrokeProperties(Color color, float width, float opacity, SvgStrokeParameterConverter.PdfLineDashParameters
+                 lineDashParameters, int lineCapStyle, int lineJoinStyle, float miterLimit) {
                 this.color = color;
                 this.width = width;
                 this.opacity = opacity;
                 this.lineDashParameters = lineDashParameters;
+                this.lineCapStyle = lineCapStyle;
+                this.lineJoinStyle = lineJoinStyle;
+                this.miterLimit = miterLimit;
             }
+//\endcond
 
-            public Color GetColor() {
+//\cond DO_NOT_DOCUMENT
+            internal Color GetColor() {
                 return color;
             }
+//\endcond
 
-            public float GetWidth() {
+//\cond DO_NOT_DOCUMENT
+            internal float GetWidth() {
                 return width;
             }
+//\endcond
 
-            public float GetOpacity() {
+//\cond DO_NOT_DOCUMENT
+            internal float GetOpacity() {
                 return opacity;
             }
+//\endcond
 
-            public SvgStrokeParameterConverter.PdfLineDashParameters GetLineDashParameters() {
+//\cond DO_NOT_DOCUMENT
+            internal SvgStrokeParameterConverter.PdfLineDashParameters GetLineDashParameters() {
                 return lineDashParameters;
             }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal int GetLineCapStyle() {
+                return lineCapStyle;
+            }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal int GetLineJoinStyle() {
+                return lineJoinStyle;
+            }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal float GetMiterLimit() {
+                return miterLimit;
+            }
+//\endcond
         }
 //\endcond
 

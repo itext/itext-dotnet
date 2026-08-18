@@ -1749,6 +1749,18 @@ namespace iText.Layout.Renderer {
                     canvas.SetStrokeColor(strokeColor.GetColor());
                     strokeColor.ApplyStrokeTransparency(canvas);
                 }
+                int? lineCapStyle = this.GetPropertyAsInteger(Property.LINE_CAP_STYLE);
+                if (lineCapStyle != null) {
+                    canvas.SetLineCapStyle((int)lineCapStyle);
+                }
+                int? lineJoinStyle = this.GetPropertyAsInteger(Property.LINE_JOIN_STYLE);
+                if (lineJoinStyle != null) {
+                    canvas.SetLineJoinStyle((int)lineJoinStyle);
+                }
+                float? miterLimit = this.GetPropertyAsFloat(Property.MITER_LIMIT);
+                if (miterLimit != null) {
+                    canvas.SetMiterLimit((float)miterLimit);
+                }
             }
             if (fontColor != null) {
                 canvas.SetFillColor(fontColor.GetColor());

@@ -91,6 +91,11 @@ namespace iText.Layout {
                 ).SetFontSize(20);
             text4.SetDashPattern(new float[] { 0.5f, 1f }, 0f);
             document.Add(new Paragraph(text4));
+            Text text5 = new Text("Stroke with dashes and line cap/join styles").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
+                .FILL_STROKE).SetStrokeColor(ColorConstants.BLUE).SetStrokeWidth(1f).SetFontColor(ColorConstants.PINK)
+                .SetFontSize(30).SetDashPattern(new float[] { 1f, 2f }, 2f).SetLineCapStyle(PdfCanvasConstants.LineCapStyle
+                .ROUND).SetLineJoinStyle(PdfCanvasConstants.LineJoinStyle.MITER).SetMiterLimit(4f);
+            document.Add(new Paragraph(text5));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));

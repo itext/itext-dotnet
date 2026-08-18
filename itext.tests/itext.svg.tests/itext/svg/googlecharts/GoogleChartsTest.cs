@@ -70,7 +70,6 @@ namespace iText.Svg.Googlecharts {
 
         [NUnit.Framework.Test]
         public virtual void CalendarChart() {
-            //TODO DEVSIX-4857 support stroke-linecap attribute
             PageSize pageSize = PageSize.A4;
             TestUtils.ConvertSVGtoPDF(DESTINATION_FOLDER + "calendarChart.pdf", SOURCE_FOLDER + "calendarChart.svg", 1
                 , pageSize);

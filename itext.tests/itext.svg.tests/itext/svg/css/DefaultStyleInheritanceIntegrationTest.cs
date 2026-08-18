@@ -92,7 +92,6 @@ namespace iText.Svg.Css {
 
         [NUnit.Framework.Test]
         public virtual void StrokeLinecapInheritanceTest() {
-            //TODO DEVSIX-4857 support stroke-linecap attribute
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeLinecapInheritance");
         }
 

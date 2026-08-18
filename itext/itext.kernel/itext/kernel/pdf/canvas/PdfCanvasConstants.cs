@@ -20,9 +20,35 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Kernel.Colors;
+
 namespace iText.Kernel.Pdf.Canvas {
     /// <summary>A container for constants defined in the PDF specification (ISO 32000-1).</summary>
     public class PdfCanvasConstants {
+        /// <summary>Default value for stroke color</summary>
+        public static readonly Color DEFAULT_STROKE_COLOR = DeviceGray.BLACK;
+
+        /// <summary>Default value for fill color</summary>
+        public static readonly Color DEFAULT_FILL_COLOR = DeviceGray.BLACK;
+
+        /// <summary>Default value for line width</summary>
+        public const float DEFAULT_LINE_WIDTH = 1f;
+
+        /// <summary>Default value for line cap style</summary>
+        public const int DEFAULT_LINE_CAP_STYLE = PdfCanvasConstants.LineCapStyle.BUTT;
+
+        /// <summary>Default value for line join style</summary>
+        public const int DEFAULT_LINE_JOIN_STYLE = PdfCanvasConstants.LineJoinStyle.MITER;
+
+        /// <summary>Default value for miter limit</summary>
+        public const float DEFAULT_MITER_LIMIT = 10f;
+
+        /// <summary>Default value for fill opacity</summary>
+        public const float DEFAULT_FILL_OPACITY = 1f;
+
+        /// <summary>Default value for stroke opacity</summary>
+        public const float DEFAULT_STROKE_OPACITY = 1f;
+
         private PdfCanvasConstants() {
         }
 
