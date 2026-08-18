@@ -21,7 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Svg.Logs;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -97,6 +99,68 @@ namespace iText.Svg.Renderers {
         public virtual void StrokeAttributesTest() {
             //TODO DEVSIX-2258: update cmp after supporting
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-attributes");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeLinecapGraphicalElementsTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-linecap-graphical-elements");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, Count = 3)]
+        public virtual void StrokeLinecapTextElementsTest() {
+            // TODO DEVSIX-2255 SVG: Textpath element
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-linecap-text-elements");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, Count = 3)]
+        public virtual void StrokeLinecapDashedTextElementsTest() {
+            // TODO DEVSIX-2255 SVG: Textpath element
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-linecap-dashed-text-elements");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeLinejoinGraphicalElementsTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-linejoin-graphical-elements");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, Count = 3)]
+        public virtual void StrokeLinejoinTextElementsTest() {
+            // TODO DEVSIX-2255 SVG: Textpath element
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-linejoin-text-elements");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, Count = 3)]
+        public virtual void StrokeLinejoinDashedTextElementsTest() {
+            // TODO DEVSIX-2255 SVG: Textpath element
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-linejoin-dashed-text-elements");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeMiterlimitGraphicalElementsTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-miterlimit-graphical-elements");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, Count = 3)]
+        public virtual void StrokeMiterlimitTextElementsTest() {
+            // TODO DEVSIX-2255 SVG: Textpath element
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-miterlimit-text-elements");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, Count = 3)]
+        public virtual void StrokeMiterlimitDashedTextElementsTest() {
+            // TODO DEVSIX-2255 SVG: Textpath element
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-miterlimit-dashed-text-elements");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeCombinedGraphicalPropertiesTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-combined-graphical-properties");
         }
 
         [NUnit.Framework.Test]
