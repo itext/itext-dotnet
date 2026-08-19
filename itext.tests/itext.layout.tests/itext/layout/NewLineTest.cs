@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Text;
-using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Element;
@@ -39,6 +38,11 @@ namespace iText.Layout {
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
+        }
+
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
         }
 
         [NUnit.Framework.Test]
@@ -104,8 +108,8 @@ namespace iText.Layout {
             String outFileName = destinationFolder + fileName;
             String cmpFileName = sourceFolder + "cmp_" + fileName;
             String diffPrefix = "diff_" + fileName + "_";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName), new WriterProperties
-                ().SetCompressionLevel(0)));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties().SetCompressionLevel
+                (0)));
             Document document = new Document(pdf);
             Paragraph paragraph = new Paragraph().Add(new StringBuilder(pre).Append(newlineCharacters).Append(post).ToString
                 ());

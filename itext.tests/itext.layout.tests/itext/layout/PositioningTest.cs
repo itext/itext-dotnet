@@ -49,11 +49,16 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void RelativePositioningTest01() {
             String outFileName = destinationFolder + "relativePositioningTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_relativePositioningTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p = new Paragraph().SetBorder(new SolidBorder(new DeviceGray(0), 5)).SetWidth(260).SetPaddings(20
                 , 20, 20, 20).Add("Here is a line of text.").Add(new Text("This part is shifted\n up a bit,").SetRelativePosition
@@ -69,7 +74,7 @@ namespace iText.Layout {
         public virtual void RelativePositioningTest02() {
             String outFileName = destinationFolder + "relativePositioningTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_relativePositioningTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p = new Paragraph().SetBorder(new SolidBorder(new DeviceGray(0), 5)).SetWidth(140).SetPaddings(20
                 , 20, 20, 20).Add("Here is a line of text.").Add(new Text("This part is shifted\n up a bit,").SetRelativePosition
@@ -85,7 +90,7 @@ namespace iText.Layout {
         public virtual void RelativePositioningTable01Test() {
             String outFileName = destinationFolder + "relativePositioningTable01Test.pdf";
             String cmpFileName = sourceFolder + "cmp_relativePositioningTable01Test.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Table table = new Table(new UnitValue[] { UnitValue.CreatePointValue(100), UnitValue.CreatePointValue(100)
                  });
@@ -102,7 +107,7 @@ namespace iText.Layout {
         public virtual void FixedPositioningTest01() {
             String outFileName = destinationFolder + "fixedPositioningTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_fixedPositioningTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             List list = new List(ListNumberingType.ROMAN_UPPER).SetFixedPosition(2, 300, 300, 50).SetBackgroundColor(ColorConstants
                 .BLUE).SetHeight(100);
@@ -117,7 +122,7 @@ namespace iText.Layout {
         public virtual void FixedPositioningTest02() {
             String outFileName = destinationFolder + "fixedPositioningTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_fixedPositioningTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.GetPdfDocument().AddNewPage();
             new PdfCanvas(document.GetPdfDocument().GetPage(1)).SetFillColor(ColorConstants.BLACK).Rectangle(300, 300, 
@@ -135,7 +140,7 @@ namespace iText.Layout {
         public virtual void FixedPositioningTest03() {
             String outFileName = destinationFolder + "fixedPositioningTest03.pdf";
             String cmpFileName = sourceFolder + "cmp_fixedPositioningTest03.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.GetPdfDocument().AddNewPage();
             Paragraph p = new Paragraph("Hello,  this is fairly long text. Lorem ipsum dolor sit amet, " + "consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna "
@@ -157,7 +162,7 @@ namespace iText.Layout {
         public virtual void FixedPositioningTest04() {
             String outFileName = destinationFolder + "fixedPositioningTest04.pdf";
             String cmpFileName = sourceFolder + "cmp_fixedPositioningTest04.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.GetPdfDocument().AddNewPage();
             Div div = new Div().SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetHeight(100).SetFixedPosition(1, 300, 
@@ -178,7 +183,7 @@ namespace iText.Layout {
         public virtual void ShowTextAlignedTest01() {
             String outFileName = destinationFolder + "showTextAlignedTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_showTextAlignedTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             pdfDocument.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(pdfDocument.GetLastPage());
@@ -241,7 +246,7 @@ namespace iText.Layout {
         public virtual void ShowTextAlignedTest02() {
             String outFileName = destinationFolder + "showTextAlignedTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_showTextAlignedTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             String watermarkText = "WATERMARK";
             Paragraph watermark = new Paragraph(watermarkText);
@@ -261,7 +266,7 @@ namespace iText.Layout {
         public virtual void ShowTextAlignedTest03() {
             String outFileName = destinationFolder + "showTextAlignedTest03.pdf";
             String cmpFileName = sourceFolder + "cmp_showTextAlignedTest03.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             iText.Layout.Element.Image img = new Image(ImageDataFactory.Create(sourceFolder + "bruno.jpg"));
             float width = img.GetImageScaledWidth();
@@ -278,7 +283,7 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void ShowTextAlignedOnFlushedPageTest01() {
             String outFileName = destinationFolder + "showTextAlignedOnFlushedPageTest01.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document doc = new Document(pdfDoc)) {
                     Paragraph p = new Paragraph();
                     for (int i = 0; i < 1000; ++i) {

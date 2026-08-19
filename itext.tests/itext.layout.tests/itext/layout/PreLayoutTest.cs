@@ -47,11 +47,16 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void PreLayoutTest01() {
             String outFileName = destinationFolder + "preLayoutTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_preLayoutTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName)).SetTagged();
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)).SetTagged();
             Document document = new Document(pdfDocument, PageSize.DEFAULT, false);
             IList<Text> pageNumberTexts = new List<Text>();
             IList<IRenderer> pageNumberRenderers = new List<IRenderer>();
@@ -84,7 +89,7 @@ namespace iText.Layout {
         public virtual void PreLayoutTest02() {
             String outFileName = destinationFolder + "preLayoutTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_preLayoutTest02.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDoc, PageSize.DEFAULT, false);
             document.Add(new Paragraph("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
             StringBuilder text = new StringBuilder();
@@ -118,7 +123,7 @@ namespace iText.Layout {
         public virtual void ColumnDocumentRendererRelayoutTest() {
             String outFileName = destinationFolder + "columnDocumentRendererRelayoutTest.pdf";
             String cmpFileName = sourceFolder + "cmp_columnDocumentRendererRelayoutTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName)).SetTagged();
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)).SetTagged();
             Document document = new Document(pdfDoc, PageSize.DEFAULT, false);
             Rectangle column1 = new Rectangle(40, 40, 200, 720);
             Rectangle column2 = new Rectangle(300, 40, 200, 720);

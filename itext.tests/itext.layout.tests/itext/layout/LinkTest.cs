@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Commons.Datastructures;
-using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -59,11 +58,16 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void LinkTest01() {
             String outFileName = destinationFolder + "linkTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_linkTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
             Link link = new Link("TestLink", action);
@@ -77,7 +81,7 @@ namespace iText.Layout {
         public virtual void LinkTest02() {
             String outFileName = destinationFolder + "linkTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_linkTest02.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new AreaBreak()).Add(new AreaBreak());
             PdfDestination dest = PdfExplicitDestination.CreateXYZ(pdfDoc.GetPage(1), 36, 100, 1);
@@ -94,7 +98,7 @@ namespace iText.Layout {
         public virtual void LinkTest03() {
             String outFileName = destinationFolder + "linkTest03.pdf";
             String cmpFileName = sourceFolder + "cmp_linkTest03.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             PdfArray array = new PdfArray();
             array.Add(doc.GetPdfDocument().AddNewPage().GetPdfObject());
@@ -115,7 +119,7 @@ namespace iText.Layout {
         public virtual void BorderedLinkTest() {
             String outFileName = destinationFolder + "borderedLinkTest.pdf";
             String cmpFileName = sourceFolder + "cmp_borderedLinkTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Link link = new Link("Link with orange border", PdfAction.CreateURI("http://itextpdf.com"));
             link.SetBorder(new SolidBorder(ColorConstants.ORANGE, 5));
@@ -142,7 +146,7 @@ namespace iText.Layout {
         public virtual void TestCreateLocalLinkInRotatedCell() {
             String outFileName = destinationFolder + "linkInRotatedCell.pdf";
             String cmpFileName = sourceFolder + "cmp_linkInRotatedCell.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 1, 2 }));
             Link chunk = new Link("Click here", PdfAction.CreateURI("http://itextpdf.com/"));
@@ -159,7 +163,7 @@ namespace iText.Layout {
         public virtual void RotatedLinkAtFixedPosition() {
             String outFileName = destinationFolder + "rotatedLinkAtFixedPosition.pdf";
             String cmpFileName = sourceFolder + "cmp_rotatedLinkAtFixedPosition.pdf";
-            Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            Document doc = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)));
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
             Link link = new Link("TestLink", action);
             doc.Add(new Paragraph(link).SetMargin(0).SetRotationAngle(Math.PI / 4).SetFixedPosition(300, 623, 100));
@@ -173,7 +177,7 @@ namespace iText.Layout {
         public virtual void RotatedLinkInnerRotation() {
             String outFileName = destinationFolder + "rotatedLinkInnerRotation.pdf";
             String cmpFileName = sourceFolder + "cmp_rotatedLinkInnerRotation.pdf";
-            Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            Document doc = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)));
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
             Link link = new Link("TestLink", action);
             Paragraph p = new Paragraph(link).SetRotationAngle(Math.PI / 4).SetBackgroundColor(ColorConstants.RED);
@@ -188,7 +192,7 @@ namespace iText.Layout {
         public virtual void SimpleMarginsTest01() {
             String outFileName = destinationFolder + "simpleMarginsTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_simpleMarginsTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
             Link link = new Link("TestLink", action);
@@ -205,7 +209,7 @@ namespace iText.Layout {
         public virtual void MultiLineLinkTest01() {
             String outFileName = destinationFolder + "multiLineLinkTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_multiLineLinkTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
             String text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut "
@@ -223,7 +227,7 @@ namespace iText.Layout {
         public virtual void TableHeaderLinkTest01() {
             String outFileName = destinationFolder + "tableHeaderLinkTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_tableHeaderLinkTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
             int numCols = 3;
@@ -250,7 +254,7 @@ namespace iText.Layout {
         public virtual void LinkWithCustomRectangleTest01() {
             String outFileName = destinationFolder + "linkWithCustomRectangleTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_linkWithCustomRectangleTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             String text = "Hello World";
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com");
@@ -271,7 +275,7 @@ namespace iText.Layout {
         public virtual void SplitLinkTest01() {
             String outFileName = destinationFolder + "splitLinkTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_splitLinkTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             pdfDocument.SetTagged();
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com");
@@ -289,8 +293,8 @@ namespace iText.Layout {
         public virtual void LinkAnnotationOnDivSplitTest01() {
             String outFileName = destinationFolder + "linkAnnotationOnDivSplitTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_linkAnnotationOnDivSplitTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName, new WriterProperties().SetPdfVersion(
-                PdfVersion.PDF_2_0)));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetPdfVersion(PdfVersion.PDF_2_0)));
             Document doc = new Document(pdfDocument);
             pdfDocument.SetTagged();
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com");
@@ -307,7 +311,7 @@ namespace iText.Layout {
         public virtual void LinkActionOnDivSplitTest01() {
             String outFileName = destinationFolder + "linkActionOnDivSplitTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_linkActionOnDivSplitTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com");
             Div div = new Div().SetHeight(2000).SetBackgroundColor(ColorConstants.RED);
@@ -322,8 +326,8 @@ namespace iText.Layout {
         public virtual void IntraForwardLinkTest() {
             String outFileName = destinationFolder + "intraForwardLink.pdf";
             String cmpFileName = sourceFolder + "cmp_intraForwardLink.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName, new WriterProperties().SetPdfVersion(PdfVersion
-                .PDF_2_0)));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)));
             pdfDoc.SetTagged();
             Document doc = new Document(pdfDoc);
             PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetAction(PdfAction.CreateGoTo
@@ -348,8 +352,8 @@ namespace iText.Layout {
         public virtual void IntraBackwardLinkTest() {
             String outFileName = destinationFolder + "intraBackwardLink.pdf";
             String cmpFileName = sourceFolder + "cmp_intraBackwardLink.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName, new WriterProperties().SetPdfVersion(PdfVersion
-                .PDF_2_0)));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0)));
             pdfDoc.SetTagged();
             Document doc = new Document(pdfDoc);
             PdfLinkAnnotation linkAnnotation = new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetAction(PdfAction.CreateGoTo
@@ -376,7 +380,7 @@ namespace iText.Layout {
         public virtual void LinkWithSetDestinationTest() {
             String outFileName = destinationFolder + "linkWithSetDestination.pdf";
             String cmpFileName = sourceFolder + "cmp_linkWithSetDestination.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)))) {
                 Link link = new Link("link", PdfAction.CreateGoTo("destination"));
                 document.Add(new Paragraph().Add(link));
                 document.Add(new AreaBreak());
@@ -392,8 +396,8 @@ namespace iText.Layout {
         public virtual void DestinationToFlushedPageTest() {
             String outFileName = destinationFolder + "destinationToFlushedPage.pdf";
             String cmpFileName = sourceFolder + "cmp_destinationToFlushedPage.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName, new WriterProperties().SetPdfVersion
-                (PdfVersion.PDF_2_0)))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetPdfVersion(PdfVersion.PDF_2_0)))) {
                 using (Document doc = new Document(pdfDoc)) {
                     pdfDoc.SetTagged();
                     doc.Add(new Paragraph("text")).Add(new AreaBreak());

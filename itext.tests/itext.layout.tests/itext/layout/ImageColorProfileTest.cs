@@ -44,6 +44,11 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.PNG_IMAGE_HAS_ICC_PROFILE_WITH_INCOMPATIBLE_NUMBER_OF_COLOR_COMPONENTS
             )]
@@ -130,7 +135,7 @@ namespace iText.Layout {
             String outFileName = destinationFolder + pdfName;
             String cmpFileName = sourceFolder + "cmp_" + pdfName;
             String diff = "diff_" + pdfName + "_";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf);
             ImageData imageData = ImageDataFactory.Create(sourceFolder + imageName);
             if (customImageAttribute != null) {

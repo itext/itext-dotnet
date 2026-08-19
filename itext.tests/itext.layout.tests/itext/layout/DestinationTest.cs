@@ -42,11 +42,16 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void DestinationTest01() {
             String outFileName = destinationFolder + "destinationTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_destinationTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Text text = new Text(MessageFormatUtil.Format("Page {0}", 10));
             ICollection<Object> destinations = new HashSet<Object>();

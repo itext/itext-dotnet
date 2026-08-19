@@ -40,13 +40,18 @@ namespace iText.Layout.Renderer {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void BuildEmptyTable() {
             //TODO DEVSIX-6255 Implementation of the application border attributes for cells
             String outFileName = destinationFolder + "emptyNestedTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_emptyNestedTableTest.pdf";
             // setup document
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             pdfDocument.SetTagged();
             Document layoutDocument = new Document(pdfDocument);
             // add table to document

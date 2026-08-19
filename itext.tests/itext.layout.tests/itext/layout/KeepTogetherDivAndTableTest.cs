@@ -46,13 +46,18 @@ namespace iText.Layout {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 4)]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.RENDERER_WAS_NOT_ABLE_TO_PROCESS_KEEP_WITH_NEXT)]
         public virtual void CombineKeepTogetherDivWithTableTest() {
             String cmpFile = SOURCE_FOLDER + "cmp_combineKeepTogetherDivWithTable.pdf";
             String destPdf = DESTINATION_FOLDER + "combineKeepTogetherDivWithTable.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destPdf))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destPdf))) {
                 Document doc = new Document(pdfDoc);
                 for (int i = 0; i < 10; i++) {
                     doc.Add(new Paragraph("").SetFontSize(10).SetMarginBottom(0).SetBorder(new SolidBorder(ColorConstants.PINK
@@ -73,7 +78,7 @@ namespace iText.Layout {
         public virtual void CombineKeepTogetherDivWithTablePossibleLayout2pageTest() {
             String cmpFile = SOURCE_FOLDER + "cmp_combineKeepTogetherDivWithTablePossibleLayout2page.pdf";
             String destPdf = DESTINATION_FOLDER + "combineKeepTogetherDivWithTablePossibleLayout2page.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destPdf))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destPdf))) {
                 Document doc = new Document(pdfDoc);
                 for (int i = 0; i < 10; i++) {
                     doc.Add(new Paragraph("").SetFontSize(10).SetMarginBottom(0).SetBorder(new SolidBorder(ColorConstants.PINK
@@ -95,7 +100,7 @@ namespace iText.Layout {
         public virtual void CombineKeepTogetherDivWithTextTest() {
             String cmpFile = SOURCE_FOLDER + "cmp_combineKeepTogetherDivWithText.pdf";
             String destPdf = DESTINATION_FOLDER + "combineKeepTogetherDivWithText.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destPdf))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destPdf))) {
                 Document doc = new Document(pdfDoc);
                 for (int i = 0; i < 1; i++) {
                     doc.Add(new Paragraph("").SetFontSize(10).SetMarginBottom(0).SetBorder(new SolidBorder(ColorConstants.PINK
@@ -123,7 +128,7 @@ namespace iText.Layout {
         public virtual void CombineKeepTogetherDivWithTableWithImageTest() {
             String cmpFile = SOURCE_FOLDER + "cmp_combineKeepTogetherDivWithTableWithImage.pdf";
             String destPdf = DESTINATION_FOLDER + "combineKeepTogetherDivWithTableWithImage.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destPdf))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destPdf))) {
                 Document doc = new Document(pdfDoc);
                 for (int i = 0; i < 1; i++) {
                     doc.Add(new Paragraph("").SetFontSize(10).SetMarginBottom(0).SetBorder(new SolidBorder(ColorConstants.PINK
@@ -150,7 +155,7 @@ namespace iText.Layout {
         public virtual void ParagraphTableSameDivKeepNextTest() {
             String cmpFile = SOURCE_FOLDER + "cmp_paragraphTableSameDivKeepNext.pdf";
             String destPdf = DESTINATION_FOLDER + "paragraphTableSameDivKeepNext.pdf";
-            using (PdfDocument pdf = new PdfDocument(new PdfWriter(destPdf))) {
+            using (PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(destPdf))) {
                 Document document = new Document(pdf, pdf.GetDefaultPageSize(), false);
                 Div div = new Div().SetKeepTogether(true).SetKeepWithNext(true);
                 div.Add(CreateTableWithData(CreateBigCellTest(40)));
@@ -166,7 +171,7 @@ namespace iText.Layout {
         public virtual void ParagraphTableWithAnotherParagraphKeepNextTest() {
             String cmpFile = SOURCE_FOLDER + "cmp_paragraphTableWithAnotherParagraphKeepNext.pdf";
             String destPdf = DESTINATION_FOLDER + "paragraphTableWithAnotherParagraphKeepNext.pdf";
-            using (PdfDocument pdf = new PdfDocument(new PdfWriter(destPdf))) {
+            using (PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(destPdf))) {
                 Document document = new Document(pdf, pdf.GetDefaultPageSize(), false);
                 Div div = new Div().SetKeepTogether(true).SetKeepWithNext(true);
                 div.Add(CreateTableWithData(CreateBigCellTest(40)));
@@ -183,7 +188,7 @@ namespace iText.Layout {
         public virtual void CombineKeepTogether2TablesTest() {
             String cmpFile = SOURCE_FOLDER + "cmp_combineKeepTogether2Tables.pdf";
             String destPdf = DESTINATION_FOLDER + "combineKeepTogether2Tables.pdf";
-            using (PdfDocument pdf = new PdfDocument(new PdfWriter(destPdf))) {
+            using (PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(destPdf))) {
                 Document document = new Document(pdf, pdf.GetDefaultPageSize(), false);
                 Div div1 = new Div().SetKeepTogether(true).SetKeepWithNext(true);
                 div1.Add(CreateTableWithData(CreateBigCellTest(20)));
@@ -203,7 +208,7 @@ namespace iText.Layout {
         public virtual void CombineKeepTogether2LargeTablesTest() {
             String cmpFile = SOURCE_FOLDER + "cmp_combineKeepTogether2LargeTables.pdf";
             String destPdf = DESTINATION_FOLDER + "combineKeepTogether2LargeTables.pdf";
-            using (PdfDocument pdf = new PdfDocument(new PdfWriter(destPdf))) {
+            using (PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(destPdf))) {
                 Document document = new Document(pdf, pdf.GetDefaultPageSize(), false);
                 Div div1 = new Div().SetKeepTogether(true).SetKeepWithNext(true);
                 div1.Add(CreateTableWithData(CreateBigCellTest(40)));
@@ -222,7 +227,7 @@ namespace iText.Layout {
         public virtual void DivWithLargeTableTest() {
             String cmpFile = SOURCE_FOLDER + "cmp_divWithLargeTable.pdf";
             String destPdf = DESTINATION_FOLDER + "divWithLargeTable.pdf";
-            using (PdfDocument pdf = new PdfDocument(new PdfWriter(destPdf))) {
+            using (PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(destPdf))) {
                 Document document = new Document(pdf, pdf.GetDefaultPageSize(), false);
                 document.immediateFlush = false;
                 Div div2 = new Div().SetKeepTogether(true).SetKeepWithNext(true);

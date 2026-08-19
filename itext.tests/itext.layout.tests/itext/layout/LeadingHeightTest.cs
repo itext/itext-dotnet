@@ -54,12 +54,17 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 2)]
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 2)]
         public virtual void ClippedHeightParagraphTest() {
             String outPdf = DESTINATION_FOLDER + "leadingTestHeight.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_leadingTestHeight.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             Document doc = new Document(pdfDoc, new PageSize(700, 700));
             AddDescription(doc, 600, "This is how table looks like if no height property is set");
             AddTable(doc, 504, "RETIREMENT PLANNING: BECAUSE YOU CAN’T BE A FINANCIAL PLANNER FOREVER.", HEIGHT_IS_NOT_SET
@@ -83,7 +88,7 @@ namespace iText.Layout {
         public virtual void ParagraphTest() {
             String outPdf = DESTINATION_FOLDER + "pageHeightParagraphTest.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_pageHeightParagraphTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             //Document height = 176 = 104 + 36 + 36, where 104 - is exact size of paragraph after layout and 34 + 34 - page margins
             Document doc = new Document(pdfDoc, new PageSize(700, 176));
             Paragraph ph = new Paragraph();
@@ -105,7 +110,7 @@ namespace iText.Layout {
         public virtual void PageHeightDivWithNestedParagraphTest() {
             String outPdf = DESTINATION_FOLDER + "pageHeightParagraphWorkAroundTest.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_pageHeightParagraphWorkAroundTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             //Document height = 176 = 104 + 36 + 36, where 104 - is exact size of paragraph after layout and 34 + 34 - page margins
             Document doc = new Document(pdfDoc, new PageSize(700, 176));
             Paragraph ph = new Paragraph();

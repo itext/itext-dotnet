@@ -87,7 +87,7 @@ namespace iText.Layout {
             String fileName = "staticLargeTopBottomPartial";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float top = A4_HEIGHT * 0.35f;
                     float bottom = A4_HEIGHT * 0.35f;
@@ -105,7 +105,7 @@ namespace iText.Layout {
             String fileName = "staticExtremeTopBottomForced";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float each = (A4_HEIGHT - 10f) / 2f;
                     document.SetMargins(each, 36, each, 36);
@@ -155,7 +155,7 @@ namespace iText.Layout {
             String fileName = "staticAllFourLargeMarginsPartial";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float v = A4_HEIGHT * 0.30f;
                     float h = A4_WIDTH * 0.30f;
@@ -172,7 +172,7 @@ namespace iText.Layout {
             String fileName = "staticAllFourLargeMarginsSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float v = A4_HEIGHT * 0.30f;
                     float h = A4_WIDTH * 0.30f;
@@ -223,7 +223,7 @@ namespace iText.Layout {
             String fileName = "pageMarginLargeOnPage2Partial";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float top = A4_HEIGHT * 0.45f;
                     float bottom = A4_HEIGHT * 0.25f;
@@ -243,7 +243,7 @@ namespace iText.Layout {
             String fileName = "pageMarginAllFourLargeOnPage1";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float v = A4_HEIGHT * 0.30f;
                     float h = A4_WIDTH * 0.28f;
@@ -292,7 +292,7 @@ namespace iText.Layout {
             String fileName = "pageMarginPredicateLargeTopBottomPartial";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float top = A4_HEIGHT * 0.40f;
                     float bottom = A4_HEIGHT * 0.30f;
@@ -309,7 +309,7 @@ namespace iText.Layout {
             String fileName = "pageMarginPredicateAllFourLargePartial";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float v = A4_HEIGHT * 0.30f;
                     float h = A4_WIDTH * 0.28f;
@@ -332,7 +332,7 @@ namespace iText.Layout {
             String fileName = "pageMarginPredicateAllFourExtremeForced";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float v = (A4_HEIGHT - 10f) / 2f;
                     float h = (A4_WIDTH - 10f) / 2f;
@@ -351,7 +351,7 @@ namespace iText.Layout {
             String fileName = "pageMarginPredicateLargeThenSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float top = A4_HEIGHT * 0.40f;
                     float bottom = A4_HEIGHT * 0.30f;
@@ -372,7 +372,7 @@ namespace iText.Layout {
             String fileName = "mixedStaticAndPageMargin";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetMargins(60, 60, 60, 60);
                     document.SetPageMargins(2, PageMarginsTestUtil.GetMarginBoxes(A4_HEIGHT * 0.30f, A4_HEIGHT * 0.25f, 0, 0));
@@ -407,7 +407,7 @@ namespace iText.Layout {
             String fileName = "extremePageMarginsUnsplittableImageNothing";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float top = A4_HEIGHT * 0.40f;
                     float bottom = A4_HEIGHT * 0.40f;

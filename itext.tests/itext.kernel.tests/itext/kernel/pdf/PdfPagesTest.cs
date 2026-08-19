@@ -723,7 +723,7 @@ namespace iText.Kernel.Pdf {
         public virtual void LayerPropertiesPersistenceTest() {
             String filename = DESTINATION_FOLDER + "layerPropertiesPersistence.pdf";
             // Create document with layers
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page = pdfDocument.AddNewPage();
             // Create a layer that is ON
             PdfLayer layerOn = new PdfLayer("LayerOn", pdfDocument);
@@ -753,7 +753,7 @@ namespace iText.Kernel.Pdf {
             canvas.EndLayer();
             pdfDocument.Close();
             // Reopen the document and verify layer states are persisted
-            PdfDocument reopenedDoc = new PdfDocument(new PdfReader(filename));
+            PdfDocument reopenedDoc = new PdfDocument(CompareTool.CreateOutputReader(filename));
             NUnit.Framework.Assert.AreEqual(2, reopenedDoc.GetPage(1).GetPdfLayers().Count);
             // Find the layers by name and verify their states
             PdfLayer reopenedLayerOn = null;
@@ -786,7 +786,7 @@ namespace iText.Kernel.Pdf {
         public virtual void LayerOnAndOffStatePersistenceViaOCPropertiesTest() {
             String filename = DESTINATION_FOLDER + "layerStatePersistenceViaOCProperties.pdf";
             // Create document with layers
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page = pdfDocument.AddNewPage();
             // Create a layer that is ON
             PdfLayer layerOn = new PdfLayer("LayerOn", pdfDocument);
@@ -812,7 +812,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsFalse(layerOff.IsOn(), "LayerOff should be OFF before close");
             pdfDocument.Close();
             // Reopen the document and verify layer states are persisted via OCProperties
-            PdfDocument reopenedDoc = new PdfDocument(new PdfReader(filename));
+            PdfDocument reopenedDoc = new PdfDocument(CompareTool.CreateOutputReader(filename));
             PdfOCProperties ocProperties = reopenedDoc.GetCatalog().GetOCProperties(false);
             NUnit.Framework.Assert.IsNotNull(ocProperties, "OCProperties should exist after reopening");
             IList<PdfLayer> layers = ocProperties.GetLayers();

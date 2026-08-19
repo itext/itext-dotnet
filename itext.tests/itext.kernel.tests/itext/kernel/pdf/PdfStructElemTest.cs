@@ -663,8 +663,8 @@ namespace iText.Kernel.Pdf {
             CompareTool compareTool = new CompareTool();
             String outPdf = destinationFolder + outFileName;
             String cmpPdf = sourceFolder + cmpFileName;
-            String contentDifferences = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder);
             String taggedStructureDifferences = compareTool.CompareTagStructures(outPdf, cmpPdf);
+            String contentDifferences = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder);
             String errorMessage = "";
             errorMessage += taggedStructureDifferences == null ? "" : taggedStructureDifferences + "\n";
             errorMessage += contentDifferences == null ? "" : contentDifferences;

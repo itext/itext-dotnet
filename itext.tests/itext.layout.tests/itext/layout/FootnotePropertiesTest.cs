@@ -65,7 +65,7 @@ namespace iText.Layout {
             String fileName = "footnoteNumberingType_" + numberingType.ToString();
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetFootnotesProperties(new FootnotesProperties().SetFootnoteNumberingType(numberingType).SetFootnoteNumberingConfig
                         (FootnoteNumberingConfig.PER_DOCUMENT));
@@ -128,7 +128,7 @@ namespace iText.Layout {
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             FootnoteNumberingType? numberingType = FootnoteNumberingType.DECIMAL;
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetFootnotesProperties(new FootnotesProperties().SetFootnoteNumberingType(numberingType).SetFootnoteNumberingConfig
                         (FootnoteNumberingConfig.PER_DOCUMENT));
@@ -191,7 +191,7 @@ namespace iText.Layout {
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             FootnoteNumberingType? numberingType = FootnoteNumberingType.DECIMAL;
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetFootnotesProperties(new FootnotesProperties().SetFootnoteNumberingType(numberingType).SetFootnoteNumberingConfig
                         (FootnoteNumberingConfig.PER_DOCUMENT));
@@ -245,7 +245,7 @@ namespace iText.Layout {
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             FootnoteNumberingType? numberingType = FootnoteNumberingType.DECIMAL;
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetFootnotesProperties(new FootnotesProperties().SetFootnoteNumberingType(numberingType).SetFootnoteNumberingConfig
                         (FootnoteNumberingConfig.PER_DOCUMENT));
@@ -291,7 +291,7 @@ namespace iText.Layout {
             String fileName = "footnoteNumberingConfig_" + numberingConfig.ToString();
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetFootnotesProperties(new FootnotesProperties().SetFootnoteNumberingType(FootnoteNumberingType.DECIMAL
                         ).SetFootnoteNumberingConfig(numberingConfig));
@@ -322,7 +322,7 @@ namespace iText.Layout {
             String fileName = "footnoteCustomStyle";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     pdfDocument.SetTagged();
                     Style footnoteAnchorLabelStyle = new Style().SetMarginLeft(10).SetMarginRight(10).SetBackgroundColor(ColorConstants
@@ -351,7 +351,7 @@ namespace iText.Layout {
             String fileName = "footnoteCustomStyleSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     pdfDocument.SetTagged();
                     Footnote footnote = new Footnote(TestResourceUtil.GetByronStanza());
@@ -379,7 +379,7 @@ namespace iText.Layout {
             String fileName = "defaultFootnoteStyle";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     pdfDocument.SetTagged();
                     Paragraph p = new Paragraph(TestResourceUtil.GetByronStanza()).Add(new FootnoteAnchor(new Footnote(TestResourceUtil
@@ -422,7 +422,7 @@ namespace iText.Layout {
 
         private static void SetFootnotePropertiesForFootnotes(String outFileName, FootnoteNumberingConfig initialNumConfig
             ) {
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     pdfDocument.SetTagged();
                     document.SetFootnotesProperties(new FootnotesProperties().SetFootnoteNumberingType(FootnoteNumberingType.DECIMAL

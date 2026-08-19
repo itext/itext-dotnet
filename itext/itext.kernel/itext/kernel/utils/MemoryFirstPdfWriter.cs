@@ -75,6 +75,10 @@ namespace iText.Kernel.Utils {
             if (path == null) {
                 throw new ArgumentException("Provided path is null");
             }
+            if (iText.Kernel.Utils.MemoryFirstPdfWriter.waitingStreams.JRemove(path) != null) {
+                // We don't expect to have any other streams with the same path, so we can return here
+                return;
+            }
             foreach (String filePath in iText.Kernel.Utils.MemoryFirstPdfWriter.waitingStreams.Keys) {
                 if (filePath.StartsWith(path)) {
                     iText.Kernel.Utils.MemoryFirstPdfWriter.waitingStreams.JRemove(filePath);

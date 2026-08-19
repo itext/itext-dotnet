@@ -71,11 +71,16 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.TestCaseSource("Transforms")]
         public virtual void CommonTransformTest(Transform transform, String fileName) {
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document doc = new Document(pdfDoc)) {
                     doc.Add(new Paragraph(TestResourceUtil.GetByronStanza()));
                     doc.Add(new Paragraph(TestResourceUtil.GetByronStanza()).SetBackgroundColor(ColorConstants.GREEN).SetTransform
@@ -95,7 +100,7 @@ namespace iText.Layout {
         public virtual void TransformStyleTest() {
             String outFileName = DESTINATION_FOLDER + "transformStyle.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_transformStyle.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document doc = new Document(pdfDoc)) {
                     doc.Add(new Paragraph(TestResourceUtil.GetByronStanza()));
                     Table table = new Table(3);

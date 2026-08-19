@@ -326,9 +326,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void FullCompressionAppendMode() {
-            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "fullCompressionAppendMode.pdf", new 
-                WriterProperties().SetFullCompressionMode(true).SetCompressionLevel(CompressionConstants.NO_COMPRESSION
-                ));
+            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "fullCompressionAppendMode.pdf", new WriterProperties
+                ().SetFullCompressionMode(true).SetCompressionLevel(CompressionConstants.NO_COMPRESSION));
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fullCompressionDoc.pdf"), writer, 
                 new StampingProperties().UseAppendMode());
             PdfPage page = pdfDocument.GetPage(1);
@@ -341,7 +340,7 @@ namespace iText.Kernel.Pdf {
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + "fullCompressionAppendMode.pdf"
                 , SOURCE_FOLDER + "cmp_fullCompressionAppendMode.pdf", DESTINATION_FOLDER, "diff_"));
-            PdfDocument assertDoc = new PdfDocument(CompareTool.CreateOutputReader(DESTINATION_FOLDER + "fullCompressionAppendMode.pdf"
+            PdfDocument assertDoc = new PdfDocument(new PdfReader(DESTINATION_FOLDER + "fullCompressionAppendMode.pdf"
                 ));
             NUnit.Framework.Assert.IsTrue(assertDoc.GetPdfObject(9).IsStream());
             NUnit.Framework.Assert.AreEqual(1, ((PdfDictionary)assertDoc.GetPdfObject(9)).GetAsNumber(PdfName.N).IntValue
@@ -568,7 +567,8 @@ namespace iText.Kernel.Pdf {
             String outputPdf = "pdfDocWithAAndUaMetadata.pdf";
             WriterProperties writerProperties = new WriterProperties().AddPdfAXmpMetadata(PdfAConformance.PDF_A_3A).AddPdfUaXmpMetadata
                 (PdfUAConformance.PDF_UA_1);
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + outputPdf, writerProperties));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + outputPdf, writerProperties
+                ));
             doc.AddNewPage();
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(DESTINATION_FOLDER + outputPdf, SOURCE_FOLDER

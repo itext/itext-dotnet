@@ -44,11 +44,16 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void BackgroundOpacityTest01() {
             String outFileName = destinationFolder + "backgroundOpacityTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_backgroundOpacityTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             DeviceRgb darkBlue = new DeviceRgb(32, 80, 129);
             Div div = new Div().SetBackgroundColor(darkBlue).SetHeight(200);
@@ -74,7 +79,7 @@ namespace iText.Layout {
         public virtual void BackgroundOpacityTest02() {
             String outFileName = destinationFolder + "backgroundOpacityTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_backgroundOpacityTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("Paragraph with ").SetBackgroundColor(ColorConstants.RED).Add(new Text("text element with transparent (0.0) background"
                 ).SetBackgroundColor(ColorConstants.WHITE, 0.0f)));
@@ -103,7 +108,7 @@ namespace iText.Layout {
         public virtual void BorderOpacityTest01() {
             String outFileName = destinationFolder + "borderOpacityTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_borderOpacityTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             DeviceRgb darkBlue = new DeviceRgb(32, 80, 129);
             Div div = new Div().SetBackgroundColor(darkBlue).SetHeight(300);
@@ -129,7 +134,7 @@ namespace iText.Layout {
         public virtual void TextOpacityTest01() {
             String outFileName = destinationFolder + "textOpacityTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_textOpacityTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             DeviceRgb darkBlue = new DeviceRgb(32, 80, 129);
             Div div = new Div().SetBackgroundColor(darkBlue).SetHeight(300);
@@ -154,7 +159,7 @@ namespace iText.Layout {
         public virtual void UnderlineOpacityTest01() {
             String outFileName = destinationFolder + "underlineOpacityTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_underlineOpacityTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             DeviceRgb darkBlue = new DeviceRgb(32, 80, 129);
             Div div = new Div().SetBackgroundColor(darkBlue).SetHeight(300);
@@ -219,7 +224,7 @@ namespace iText.Layout {
         private void ElementOpacityTest(String elem) {
             String outFileName = destinationFolder + elem + "ElementOpacity01.pdf";
             String cmpFileName = sourceFolder + "cmp_" + elem + "ElementOpacity01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             DeviceRgb divBackground = WebColors.GetRGBColor("#82abd6");
             DeviceRgb paraBackground = WebColors.GetRGBColor("#994ec7");

@@ -47,11 +47,16 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void CollapsingMarginsTest01() {
             String outFileName = destinationFolder + "collapsingMarginsTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_collapsingMarginsTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             DrawPageBorders(pdfDocument, 4);
             Document doc = new Document(pdfDocument);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
@@ -80,7 +85,7 @@ namespace iText.Layout {
         public virtual void CollapsingMarginsTest02() {
             String outFileName = destinationFolder + "collapsingMarginsTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_collapsingMarginsTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             DrawPageBorders(pdfDocument, 3);
             Document doc = new Document(pdfDocument);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
@@ -112,7 +117,7 @@ namespace iText.Layout {
         public virtual void CollapsingMarginsTest03() {
             String outFileName = destinationFolder + "collapsingMarginsTest03.pdf";
             String cmpFileName = sourceFolder + "cmp_collapsingMarginsTest03.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             DrawPageBorders(pdfDocument, 3);
             Document doc = new Document(pdfDocument);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
@@ -142,7 +147,7 @@ namespace iText.Layout {
         public virtual void CollapsingMarginsTest04() {
             String outFileName = destinationFolder + "collapsingMarginsTest04.pdf";
             String cmpFileName = sourceFolder + "cmp_collapsingMarginsTest04.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             DrawPageBorders(pdfDocument, 3);
             Document doc = new Document(pdfDocument);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
@@ -175,7 +180,7 @@ namespace iText.Layout {
         public virtual void CollapsingMarginsTest05() {
             String outFileName = destinationFolder + "collapsingMarginsTest05.pdf";
             String cmpFileName = sourceFolder + "cmp_collapsingMarginsTest05.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             DrawPageBorders(pdfDocument, 2);
             Document doc = new Document(pdfDocument);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
@@ -197,7 +202,7 @@ namespace iText.Layout {
         public virtual void CollapsingMarginsTest06() {
             String outFileName = destinationFolder + "collapsingMarginsTest06.pdf";
             String cmpFileName = sourceFolder + "cmp_collapsingMarginsTest06.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             DrawPageBorders(pdfDocument, 1);
             Document doc = new Document(pdfDocument);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
@@ -222,7 +227,7 @@ namespace iText.Layout {
         public virtual void ElementCollapsingMarginsTest01() {
             String outFileName = destinationFolder + "elementCollapsingMarginsTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_elementCollapsingMarginsTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             DrawPageBorders(pdfDocument, 1);
             Document doc = new Document(pdfDocument);
             Paragraph markerText = new Paragraph("Margin between this paragraph and next block is expected to be 170pt."
@@ -265,7 +270,7 @@ namespace iText.Layout {
             */
             String outFileName = destinationFolder + "columnRendererTest.pdf";
             String cmpFileName = sourceFolder + "cmp_columnRendererTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             using (Document doc = new Document(pdfDocument)) {
                 doc.SetProperty(Property.COLLAPSING_MARGINS, true);
                 Paragraph p = new Paragraph();

@@ -60,7 +60,7 @@ namespace iText.Layout {
             String fileName = "footnoteHeightExactlyPageHeight";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.Add(new SectionBreak(PageMarginsTestUtil.GetFootnoteMarginBoxes(A4_HEIGHT)));
                     Div forced = new Div().Add(new Paragraph("Content — footnote height == page height (FORCED).")).SetBackgroundColor
@@ -92,7 +92,7 @@ namespace iText.Layout {
             String fileName = "footnoteHeightExceedsPageHeight";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.Add(new SectionBreak(PageMarginsTestUtil.GetFootnoteMarginBoxes(A4_HEIGHT + 50f)));
                     Div forced = new Div().Add(new Paragraph("Content — footnote height > page height (FORCED).")).SetBackgroundColor
@@ -138,7 +138,7 @@ namespace iText.Layout {
             String fileName = "footnoteExceedsPageHeightMultiPage";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     ApplyFootnoteMarginBoxes(document, A4_HEIGHT + 50f);
                     for (int i = 1; i <= 3; i++) {
@@ -161,7 +161,7 @@ namespace iText.Layout {
             String fileName = "hugeParagraphFontWithFootnoteAnchorInDiv";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     pdfDoc.SetTagged();
                     document.SetFootnotesProperties(new FootnotesProperties().SetFootnotesContainerStyle(new Style().SetFontSize
@@ -184,7 +184,7 @@ namespace iText.Layout {
             String fileName = "hugeParagraphWithFootnoteAnchor";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Footnote footnote = new Footnote(TestResourceUtil.GetByronStanza());
                     footnote.SetBorder(new DashedBorder(ColorConstants.YELLOW, 3));
@@ -203,7 +203,7 @@ namespace iText.Layout {
             String fileName = "hugeFontAnchorFootnote";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Footnote footnote = new Footnote(TestResourceUtil.GetByronStanza());
                     footnote.SetBorder(new DashedBorder(ColorConstants.YELLOW, 3));
@@ -222,7 +222,7 @@ namespace iText.Layout {
             String fileName = "hugeFontAnchorWithMultipleFootnotesInDiv";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     pdfDoc.SetTagged();
                     for (int i = 1; i <= 2; i++) {
@@ -247,7 +247,7 @@ namespace iText.Layout {
             String fileName = "hugeFontAnchorWithMultipleFootnotesInDiv2";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     pdfDoc.SetTagged();
                     for (int i = 1; i <= 4; i++) {
@@ -272,7 +272,7 @@ namespace iText.Layout {
             String fileName = "hugeFontAnchorWithMultipleFootnotes";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     for (int i = 1; i <= 4; i++) {
                         Footnote footnote = new Footnote("Footnote " + i + ": " + TestResourceUtil.GetByronStanza());
@@ -296,7 +296,7 @@ namespace iText.Layout {
             String fileName = "largeImageAnchorFootnote";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Footnote footnote = new Footnote(TestResourceUtil.RepeatString(TestResourceUtil.GetByronStanza(), 4));
                     footnote.SetBorder(new DashedBorder(ColorConstants.YELLOW, 3));
@@ -318,7 +318,7 @@ namespace iText.Layout {
             String fileName = "largeImageAnchorNormalContent";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Footnote footnote = new Footnote("Footnote for the large image anchor.\n" + TestResourceUtil.GetByronStanza
                         ());
@@ -344,7 +344,7 @@ namespace iText.Layout {
             String fileName = "smallImageAnchorHugeTextFootnote";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Footnote footnote = new Footnote(TestResourceUtil.RepeatString(TestResourceUtil.GetByronStanza(), 8));
                     footnote.SetBorder(new DashedBorder(ColorConstants.YELLOW, 3));

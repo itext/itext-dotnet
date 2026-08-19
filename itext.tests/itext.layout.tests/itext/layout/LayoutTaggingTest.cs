@@ -65,9 +65,15 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void TextInParagraphTest01() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "textInParagraphTest01.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "textInParagraphTest01.pdf"
+                ));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Paragraph p = CreateParagraph1();
@@ -81,7 +87,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TextInParagraphTestWithIds() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "textInParagraphTestWithIds.pdf"
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "textInParagraphTestWithIds.pdf"
                 ));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
@@ -100,7 +106,8 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ImageTest01() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "imageTest01.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "imageTest01.pdf"
+                ));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             iText.Layout.Element.Image image = new Image(ImageDataFactory.Create(sourceFolder + imageName));
@@ -111,7 +118,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void ImageTest02() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "imageTest02.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "imageTest02.pdf"
+                ));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Div div = new Div();
@@ -130,7 +138,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void DivTest01() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "divTest01.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "divTest01.pdf"
+                ));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Div div = new Div();
@@ -149,7 +158,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TableTest01() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest01.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "tableTest01.pdf"
+                ));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
@@ -173,7 +183,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TableTest02() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest02.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "tableTest02.pdf"
+                ));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
@@ -189,7 +200,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TableTest03() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest03.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "tableTest03.pdf"
+                ));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
@@ -218,7 +230,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TableTest04() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest04.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "tableTest04.pdf"
+                ));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             Table table = new Table(UnitValue.CreatePercentArray(5), true);
@@ -242,7 +255,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TableTest05() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest05.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "tableTest05.pdf"
+                ));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             Table table = new Table(UnitValue.CreatePercentArray(5), true);
@@ -269,7 +283,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TableTest06() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest06.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "tableTest06.pdf"
+                ));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
@@ -296,7 +311,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TableTest07() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest07.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "tableTest07.pdf"
+                ));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             Table table = new Table(new float[] { 130, 130, 260 }).AddHeaderCell(new Cell().Add(new Paragraph("hcell 1, 1"
@@ -313,7 +329,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void LinkInsideTable() {
-            PdfDocument pdf = new PdfDocument(new PdfWriter(destinationFolder + "linkInsideTable.pdf"));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "linkInsideTable.pdf"
+                ));
             pdf.SetTagged();
             Document doc = new Document(pdf);
             Table table = new Table(new float[] { 1, 2, 3 }).SetFixedLayout().SetWidth(400);
@@ -329,7 +346,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TableTest08() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest08.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "tableTest08.pdf"
+                ));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             Table table = new Table(new UnitValue[5], true);
@@ -356,7 +374,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void ListTest01() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "listTest01.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "listTest01.pdf"
+                ));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             List list = new List(ListNumberingType.DECIMAL);
@@ -370,7 +389,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void ListTest02() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "listTest02.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "listTest02.pdf"
+                ));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             doc.SetFont(PdfFontFactory.CreateFont(sourceFolder + "../fonts/NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H
@@ -423,7 +443,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void ListTest03() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "listTest03.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "listTest03.pdf"
+                ));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             PdfDictionary attributesSquare = new PdfDictionary();
@@ -442,7 +463,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void ListTest04() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "listTest04.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "listTest04.pdf"
+                ));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             List list = new List(ListNumberingType.DECIMAL);
@@ -458,7 +480,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void LinkTest01() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "linkTest01.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "linkTest01.pdf"
+                ));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
@@ -472,7 +495,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void ArtifactTest01() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "artifactTest01.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "artifactTest01.pdf"
+                ));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             String watermarkText = "WATERMARK";
@@ -490,7 +514,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void ArtifactTest02() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "artifactTest02.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "artifactTest02.pdf"
+                ));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("Hello world"));
@@ -514,7 +539,8 @@ namespace iText.Layout {
         /// </remarks>
         [NUnit.Framework.Test]
         public virtual void FlushingTest01() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "flushingTest01.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "flushingTest01.pdf"
+                ));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Paragraph p = CreateParagraph1();
@@ -540,7 +566,8 @@ namespace iText.Layout {
         /// </remarks>
         [NUnit.Framework.Test]
         public virtual void FlushingTest02() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "flushingTest02.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "flushingTest02.pdf"
+                ));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             Table table = new Table(UnitValue.CreatePercentArray(5), true);
@@ -575,7 +602,8 @@ namespace iText.Layout {
         /// </remarks>
         [NUnit.Framework.Test]
         public virtual void FlushingTest03() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "flushingTest03.pdf"));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "flushingTest03.pdf"
+                ));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             Table table = new Table(UnitValue.CreatePercentArray(5), true);
@@ -600,7 +628,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void WordBreaksLineEndingsTest01() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "wordBreaksLineEndingsTest01.pdf"
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "wordBreaksLineEndingsTest01.pdf"
                 , new WriterProperties().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
@@ -618,7 +646,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void WordBreaksLineEndingsTest02() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "wordBreaksLineEndingsTest02.pdf"
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "wordBreaksLineEndingsTest02.pdf"
                 , new WriterProperties().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
@@ -632,7 +660,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void WordBreaksLineEndingsTest03() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "wordBreaksLineEndingsTest03.pdf"
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "wordBreaksLineEndingsTest03.pdf"
                 , new WriterProperties().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
@@ -655,7 +683,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void WordBreaksLineEndingsTest04() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "wordBreaksLineEndingsTest04.pdf"
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "wordBreaksLineEndingsTest04.pdf"
                 , new WriterProperties().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
@@ -672,7 +700,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void WordBreaksLineEndingsTest05() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "wordBreaksLineEndingsTest05.pdf"
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "wordBreaksLineEndingsTest05.pdf"
                 , new WriterProperties().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
@@ -689,8 +717,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void ImageAndTextNoRole01() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "imageAndTextNoRole01.pdf", new 
-                WriterProperties().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "imageAndTextNoRole01.pdf"
+                , new WriterProperties().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             doc.Add(new Paragraph("Set Image role to null and add to div with role \"Figure\""));
@@ -717,7 +745,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void TableWithCaption01() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "tableWithCaption01.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "tableWithCaption01.pdf");
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
             pdf.SetTagged();
@@ -738,7 +766,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void EmptyDivTest() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "emptyDivTest.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "emptyDivTest.pdf");
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
             pdf.SetTagged();
@@ -752,7 +780,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void FloatListItemTest() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "floatListItemTest.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "floatListItemTest.pdf");
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
             pdf.SetTagged();
@@ -765,7 +793,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void NotAsciiCharTest() {
-            PdfWriter writer = new PdfWriter(destinationFolder + "notAsciiCharTest.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + "notAsciiCharTest.pdf");
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
             pdf.SetTagged();
@@ -785,7 +813,7 @@ namespace iText.Layout {
         public virtual void CheckParentTreeIfFormXObjectTaggedTest() {
             String outFileName = destinationFolder + "checkParentTreeIfFormXObjectTaggedTest.pdf";
             String cmpPdf = sourceFolder + "cmp_checkParentTreeIfFormXObjectTaggedTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             pdfDoc.SetTagged();
             PdfPage page1 = pdfDoc.AddNewPage();
             iText.Layout.Element.Text txt = new iText.Layout.Element.Text("Text from XObject");
@@ -802,7 +830,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void CreateTaggedVersionOneDotFourTest01() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "createTaggedVersionOneDotFourTest01.pdf"
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "createTaggedVersionOneDotFourTest01.pdf"
                 , new WriterProperties().SetPdfVersion(PdfVersion.PDF_1_4)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
@@ -833,7 +861,7 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void NeutralRoleTaggingTest() {
             String outFile = "neutralRoleTaggingTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + outFile));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + outFile));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
@@ -866,7 +894,8 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void UnexpectedTableHintChildTest() {
             String outFile = "unexpectedTableHintChildTest.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + outFile))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + outFile
+                ))) {
                 Document document = new Document(pdfDocument);
                 pdfDocument.SetTagged();
                 Div div = new Div();
@@ -885,7 +914,7 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void TableAppendsScopeToCell() {
             String outFile = "tableAppendsScopeToCell.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + outFile));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + outFile));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
@@ -907,7 +936,7 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void TableAppendsScopeNoneToCell() {
             String outFile = "tableAppendsScopeNoneToCell.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + outFile));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + outFile));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
@@ -933,7 +962,7 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void TableAddsScopeRegardlessOfHeaderId() {
             String outFile = "tableAddsScopeRegardlessOfHeaderId.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + outFile));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + outFile));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
@@ -963,7 +992,7 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void EmptyTaggedDocumentStillAddsDocumentTag() {
             String outFile = "emptyTaggedDocumentStillAddsDocumentTag.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + outFile));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + outFile));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             document.Close();
@@ -973,7 +1002,7 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void EmptyTaggedCanvasStillAddsDocumentTag1() {
             String outFile = "emptyTaggedCanvasStillAddsDocumentTag1.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + outFile));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + outFile));
             pdfDocument.SetTagged();
             PdfPage page = pdfDocument.AddNewPage();
             iText.Layout.Canvas canvas = new iText.Layout.Canvas(page, page.GetMediaBox());
@@ -985,7 +1014,7 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void EmptyTaggedCanvasStillAddsDocumentTag2() {
             String outFile = "emptyTaggedCanvasStillAddsDocumentTag2.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + outFile));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + outFile));
             pdfDocument.SetTagged();
             PdfPage page = pdfDocument.AddNewPage();
             iText.Layout.Canvas canvas = new iText.Layout.Canvas(new PdfFormXObject(page), pdfDocument);
@@ -1055,8 +1084,8 @@ namespace iText.Layout {
             CompareTool compareTool = new CompareTool();
             String outPdf = destinationFolder + outFileName;
             String cmpPdf = sourceFolder + cmpFileName;
-            String contentDifferences = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff");
             String taggedStructureDifferences = compareTool.CompareTagStructures(outPdf, cmpPdf);
+            String contentDifferences = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff");
             String errorMessage = "";
             errorMessage += taggedStructureDifferences == null ? "" : taggedStructureDifferences + "\n";
             errorMessage += contentDifferences == null ? "" : contentDifferences;

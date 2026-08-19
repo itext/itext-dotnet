@@ -89,7 +89,7 @@ namespace iText.Layout {
             String fileName = "partialDynamicMarginsEvenPages";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float largeTop = A4_HEIGHT * 0.55f;
                     float largeBottom = A4_HEIGHT * 0.20f;
@@ -109,7 +109,7 @@ namespace iText.Layout {
             String fileName = "partialDynamicMarginsOddPages";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float largeTop = A4_HEIGHT * 0.55f;
                     float largeBottom = A4_HEIGHT * 0.15f;
@@ -129,7 +129,7 @@ namespace iText.Layout {
             String fileName = "partialDynamicMarginsSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float largeTop = A4_HEIGHT * 0.50f;
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, PageMarginsTestUtil.GetMarginBoxes(largeTop, 0, 0, 
@@ -148,7 +148,7 @@ namespace iText.Layout {
             String fileName = "partialPerPageDynamicMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => {
                         float top = Math.Min(pageNum * 60f, A4_HEIGHT * 0.55f);
@@ -185,7 +185,7 @@ namespace iText.Layout {
             String fileName = "partialLargeFootnoteMargin";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float footnoteHeight = A4_HEIGHT * 0.55f;
                     document.Add(new SectionBreak(PageMarginsTestUtil.GetFootnoteMarginBoxes(footnoteHeight)));
@@ -205,7 +205,7 @@ namespace iText.Layout {
             String fileName = "partialFootnoteAreaBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float footnoteHeight = A4_HEIGHT * 0.55f;
                     ApplyMarginBoxes(document, 0, footnoteHeight, 0, 0);
@@ -239,7 +239,7 @@ namespace iText.Layout {
             String fileName = "partialDynamicFootnoteEvenPages";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float footnoteHeight = A4_HEIGHT * 0.55f;
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, PageMarginsTestUtil.GetFootnoteMarginBoxes(footnoteHeight
@@ -325,7 +325,7 @@ namespace iText.Layout {
             String fileName = "hugeDynamicMarginForcedPlacement";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float hugeTop = A4_HEIGHT - 30f;
                     document.SetPageMargins((pageNum) => true, PageMarginsTestUtil.GetMarginBoxes(hugeTop, 0, 0, 0));
@@ -344,7 +344,7 @@ namespace iText.Layout {
             String fileName = "hugeFootnoteForcedPlacement";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float hugeFootnote = A4_HEIGHT - 30f;
                     document.Add(new SectionBreak(PageMarginsTestUtil.GetFootnoteMarginBoxes(hugeFootnote)));
@@ -363,7 +363,7 @@ namespace iText.Layout {
             String fileName = "extremeMarginsRecoverySectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float hugeMargin = (A4_HEIGHT - 10f) / 2f;
                     document.SetPageMargins((pageNum) => true, PageMarginsTestUtil.GetMarginBoxes(hugeMargin, hugeMargin, 0, 0
@@ -386,7 +386,7 @@ namespace iText.Layout {
             String fileName = "extremeFootnoteMarginsRecovery";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float hugeFootnote = A4_HEIGHT - 30f;
                     document.Add(new SectionBreak(PageMarginsTestUtil.GetFootnoteMarginBoxes(hugeFootnote)));
@@ -482,7 +482,7 @@ namespace iText.Layout {
             String fileName = "hugeTopDynamicMarginWithFootnoteAnchor";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float largeTop = A4_HEIGHT * 0.55f;
                     Footnote footnote = new Footnote(TestResourceUtil.GetByronStanza());
@@ -504,7 +504,7 @@ namespace iText.Layout {
             String fileName = "hugeBottomDynamicMarginWithFootnoteAnchor";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float largeBottom = A4_HEIGHT * 0.55f;
                     Footnote footnote = new Footnote(TestResourceUtil.GetByronStanza());
@@ -526,7 +526,7 @@ namespace iText.Layout {
             String fileName = "hugeTopAndBottomMarginsWithFootnoteAnchor";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     float top = A4_HEIGHT * 0.35f;
                     float bottom = A4_HEIGHT * 0.35f;

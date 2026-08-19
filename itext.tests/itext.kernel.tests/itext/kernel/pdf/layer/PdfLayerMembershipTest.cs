@@ -275,7 +275,7 @@ namespace iText.Kernel.Pdf.Layer {
         public virtual void LayerPropertiesPersistenceTest() {
             String filename = DESTINATION_FOLDER + "layerPropertiesPersistence.pdf";
             // Create document with layers
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page = pdfDocument.AddNewPage();
             // Create a layer that is ON
             PdfLayer layerOn = new PdfLayer("LayerOn", pdfDocument);
@@ -303,7 +303,8 @@ namespace iText.Kernel.Pdf.Layer {
             canvas.EndLayer();
             pdfDocument.Close();
             // Reopen the document and verify layer states are persisted
-            PdfDocument reopenedDoc = new PdfDocument(new PdfReader(filename), new PdfWriter(new MemoryStream()));
+            PdfDocument reopenedDoc = new PdfDocument(CompareTool.CreateOutputReader(filename), new PdfWriter(new MemoryStream
+                ()));
             NUnit.Framework.Assert.AreEqual(2, reopenedDoc.GetPage(1).GetPdfLayers().Count);
             PdfLayerMembership reopenedLayerMembership = new PdfLayerMembership(reopenedDoc);
             foreach (PdfLayer layer in reopenedDoc.GetCatalog().GetOCProperties(false).GetLayers()) {

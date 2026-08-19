@@ -41,12 +41,17 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void SimpleParagraphTest() {
             String outFileName = destinationFolder + "simpleParagraphTest.pdf";
             String cmpFileName = sourceFolder + "cmp_simpleParagraphTest.pdf";
             String diffPrefix = "diff_simpleParagraphTest_";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)));
             document.Add(new Paragraph("aaa bbb\u00a0ccccccccccc").SetWidth(100).SetBorder(new SolidBorder(ColorConstants
                 .RED, 10)));
             document.Add(new Paragraph("aaa bbb ccccccccccc").SetWidth(100).SetBorder(new SolidBorder(ColorConstants.GREEN
@@ -63,7 +68,7 @@ namespace iText.Layout {
             String outFileName = destinationFolder + "consecutiveSpacesTest.pdf";
             String cmpFileName = sourceFolder + "cmp_consecutiveSpacesTest.pdf";
             String diffPrefix = "diff_consecutiveSpacesTest_";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)));
             document.Add(new Paragraph("aaa\u00a0\u00a0\u00a0bbb").SetWidth(100).SetBorder(new SolidBorder(ColorConstants
                 .RED, 10)));
             document.Add(new Paragraph("aaa\u00a0bbb").SetWidth(100).SetBorder(new SolidBorder(ColorConstants.GREEN, 10

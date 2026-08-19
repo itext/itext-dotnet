@@ -213,8 +213,8 @@ namespace iText.Kernel.Mac {
             WriterProperties writerProperties = new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption
                 (PASSWORD, PASSWORD, 0, EncryptionConstants.ENCRYPTION_AES_256, macProperties);
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "noMacProtectionDocument.pdf", new 
-                ReaderProperties().SetPassword(PASSWORD)), new PdfWriter(outputFileName, writerProperties), new StampingProperties
-                ().DisableMac())) {
+                ReaderProperties().SetPassword(PASSWORD)), CompareTool.CreateTestPdfWriter(outputFileName, writerProperties
+                ), new StampingProperties().DisableMac())) {
                 pdfDoc.AddNewPage().AddAnnotation(new PdfTextAnnotation(new Rectangle(100, 100, 100, 100)));
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().EnableEncryptionCompare().CompareByContent(outputFileName, 

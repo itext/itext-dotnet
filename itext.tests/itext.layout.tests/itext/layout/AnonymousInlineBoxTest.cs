@@ -42,11 +42,16 @@ namespace iText.Layout {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void RelativeHeightTest() {
             String outFileName = DESTINATION_FOLDER + "relativeHeight.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_relativeHeight.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDocument);
                 Div div = new Div();
                 div.SetHeight(500);
@@ -67,7 +72,7 @@ namespace iText.Layout {
         public virtual void DefaultRoleTest() {
             String outFileName = DESTINATION_FOLDER + "defaultRole.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_defaultRole.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 pdfDocument.SetTagged();
                 Document doc = new Document(pdfDocument);
                 AnonymousInlineBox ab = new AnonymousInlineBox();

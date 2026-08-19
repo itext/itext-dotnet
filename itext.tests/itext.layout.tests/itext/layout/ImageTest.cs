@@ -49,11 +49,16 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void ImageTest01() {
             String outFileName = destinationFolder + "imageTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest01.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
@@ -72,7 +77,7 @@ namespace iText.Layout {
         public virtual void ImageTest02() {
             String outFileName = destinationFolder + "imageTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest02.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(UrlUtil.ToURL(sourceFolder + "Desert.jpg"
@@ -92,7 +97,7 @@ namespace iText.Layout {
         public virtual void ImageTest03() {
             String outFileName = destinationFolder + "imageTest03.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest03.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
@@ -112,7 +117,7 @@ namespace iText.Layout {
         public virtual void ImageTest04() {
             String outFileName = destinationFolder + "imageTest04.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest04.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
@@ -132,7 +137,7 @@ namespace iText.Layout {
         public virtual void ImageTest05() {
             String outFileName = destinationFolder + "imageTest05.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest05.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
@@ -152,7 +157,7 @@ namespace iText.Layout {
         public virtual void ImageTest06() {
             String outFileName = destinationFolder + "imageTest06.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest06.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
@@ -173,7 +178,7 @@ namespace iText.Layout {
         public virtual void ImageTest07() {
             String outFileName = destinationFolder + "imageTest07.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest07.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
@@ -191,7 +196,7 @@ namespace iText.Layout {
         public virtual void ImageTest08() {
             String outFileName = destinationFolder + "imageTest08.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest08.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
@@ -210,7 +215,7 @@ namespace iText.Layout {
         public virtual void ImageTest09() {
             String outFileName = destinationFolder + "imageTest09.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest09.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc, new PageSize(500, 300));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
@@ -226,7 +231,7 @@ namespace iText.Layout {
         public virtual void ImageTest10() {
             String outFileName = destinationFolder + "imageTest10.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest10.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc, new PageSize(500, 300));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
@@ -242,7 +247,7 @@ namespace iText.Layout {
         public virtual void ImageTest11() {
             String outFileName = destinationFolder + "imageTest11.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest11.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
@@ -258,7 +263,7 @@ namespace iText.Layout {
         public virtual void ImageTest12_HorizontalAlignment_CENTER() {
             String outFileName = destinationFolder + "imageTest12.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest12.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
@@ -274,7 +279,7 @@ namespace iText.Layout {
         public virtual void ImageTest13_HorizontalAlignment_RIGHT() {
             String outFileName = destinationFolder + "imageTest13.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest13.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
@@ -290,7 +295,7 @@ namespace iText.Layout {
         public virtual void ImageTest14_HorizontalAlignment_LEFT() {
             String outFileName = destinationFolder + "imageTest14.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest14.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
@@ -307,7 +312,7 @@ namespace iText.Layout {
         public virtual void ImageTest15() {
             String outFileName = destinationFolder + "imageTest15.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest15.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
@@ -323,7 +328,7 @@ namespace iText.Layout {
         public virtual void ImageTest16() {
             String outFileName = destinationFolder + "imageTest16.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest16.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
@@ -342,7 +347,7 @@ namespace iText.Layout {
         public virtual void ImageTest17() {
             String outFileName = destinationFolder + "imageTest17.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest17.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             iText.Layout.Element.Image image1 = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + 
@@ -366,7 +371,7 @@ namespace iText.Layout {
         public virtual void ImageTest18() {
             String outFileName = destinationFolder + "imageTest18.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest18.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
@@ -388,7 +393,7 @@ namespace iText.Layout {
         public virtual void ImageTest19() {
             String outFileName = destinationFolder + "imageTest19.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest19.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
@@ -409,7 +414,7 @@ namespace iText.Layout {
         public virtual void ImageTest20() {
             String outFileName = destinationFolder + "imageTest20.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest20.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
@@ -431,7 +436,7 @@ namespace iText.Layout {
         public virtual void ImageTest21() {
             String outFileName = destinationFolder + "imageTest21.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest21.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
@@ -459,7 +464,7 @@ namespace iText.Layout {
         public virtual void ImageTest22() {
             String cmpFileName = sourceFolder + "cmp_imageTest22.pdf";
             String outFile = destinationFolder + "imageTest22.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph("Very small paragraph with text."));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400);
@@ -476,7 +481,7 @@ namespace iText.Layout {
         public virtual void ImageTest23() {
             String outFileName = destinationFolder + "imageTest23.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest23.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "encoded_tiff.tiff"
@@ -494,7 +499,7 @@ namespace iText.Layout {
             String outFileName = destinationFolder + "flushOnDrawTest.pdf";
             String cmpFileName = sourceFolder + "cmp_flushOnDrawTest.pdf";
             int rowCount = 60;
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document document = new Document(pdfDoc);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
@@ -528,7 +533,7 @@ namespace iText.Layout {
         public virtual void FlushOnDrawCheckCircularReferencesTest() {
             String outFileName = destinationFolder + "flushOnDrawCheckCircularReferencesTest.pdf";
             String cmpFileName = sourceFolder + "cmp_flushOnDrawCheckCircularReferencesTest.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             //Initialize document
             Document document = new Document(pdf);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
@@ -561,7 +566,7 @@ namespace iText.Layout {
         public virtual void ImageWithBordersSurroundedByTextTest() {
             String outFileName = destinationFolder + "imageBordersTextTest.pdf";
             String cmpFileName = sourceFolder + "cmp_imageBordersTextTest.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
@@ -582,7 +587,7 @@ namespace iText.Layout {
         public virtual void ImageInParagraphBorderTest() {
             String outFileName = destinationFolder + "imageParagraphBorderTest.pdf";
             String cmpFileName = sourceFolder + "cmp_imageParagraphBorderTest.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
@@ -602,7 +607,7 @@ namespace iText.Layout {
         public virtual void ImageRelativePositionTest() {
             String outFileName = destinationFolder + "imageRelativePositionTest.pdf";
             String cmpFileName = sourceFolder + "cmp_imageRelativePositionTest.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
@@ -623,7 +628,7 @@ namespace iText.Layout {
         public virtual void ImageInTableTest01() {
             String outFileName = destinationFolder + "imageInTableTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_imageInTableTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDoc);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
                 ));
@@ -651,7 +656,7 @@ namespace iText.Layout {
         public virtual void ImageInTableTest02() {
             String outFileName = destinationFolder + "imageInTableTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_imageInTableTest02.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDoc);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
                 ));
@@ -681,7 +686,7 @@ namespace iText.Layout {
             String outFileName = destinationFolder + "fixedPositionImageTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_fixedPositionImageTest01.pdf";
             String imgPath = sourceFolder + "Desert.jpg";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDoc);
             document.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(imgPath), 12, pdfDoc.GetDefaultPageSize
                 ().GetHeight() - 36, 24).SetBorder(new SolidBorder(ColorConstants.RED, 5)));
@@ -694,7 +699,7 @@ namespace iText.Layout {
         public virtual void ImageWithMinMaxHeightTest01() {
             String outFileName = destinationFolder + "imageWithMinMaxHeightTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_imageWithMinMaxHeightTest01.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
@@ -722,7 +727,7 @@ namespace iText.Layout {
             String outFileName = destinationFolder + "precisionTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_precisionTest01.pdf";
             String imageFileName = sourceFolder + "LOGO_PDF_77.jpg";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas currentPdfCanvas = new PdfCanvas(page);
             Rectangle rc = new Rectangle(56.6929131f, 649.13385f, 481.889771f, 136.062988f);
@@ -747,7 +752,7 @@ namespace iText.Layout {
             String outFileName = destinationFolder + "imageBorderRadiusTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_imageBorderRadiusTest01.pdf";
             String imageFileName = sourceFolder + "itis.jpg";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(imageFileName));
             image.SetBorderRadius(new BorderRadius(20));
@@ -765,7 +770,7 @@ namespace iText.Layout {
             String outFileName = destinationFolder + "createTiffImageTest.pdf";
             String cmpFileName = sourceFolder + "cmp_createTiffImageTest.pdf";
             String imgPath = sourceFolder + "group4Compression.tif";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDoc);
             ImageData id = ImageDataFactory.Create(imgPath);
             Uri imageURL = UrlUtil.ToURL(imgPath);
@@ -784,7 +789,7 @@ namespace iText.Layout {
             String outFileName = destinationFolder + "tiffImageWithoutCompression.pdf";
             String cmpFileName = sourceFolder + "cmp_tiffImageWithoutCompression.pdf";
             String imgPath = sourceFolder + "no-compression-tag.tiff";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDoc);
             ImageData id = ImageDataFactory.Create(imgPath);
             document.Add(new iText.Layout.Element.Image(id));
@@ -801,7 +806,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_distortedPngStream.pdf";
             String imgPath = sourceFolder + "bee.png";
             ImageData imgData = ImageDataFactory.Create(imgPath);
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument).Add(new iText.Layout.Element.Image(imgData));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

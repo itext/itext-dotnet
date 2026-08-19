@@ -44,10 +44,15 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void FloatAllClearNoneImageTest() {
             String dest = destinationFolder + "floatAllClearNoneImage.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(dest));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(dest));
             Document document = new Document(pdf);
             pdf.SetTagged();
             IList<FloatImageTest.ImagesContainer> images = new List<FloatImageTest.ImagesContainer>();
@@ -64,16 +69,16 @@ namespace iText.Layout {
                 .POINT, 200f)));
             AddFloatingImagesAndText(document, images);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, sourceFolder + "cmp_floatAllClearNoneImage.pdf"
-                , destinationFolder));
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareTagStructures(dest, sourceFolder + "cmp_floatAllClearNoneImage.pdf"
                 ));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, sourceFolder + "cmp_floatAllClearNoneImage.pdf"
+                , destinationFolder));
         }
 
         [NUnit.Framework.Test]
         public virtual void FloatAllClearBothImageTest() {
             String dest = destinationFolder + "floatAllClearBothImage.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(dest));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(dest));
             Document document = new Document(pdf);
             pdf.SetTagged();
             IList<FloatImageTest.ImagesContainer> images = new List<FloatImageTest.ImagesContainer>();
@@ -91,16 +96,16 @@ namespace iText.Layout {
                 .POINT, 200f)));
             AddFloatingImagesAndText(document, images);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, sourceFolder + "cmp_floatAllClearBothImage.pdf"
-                , destinationFolder));
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareTagStructures(dest, sourceFolder + "cmp_floatAllClearBothImage.pdf"
                 ));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, sourceFolder + "cmp_floatAllClearBothImage.pdf"
+                , destinationFolder));
         }
 
         [NUnit.Framework.Test]
         public virtual void FloatNoneRightClearBothImageTest() {
             String dest = destinationFolder + "floatNoneRightClearBothImage.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(dest));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(dest));
             Document document = new Document(pdf);
             pdf.SetTagged();
             IList<FloatImageTest.ImagesContainer> images = new List<FloatImageTest.ImagesContainer>();
@@ -115,16 +120,16 @@ namespace iText.Layout {
                 .PERCENT, 33f)));
             AddFloatingImagesAndText(document, images);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, sourceFolder + "cmp_floatNoneRightClearBothImage.pdf"
-                , destinationFolder));
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareTagStructures(dest, sourceFolder + "cmp_floatNoneRightClearBothImage.pdf"
                 ));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, sourceFolder + "cmp_floatNoneRightClearBothImage.pdf"
+                , destinationFolder));
         }
 
         [NUnit.Framework.Test]
         public virtual void FloatNoneRightClearNoneImageTest() {
             String dest = destinationFolder + "floatNoneRightClearNoneImage.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(dest));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(dest));
             Document document = new Document(pdf);
             pdf.SetTagged();
             IList<FloatImageTest.ImagesContainer> images = new List<FloatImageTest.ImagesContainer>();
@@ -139,10 +144,10 @@ namespace iText.Layout {
                 .PERCENT, 33f)));
             AddFloatingImagesAndText(document, images);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, sourceFolder + "cmp_floatNoneRightClearNoneImage.pdf"
-                , destinationFolder));
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareTagStructures(dest, sourceFolder + "cmp_floatNoneRightClearNoneImage.pdf"
                 ));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, sourceFolder + "cmp_floatNoneRightClearNoneImage.pdf"
+                , destinationFolder));
         }
 
         private static void AddFloatingImagesAndText(Document document, IList<FloatImageTest.ImagesContainer> images

@@ -50,12 +50,17 @@ namespace iText.Layout {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void TextRiseTest01() {
             // CountryChunks example
             String outFileName = DESTINATION_FOLDER + "textRiseTest01.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_textRiseTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
             for (int i = 0; i < 10; i++) {
@@ -74,7 +79,7 @@ namespace iText.Layout {
         public virtual void TextRenderingModeTest01() {
             String outFileName = DESTINATION_FOLDER + "textRenderingModeTest01.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_textRenderingModeTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Text text1 = new Text("This is a fill and stroke text").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
                 .FILL_STROKE).SetStrokeColor(ColorConstants.RED).SetStrokeWidth(0.1f);
@@ -105,7 +110,7 @@ namespace iText.Layout {
         public virtual void TextStrokeTest() {
             String outFileName = DESTINATION_FOLDER + "textStrokeTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_textStrokeTest.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     Text text1 = new Text("Red stroke text via color setter").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
                         .STROKE).SetStrokeColor(ColorConstants.RED).SetStrokeWidth(0.1f);
@@ -134,7 +139,7 @@ namespace iText.Layout {
         public virtual void TextFillStrokeTest() {
             String outFileName = DESTINATION_FOLDER + "textFillStrokeTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_textFillStrokeTest.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     Text text1 = new Text("Pink text with null stroke color (so font color is used)").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
                         .FILL_STROKE).SetFontColor(ColorConstants.PINK).SetStrokeColor((Color)null).SetStrokeWidth(2).SetFontSize
@@ -158,7 +163,7 @@ namespace iText.Layout {
         public virtual void LeadingTest01() {
             String outFileName = DESTINATION_FOLDER + "leadingTest01.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_leadingTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p1 = new Paragraph("first, leading of 150").SetFixedLeading(150);
             document.Add(p1);
@@ -176,7 +181,7 @@ namespace iText.Layout {
         public virtual void LeadingTest02() {
             String outFileName = DESTINATION_FOLDER + "leadingTest02.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_leadingTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p1 = new Paragraph().Add(new Text("Abdgsdfds ffs f dds").SetFontSize(60)).Add(new Text("fsd f dsf ds fds f ds"
                 ).SetFontSize(22)).SetMultipliedLeading(1);
@@ -190,7 +195,7 @@ namespace iText.Layout {
         public virtual void FirstLineIndentTest01() {
             String outFileName = DESTINATION_FOLDER + "firstLineIndentTest01.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_firstLineIndentTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.SetProperty(Property.FIRST_LINE_INDENT, 25);
             document.Add(new Paragraph("Portable Document Format (PDF) is a file format used to present documents in a manner "
@@ -224,7 +229,7 @@ namespace iText.Layout {
         public virtual void CharSpacingTest01() {
             String outFileName = DESTINATION_FOLDER + "charSpacingTest01.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_charSpacingTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
             Paragraph p = new Paragraph().SetFont(font);
@@ -245,7 +250,7 @@ namespace iText.Layout {
         public virtual void WordSpacingTest01() {
             String outFileName = DESTINATION_FOLDER + "wordSpacingTest01.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_wordSpacingTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
             Paragraph p = new Paragraph().SetFont(font);
@@ -268,7 +273,7 @@ namespace iText.Layout {
         public virtual void FontStyleSimulationTest01() {
             String outFileName = DESTINATION_FOLDER + "fontStyleSimulationTest01.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_fontStyleSimulationTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("I'm underlined").SetUnderline());
             document.Add(new Paragraph("I'm strikethrough").SetLineThrough());
@@ -288,7 +293,7 @@ namespace iText.Layout {
         public virtual void BigWordTest01() {
             String outFileName = DESTINATION_FOLDER + "bigWordTest01.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_bigWordTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Paragraph p = new Paragraph();
             p.SetWidth(150);
@@ -325,7 +330,7 @@ namespace iText.Layout {
         public virtual void UnderlineTest() {
             String outFileName = DESTINATION_FOLDER + "underline.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_underline.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p = new Paragraph("Text");
             p.SetUnderline(1, 0);
@@ -341,7 +346,7 @@ namespace iText.Layout {
         public virtual void StrokedUnderlineTest() {
             String outFileName = DESTINATION_FOLDER + "strokedUnderline.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_strokedUnderline.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     Paragraph p = new Paragraph("Yellow text with pink stroked dashed underline.").SetFontSize(45).SetFontColor
                         (ColorConstants.YELLOW);
@@ -379,7 +384,7 @@ namespace iText.Layout {
             //TODO: update after DEVSIX-2623 fix
             String outFileName = DESTINATION_FOLDER + "lineThrough.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_lineThrough.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Text textUp = new Text("textRise10f_with_lineThrough");
             textUp.SetTextRise(10f);
@@ -406,7 +411,7 @@ namespace iText.Layout {
             // TODO: update cmp file after fixing DEVSIX-4604
             String outFileName = DESTINATION_FOLDER + "leadingAndFloatInText.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_leadingAndFloatInText.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p = new Paragraph().SetFixedLeading(30).SetBorder(new SolidBorder(ColorConstants.RED, 2));
             p.Add("First text");
@@ -423,7 +428,7 @@ namespace iText.Layout {
         public virtual void TextWrappingEpsilonTest() {
             String outFileName = DESTINATION_FOLDER + "textWrappingEpsilon.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_textWrappingEpsilon.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document document = new Document(pdfDoc);
             // Play with margins to make AbstractRenderer.EPS important for wrapping behavior

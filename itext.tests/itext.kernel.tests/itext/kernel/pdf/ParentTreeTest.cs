@@ -347,7 +347,7 @@ namespace iText.Kernel.Pdf {
             String pdf = sourceFolder + "allObjRefDontHaveStructParent.pdf";
             String outPdf = destinationFolder + "allObjRefDontHaveStructParent.pdf";
             String cmpPdf = sourceFolder + "cmp_allObjRefDontHaveStructParent.pdf";
-            PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), new PdfWriter(outPdf));
+            PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), CompareTool.CreateTestPdfWriter(outPdf));
             taggedPdf.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
                 ));
@@ -359,7 +359,7 @@ namespace iText.Kernel.Pdf {
             String pdf = sourceFolder + "xObjDoesntHaveStructParentTest.pdf";
             String outPdf = destinationFolder + "xObjDoesntHaveStructParentTest.pdf";
             String cmpPdf = sourceFolder + "cmp_xObjDoesntHaveStructParentTest.pdf";
-            PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), new PdfWriter(outPdf));
+            PdfDocument taggedPdf = new PdfDocument(new PdfReader(pdf), CompareTool.CreateTestPdfWriter(outPdf));
             taggedPdf.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff"
                 ));
@@ -399,7 +399,7 @@ namespace iText.Kernel.Pdf {
             String pdf = sourceFolder + "xObjNoStructParent.pdf";
             String outPdf = destinationFolder + "xObjNoStructParentNoModification.pdf";
             PdfReader reader = new PdfReader(pdf).SetStrictnessLevel(PdfReader.StrictnessLevel.CONSERVATIVE);
-            PdfDocument doc = new PdfDocument(reader, new PdfWriter(outPdf));
+            PdfDocument doc = new PdfDocument(reader, CompareTool.CreateTestPdfWriter(outPdf));
             PdfObject obj = doc.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.StructTreeRoot).GetAsDictionary(PdfName
                 .ParentTree).GetAsArray(PdfName.Nums).Get(1);
             PdfStream xObj = ((PdfDictionary)((PdfArray)obj).Get(0)).GetAsDictionary(PdfName.K).GetAsStream(PdfName.Stm

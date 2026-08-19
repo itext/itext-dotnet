@@ -150,10 +150,31 @@ namespace iText.Kernel.Utils {
 //\endcond
 
         /// <summary>
-        /// Create
+        /// Creates
         /// <see cref="iText.Kernel.Pdf.PdfWriter"/>
-        /// optimized for tests.
+        /// optimized for tests that generate output PDF files
+        /// for comparison with reference files.
         /// </summary>
+        /// <remarks>
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.PdfWriter"/>
+        /// optimized for tests that generate output PDF files
+        /// for comparison with reference files.
+        /// <para />
+        /// Use this method for output PDFs that are later passed to
+        /// <see cref="CompareTool"/>
+        /// comparison methods. If a test needs to read the generated output PDF, use
+        /// <see cref="CreateOutputReader(System.String)"/>
+        /// instead of creating
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// directly.
+        /// <para />
+        /// Use regular
+        /// <see cref="iText.Kernel.Pdf.PdfWriter"/>
+        /// instead when the test verifies writer behavior,
+        /// stream handling, file-system output, or requires the output file to exist on disk
+        /// immediately.
+        /// </remarks>
         /// <param name="filename">File to write to when necessary.</param>
         /// <returns>
         /// 
@@ -165,10 +186,31 @@ namespace iText.Kernel.Utils {
         }
 
         /// <summary>
-        /// Create
+        /// Creates
         /// <see cref="iText.Kernel.Pdf.PdfWriter"/>
-        /// optimized for tests.
+        /// optimized for tests that generate output PDF files
+        /// for comparison with reference files.
         /// </summary>
+        /// <remarks>
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.PdfWriter"/>
+        /// optimized for tests that generate output PDF files
+        /// for comparison with reference files.
+        /// <para />
+        /// Use this method for output PDFs that are later passed to
+        /// <see cref="CompareTool"/>
+        /// comparison methods. If a test needs to read the generated output PDF, use
+        /// <see cref="CreateOutputReader(System.String, iText.Kernel.Pdf.ReaderProperties)"/>
+        /// instead of creating
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// directly.
+        /// <para />
+        /// Use regular
+        /// <see cref="iText.Kernel.Pdf.PdfWriter"/>
+        /// instead when the test verifies writer behavior,
+        /// stream handling, file-system output, or requires the output file to exist on disk
+        /// immediately.
+        /// </remarks>
         /// <param name="filename">File to write to when necessary.</param>
         /// <param name="properties">
         /// 
@@ -191,10 +233,18 @@ namespace iText.Kernel.Utils {
 
         // Android-Conversion-Replace return new PdfWriter(filename, properties);
         /// <summary>
-        /// Create
+        /// Creates
         /// <see cref="iText.Kernel.Pdf.PdfReader"/>
-        /// out of the data created recently or read from disk.
+        /// for an output PDF created by
+        /// <see cref="CreateTestPdfWriter(System.String, iText.Kernel.Pdf.WriterProperties)"/>.
         /// </summary>
+        /// <remarks>
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// for an output PDF created by
+        /// <see cref="CreateTestPdfWriter(System.String, iText.Kernel.Pdf.WriterProperties)"/>.
+        /// The reader uses the in-memory output data when available and falls back to reading from disk otherwise.
+        /// </remarks>
         /// <param name="filename">File to read the data from when necessary.</param>
         /// <param name="properties">
         /// 
@@ -217,10 +267,18 @@ namespace iText.Kernel.Utils {
         }
 
         /// <summary>
-        /// Create
+        /// Creates
         /// <see cref="iText.Kernel.Pdf.PdfReader"/>
-        /// out of the data created recently or read from disk.
+        /// for an output PDF created by
+        /// <see cref="CreateTestPdfWriter(System.String)"/>.
         /// </summary>
+        /// <remarks>
+        /// Creates
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// for an output PDF created by
+        /// <see cref="CreateTestPdfWriter(System.String)"/>.
+        /// The reader uses the in-memory output data when available and falls back to reading from disk otherwise.
+        /// </remarks>
         /// <param name="filename">File to read the data from when necessary.</param>
         /// <returns>
         /// 
@@ -2034,6 +2092,11 @@ namespace iText.Kernel.Utils {
                 iText.Kernel.Utils.CompareTool.WriteOnDisk(outPdf);
                 iText.Kernel.Utils.CompareTool.WriteOnDiskIfNotExists(cmpPdf);
                 throw;
+            }
+            finally {
+                // Normally it is the last operation with an output file in a test
+                // So we can remove it from memory
+                iText.Kernel.Utils.CompareTool.Cleanup(outPdf);
             }
         }
 

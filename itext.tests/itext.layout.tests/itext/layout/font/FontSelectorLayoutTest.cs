@@ -48,11 +48,16 @@ namespace iText.Layout.Font {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void NonBreakingHyphenDifferentFonts() {
             String outFileName = destinationFolder + "nonBreakingHyphenDifferentFonts.pdf";
             String cmpFileName = sourceFolder + "cmp_nonBreakingHyphenDifferentFonts.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)));
             FontProvider sel = new FontProvider();
             sel.SetFontSelectorStrategyFactory(new BestMatchFontSelectorStrategy.BestMatchFontSelectorStrategyFactory(
                 ));

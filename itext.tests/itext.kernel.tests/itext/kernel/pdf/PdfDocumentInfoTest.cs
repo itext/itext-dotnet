@@ -52,9 +52,9 @@ namespace iText.Kernel.Pdf {
             document.GetDocumentInfo().SetAuthor("Alexey");
             document.Close();
             CompareTool ct = new CompareTool();
-            NUnit.Framework.Assert.IsNull(ct.CompareByContent(outFile, cmpFile, destinationFolder, "diff_"));
             NUnit.Framework.Assert.IsNull(ct.CompareDocumentInfo(outFile, cmpFile));
             NUnit.Framework.Assert.IsNull(ct.CompareXmp(outFile, cmpFile, true));
+            NUnit.Framework.Assert.IsNull(ct.CompareByContent(outFile, cmpFile, destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
@@ -66,9 +66,9 @@ namespace iText.Kernel.Pdf {
                 new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             document.Close();
             CompareTool ct = new CompareTool();
-            NUnit.Framework.Assert.IsNull(ct.CompareByContent(outFile, cmpFile, destinationFolder, "diff_"));
             NUnit.Framework.Assert.IsNull(ct.CompareDocumentInfo(outFile, cmpFile));
             NUnit.Framework.Assert.IsNull(ct.CompareXmp(outFile, cmpFile, true));
+            NUnit.Framework.Assert.IsNull(ct.CompareByContent(outFile, cmpFile, destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
@@ -81,9 +81,9 @@ namespace iText.Kernel.Pdf {
             document.GetDocumentInfo().SetAuthor("Alexey Subach");
             document.Close();
             CompareTool ct = new CompareTool();
-            NUnit.Framework.Assert.IsNull(ct.CompareByContent(outFile, cmpFile, destinationFolder, "diff_"));
             NUnit.Framework.Assert.IsNull(ct.CompareDocumentInfo(outFile, cmpFile));
             NUnit.Framework.Assert.IsNull(ct.CompareXmp(outFile, cmpFile, true));
+            NUnit.Framework.Assert.IsNull(ct.CompareByContent(outFile, cmpFile, destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
@@ -109,9 +109,9 @@ namespace iText.Kernel.Pdf {
             document.GetDocumentInfo().SetAuthor("Alexey Subach");
             document.Close();
             CompareTool ct = new CompareTool();
-            NUnit.Framework.Assert.IsNull(ct.CompareByContent(outFile, cmpFile, destinationFolder, "diff_"));
             NUnit.Framework.Assert.IsNull(ct.CompareDocumentInfo(outFile, cmpFile));
             NUnit.Framework.Assert.IsNull(ct.CompareXmp(outFile, cmpFile, true));
+            NUnit.Framework.Assert.IsNull(ct.CompareByContent(outFile, cmpFile, destinationFolder, "diff_"));
         }
 
         [NUnit.Framework.Test]
@@ -125,9 +125,9 @@ namespace iText.Kernel.Pdf {
             document.Close();
             NUnit.Framework.Assert.AreEqual("Bruno Lowagie; Alexey Subach", author, "Author");
             CompareTool ct = new CompareTool();
-            NUnit.Framework.Assert.IsNull(ct.CompareByContent(outFile, cmpFile, destinationFolder, "diff_"));
             NUnit.Framework.Assert.IsNull(ct.CompareDocumentInfo(outFile, cmpFile));
             NUnit.Framework.Assert.IsNull(ct.CompareXmp(outFile, cmpFile, true));
+            NUnit.Framework.Assert.IsNull(ct.CompareByContent(outFile, cmpFile, destinationFolder, "diff_"));
         }
     }
 }

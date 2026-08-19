@@ -38,7 +38,7 @@ namespace iText.Kernel.Utils {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(destinationFolder);
         }
 
         [NUnit.Framework.OneTimeTearDown]
@@ -201,10 +201,10 @@ namespace iText.Kernel.Utils {
             pdfDoc1.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = "";
-            String contentErrorMessage = compareTool.CompareByContent(resultFile, sourceFolder + "cmp_mergedResult03.pdf"
-                , destinationFolder, "diff_");
             String tagStructErrorMessage = compareTool.CompareTagStructures(resultFile, sourceFolder + "cmp_mergedResult03.pdf"
                 );
+            String contentErrorMessage = compareTool.CompareByContent(resultFile, sourceFolder + "cmp_mergedResult03.pdf"
+                , destinationFolder, "diff_");
             errorMessage += tagStructErrorMessage == null ? "" : tagStructErrorMessage + "\n";
             errorMessage += contentErrorMessage == null ? "" : contentErrorMessage;
             if (!String.IsNullOrEmpty(errorMessage)) {
@@ -241,10 +241,10 @@ namespace iText.Kernel.Utils {
             merger.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = "";
-            String contentErrorMessage = compareTool.CompareByContent(resultFile, sourceFolder + "cmp_mergedResult04.pdf"
-                , destinationFolder, "diff_");
             String tagStructErrorMessage = compareTool.CompareTagStructures(resultFile, sourceFolder + "cmp_mergedResult04.pdf"
                 );
+            String contentErrorMessage = compareTool.CompareByContent(resultFile, sourceFolder + "cmp_mergedResult04.pdf"
+                , destinationFolder, "diff_");
             errorMessage += tagStructErrorMessage == null ? "" : tagStructErrorMessage + "\n";
             errorMessage += contentErrorMessage == null ? "" : contentErrorMessage;
             if (!String.IsNullOrEmpty(errorMessage)) {

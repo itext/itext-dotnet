@@ -53,7 +53,7 @@ namespace iText.Layout {
             String fileName = "gridSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     GridContainer grid = CreateThreeColumnGrid();
                     for (int i = 1; i <= 6; i++) {
@@ -73,7 +73,7 @@ namespace iText.Layout {
             String fileName = "gridTwoSectionBreaks";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     GridContainer grid = CreateThreeColumnGrid();
                     for (int i = 1; i <= 6; i++) {
@@ -95,7 +95,7 @@ namespace iText.Layout {
             String fileName = "gridMultiPageSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     GridContainer grid = CreateThreeColumnGrid();
                     for (int i = 1; i <= 18; i++) {
@@ -116,7 +116,7 @@ namespace iText.Layout {
             String fileName = "gridSameMarginsTwice";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     GridContainer grid1 = CreateThreeColumnGrid();
                     for (int i = 1; i <= 6; i++) {
@@ -142,7 +142,7 @@ namespace iText.Layout {
             String fileName = "gridAltBreaks";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.Add(BuildSmallGrid("S1", 1));
                     document.Add(new AreaBreak());
@@ -164,7 +164,7 @@ namespace iText.Layout {
             String fileName = "gridMultiPageDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins2
                         ()));
@@ -185,7 +185,7 @@ namespace iText.Layout {
             String fileName = "gridPerPageDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => {
                         IList<PageMarginContent> margins = new List<PageMarginContent>();
@@ -211,7 +211,7 @@ namespace iText.Layout {
             String fileName = "gridDocMarginsOverriddenBySectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins2
                         ()));
@@ -238,7 +238,7 @@ namespace iText.Layout {
             String fileName = "gridStaticMarginsAndSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetMargins(80, 80, 80, 80);
                     GridContainer grid1 = CreateThreeColumnGrid();
@@ -263,7 +263,7 @@ namespace iText.Layout {
             String fileName = "gridPageNumMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins(2, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1()));
                     GridContainer grid = CreateThreeColumnGrid();
@@ -283,7 +283,7 @@ namespace iText.Layout {
             String fileName = "gridElemMarginsSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     GridContainer grid = CreateThreeColumnGrid();
                     grid.SetMargins(40, 40, 40, 40).SetBackgroundColor(new DeviceRgb(220, 220, 220));
@@ -304,7 +304,7 @@ namespace iText.Layout {
             String fileName = "gridItemMarginsDocPageMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1
                         ()));
@@ -334,7 +334,7 @@ namespace iText.Layout {
             String fileName = "gridFractionColsSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     GridContainer grid = new GridContainer();
                     IList<TemplateValue> columns = new List<TemplateValue>();
@@ -359,7 +359,7 @@ namespace iText.Layout {
             String fileName = "gridMixedColsDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1
                         ()));
@@ -387,7 +387,7 @@ namespace iText.Layout {
             String fileName = "gridPercentColsPageSizeSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     GridContainer grid1 = new GridContainer();
                     IList<TemplateValue> columns1 = new List<TemplateValue>();
@@ -423,7 +423,7 @@ namespace iText.Layout {
             String fileName = "nestedGridCellAreaBreakDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1
                         ()));
@@ -455,7 +455,7 @@ namespace iText.Layout {
             String fileName = "nestedGridsDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins2
                         ()));
@@ -480,7 +480,7 @@ namespace iText.Layout {
             String fileName = "nestedGridsAreaBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     GridContainer outer1 = CreateTwoColumnGrid();
                     for (int col = 0; col < 2; col++) {
@@ -512,7 +512,7 @@ namespace iText.Layout {
             String fileName = "nestedGridsPageSizeSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     GridContainer outer1 = CreateThreeColumnGrid();
                     for (int col = 0; col < 3; col++) {
@@ -545,7 +545,7 @@ namespace iText.Layout {
             String fileName = "deepNestedGridsMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 != 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1
                         ()));
@@ -578,7 +578,7 @@ namespace iText.Layout {
             String fileName = "areaBreakDirectlyInsideGridContainer";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins2
                         ()));
@@ -603,7 +603,7 @@ namespace iText.Layout {
             String fileName = "sectionBreakDirectlyInsideGridContainer";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins2
                         ()));
@@ -628,7 +628,7 @@ namespace iText.Layout {
             String fileName = "sectionBreakInNestedGrid";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     GridContainer outer = CreateTwoColumnGrid();
                     GridContainer inner = CreateTwoColumnGrid();
@@ -654,7 +654,7 @@ namespace iText.Layout {
             String fileName = "areaBreakInNestedGrid";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     GridContainer outer = CreateTwoColumnGrid();
                     GridContainer inner = CreateTwoColumnGrid();
@@ -677,7 +677,7 @@ namespace iText.Layout {
             String fileName = "nestedGridInnerElemMarginsDocPageMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1
                         ()));
@@ -714,7 +714,7 @@ namespace iText.Layout {
             String fileName = "gridWithTableHeaderAndFooter";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     GridContainer gridContainer = CreateTwoColumnGrid();
                     Table table = new Table(3);

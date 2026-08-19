@@ -79,7 +79,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
             int perms = EncryptionConstants.ALLOW_PRINTING | EncryptionConstants.ALLOW_DEGRADED_PRINTING;
             WriterProperties wProps = new WriterProperties().SetStandardEncryption(USER_PASSWORD, OWNER_PASSWORD, perms
                 , EncryptionConstants.ENCRYPTION_AES_GCM);
-            PdfDocument ignored = new PdfDocument(new PdfReader(srcFile), new PdfWriter(outFile, wProps));
+            PdfDocument ignored = new PdfDocument(new PdfReader(srcFile), CompareTool.CreateTestPdfWriter(outFile, wProps
+                ));
             ignored.Close();
             new CToolNoDeveloperExtension().CompareByContent(outFile, srcFile, DEST, "diff", USER_PASSWORD, null);
         }
@@ -90,7 +91,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             String outFile = DEST + "encryptedDocument.pdf";
             String cmpFile = SRC + "simpleDocument.pdf";
             using (PdfDocument ignored = new PdfDocument(new PdfReader(srcFile, new ReaderProperties().SetPassword(OWNER_PASSWORD
-                )), new PdfWriter(outFile))) {
+                )), CompareTool.CreateTestPdfWriter(outFile))) {
             }
             // We need to copy the source file to the destination folder to be able to compare pdf files in android.
             new CompareTool().CompareByContent(outFile, cmpFile, DEST, "diff", USER_PASSWORD, null);
@@ -238,8 +239,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         private void AssertTampered(String outFile) {
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(outFile, new ReaderProperties().SetPassword(USER_PASSWORD
-                )))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateOutputReader(outFile, new ReaderProperties()
+                .SetPassword(USER_PASSWORD)))) {
                 PdfObject obj = pdfDoc.GetPdfObject(14);
                 if (obj != null && obj.IsStream()) {
                     // Get decoded stream bytes.

@@ -53,6 +53,11 @@ namespace iText.Layout.Properties {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void BackgroundImage() {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
@@ -182,8 +187,7 @@ namespace iText.Layout.Properties {
             NUnit.Framework.Assert.IsTrue(backgroundImage.IsBackgroundSpecified());
             String outFileName = DESTINATION_FOLDER + "backgroundImageForText.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageForText.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDocument);
                 Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                     );
@@ -203,8 +207,7 @@ namespace iText.Layout.Properties {
                 Build();
             String outFileName = DESTINATION_FOLDER + "backgroundImageWithPercentWidth.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageWithPercentWidth.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDocument);
                 Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                     );
@@ -225,8 +228,7 @@ namespace iText.Layout.Properties {
                 Build();
             String outFileName = DESTINATION_FOLDER + "backgroundImageWithPercentHeight.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageWithPercentHeight.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDocument);
                 Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                     );
@@ -247,8 +249,7 @@ namespace iText.Layout.Properties {
                 Build();
             String outFileName = DESTINATION_FOLDER + "backgroundImageWithPercentHeightAndWidth.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageWithPercentHeightAndWidth.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDocument);
                 Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                     );
@@ -270,8 +271,7 @@ namespace iText.Layout.Properties {
                 Build();
             String outFileName = DESTINATION_FOLDER + "backgroundImageWithPointWidth.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageWithPointWidth.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDocument);
                 Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                     );
@@ -292,8 +292,7 @@ namespace iText.Layout.Properties {
                 Build();
             String outFileName = DESTINATION_FOLDER + "backgroundImageWithPointHeight.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageWithPointHeight.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDocument);
                 Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                     );
@@ -314,8 +313,7 @@ namespace iText.Layout.Properties {
                 Build();
             String outFileName = DESTINATION_FOLDER + "backgroundImageWithPointHeightAndWidth.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageWithPointHeightAndWidth.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDocument);
                 Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                     );
@@ -337,8 +335,7 @@ namespace iText.Layout.Properties {
                 Build();
             String outFileName = DESTINATION_FOLDER + "backgroundImageWithLowWidthAndHeight.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageWithLowWidthAndHeight.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDocument);
                 Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                     );
@@ -417,8 +414,7 @@ namespace iText.Layout.Properties {
             String filename = "backgroundXObject";
             String fileName = filename + ".pdf";
             String outFileName = DESTINATION_FOLDER + fileName;
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(CreateFormXObject
                     (pdfDocument, "itis.jpg")).Build();
                 NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.REPEAT, backgroundImage.GetRepeat()
@@ -434,8 +430,7 @@ namespace iText.Layout.Properties {
             String filename = "backgroundXObjectWithoutRepeatX";
             String fileName = filename + ".pdf";
             String outFileName = DESTINATION_FOLDER + fileName;
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(CreateFormXObject
                     (pdfDocument, "itis.jpg")).SetBackgroundRepeat(new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue
                     .NO_REPEAT, BackgroundRepeat.BackgroundRepeatValue.REPEAT)).Build();
@@ -452,8 +447,7 @@ namespace iText.Layout.Properties {
             String filename = "backgroundXObjectWithoutRepeatY";
             String fileName = filename + ".pdf";
             String outFileName = DESTINATION_FOLDER + fileName;
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(CreateFormXObject
                     (pdfDocument, "itis.jpg")).SetBackgroundRepeat(new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue
                     .REPEAT, BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT)).Build();
@@ -470,8 +464,7 @@ namespace iText.Layout.Properties {
             String filename = "backgroundXObjectWithoutRepeatXY";
             String fileName = filename + ".pdf";
             String outFileName = DESTINATION_FOLDER + fileName;
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(CreateFormXObject
                     (pdfDocument, "itis.jpg")).SetBackgroundRepeat(new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue
                     .NO_REPEAT)).Build();
@@ -489,8 +482,7 @@ namespace iText.Layout.Properties {
             String fileName = filename + ".pdf";
             String outFileName = DESTINATION_FOLDER + fileName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + filename + ".pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDocument);
                 String text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                      + "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi " + "ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit "
@@ -520,8 +512,7 @@ namespace iText.Layout.Properties {
             String fileName = filename + ".pdf";
             String outFileName = DESTINATION_FOLDER + fileName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + filename + ".pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDocument);
                 String text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                      + "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi " + "ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit "
@@ -725,7 +716,7 @@ namespace iText.Layout.Properties {
             }
             String outFileName = DESTINATION_FOLDER + filename + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + filename + ".pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             String text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                  + "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi " + "ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit "

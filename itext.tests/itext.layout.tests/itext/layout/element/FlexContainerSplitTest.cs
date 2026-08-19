@@ -53,11 +53,16 @@ namespace iText.Layout.Element {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void SimpleTest() {
             String outFileName = DESTINATION_FOLDER + "simpleTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_simpleTest.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document document = new Document(pdfDocument);
                 pdfDocument.SetDefaultPageSize(PageSize.A5);
                 Div flexContainer = CreateDefaultFlexContainer();
@@ -71,7 +76,7 @@ namespace iText.Layout.Element {
         public virtual void HeightPropertyTest() {
             String outFileName = DESTINATION_FOLDER + "heightPropertyTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_heightPropertyTest.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document document = new Document(pdfDocument);
                 pdfDocument.SetDefaultPageSize(PageSize.A5);
                 Div flexContainer = CreateDefaultFlexContainer();
@@ -86,7 +91,7 @@ namespace iText.Layout.Element {
         public virtual void SmallTrailingElementTest() {
             String outFileName = DESTINATION_FOLDER + "smallTrailingElementTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_smallTrailingElementTest.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document document = new Document(pdfDocument);
                 pdfDocument.SetDefaultPageSize(PageSize.A5);
                 Div flexContainer = CreateDefaultFlexContainer();
@@ -104,7 +109,7 @@ namespace iText.Layout.Element {
         public virtual void SplitOverSeveralPagesTest() {
             String outFileName = DESTINATION_FOLDER + "splitOverSeveralPagesTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_splitOverSeveralPagesTest.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document document = new Document(pdfDocument);
                 pdfDocument.SetDefaultPageSize(PageSize.A6);
                 Div flexContainer = CreateDefaultFlexContainer();
@@ -119,7 +124,7 @@ namespace iText.Layout.Element {
         public virtual void KeepTogetherIgnoredTest() {
             String outFileName = DESTINATION_FOLDER + "keepTogetherIgnoredTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherIgnoredTest.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document document = new Document(pdfDocument);
                 pdfDocument.SetDefaultPageSize(PageSize.A5);
                 Div flexContainer = new FlexContainer();
@@ -136,7 +141,7 @@ namespace iText.Layout.Element {
         public virtual void SimpleWrapTest() {
             String outFileName = DESTINATION_FOLDER + "simpleWrapTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_simpleWrapTest.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document document = new Document(pdfDocument);
                 pdfDocument.SetDefaultPageSize(PageSize.A5);
                 Div flexContainer = CreateDefaultFlexContainerForWrap();
@@ -151,7 +156,7 @@ namespace iText.Layout.Element {
         public virtual void SimpleWrapStartTest() {
             String outFileName = DESTINATION_FOLDER + "simpleWrapStartTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_simpleWrapStartTest.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document document = new Document(pdfDocument);
                 pdfDocument.SetDefaultPageSize(PageSize.A5);
                 Div flexContainer = CreateDefaultFlexContainerForWrap();
@@ -168,7 +173,7 @@ namespace iText.Layout.Element {
         public virtual void SimpleWrapEndTest() {
             String outFileName = DESTINATION_FOLDER + "simpleWrapEndTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_simpleWrapEndTest.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document document = new Document(pdfDocument);
                 pdfDocument.SetDefaultPageSize(PageSize.A5);
                 Div flexContainer = CreateDefaultFlexContainerForWrap();
@@ -185,7 +190,7 @@ namespace iText.Layout.Element {
         public virtual void ReverseWrapStartTest() {
             String outFileName = DESTINATION_FOLDER + "reverseWrapStartTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_reverseWrapStartTest.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document document = new Document(pdfDocument);
                 pdfDocument.SetDefaultPageSize(PageSize.A5);
                 Div flexContainer = CreateDefaultFlexContainerForWrap();
@@ -202,7 +207,7 @@ namespace iText.Layout.Element {
         public virtual void RowWrapRtlStartTest() {
             String outFileName = DESTINATION_FOLDER + "rowWrapRtlStartTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_rowWrapRtlStartTest.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document document = new Document(pdfDocument);
                 pdfDocument.SetDefaultPageSize(PageSize.A5);
                 Div flexContainer = CreateDefaultFlexContainerForWrap();
@@ -220,7 +225,7 @@ namespace iText.Layout.Element {
         public virtual void ReverseRowWrapRtlStartTest() {
             String outFileName = DESTINATION_FOLDER + "reverseRowWrapRtlStartTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_reverseRowWrapRtlStartTest.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document document = new Document(pdfDocument);
                 pdfDocument.SetDefaultPageSize(PageSize.A5);
                 Div flexContainer = CreateDefaultFlexContainerForWrap();
@@ -239,7 +244,7 @@ namespace iText.Layout.Element {
         public virtual void ReverseWrapEndTest() {
             String outFileName = DESTINATION_FOLDER + "reverseWrapEndTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_reverseWrapEndTest.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document document = new Document(pdfDocument);
                 pdfDocument.SetDefaultPageSize(PageSize.A5);
                 Div flexContainer = CreateDefaultFlexContainerForWrap();
@@ -256,7 +261,7 @@ namespace iText.Layout.Element {
         public virtual void ReverseWrapStartHeightTest() {
             String outFileName = DESTINATION_FOLDER + "reverseWrapStartHeightTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_reverseWrapStartHeightTest.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document document = new Document(pdfDocument);
                 pdfDocument.SetDefaultPageSize(PageSize.A5);
                 Div flexContainer = CreateDefaultFlexContainerForWrap();
@@ -274,7 +279,7 @@ namespace iText.Layout.Element {
         public virtual void ReverseWrapEndHeightTest() {
             String outFileName = DESTINATION_FOLDER + "reverseWrapEndHeightTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_reverseWrapEndHeightTest.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document document = new Document(pdfDocument);
                 pdfDocument.SetDefaultPageSize(PageSize.A5);
                 Div flexContainer = CreateDefaultFlexContainerForWrap();
@@ -292,7 +297,7 @@ namespace iText.Layout.Element {
         public virtual void SimpleWrapCenterTest() {
             String outFileName = DESTINATION_FOLDER + "simpleWrapCenterTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_simpleWrapCenterTest.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document document = new Document(pdfDocument);
                 pdfDocument.SetDefaultPageSize(PageSize.A5);
                 Div flexContainer = CreateDefaultFlexContainerForWrap();
@@ -309,7 +314,7 @@ namespace iText.Layout.Element {
         public virtual void TableInFlexOnSplitTest() {
             String outFileName = DESTINATION_FOLDER + "tableInFlexOnSplitTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "tableInFlexOnSplitTest.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document document = new Document(pdfDocument);
                 pdfDocument.SetDefaultPageSize(PageSize.A5);
                 Div flexContainer = new FlexContainer();
@@ -333,7 +338,7 @@ namespace iText.Layout.Element {
         public virtual void TableInFlexOnSplit2Test() {
             String outFileName = DESTINATION_FOLDER + "tableInFlexOnSplit2Test.pdf";
             String cmpFileName = SOURCE_FOLDER + "tableInFlexOnSplitTest2.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document document = new Document(pdfDocument);
                 pdfDocument.SetDefaultPageSize(PageSize.A5);
                 Div flexContainer = new FlexContainer();

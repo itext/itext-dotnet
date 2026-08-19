@@ -71,11 +71,16 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void ChunkEndsAfterOrBeforeTabPosition() {
             String outFileName = destinationFolder + "chunkEndsAfterOrBeforeTabPosition.pdf";
             String cmpFileName = sourceFolder + "cmp_chunkEndsAfterOrBeforeTabPosition.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String textBeforeTab = "a";
             String textAfterTab = "tab stop's position = ";
@@ -100,7 +105,7 @@ namespace iText.Layout {
         public virtual void DefaultTabsTest() {
             String outFileName = destinationFolder + "defaultTabTest.pdf";
             String cmpFileName = sourceFolder + "cmp_defaultTabTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Paragraph p = new Paragraph();
             AddTabbedTextToParagraph(p, text0, new float[0], null, null, null);
@@ -248,7 +253,7 @@ namespace iText.Layout {
         public virtual void TabPositionAbsoluteValueTest() {
             String outFileName = destinationFolder + "tabPositionAbsoluteValue.pdf";
             String cmpFileName = sourceFolder + "cmp_tabPositionAbsoluteValue.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph("x-coordinate = 100").SetFontColor(ColorConstants.RED).SetFirstLineIndent(100).SetFontSize
                 (8));
@@ -304,7 +309,7 @@ namespace iText.Layout {
         public virtual void OutOfPageBoundsTest() {
             String outFileName = destinationFolder + "outOfPageBoundsTest.pdf";
             String cmpFileName = sourceFolder + "cmp_outOfPageBoundsTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             //tabstops out of page bounds
             Paragraph p = new Paragraph();
@@ -354,7 +359,7 @@ namespace iText.Layout {
         public virtual void TabsInParagraphTest01() {
             String outFileName = destinationFolder + "tabsInParagraphTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_tabsInParagraphTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             float tabWidth = pdfDoc.GetDefaultPageSize().GetWidth() - doc.GetLeftMargin() - doc.GetRightMargin();
             Paragraph p = new Paragraph();
@@ -385,7 +390,7 @@ namespace iText.Layout {
         public virtual void TabsAnchorSemicolonTest01() {
             String outFileName = destinationFolder + "tabsAnchorSemicolonTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_tabsAnchorSemicolonTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDoc);
             float w = document.GetPageEffectiveArea(PageSize.A4).GetWidth();
             Paragraph p = new Paragraph();
@@ -408,7 +413,7 @@ namespace iText.Layout {
         public virtual void TabsAnchorSemicolonTest02() {
             String outFileName = destinationFolder + "tabsAnchorSemicolonTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_tabsAnchorSemicolonTest02.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDoc);
             float w = document.GetPageEffectiveArea(PageSize.A4).GetWidth();
             Paragraph p = new Paragraph();
@@ -432,7 +437,7 @@ namespace iText.Layout {
         public virtual void TabsAnchorSemicolonTest03() {
             String outFileName = destinationFolder + "tabsAnchorSemicolonTest03.pdf";
             String cmpFileName = sourceFolder + "cmp_tabsAnchorSemicolonTest03.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDoc);
             float w = document.GetPageEffectiveArea(PageSize.A4).GetWidth();
             Paragraph p = new Paragraph();
@@ -454,7 +459,7 @@ namespace iText.Layout {
         public virtual void FillParagraphWithTabsDifferently() {
             String outFileName = destinationFolder + "fillParagraphWithTabsDifferently.pdf";
             String cmpFileName = sourceFolder + "cmp_fillParagraphWithTabsDifferently.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph("a\tb"));
             doc.Add(new Paragraph().Add("a").Add("\t").Add("b"));
@@ -469,7 +474,7 @@ namespace iText.Layout {
         }
 
         private Document InitDocument(String outFileName, bool tagged) {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             if (tagged) {
                 pdfDoc.SetTagged();
             }

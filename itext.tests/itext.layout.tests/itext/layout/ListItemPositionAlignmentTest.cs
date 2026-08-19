@@ -77,6 +77,11 @@ namespace iText.Layout {
             return objectList;
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.TestCaseSource("BaseDirectionAndSymbolAlignmentProperties")]
         public virtual void DefaultListIemPositionAlignmentTest(BaseDirection? listBaseDirection, BaseDirection? listItemBaseDirection
             , ListSymbolAlignment listSymbolAlignment, ListSymbolPosition listSymbolPosition, int? comparisonPdfId
@@ -88,7 +93,7 @@ namespace iText.Layout {
                 (listBaseDirection));
             String outFileName = DESTINATION_FOLDER + "defaultListItemTest" + comparisonPdfId + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_defaultListItemTest" + comparisonPdfId + ".pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             List list = CreateTestList(listBaseDirection, listItemBaseDirection, listSymbolAlignment, listSymbolPosition
                 );

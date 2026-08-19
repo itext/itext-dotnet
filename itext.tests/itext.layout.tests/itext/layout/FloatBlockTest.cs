@@ -45,39 +45,44 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void FloatImageInDivClearNoneTest() {
             String dest = destinationFolder + "floatImageInDivClearNone.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(dest));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(dest));
             Document document = new Document(pdf);
             pdf.SetTagged();
             AddFloatingImagesInDivs(document, new UnitValue(UnitValue.POINT, 200f), ClearPropertyValue.NONE);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, sourceFolder + "cmp_floatImageInDivClearNone.pdf"
-                , destinationFolder));
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareTagStructures(dest, sourceFolder + "cmp_floatImageInDivClearNone.pdf"
                 ));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, sourceFolder + "cmp_floatImageInDivClearNone.pdf"
+                , destinationFolder));
         }
 
         [NUnit.Framework.Test]
         public virtual void FloatImageInDivClearBothTest() {
             String dest = destinationFolder + "floatImageInDivClearBoth.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(dest));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(dest));
             Document document = new Document(pdf);
             pdf.SetTagged();
             AddFloatingImagesInDivs(document, new UnitValue(UnitValue.POINT, 200f), ClearPropertyValue.BOTH);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, sourceFolder + "cmp_floatImageInDivClearBoth.pdf"
-                , destinationFolder));
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareTagStructures(dest, sourceFolder + "cmp_floatImageInDivClearBoth.pdf"
                 ));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, sourceFolder + "cmp_floatImageInDivClearBoth.pdf"
+                , destinationFolder));
         }
 
         [NUnit.Framework.Test]
         public virtual void FloatImageDifferentSizeInDivTest() {
             String cmpFileName = sourceFolder + "cmp_floatImageDifferentSizeInDiv.pdf";
             String outFile = destinationFolder + "floatImageInDiv.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             pdfDoc.SetTagged();
             UnitValue width = new UnitValue(UnitValue.PERCENT, 33f);
@@ -100,8 +105,8 @@ namespace iText.Layout {
             div1.Add(image1);
             doc.Add(div1);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareTagStructures(outFile, cmpFileName));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder));
         }
 
         private static void AddFloatingImagesInDivs(Document document, UnitValue width, ClearPropertyValue? clearValue

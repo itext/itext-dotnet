@@ -66,6 +66,11 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void FootnoteTest() {
             String fileName = "footnote";
@@ -1349,7 +1354,7 @@ namespace iText.Layout {
             String fileName = "sectionBreakInsideTableHeader";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
                     SectionBreak sectionBreak = new SectionBreak(new PageMarginBoxes(elements));
@@ -1380,7 +1385,7 @@ namespace iText.Layout {
             String fileName = "sectionBreakInsideTableBody";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
                     SectionBreak sectionBreak = new SectionBreak(new PageMarginBoxes(elements));
@@ -1411,7 +1416,7 @@ namespace iText.Layout {
             String fileName = "sectionBreakInsideTableFooter";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     IList<PageMarginContent> elements = PageMarginsTestUtil.GetPageMargins1();
                     SectionBreak sectionBreak = new SectionBreak(new PageMarginBoxes(elements));

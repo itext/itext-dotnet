@@ -48,11 +48,16 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void TextOverflowTest01() {
             String outFileName = destinationFolder + "textOverflowTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_textOverflowTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             StringBuilder text = new StringBuilder();
             for (int i = 0; i < 1000; i++) {
@@ -69,7 +74,7 @@ namespace iText.Layout {
         public virtual void TextOverflowTest02() {
             String outFileName = destinationFolder + "textOverflowTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_textOverflowTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             iText.Layout.Element.Text overflowText = new iText.Layout.Element.Text("This is a long-long and large text which will not overflow"
                 ).SetFontSize(19).SetFontColor(ColorConstants.RED);
@@ -85,7 +90,7 @@ namespace iText.Layout {
         public virtual void TextOverflowTest03() {
             String outFileName = destinationFolder + "textOverflowTest03.pdf";
             String cmpFileName = sourceFolder + "cmp_textOverflowTest03.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             iText.Layout.Element.Text overflowText = new iText.Layout.Element.Text("This is a long-long and large text which will overflow"
                 ).SetFontSize(25).SetFontColor(ColorConstants.RED);
@@ -101,7 +106,7 @@ namespace iText.Layout {
         public virtual void TextOverflowTest04() {
             String outFileName = destinationFolder + "textOverflowTest04.pdf";
             String cmpFileName = sourceFolder + "cmp_textOverflowTest04.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("ThisIsALongTextWithNoSpacesSoSplittingShouldBeForcedInThisCase").SetFontSize(20
                 ));
@@ -115,7 +120,7 @@ namespace iText.Layout {
             String outFileName = destinationFolder + "alignedInlineContentOverflowHiddenTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_alignedInlineContentOverflowHiddenTest01.pdf";
             String imgPath = sourceFolder + "itis.jpg";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div div = new Div().SetHeight(150f).SetWidth(150f).SetBorder(new SolidBorder(5f));
             div.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.HIDDEN);
@@ -137,7 +142,7 @@ namespace iText.Layout {
             String outFileName = destinationFolder + "alignedInlineContentOverflowHiddenTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_alignedInlineContentOverflowHiddenTest02.pdf";
             String imgPath = sourceFolder + "itis.jpg";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(imgPath));
             Paragraph p = new Paragraph().SetTextAlignment(TextAlignment.CENTER).SetHeight(150f).SetWidth(150f).SetBorder
@@ -156,7 +161,7 @@ namespace iText.Layout {
         public virtual void OverflowHiddenOnCanvasTest01() {
             String outFileName = destinationFolder + "overflowHiddenOnCanvasTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_overflowHiddenOnCanvasTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             PdfPage page = pdfDocument.AddNewPage();
             iText.Layout.Canvas canvas = new Canvas(new PdfCanvas(page), page.GetPageSize().Clone().ApplyMargins(36, 36
                 , 36, 36, false));
@@ -171,7 +176,7 @@ namespace iText.Layout {
         public virtual void OverflowHiddenOnCanvasTest02() {
             String outFileName = destinationFolder + "overflowHiddenOnCanvasTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_overflowHiddenOnCanvasTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             PdfPage page = pdfDocument.AddNewPage();
             iText.Layout.Canvas canvas = new iText.Layout.Canvas(page, page.GetPageSize().Clone().ApplyMargins(36, 36, 
                 36, 36, false));
@@ -186,7 +191,7 @@ namespace iText.Layout {
         public virtual void OverflowVisibleOnCanvasTest01() {
             String outFileName = destinationFolder + "overflowVisibleOnCanvasTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_overflowVisibleOnCanvasTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             PdfPage page = pdfDocument.AddNewPage();
             iText.Layout.Canvas canvas = new iText.Layout.Canvas(new PdfCanvas(page), page.GetPageSize().Clone().ApplyMargins
                 (36, 36, 36, 36, false));
@@ -201,7 +206,7 @@ namespace iText.Layout {
         public virtual void OverflowVisibleOnCanvasTest02() {
             String outFileName = destinationFolder + "overflowVisibleOnCanvasTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_overflowVisibleOnCanvasTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             PdfPage page = pdfDocument.AddNewPage();
             iText.Layout.Canvas canvas = new iText.Layout.Canvas(page, page.GetPageSize().Clone().ApplyMargins(36, 36, 
                 36, 36, false));
@@ -229,7 +234,7 @@ namespace iText.Layout {
         public virtual void ForcedPlacementTest01() {
             String outFileName = destinationFolder + "forcedPlacementTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_forcedPlacementTest01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)));
             String text = "Text that is not fitting into single line, but requires several of them. " + "It should be repeated twice and all of it should be shown in the document. ";
             Div div = new Div();
             div.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
@@ -255,7 +260,7 @@ namespace iText.Layout {
         public virtual void ForcedPlacementTest02() {
             String outFileName = destinationFolder + "forcedPlacementTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_forcedPlacementTest02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)));
             String text = "Text that is not fitting into single line, but requires several of them. " + "It should be repeated twice and all of it should be shown in the document. ";
             Div div = new Div();
             div.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));

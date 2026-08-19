@@ -225,10 +225,10 @@ namespace iText.Kernel.Pdf {
         public virtual void HybridReferenceIncrementTwiceTest() {
             String inFileName = sourceFolder + "hybridReferenceDocument.pdf";
             String outFileName = destinationFolder + "hybridReferenceDocumentUpdateTwice.pdf";
-            PdfDocument pdfDoc1 = new PdfDocument(new PdfReader(inFileName), new PdfWriter(destinationFolder + "hybridReferenceDocumentUpdate.pdf"
-                ), new StampingProperties().UseAppendMode());
+            PdfDocument pdfDoc1 = new PdfDocument(new PdfReader(inFileName), CompareTool.CreateTestPdfWriter(destinationFolder
+                 + "hybridReferenceDocumentUpdate.pdf"), new StampingProperties().UseAppendMode());
             pdfDoc1.Close();
-            PdfDocument pdfDoc2 = new PdfDocument(new PdfReader(destinationFolder + "hybridReferenceDocumentUpdate.pdf"
+            PdfDocument pdfDoc2 = new PdfDocument(CompareTool.CreateOutputReader(destinationFolder + "hybridReferenceDocumentUpdate.pdf"
                 ), CompareTool.CreateTestPdfWriter(outFileName), new StampingProperties().UseAppendMode());
             pdfDoc2.Close();
             //if document processed correctly, no errors should occur

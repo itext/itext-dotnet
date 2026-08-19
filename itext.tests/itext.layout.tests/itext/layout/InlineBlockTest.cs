@@ -45,13 +45,18 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void InlineTableTest01() {
             // TODO DEVSIX-1967
             String name = "inlineTableTest01.pdf";
             String outFileName = destinationFolder + name;
             String cmpFileName = sourceFolder + "cmp_" + name;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Paragraph p = new Paragraph().SetMultipliedLeading(0);
             p.Add(new Paragraph("This is inline table: ").SetBorder(new SolidBorder(1)).SetMultipliedLeading(0));
@@ -84,7 +89,7 @@ namespace iText.Layout {
             String name = "deepNestingInlineBlocksTest01.pdf";
             String outFileName = destinationFolder + name;
             String cmpFileName = sourceFolder + "cmp_" + name;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Color[] colors = new Color[] { ColorConstants.BLUE, ColorConstants.RED, ColorConstants.LIGHT_GRAY, ColorConstants
                 .ORANGE };
@@ -120,7 +125,7 @@ namespace iText.Layout {
             String name = "wrappingAfter100PercentWidthFloatTest.pdf";
             String output = destinationFolder + name;
             String cmp = sourceFolder + "cmp_" + name;
-            using (Document doc = new Document(new PdfDocument(new PdfWriter(output)))) {
+            using (Document doc = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(output)))) {
                 Div floatingDiv = new Div().SetWidth(UnitValue.CreatePercentValue(100)).SetHeight(10).SetBorder(new SolidBorder
                     (1)).SetBackgroundColor(ColorConstants.RED);
                 floatingDiv.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
@@ -143,7 +148,7 @@ namespace iText.Layout {
             String name = "areaBreakWithinInlineBlockTest.pdf";
             String output = destinationFolder + name;
             String cmp = sourceFolder + "cmp_" + name;
-            using (Document doc = new Document(new PdfDocument(new PdfWriter(output)))) {
+            using (Document doc = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(output)))) {
                 AnonymousInlineBox root = new AnonymousInlineBox();
                 Div container = new Div();
                 container.Add(new AreaBreak());

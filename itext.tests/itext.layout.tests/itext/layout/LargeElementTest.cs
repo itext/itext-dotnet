@@ -50,12 +50,17 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void LargeTableTest01() {
             String testName = "largeTableTest01.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(5), true);
             doc.Add(table);
@@ -82,7 +87,7 @@ namespace iText.Layout {
             String testName = "largeTableTest02.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(5), true).SetMargins(20, 20, 20, 20);
             doc.Add(table);
@@ -106,7 +111,7 @@ namespace iText.Layout {
             String testName = "largeTableWithEmptyLastRowTest.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(5), true);
             doc.Add(table);
@@ -134,7 +139,7 @@ namespace iText.Layout {
             String testName = "flushingLargeTableAfterStartingNewRowTest.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(5), true);
             doc.Add(table);
@@ -154,7 +159,7 @@ namespace iText.Layout {
             String testName = "largeTableWithCollapsedFooterTest.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(5), true);
             doc.Add(table);
@@ -180,7 +185,7 @@ namespace iText.Layout {
             String testName = "largeTableWithHeaderFooterTest01A.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(5), true);
             doc.Add(table);
@@ -207,7 +212,7 @@ namespace iText.Layout {
             String testName = "largeTableWithHeaderFooterTest01ASeparated.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(5), true);
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
@@ -237,7 +242,7 @@ namespace iText.Layout {
             String testName = "largeTableWithHeaderFooterTest01B.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(5), true);
             doc.Add(table);
@@ -268,7 +273,7 @@ namespace iText.Layout {
             String testName = "largeTableWithHeaderFooterTest01C.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A6.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(5), true);
             doc.Add(table);
@@ -299,7 +304,7 @@ namespace iText.Layout {
             String testName = "largeTableWithHeaderFooterTest01CForcedPlacement.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A6.Rotate());
             // separate
             Table table = new Table(UnitValue.CreatePercentArray(5), true);
@@ -354,7 +359,7 @@ namespace iText.Layout {
             String testName = "largeTableWithHeaderFooterTest01D.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A6.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(5), true);
             table.SetSkipLastFooter(true);
@@ -386,7 +391,7 @@ namespace iText.Layout {
             String testName = "largeTableWithHeaderFooterTest01DSeparated.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A6.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(5), true);
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
@@ -419,7 +424,7 @@ namespace iText.Layout {
             String testName = "largeTableWithHeaderFooterTest01E.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(5), true);
             Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)"));
@@ -450,7 +455,7 @@ namespace iText.Layout {
             String testName = "largeTableWithHeaderFooterTest01ESeparated.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(5), true);
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
@@ -484,7 +489,7 @@ namespace iText.Layout {
             String testName = "largeTableWithHeaderFooterTest02.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(5), true);
             doc.Add(table);
@@ -513,7 +518,7 @@ namespace iText.Layout {
             String testName = "largeTableWithHeaderFooterTest03.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(5), true);
             doc.Add(table);
@@ -542,7 +547,7 @@ namespace iText.Layout {
             String testName = "largeTableWithHeaderFooterTest04.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(5), true);
             doc.Add(table);
@@ -568,7 +573,7 @@ namespace iText.Layout {
             String testName = "largeTableWithLayoutResultNothingTest01.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A1.Rotate());
             float[] colWidths = new float[] { 300, 150, 50, 100 };
             // the second column has colspan value as 2
@@ -600,7 +605,7 @@ namespace iText.Layout {
             String testName = "tableWithLayoutResultNothingTest01.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A1.Rotate());
             float[] colWidths = new float[] { 300, 150, 50, 100 };
             int numOfColumns = colWidths.Length - 1;
@@ -632,7 +637,7 @@ namespace iText.Layout {
             String testName = "largeTableWithLayoutResultNothingTest02.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
             float[] colWidths = new float[] { 200, 1, 2, 4 };
             Table table = new Table(UnitValue.CreatePointArray(colWidths), true);
@@ -657,7 +662,7 @@ namespace iText.Layout {
             String testName = "largeTableWithLayoutResultNothingTest03.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
             float[] colWidths = new float[] { 200, -1, 20, 40 };
             Table table = new Table(UnitValue.CreatePointArray(colWidths), true);
@@ -746,7 +751,7 @@ namespace iText.Layout {
 
         private void LargeTableSplitTest(String outFileName, float pageHeight, float rowsNumber, bool addFooter, bool
              separate) {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, new PageSize(595, pageHeight));
             float[] colWidths = new float[] { 200, -1, 20, 40 };
             Table table = new Table(UnitValue.CreatePointArray(colWidths), true);
@@ -775,7 +780,7 @@ namespace iText.Layout {
             String testName = "largeTableWithTableBorderSplitTest.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, new PageSize(595, 100));
             float[] colWidths = new float[] { 200, -1, 20, 40 };
             Table table = new Table(UnitValue.CreatePointArray(colWidths), true);
@@ -800,7 +805,7 @@ namespace iText.Layout {
             String testName = "largeTableWithTableBorderSplitTest02.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, new PageSize(595, 100));
             Table table = new Table(2, true);
             doc.Add(table);
@@ -820,7 +825,7 @@ namespace iText.Layout {
             String testName = "largeTableWithCellBordersSplitTest1.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             float[] colWidths = new float[] { 30, 30, 30 };
             Table table = new Table(colWidths, true).SetWidth(290);
@@ -845,7 +850,7 @@ namespace iText.Layout {
             String testName = "largeTableWithCellBordersSplitTest.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, new PageSize(595, 100));
             float[] colWidths = new float[] { 200, -1, 20, 40 };
             Table table = new Table(UnitValue.CreatePointArray(colWidths), true);
@@ -872,7 +877,7 @@ namespace iText.Layout {
             String testName = "largeTableWithCellBordersSplitTest02.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, new PageSize(595, 100));
             float[] colWidths = new float[] { 200, 40 };
             Table table = new Table(UnitValue.CreatePointArray(colWidths), true);
@@ -893,7 +898,7 @@ namespace iText.Layout {
             String testName = "simpleLargeTableDifferentCellBottomBorderTest.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(2, true);
             doc.Add(table);
@@ -917,7 +922,7 @@ namespace iText.Layout {
             String testName = "largeTableSplitFooter2Test.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, new PageSize(595, 400));
             float[] colWidths = new float[] { 100 };
             Table table = new Table(UnitValue.CreatePointArray(colWidths), true);
@@ -943,7 +948,7 @@ namespace iText.Layout {
             String testName = "largeTableSplitFooter2ATest.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(1, true);
             doc.Add(table);
@@ -965,7 +970,7 @@ namespace iText.Layout {
             String testName = "largeTableSplitFooter2BTest.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, new PageSize(595, 900));
             AddSpecificTableConsideringFlushes(doc, false, false);
             doc.Add(new AreaBreak());
@@ -985,7 +990,7 @@ namespace iText.Layout {
             String testName = "largeTableCollapsingSplitTest.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, new PageSize(595, 400));
             float[] colWidths = new float[] { 100 };
             Table table = new Table(UnitValue.CreatePointArray(colWidths), true);
@@ -1006,7 +1011,7 @@ namespace iText.Layout {
             String testName = "largeTableOnDifferentPages01.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.SetRenderer(new LargeElementTest.DifferentPagesDocumentRenderer(doc));
             float[] colWidths = new float[] { 200, -1, 20, 40 };
@@ -1035,7 +1040,7 @@ namespace iText.Layout {
             String testName = "tableOnDifferentPages01.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.SetRenderer(new LargeElementTest.DifferentPagesDocumentRenderer(doc));
             float[] colWidths = new float[] { 200, -1, 20, 40 };
@@ -1060,7 +1065,7 @@ namespace iText.Layout {
             String testName = "largeTableOnDifferentPages01A.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             float[] colWidths = new float[] { 200, -1, 20, 40 };
             Table table = new Table(UnitValue.CreatePointArray(colWidths), true);
@@ -1086,7 +1091,7 @@ namespace iText.Layout {
             String testName = "tableOnDifferentPages02.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.SetRenderer(new LargeElementTest.DifferentPagesDocumentRenderer(doc));
             float[] colWidths = new float[] { 200, -1, 20, 40 };
@@ -1112,7 +1117,7 @@ namespace iText.Layout {
             String testName = "reuseLargeTableTest01.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             float[] colWidths = new float[] { 200, -1, 20, 40 };
             Table table = new Table(UnitValue.CreatePointArray(colWidths), true);
@@ -1160,7 +1165,7 @@ namespace iText.Layout {
             String testName = "largeEmptyTableTest.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(1), true);
             doc.Add(table);
@@ -1180,7 +1185,7 @@ namespace iText.Layout {
             String testName = "largeEmptyTableTest02.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(3), true);
             doc.Add(table);
@@ -1252,7 +1257,7 @@ namespace iText.Layout {
             String testName = "largeEmptyTableTest02Separated.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(3), true);
             table.SetBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
@@ -1326,7 +1331,7 @@ namespace iText.Layout {
             String testName = "largeTableFooterNotFitTest.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, new PageSize(595, 100));
             Table table = new Table(1, true);
             Cell footerCell = new Cell().Add(new Paragraph("Table footer: continue on next page"));

@@ -49,11 +49,16 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void NestedListTest01() {
             String outFileName = destinationFolder + "nestedListTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_nestedListTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             List romanList2 = new List(ListNumberingType.ROMAN_LOWER).SetSymbolIndent(20).SetMarginLeft(25).Add("One")
                 .Add("Two").Add("Three");
@@ -72,7 +77,7 @@ namespace iText.Layout {
         public virtual void NestedListTest02() {
             String outFileName = destinationFolder + "nestedListTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_nestedListTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             List nestedList = new List().SetSymbolIndent(20).SetMarginLeft(25).Add("One").Add("Two").Add("Three");
             List list = new List(ListNumberingType.DECIMAL).SetSymbolIndent(20).Add("One").Add("Two").Add("Three").Add
@@ -87,7 +92,7 @@ namespace iText.Layout {
         public virtual void ListNestedInTableTest01() {
             String outFileName = destinationFolder + "listNestedInTableTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_listNestedInTableTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument, PageSize.A9.Rotate());
             List list = new List(ListNumberingType.DECIMAL).Add("first string").Add("second string").Add("third string"
                 ).Add("fourth string");
@@ -103,7 +108,7 @@ namespace iText.Layout {
         public virtual void ListNumberingTest01() {
             String outFileName = destinationFolder + "listNumberingTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_listNumberingTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             IList<List> lists = new List<List>();
             lists.Add(new List(ListNumberingType.DECIMAL));
@@ -131,7 +136,7 @@ namespace iText.Layout {
         public virtual void AddListOnShortPage1() {
             String outFileName = destinationFolder + "addListOnShortPage1.pdf";
             String cmpFileName = sourceFolder + "cmp_addListOnShortPage1.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, new PageSize(500, 60));
             ListItem item = new ListItem();
             ListItem nestedItem = new ListItem();
@@ -158,7 +163,7 @@ namespace iText.Layout {
         public virtual void AddListOnShortPage2() {
             String outFileName = destinationFolder + "addListOnShortPage2.pdf";
             String cmpFileName = sourceFolder + "cmp_addListOnShortPage2.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName)).SetTagged();
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)).SetTagged();
             Document doc = new Document(pdfDoc, new PageSize(500, 130));
             List list = new List(ListNumberingType.DECIMAL);
             ListItem item = new ListItem();
@@ -184,7 +189,7 @@ namespace iText.Layout {
         public virtual void DivInListItemTest01() {
             String outFileName = destinationFolder + "divInListItemTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_divInListItemTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             ListItem item = new ListItem();
             item.Add(new Div().Add(new Paragraph("text")));
@@ -198,7 +203,7 @@ namespace iText.Layout {
         public virtual void ListOverflowTest01() {
             String outFileName = destinationFolder + "listOverflowTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_listOverflowTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p = new Paragraph("Test String");
             List list = new List(ListNumberingType.DECIMAL).Add("first string").Add("second string").Add("third string"
@@ -216,7 +221,7 @@ namespace iText.Layout {
         public virtual void ListOverflowTest02() {
             String outFileName = destinationFolder + "listOverflowTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_listOverflowTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p = new Paragraph("Test String");
             List list = new List(ListNumberingType.DECIMAL).Add("first string");
@@ -235,7 +240,7 @@ namespace iText.Layout {
         public virtual void ListOverflowTest03() {
             String outFileName = destinationFolder + "listOverflowTest03.pdf";
             String cmpFileName = sourceFolder + "cmp_listOverflowTest03.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p = new Paragraph("Test String");
             List list = new List(ListNumberingType.DECIMAL).SetItemStartIndex(10).Add("first string").Add("second string"
@@ -253,7 +258,7 @@ namespace iText.Layout {
         public virtual void ListEmptyItemTest01() {
             String outFileName = destinationFolder + "listEmptyItemTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_listEmptyItemTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName)).SetTagged();
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)).SetTagged();
             Document document = new Document(pdfDocument);
             List list = new List(ListNumberingType.GREEK_LOWER);
             list.Add(new ListItem()).Add(new ListItem()).Add(new ListItem()).Add("123").Add((ListItem)new ListItem().Add
@@ -268,7 +273,7 @@ namespace iText.Layout {
         public virtual void ImageInListTest01() {
             String outFileName = destinationFolder + "imageInListTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_imageInListTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             List list = new List(ListNumberingType.GREEK_LOWER);
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
@@ -285,7 +290,7 @@ namespace iText.Layout {
         public virtual void ListItemAlignmentTest01() {
             String outFileName = destinationFolder + "listItemAlignmentTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_listItemAlignmentTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             List list = new List(ListNumberingType.DECIMAL).SetListSymbolAlignment(ListSymbolAlignment.LEFT);
             for (int i = 1; i <= 30; i++) {
@@ -301,7 +306,7 @@ namespace iText.Layout {
         public virtual void ListItemTest01() {
             String outFileName = destinationFolder + "listItemTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_listItemTest01.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf);
             List list = new List();
             list.Add(new ListItem("The quick brown").SetListSymbol(ListNumberingType.ZAPF_DINGBATS_1)).Add(new ListItem
@@ -318,7 +323,7 @@ namespace iText.Layout {
         public virtual void ListItemTest02() {
             String outFileName = destinationFolder + "listItemTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_listItemTest02.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf);
             document.SetFontColor(ColorConstants.WHITE);
             List list = new List();
@@ -339,7 +344,7 @@ namespace iText.Layout {
         public virtual void ListItemWithoutMarginsTest() {
             String outFileName = destinationFolder + "listItemWithoutMarginsTest.pdf";
             String cmpFileName = sourceFolder + "cmp_listItemWithoutMarginsTest.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf);
             document.SetMargins(0, 0, 0, 0);
             List list = new List();
@@ -356,7 +361,7 @@ namespace iText.Layout {
         public virtual void ListItemBigMarginsTest() {
             String outFileName = destinationFolder + "listItemBigMarginsTest.pdf";
             String cmpFileName = sourceFolder + "cmp_listItemBigMarginsTest.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf);
             int margin = 100;
             document.SetMargins(margin, margin, margin, margin);
@@ -374,7 +379,7 @@ namespace iText.Layout {
         public virtual void MaxMarginWidthWhereTheBulletIsNotDrawnTest() {
             String outFileName = destinationFolder + "maxMarginWidthWhereTheBulletIsNotDrawn.pdf";
             String cmpFileName = sourceFolder + "cmp_maxMarginWidthWhereTheBulletIsNotDrawn.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf);
             int margin = 50;
             document.SetMargins(margin, margin, margin, margin);
@@ -394,7 +399,7 @@ namespace iText.Layout {
         public virtual void InitialMarginWidthWhereTheBulletIsDrawnTest() {
             String outFileName = destinationFolder + "initialMarginWidthWhereTheBulletIsDrawn.pdf";
             String cmpFileName = sourceFolder + "cmp_initialMarginWidthWhereTheBulletIsDrawn.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf);
             int margin = 49;
             document.SetMargins(margin, margin, margin, margin);
@@ -415,7 +420,7 @@ namespace iText.Layout {
         public virtual void ListWithSetHeightProperties01() {
             String outFileName = destinationFolder + "listWithSetHeightProperties01.pdf";
             String cmpFileName = sourceFolder + "cmp_listWithSetHeightProperties01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph("Default layout:"));
             ListItem item = new ListItem();
@@ -503,7 +508,7 @@ namespace iText.Layout {
         public virtual void ListItemNullSymbol() {
             String outFileName = destinationFolder + "listItemNullSymbol.pdf";
             String cmpFileName = sourceFolder + "cmp_listItemNullSymbol.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             List list = new List();
             list.Add(new ListItem("List item 1"));
@@ -525,7 +530,7 @@ namespace iText.Layout {
         public virtual void ListSymbolForcedPlacement01() {
             String outFileName = destinationFolder + "listSymbolForcedPlacement01.pdf";
             String cmpFileName = sourceFolder + "cmp_listSymbolForcedPlacement01.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf);
             // This may seem like a contrived example, but in real life, this happened
             // with a two-column layout. The key is that the label is wider than the column.
@@ -547,7 +552,7 @@ namespace iText.Layout {
             // There is no symbol indent in html: one uses margins for such a purpose.
             String outFileName = destinationFolder + "bothSymbolIndentAndMarginAreSetTest.pdf";
             String cmpFileName = sourceFolder + "cmp_bothSymbolIndentAndMarginAreSetTest.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf);
             List l = CreateTestList();
             ListItem li = new ListItem("Only symbol indent: 50pt");
@@ -568,7 +573,7 @@ namespace iText.Layout {
         public virtual void ListItemMarginInPercentTest() {
             String outFileName = destinationFolder + "listItemMarginInPercentTest.pdf";
             String cmpFileName = sourceFolder + "cmp_listItemMarginInPercentTest.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf);
             List l = CreateTestList();
             ListItem li = new ListItem("Left margin in percent: 50%");
@@ -585,7 +590,7 @@ namespace iText.Layout {
         public virtual void ListItemWithImageSymbolPositionTest() {
             String outFileName = destinationFolder + "listItemWithImageSymbolPositionTest.pdf";
             String cmpFileName = sourceFolder + "cmp_listItemWithImageSymbolPositionTest.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf);
             List l = new List();
             l.SetMarginLeft(50);
@@ -612,7 +617,7 @@ namespace iText.Layout {
         public virtual void ListItemWrappedDivSymbolInside() {
             String outFileName = destinationFolder + "listItemWrappedDivSymbolInside.pdf";
             String cmpFileName = sourceFolder + "cmp_listItemWrappedDivSymbolInside.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf);
             List l = new List();
             l.SetMarginLeft(50);
@@ -634,7 +639,7 @@ namespace iText.Layout {
         public virtual void ListSymbolOnPageSplit() {
             String outFileName = destinationFolder + "listSymbolOnPageSplit.pdf";
             String cmpFileName = sourceFolder + "cmp_listSymbolOnPageSplit.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf);
             Div div = new Div().SetHeight(750);
             List l = new List();
