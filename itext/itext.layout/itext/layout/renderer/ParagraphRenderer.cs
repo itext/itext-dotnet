@@ -251,7 +251,8 @@ namespace iText.Layout.Renderer {
                     () > 0;
                 bool isFit = processedRenderer != null;
                 float deltaY = 0;
-                if (isFit && !RenderingMode.HTML_MODE.Equals(this.GetProperty<RenderingMode?>(Property.RENDERING_MODE))) {
+                if (isFit && this.GetProperty<RenderingMode?>(Property.RENDERING_MODE) != RenderingMode.HTML_MODE && !IsVerticalWriting
+                    ()) {
                     if (lineHasContent) {
                         float indentFromLastLine = previousDescent - lastLineBottomLeadingIndent - (leading != null ? processedRenderer
                             .GetTopLeadingIndent(leading) : 0) - processedRenderer.GetMaxAscent();
@@ -398,7 +399,15 @@ namespace iText.Layout.Renderer {
                         FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
                     }
                     firstLineInBox = false;
-                    layoutBox.SetHeight(processedRenderer.GetOccupiedArea().GetBBox().GetY() - layoutBox.GetY());
+                    if (IsVerticalWriting()) {
+                        // TODO DEVSIX-10137 Distance between lines is currently equal to two line widths.
+                        float lineWidth = processedRenderer.GetOccupiedArea().GetBBox().GetWidth();
+                        layoutBox.SetX(processedRenderer.GetOccupiedArea().GetBBox().GetX() + (lineWidth * 2));
+                        layoutBox.SetWidth(layoutBox.GetWidth() - (lineWidth * 2));
+                    }
+                    else {
+                        layoutBox.SetHeight(processedRenderer.GetOccupiedArea().GetBBox().GetY() - layoutBox.GetY());
+                    }
                     lines.Add(processedRenderer);
                     anythingPlaced = true;
                     currentRenderer = (LineRenderer)result.GetOverflowRenderer();
@@ -410,7 +419,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            if (!RenderingMode.HTML_MODE.Equals(this.GetProperty<RenderingMode?>(Property.RENDERING_MODE))) {
+            if (this.GetProperty<RenderingMode?>(Property.RENDERING_MODE) != RenderingMode.HTML_MODE) {
                 float moveDown = lastLineBottomLeadingIndent;
                 if (IsOverflowFit(overflowY) && moveDown > occupiedArea.GetBBox().GetY() - layoutBox.GetY()) {
                     moveDown = occupiedArea.GetBBox().GetY() - layoutBox.GetY();

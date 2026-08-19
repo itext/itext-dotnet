@@ -143,8 +143,15 @@ namespace iText.Layout.Renderer {
                 IRenderer directChildRenderer = GetChildRenderers()[childPos];
                 IRenderer childRenderer = UnwrapChildRendererIfNeeded(directChildRenderer);
                 LayoutResult childResult = null;
-                Rectangle bbox = new Rectangle(layoutBox.GetX() + curWidth, layoutBox.GetY(), layoutBox.GetWidth() - curWidth
-                    , layoutBox.GetHeight());
+                Rectangle bbox;
+                if (IsVerticalWriting()) {
+                    bbox = new Rectangle(layoutBox.GetX(), layoutBox.GetY(), layoutBox.GetWidth(), layoutBox.GetHeight() - curWidth
+                        );
+                }
+                else {
+                    bbox = new Rectangle(layoutBox.GetX() + curWidth, layoutBox.GetY(), layoutBox.GetWidth() - curWidth, layoutBox
+                        .GetHeight());
+                }
                 if (childRenderer is AbsolutelyPositionedRenderer) {
                     childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(), bbox), wasParentsHeightClipped
                         ));
@@ -522,15 +529,24 @@ namespace iText.Layout.Renderer {
                     else {
                         if (null == hangingTabStop) {
                             if (childResult.GetOccupiedArea() != null && childResult.GetOccupiedArea().GetBBox() != null) {
-                                curWidth += childResult.GetOccupiedArea().GetBBox().GetWidth();
+                                curWidth += IsVerticalWriting() ? childResult.GetOccupiedArea().GetBBox().GetHeight() : childResult.GetOccupiedArea
+                                    ().GetBBox().GetWidth();
                             }
                             widthHandler.UpdateMinChildWidth(minChildWidth_1 + currChildTextIndent);
                             widthHandler.UpdateMaxChildWidth(maxChildWidth_1 + currChildTextIndent);
                         }
                     }
                     if (!forceOverflowForTextRendererPartialResult) {
-                        occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox.GetHeight() - maxHeight, 
-                            curWidth, maxHeight));
+                        if (IsVerticalWriting()) {
+                            float maxLineWidth = Math.Max(occupiedArea.GetBBox().GetWidth(), childResult.GetOccupiedArea().GetBBox().GetWidth
+                                ());
+                            occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox.GetHeight() - curWidth, 
+                                maxLineWidth, curWidth));
+                        }
+                        else {
+                            occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox.GetHeight() - maxHeight, 
+                                curWidth, maxHeight));
+                        }
                     }
                 }
                 if (shouldBreakLayouting) {
@@ -865,22 +881,26 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual LineRenderer AdjustChildrenYLine() {
-            if (RenderingMode.HTML_MODE == this.GetProperty<RenderingMode?>(Property.RENDERING_MODE) && HasInlineBlocksWithVerticalAlignment
-                ()) {
-                InlineVerticalAlignmentHelper.AdjustChildrenYLineHtmlMode(this);
-            }
-            else {
-                AdjustChildrenYLineDefaultMode();
+            if (!IsVerticalWriting()) {
+                if (RenderingMode.HTML_MODE == this.GetProperty<RenderingMode?>(Property.RENDERING_MODE) && HasInlineBlocksWithVerticalAlignment
+                    ()) {
+                    InlineVerticalAlignmentHelper.AdjustChildrenYLineHtmlMode(this);
+                }
+                else {
+                    AdjustChildrenYLineDefaultMode();
+                }
             }
             return this;
         }
 
         protected internal virtual void ApplyLeading(float deltaY) {
-            occupiedArea.GetBBox().MoveUp(deltaY);
-            occupiedArea.GetBBox().DecreaseHeight(deltaY);
-            foreach (IRenderer child in GetChildRenderers()) {
-                if (!FloatingHelper.IsRendererFloating(child)) {
-                    child.Move(0, deltaY);
+            if (!IsVerticalWriting()) {
+                occupiedArea.GetBBox().MoveUp(deltaY);
+                occupiedArea.GetBBox().DecreaseHeight(deltaY);
+                foreach (IRenderer child in GetChildRenderers()) {
+                    if (!FloatingHelper.IsRendererFloating(child)) {
+                        child.Move(0, deltaY);
+                    }
                 }
             }
         }
@@ -897,7 +917,13 @@ namespace iText.Layout.Renderer {
             lastRenderer = UnwrapChildRendererIfNeeded(lastRenderer);
             if (lastRenderer is TextRenderer && lastIndex >= 0) {
                 float trimmedSpace = ((TextRenderer)lastRenderer).TrimLast();
-                occupiedArea.GetBBox().SetWidth(occupiedArea.GetBBox().GetWidth() - trimmedSpace);
+                if (IsVerticalWriting()) {
+                    occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() - trimmedSpace);
+                    occupiedArea.GetBBox().SetY(occupiedArea.GetBBox().GetY() + trimmedSpace);
+                }
+                else {
+                    occupiedArea.GetBBox().SetWidth(occupiedArea.GetBBox().GetWidth() - trimmedSpace);
+                }
             }
             return this;
         }

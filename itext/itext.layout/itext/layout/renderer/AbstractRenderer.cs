@@ -3066,6 +3066,15 @@ namespace iText.Layout.Renderer {
         }
 //\endcond
 
+//\cond DO_NOT_DOCUMENT
+        internal virtual bool IsVerticalWriting() {
+            if (this.GetProperty<WritingMode?>(Property.WRITING_MODE) == WritingMode.VERTICAL_LR) {
+                return this.GetProperty<VerticalTextOrientation?>(Property.TEXT_ORIENTATION) == VerticalTextOrientation.UPRIGHT;
+            }
+            return false;
+        }
+//\endcond
+
         private void RemoveThisFromParent(IRenderer toRemove) {
             // we need to be sure that the removed element has no other entries in child renderers list
             if (toRemove != null && this == toRemove.GetParent() && !this.childRenderers.Contains(toRemove)) {
