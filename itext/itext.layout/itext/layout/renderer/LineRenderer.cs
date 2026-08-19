@@ -97,7 +97,7 @@ namespace iText.Layout.Renderer {
                 GetHeight()).SetHeight(0).SetWidth(0));
             UpdateChildrenParent();
             TargetCounterHandler.AddPageByID(this);
-            float curWidth = 0;
+            float curMainAxisOccupiedSize = 0;
             if (RenderingMode.HTML_MODE.Equals(this.GetProperty<RenderingMode?>(Property.RENDERING_MODE)) && HasChildRendererInHtmlMode
                 ()) {
                 float[] ascenderDescender = LineHeightHelper.GetActualAscenderDescender(this);
@@ -145,12 +145,12 @@ namespace iText.Layout.Renderer {
                 LayoutResult childResult = null;
                 Rectangle bbox;
                 if (IsVerticalWriting()) {
-                    bbox = new Rectangle(layoutBox.GetX(), layoutBox.GetY(), layoutBox.GetWidth(), layoutBox.GetHeight() - curWidth
+                    bbox = new Rectangle(layoutBox.GetX(), layoutBox.GetY(), layoutBox.GetWidth(), layoutBox.GetHeight() - curMainAxisOccupiedSize
                         );
                 }
                 else {
-                    bbox = new Rectangle(layoutBox.GetX() + curWidth, layoutBox.GetY(), layoutBox.GetWidth() - curWidth, layoutBox
-                        .GetHeight());
+                    bbox = new Rectangle(layoutBox.GetX() + curMainAxisOccupiedSize, layoutBox.GetY(), layoutBox.GetWidth() - 
+                        curMainAxisOccupiedSize, layoutBox.GetHeight());
                 }
                 if (childRenderer is AbsolutelyPositionedRenderer) {
                     childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(), bbox), wasParentsHeightClipped
@@ -178,10 +178,10 @@ namespace iText.Layout.Renderer {
                             IRenderer tabRenderer = GetChildRenderers()[childPos - 1];
                             tabRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(), bbox), wasParentsHeightClipped
                                 ));
-                            curWidth += tabRenderer.GetOccupiedArea().GetBBox().GetWidth();
+                            curMainAxisOccupiedSize += tabRenderer.GetOccupiedArea().GetBBox().GetWidth();
                             widthHandler.UpdateMaxChildWidth(tabRenderer.GetOccupiedArea().GetBBox().GetWidth());
                         }
-                        hangingTabStop = CalculateTab(childRenderer, curWidth, layoutBox.GetWidth());
+                        hangingTabStop = CalculateTab(childRenderer, curMainAxisOccupiedSize, layoutBox.GetWidth());
                         if (childPos == GetChildRenderers().Count - 1) {
                             hangingTabStop = null;
                         }
@@ -448,7 +448,7 @@ namespace iText.Layout.Renderer {
                                 firstChildToRelayout = childPos;
                             }
                             else {
-                                curWidth -= TextSequenceWordWrapping.GetCurWidthRelayoutedTextSequenceDecrement(childPos, lastFittingChildRendererData
+                                curMainAxisOccupiedSize -= TextSequenceWordWrapping.GetCurWidthRelayoutedTextSequenceDecrement(childPos, lastFittingChildRendererData
                                     .childIndex, specialScriptLayoutResults);
                                 childPos = lastFittingChildRendererData.childIndex;
                                 childResult = lastFittingChildRendererData.childLayoutResult;
@@ -471,7 +471,7 @@ namespace iText.Layout.Renderer {
                                     firstChildToRelayout = childPos;
                                 }
                                 else {
-                                    curWidth -= TextSequenceWordWrapping.GetCurWidthRelayoutedTextSequenceDecrement(childPos, lastFittingChildRendererData
+                                    curMainAxisOccupiedSize -= TextSequenceWordWrapping.GetCurWidthRelayoutedTextSequenceDecrement(childPos, lastFittingChildRendererData
                                         .childIndex, textRendererLayoutResults);
                                     childAscentDescent = UpdateAscentDescentAfterTextRendererSequenceProcessing((lastFittingChildRendererData.
                                         childLayoutResult.GetStatus() == LayoutResult.NOTHING) ? (lastFittingChildRendererData.childIndex - 1)
@@ -502,7 +502,8 @@ namespace iText.Layout.Renderer {
                         IRenderer tabRenderer = GetChildRenderers()[lastTabIndex];
                         IList<IRenderer> affectedRenderers = new List<IRenderer>();
                         affectedRenderers.AddAll(GetChildRenderers().SubList(lastTabIndex + 1, childPos + 1));
-                        float tabWidth = CalculateTab(layoutBox, curWidth, hangingTabStop, affectedRenderers, tabRenderer);
+                        float tabWidth = CalculateTab(layoutBox, curMainAxisOccupiedSize, hangingTabStop, affectedRenderers, tabRenderer
+                            );
                         tabRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(), bbox), wasParentsHeightClipped
                             ));
                         float sumOfAffectedRendererWidths = 0;
@@ -515,12 +516,12 @@ namespace iText.Layout.Renderer {
                                 ).GetOccupiedArea().GetBBox().GetWidth(), 0);
                         }
                         float tabAndNextElemWidth = tabWidth + childResult.GetOccupiedArea().GetBBox().GetWidth();
-                        if (hangingTabStop.GetTabAlignment() == TabAlignment.RIGHT && curWidth + tabAndNextElemWidth < hangingTabStop
-                            .GetTabPosition()) {
-                            curWidth = hangingTabStop.GetTabPosition();
+                        if (hangingTabStop.GetTabAlignment() == TabAlignment.RIGHT && curMainAxisOccupiedSize + tabAndNextElemWidth
+                             < hangingTabStop.GetTabPosition()) {
+                            curMainAxisOccupiedSize = hangingTabStop.GetTabPosition();
                         }
                         else {
-                            curWidth += tabAndNextElemWidth;
+                            curMainAxisOccupiedSize += tabAndNextElemWidth;
                         }
                         widthHandler.UpdateMinChildWidth(minChildWidth_1 + currChildTextIndent);
                         widthHandler.UpdateMaxChildWidth(tabWidth + maxChildWidth_1 + currChildTextIndent);
@@ -529,8 +530,8 @@ namespace iText.Layout.Renderer {
                     else {
                         if (null == hangingTabStop) {
                             if (childResult.GetOccupiedArea() != null && childResult.GetOccupiedArea().GetBBox() != null) {
-                                curWidth += IsVerticalWriting() ? childResult.GetOccupiedArea().GetBBox().GetHeight() : childResult.GetOccupiedArea
-                                    ().GetBBox().GetWidth();
+                                curMainAxisOccupiedSize += IsVerticalWriting() ? childResult.GetOccupiedArea().GetBBox().GetHeight() : childResult
+                                    .GetOccupiedArea().GetBBox().GetWidth();
                             }
                             widthHandler.UpdateMinChildWidth(minChildWidth_1 + currChildTextIndent);
                             widthHandler.UpdateMaxChildWidth(maxChildWidth_1 + currChildTextIndent);
@@ -540,12 +541,12 @@ namespace iText.Layout.Renderer {
                         if (IsVerticalWriting()) {
                             float maxLineWidth = Math.Max(occupiedArea.GetBBox().GetWidth(), childResult.GetOccupiedArea().GetBBox().GetWidth
                                 ());
-                            occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox.GetHeight() - curWidth, 
-                                maxLineWidth, curWidth));
+                            occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox.GetHeight() - curMainAxisOccupiedSize
+                                , maxLineWidth, curMainAxisOccupiedSize));
                         }
                         else {
                             occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox.GetHeight() - maxHeight, 
-                                curWidth, maxHeight));
+                                curMainAxisOccupiedSize, maxHeight));
                         }
                     }
                 }
