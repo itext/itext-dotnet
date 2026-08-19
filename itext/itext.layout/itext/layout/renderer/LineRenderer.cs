@@ -71,6 +71,7 @@ namespace iText.Layout.Renderer {
             bool wasParentsHeightClipped = layoutContext.IsClippedHeight();
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             OverflowPropertyValue? oldXOverflow = null;
+            bool isVerticalWriting = IsVerticalWriting();
             bool wasXOverflowChanged = false;
             bool floatsPlacedBeforeLine = false;
             if (floatRendererAreas != null) {
@@ -144,7 +145,7 @@ namespace iText.Layout.Renderer {
                 IRenderer childRenderer = UnwrapChildRendererIfNeeded(directChildRenderer);
                 LayoutResult childResult = null;
                 Rectangle bbox;
-                if (IsVerticalWriting()) {
+                if (isVerticalWriting) {
                     bbox = new Rectangle(layoutBox.GetX(), layoutBox.GetY(), layoutBox.GetWidth(), layoutBox.GetHeight() - curMainAxisOccupiedSize
                         );
                 }
@@ -530,7 +531,7 @@ namespace iText.Layout.Renderer {
                     else {
                         if (null == hangingTabStop) {
                             if (childResult.GetOccupiedArea() != null && childResult.GetOccupiedArea().GetBBox() != null) {
-                                curMainAxisOccupiedSize += IsVerticalWriting() ? childResult.GetOccupiedArea().GetBBox().GetHeight() : childResult
+                                curMainAxisOccupiedSize += isVerticalWriting ? childResult.GetOccupiedArea().GetBBox().GetHeight() : childResult
                                     .GetOccupiedArea().GetBBox().GetWidth();
                             }
                             widthHandler.UpdateMinChildWidth(minChildWidth_1 + currChildTextIndent);
@@ -538,7 +539,7 @@ namespace iText.Layout.Renderer {
                         }
                     }
                     if (!forceOverflowForTextRendererPartialResult) {
-                        if (IsVerticalWriting()) {
+                        if (isVerticalWriting) {
                             float maxLineWidth = Math.Max(occupiedArea.GetBBox().GetWidth(), childResult.GetOccupiedArea().GetBBox().GetWidth
                                 ());
                             occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox.GetHeight() - curMainAxisOccupiedSize
@@ -895,13 +896,11 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual void ApplyLeading(float deltaY) {
-            if (!IsVerticalWriting()) {
-                occupiedArea.GetBBox().MoveUp(deltaY);
-                occupiedArea.GetBBox().DecreaseHeight(deltaY);
-                foreach (IRenderer child in GetChildRenderers()) {
-                    if (!FloatingHelper.IsRendererFloating(child)) {
-                        child.Move(0, deltaY);
-                    }
+            occupiedArea.GetBBox().MoveUp(deltaY);
+            occupiedArea.GetBBox().DecreaseHeight(deltaY);
+            foreach (IRenderer child in GetChildRenderers()) {
+                if (!FloatingHelper.IsRendererFloating(child)) {
+                    child.Move(0, deltaY);
                 }
             }
         }

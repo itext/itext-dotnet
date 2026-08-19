@@ -94,6 +94,7 @@ namespace iText.Layout.Renderer {
             int pageNumber = layoutContext.GetArea().GetPageNumber();
             bool anythingPlaced = false;
             bool firstLineInBox = true;
+            bool isVerticalWriting = IsVerticalWriting();
             LineRenderer currentRenderer = (LineRenderer)new LineRenderer().SetParent(this);
             Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
             MarginsCollapseHandler marginsCollapseHandler = null;
@@ -251,8 +252,8 @@ namespace iText.Layout.Renderer {
                     () > 0;
                 bool isFit = processedRenderer != null;
                 float deltaY = 0;
-                if (isFit && this.GetProperty<RenderingMode?>(Property.RENDERING_MODE) != RenderingMode.HTML_MODE && !IsVerticalWriting
-                    ()) {
+                if (isFit && this.GetProperty<RenderingMode?>(Property.RENDERING_MODE) != RenderingMode.HTML_MODE && !isVerticalWriting
+                    ) {
                     if (lineHasContent) {
                         float indentFromLastLine = previousDescent - lastLineBottomLeadingIndent - (leading != null ? processedRenderer
                             .GetTopLeadingIndent(leading) : 0) - processedRenderer.GetMaxAscent();
@@ -388,7 +389,9 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     if (leading != null) {
-                        processedRenderer.ApplyLeading(deltaY);
+                        if (!isVerticalWriting) {
+                            processedRenderer.ApplyLeading(deltaY);
+                        }
                         if (lineHasContent) {
                             lastYLine = processedRenderer.GetYLine();
                         }
@@ -399,7 +402,7 @@ namespace iText.Layout.Renderer {
                         FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
                     }
                     firstLineInBox = false;
-                    if (IsVerticalWriting()) {
+                    if (isVerticalWriting) {
                         // TODO DEVSIX-10137 Distance between lines is currently equal to two line widths.
                         float lineWidth = processedRenderer.GetOccupiedArea().GetBBox().GetWidth();
                         layoutBox.SetX(processedRenderer.GetOccupiedArea().GetBBox().GetX() + (lineWidth * 2));
