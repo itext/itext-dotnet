@@ -94,9 +94,17 @@ namespace iText.Svg.Renderers.Impl {
                     LOGGER.Warn(() => SvgLogMessageConstant.NONINVERTIBLE_TRANSFORMATION_MATRIX_USED_IN_CLIP_PATH);
                 }
             }
+            // In case of nested clip paths, SvgDrawContext.clippingElementTransform could aggregate nested translations,
+            // which is incorrect because a clip path's translation doesn't translate the coordinate system for its children.
+            // Therefore, save clippingElementTransform and restore it after drawing the clipped renderer.
+            AffineTransform originalClippingElementTransform = new AffineTransform(context.GetClippingElementTransform
+                ());
+            context.ResetClippingElementTransform();
             clippedRenderer.PreDraw(context);
             clippedRenderer.DoDraw(context);
             clippedRenderer.PostDraw(context);
+            context.ResetClippingElementTransform();
+            context.GetClippingElementTransform().Concatenate(originalClippingElementTransform);
         }
 
         // Returning canvas matrix to its original state isn't required
