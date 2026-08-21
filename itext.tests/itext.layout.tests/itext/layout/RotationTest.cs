@@ -392,6 +392,279 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void CellRotationNoSizesSetTest() {
+            String outFileName = DESTINATION_FOLDER + "cellRotationNoSizesSetTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "cellRotationNoSizesSetTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(1);
+            Cell cell = new Cell().Add(new Paragraph("The quick brown fox jumps over the lazy dog.")).SetRotationAngle
+                (MathUtil.ToRadians(90));
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CellRotationTableWidthTest() {
+            String outFileName = DESTINATION_FOLDER + "cellRotationTableWidthTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "cellRotationTableWidthTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(1);
+            table.SetWidth(60);
+            Cell cell = new Cell().Add(new Paragraph("The quick brown fox jumps over the lazy dog.")).SetRotationAngle
+                (MathUtil.ToRadians(90));
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void CellRotationTableHeightTest() {
+            String outFileName = DESTINATION_FOLDER + "cellRotationTableHeightTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "cellRotationTableHeightTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(1);
+            table.SetHeight(60);
+            Cell cell = new Cell().Add(new Paragraph("The quick brown fox jumps over the lazy dog.")).SetRotationAngle
+                (MathUtil.ToRadians(90));
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CellRotationTableSetSizeTest() {
+            String outFileName = DESTINATION_FOLDER + "cellRotationTableSetSizeTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "cellRotationTableSetSizeTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(1);
+            table.SetHeight(70).SetWidth(200);
+            Cell cell = new Cell().Add(new Paragraph("The quick brown fox jumps over the lazy dog.")).SetRotationAngle
+                (MathUtil.ToRadians(90));
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CellRotationCellWidthTest() {
+            String outFileName = DESTINATION_FOLDER + "cellRotationCellWidthTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "cellRotationCellWidthTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(1);
+            Cell cell = new Cell().Add(new Paragraph("The quick brown fox jumps over the lazy dog.")).SetWidth(140).SetRotationAngle
+                (MathUtil.ToRadians(90));
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER)]
+        public virtual void CellRotationCellHeightTest() {
+            String outFileName = DESTINATION_FOLDER + "cellRotationCellHeightTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "cellRotationCellHeightTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(1);
+            Cell cell = new Cell().Add(new Paragraph("The quick brown fox jumps over the lazy dog.")).SetHeight(70).SetRotationAngle
+                (MathUtil.ToRadians(90));
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CellRotationCellSizesTest() {
+            String outFileName = DESTINATION_FOLDER + "cellRotationCellSizesTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "cellRotationCellSizesTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(1);
+            Cell cell = new Cell().Add(new Paragraph("The quick brown fox jumps over the lazy dog.")).SetHeight(70).SetWidth
+                (140).SetRotationAngle(MathUtil.ToRadians(90));
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
+        public virtual void CellRotationTableAndCellSizesTest() {
+            String outFileName = DESTINATION_FOLDER + "cellRotationTableAndCellSizesTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "cellRotationTableAndCellSizesTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(1).SetHeight(140).SetWidth(70);
+            Cell cell = new Cell().Add(new Paragraph("The quick brown fox jumps over the lazy dog.")).SetHeight(70).SetWidth
+                (140).SetRotationAngle(MathUtil.ToRadians(90));
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
+        public virtual void CellRotationTableWidthCellSizesTest() {
+            String outFileName = DESTINATION_FOLDER + "cellRotationTableWidthCellSizesTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "cellRotationTableWidthCellSizesTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(1).SetWidth(70);
+            Cell cell = new Cell().Add(new Paragraph("The quick brown fox jumps over the lazy dog.")).SetHeight(70).SetWidth
+                (140).SetRotationAngle(MathUtil.ToRadians(90));
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
+        public virtual void CellRotationTableHeightCellSizesTest() {
+            String outFileName = DESTINATION_FOLDER + "cellRotationTableHeightCellSizesTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "cellRotationTableHeightCellSizesTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(1).SetHeight(140);
+            Cell cell = new Cell().Add(new Paragraph("The quick brown fox jumps over the lazy dog.")).SetHeight(70).SetWidth
+                (140).SetRotationAngle(MathUtil.ToRadians(90));
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
+        public virtual void CellRotationTableSizesCellHeightTest() {
+            String outFileName = DESTINATION_FOLDER + "cellRotationTableSizesCellHeightTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "cellRotationTableSizesCellHeightTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(1).SetWidth(70).SetHeight(140);
+            Cell cell = new Cell().Add(new Paragraph("The quick brown fox jumps over the lazy dog.")).SetHeight(70).SetRotationAngle
+                (MathUtil.ToRadians(90));
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void CellRotationTableSizesCellWidthTest() {
+            String outFileName = DESTINATION_FOLDER + "cellRotationTableSizesCellWidthTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "cellRotationTableSizesCellWidthTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(1).SetWidth(70).SetHeight(140);
+            Cell cell = new Cell().Add(new Paragraph("The quick brown fox jumps over the lazy dog.")).SetWidth(140).SetRotationAngle
+                (MathUtil.ToRadians(90));
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void CellRotationTableWidthCellWidthTest() {
+            String outFileName = DESTINATION_FOLDER + "cellRotationTableWidthCellWidthTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "cellRotationTableWidthCellWidthTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(1).SetWidth(70);
+            Cell cell = new Cell().Add(new Paragraph("The quick brown fox jumps over the lazy dog.")).SetWidth(140).SetRotationAngle
+                (MathUtil.ToRadians(90));
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH)]
+        public virtual void CellRotationTableWidthCellHeightTest() {
+            String outFileName = DESTINATION_FOLDER + "cellRotationTableWidthCellHeightTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "cellRotationTableWidthCellHeightTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(1).SetWidth(70);
+            Cell cell = new Cell().Add(new Paragraph("The quick brown fox jumps over the lazy dog.")).SetHeight(70).SetRotationAngle
+                (MathUtil.ToRadians(90));
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER)]
+        public virtual void CellRotationTableHeightCellHeightTest() {
+            String outFileName = DESTINATION_FOLDER + "cellRotationTableHeightCellHeightTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "cellRotationTableHeightCellHeightTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(1).SetHeight(140);
+            Cell cell = new Cell().Add(new Paragraph("The quick brown fox jumps over the lazy dog.")).SetHeight(70).SetRotationAngle
+                (MathUtil.ToRadians(90));
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
+        public virtual void CellRotationTableHeightCellWidthTest() {
+            String outFileName = DESTINATION_FOLDER + "cellRotationTableHeightCellWidthTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + cmpPrefix + "cellRotationTableHeightCellWidthTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(1).SetHeight(140);
+            Cell cell = new Cell().Add(new Paragraph("The quick brown fox jumps over the lazy dog.")).SetWidth(140).SetRotationAngle
+                (MathUtil.ToRadians(90));
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void CellRotationParagraphIsGone() {
             // TODO DEVSIX-5029 Content of the first cell is missing
             String testName = "cellRotationParagraphIsGone.pdf";
