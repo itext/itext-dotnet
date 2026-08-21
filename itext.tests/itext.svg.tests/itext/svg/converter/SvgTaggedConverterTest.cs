@@ -46,6 +46,11 @@ namespace iText.Svg.Converter {
             CreateOrClearDestinationFolder(DEST_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DEST_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void SimpleSvgTagged() {
             String source = SOURCE_FOLDER + "simple.svg";
@@ -53,7 +58,7 @@ namespace iText.Svg.Converter {
             String cmpFile = SOURCE_FOLDER + "cmp_simple.pdf";
             WriterProperties writerProperties = new WriterProperties();
             writerProperties.SetPdfVersion(PdfVersion.PDF_2_0);
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destination, writerProperties));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destination, writerProperties));
             pdfDocument.AddNewPage();
             SvgConverter.DrawOnDocument(FileUtil.GetInputStreamForFile(source), pdfDocument, 1);
             pdfDocument.Close();
@@ -67,8 +72,8 @@ namespace iText.Svg.Converter {
             String destination = DEST_FOLDER + "simpleUACompliantSvgTagged.pdf";
             WriterProperties writerProperties = new WriterProperties();
             writerProperties.SetPdfVersion(PdfVersion.PDF_2_0);
-            PdfUADocument pdfDocument = new PdfUADocument(new PdfWriter(destination, writerProperties), new PdfUAConfig
-                (PdfUAConformance.PDF_UA_2, "ua title", "en-US"));
+            PdfUADocument pdfDocument = new PdfUADocument(CompareTool.CreateTestPdfWriter(destination, writerProperties
+                ), new PdfUAConfig(PdfUAConformance.PDF_UA_2, "ua title", "en-US"));
             pdfDocument.AddNewPage();
             SvgConverter.DrawOnDocument(FileUtil.GetInputStreamForFile(source), pdfDocument, 1);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDocument.Close());
@@ -81,8 +86,8 @@ namespace iText.Svg.Converter {
             String destination = DEST_FOLDER + "simpleSvgTaggedWithConverterProperties.pdf";
             WriterProperties writerProperties = new WriterProperties();
             writerProperties.SetPdfVersion(PdfVersion.PDF_2_0);
-            PdfUADocument pdfDocument = new PdfUADocument(new PdfWriter(destination, writerProperties), new PdfUAConfig
-                (PdfUAConformance.PDF_UA_2, "ua title", "en-US"));
+            PdfUADocument pdfDocument = new PdfUADocument(CompareTool.CreateTestPdfWriter(destination, writerProperties
+                ), new PdfUAConfig(PdfUAConformance.PDF_UA_2, "ua title", "en-US"));
             pdfDocument.AddNewPage();
             SvgConverterProperties properties = new SvgConverterProperties();
             SvgConverter.DrawOnDocument(FileUtil.GetInputStreamForFile(source), pdfDocument, 1, properties);
@@ -96,8 +101,8 @@ namespace iText.Svg.Converter {
             String destination = DEST_FOLDER + "simpleSvgTaggedWithConverterPropertiesEmptyAlternateDescriptionEmpty.pdf";
             WriterProperties writerProperties = new WriterProperties();
             writerProperties.SetPdfVersion(PdfVersion.PDF_2_0);
-            PdfUADocument pdfDocument = new PdfUADocument(new PdfWriter(destination, writerProperties), new PdfUAConfig
-                (PdfUAConformance.PDF_UA_2, "ua title", "en-US"));
+            PdfUADocument pdfDocument = new PdfUADocument(CompareTool.CreateTestPdfWriter(destination, writerProperties
+                ), new PdfUAConfig(PdfUAConformance.PDF_UA_2, "ua title", "en-US"));
             pdfDocument.AddNewPage();
             SvgConverterProperties properties = new SvgConverterProperties();
             properties.GetAccessibilityProperties().SetAlternateDescription("");
@@ -160,8 +165,8 @@ namespace iText.Svg.Converter {
             String destination = DEST_FOLDER + "convertToImageWithProps.pdf";
             WriterProperties writerProperties = new WriterProperties();
             writerProperties.SetPdfVersion(PdfVersion.PDF_2_0);
-            PdfUADocument pdfDocument = new PdfUADocument(new PdfWriter(destination, writerProperties), new PdfUAConfig
-                (PdfUAConformance.PDF_UA_2, "ua title", "en-US"));
+            PdfUADocument pdfDocument = new PdfUADocument(CompareTool.CreateTestPdfWriter(destination, writerProperties
+                ), new PdfUAConfig(PdfUAConformance.PDF_UA_2, "ua title", "en-US"));
             SvgConverterProperties props = new SvgConverterProperties();
             props.GetAccessibilityProperties().SetAlternateDescription("Bing bong");
             Image image = SvgConverter.ConvertToImage(FileUtil.GetInputStreamForFile(source), pdfDocument, props);
@@ -176,8 +181,8 @@ namespace iText.Svg.Converter {
             String destination = DEST_FOLDER + "convertToImageWithPropsArtifacts.pdf";
             WriterProperties writerProperties = new WriterProperties();
             writerProperties.SetPdfVersion(PdfVersion.PDF_2_0);
-            PdfUADocument pdfDocument = new PdfUADocument(new PdfWriter(destination, writerProperties), new PdfUAConfig
-                (PdfUAConformance.PDF_UA_2, "ua title", "en-US"));
+            PdfUADocument pdfDocument = new PdfUADocument(CompareTool.CreateTestPdfWriter(destination, writerProperties
+                ), new PdfUAConfig(PdfUAConformance.PDF_UA_2, "ua title", "en-US"));
             SvgConverterProperties props = new SvgConverterProperties();
             props.GetAccessibilityProperties().SetRole(StandardRoles.ARTIFACT);
             Image image = SvgConverter.ConvertToImage(FileUtil.GetInputStreamForFile(source), pdfDocument, props);
@@ -192,7 +197,7 @@ namespace iText.Svg.Converter {
             String cmpFile = SOURCE_FOLDER + "cmp_drawOnPage01.pdf";
             WriterProperties writerProperties = new WriterProperties();
             writerProperties.SetPdfVersion(PdfVersion.PDF_2_0);
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destination, writerProperties));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destination, writerProperties));
             PdfPage page = pdfDocument.AddNewPage();
             SvgConverter.DrawOnPage(FileUtil.GetInputStreamForFile(source), page);
             pdfDocument.Close();
@@ -206,8 +211,8 @@ namespace iText.Svg.Converter {
             String destination = DEST_FOLDER + "drawOnPageUa.pdf";
             WriterProperties writerProperties = new WriterProperties();
             writerProperties.SetPdfVersion(PdfVersion.PDF_2_0);
-            PdfUADocument pdfDocument = new PdfUADocument(new PdfWriter(destination, writerProperties), new PdfUAConfig
-                (PdfUAConformance.PDF_UA_2, "ua title", "en-US"));
+            PdfUADocument pdfDocument = new PdfUADocument(CompareTool.CreateTestPdfWriter(destination, writerProperties
+                ), new PdfUAConfig(PdfUAConformance.PDF_UA_2, "ua title", "en-US"));
             PdfPage page = pdfDocument.AddNewPage();
             SvgConverter.DrawOnPage(FileUtil.GetInputStreamForFile(source), page);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfUAConformanceException), () => pdfDocument.Close());

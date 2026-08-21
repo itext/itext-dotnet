@@ -45,12 +45,17 @@ namespace iText.Forms.Xfa {
         public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
+        
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
 
         [NUnit.Framework.Test]
         public virtual void CreateEmptyXFAFormTest01() {
             String outFileName = destinationFolder + "createEmptyXFAFormTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_createEmptyXFAFormTest01.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             XfaForm xfa = new XfaForm(doc);
             XfaForm.SetXfaForm(xfa, doc);
             doc.AddNewPage();
@@ -63,7 +68,7 @@ namespace iText.Forms.Xfa {
         public virtual void CreateEmptyXFAFormTest02() {
             String outFileName = destinationFolder + "createEmptyXFAFormTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_createEmptyXFAFormTest02.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             XfaForm xfa = new XfaForm();
             XfaForm.SetXfaForm(xfa, doc);
             doc.AddNewPage();
@@ -76,7 +81,7 @@ namespace iText.Forms.Xfa {
         public virtual void CreateXFAFormTest() {
             String outFileName = destinationFolder + "createXFAFormTest.pdf";
             String cmpFileName = sourceFolder + "cmp_createXFAFormTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             XfaForm xfa = new XfaForm(FileUtil.GetInputStreamForFile(XML));
             xfa.Write(doc);
             doc.AddNewPage();

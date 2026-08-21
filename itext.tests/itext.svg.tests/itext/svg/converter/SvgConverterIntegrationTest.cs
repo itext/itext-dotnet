@@ -62,13 +62,18 @@ namespace iText.Svg.Converter {
             ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void UnusedXObjectIntegrationTest() {
             // This method tests that making an XObject does not, in itself, influence the document it's for.
-            PdfDocument doc1 = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "unusedXObjectIntegrationTest1.pdf")
-                );
-            PdfDocument doc2 = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "unusedXObjectIntegrationTest2.pdf")
-                );
+            PdfDocument doc1 = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "unusedXObjectIntegrationTest1.pdf"
+                ));
+            PdfDocument doc2 = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "unusedXObjectIntegrationTest2.pdf"
+                ));
             doc1.AddNewPage();
             doc2.AddNewPage();
             SvgConverter.ConvertToXObject("<svg width='100pt' height='100pt' />", doc1);
@@ -81,7 +86,7 @@ namespace iText.Svg.Converter {
         [NUnit.Framework.Test]
         public virtual void BasicIntegrationTest() {
             String filename = "basicIntegrationTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             PdfFormXObject form = SvgConverter.ConvertToXObject(ECLIPSESVGSTRING, doc);
             new PdfCanvas(doc.GetPage(1)).AddXObjectFittedIntoRectangle(form, new Rectangle(100, 100, 100, 100));
@@ -129,7 +134,7 @@ namespace iText.Svg.Converter {
 
         [NUnit.Framework.Test]
         public virtual void PdfFromSvgString() {
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "pdfFromSvgString.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "pdfFromSvgString.pdf");
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.AddNewPage();
             String svg = "<?xml version=\"1.0\" standalone=\"no\"?>\n" + "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"\n"
@@ -148,7 +153,7 @@ namespace iText.Svg.Converter {
 
         [NUnit.Framework.Test]
         public virtual void FromFile() {
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "pdfFromSvgFile.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "pdfFromSvgFile.pdf");
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.AddNewPage();
             String svg = "eclipse.svg";
@@ -165,7 +170,7 @@ namespace iText.Svg.Converter {
         [NUnit.Framework.Test]
         public virtual void AddToExistingDoc() {
             PdfReader reader = new PdfReader(SOURCE_FOLDER + "cmp_eclipse.pdf");
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "addToExistingDoc.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "addToExistingDoc.pdf");
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             pdfDoc.AddNewPage();
             String output = DESTINATION_FOLDER + "addToExistingDoc.pdf";
@@ -282,7 +287,7 @@ namespace iText.Svg.Converter {
         public virtual void ConvertToXObjectStringPdfDocumentConverterProps() {
             String name = "eclipse";
             String destName = "CTXO_" + name + "_StringDocProps";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
             PdfPage page = doc.AddNewPage();
             ISvgConverterProperties props = new SvgConverterProperties();
             PdfXObject xObj = SvgConverter.ConvertToXObject(ECLIPSESVGSTRING, doc, props);
@@ -298,7 +303,7 @@ namespace iText.Svg.Converter {
             String name = "eclipse";
             String destName = "CTXO_" + name + "_StreamDocProps";
             Stream fis = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + name + ".svg");
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
             PdfPage page = doc.AddNewPage();
             ISvgConverterProperties props = new SvgConverterProperties();
             PdfXObject xObj = SvgConverter.ConvertToXObject(fis, doc, props);
@@ -346,7 +351,7 @@ namespace iText.Svg.Converter {
         public virtual void DrawOnPageStringPage() {
             String name = "eclipse";
             String destName = "DOP_" + name + "_StringPdfPage";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
             PdfPage page = doc.AddNewPage();
             SvgConverter.DrawOnPage(ECLIPSESVGSTRING, page);
             doc.Close();
@@ -358,7 +363,7 @@ namespace iText.Svg.Converter {
         public virtual void DrawOnPageStringPageConverterProps() {
             String name = "eclipse";
             String destName = "DOP_" + name + "_StringPdfPageConverterProps";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
             PdfPage page = doc.AddNewPage();
             ISvgConverterProperties props = new SvgConverterProperties();
             SvgConverter.DrawOnPage(ECLIPSESVGSTRING, page, props);
@@ -372,7 +377,7 @@ namespace iText.Svg.Converter {
             String name = "eclipse";
             String destName = "DOP_" + name + "_StreamPdfPage";
             Stream fis = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + name + ".svg");
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
             PdfPage page = doc.AddNewPage();
             SvgConverter.DrawOnPage(fis, page);
             doc.Close();
@@ -385,7 +390,7 @@ namespace iText.Svg.Converter {
             String name = "eclipse";
             String destName = "DOP_" + name + "_StreamPdfPageConverterProperties";
             Stream fis = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + name + ".svg");
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
             PdfPage page = doc.AddNewPage();
             ISvgConverterProperties props = new SvgConverterProperties();
             SvgConverter.DrawOnPage(fis, page, props);
@@ -398,7 +403,7 @@ namespace iText.Svg.Converter {
         public virtual void DrawOnDocumentStringPdfDocumentInt() {
             String name = "eclipse";
             String destName = "DOD_" + name + "_StringPdfDocumentInt";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
             doc.AddNewPage();
             SvgConverter.DrawOnDocument(ECLIPSESVGSTRING, doc, 1);
             doc.Close();
@@ -411,7 +416,7 @@ namespace iText.Svg.Converter {
             String name = "eclipse";
             String destName = "DOD_" + name + "_StringPdfDocumentIntProps";
             Stream fis = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + name + ".svg");
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
             doc.AddNewPage();
             ISvgConverterProperties props = new SvgConverterProperties();
             SvgConverter.DrawOnDocument(fis, doc, 1, props);
@@ -424,7 +429,7 @@ namespace iText.Svg.Converter {
         public virtual void DrawOnDocumentStreamPdfDocumentIntConverterProperties() {
             String name = "eclipse";
             String destName = "DOD_" + name + "_StreamPdfDocumentIntProps";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
             doc.AddNewPage();
             ISvgConverterProperties props = new SvgConverterProperties();
             SvgConverter.DrawOnDocument(ECLIPSESVGSTRING, doc, 1, props);
@@ -437,7 +442,7 @@ namespace iText.Svg.Converter {
         public virtual void DrawOnCanvasStringPdfCanvasConverter() {
             String name = "eclipse";
             String destName = "DOC_" + name + "_StringCanvas";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             SvgConverter.DrawOnCanvas(ECLIPSESVGSTRING, canvas);
             doc.Close();
@@ -449,7 +454,7 @@ namespace iText.Svg.Converter {
         public virtual void DrawOnCanvasStringPdfCanvasConverterProps() {
             String name = "eclipse";
             String destName = "DOC_" + name + "_StringCanvasProps";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             ISvgConverterProperties props = new SvgConverterProperties();
             SvgConverter.DrawOnCanvas(ECLIPSESVGSTRING, canvas, props);
@@ -462,7 +467,7 @@ namespace iText.Svg.Converter {
         public virtual void DrawOnCanvasStreamPdfCanvas() {
             String name = "eclipse";
             String destName = "DOC_" + name + "_StreamCanvas";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
             Stream fis = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + name + ".svg");
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             SvgConverter.DrawOnCanvas(fis, canvas);
@@ -475,7 +480,7 @@ namespace iText.Svg.Converter {
         public virtual void DrawOnCanvasStreamPdfCanvasConverterProps() {
             String name = "eclipse";
             String destName = "DOC_" + name + "_StreamCanvasProps";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + destName + ".pdf"));
             Stream fis = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + name + ".svg");
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             ISvgConverterProperties props = new SvgConverterProperties();
@@ -486,7 +491,8 @@ namespace iText.Svg.Converter {
         }
 
         private static void DrawOnSpecifiedPositionDocument(Stream svg, String dest, int x, int y) {
-            PdfDocument document = new PdfDocument(new PdfWriter(dest, new WriterProperties().SetCompressionLevel(0)));
+            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(dest, new WriterProperties().SetCompressionLevel
+                (0)));
             document.AddNewPage();
             SvgConverter.DrawOnDocument(svg, document, 1, x, y);
             document.Close();

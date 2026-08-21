@@ -53,13 +53,18 @@ namespace iText.Svg.Renderers {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void SvgWithSvgTest() {
             String svgFileName = SOURCE_FOLDER + "svgWithSvg.svg";
             String cmpFileName = SOURCE_FOLDER + "cmp_svgWithSvg.pdf";
             String outFileName = DESTINATION_FOLDER + "svgWithSvg.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
-                SetCompressionLevel(0))))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(0))))) {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, null);
                 ISvgNodeRenderer topSvgRenderer = result.GetRootRenderer();
@@ -78,8 +83,8 @@ namespace iText.Svg.Renderers {
             String svgFileName = SOURCE_FOLDER + "svgImage.svg";
             String cmpFileName = SOURCE_FOLDER + "cmp_svgImage.pdf";
             String outFileName = DESTINATION_FOLDER + "svgImage.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
-                SetCompressionLevel(0))))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(0))))) {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
                     (svgFileName));
@@ -99,8 +104,8 @@ namespace iText.Svg.Renderers {
             String svgFileName = SOURCE_FOLDER + "svgImageWithBackground.svg";
             String cmpFileName = SOURCE_FOLDER + "cmp_svgImageWithBackground.pdf";
             String outFileName = DESTINATION_FOLDER + "svgImageWithBackground.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
-                SetCompressionLevel(0))))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(0))))) {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
                     (svgFileName));
@@ -119,8 +124,8 @@ namespace iText.Svg.Renderers {
             String svgFileName = SOURCE_FOLDER + "noWidthHeightSvgImage.svg";
             String cmpFileName = SOURCE_FOLDER + "cmp_noWidthHeightSvg.pdf";
             String outFileName = DESTINATION_FOLDER + "noWidthHeightSvg.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
-                SetCompressionLevel(0))))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(0))))) {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
                     (svgFileName));
@@ -138,8 +143,8 @@ namespace iText.Svg.Renderers {
             String svgFileName = SOURCE_FOLDER + svgName + ".svg";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + ".pdf";
             String outFileName = DESTINATION_FOLDER + svgName + ".pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
-                SetCompressionLevel(0))))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(0))))) {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
                     (svgFileName));
@@ -161,8 +166,8 @@ namespace iText.Svg.Renderers {
             String svgFileName = SOURCE_FOLDER + svgName + ".svg";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + ".pdf";
             String outFileName = DESTINATION_FOLDER + svgName + ".pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
-                SetCompressionLevel(0))))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(0))))) {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
                     (svgFileName));
@@ -185,8 +190,8 @@ namespace iText.Svg.Renderers {
             String svgFileName = SOURCE_FOLDER + svgName + ".svg";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + ".pdf";
             String outFileName = DESTINATION_FOLDER + svgName + ".pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
-                SetCompressionLevel(0))))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(0))))) {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
                     (svgFileName));
@@ -206,8 +211,8 @@ namespace iText.Svg.Renderers {
             String svgFileName = SOURCE_FOLDER + svgName + ".svg";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + ".pdf";
             String outFileName = DESTINATION_FOLDER + svgName + ".pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
-                SetCompressionLevel(0))))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(0))))) {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
                     (svgFileName));
@@ -233,8 +238,8 @@ namespace iText.Svg.Renderers {
             String svgFileName = SOURCE_FOLDER + svgName + ".svg";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "_img" + ".pdf";
             String outFileName = DESTINATION_FOLDER + svgName + "_img" + ".pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
-                SetCompressionLevel(0))))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(0))))) {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
                     (svgFileName));
@@ -259,8 +264,8 @@ namespace iText.Svg.Renderers {
             String svgFileName = SOURCE_FOLDER + svgName + ".svg";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "_img" + ".pdf";
             String outFileName = DESTINATION_FOLDER + svgName + "_img" + ".pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
-                SetCompressionLevel(0))))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(0))))) {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
                     (svgFileName));
@@ -285,8 +290,8 @@ namespace iText.Svg.Renderers {
             String svgFileName = SOURCE_FOLDER + svgName + ".svg";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "_img" + ".pdf";
             String outFileName = DESTINATION_FOLDER + svgName + "_img" + ".pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
-                SetCompressionLevel(0))))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(0))))) {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
                     (svgFileName));
@@ -309,8 +314,8 @@ namespace iText.Svg.Renderers {
             String svgFileName = SOURCE_FOLDER + svgName + ".svg";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "_img" + ".pdf";
             String outFileName = DESTINATION_FOLDER + svgName + "_img" + ".pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
-                SetCompressionLevel(0))))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(0))))) {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
                     (svgFileName));
@@ -332,8 +337,8 @@ namespace iText.Svg.Renderers {
             String svgFileName = SOURCE_FOLDER + svgName + ".svg";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "_img" + ".pdf";
             String outFileName = DESTINATION_FOLDER + svgName + "_img" + ".pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
-                SetCompressionLevel(0))))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(0))))) {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
                     (svgFileName));
@@ -355,8 +360,8 @@ namespace iText.Svg.Renderers {
             String svgFileName = SOURCE_FOLDER + svgName + ".svg";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "2_img" + ".pdf";
             String outFileName = DESTINATION_FOLDER + svgName + "2_img" + ".pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
-                SetCompressionLevel(0))))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(0))))) {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
                     (svgFileName));
@@ -378,8 +383,8 @@ namespace iText.Svg.Renderers {
             String svgFileName = SOURCE_FOLDER + svgName + ".svg";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "_img" + ".pdf";
             String outFileName = DESTINATION_FOLDER + svgName + "_img" + ".pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
-                SetCompressionLevel(0))))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(0))))) {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
                     (svgFileName));
@@ -400,8 +405,8 @@ namespace iText.Svg.Renderers {
             String svgFileName = SOURCE_FOLDER + svgName + ".svg";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "_img" + ".pdf";
             String outFileName = DESTINATION_FOLDER + svgName + "_img" + ".pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
-                SetCompressionLevel(0))))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(0))))) {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
                     (svgFileName));
@@ -422,8 +427,8 @@ namespace iText.Svg.Renderers {
             String svgFileName = SOURCE_FOLDER + svgName + ".svg";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "_obj" + ".pdf";
             String outFileName = DESTINATION_FOLDER + svgName + "_obj" + ".pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
-                SetCompressionLevel(0))))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(0))))) {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
                     (svgFileName));
@@ -445,8 +450,8 @@ namespace iText.Svg.Renderers {
             String svgFileName = SOURCE_FOLDER + svgName + ".svg";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "_obj2" + ".pdf";
             String outFileName = DESTINATION_FOLDER + svgName + "_obj2" + ".pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
-                SetCompressionLevel(0))))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(0))))) {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
                     (svgFileName));
@@ -469,8 +474,8 @@ namespace iText.Svg.Renderers {
             String svgFileName = SOURCE_FOLDER + svgName + ".svg";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "_obj" + ".pdf";
             String outFileName = DESTINATION_FOLDER + svgName + "_obj" + ".pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
-                SetCompressionLevel(0))))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(0))))) {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
                     (svgFileName));
@@ -492,8 +497,8 @@ namespace iText.Svg.Renderers {
             String svgFileName = SOURCE_FOLDER + svgName + ".svg";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + svgName + "_obj2" + ".pdf";
             String outFileName = DESTINATION_FOLDER + svgName + "_obj2" + ".pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName, new WriterProperties().
-                SetCompressionLevel(0))))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
+                ().SetCompressionLevel(0))))) {
                 INode parsedSvg = SvgConverter.Parse(FileUtil.GetInputStreamForFile(svgFileName));
                 ISvgProcessorResult result = new DefaultSvgProcessor().Process(parsedSvg, new SvgConverterProperties().SetBaseUri
                     (svgFileName));

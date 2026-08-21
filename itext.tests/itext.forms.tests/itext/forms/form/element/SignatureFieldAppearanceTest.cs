@@ -56,11 +56,16 @@ namespace iText.Forms.Form.Element {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void BasicSigFieldTest() {
             String outPdf = DESTINATION_FOLDER + "basicSigField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_basicSigField.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 SignatureFieldAppearance formSigField = new SignatureFieldAppearance("form SigField");
                 formSigField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formSigField.SetContent("form SigField");
@@ -81,7 +86,7 @@ namespace iText.Forms.Form.Element {
         public virtual void InvisibleSigFieldTest() {
             String outPdf = DESTINATION_FOLDER + "invisibleSigField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_invisibleSigField.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 SignatureFieldAppearance formSigField = new SignatureFieldAppearance("form SigField");
                 formSigField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formSigField.SetContent("form SigField");
@@ -99,7 +104,7 @@ namespace iText.Forms.Form.Element {
         public virtual void CustomizedSigFieldTest() {
             String outPdf = DESTINATION_FOLDER + "customizedSigField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_customizedSigField.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 SignedAppearanceText description = new SignedAppearanceText().SetSignedBy("signer").SetLocationLine("Location capt: location"
                     ).SetReasonLine("Reason capt: reason");
                 SignatureFieldAppearance formSigField = new SignatureFieldAppearance("form SigField");
@@ -127,7 +132,7 @@ namespace iText.Forms.Form.Element {
         public virtual void EmptySigFieldAppearanceTest() {
             String outPdf = DESTINATION_FOLDER + "emptySigFieldAppearance.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_emptySigFieldAppearance.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 SignedAppearanceText description = new SignedAppearanceText().SetSignedBy(null).SetLocationLine(null).SetReasonLine
                     (null);
                 SignatureFieldAppearance formSigField = new SignatureFieldAppearance("Signature1").SetContent(description);
@@ -143,7 +148,7 @@ namespace iText.Forms.Form.Element {
         public virtual void IgnoreSignDateAndReasonInAppearanceTest() {
             String outPdf = DESTINATION_FOLDER + "ignoreSignDateAndReasonInAppearance.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_ignoreSignDateAndReasonInAppearance.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 SignedAppearanceText description = new SignedAppearanceText().SetSignedBy("Signer Name").SetLocationLine("Test Location"
                     ).SetReasonLine(null);
                 SignatureFieldAppearance formSigField = new SignatureFieldAppearance("Signature1").SetContent(description);
@@ -160,7 +165,7 @@ namespace iText.Forms.Form.Element {
         public virtual void SignatureFieldVerticalAlignmentTest() {
             String outPdf = DESTINATION_FOLDER + "signatureFieldVerticalAlignment.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_signatureFieldVerticalAlignment.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 SignatureFieldAppearance bottomSigField = new SignatureFieldAppearance("bottomSigField");
                 bottomSigField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 bottomSigField.SetContent("description on bottom");
@@ -197,7 +202,7 @@ namespace iText.Forms.Form.Element {
             String outPdf = DESTINATION_FOLDER + "sigFieldWithGraphicAndDescriptionMode.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_sigFieldWithGraphicAndDescriptionMode.pdf";
             String imagePath = SOURCE_FOLDER + "1.png";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 SignatureFieldAppearance formSigField = new SignatureFieldAppearance("SigField");
                 ImageData image = ImageDataFactory.Create(imagePath);
                 formSigField.SetContent("description", image);
@@ -216,7 +221,7 @@ namespace iText.Forms.Form.Element {
             String outPdf = DESTINATION_FOLDER + "sigFieldWithGraphicMode.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_sigFieldWithGraphicMode.pdf";
             String imagePath = SOURCE_FOLDER + "1.png";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 SignatureFieldAppearance formSigField = new SignatureFieldAppearance("SigField");
                 ImageData image = ImageDataFactory.Create(imagePath);
                 formSigField.SetContent(image);
@@ -231,7 +236,7 @@ namespace iText.Forms.Form.Element {
         public virtual void SigFieldWithNameAndDescriptionModeHorizontalTest() {
             String outPdf = DESTINATION_FOLDER + "sigFieldWithNameAndDescriptionModeHorizontal.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_sigFieldWithNameAndDescriptionModeHorizontal.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 SignatureFieldAppearance formSigField = new SignatureFieldAppearance("SigField");
                 formSigField.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(250));
                 formSigField.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(150));
@@ -250,7 +255,7 @@ namespace iText.Forms.Form.Element {
         public virtual void SigFieldWithNameAndDescriptionModeVerticalTest() {
             String outPdf = DESTINATION_FOLDER + "sigFieldWithNameAndDescriptionModeVertical.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_sigFieldWithNameAndDescriptionModeVertical.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 SignatureFieldAppearance formSigField = new SignatureFieldAppearance("SigField");
                 formSigField.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(150));
                 formSigField.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(250));
@@ -269,7 +274,7 @@ namespace iText.Forms.Form.Element {
         public virtual void BorderBoxesTest() {
             String outPdf = DESTINATION_FOLDER + "borderBoxes.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_borderBoxes.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 // BORDER_BOX
                 SignatureFieldAppearance interactiveSigField = new SignatureFieldAppearance("interactiveSigField").SetBorder
                     (new SolidBorder(ColorConstants.PINK, 10));
@@ -310,7 +315,7 @@ namespace iText.Forms.Form.Element {
         public virtual void BorderTypesTest() {
             String outPdf = DESTINATION_FOLDER + "borderTypes.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_borderTypes.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 // DASHED
                 SignatureFieldAppearance sigField = new SignatureFieldAppearance("SigField").SetBorder(new DashedBorder(ColorConstants
                     .PINK, 10)).SetBackgroundColor(ColorConstants.YELLOW);
@@ -360,7 +365,7 @@ namespace iText.Forms.Form.Element {
         public virtual void FontSizeTest() {
             String outPdf = DESTINATION_FOLDER + "fontSizeTest.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_fontSizeTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 SignatureFieldAppearance sigField = new SignatureFieldAppearance("SigField");
                 sigField.SetFontSize(20);
                 sigField.SetContent("test");
@@ -372,7 +377,7 @@ namespace iText.Forms.Form.Element {
         [NUnit.Framework.Test]
         public virtual void FontNullCustomCheck() {
             String outPdf = DESTINATION_FOLDER + "fontNullCustomCheck.pdf";
-            PdfDocument pdfDoc = new _PdfDocument_450(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new _PdfDocument_456(CompareTool.CreateTestPdfWriter(outPdf));
             Document document = new Document(pdfDoc);
             SignatureFieldAppearance sigField = new SignatureFieldAppearance("SigField");
             sigField.SetContent("test");
@@ -383,8 +388,8 @@ namespace iText.Forms.Form.Element {
             NUnit.Framework.Assert.AreEqual(LayoutExceptionMessageConstant.INVALID_FONT_PROPERTY_VALUE, e.Message);
         }
 
-        private sealed class _PdfDocument_450 : PdfDocument {
-            public _PdfDocument_450(PdfWriter baseArg1)
+        private sealed class _PdfDocument_456 : PdfDocument {
+            public _PdfDocument_456(PdfWriter baseArg1)
                 : base(baseArg1) {
             }
 
@@ -397,7 +402,7 @@ namespace iText.Forms.Form.Element {
         public virtual void SignatureOnRotatedPagesTest() {
             String outPdf = DESTINATION_FOLDER + "signatureOnRotatedPages.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_signatureOnRotatedPages.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 document.GetPdfDocument().AddNewPage().SetRotation(90);
                 document.GetPdfDocument().AddNewPage().SetRotation(180);
                 document.GetPdfDocument().AddNewPage().SetRotation(270);
@@ -432,7 +437,7 @@ namespace iText.Forms.Form.Element {
         public virtual void CustomModeTest() {
             String outPdf = DESTINATION_FOLDER + "customModeTest.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_customModeTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Div div = new Div();
                 div.Add(new Paragraph("Paragraph inside div with red dashed border and pink background").SetBorder(new DashedBorder
                     (ColorConstants.RED, 1)).SetBackgroundColor(ColorConstants.PINK));

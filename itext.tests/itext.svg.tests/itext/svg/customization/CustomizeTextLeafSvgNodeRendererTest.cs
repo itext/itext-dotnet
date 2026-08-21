@@ -50,10 +50,15 @@ namespace iText.Svg.Customization {
             ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void TestCustomizeTextLeafSvgNodeRenderer() {
             String pdfFilename = "customizeTextLeafSvgNodeRenderer.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + pdfFilename));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + pdfFilename));
             doc.AddNewPage();
             SvgConverterProperties properties = new SvgConverterProperties();
             properties.SetRendererFactory(new CustomizeTextLeafSvgNodeRendererTest.CustomTextLeafOverridingSvgNodeRendererFactory

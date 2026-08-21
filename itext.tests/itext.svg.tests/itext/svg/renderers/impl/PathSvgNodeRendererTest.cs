@@ -51,6 +51,11 @@ namespace iText.Svg.Renderers.Impl {
             ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.SetUp]
         public virtual void Before() {
             properties = new SvgConverterProperties().SetBaseUri(SOURCE_FOLDER);
@@ -59,7 +64,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void PathNodeRendererMoveToTest() {
             String filename = "pathNodeRendererMoveToTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             IDictionary<String, String> pathShapes = new Dictionary<String, String>();
             pathShapes.Put("d", "M 100,100, L300,100,L200,300,z");
@@ -80,7 +85,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void PathNodeRendererMoveToTest1() {
             String filename = "pathNodeRendererMoveToTest1.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             IDictionary<String, String> pathShapes = new Dictionary<String, String>();
             pathShapes.Put("d", "M 100 100 l300 100 L200 300 z");
@@ -101,7 +106,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void PathNodeRendererCurveToTest() {
             String filename = "pathNodeRendererCurveToTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             IDictionary<String, String> pathShapes = new Dictionary<String, String>();
             pathShapes.Put("d", "M100,200 C100,100 250,100 250,200 S400,300 400,200,z");
@@ -122,7 +127,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void PathNodeRendererCurveToTest1() {
             String filename = "pathNodeRendererCurveToTest1.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             IDictionary<String, String> pathShapes = new Dictionary<String, String>();
             pathShapes.Put("d", "M100 200 C100 300 250 300 250 200 S400 100 400 200 z");
@@ -143,7 +148,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void PathNodeRendererQCurveToCurveToTest() {
             String filename = "pathNodeRendererQCurveToCurveToTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             IDictionary<String, String> pathShapes = new Dictionary<String, String>();
             pathShapes.Put("d", "M200,300 Q400,50 600,300,z");
@@ -164,7 +169,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void PathNodeRendererQCurveToCurveToTest1() {
             String filename = "pathNodeRendererQCurveToCurveToTest1.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             IDictionary<String, String> pathShapes = new Dictionary<String, String>();
             pathShapes.Put("d", "M200 300 Q400 50 600 300 z");
@@ -185,7 +190,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void SmoothCurveTest1() {
             String filename = "smoothCurveTest1.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             String svgFilename = "smoothCurveTest1.svg";
             Stream xmlStream = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + svgFilename);
@@ -203,7 +208,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void SmoothCurveTest2() {
             String filename = "smoothCurveTest2.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             String svgFilename = "smoothCurveTest2.svg";
             Stream xmlStream = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + svgFilename);
@@ -221,7 +226,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void SmoothCurveTest3() {
             String filename = "smoothCurveTest3.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             String svgFilename = "smoothCurveTest3.svg";
             Stream xmlStream = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + svgFilename);

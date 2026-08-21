@@ -52,11 +52,16 @@ namespace iText.Forms.Form.Element {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void NonInteractive() {
             String outputFileName = DESTINATION_FOLDER + "ni_setFixedPosition.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_ni_setFixedPosition.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outputFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outputFileName))) {
                 Document document = new Document(pdfDocument);
                 int left = 100;
                 int bottom = 700;
@@ -77,7 +82,7 @@ namespace iText.Forms.Form.Element {
         public virtual void NonInteractiveOnSpecificPage() {
             String outputFileName = DESTINATION_FOLDER + "ni_setFixedPositionOnPage.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_ni_setFixedPositionOnPage.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outputFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outputFileName))) {
                 Document document = new Document(pdfDocument);
                 int left = 100;
                 int bottom = 700;
@@ -100,7 +105,7 @@ namespace iText.Forms.Form.Element {
         public virtual void Interactive() {
             String outputFileName = DESTINATION_FOLDER + "interactive_fixed_pos.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_interactive_fixed_pos.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outputFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outputFileName))) {
                 Document document = new Document(pdfDocument);
                 int left = 100;
                 int bottom = 700;
@@ -123,7 +128,7 @@ namespace iText.Forms.Form.Element {
         public virtual void InteractiveOnPage() {
             String outputFileName = DESTINATION_FOLDER + "interactive_fixed_pos_on_page.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_interactive_fixed_pos_on_page.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outputFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outputFileName))) {
                 Document document = new Document(pdfDocument);
                 int left = 100;
                 int bottom = 700;
@@ -147,7 +152,7 @@ namespace iText.Forms.Form.Element {
         public virtual void InteractiveWidthOutOfBounds() {
             String outputFileName = DESTINATION_FOLDER + "interactiveOutOfBounds.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_interactiveOutOfBounds.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outputFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outputFileName))) {
                 Document document = new Document(pdfDocument);
                 int left = 100;
                 int bottom = 10000;
@@ -170,7 +175,7 @@ namespace iText.Forms.Form.Element {
         public virtual void InteractiveMarginLeft() {
             String outputFileName = DESTINATION_FOLDER + "interactiveMarginLeft.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_interactiveMarginLeft.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outputFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outputFileName))) {
                 Document document = new Document(pdfDocument);
                 foreach (Func<IFormField> iFormFieldSupplier in GetDataToTest()) {
                     IFormField field = iFormFieldSupplier();
@@ -199,7 +204,7 @@ namespace iText.Forms.Form.Element {
         public virtual void InteractiveMarginTop() {
             String outputFileName = DESTINATION_FOLDER + "marginTop.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_marginTop.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outputFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outputFileName))) {
                 Document document = new Document(pdfDocument, PageSize.A4, false);
                 foreach (Func<IFormField> iFormFieldSupplier in GetDataToTest()) {
                     IFormField field = iFormFieldSupplier();
@@ -228,7 +233,7 @@ namespace iText.Forms.Form.Element {
         public virtual void Width() {
             String outputFileName = DESTINATION_FOLDER + "width.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_width.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outputFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outputFileName))) {
                 Document document = new Document(pdfDocument, PageSize.A4, false);
                 foreach (Func<IFormField> iFormFieldSupplier in GetDataToTest()) {
                     IFormField field = iFormFieldSupplier();
@@ -255,7 +260,7 @@ namespace iText.Forms.Form.Element {
         public virtual void Padding() {
             String outputFileName = DESTINATION_FOLDER + "padding.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_padding.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outputFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outputFileName))) {
                 Document document = new Document(pdfDocument, PageSize.A4, false);
                 foreach (Func<IFormField> iFormFieldSupplier in GetDataToTest()) {
                     IFormField field = iFormFieldSupplier();

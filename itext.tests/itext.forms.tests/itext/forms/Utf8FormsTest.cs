@@ -49,6 +49,11 @@ namespace iText.Forms {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void ReadUtf8FieldName() {
             String filename = sourceFolder + "utf-8-field-name.pdf";
@@ -79,7 +84,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void WriteUtf8FieldNameAndValue() {
             //TODO DEVSIX-2798
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "writeUtf8FieldNameAndValue.pdf"));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "writeUtf8FieldNameAndValue.pdf"
+                ));
             PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "").SetWidgetRectangle(new Rectangle(99, 753, 425
                 , 15)).CreateText();

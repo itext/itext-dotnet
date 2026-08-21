@@ -21,7 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -43,6 +42,11 @@ namespace iText.Forms.Form.Element {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void ButtonsWithColorTest() {
             String outPdf = DESTINATION_FOLDER + "buttonsWithColor.pdf";
@@ -58,7 +62,7 @@ namespace iText.Forms.Form.Element {
         }
 
         private static void DrawButtons(String outPdf, String cmpPdf, Color color) {
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outPdf)))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
                 using (Document document = new Document(pdfDocument)) {
                     Button button = new Button("button");
                     button.Add(new Paragraph("button child paragraph"));

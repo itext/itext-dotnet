@@ -53,11 +53,16 @@ namespace iText.Forms.Form.Element {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void BasicRadioTest() {
             String outPdf = DESTINATION_FOLDER + "basicRadio.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_basicRadio.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Radio formRadio1 = CreateRadioButton("form radio button 1", "form radio group", null, null, true, false);
                 document.Add(formRadio1);
                 Radio formRadio2 = CreateRadioButton("form radio button 2", "form radio group", null, null, false, false);
@@ -76,7 +81,7 @@ namespace iText.Forms.Form.Element {
         public virtual void BasicRadioTaggedTest() {
             String outPdf = DESTINATION_FOLDER + "basicRadioTagged.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_basicRadioTagged.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 document.GetPdfDocument().SetTagged();
                 Radio formRadio1 = CreateRadioButton("form radio button 1", "form radio group", null, null, true, false);
                 document.Add(formRadio1);
@@ -115,7 +120,8 @@ namespace iText.Forms.Form.Element {
             String srcPdf = SOURCE_FOLDER + "src_mergeWithExistingField.pdf";
             String outPdf = DESTINATION_FOLDER + "mergeWithExistingField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_mergeWithExistingField.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(new PdfReader(srcPdf), CompareTool.CreateTestPdfWriter
+                (outPdf)))) {
                 Radio formRadio1 = CreateRadioButton("radio1", "form radio group", new SolidBorder(ColorConstants.BLUE, 1)
                     , null, false, false);
                 document.Add(formRadio1);
@@ -130,7 +136,7 @@ namespace iText.Forms.Form.Element {
         public virtual void BorderBackgroundTest() {
             String outPdf = DESTINATION_FOLDER + "borderBackground.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_borderBackground.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Radio formRadio1 = CreateRadioButton("formRadio1", "form radio group", new SolidBorder(ColorConstants.BLUE
                     , 1), ColorConstants.GREEN, true, false);
                 document.Add(formRadio1);
@@ -174,7 +180,7 @@ namespace iText.Forms.Form.Element {
         public virtual void BorderBoxesTest() {
             String outPdf = DESTINATION_FOLDER + "borderBoxes.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_borderBoxes.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 // BORDER_BOX
                 Radio formRadio1 = CreateRadioButton("formRadio1", "form radio group", new SolidBorder(ColorConstants.BLUE
                     , 3), ColorConstants.GREEN, true, false);
@@ -203,7 +209,7 @@ namespace iText.Forms.Form.Element {
         public virtual void DottedBorderTest() {
             String outPdf = DESTINATION_FOLDER + "dottedBorder.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_dottedBorder.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Radio formRadio1 = CreateRadioButton("formRadio1", "form radio group", new DottedBorder(ColorConstants.BLUE
                     , 3), ColorConstants.GREEN, true, false);
                 formRadio1.SetSize(20);
@@ -230,7 +236,7 @@ namespace iText.Forms.Form.Element {
         public virtual void FormFieldRadioBorderCircleTest() {
             String outPdf = DESTINATION_FOLDER + "formFieldRadioBorderCircle.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_formFieldRadioBorderCircle.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Radio flattenRadio1 = CreateRadioButton("flattenRadio1", "flatten radio group", new SolidBorder(ColorConstants
                     .LIGHT_GRAY, 1), ColorConstants.GREEN, false, true);
                 flattenRadio1.SetProperty(FormProperty.FORM_FIELD_RADIO_BORDER_CIRCLE, true);
@@ -249,7 +255,7 @@ namespace iText.Forms.Form.Element {
         public virtual void BigRadioButtonTest() {
             String outPdf = DESTINATION_FOLDER + "bigRadioButton.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_bigRadioButton.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Radio flattenRadio1 = CreateRadioButton("flattenRadio1", "form radio group", new SolidBorder(ColorConstants
                     .BLUE, 1), ColorConstants.GREEN, true, true);
                 flattenRadio1.SetSize(825f);
@@ -262,7 +268,7 @@ namespace iText.Forms.Form.Element {
         public virtual void RadioWithMarginsTest() {
             String outPdf = DESTINATION_FOLDER + "radioWithMargins.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_radioWithMargins.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Div div = new Div().SetBackgroundColor(ColorConstants.PINK);
                 Radio radio = CreateRadioButton("radio", "form radio group", new SolidBorder(ColorConstants.DARK_GRAY, 20)
                     , ColorConstants.WHITE, true, false);
@@ -281,7 +287,7 @@ namespace iText.Forms.Form.Element {
         public virtual void RadioWithPaddingsTest() {
             String outPdf = DESTINATION_FOLDER + "radioWithPaddings.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_radioWithPaddings.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Div div = new Div().SetBackgroundColor(ColorConstants.PINK);
                 Radio radio = CreateRadioButton("radio", "form radio group", new SolidBorder(ColorConstants.DARK_GRAY, 20)
                     , ColorConstants.WHITE, true, false);
@@ -309,7 +315,7 @@ namespace iText.Forms.Form.Element {
         public virtual void MultiPageRadioFieldTest() {
             String outPdf = DESTINATION_FOLDER + "multiPageCheckboxField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_multiPageCheckBoxField.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfWriter(outPdf))) {
+            using (PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(document, true);
                 for (int i = 0; i < 10; i++) {
                     document.AddNewPage();

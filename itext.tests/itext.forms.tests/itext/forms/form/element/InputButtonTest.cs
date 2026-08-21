@@ -50,11 +50,16 @@ namespace iText.Forms.Form.Element {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void BasicInputButtonTest() {
             String outPdf = DESTINATION_FOLDER + "basicInputButton.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_basicInputButton.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Button formInputButton = new Button("form input button");
                 formInputButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formInputButton.SetSingleLineValue("form input button");
@@ -72,7 +77,7 @@ namespace iText.Forms.Form.Element {
         public virtual void CustomizedInputButtonTest() {
             String outPdf = DESTINATION_FOLDER + "customizedInputButton.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_customizedInputButton.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Button formInputButton = new Button("form input button");
                 formInputButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formInputButton.SetSingleLineValue("form input button");
@@ -96,7 +101,7 @@ namespace iText.Forms.Form.Element {
         public virtual void AddInputButtonInTwoWaysTest() {
             String outPdf = DESTINATION_FOLDER + "addInputButtonInTwoWays.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_addInputButtonInTwoWays.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 // Create push button using html element
                 Button formInputButton = new Button("button");
                 formInputButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
@@ -121,7 +126,7 @@ namespace iText.Forms.Form.Element {
         public virtual void InputButtonIsSplitTest() {
             String outPdf = DESTINATION_FOLDER + "inputButtonIsSplit.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_inputButtonIsSplit.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Button formInputButton = new Button("button");
                 formInputButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formInputButton.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(280));
@@ -138,7 +143,7 @@ namespace iText.Forms.Form.Element {
         public virtual void InputButtonIsForcedSplitTest() {
             String outPdf = DESTINATION_FOLDER + "inputButtonIsForcedSplit.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_inputButtonIsForcedSplit.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Button formInputButton = new Button("button");
                 formInputButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formInputButton.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(280));
@@ -153,7 +158,7 @@ namespace iText.Forms.Form.Element {
         public virtual void InputButtonWithPaddingsTest() {
             String outPdf = DESTINATION_FOLDER + "inputButtonWithPaddings.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_inputButtonWithPaddings.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Button formInputButton = new Button("button");
                 formInputButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formInputButton.SetProperty(Property.PADDING_BOTTOM, UnitValue.CreatePointValue(15));
@@ -169,7 +174,7 @@ namespace iText.Forms.Form.Element {
         public virtual void InputButtonWithMarginsPaddingsTest() {
             String outPdf = DESTINATION_FOLDER + "inputButtonWithMarginsPaddings.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_inputButtonWithMarginsPaddings.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Div div = new Div().SetBackgroundColor(ColorConstants.PINK);
                 Button formInputButton = new Button("button");
                 formInputButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);

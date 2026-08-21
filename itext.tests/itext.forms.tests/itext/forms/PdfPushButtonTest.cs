@@ -40,6 +40,11 @@ namespace iText.Forms {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void SetFontSizePushButtonWithDisplayTest() {
             String outPdf = DESTINATION_FOLDER + "pushButtonWithDisplay.pdf";

@@ -42,10 +42,15 @@ namespace iText.Svg.Renderers.Impl {
             ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void LineRendererTest() {
             String filename = "lineSvgRendererTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             IDictionary<String, String> lineProperties = new Dictionary<String, String>();
             lineProperties.Put("x1", "100");
@@ -68,7 +73,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void LineWithEmpyAttributesTest() {
             String filename = "lineWithEmpyAttributesTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             IDictionary<String, String> lineProperties = new Dictionary<String, String>();
             LineSvgNodeRenderer root = new LineSvgNodeRenderer();
@@ -85,7 +90,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void InvalidAttributeTest01() {
             String filename = "invalidAttributeTest01.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             ISvgNodeRenderer root = new LineSvgNodeRenderer();
             IDictionary<String, String> lineProperties = new Dictionary<String, String>();
@@ -112,7 +117,7 @@ namespace iText.Svg.Renderers.Impl {
             lineProperties.Put("y2", "0 2 0");
             lineProperties.Put("stroke", "orange");
             String filename = "invalidAttributes02.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             LineSvgNodeRenderer root = new LineSvgNodeRenderer();
             root.SetAttributesAndStyles(lineProperties);
@@ -126,7 +131,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void EmptyPointsListTest() {
             String filename = "lineEmptyPointsListTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + filename));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + filename));
             doc.AddNewPage();
             ISvgNodeRenderer root = new LineSvgNodeRenderer();
             IDictionary<String, String> lineProperties = new Dictionary<String, String>();

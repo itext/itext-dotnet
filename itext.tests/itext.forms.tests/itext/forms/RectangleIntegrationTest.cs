@@ -40,11 +40,16 @@ namespace iText.Forms {
             ITextTest.CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void CreatePdfWithSignatureFields() {
             String outPdf = DESTINATION_FOLDER + "RectangleTest.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_RectangleTest.pdf";
-            PdfWriter writer = new PdfWriter(DESTINATION_FOLDER + "RectangleTest.pdf");
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "RectangleTest.pdf");
             PdfDocument pdfDoc = new PdfDocument(writer);
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             for (int i = 0; i <= 3; i++) {

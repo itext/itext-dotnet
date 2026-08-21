@@ -49,12 +49,17 @@ namespace iText.Forms {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void FillFormWithAutosizeTest() {
             String outPdf = destinationFolder + "fillFormWithAutosizeTest.pdf";
             String inPdf = sourceFolder + "fillFormWithAutosizeSource.pdf";
             String cmpPdf = sourceFolder + "cmp_fillFormWithAutosizeTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(inPdf), new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(inPdf), CompareTool.CreateTestPdfWriter(outPdf));
             PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, false);
             IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
             fields.Get("First field").SetValue("name name name ");
@@ -66,8 +71,8 @@ namespace iText.Forms {
 
         [NUnit.Framework.Test]
         public virtual void DefaultAppearanceExtractionForNotMergedFieldsTest() {
-            PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "sourceDAExtractionTest.pdf"), new PdfWriter
-                (destinationFolder + "defaultAppearanceExtractionTest.pdf"));
+            PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "sourceDAExtractionTest.pdf"), CompareTool.
+                CreateTestPdfWriter(destinationFolder + "defaultAppearanceExtractionTest.pdf"));
             PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, false);
             form.GetField("First field").SetValue("Your name");
             form.GetField("Text1").SetValue("Your surname");
@@ -83,14 +88,14 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void FontsResourcesHelvFontTest() {
             String filename = "fontsResourcesHelvFontTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "drWithHelv.pdf"), new PdfWriter(destinationFolder
-                 + filename));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "drWithHelv.pdf"), CompareTool.CreateTestPdfWriter
+                (destinationFolder + filename));
             PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H);
             font.SetSubset(false);
             PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, false);
             form.GetField("description").SetValue(TEXT, font, 12f);
             pdfDoc.Close();
-            PdfDocument document = new PdfDocument(new PdfReader(destinationFolder + filename));
+            PdfDocument document = new PdfDocument(CompareTool.CreateOutputReader(destinationFolder + filename));
             PdfDictionary actualDocumentFonts = PdfFormCreator.GetAcroForm(document, false).GetPdfObject().GetAsDictionary
                 (PdfName.DR).GetAsDictionary(PdfName.Font);
             // Note that we know the structure of the expected pdf file
@@ -110,15 +115,15 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void FontsResourcesHelvCourierNotoFontTest() {
             String filename = "fontsResourcesHelvCourierNotoFontTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "drWithHelvAndCourier.pdf"), new PdfWriter
-                (destinationFolder + filename));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "drWithHelvAndCourier.pdf"), CompareTool
+                .CreateTestPdfWriter(destinationFolder + filename));
             PdfFont font = PdfFontFactory.CreateFont(FONT_FOLDER + "NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H);
             font.SetSubset(false);
             PdfFormField formField = PdfFormCreator.GetAcroForm(pdfDoc, false).GetField("description");
             formField.SetFont(font);
             formField.SetValue(TEXT);
             pdfDoc.Close();
-            PdfDocument document = new PdfDocument(new PdfReader(destinationFolder + filename));
+            PdfDocument document = new PdfDocument(CompareTool.CreateOutputReader(destinationFolder + filename));
             // Note that we know the structure of the expected pdf file
             PdfString expectedAcroformDAFont = new PdfString("/F1 0 Tf 0 g ");
             PdfString expectedFieldsDAFont = new PdfString("/F3 12 Tf");
@@ -146,7 +151,7 @@ namespace iText.Forms {
         public virtual void LineEndingsTest() {
             String destFilename = destinationFolder + "lineEndingsTest.pdf";
             String cmpFilename = sourceFolder + "cmp_lineEndingsTest.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destFilename))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destFilename))) {
                 PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 PdfTextFormField field = new TextFormFieldBuilder(pdfDoc, "single").SetWidgetRectangle(new Rectangle(50, 700
                     , 500, 120)).CreateText();

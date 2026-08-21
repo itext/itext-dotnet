@@ -47,12 +47,17 @@ namespace iText.Forms {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void FlatteningFormFieldNoSubtypeInAPTest() {
             String src = sourceFolder + "formFieldNoSubtypeInAPTest.pdf";
             String dest = destinationFolder + "flatteningFormFieldNoSubtypeInAPTest.pdf";
             String cmp = sourceFolder + "cmp_flatteningFormFieldNoSubtypeInAPTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
+            PdfDocument doc = new PdfDocument(new PdfReader(src), CompareTool.CreateTestPdfWriter(dest));
             PdfFormCreator.GetAcroForm(doc, false).FlattenFields();
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(dest, cmp, destinationFolder, "diff_"));
@@ -63,7 +68,7 @@ namespace iText.Forms {
             String src = sourceFolder + "flatteningPdfWithButtons.pdf";
             String dest = destinationFolder + "flatteningPdfWithButtonsOutput.pdf";
             String cmp = sourceFolder + "cmp_flatteningPdfWithButtons.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(src), new PdfWriter(dest))) {
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(src), CompareTool.CreateTestPdfWriter(dest))) {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfFont font = PdfFontFactory.CreateFont();
                 PdfFormField field = form.GetField("myPushButton");
@@ -85,7 +90,7 @@ namespace iText.Forms {
             String src = sourceFolder + "flatteningPdfWithFields.pdf";
             String dest = destinationFolder + "flatteningPdfWithFields.pdf";
             String cmp = sourceFolder + "cmp_flatteningPdfWithFields.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(src), new PdfWriter(dest))) {
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(src), CompareTool.CreateTestPdfWriter(dest))) {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
                 PdfFont font = PdfFontFactory.CreateFont();
                 IDictionary<PdfName, PdfObject> appearance = new Dictionary<PdfName, PdfObject>();
@@ -113,7 +118,7 @@ namespace iText.Forms {
             String src = sourceFolder + filename + ".pdf";
             String dest = destinationFolder + filename + "_flattened.pdf";
             String cmp = sourceFolder + "cmp_" + filename + "_flattened.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
+            PdfDocument doc = new PdfDocument(new PdfReader(src), CompareTool.CreateTestPdfWriter(dest));
             PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(doc, false);
             acroForm.SetGenerateAppearance(false);
             acroForm.FlattenFields();
@@ -127,7 +132,7 @@ namespace iText.Forms {
             String filename = "hiddenField";
             String src = sourceFolder + filename + ".pdf";
             String dest = destinationFolder + filename + "_flattened.pdf";
-            PdfDocument document = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
+            PdfDocument document = new PdfDocument(new PdfReader(src), CompareTool.CreateTestPdfWriter(dest));
             PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, true);
             acroForm.GetField("hiddenField").GetPdfObject().Put(PdfName.F, new PdfNumber(2));
             acroForm.FlattenFields();

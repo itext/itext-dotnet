@@ -45,12 +45,17 @@ namespace iText.Forms {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         /// <summary>Form fields addition to the tagged document.</summary>
         [NUnit.Framework.Test]
         public virtual void FormFieldTaggingTest01() {
             String outFileName = destinationFolder + "taggedPdfWithForms01.pdf";
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms01.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.SetTagged();
             PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
@@ -64,7 +69,7 @@ namespace iText.Forms {
         public virtual void FormFieldTaggingTest02() {
             String outFileName = destinationFolder + "taggedPdfWithForms02.pdf";
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms02.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             pdfDoc.SetTagged();
             pdfDoc.InitializeOutlines();
             PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDoc, true);
@@ -81,8 +86,8 @@ namespace iText.Forms {
         public virtual void FormFieldTaggingTest03() {
             String outFileName = destinationFolder + "taggedPdfWithForms03.pdf";
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms03.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "cmp_taggedPdfWithForms01.pdf"), new PdfWriter
-                (outFileName));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "cmp_taggedPdfWithForms01.pdf"), CompareTool
+                .CreateTestPdfWriter(outFileName));
             PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDoc, false);
             acroForm.FlattenFields();
             pdfDoc.Close();
@@ -94,8 +99,8 @@ namespace iText.Forms {
         public virtual void FormFieldTaggingTest04() {
             String outFileName = destinationFolder + "taggedPdfWithForms04.pdf";
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms04.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "cmp_taggedPdfWithForms01.pdf"), new PdfWriter
-                (outFileName));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "cmp_taggedPdfWithForms01.pdf"), CompareTool
+                .CreateTestPdfWriter(outFileName));
             PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDoc, false);
             acroForm.RemoveField("TestCheck");
             acroForm.RemoveField("push");
@@ -108,7 +113,7 @@ namespace iText.Forms {
         public virtual void FormFieldTaggingTest05() {
             String outFileName = destinationFolder + "taggedPdfWithForms05.pdf";
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms05.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             pdfDoc.SetTagged();
             PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             AddFormFieldsToDocument(pdfDoc, form);
@@ -122,7 +127,7 @@ namespace iText.Forms {
         public virtual void FormFieldTaggingTest06() {
             String outFileName = destinationFolder + "taggedPdfWithForms06.pdf";
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms06.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             pdfDoc.SetTagged();
             PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             AddFormFieldsToDocument(pdfDoc, form);
@@ -137,7 +142,7 @@ namespace iText.Forms {
         public virtual void FormFieldTaggingTest07() {
             String outFileName = destinationFolder + "taggedPdfWithForms07.pdf";
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms07.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocWithFields.pdf");
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             // Original document is already tagged, so there is no need to mark it as tagged again
@@ -158,7 +163,8 @@ namespace iText.Forms {
             String outFileName = destinationFolder + "mergeFieldTaggingTest08.pdf";
             String cmpFileName = sourceFolder + "cmp_mergeFieldTaggingTest08.pdf";
             String srcFileName = sourceFolder + "mergeFieldTaggingTest08.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcFileName), CompareTool.CreateTestPdfWriter(outFileName
+                ))) {
                 pdfDoc.SetTagged();
                 PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 AddFormFieldsToDocument(pdfDoc, form);
@@ -185,7 +191,7 @@ namespace iText.Forms {
         public virtual void FormFieldTaggingTest10() {
             String outFileName = destinationFolder + "taggedPdfWithForms10.pdf";
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms10.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             pdfDoc.SetTagged();
             pdfDoc.InitializeOutlines();
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDoc, true);
@@ -202,7 +208,7 @@ namespace iText.Forms {
         public virtual void FormFieldTaggingTest11() {
             String outFileName = destinationFolder + "taggedPdfWithForms11.pdf";
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms11.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocWithFields.pdf");
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             pdfDoc.SetTagged();

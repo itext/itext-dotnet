@@ -48,8 +48,8 @@ namespace iText.Svg.Renderers {
         }
 
         public virtual void Convert(String svg, String output, PageSize size, SvgConverterProperties properties) {
-            using (PdfDocument doc = new PdfDocument(new PdfWriter(output, new WriterProperties().SetCompressionLevel(
-                0)))) {
+            using (PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(output, new WriterProperties().SetCompressionLevel
+                (0)))) {
                 doc.AddNewPage(size);
                 properties.SetBaseUri(svg);
                 SvgConverter.DrawOnDocument(FileUtil.GetInputStreamForFile(svg), doc, 1, properties);
@@ -57,7 +57,8 @@ namespace iText.Svg.Renderers {
         }
 
         public static PdfDocument ConvertWithResult(String svg, String output) {
-            PdfDocument doc = new PdfDocument(new PdfWriter(output, new WriterProperties().SetCompressionLevel(0)));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(output, new WriterProperties().SetCompressionLevel
+                (0)));
             doc.AddNewPage();
             ISvgConverterProperties properties = new SvgConverterProperties().SetBaseUri(svg);
             SvgConverter.DrawOnDocument(FileUtil.GetInputStreamForFile(svg), doc, 1, properties);

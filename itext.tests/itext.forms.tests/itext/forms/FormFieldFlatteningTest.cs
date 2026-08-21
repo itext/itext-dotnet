@@ -44,11 +44,16 @@ namespace iText.Forms {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void GetFieldsForFlatteningTest() {
             String outPdfName = destinationFolder + "flattenedFormField.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "formFieldFile.pdf"), new PdfWriter(outPdfName
-                ));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "formFieldFile.pdf"), CompareTool.CreateTestPdfWriter
+                (outPdfName));
             PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, false);
             NUnit.Framework.Assert.AreEqual(0, form.GetFieldsForFlattening().Count);
             form.PartialFormFlattening("radioName");
@@ -60,7 +65,7 @@ namespace iText.Forms {
             NUnit.Framework.Assert.IsTrue(form.GetFieldsForFlattening().Contains(text1Field));
             form.FlattenFields();
             pdfDoc.Close();
-            PdfDocument outPdfDoc = new PdfDocument(new PdfReader(outPdfName));
+            PdfDocument outPdfDoc = new PdfDocument(CompareTool.CreateOutputReader(outPdfName));
             PdfAcroForm outPdfForm = PdfFormCreator.GetAcroForm(outPdfDoc, false);
             NUnit.Framework.Assert.AreEqual(2, outPdfForm.GetAllFormFields().Count);
             outPdfDoc.Close();
@@ -85,7 +90,7 @@ namespace iText.Forms {
             String src = sourceFolder + "multiLineFormFieldClippingTest.pdf";
             String dest = destinationFolder + "multiLineFormFieldClippingTest_flattened.pdf";
             String cmp = sourceFolder + "cmp_multiLineFormFieldClippingTest_flattened.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
+            PdfDocument doc = new PdfDocument(new PdfReader(src), CompareTool.CreateTestPdfWriter(dest));
             PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             form.GetField("Text1").SetValue("Tall letters: T I J L R E F");
             form.FlattenFields();
@@ -130,7 +135,7 @@ namespace iText.Forms {
 
         private static void FlattenFieldsAndCompare(String srcFile, String outFile) {
             PdfReader reader = new PdfReader(sourceFolder + srcFile);
-            PdfWriter writer = new PdfWriter(destinationFolder + outFile);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + outFile);
             PdfDocument document = new PdfDocument(reader, writer);
             PdfFormCreator.GetAcroForm(document, false).FlattenFields();
             document.Close();
@@ -157,7 +162,7 @@ namespace iText.Forms {
             String src = sourceFolder + "src_" + testName + ".pdf";
             String dest = destinationFolder + testName + ".pdf";
             String cmp = sourceFolder + "cmp_" + testName + ".pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
+            PdfDocument doc = new PdfDocument(new PdfReader(src), CompareTool.CreateTestPdfWriter(dest));
             PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             foreach (PdfFormField field in form.GetAllFormFields().Values) {
                 if (field is PdfTextFormField) {

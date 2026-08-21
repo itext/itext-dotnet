@@ -49,6 +49,11 @@ namespace iText.Forms {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
 //\cond DO_NOT_DOCUMENT
         // Custom entry in Info dictionary is used because standard entried are gone into metadata in PDF 2.0
         internal const String customInfoEntryKey = "Custom";
@@ -74,9 +79,9 @@ namespace iText.Forms {
             String filename = "encryptAes256Pdf2PermissionsTest01.pdf";
             int permissions = EncryptionConstants.ALLOW_FILL_IN | EncryptionConstants.ALLOW_SCREENREADERS | EncryptionConstants
                 .ALLOW_DEGRADED_PRINTING;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename, new WriterProperties().SetPdfVersion
-                (PdfVersion.PDF_2_0).SetStandardEncryption(USER, OWNER, permissions, EncryptionConstants.ENCRYPTION_AES_256
-                )));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + filename, new WriterProperties
+                ().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption(USER, OWNER, permissions, EncryptionConstants
+                .ENCRYPTION_AES_256)));
             pdfDoc.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
             PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfTextFormField textField1 = new TextFormFieldBuilder(pdfDoc, "Name").SetWidgetRectangle(new Rectangle(100
@@ -111,9 +116,9 @@ namespace iText.Forms {
             // This test differs from the previous one (encryptAes256Pdf2PermissionsTest01) only in permissions.
             // Here we do not allow to fill the form in.
             int permissions = EncryptionConstants.ALLOW_SCREENREADERS | EncryptionConstants.ALLOW_DEGRADED_PRINTING;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename, new WriterProperties().SetPdfVersion
-                (PdfVersion.PDF_2_0).SetStandardEncryption(USER, OWNER, permissions, EncryptionConstants.ENCRYPTION_AES_256
-                )));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + filename, new WriterProperties
+                ().SetPdfVersion(PdfVersion.PDF_2_0).SetStandardEncryption(USER, OWNER, permissions, EncryptionConstants
+                .ENCRYPTION_AES_256)));
             pdfDoc.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
             PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfTextFormField textField1 = new TextFormFieldBuilder(pdfDoc, "Name").SetWidgetRectangle(new Rectangle(100

@@ -48,11 +48,16 @@ namespace iText.Forms.Form.Element {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void EmptyComboBoxFieldTest() {
             String outPdf = DESTINATION_FOLDER + "emptyComboBoxField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_emptyComboBoxField.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 ComboBoxField flattenComboBoxField = new ComboBoxField("flatten empty combo box field");
                 flattenComboBoxField.SetInteractive(false);
                 flattenComboBoxField.SetBackgroundColor(ColorConstants.RED);
@@ -76,7 +81,7 @@ namespace iText.Forms.Form.Element {
         public virtual void BasicComboBoxFieldTest() {
             String outPdf = DESTINATION_FOLDER + "basicComboBoxField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_basicComboBoxField.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 ComboBoxField formComboBoxField = new ComboBoxField("form combo box field");
                 formComboBoxField.SetInteractive(true);
                 formComboBoxField.AddOption(new SelectFieldItem("option 1"));
@@ -111,7 +116,7 @@ namespace iText.Forms.Form.Element {
             borderList.Add(new SolidBorder(ColorConstants.RED, .7f));
             borderList.Add(new SolidBorder(ColorConstants.GREEN, 1));
             borderList.Add(new SolidBorder(ColorConstants.BLUE, 2));
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 for (int i = 0; i < borderList.Count; i++) {
                     ComboBoxField formComboBoxField = new ComboBoxField("form combo box field" + i);
                     formComboBoxField.SetInteractive(true);
@@ -144,7 +149,7 @@ namespace iText.Forms.Form.Element {
             borderList.Add(ColorConstants.RED);
             borderList.Add(ColorConstants.GREEN);
             borderList.Add(ColorConstants.BLUE);
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 for (int i = 0; i < borderList.Count; i++) {
                     ComboBoxField formComboBoxField = new ComboBoxField("form combo box field" + i);
                     formComboBoxField.SetInteractive(true);
@@ -173,7 +178,7 @@ namespace iText.Forms.Form.Element {
         public virtual void ComboBoxFieldWithoutSelectionTest() {
             String outPdf = DESTINATION_FOLDER + "comboBoxFieldWithoutSelection.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_comboBoxFieldWithoutSelection.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 ComboBoxField flattenComboBoxFieldWithFont = new ComboBoxField("flatten combo box field with font");
                 flattenComboBoxFieldWithFont.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flattenComboBoxFieldWithFont.SetBackgroundColor(ColorConstants.RED);
@@ -196,7 +201,7 @@ namespace iText.Forms.Form.Element {
         public virtual void ComboBoxFieldWithHeightTest() {
             String outPdf = DESTINATION_FOLDER + "comboBoxFieldWithHeight.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_comboBoxFieldWithHeight.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 ComboBoxField flattenComboBoxField = new ComboBoxField("flatten combo box field with height");
                 flattenComboBoxField.SetBackgroundColor(ColorConstants.RED);
                 flattenComboBoxField.AddOption(new SelectFieldItem("option 1"));
@@ -212,7 +217,7 @@ namespace iText.Forms.Form.Element {
         public virtual void ComboBoxFieldWithMinHeightTest() {
             String outPdf = DESTINATION_FOLDER + "comboBoxFieldWithMinHeight.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_comboBoxFieldWithMinHeight.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 ComboBoxField flattenComboBoxField = new ComboBoxField("flatten combo box field with min height");
                 flattenComboBoxField.SetBackgroundColor(ColorConstants.RED);
                 flattenComboBoxField.AddOption(new SelectFieldItem("option 1"));
@@ -228,7 +233,7 @@ namespace iText.Forms.Form.Element {
         public virtual void ComboBoxFieldWithMaxHeightTest() {
             String outPdf = DESTINATION_FOLDER + "comboBoxFieldWithMaxHeight.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_comboBoxFieldWithMaxHeight.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 ComboBoxField flattenComboBoxField = new ComboBoxField("flatten combo box field with max height");
                 flattenComboBoxField.SetBackgroundColor(ColorConstants.RED);
                 flattenComboBoxField.AddOption(new SelectFieldItem("option 1"));
@@ -244,7 +249,7 @@ namespace iText.Forms.Form.Element {
         public virtual void ComboBoxFieldCannotFitTest() {
             String outPdf = DESTINATION_FOLDER + "comboBoxFieldCannotFit.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_comboBoxFieldCannotFit.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Div div = new Div();
                 div.SetWidth(UnitValue.CreatePointValue(400));
                 div.SetHeight(UnitValue.CreatePointValue(755));
@@ -265,7 +270,7 @@ namespace iText.Forms.Form.Element {
         public virtual void ComboBoxFieldWithLangTest() {
             String outPdf = DESTINATION_FOLDER + "comboBoxFieldWithLang.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_comboBoxFieldWithLang.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 ComboBoxField flattenComboBoxField = new ComboBoxField("flatten combo box with lang");
                 flattenComboBoxField.SetBackgroundColor(ColorConstants.RED);
                 flattenComboBoxField.AddOption(new SelectFieldItem("option 1"));
@@ -283,7 +288,7 @@ namespace iText.Forms.Form.Element {
             String outPdf = DESTINATION_FOLDER + "comboBoxFontSizeTest.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_comboBoxFontSizeTest.pdf";
             float?[] fontSizes = new float?[] { 4F, 8F, 12F, 16F, 20F, 24F };
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 foreach (float? fontSize in fontSizes) {
                     ComboBoxField formComboBoxFieldSelected = new ComboBoxField("form combo box field selected" + MathematicUtil.Round
                         ((float)fontSize));
@@ -311,7 +316,7 @@ namespace iText.Forms.Form.Element {
             // test different font sizes
             String outPdf = DESTINATION_FOLDER + "nonSelectedInHtml2PdfSelectsFirst.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_nonSelectedInHtml2PdfSelectsFirst.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 ComboBoxField formComboBoxFieldSelected = new ComboBoxField("form combo box field selected");
                 formComboBoxFieldSelected.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                 formComboBoxFieldSelected.SetInteractive(true);
@@ -330,7 +335,7 @@ namespace iText.Forms.Form.Element {
             String cmpPdf = SOURCE_FOLDER + "cmp_comboBoxFontColorTest.pdf";
             Color[] colors = new Color[] { ColorConstants.GREEN, ColorConstants.RED, ColorConstants.BLUE, ColorConstants
                 .YELLOW, ColorConstants.ORANGE, ColorConstants.PINK };
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 for (int i = 0; i < colors.Length; i++) {
                     Color color = colors[i];
                     ComboBoxField formComboBoxFieldSelected = new ComboBoxField("form combo box field selected" + i);
@@ -479,7 +484,7 @@ namespace iText.Forms.Form.Element {
         public virtual void BasicComboBoxFieldTaggedTest() {
             String outPdf = DESTINATION_FOLDER + "basicComboBoxFieldTagged.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_basicComboBoxFieldTagged.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 document.GetPdfDocument().SetTagged();
                 ComboBoxField formComboBoxField = new ComboBoxField("form combo box field");
                 formComboBoxField.SetInteractive(true);
@@ -511,7 +516,7 @@ namespace iText.Forms.Form.Element {
         public virtual void ComboBoxAlternativeDescriptionTest() {
             String outPdf = DESTINATION_FOLDER + "comboBoxAlternativeDescription.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_comboBoxAlternativeDescription.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 document.GetPdfDocument().SetTagged();
                 ComboBoxField formComboBoxField = new ComboBoxField("form combo box field");
                 formComboBoxField.SetInteractive(true);

@@ -40,12 +40,17 @@ namespace iText.Forms.Fields {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void AddFormXObjectToPushButtonTest() {
             String outPdf = DESTINATION_FOLDER + "addFormXObjectToPushButton.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_addFormXObjectToPushButton.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "addFormXObjectToPushButton.pdf"), new 
-                PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "addFormXObjectToPushButton.pdf"), CompareTool
+                .CreateTestPdfWriter(outPdf));
             PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfPage page = pdfDoc.GetPage(2);
             PdfFormXObject xObject = page.CopyAsFormXObject(pdfDoc);

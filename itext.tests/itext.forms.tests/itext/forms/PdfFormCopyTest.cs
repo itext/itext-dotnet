@@ -42,6 +42,11 @@ namespace iText.Forms {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 14)]
         public virtual void CopyFieldsTest01() {
@@ -52,7 +57,7 @@ namespace iText.Forms {
             PdfDocument doc1 = new PdfDocument(new PdfReader(srcFilename1));
             PdfDocument doc2 = new PdfDocument(new PdfReader(srcFilename2));
             PdfDocument doc3 = new PdfDocument(new PdfReader(srcFilename3));
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             pdfDoc.InitializeOutlines();
             doc3.CopyPagesTo(1, doc3.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
             doc2.CopyPagesTo(1, doc2.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
@@ -67,7 +72,7 @@ namespace iText.Forms {
             String srcFilename = sourceFolder + "hello_with_comments.pdf";
             String filename = destinationFolder + "copyFields02.pdf";
             PdfDocument doc1 = new PdfDocument(new PdfReader(srcFilename));
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             pdfDoc.InitializeOutlines();
             doc1.CopyPagesTo(1, doc1.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
             pdfDoc.Close();
@@ -80,7 +85,7 @@ namespace iText.Forms {
             String srcFilename = sourceFolder + "hello2_with_comments.pdf";
             String filename = destinationFolder + "copyFields03.pdf";
             PdfDocument doc1 = new PdfDocument(new PdfReader(srcFilename));
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             pdfDoc.InitializeOutlines();
             doc1.CopyPagesTo(1, doc1.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
             pdfDoc.Close();
@@ -95,7 +100,7 @@ namespace iText.Forms {
             String filename = destinationFolder + "copyLargeFile.pdf";
             PdfDocument doc1 = new PdfDocument(new PdfReader(srcFilename1));
             PdfDocument doc2 = new PdfDocument(new PdfReader(srcFilename2));
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             pdfDoc.InitializeOutlines();
             PdfPageFormCopier formCopier = new PdfPageFormCopier();
             doc1.CopyPagesTo(1, doc1.GetNumberOfPages(), pdfDoc, formCopier);
@@ -125,7 +130,7 @@ namespace iText.Forms {
             String srcFilename = sourceFolder + "srcFile1.pdf";
             String destFilename = destinationFolder + "copyFields05.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFilename));
-            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
+            PdfDocument destDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destFilename));
             destDoc.AddPage(srcDoc.GetFirstPage().CopyTo(destDoc, new PdfPageFormCopier()));
             destDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "cmp_copyFields05.pdf"
@@ -138,7 +143,7 @@ namespace iText.Forms {
             String srcFilename = sourceFolder + "copyMultipleSubfieldsTest01.pdf";
             String destFilename = destinationFolder + "copyMultipleSubfieldsTest01.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFilename));
-            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
+            PdfDocument destDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destFilename));
             PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
             // copying the same page from the same document twice
             for (int i = 0; i < 4; ++i) {
@@ -161,7 +166,7 @@ namespace iText.Forms {
             String srcFilename = sourceFolder + "copyMultipleSubfieldsTest02.pdf";
             String destFilename = destinationFolder + "copyMultipleSubfieldsTest02.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFilename));
-            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
+            PdfDocument destDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destFilename));
             PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
             // copying the same page from the same document twice
             for (int i = 0; i < 3; ++i) {
@@ -181,7 +186,7 @@ namespace iText.Forms {
             String srcFilename = sourceFolder + "copyMultipleSubfieldsTest03.pdf";
             String destFilename = destinationFolder + "copyMultipleSubfieldsTest03.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFilename));
-            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
+            PdfDocument destDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destFilename));
             PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
             // copying the same page from the same document twice
             for (int i = 0; i < 3; ++i) {
@@ -201,7 +206,7 @@ namespace iText.Forms {
             String srcFilename = sourceFolder + "copyMultipleSubfieldsSmartModeTest01.pdf";
             String destFilename = destinationFolder + "copyMultipleSubfieldsSmartModeTest01.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFilename));
-            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename).SetSmartMode(true));
+            PdfDocument destDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destFilename).SetSmartMode(true));
             PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
             // copying the same page from the same document twice
             for (int i = 0; i < 4; ++i) {
@@ -224,7 +229,7 @@ namespace iText.Forms {
             String srcFilename = sourceFolder + "datasheet.pdf";
             String destFilename = destinationFolder + "copyFields06.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFilename));
-            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
+            PdfDocument destDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destFilename));
             PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
             // copying the same page from the same document twice
             for (int i = 0; i < 2; ++i) {
@@ -241,7 +246,7 @@ namespace iText.Forms {
         public virtual void CopyFieldsTest07() {
             String srcFilename = sourceFolder + "datasheet.pdf";
             String destFilename = destinationFolder + "copyFields07.pdf";
-            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
+            PdfDocument destDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destFilename));
             PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
             // copying the same page from reopened document twice
             for (int i = 0; i < 2; ++i) {
@@ -264,7 +269,7 @@ namespace iText.Forms {
             PdfDocument doc1 = new PdfDocument(new PdfReader(srcFilename1));
             PdfDocument doc2 = new PdfDocument(new PdfReader(srcFilename2));
             PdfDocument doc3 = new PdfDocument(new PdfReader(srcFilename3));
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             pdfDoc.InitializeOutlines();
             PdfPageFormCopier formCopier = new PdfPageFormCopier();
             doc3.CopyPagesTo(1, doc3.GetNumberOfPages(), pdfDoc, formCopier);
@@ -354,7 +359,7 @@ namespace iText.Forms {
             String srcFilename = sourceFolder + "copyFields13.pdf";
             String destFilename = destinationFolder + "copyFields13.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFilename));
-            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
+            PdfDocument destDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destFilename));
             PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
             for (int i = 0; i < 1; ++i) {
                 srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
@@ -372,7 +377,7 @@ namespace iText.Forms {
             String sourceFile = sourceFolder + "AnnotationSampleStandard.pdf";
             String destFile = destinationFolder + "AnnotationSampleStandard_copy.pdf";
             PdfDocument source = new PdfDocument(new PdfReader(sourceFile));
-            PdfDocument target = new PdfDocument(new PdfWriter(destFile));
+            PdfDocument target = new PdfDocument(CompareTool.CreateTestPdfWriter(destFile));
             target.InitializeOutlines();
             source.CopyPagesTo(1, source.GetNumberOfPages(), target, new PdfPageFormCopier());
             target.Close();
@@ -385,7 +390,7 @@ namespace iText.Forms {
             String srcFilename = sourceFolder + "unnamedFields.pdf";
             String destFilename = destinationFolder + "hierarchyTest.pdf";
             PdfDocument src = new PdfDocument(new PdfReader(srcFilename));
-            PdfDocument merged = new PdfDocument(new PdfWriter(destFilename));
+            PdfDocument merged = new PdfDocument(CompareTool.CreateTestPdfWriter(destFilename));
             src.CopyPagesTo(1, 1, merged, new PdfPageFormCopier());
             merged.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "cmp_unnamedFieldsHierarchyTest.pdf"
@@ -399,7 +404,7 @@ namespace iText.Forms {
             String destFilename = destinationFolder + "copyAndEditTextFields.pdf";
             String cmpFileName = sourceFolder + "cmp_copyAndEditTextFields.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFileName));
-            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
+            PdfDocument destDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destFilename));
             PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
             for (int i = 0; i < 4; i++) {
                 srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
@@ -423,7 +428,7 @@ namespace iText.Forms {
             String destFilename = destinationFolder + "copyAndEditCheckboxes.pdf";
             String cmpFileName = sourceFolder + "cmp_copyAndEditCheckboxes.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFileName));
-            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
+            PdfDocument destDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destFilename));
             PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
             for (int i = 0; i < 4; i++) {
                 srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
@@ -445,7 +450,7 @@ namespace iText.Forms {
             String destFilename = destinationFolder + "copyAndEditRadioButtons.pdf";
             String cmpFileName = sourceFolder + "cmp_copyAndEditRadioButtons.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFileName));
-            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
+            PdfDocument destDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(destFilename));
             PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
             for (int i = 0; i < 4; i++) {
                 srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
@@ -464,7 +469,7 @@ namespace iText.Forms {
             String srcFileName1 = sourceFolder + "fieldMergedWithWidget.pdf";
             String destFilename = destinationFolder + "mergeMergedFieldAndMergedFieldTest.pdf";
             String cmpFileName = sourceFolder + "cmp_mergeMergedFieldAndMergedFieldTest.pdf";
-            using (PdfWriter writer = new PdfWriter(destFilename)) {
+            using (PdfWriter writer = CompareTool.CreateTestPdfWriter(destFilename)) {
                 using (PdfDocument resultPdfDocument = new PdfDocument(writer)) {
                     using (PdfReader reader1 = new PdfReader(srcFileName1)) {
                         using (PdfDocument sourceDoc1 = new PdfDocument(reader1)) {
@@ -487,7 +492,7 @@ namespace iText.Forms {
             String srcFileName2 = sourceFolder + "fieldTwoWidgets.pdf";
             String destFilename = destinationFolder + "mergeMergedFieldAndTwoWidgetsTest.pdf";
             String cmpFileName = sourceFolder + "cmp_mergeMergedFieldAndTwoWidgetsTest.pdf";
-            using (PdfWriter writer = new PdfWriter(destFilename)) {
+            using (PdfWriter writer = CompareTool.CreateTestPdfWriter(destFilename)) {
                 using (PdfDocument resultPdfDocument = new PdfDocument(writer)) {
                     using (PdfReader reader1 = new PdfReader(srcFileName1)) {
                         using (PdfDocument sourceDoc1 = new PdfDocument(reader1)) {
@@ -514,7 +519,7 @@ namespace iText.Forms {
             String srcFileName2 = sourceFolder + "fieldTwoWidgets.pdf";
             String destFilename = destinationFolder + "mergeTwoWidgetsAndMergedFieldTest.pdf";
             String cmpFileName = sourceFolder + "cmp_mergeTwoWidgetsAndMergedFieldTest.pdf";
-            using (PdfWriter writer = new PdfWriter(destFilename)) {
+            using (PdfWriter writer = CompareTool.CreateTestPdfWriter(destFilename)) {
                 using (PdfDocument resultPdfDocument = new PdfDocument(writer)) {
                     using (PdfReader reader1 = new PdfReader(srcFileName1)) {
                         using (PdfDocument sourceDoc1 = new PdfDocument(reader1)) {
@@ -540,7 +545,7 @@ namespace iText.Forms {
             String srcFileName2 = sourceFolder + "fieldTwoWidgets.pdf";
             String destFilename = destinationFolder + "mergeTwoWidgetsAndTwoWidgetsTest.pdf";
             String cmpFileName = sourceFolder + "cmp_mergeTwoWidgetsAndTwoWidgetsTest.pdf";
-            using (PdfWriter writer = new PdfWriter(destFilename)) {
+            using (PdfWriter writer = CompareTool.CreateTestPdfWriter(destFilename)) {
                 using (PdfDocument resultPdfDocument = new PdfDocument(writer)) {
                     using (PdfReader reader2 = new PdfReader(srcFileName2)) {
                         using (PdfDocument sourceDoc2 = new PdfDocument(reader2)) {
@@ -562,8 +567,8 @@ namespace iText.Forms {
             String srcFileName = sourceFolder + "complexFieldsHierarchyTest.pdf";
             String destFilename = destinationFolder + "complexFieldsHierarchyTest.pdf";
             String cmpFileName = sourceFolder + "cmp_complexFieldsHierarchyTest.pdf";
-            using (PdfDocument pdfDocMerged = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(destFilename))
-                ) {
+            using (PdfDocument pdfDocMerged = new PdfDocument(new PdfReader(srcFileName), CompareTool.CreateTestPdfWriter
+                (destFilename))) {
                 using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcFileName))) {
                     pdfDoc.CopyPagesTo(1, pdfDoc.GetNumberOfPages(), pdfDocMerged, new PdfPageFormCopier());
                     pdfDoc.CopyPagesTo(1, pdfDoc.GetNumberOfPages(), pdfDocMerged, new PdfPageFormCopier());
@@ -579,7 +584,7 @@ namespace iText.Forms {
             String destFileName = destinationFolder + "widgetContainsNoTEntryTest.pdf";
             String cmpFileName = sourceFolder + "cmp_widgetContainsNoTEntryTest.pdf";
             PdfDocument sourcePdfDocument = new PdfDocument(new PdfReader(sourceFileName));
-            PdfDocument resultPdfDocument = new PdfDocument(new PdfWriter(destFileName));
+            PdfDocument resultPdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destFileName));
             sourcePdfDocument.CopyPagesTo(1, sourcePdfDocument.GetNumberOfPages(), resultPdfDocument, new PdfPageFormCopier
                 ());
             resultPdfDocument.Close();
@@ -594,7 +599,7 @@ namespace iText.Forms {
             String destFileName = destinationFolder + "copyWithNoSubtypeInAnnotationTest.pdf";
             String cmpFileName = sourceFolder + "cmp_copyWithNoSubtypeInAnnotationTest.pdf";
             PdfDocument sourcePdfDocument = new PdfDocument(new PdfReader(sourceFileName));
-            PdfDocument resultPdfDocument = new PdfDocument(new PdfWriter(destFileName));
+            PdfDocument resultPdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destFileName));
             sourcePdfDocument.CopyPagesTo(1, sourcePdfDocument.GetNumberOfPages(), resultPdfDocument, new PdfPageFormCopier
                 ());
             resultPdfDocument.Close();
