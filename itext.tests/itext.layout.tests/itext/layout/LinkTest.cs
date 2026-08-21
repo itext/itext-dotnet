@@ -143,6 +143,7 @@ namespace iText.Layout {
         /// in the question.
         /// </remarks>
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void TestCreateLocalLinkInRotatedCell() {
             String outFileName = destinationFolder + "linkInRotatedCell.pdf";
             String cmpFileName = sourceFolder + "cmp_linkInRotatedCell.pdf";

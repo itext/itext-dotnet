@@ -80,12 +80,12 @@ namespace iText.Layout.Renderer {
                 marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo());
             }
             float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
-            if (rotation != null || IsFixedLayout()) {
-                parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
-            }
             if (rotation != null && !FloatingHelper.IsRendererFloating(this, floatPropertyValue) && !(this is FlexContainerRenderer
                 )) {
-                blockWidth = RotationUtils.RetrieveRotatedLayoutWidth(parentBBox.GetWidth(), this);
+                blockWidth = RotationUtils.RetrieveRotatedLayoutWidth(parentBBox.GetWidth(), parentBBox.GetHeight(), this);
+            }
+            if (rotation != null || IsFixedLayout()) {
+                parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
             }
             bool includeFloatsInOccupiedArea = BlockFormattingContextUtil.IsRendererCreateBfc(this);
             float clearHeightCorrection = FloatingHelper.CalculateClearHeightCorrection(this, floatRendererAreas, parentBBox
@@ -507,8 +507,13 @@ namespace iText.Layout.Renderer {
             float? rotationAngle = this.GetProperty<float?>(Property.ROTATION_ANGLE);
             if (rotationAngle != null) {
                 if (HasOwnProperty(Property.ROTATION_INITIAL_WIDTH) && HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT)) {
-                    bBox.SetWidth((float)this.GetPropertyAsFloat(Property.ROTATION_INITIAL_WIDTH));
-                    bBox.SetHeight((float)this.GetPropertyAsFloat(Property.ROTATION_INITIAL_HEIGHT));
+                    float initialWidth = (float)this.GetPropertyAsFloat(Property.ROTATION_INITIAL_WIDTH);
+                    float initialHeight = (float)this.GetPropertyAsFloat(Property.ROTATION_INITIAL_HEIGHT);
+                    bBox.SetWidth(initialWidth);
+                    bBox.SetHeight(initialHeight);
+                    // Keep top edge stable for the pre-rotation box
+                    float newHeight = (float)RotationMinMaxWidth.CalculateRotatedHeight(bBox, rotationAngle.Value);
+                    bBox.SetY(occupiedArea.GetBBox().GetTop() - newHeight);
                 }
                 else {
                     LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER
@@ -1090,7 +1095,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             if (this.GetPropertyAsFloat(Property.ROTATION_ANGLE) != null) {
-                return RotationUtils.CountRotationMinMaxWidth(minMaxWidth, this);
+                return RotationUtils.CalculateRotationMinMaxWidth(minMaxWidth, this);
             }
             return minMaxWidth;
         }

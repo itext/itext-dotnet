@@ -223,7 +223,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             if (this.GetPropertyAsFloat(Property.ROTATION_ANGLE) != null) {
-                return RotationUtils.CountRotationMinMaxWidth(minMaxWidth, this);
+                return RotationUtils.CalculateRotationMinMaxWidth(minMaxWidth, this);
             }
             return minMaxWidth;
         }

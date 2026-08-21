@@ -129,11 +129,11 @@ namespace iText.Layout.Renderer {
             OverflowPropertyValue? overflowY = (null == blockMaxHeight || blockMaxHeight > parentBBox.GetHeight()) && 
                 !wasParentsHeightClipped ? OverflowPropertyValue.FIT : this.GetProperty<OverflowPropertyValue?>(Property
                 .OVERFLOW_Y);
+            if (rotation != null && !FloatingHelper.IsRendererFloating(this)) {
+                blockWidth = RotationUtils.RetrieveRotatedLayoutWidth(parentBBox.GetWidth(), parentBBox.GetHeight(), this);
+            }
             if (rotation != null || IsFixedLayout()) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
-            }
-            if (rotation != null && !FloatingHelper.IsRendererFloating(this)) {
-                blockWidth = RotationUtils.RetrieveRotatedLayoutWidth(parentBBox.GetWidth(), this);
             }
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler.StartMarginsCollapse(parentBBox);
@@ -658,7 +658,7 @@ namespace iText.Layout.Renderer {
             else {
                 minMaxWidth.SetAdditionalWidth(CalculateAdditionalWidth(this));
             }
-            return rotation != null ? RotationUtils.CountRotationMinMaxWidth(minMaxWidth, this) : minMaxWidth;
+            return rotation != null ? RotationUtils.CalculateRotationMinMaxWidth(minMaxWidth, this) : minMaxWidth;
         }
 
         protected internal virtual iText.Layout.Renderer.ParagraphRenderer[] Split() {

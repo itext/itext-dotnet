@@ -29,7 +29,6 @@ using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
-using iText.Layout.Logs;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 using iText.Test;
@@ -114,7 +113,6 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void DivWithBigRotatedParagraph() {
             String outFileName = destinationFolder + "divBigRotatedParagraphTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_divBigRotatedParagraphTest01.pdf";
