@@ -392,5 +392,114 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 ));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void LineTroughWithTextRiseTest() {
+            //TODO DEVSIX-10137 :Support baselining and line width for vertical drawing
+            String outFileName = DESTINATION_FOLDER + "lineTroughWithTextRise.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_lineTroughWithTextRise.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Text textUp = new Text("textRise10f_with_lineThrough");
+            textUp.SetTextRise(-10f);
+            textUp.SetLineThrough();
+            textUp.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+            textUp.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+            Text textDown = new Text("textRise-10f_with_lineThrough");
+            textDown.SetTextRise(-10f);
+            textDown.SetLineThrough();
+            textDown.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+            textDown.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+            Paragraph n = new Paragraph("baseline");
+            n.Add(textUp).Add(textDown);
+            n.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+            n.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+            document.Add(n);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void UnderlineTest() {
+            //TODO DEVSIX-10137 :Support line width for vertical drawing should
+            // fix issue for the last part of pages 2 and 3.
+            String outFileName = DESTINATION_FOLDER + "underline.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_underline.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    Paragraph p = new Paragraph("Yellow text with pink stroked dashed underline.").SetFontSize(45).SetFontColor
+                        (ColorConstants.YELLOW);
+                    Underline underline = new Underline(null, 0, 0.1f, 0, -0.1f, PdfCanvasConstants.LineCapStyle.BUTT).SetStrokeWidth
+                        (2).SetStrokeColor(new TransparentColor(ColorConstants.PINK, 0.5f)).SetDashPattern(new float[] { 5, 5, 
+                        10, 5 }, 5);
+                    p.SetUnderline(underline);
+                    p.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    p.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    TransparentColor strokeColor = new TransparentColor(ColorConstants.GREEN, 0.5f);
+                    Paragraph p2 = new Paragraph("Text with line-through and default underline.").SetFontSize(50).SetStrokeWidth
+                        (1).SetFontColor(ColorConstants.DARK_GRAY).SetStrokeColor(strokeColor);
+                    Underline underline2 = new Underline(ColorConstants.DARK_GRAY, 0, 0.1f, 0, 0.3f, PdfCanvasConstants.LineCapStyle
+                        .BUTT).SetStrokeWidth(1).SetStrokeColor(strokeColor);
+                    p2.SetUnderline(underline2);
+                    p2.SetUnderline();
+                    p2.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    p2.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    Underline underline3 = new Underline(null, 0, 0.1f, 0, 0.9f, PdfCanvasConstants.LineCapStyle.BUTT);
+                    Paragraph p3 = new Paragraph("Text with null font color and default overline.").SetFontSize(50).SetFontColor
+                        ((TransparentColor)null);
+                    p3.SetUnderline(underline3);
+                    p3.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    p3.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    //This line should be around the middle of the text compared to horizontal text.
+                    Underline underline4 = new Underline(null, 0, 0.1f, 15, 0f, PdfCanvasConstants.LineCapStyle.BUTT);
+                    Paragraph p4 = new Paragraph("Text with custom yPosition (15).").SetFontSize(50);
+                    p4.SetUnderline(underline4);
+                    p4.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    p4.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    document.Add(p);
+                    document.Add(p2);
+                    document.Add(p3);
+                    document.Add(p4);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FontStyleSimulationTest01() {
+            String outFileName = DESTINATION_FOLDER + "fontStyleSimulationTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_fontStyleSimulationTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Paragraph p = new Paragraph("I'm underlined").SetUnderline();
+            p.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+            p.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+            document.Add(p);
+            p = new Paragraph("I'm strikethrough").SetLineThrough();
+            p.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+            p.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+            document.Add(p);
+            p = new Paragraph(new Text("I'm a bold simulation font").SetBackgroundColor(ColorConstants.GREEN)).SimulateBold
+                ();
+            p.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+            p.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+            document.Add(p);
+            p = new Paragraph(new Text("I'm an italic simulation font").SetBackgroundColor(ColorConstants.GREEN)).SimulateItalic
+                ();
+            p.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+            p.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+            document.Add(p);
+            p = new Paragraph(new Text("I'm a super bold italic underlined linethrough piece of text and no one can be better than me, even if "
+                 + "such a long description will cause me to occupy two lines").SetBackgroundColor(ColorConstants.GREEN
+                )).SimulateItalic().SimulateBold().SetUnderline().SetLineThrough();
+            p.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+            p.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+            document.Add(p);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff"));
+        }
     }
 }

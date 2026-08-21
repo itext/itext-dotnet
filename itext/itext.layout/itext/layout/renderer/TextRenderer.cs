@@ -1015,6 +1015,10 @@ namespace iText.Layout.Renderer {
                 (Property.TEXT_RISE);
         }
 
+        private float GetXLine() {
+            return occupiedArea.GetBBox().GetX();
+        }
+
         /// <summary>Moves the vertical position to the parameter's value.</summary>
         /// <param name="y">the new vertical position of the Text</param>
         public virtual void MoveYLineTo(float y) {
@@ -1455,12 +1459,22 @@ namespace iText.Layout.Renderer {
                 if (doStroke) {
                     canvas.SetLineWidth(underline.GetStrokeWidth());
                 }
-                float yLine = GetYLine();
-                float underlineYPosition = underline.GetYPosition(fontSize) + yLine;
-                float italicWidthSubtraction = .5f * fontSize * italicAngleTan;
-                Rectangle innerAreaBbox = GetInnerAreaBBox();
-                Rectangle underlineBBox = new Rectangle(innerAreaBbox.GetX(), underlineYPosition - underlineThickness / 2, 
-                    innerAreaBbox.GetWidth() - italicWidthSubtraction, underlineThickness);
+                Rectangle underlineBBox;
+                if (IsVerticalWriting()) {
+                    float xLine = GetXLine();
+                    float underlineXPosition = xLine + underline.GetYPosition(fontSize);
+                    Rectangle innerAreaBbox = GetInnerAreaBBox();
+                    underlineBBox = new Rectangle(underlineXPosition - underlineThickness / 2, innerAreaBbox.GetY(), underlineThickness
+                        , innerAreaBbox.GetHeight());
+                }
+                else {
+                    float yLine = GetYLine();
+                    float underlineYPosition = underline.GetYPosition(fontSize) + yLine;
+                    float italicWidthSubtraction = .5f * fontSize * italicAngleTan;
+                    Rectangle innerAreaBbox = GetInnerAreaBBox();
+                    underlineBBox = new Rectangle(innerAreaBbox.GetX(), underlineYPosition - underlineThickness / 2, innerAreaBbox
+                        .GetWidth() - italicWidthSubtraction, underlineThickness);
+                }
                 canvas.Rectangle(underlineBBox);
                 if (isClippingMode) {
                     canvas.Clip().EndPath();
