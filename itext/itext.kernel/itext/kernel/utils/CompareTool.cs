@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Internal.Runtime;
 using iText.Commons.Logs;
@@ -87,6 +88,9 @@ namespace iText.Kernel.Utils {
 
         private const String NEW_LINES = "[\\r\\n]";
 
+        private static readonly Regex NUMBER_PATTERN = iText.Commons.Utils.StringUtil.RegexCompile("(?<!\\d)[-+]?\\d{1,8}(?:\\.\\d{1,5})?(?!\\d)"
+            );
+
         private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Utils.CompareTool));
 
         private String cmpPdfName;
@@ -116,6 +120,8 @@ namespace iText.Kernel.Utils {
         private bool encryptionCompareEnabled = false;
 
         private bool kdfSaltCompareEnabled = true;
+
+        private float? floatToleranceInStreams = null;
 
         private bool useCachedPagesForComparison = true;
 
@@ -460,6 +466,17 @@ namespace iText.Kernel.Utils {
         public virtual iText.Kernel.Utils.CompareTool SetGenerateCompareByContentXmlReport(bool generateCompareByContentXmlReport
             ) {
             this.generateCompareByContentXmlReport = generateCompareByContentXmlReport;
+            return this;
+        }
+
+        /// <summary>Sets the numeric tolerance used when comparing float values in PDF content streams.</summary>
+        /// <param name="tolerance">the tolerance value; must be greater than zero</param>
+        /// <returns>this CompareTool instance</returns>
+        public virtual iText.Kernel.Utils.CompareTool SetContentStreamFloatTolerance(float tolerance) {
+            if (tolerance <= 0) {
+                throw new ArgumentException("Tolerance must be positive.");
+            }
+            floatToleranceInStreams = tolerance;
             return this;
         }
 
@@ -2419,7 +2436,7 @@ namespace iText.Kernel.Utils {
                 cmpStreamBytes = cmpStream.GetBytes(toDecodeCmp);
                 decompressedStreams.Put(cmpStream, cmpStreamBytes);
             }
-            if (JavaUtil.ArraysEquals(outStreamBytes, cmpStreamBytes)) {
+            if (EqualsWithFloatTolerance(outStreamBytes, cmpStreamBytes, floatToleranceInStreams)) {
                 return CompareDictionariesExtended(outStream, cmpStream, currentPath, compareResult);
             }
             else {
@@ -2440,6 +2457,68 @@ namespace iText.Kernel.Utils {
                 return false;
             }
         }
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Compares two byte arrays as text, treating them as equal when all differences
+        /// are floating point numbers whose absolute difference does not exceed
+        /// <paramref name="tolerance"/>.
+        /// </summary>
+        /// <param name="a">first byte array</param>
+        /// <param name="b">second byte array</param>
+        /// <param name="tolerance">
+        /// maximum allowed absolute difference between any pair of numbers
+        /// for the two arrays to still be considered equal
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the arrays are equal under the float-tolerance rule
+        /// </returns>
+        internal static bool EqualsWithFloatTolerance(byte[] a, byte[] b, float? tolerance) {
+            if (JavaUtil.ArraysEquals(a, b)) {
+                return true;
+            }
+            // Do not reprocess by default
+            if (tolerance == null) {
+                return false;
+            }
+            String sa = iText.Commons.Utils.JavaUtil.GetStringForBytes(a, iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            String sb = iText.Commons.Utils.JavaUtil.GetStringForBytes(b, iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            Matcher ma = iText.Commons.Utils.Matcher.Match(NUMBER_PATTERN, sa);
+            Matcher mb = iText.Commons.Utils.Matcher.Match(NUMBER_PATTERN, sb);
+            int lastEndA = 0;
+            int lastEndB = 0;
+            while (ma.Find()) {
+                if (!mb.Find()) {
+                    // a has more numbers than b
+                    return false;
+                }
+                // Non-numeric data between previous number and this one must match exactly
+                if (!sa.JSubstring(lastEndA, ma.Start()).Equals(sb.JSubstring(lastEndB, mb.Start()))) {
+                    return false;
+                }
+                try {
+                    double numA = Double.Parse(ma.Group(), System.Globalization.CultureInfo.InvariantCulture);
+                    double numB = Double.Parse(mb.Group(), System.Globalization.CultureInfo.InvariantCulture);
+                    if (Math.Abs(numA - numB) > tolerance) {
+                        return false;
+                    }
+                }
+                catch (FormatException) {
+                    return false;
+                }
+                lastEndA = ma.End();
+                lastEndB = mb.End();
+            }
+            // b has more numbers than a
+            if (mb.Find()) {
+                return false;
+            }
+            // Remaining data must match exactly
+            return sa.Substring(lastEndA).Equals(sb.Substring(lastEndB));
+        }
+//\endcond
 
         /// <returns>first difference offset</returns>
         private int FindBytesDifference(byte[] outStreamBytes, byte[] cmpStreamBytes, StringBuilder errorMessage) {

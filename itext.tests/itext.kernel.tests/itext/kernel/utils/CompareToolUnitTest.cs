@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using iText.Commons.Internal.Runtime;
 using iText.IO.Source;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils.Objectpathitems;
@@ -109,6 +110,45 @@ namespace iText.Kernel.Utils {
             NUnit.Framework.Assert.IsFalse(compareTool.CompareObjects(ref2, ref1, new ObjectPath(ref1, ref1), result));
             NUnit.Framework.Assert.IsTrue(result.GetDifferences().Values.Contains("Expected a page. Found not a page."
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EqualsWithFloatToleranceTest() {
+            NUnit.Framework.Assert.IsTrue(CompareTool.EqualsWithFloatTolerance(new byte[0], new byte[0], 0.1f));
+            byte[] a = "asd 143.6 asd".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            NUnit.Framework.Assert.IsTrue(CompareTool.EqualsWithFloatTolerance(a, a, 0.02f));
+            a = "asd 143.6 asd".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            byte[] b = "asd 143.59 asd".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            NUnit.Framework.Assert.IsTrue(CompareTool.EqualsWithFloatTolerance(a, b, 0.02f));
+            a = "val -10.0 end".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            b = "val -10.1 end".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            NUnit.Framework.Assert.IsTrue(CompareTool.EqualsWithFloatTolerance(a, b, 0.11f));
+            a = "1.0 Tf 100 200.0 Td".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            b = "1.0 Tf 100.05 199.95 Td".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            NUnit.Framework.Assert.IsTrue(CompareTool.EqualsWithFloatTolerance(a, b, 0.1f));
+            a = "1.0 Tf 100 200.0 Td".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            b = "1.0 Tf 100.05 200.11 Td".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            NUnit.Framework.Assert.IsFalse(CompareTool.EqualsWithFloatTolerance(a, b, 0.1f));
+            a = "1.0 2.0 3.0".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            b = "1.0 2.0".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            NUnit.Framework.Assert.IsFalse(CompareTool.EqualsWithFloatTolerance(a, b, 1.0f));
+            a = "pos -5 end".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            b = "pos -5.02 end differ".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            NUnit.Framework.Assert.IsFalse(CompareTool.EqualsWithFloatTolerance(a, b, 0.1f));
+            a = "pos -5.000001 end".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            b = "pos -5.000002 end".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            NUnit.Framework.Assert.IsFalse(CompareTool.EqualsWithFloatTolerance(a, b, 0.1f));
+            a = "asd 1.5 asd".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            b = "asd 1.50001 asd".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            NUnit.Framework.Assert.IsFalse(CompareTool.EqualsWithFloatTolerance(a, b, 0f));
+            a = "BT ET q Q".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            b = "BT ET Q q".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            NUnit.Framework.Assert.IsFalse(CompareTool.EqualsWithFloatTolerance(a, b, 0.5f));
+            // A 9-digit integer exceeds the 8-digit cap and must be compared as raw text,
+            // so even a "small" difference causes the arrays to be considered different.
+            a = "id 123456789 end".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            b = "id 123456788 end".GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1);
+            NUnit.Framework.Assert.IsFalse(CompareTool.EqualsWithFloatTolerance(a, b, 10f));
         }
     }
 }

@@ -437,5 +437,14 @@ namespace iText.Kernel.Utils {
             NUnit.Framework.Assert.IsNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, null, ignoredAreas, 0.4
                 ));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void CompareToolWithStreamToleranceTest() {
+            String outPdf = sourceFolder + "tolerance1.pdf";
+            String cmpPdf = sourceFolder + "tolerance2.pdf";
+            NUnit.Framework.Assert.IsNull(new CompareTool().SetContentStreamFloatTolerance(0.02f).CompareByContent(outPdf
+                , cmpPdf, destinationFolder));
+            NUnit.Framework.Assert.IsNotNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder));
+        }
     }
 }
