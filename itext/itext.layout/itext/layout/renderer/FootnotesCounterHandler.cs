@@ -29,7 +29,6 @@ using iText.Kernel.Geom;
 using iText.Kernel.Numbering;
 using iText.Layout;
 using iText.Layout.Element;
-using iText.Layout.Properties;
 using iText.Layout.Properties.Margins;
 
 namespace iText.Layout.Renderer {
@@ -144,6 +143,8 @@ namespace iText.Layout.Renderer {
                         );
                 }
             }
+            // Note: footnote anchor style is applied by FootnoteAnchorRenderer via Property.FOOTNOTES_PROPERTIES
+            // so that we do not need to apply anchor styles to the anchor here
             if (footnotesProperties.GetFootnoteNumberingType() == null) {
                 return;
             }
@@ -239,12 +240,7 @@ namespace iText.Layout.Renderer {
                     throw new InvalidOperationException();
                 }
             }
-            Style defaultStyle = new Style();
-            // TODO DEVSIX-10031 Do not specify constant font size by default,
-            //  it should depend on parent paragraph font size.
-            defaultStyle.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(DEFAULT_FONT_SIZE));
-            defaultStyle.SetProperty(Property.TEXT_RISE, DEFAULT_TEXT_RISE);
-            Text textElement = new Text(numberText).AddStyle(defaultStyle);
+            Text textElement = new Text(numberText);
             return new TextRenderer(textElement);
         }
     }

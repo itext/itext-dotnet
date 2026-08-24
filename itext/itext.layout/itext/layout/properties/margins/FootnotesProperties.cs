@@ -41,6 +41,8 @@ namespace iText.Layout.Properties.Margins {
 
         private Style footnoteAnchorLabelStyle = null;
 
+        private Style footnoteAnchorStyle = null;
+
         /// <summary>
         /// Creates new
         /// <see cref="FootnotesProperties"/>
@@ -187,6 +189,41 @@ namespace iText.Layout.Properties.Margins {
         public virtual iText.Layout.Properties.Margins.FootnotesProperties SetFootnoteAnchorLabelStyle(Style footnoteAnchorLabelStyle
             ) {
             this.footnoteAnchorLabelStyle = footnoteAnchorLabelStyle;
+            return this;
+        }
+
+        /// <summary>
+        /// Gets
+        /// <see cref="iText.Layout.Style"/>
+        /// storing style properties for footnote anchors.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Layout.Style"/>
+        /// storing properties for footnote anchors
+        /// </returns>
+        public virtual Style GetFootnoteAnchorStyle() {
+            return footnoteAnchorStyle;
+        }
+
+        /// <summary>
+        /// Sets
+        /// <see cref="iText.Layout.Style"/>
+        /// storing style properties for footnote anchors.
+        /// </summary>
+        /// <param name="footnoteAnchorStyle">
+        /// 
+        /// <see cref="iText.Layout.Style"/>
+        /// storing properties for footnote anchors
+        /// </param>
+        /// <returns>
+        /// this same
+        /// <see cref="FootnotesProperties"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Layout.Properties.Margins.FootnotesProperties SetFootnoteAnchorStyle(Style footnoteAnchorStyle
+            ) {
+            this.footnoteAnchorStyle = footnoteAnchorStyle;
             return this;
         }
     }

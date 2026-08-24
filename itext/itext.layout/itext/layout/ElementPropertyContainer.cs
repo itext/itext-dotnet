@@ -91,6 +91,12 @@ namespace iText.Layout {
             }
         }
 
+        /// <summary>Gets a copy of this container's properties.</summary>
+        /// <returns>an unmodifiable map with properties set directly on this container</returns>
+        public virtual IDictionary<int, Object> GetOwnProperties() {
+            return JavaCollectionsUtil.UnmodifiableMap(properties);
+        }
+
         /// <summary>Sets values for a relative repositioning of the Element.</summary>
         /// <remarks>
         /// Sets values for a relative repositioning of the Element. Also has as a

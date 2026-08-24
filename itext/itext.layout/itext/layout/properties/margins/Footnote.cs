@@ -43,6 +43,8 @@ namespace iText.Layout.Properties.Margins {
 
         private IElement footnoteAnchor = null;
 
+        private bool defaultStyleNeededForInjectedFootnoteAnchor = false;
+
         private DefaultAccessibilityProperties tagProperties;
 
         /// <summary>
@@ -141,6 +143,7 @@ namespace iText.Layout.Properties.Margins {
             if (footnoteAnchorSymbol == null) {
                 return;
             }
+            this.defaultStyleNeededForInjectedFootnoteAnchor = footnoteAnchor.IsDefaultStyleNeeded();
             this.footnoteAnchor = footnoteAnchorSymbol;
             paragraph.GetChildren().Add(0, this.footnoteAnchor);
         }
@@ -171,6 +174,12 @@ namespace iText.Layout.Properties.Margins {
                 }
             }
         }
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual bool IsDefaultStyleNeededForInjectedFootnoteAnchor() {
+            return defaultStyleNeededForInjectedFootnoteAnchor;
+        }
+//\endcond
 
         private void RemoveFootnoteAnchorFromParagraph(Paragraph paragraph) {
             if (this.footnoteAnchor != null) {

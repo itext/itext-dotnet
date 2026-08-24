@@ -89,6 +89,7 @@ namespace iText.Layout.Renderer {
                     LayoutTaggingHelper.AddTreeHints(taggingHelper, footnoteAnchor);
                 }
             }
+            HandleFootnoteAnchorStyles();
             int pageNumber = layoutContext.GetArea().GetPageNumber();
             Rectangle pageRectangle = this.GetPdfDocument().GetPage(pageNumber).GetPageSize();
             IRenderer parentRenderer = GetParent();
@@ -107,7 +108,7 @@ namespace iText.Layout.Renderer {
                 parentRenderer = parentRenderer.GetParent();
             }
             this.footnoteRenderer.Layout(new LayoutContext(new LayoutArea(pageNumber, pageRectangle)));
-            LayoutResult layoutResult = footnoteAnchor.Layout(layoutContext);
+            LayoutResult layoutResult = footnoteAnchor.SetParent(this).Layout(layoutContext);
             this.occupiedArea = layoutResult.GetOccupiedArea();
             if (LayoutResult.NOTHING == layoutResult.GetStatus()) {
                 layoutResult.SetOverflowRenderer(this);
@@ -303,6 +304,70 @@ namespace iText.Layout.Renderer {
             splitRenderer.AddAllProperties(GetOwnProperties());
             splitRenderer.footnoteAnchor = layoutResult.GetSplitRenderer().SetParent(splitRenderer);
             return splitRenderer;
+        }
+
+        private void HandleFootnoteAnchorStyles() {
+            if (!(footnoteAnchor.GetModelElement() is IAbstractElement)) {
+                return;
+            }
+            IPropertyContainer footnoteAnchorModelElement = footnoteAnchor.GetModelElement();
+            FootnoteAnchor modelElement = ((FootnoteAnchor)this.GetModelElement());
+            FootnotesProperties footnotesProperties = this.GetProperty<FootnotesProperties>(Property.FOOTNOTES_PROPERTIES
+                );
+            Style customStyle = footnotesProperties.GetFootnoteAnchorStyle();
+            if (footnoteAnchorModelElement is Text) {
+                HandleFootnoteAnchorStyles(modelElement, (Text)footnoteAnchorModelElement, customStyle);
+            }
+            else {
+                if (footnoteAnchorModelElement is Image) {
+                    HandleFootnoteAnchorStyles(modelElement, (Image)footnoteAnchorModelElement, customStyle);
+                }
+            }
+        }
+
+        private void HandleFootnoteAnchorStyles<T>(FootnoteAnchor modelElement, AbstractElement<T> footnoteAnchorModelElement
+            , Style customStyle)
+            where T : IElement {
+            CopyPropertiesAndStyles(modelElement, footnoteAnchorModelElement);
+            if (customStyle != null) {
+                footnoteAnchorModelElement.AddStyleIfAbsent(customStyle);
+            }
+            if (FootnotesUtil.IsDefaultStyleNeeded(modelElement)) {
+                UnitValue parentFontSize = GetParent().GetProperty<UnitValue>(Property.FONT_SIZE);
+                Style defaultStyle = FootnotesUtil.CreateDefaultFootnoteAnchorStyle(parentFontSize);
+                if (!footnoteAnchorModelElement.GetOwnProperties().ContainsKey(Property.FONT_SIZE) && !HasStyleWithOwnProperty
+                    (footnoteAnchorModelElement, Property.FONT_SIZE)) {
+                    footnoteAnchor.SetProperty(Property.FONT_SIZE, defaultStyle.GetProperty<UnitValue>(Property.FONT_SIZE));
+                }
+                if (!footnoteAnchorModelElement.GetOwnProperties().ContainsKey(Property.TEXT_RISE) && !HasStyleWithOwnProperty
+                    (footnoteAnchorModelElement, Property.TEXT_RISE)) {
+                    footnoteAnchor.SetProperty(Property.TEXT_RISE, defaultStyle.GetProperty<float?>(Property.TEXT_RISE));
+                }
+            }
+            SetFootnoteAnchor(((FootnoteAnchor)this.modelElement), footnoteAnchorModelElement);
+        }
+
+        private static void CopyPropertiesAndStyles<T>(FootnoteAnchor sourceElement, AbstractElement<T> targetElement
+            )
+            where T : IElement {
+            foreach (KeyValuePair<int, Object> property in sourceElement.GetOwnProperties()) {
+                if (!targetElement.HasProperty(property.Key)) {
+                    targetElement.SetProperty(property.Key, property.Value);
+                }
+            }
+            foreach (Style style in sourceElement.GetStyles()) {
+                targetElement.AddStyleIfAbsent(style);
+            }
+        }
+
+        private static bool HasStyleWithOwnProperty<T>(AbstractElement<T> element, int property)
+            where T : IElement {
+            foreach (Style style in element.GetStyles()) {
+                if (style.HasOwnProperty(property)) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

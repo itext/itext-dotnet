@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Commons.Internal.Runtime;
 using iText.Layout.Properties;
 
@@ -612,6 +613,14 @@ namespace iText.Layout {
         public virtual iText.Layout.Style SetMinWidth(float minWidth) {
             SetProperty(Property.MIN_WIDTH, UnitValue.CreatePointValue(minWidth));
             return this;
+        }
+
+        /// <summary>Sets the text rise of the element.</summary>
+        /// <param name="textRise">the new text rise in points</param>
+        /// <returns>this style</returns>
+        public virtual iText.Layout.Style SetTextRise(float textRise) {
+            SetProperty(Property.TEXT_RISE, textRise);
+            return (iText.Layout.Style)(Object)this;
         }
     }
 }

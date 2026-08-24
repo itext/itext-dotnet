@@ -21,6 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using iText.Commons.Internal.Runtime;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Properties.Margins;
 using iText.Layout.Tagging;
@@ -51,6 +54,11 @@ namespace iText.Layout.Renderer {
             return new iText.Layout.Renderer.FootnoteRenderer((Footnote)modelElement);
         }
 
+        public override LayoutResult Layout(LayoutContext layoutContext) {
+            ApplyDefaultStyleToInjectedFootnoteAnchor();
+            return base.Layout(layoutContext);
+        }
+
         public override void Draw(DrawContext drawContext) {
             LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
             FootnoteTaggingHelper.RepairFootnoteTagIfNeeded(this, taggingHelper);
@@ -67,6 +75,35 @@ namespace iText.Layout.Renderer {
                 FootnoteTaggingHelper.WrapAnchorInsideFootnoteIntoLbl(footnoteAnchorContent, taggingHelper);
             }
             base.Draw(drawContext);
+        }
+
+        private void ApplyDefaultStyleToInjectedFootnoteAnchor() {
+            Footnote footnote = (Footnote)modelElement;
+            if (!FootnotesUtil.IsDefaultStyleNeededForInjectedFootnoteAnchor(footnote)) {
+                return;
+            }
+            UnitValue resolvedFontSize = null;
+            if (!footnote.GetChildren().IsEmpty() && footnote.GetChildren()[0] is Paragraph) {
+                Paragraph paragraph = (Paragraph)footnote.GetChildren()[0];
+                resolvedFontSize = paragraph.GetProperty<UnitValue>(Property.FONT_SIZE);
+            }
+            if (resolvedFontSize == null) {
+                resolvedFontSize = footnote.GetProperty<UnitValue>(Property.FONT_SIZE);
+            }
+            if (resolvedFontSize == null) {
+                // Renderer lookup resolves inheritable properties from parent renderers.
+                resolvedFontSize = this.GetProperty<UnitValue>(Property.FONT_SIZE);
+            }
+            IElement injectedAnchor = FootnotesUtil.GetInjectedFootnoteAnchor(footnote);
+            Style defaultStyle = FootnotesUtil.CreateDefaultFootnoteAnchorStyle(resolvedFontSize);
+            if (injectedAnchor is Text) {
+                ((Text)injectedAnchor).AddStyleIfAbsent(defaultStyle);
+            }
+            else {
+                if (injectedAnchor is Image) {
+                    ((Image)injectedAnchor).AddStyleIfAbsent(defaultStyle);
+                }
+            }
         }
     }
 }

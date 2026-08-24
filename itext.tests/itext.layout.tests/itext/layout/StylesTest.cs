@@ -88,6 +88,34 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        public virtual void AddNullAsStyleIfAbsentTest() {
+            Paragraph p = new Paragraph("text");
+            NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => p.AddStyleIfAbsent(null));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddingStyleIfAbsentAfterOwnPropertyTest() {
+            Style myStyle = new Style();
+            myStyle.SetFontColor(ColorConstants.RED);
+            Paragraph p = new Paragraph("text").SetFontColor(ColorConstants.GREEN).AddStyleIfAbsent(myStyle);
+            NUnit.Framework.Assert.AreEqual(ColorConstants.GREEN, p.GetRenderer().GetProperty<TransparentColor>(Property
+                .FONT_COLOR).GetColor());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddingStyleIfAbsentAfterStylePropertyTest() {
+            Style existingStyle = new Style();
+            existingStyle.SetFontColor(ColorConstants.RED);
+            Style absentStyle = new Style();
+            absentStyle.SetFontColor(ColorConstants.GREEN);
+            absentStyle.SetTextRise(3f);
+            Paragraph p = new Paragraph("text").AddStyle(existingStyle).AddStyleIfAbsent(absentStyle);
+            NUnit.Framework.Assert.AreEqual(ColorConstants.RED, p.GetRenderer().GetProperty<TransparentColor>(Property
+                .FONT_COLOR).GetColor());
+            NUnit.Framework.Assert.AreEqual(3f, (float)p.GetProperty<float?>(Property.TEXT_RISE), EPS);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void SetMarginsViaStyleTest() {
             float expectedMarginTop = 92;
             float expectedMarginRight = 90;
