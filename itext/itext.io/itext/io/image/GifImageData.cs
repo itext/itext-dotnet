@@ -27,6 +27,7 @@ using iText.IO.Source;
 using iText.IO.Util;
 
 namespace iText.IO.Image {
+    /// <summary>Holds the logical screen properties and decoded frames of a GIF image.</summary>
     public class GifImageData {
         private float logicalHeight;
 
@@ -38,42 +39,73 @@ namespace iText.IO.Image {
 
         private Uri url;
 
+        /// <summary>Creates GIF data to be loaded from a URL.</summary>
+        /// <param name="url">
+        /// source URL, not
+        /// <see langword="null"/>
+        /// </param>
         protected internal GifImageData(Uri url) {
             this.url = url;
         }
 
+        /// <summary>Creates GIF data from encoded bytes.</summary>
+        /// <param name="data">encoded GIF bytes; the array is retained</param>
         protected internal GifImageData(byte[] data) {
             this.data = data;
         }
 
+        /// <summary>Gets the logical screen height.</summary>
+        /// <returns>height in pixels</returns>
         public virtual float GetLogicalHeight() {
             return logicalHeight;
         }
 
+        /// <summary>Sets the logical screen height.</summary>
+        /// <param name="logicalHeight">height in pixels</param>
         public virtual void SetLogicalHeight(float logicalHeight) {
             this.logicalHeight = logicalHeight;
         }
 
+        /// <summary>Gets the logical screen width.</summary>
+        /// <returns>width in pixels</returns>
         public virtual float GetLogicalWidth() {
             return logicalWidth;
         }
 
+        /// <summary>Sets the logical screen width.</summary>
+        /// <param name="logicalWidth">width in pixels</param>
         public virtual void SetLogicalWidth(float logicalWidth) {
             this.logicalWidth = logicalWidth;
         }
 
+        /// <summary>Gets the decoded GIF frames.</summary>
+        /// <returns>list of frames in source order</returns>
         public virtual IList<ImageData> GetFrames() {
             return frames;
         }
 
+        /// <summary>Gets the encoded GIF bytes.</summary>
+        /// <returns>
+        /// retained bytes, or
+        /// <see langword="null"/>
+        /// until loaded
+        /// </returns>
         protected internal virtual byte[] GetData() {
             return data;
         }
 
+        /// <summary>Gets the source URL.</summary>
+        /// <returns>
+        /// source URL, or
+        /// <see langword="null"/>
+        /// when data was supplied directly
+        /// </returns>
         protected internal virtual Uri GetUrl() {
             return url;
         }
 
+        /// <summary>Appends a decoded frame.</summary>
+        /// <param name="frame">decoded frame to append</param>
         protected internal virtual void AddFrame(ImageData frame) {
             frames.Add(frame);
         }

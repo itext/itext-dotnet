@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using iText.Commons.Internal.Runtime;
 
 namespace iText.IO.Font {
+    /// <summary>Caches font programs by their source identifiers.</summary>
     public class FontCache {
         private static readonly IDictionary<FontCacheKey, FontProgram> fontCache = new ConcurrentDictionary<FontCacheKey
             , FontProgram>();
@@ -48,6 +49,13 @@ namespace iText.IO.Font {
             fontCache.Clear();
         }
 
+        /// <summary>Retrieves a cached font by its source name.</summary>
+        /// <param name="fontName">the font source name</param>
+        /// <returns>
+        /// the cached font, or
+        /// <see langword="null"/>
+        /// when absent
+        /// </returns>
         public static FontProgram GetFont(String fontName) {
             return fontCache.Get(FontCacheKey.Create(fontName));
         }
@@ -58,6 +66,10 @@ namespace iText.IO.Font {
         }
 //\endcond
 
+        /// <summary>Caches a font unless an entry for the source name already exists.</summary>
+        /// <param name="font">the font to cache</param>
+        /// <param name="fontName">the font source name</param>
+        /// <returns>the cached font, which may be an existing entry</returns>
         public static FontProgram SaveFont(FontProgram font, String fontName) {
             return SaveFont(font, FontCacheKey.Create(fontName));
         }

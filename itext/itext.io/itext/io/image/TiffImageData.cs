@@ -26,6 +26,7 @@ using iText.IO.Exceptions;
 using iText.IO.Source;
 
 namespace iText.IO.Image {
+    /// <summary>Image data and loading options for one page of a TIFF image.</summary>
     public class TiffImageData : RawImageData {
         private bool recoverFromImageError;
 
@@ -33,6 +34,14 @@ namespace iText.IO.Image {
 
         private bool direct;
 
+        /// <summary>Creates TIFF image data to be loaded from a URL.</summary>
+        /// <param name="url">
+        /// source URL, not
+        /// <see langword="null"/>
+        /// </param>
+        /// <param name="recoverFromImageError">whether decoding should recover from malformed image data</param>
+        /// <param name="page">one-based TIFF page number</param>
+        /// <param name="direct">whether to preserve directly embeddable TIFF data</param>
         protected internal TiffImageData(Uri url, bool recoverFromImageError, int page, bool direct)
             : base(url, ImageType.TIFF) {
             this.recoverFromImageError = recoverFromImageError;
@@ -40,6 +49,11 @@ namespace iText.IO.Image {
             this.direct = direct;
         }
 
+        /// <summary>Creates TIFF image data from encoded bytes.</summary>
+        /// <param name="bytes">encoded TIFF bytes; the array is retained</param>
+        /// <param name="recoverFromImageError">whether decoding should recover from malformed image data</param>
+        /// <param name="page">one-based TIFF page number</param>
+        /// <param name="direct">whether to preserve directly embeddable TIFF data</param>
         protected internal TiffImageData(byte[] bytes, bool recoverFromImageError, int page, bool direct)
             : base(bytes, ImageType.TIFF) {
             this.recoverFromImageError = recoverFromImageError;
@@ -79,18 +93,34 @@ namespace iText.IO.Image {
             return GetNumberOfPages(new RandomAccessFileOrArray(ras));
         }
 
+        /// <summary>Checks whether decoding may recover from image errors.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// when recovery is enabled
+        /// </returns>
         public virtual bool IsRecoverFromImageError() {
             return recoverFromImageError;
         }
 
+        /// <summary>Gets the selected TIFF page number.</summary>
+        /// <returns>one-based page number</returns>
         public virtual int GetPage() {
             return page;
         }
 
+        /// <summary>Checks whether direct TIFF embedding was requested.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// when direct embedding was requested
+        /// </returns>
         public virtual bool IsDirect() {
             return direct;
         }
 
+        /// <summary>Sets the detected original image type.</summary>
+        /// <param name="originalType">original image type</param>
         public virtual void SetOriginalType(ImageType originalType) {
             this.originalType = originalType;
         }

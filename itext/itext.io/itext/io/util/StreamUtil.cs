@@ -100,12 +100,12 @@ namespace iText.IO.Util {
         /// <c>OutputStream</c>
         /// an escaped
         /// <c>byte</c>
-        /// array write to.
+        /// array write to
         /// </param>
         /// <param name="bytes">
         /// the
         /// <c>byte</c>
-        /// array to escape.
+        /// array to escape
         /// </param>
         public static void WriteEscapedString(Stream outputStream, byte[] bytes) {
             ByteBuffer buf = CreateBufferedEscapedString(bytes);
@@ -117,6 +117,9 @@ namespace iText.IO.Util {
             }
         }
 
+        /// <summary>Writes PDF hexadecimal-string syntax for the supplied bytes.</summary>
+        /// <param name="outputStream">the stream to receive the encoded string</param>
+        /// <param name="bytes">the bytes to encode</param>
         public static void WriteHexedString(Stream outputStream, byte[] bytes) {
             ByteBuffer buf = CreateBufferedHexedString(bytes);
             try {
@@ -127,6 +130,9 @@ namespace iText.IO.Util {
             }
         }
 
+        /// <summary>Creates a buffer containing PDF literal-string syntax for the supplied bytes.</summary>
+        /// <param name="bytes">the bytes to escape</param>
+        /// <returns>a buffer containing the escaped string, including parentheses</returns>
         public static ByteBuffer CreateBufferedEscapedString(byte[] bytes) {
             ByteBuffer buf = new ByteBuffer(bytes.Length * 2 + 2);
             buf.Append('(');
@@ -184,6 +190,9 @@ namespace iText.IO.Util {
             return buf;
         }
 
+        /// <summary>Creates a buffer containing PDF hexadecimal-string syntax for the supplied bytes.</summary>
+        /// <param name="bytes">the bytes to encode</param>
+        /// <returns>a buffer containing the encoded string, including angle brackets</returns>
         public static ByteBuffer CreateBufferedHexedString(byte[] bytes) {
             ByteBuffer buf = new ByteBuffer(bytes.Length * 2 + 2);
             buf.Append('<');
@@ -194,6 +203,9 @@ namespace iText.IO.Util {
             return buf;
         }
 
+        /// <summary>Copies all remaining bytes from an input stream to an output stream.</summary>
+        /// <param name="input">the source stream</param>
+        /// <param name="output">the destination stream</param>
         public static void TransferBytes(Stream input, Stream output) {
             byte[] buffer = new byte[TRANSFER_SIZE];
             for (; ; ) {
@@ -207,6 +219,9 @@ namespace iText.IO.Util {
             }
         }
 
+        /// <summary>Copies all remaining bytes from a random-access source to an output stream.</summary>
+        /// <param name="input">the source to read</param>
+        /// <param name="output">the destination stream</param>
         public static void TransferBytes(RandomAccessFileOrArray input, Stream output) {
             byte[] buffer = new byte[TRANSFER_SIZE];
             for (; ; ) {

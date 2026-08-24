@@ -33,6 +33,15 @@ namespace iText.IO.Font.Otf.Lookuptype5 {
 
         private OtfClass classDefinition;
 
+        /// <summary>Creates a new Contextual Substitution Subtable.</summary>
+        /// <param name="openReader">the OpenType font reader</param>
+        /// <param name="lookupFlag">
+        /// specifies processing options, e.g. whether to skip base glyphs, marks or
+        /// ligatures during glyph substitution or positioning. See
+        /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+        /// </param>
+        /// <param name="substCoverageGlyphIds">the substitution coverage glyph ids</param>
+        /// <param name="classDefinition">the class definition</param>
         public SubTableLookup5Format2(OpenTypeFontTableReader openReader, int lookupFlag, ICollection<int> substCoverageGlyphIds
             , OtfClass classDefinition)
             : base(openReader, lookupFlag) {
@@ -40,6 +49,8 @@ namespace iText.IO.Font.Otf.Lookuptype5 {
             this.classDefinition = classDefinition;
         }
 
+        /// <summary>Updates the substitution class sets.</summary>
+        /// <param name="subClassSets">the substitution class sets</param>
         public virtual void SetSubClassSets(IList<IList<ContextualSubstRule>> subClassSets) {
             this.subClassSets = subClassSets;
         }
@@ -52,15 +63,20 @@ namespace iText.IO.Font.Otf.Lookuptype5 {
             return JavaCollectionsUtil.EmptyList<ContextualSubstRule>();
         }
 
+        /// <summary>Represents the substitution rule format2 of an OpenType font.</summary>
         public class SubstRuleFormat2 : ContextualSubstRule {
             // inputClassIds array omits the first class in the sequence,
             // the first class is defined by corresponding index of subClassSet array
-            private int[] inputClassIds;
+            private readonly int[] inputClassIds;
 
-            private SubstLookupRecord[] substLookupRecords;
+            private readonly SubstLookupRecord[] substLookupRecords;
 
-            private OtfClass classDefinition;
+            private readonly OtfClass classDefinition;
 
+            /// <summary>Creates a new substitution rule format2.</summary>
+            /// <param name="subTable">the sub table</param>
+            /// <param name="inputClassIds">the input class ids</param>
+            /// <param name="substLookupRecords">the substitution lookup records</param>
             public SubstRuleFormat2(SubTableLookup5Format2 subTable, int[] inputClassIds, SubstLookupRecord[] substLookupRecords
                 ) {
                 this.inputClassIds = inputClassIds;

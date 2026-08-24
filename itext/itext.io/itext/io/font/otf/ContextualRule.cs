@@ -21,8 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.IO.Font.Otf {
+    /// <summary>Represents the contextual rule of an OpenType font.</summary>
     public abstract class ContextualRule {
-        /// <summary>Gets the length of the context glyph sequence defined by this rule</summary>
+        /// <summary>Gets the length of the context glyph sequence defined by this rule.</summary>
         /// <returns>length of the context</returns>
         public abstract int GetContextLength();
 
@@ -31,7 +32,7 @@ namespace iText.IO.Font.Otf {
         /// Checks if glyph line element matches element from input sequence of the rule.
         /// <br /><br />
         /// NOTE: rules do not contain the first element of the input sequence, the first element is defined by rule
-        /// position in substitution table. Therefore atIdx shall not be 0.
+        /// position in substitution table. Therefore, atIdx shall not be 0.
         /// </remarks>
         /// <param name="glyphId">glyph code id</param>
         /// <param name="atIdx">
@@ -45,13 +46,13 @@ namespace iText.IO.Font.Otf {
         /// </returns>
         public abstract bool IsGlyphMatchesInput(int glyphId, int atIdx);
 
-        /// <summary>Gets the length of the lookahead context glyph sequence defined by this rule</summary>
+        /// <summary>Gets the length of the lookahead context glyph sequence defined by this rule.</summary>
         /// <returns>length of the lookahead context</returns>
         public virtual int GetLookaheadContextLength() {
             return 0;
         }
 
-        /// <summary>Gets the length of the backtrack context glyph sequence defined by this rule</summary>
+        /// <summary>Gets the length of the backtrack context glyph sequence defined by this rule.</summary>
         /// <returns>length of the backtrack context</returns>
         public virtual int GetBacktrackContextLength() {
             return 0;

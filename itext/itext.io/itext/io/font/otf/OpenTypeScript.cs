@@ -24,13 +24,17 @@ using System;
 using System.Collections.Generic;
 
 namespace iText.IO.Font.Otf {
+    /// <summary>Reads OpenType script and language-system records.</summary>
     public class OpenTypeScript {
         public const String DEFAULT_SCRIPT = "DFLT";
 
-        private OpenTypeFontTableReader openTypeReader;
+        private readonly OpenTypeFontTableReader openTypeReader;
 
-        private IList<ScriptRecord> records;
+        private readonly IList<ScriptRecord> records;
 
+        /// <summary>Creates a new OpenType script.</summary>
+        /// <param name="openTypeReader">the open type reader</param>
+        /// <param name="locationScriptTable">the location script table</param>
         public OpenTypeScript(OpenTypeFontTableReader openTypeReader, int locationScriptTable) {
             this.openTypeReader = openTypeReader;
             records = new List<ScriptRecord>();
@@ -41,10 +45,23 @@ namespace iText.IO.Font.Otf {
             }
         }
 
+        /// <summary>
+        /// Returns the script records represented by
+        /// <see cref="ScriptRecord"/>
+        /// list.
+        /// </summary>
+        /// <returns>the requested result</returns>
         public virtual IList<ScriptRecord> GetScriptRecords() {
             return records;
         }
 
+        /// <summary>
+        /// Returns the language record represented by
+        /// <see cref="LanguageRecord"/>.
+        /// </summary>
+        /// <param name="scripts">the scripts</param>
+        /// <param name="language">the language</param>
+        /// <returns>the requested result</returns>
         public virtual LanguageRecord GetLanguageRecord(String[] scripts, String language) {
             ScriptRecord scriptFound = null;
             ScriptRecord scriptDefault = null;

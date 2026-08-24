@@ -584,6 +584,7 @@ namespace iText.IO.Font {
             return key;
         }
 
+        /// <summary>Removes all fonts registered through the global font register provider.</summary>
         public static void ClearRegisteredFonts() {
             fontRegisterProvider.ClearRegisteredFonts();
         }

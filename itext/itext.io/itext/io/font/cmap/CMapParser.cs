@@ -26,6 +26,7 @@ using iText.Commons.Logs;
 using iText.IO.Source;
 
 namespace iText.IO.Font.Cmap {
+    /// <summary>Populates CMap objects from PDF CMap programs.</summary>
     public class CMapParser {
         private static readonly LazyLogger LOGGER = new LazyLogger(typeof(CMapParser));
 
@@ -53,6 +54,10 @@ namespace iText.IO.Font.Cmap {
 
         private const int MAX_LEVEL = 10;
 
+        /// <summary>Parses a named CMap and its referenced CMaps into a destination map.</summary>
+        /// <param name="cmapName">the CMap name to load</param>
+        /// <param name="cmap">the destination map to populate</param>
+        /// <param name="location">the source used to locate named CMaps</param>
         public static void ParseCid(String cmapName, AbstractCMap cmap, ICMapLocation location) {
             ParseCid(cmapName, cmap, location, 0);
         }

@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 
 namespace iText.IO.Image {
+    /// <summary>Image data encoded as raw samples or CCITT-compressed bilevel samples.</summary>
     public class RawImageData : ImageData {
         /// <summary>Pure two-dimensional encoding (Group 4)</summary>
         public const int CCITTG4 = 0x100;
@@ -63,24 +64,43 @@ namespace iText.IO.Image {
         public const int CCITT_ENDOFBLOCK = 8;
 
         //NOTE in itext5 instead of typeCcitt bpc property was using for both bpc and type CCITT.
+        /// <summary>CCITT compression type when the image uses CCITT encoding.</summary>
         protected internal int typeCcitt;
 
+        /// <summary>Creates raw image data whose bytes are available from a URL.</summary>
+        /// <param name="url">
+        /// source URL, not
+        /// <see langword="null"/>
+        /// </param>
+        /// <param name="type">declared source image type</param>
         protected internal RawImageData(Uri url, ImageType type)
             : base(url, type) {
         }
 
+        /// <summary>Creates raw image data from encoded bytes.</summary>
+        /// <param name="bytes">encoded image bytes; the array is retained</param>
+        /// <param name="type">declared source image type</param>
         protected internal RawImageData(byte[] bytes, ImageType type)
             : base(bytes, type) {
         }
 
+        /// <summary><inheritDoc/></summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// </returns>
         public override bool IsRawImage() {
             return true;
         }
 
+        /// <summary>Gets the CCITT compression type.</summary>
+        /// <returns>CCITT compression type</returns>
         public virtual int GetTypeCcitt() {
             return typeCcitt;
         }
 
+        /// <summary>Sets the CCITT compression type.</summary>
+        /// <param name="typeCcitt">one of the CCITT type constants</param>
         public virtual void SetTypeCcitt(int typeCcitt) {
             this.typeCcitt = typeCcitt;
         }

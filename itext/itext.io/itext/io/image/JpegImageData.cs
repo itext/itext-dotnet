@@ -23,11 +23,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 
 namespace iText.IO.Image {
+    /// <summary>Image data originating from a JPEG image.</summary>
     public class JpegImageData : ImageData {
+        /// <summary>Creates JPEG image data to be loaded from a URL.</summary>
+        /// <param name="url">
+        /// source URL, not
+        /// <see langword="null"/>
+        /// </param>
         protected internal JpegImageData(Uri url)
             : base(url, ImageType.JPEG) {
         }
 
+        /// <summary>Creates JPEG image data from encoded bytes.</summary>
+        /// <param name="bytes">encoded JPEG bytes; the array is retained</param>
         protected internal JpegImageData(byte[] bytes)
             : base(bytes, ImageType.JPEG) {
         }

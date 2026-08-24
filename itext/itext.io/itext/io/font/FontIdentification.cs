@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 
 namespace iText.IO.Font {
+    /// <summary>Holds identification strings extracted from a font program.</summary>
     public class FontIdentification {
         // name ID 5
         private String ttfVersion;
@@ -36,38 +37,72 @@ namespace iText.IO.Font {
         // OS/2.panose
         private String panose;
 
+        /// <summary>Returns the TrueType version string.</summary>
+        /// <returns>
+        /// the version string, or
+        /// <see langword="null"/>
+        /// when unavailable
+        /// </returns>
         public virtual String GetTtfVersion() {
             return ttfVersion;
         }
 
+        /// <summary>Returns the TrueType unique identifier.</summary>
+        /// <returns>
+        /// the unique identifier, or
+        /// <see langword="null"/>
+        /// when unavailable
+        /// </returns>
         public virtual String GetTtfUniqueId() {
             return ttfUniqueId;
         }
 
+        /// <summary>Returns the Type 1 unique ID.</summary>
+        /// <returns>
+        /// the identifier, or
+        /// <see langword="null"/>
+        /// when unavailable
+        /// </returns>
         public virtual int? GetType1Xuid() {
             return type1Xuid;
         }
 
+        /// <summary>Returns the PANOSE classification.</summary>
+        /// <returns>
+        /// the classification string, or
+        /// <see langword="null"/>
+        /// when unavailable
+        /// </returns>
         public virtual String GetPanose() {
             return panose;
         }
 
+        /// <summary>Sets the TrueType version.</summary>
+        /// <param name="ttfVersion">the version string</param>
         protected internal virtual void SetTtfVersion(String ttfVersion) {
             this.ttfVersion = ttfVersion;
         }
 
+        /// <summary>Sets the TrueType unique identifier.</summary>
+        /// <param name="ttfUniqueId">the identifier</param>
         protected internal virtual void SetTtfUniqueId(String ttfUniqueId) {
             this.ttfUniqueId = ttfUniqueId;
         }
 
+        /// <summary>Sets the Type 1 unique ID.</summary>
+        /// <param name="type1Xuid">the unique ID</param>
         protected internal virtual void SetType1Xuid(int? type1Xuid) {
             this.type1Xuid = type1Xuid;
         }
 
+        /// <summary>Sets the PANOSE classification from raw bytes.</summary>
+        /// <param name="panose">the PANOSE bytes</param>
         protected internal virtual void SetPanose(byte[] panose) {
             this.panose = iText.Commons.Utils.JavaUtil.GetStringForBytes(panose);
         }
 
+        /// <summary>Sets the PANOSE classification string.</summary>
+        /// <param name="panose">the classification string</param>
         protected internal virtual void SetPanose(String panose) {
             this.panose = panose;
         }

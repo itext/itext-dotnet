@@ -25,13 +25,23 @@ using iText.Commons.Utils;
 using iText.IO.Font.Otf;
 
 namespace iText.IO.Font.Otf.Lookuptype7 {
+    /// <summary>Contextual Positioning Subtable: Class-Based Glyph Contexts.</summary>
     public class PosTableLookup7Format2 : ContextualTable<ContextualPositionRule> {
-        private ICollection<int> posCoverageGlyphIds;
+        private readonly ICollection<int> posCoverageGlyphIds;
 
-        private IList<IList<ContextualPositionRule>> subClassSets;
+        private readonly OtfClass classDefinition;
 
-        private OtfClass classDefinition;
+        private IList<IList<ContextualPositionRule>> posClassSets;
 
+        /// <summary>Creates a new Contextual Positioning Subtable.</summary>
+        /// <param name="openReader">the OpenType font reader</param>
+        /// <param name="lookupFlag">
+        /// specifies processing options, e.g. whether to skip base glyphs, marks or
+        /// ligatures during glyph substitution or positioning. See
+        /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+        /// </param>
+        /// <param name="posCoverageGlyphIds">the positioning coverage glyph ids</param>
+        /// <param name="classDefinition">the class definition</param>
         public PosTableLookup7Format2(OpenTypeFontTableReader openReader, int lookupFlag, ICollection<int> posCoverageGlyphIds
             , OtfClass classDefinition)
             : base(openReader, lookupFlag) {
@@ -39,27 +49,34 @@ namespace iText.IO.Font.Otf.Lookuptype7 {
             this.classDefinition = classDefinition;
         }
 
-        public virtual void SetPosClassSets(IList<IList<ContextualPositionRule>> subClassSets) {
-            this.subClassSets = subClassSets;
+        /// <summary>Updates the positioning class sets.</summary>
+        /// <param name="posClassSets">the positioning class sets</param>
+        public virtual void SetPosClassSets(IList<IList<ContextualPositionRule>> posClassSets) {
+            this.posClassSets = posClassSets;
         }
 
         protected internal override IList<ContextualPositionRule> GetSetOfRulesForStartGlyph(int startId) {
             if (posCoverageGlyphIds.Contains(startId) && !openReader.IsSkip(startId, lookupFlag)) {
                 int gClass = classDefinition.GetOtfClass(startId);
-                return subClassSets[gClass];
+                return posClassSets[gClass];
             }
             return JavaCollectionsUtil.EmptyList<ContextualPositionRule>();
         }
 
+        /// <summary>Represents the positioning rule format2 of an OpenType font.</summary>
         public class PosRuleFormat2 : ContextualPositionRule {
             // inputClassIds array omits the first class in the sequence,
             // the first class is defined by corresponding index of subClassSet array
-            private int[] inputClassIds;
+            private readonly int[] inputClassIds;
 
-            private PosLookupRecord[] posLookupRecords;
+            private readonly PosLookupRecord[] posLookupRecords;
 
-            private OtfClass classDefinition;
+            private readonly OtfClass classDefinition;
 
+            /// <summary>Creates a new positioning rule format2.</summary>
+            /// <param name="subTable">the sub table</param>
+            /// <param name="inputClassIds">the input class ids</param>
+            /// <param name="posLookupRecords">the positioning lookup records</param>
             public PosRuleFormat2(PosTableLookup7Format2 subTable, int[] inputClassIds, PosLookupRecord[] posLookupRecords
                 ) {
                 this.inputClassIds = inputClassIds;

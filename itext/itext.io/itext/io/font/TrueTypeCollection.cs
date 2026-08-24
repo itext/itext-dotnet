@@ -28,6 +28,7 @@ using iText.IO.Source;
 namespace iText.IO.Font {
     /// <summary>Use this class for working with true type collection font (*.ttc)</summary>
     public class TrueTypeCollection {
+        /// <summary>Provides random access to the collection bytes.</summary>
         protected internal RandomAccessFileOrArray raf;
 
         private int TTCSize = 0;

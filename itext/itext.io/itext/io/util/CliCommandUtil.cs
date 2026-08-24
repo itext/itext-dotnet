@@ -24,6 +24,7 @@ using System;
 using iText.Commons.Utils;
 
 namespace iText.IO.Util {
+    /// <summary>Provides utilities for checking command line tools.</summary>
     public sealed class CliCommandUtil {
         private CliCommandUtil() {
         }

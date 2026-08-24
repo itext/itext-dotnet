@@ -189,6 +189,11 @@ namespace iText.IO.Font {
             return result;
         }
 
+        /// <summary>Encodes a CID into the supplied byte array.</summary>
+        /// <param name="cid">character identifier to encode</param>
+        /// <param name="array">destination array</param>
+        /// <param name="offset">destination offset</param>
+        /// <returns>new destination offset</returns>
         public virtual int FillCmapBytes(int cid, byte[] array, int offset) {
             if (isDirect) {
                 array[offset++] = (byte)((cid & 0xff00) >> 8);
@@ -203,6 +208,9 @@ namespace iText.IO.Font {
             return offset;
         }
 
+        /// <summary>Appends the encoded form of a CID to a byte buffer.</summary>
+        /// <param name="cid">character identifier to encode</param>
+        /// <param name="buffer">destination buffer</param>
         public virtual void FillCmapBytes(int cid, ByteBuffer buffer) {
             if (isDirect) {
                 buffer.Append((byte)((cid & 0xff00) >> 8));
@@ -214,6 +222,9 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>Gets the number of bytes required to encode a CID.</summary>
+        /// <param name="cid">character identifier to encode</param>
+        /// <returns>number of bytes required to encode a CID</returns>
         public virtual int GetCmapBytesLength(int cid) {
             if (isDirect) {
                 return 2;
@@ -223,6 +234,9 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>Converts a CMap code to its CID.</summary>
+        /// <param name="cmapCode">CMap code</param>
+        /// <returns>mapped CID</returns>
         public virtual int GetCidCode(int cmapCode) {
             if (isDirect) {
                 return cmapCode;
@@ -232,6 +246,8 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>Gets the CMap code space ranges.</summary>
+        /// <returns>list of low/high byte array pairs used by this encoding</returns>
         public virtual IList<byte[]> GetCodeSpaceRanges() {
             return codeSpaceRanges;
         }

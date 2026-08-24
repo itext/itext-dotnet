@@ -34,8 +34,17 @@ namespace iText.IO.Font.Otf {
     public class GposLookupType7 : OpenTableLookup {
         private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.IO.Font.Otf.GposLookupType7));
 
+        /// <summary>Stores sub tables.</summary>
         protected internal IList<ContextualTable<ContextualPositionRule>> subTables;
 
+        /// <summary>Creates a new GPOS Lookup Type 7.</summary>
+        /// <param name="openReader">the OpenType font reader</param>
+        /// <param name="lookupFlag">
+        /// specifies processing options, e.g. whether to skip base glyphs, marks or
+        /// ligatures during glyph substitution or positioning. See
+        /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+        /// </param>
+        /// <param name="subTableLocations">the sub table locations</param>
         public GposLookupType7(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations)
             : base(openReader, lookupFlag, subTableLocations) {
             subTables = new List<ContextualTable<ContextualPositionRule>>();
@@ -99,6 +108,8 @@ namespace iText.IO.Font.Otf {
             }
         }
 
+        /// <summary>Reads the sub table format2 from OpenType data.</summary>
+        /// <param name="subTableLocation">the sub table location offset</param>
         protected internal virtual void ReadSubTableFormat2(int subTableLocation) {
             int coverageOffset = openReader.rf.ReadUnsignedShort();
             int classDefOffset = openReader.rf.ReadUnsignedShort();

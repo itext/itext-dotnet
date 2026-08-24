@@ -24,6 +24,7 @@ using System;
 using System.Text;
 
 namespace iText.IO.Font.Cmap {
+    /// <summary>Represents a typed object parsed from CMap content.</summary>
     public class CMapObject {
         protected internal const int STRING = 1;
 
@@ -45,51 +46,108 @@ namespace iText.IO.Font.Cmap {
 
         private Object value;
 
+        /// <summary>Creates a typed CMap object.</summary>
+        /// <param name="objectType">one of this class's object-type constants</param>
+        /// <param name="value">the value associated with the type</param>
         public CMapObject(int objectType, Object value) {
             this.type = objectType;
             this.value = value;
         }
 
+        /// <summary>Returns the value represented by this object.</summary>
+        /// <returns>the stored value</returns>
         public virtual Object GetValue() {
             return value;
         }
 
+        /// <summary>Returns this object's type code.</summary>
+        /// <returns>one of this class's object type constants</returns>
         public virtual int GetObjectType() {
             return type;
         }
 
+        /// <summary>Replaces this object's stored value.</summary>
+        /// <param name="value">the new value</param>
         public virtual void SetValue(Object value) {
             this.value = value;
         }
 
+        /// <summary>Tests whether this object is a literal or hexadecimal string.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// for either string type
+        /// </returns>
         public virtual bool IsString() {
             return type == STRING || type == HEX_STRING;
         }
 
+        /// <summary>Tests whether this object is a hexadecimal string.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// when this object's type is hexadecimal string
+        /// </returns>
         public virtual bool IsHexString() {
             return type == HEX_STRING;
         }
 
+        /// <summary>Tests whether this object is a PDF name.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// when this object's type is name
+        /// </returns>
         public virtual bool IsName() {
             return type == NAME;
         }
 
+        /// <summary>Tests whether this object is a number.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// when this object's type is number
+        /// </returns>
         public virtual bool IsNumber() {
             return type == NUMBER;
         }
 
+        /// <summary>Tests whether this object is a command literal.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// when this object's type is literal
+        /// </returns>
         public virtual bool IsLiteral() {
             return type == LITERAL;
         }
 
+        /// <summary>Tests whether this object is an array.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// when this object's type is array
+        /// </returns>
         public virtual bool IsArray() {
             return type == ARRAY;
         }
 
+        /// <summary>Tests whether this object is a dictionary.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// when this object's type is dictionary
+        /// </returns>
         public virtual bool IsDictionary() {
             return type == DICTIONARY;
         }
 
+        /// <summary>Tests whether this object is a structural token.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// when this object's type is token
+        /// </returns>
         public virtual bool IsToken() {
             return type == TOKEN;
         }
@@ -111,6 +169,12 @@ namespace iText.IO.Font.Cmap {
             return value.ToString();
         }
 
+        /// <summary>Returns the byte array of a hexadecimal string object.</summary>
+        /// <returns>
+        /// the retained byte array, or
+        /// <see langword="null"/>
+        /// when this is not a hexadecimal string
+        /// </returns>
         public virtual byte[] ToHexByteArray() {
             if (type == HEX_STRING) {
                 return (byte[])value;

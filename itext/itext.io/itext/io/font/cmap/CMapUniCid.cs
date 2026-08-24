@@ -24,6 +24,7 @@ using System;
 using iText.IO.Util;
 
 namespace iText.IO.Font.Cmap {
+    /// <summary>Maps Unicode code points to CIDs.</summary>
     public class CMapUniCid : AbstractCMap {
         private IntHashtable map = new IntHashtable(65537);
 
@@ -43,10 +44,19 @@ namespace iText.IO.Font.Cmap {
         }
 //\endcond
 
+        /// <summary>Looks up the CID assigned to a Unicode code point.</summary>
+        /// <param name="character">the Unicode code point</param>
+        /// <returns>
+        /// the mapped CID, or
+        /// <c>0</c>
+        /// when absent
+        /// </returns>
         public virtual int Lookup(int character) {
             return map.Get(character);
         }
 
+        /// <summary>Exports this mapping as a ToUnicode CMap.</summary>
+        /// <returns>a newly created CMap containing this map's CID-to-Unicode mappings</returns>
         public virtual CMapToUnicode ExportToUnicode() {
             CMapToUnicode uni = new CMapToUnicode();
             int[] keys = map.ToOrderedKeys();

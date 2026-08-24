@@ -28,9 +28,16 @@ using iText.Commons.Utils;
 using iText.IO.Exceptions;
 
 namespace iText.IO.Source {
+    /// <summary>Tokenizes PDF syntax from a random-access byte source.</summary>
+    /// <remarks>
+    /// Tokenizes PDF syntax from a random-access byte source.
+    /// <para />
+    /// Instances maintain a mutable stream position and token state and are not thread-safe.
+    /// </remarks>
     public class PdfTokenizer : IDisposable {
         private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.IO.Source.PdfTokenizer));
 
+        /// <summary>Token types recognized by this tokenizer.</summary>
         public enum TokenType {
             Number,
             String,
@@ -69,14 +76,19 @@ namespace iText.IO.Source {
 
         public static readonly byte[] False = ByteUtils.GetIsoBytes("false");
 
+        /// <summary>The type of the most recently parsed token.</summary>
         protected internal PdfTokenizer.TokenType type;
 
+        /// <summary>The object number parsed for the current indirect reference.</summary>
         protected internal int reference;
 
+        /// <summary>The generation number parsed for the current indirect reference.</summary>
         protected internal int generation;
 
+        /// <summary>Whether the current string token uses hexadecimal notation.</summary>
         protected internal bool hexString;
 
+        /// <summary>The mutable bytes of the most recently parsed token.</summary>
         protected internal ByteBuffer outBuf;
 
         private readonly RandomAccessFileOrArray file;
@@ -119,28 +131,43 @@ namespace iText.IO.Source {
             this.outBuf = new ByteBuffer();
         }
 
+        /// <summary>Sets the position from which the next byte is read.</summary>
+        /// <param name="pos">the absolute byte offset in the underlying source</param>
         public virtual void Seek(long pos) {
             file.Seek(pos);
         }
 
+        /// <summary>Reads enough bytes to fill a destination array.</summary>
+        /// <param name="bytes">the destination array</param>
         public virtual void ReadFully(byte[] bytes) {
             file.ReadFully(bytes);
         }
 
+        /// <summary>Gets the current source position.</summary>
+        /// <returns>the absolute offset of the next byte to read</returns>
         public virtual long GetPosition() {
             return file.GetPosition();
         }
 
+        /// <summary>Closes the underlying source when closing is enabled.</summary>
         public virtual void Close() {
             if (closeStream) {
                 file.Close();
             }
         }
 
+        /// <summary>Gets the length of the underlying source.</summary>
+        /// <returns>the number of readable bytes</returns>
         public virtual long Length() {
             return file.Length();
         }
 
+        /// <summary>Reads one byte and advances the source position.</summary>
+        /// <returns>
+        /// the unsigned byte value, or
+        /// <c>-1</c>
+        /// at EOF
+        /// </returns>
         public virtual int Read() {
             return file.Read();
         }
@@ -160,12 +187,15 @@ namespace iText.IO.Source {
         /// <returns>
         /// the number of read bytes. If it is less than
         /// <c>buffer.length</c>
-        /// it means EOF has been reached.
+        /// it means EOF has been reached
         /// </returns>
         public virtual int Peek(byte[] buffer) {
             return file.Peek(buffer);
         }
 
+        /// <summary>Reads up to a requested number of bytes as character values.</summary>
+        /// <param name="size">the maximum number of bytes to read</param>
+        /// <returns>a string containing the bytes read before EOF</returns>
         public virtual String ReadString(int size) {
             StringBuilder buf = new StringBuilder();
             int ch;
@@ -179,22 +209,43 @@ namespace iText.IO.Source {
             return buf.ToString();
         }
 
+        /// <summary>Gets the type of the most recently parsed token.</summary>
+        /// <returns>the current token type</returns>
         public virtual PdfTokenizer.TokenType GetTokenType() {
             return type;
         }
 
+        /// <summary>Copies the bytes of the most recently parsed token.</summary>
+        /// <returns>a new array containing the current token bytes</returns>
         public virtual byte[] GetByteContent() {
             return outBuf.ToByteArray();
         }
 
+        /// <summary>Converts the current token bytes to a string using the platform default charset.</summary>
+        /// <returns>the current token value as a string</returns>
         public virtual String GetStringValue() {
             return iText.Commons.Utils.JavaUtil.GetStringForBytes(outBuf.GetInternalBuffer(), 0, outBuf.Size());
         }
 
+        /// <summary>Decodes the current PDF string token.</summary>
+        /// <returns>a new array containing decoded literal or hexadecimal string bytes</returns>
         public virtual byte[] GetDecodedStringContent() {
             return DecodeStringContent(outBuf.GetInternalBuffer(), 0, outBuf.Size() - 1, IsHexString());
         }
 
+        /// <summary>Tests whether the current token bytes equal a candidate byte sequence.</summary>
+        /// <param name="cmp">
+        /// the bytes to compare;
+        /// <see langword="null"/>
+        /// never matches
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if
+        /// <paramref name="cmp"/>
+        /// equals the current token bytes
+        /// </returns>
         public virtual bool TokenValueEqualsTo(byte[] cmp) {
             if (cmp == null) {
                 return false;
@@ -211,20 +262,32 @@ namespace iText.IO.Source {
             return true;
         }
 
+        /// <summary>Gets the object number parsed from the current indirect reference.</summary>
+        /// <returns>the parsed object number</returns>
         public virtual int GetObjNr() {
             return reference;
         }
 
+        /// <summary>Gets the generation number parsed from the current indirect reference.</summary>
+        /// <returns>the parsed generation number</returns>
         public virtual int GetGenNr() {
             return generation;
         }
 
+        /// <summary>Pushes a read byte back so it becomes the next byte read.</summary>
+        /// <param name="ch">
+        /// the byte value to push back;
+        /// <c>-1</c>
+        /// is ignored
+        /// </param>
         public virtual void BackOnePosition(int ch) {
             if (ch != -1) {
                 file.PushBack((byte)ch);
             }
         }
 
+        /// <summary>Finds a PDF or FDF header in the first kilobyte of the source.</summary>
+        /// <returns>the zero-based byte offset of the header</returns>
         public virtual int GetHeaderOffset() {
             String str = ReadString(1024);
             int idx = str.IndexOf("%PDF-", StringComparison.Ordinal);
@@ -237,6 +300,8 @@ namespace iText.IO.Source {
             return idx;
         }
 
+        /// <summary>Validates a PDF header at offset zero and returns its version text.</summary>
+        /// <returns>the header text without its percent sign</returns>
         public virtual String CheckPdfHeader() {
             file.Seek(0);
             String str = ReadString(1024);
@@ -247,6 +312,7 @@ namespace iText.IO.Source {
             return str.JSubstring(idx + 1, idx + 8);
         }
 
+        /// <summary>Validates that an FDF header begins at offset zero.</summary>
         public virtual void CheckFdfHeader() {
             file.Seek(0);
             String str = ReadString(1024);
@@ -256,6 +322,12 @@ namespace iText.IO.Source {
             }
         }
 
+        /// <summary>
+        /// Locates the final
+        /// <c>startxref</c>
+        /// marker near the end of the source.
+        /// </summary>
+        /// <returns>the absolute byte offset of the marker</returns>
         public virtual long GetStartxref() {
             int arrLength = 1024;
             long fileLength = file.Length();
@@ -309,6 +381,12 @@ namespace iText.IO.Source {
             throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.PDF_EOF_NOT_FOUND, this);
         }
 
+        /// <summary>Reads the next non-comment token and recognizes indirect references and object declarations.</summary>
+        /// <remarks>
+        /// Reads the next non-comment token and recognizes indirect references and object declarations.
+        /// <para />
+        /// The source position and current token state are advanced to the recognized token.
+        /// </remarks>
         public virtual void NextValidToken() {
             int level = 0;
             byte[] n1 = null;
@@ -395,6 +473,14 @@ namespace iText.IO.Source {
         // if we hit here, the file is either corrupt (stream ended unexpectedly),
         // or the last token ended exactly at the end of a stream.  This last
         // case can occur inside an Object Stream.
+        /// <summary>Parses the next PDF token into this tokenizer's mutable token state.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// when a token was read, or
+        /// <see langword="false"/>
+        /// at EOF
+        /// </returns>
         public virtual bool NextToken() {
             int ch;
             outBuf.Reset();
@@ -592,26 +678,66 @@ namespace iText.IO.Source {
             return true;
         }
 
+        /// <summary>
+        /// Parses the current token value as a
+        /// <c>long</c>.
+        /// </summary>
+        /// <returns>the parsed numeric value</returns>
         public virtual long GetLongValue() {
             return Convert.ToInt64(GetStringValue(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
+        /// <summary>
+        /// Parses the current token value as an
+        /// <c>int</c>.
+        /// </summary>
+        /// <returns>the parsed numeric value</returns>
         public virtual int GetIntValue() {
             return Convert.ToInt32(GetStringValue(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
+        /// <summary>Tests whether the current string token uses hexadecimal notation.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// for a hexadecimal string token
+        /// </returns>
         public virtual bool IsHexString() {
             return this.hexString;
         }
 
+        /// <summary>
+        /// Tests whether
+        /// <see cref="Close()"/>
+        /// closes the underlying source.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if this tokenizer owns closing the source
+        /// </returns>
         public virtual bool IsCloseStream() {
             return closeStream;
         }
 
+        /// <summary>
+        /// Configures whether
+        /// <see cref="Close()"/>
+        /// closes the underlying source.
+        /// </summary>
+        /// <param name="closeStream">
+        /// 
+        /// <see langword="true"/>
+        /// to close the source,
+        /// <see langword="false"/>
+        /// to leave it open
+        /// </param>
         public virtual void SetCloseStream(bool closeStream) {
             this.closeStream = closeStream;
         }
 
+        /// <summary>Creates an independent view of the underlying source.</summary>
+        /// <returns>a view with its own position; closing it does not close this tokenizer's source</returns>
         public virtual RandomAccessFileOrArray GetSafeFile() {
             return file.CreateView();
         }
@@ -797,11 +923,29 @@ namespace iText.IO.Source {
             return ((isWhitespace && ch == 0) || ch == 9 || ch == 10 || ch == 12 || ch == 13 || ch == 32);
         }
 
+        /// <summary>Tests whether a character is a PDF delimiter.</summary>
+        /// <param name="ch">the character value to test</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// when
+        /// <paramref name="ch"/>
+        /// is a PDF delimiter
+        /// </returns>
         protected internal static bool IsDelimiter(int ch) {
             return (ch == '(' || ch == ')' || ch == '<' || ch == '>' || ch == '[' || ch == ']' || ch == '/' || ch == '%'
                 );
         }
 
+        /// <summary>Tests whether a character is a PDF delimiter or whitespace character.</summary>
+        /// <param name="ch">the character value to test</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// when
+        /// <paramref name="ch"/>
+        /// is a delimiter or configured whitespace value
+        /// </returns>
         protected internal static bool IsDelimiterWhitespace(int ch) {
             return delims[ch + 1];
         }

@@ -35,6 +35,11 @@ using iText.IO.Exceptions;
 using iText.IO.Util;
 
 namespace iText.IO.Image {
+    /// <summary>
+    /// Creates
+    /// <see cref="ImageData"/>
+    /// instances from encoded image sources.
+    /// </summary>
     public sealed class ImageDataFactory {
         private static AbstractWebPLoader webpLoader = null;
 
@@ -304,6 +309,10 @@ namespace iText.IO.Image {
             return image.GetFrames();
         }
 
+        /// <summary>Creates image data for a page in a JBIG2 image from a URL.</summary>
+        /// <param name="url">URL of the JBIG2 image</param>
+        /// <param name="page">page number</param>
+        /// <returns>processed image data for the requested page</returns>
         public static ImageData CreateJbig2(Uri url, int page) {
             if (page < 1) {
                 throw new ArgumentException("The page number must be greater than 0");
@@ -314,6 +323,10 @@ namespace iText.IO.Image {
             return image;
         }
 
+        /// <summary>Creates image data for a page in a JBIG2 image from encoded bytes.</summary>
+        /// <param name="bytes">encoded JBIG2 bytes</param>
+        /// <param name="page">one-based page number</param>
+        /// <returns>processed image data for the requested page</returns>
         public static ImageData CreateJbig2(byte[] bytes, int page) {
             if (page < 1) {
                 throw new ArgumentException("The page number must be greater than 0");
@@ -408,6 +421,12 @@ namespace iText.IO.Image {
             return image;
         }
 
+        /// <summary>Creates image data for a TIFF page from a URL.</summary>
+        /// <param name="url">URL of the TIFF image</param>
+        /// <param name="recoverFromImageError">whether to recover from malformed image data</param>
+        /// <param name="page">page number</param>
+        /// <param name="direct">whether to preserve directly embeddable TIFF data</param>
+        /// <returns>processed image data for the requested page</returns>
         public static ImageData CreateTiff(Uri url, bool recoverFromImageError, int page, bool direct) {
             ValidateImageType(url, ImageType.TIFF);
             ImageData image = new TiffImageData(url, recoverFromImageError, page, direct);
@@ -415,6 +434,12 @@ namespace iText.IO.Image {
             return image;
         }
 
+        /// <summary>Creates image data for a TIFF page from encoded bytes.</summary>
+        /// <param name="bytes">encoded TIFF bytes</param>
+        /// <param name="recoverFromImageError">whether to recover from malformed image data</param>
+        /// <param name="page">one-based page number</param>
+        /// <param name="direct">whether to preserve directly embeddable TIFF data</param>
+        /// <returns>processed image data for the requested page</returns>
         public static ImageData CreateTiff(byte[] bytes, bool recoverFromImageError, int page, bool direct) {
             ValidateImageType(bytes, ImageType.TIFF);
             ImageData image = new TiffImageData(bytes, recoverFromImageError, page, direct);
@@ -422,6 +447,9 @@ namespace iText.IO.Image {
             return image;
         }
 
+        /// <summary>Creates unprocessed raw image data.</summary>
+        /// <param name="bytes">raw image bytes; the array is retained</param>
+        /// <returns>raw image data with no dimensions or color information set</returns>
         public static ImageData CreateRawImage(byte[] bytes) {
             return new RawImageData(bytes, ImageType.RAW);
         }

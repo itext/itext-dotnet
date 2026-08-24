@@ -91,42 +91,78 @@ namespace iText.IO.Font {
         }
 //\endcond
 
+        /// <summary>Gets the font name.</summary>
+        /// <returns>font name</returns>
         public virtual String GetFontName() {
             return fontName;
         }
 
+        /// <summary>Gets the style name.</summary>
+        /// <returns>style string</returns>
         public virtual String GetStyle() {
             return style;
         }
 
+        /// <summary>Gets the font weight.</summary>
+        /// <returns>normalized font weight</returns>
         public virtual int GetFontWeight() {
             return weight;
         }
 
+        /// <summary>Gets the italic angle.</summary>
+        /// <returns>counterclockwise degrees from vertical</returns>
         public virtual float GetItalicAngle() {
             return italicAngle;
         }
 
+        /// <summary>Checks whether the font is fixed pitch.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// for a monospaced font
+        /// </returns>
         public virtual bool IsMonospace() {
             return isMonospace;
         }
 
+        /// <summary>Checks whether the Macintosh style flags declare bold.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// when bold is declared
+        /// </returns>
         public virtual bool IsBold() {
             return (macStyle & FontMacStyleFlags.BOLD) != 0;
         }
 
+        /// <summary>Checks whether the Macintosh style flags declare italic.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// when italic is declared
+        /// </returns>
         public virtual bool IsItalic() {
             return (macStyle & FontMacStyleFlags.ITALIC) != 0;
         }
 
+        /// <summary>Gets the lowercase full font name used for case-insensitive matching.</summary>
+        /// <returns>lowercase full name</returns>
         public virtual String GetFullNameLowerCase() {
             return fullNameLowerCase;
         }
 
+        /// <summary>Gets the lowercase name used for case-insensitive matching.</summary>
+        /// <returns>lowercase font name</returns>
         public virtual String GetFontNameLowerCase() {
             return fontNameLowerCase;
         }
 
+        /// <summary>Gets the lowercase preferred family name used for matching.</summary>
+        /// <returns>
+        /// lowercase family name, or
+        /// <see langword="null"/>
+        /// when absent
+        /// </returns>
         public virtual String GetFamilyNameLowerCase() {
             return familyNameLowerCase;
         }
@@ -141,10 +177,14 @@ namespace iText.IO.Font {
             return familyName2LowerCase;
         }
 
+        /// <summary>Gets lowercase full names from every available localization.</summary>
+        /// <returns>internally retained set of localized full names</returns>
         public virtual ICollection<String> GetFullNameAllLangs() {
             return fullNamesAllLangs;
         }
 
+        /// <summary>Gets full names from supported English OpenType naming records.</summary>
+        /// <returns>internally retained set of matching full names</returns>
         public virtual ICollection<String> GetFullNamesEnglishOpenType() {
             return fullNamesEnglishOpenType;
         }

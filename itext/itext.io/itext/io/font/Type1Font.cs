@@ -30,6 +30,7 @@ using iText.IO.Font.Otf;
 using iText.IO.Source;
 
 namespace iText.IO.Font {
+    /// <summary>Font program parsed from Adobe Type 1 AFM/PFM metrics and optional PFB outline data.</summary>
     public class Type1Font : FontProgram {
         private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.IO.Font.Type1Font));
 
@@ -53,6 +54,9 @@ namespace iText.IO.Font {
 
         private int[] fontStreamLengths;
 
+        /// <summary>Creates a font program for one of the PDF standard Type 1 fonts.</summary>
+        /// <param name="name">standard font name</param>
+        /// <returns>initialized standard-font program</returns>
         protected internal static iText.IO.Font.Type1Font CreateStandardFont(String name) {
             if (StandardFonts.IsStandardFont(name)) {
                 return new iText.IO.Font.Type1Font(name, null, null, null);
@@ -62,10 +66,41 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>Creates an empty Type 1 font program.</summary>
         protected internal Type1Font() {
             fontNames = new FontNames();
         }
 
+        /// <summary>Creates a Type 1 font program from AFM/PFM metrics and optional PFB data without remapping codes.
+        ///     </summary>
+        /// <param name="metricsPath">
+        /// metrics file path, built-in font name, or
+        /// <see langword="null"/>
+        /// when
+        /// <paramref name="afm"/>
+        /// is supplied
+        /// </param>
+        /// <param name="binaryPath">
+        /// PFB path, or
+        /// <see langword="null"/>
+        /// when
+        /// <paramref name="pfb"/>
+        /// is supplied
+        /// </param>
+        /// <param name="afm">
+        /// AFM/PFM bytes, or
+        /// <see langword="null"/>
+        /// when
+        /// <paramref name="metricsPath"/>
+        /// is supplied
+        /// </param>
+        /// <param name="pfb">
+        /// PFB bytes, or
+        /// <see langword="null"/>
+        /// when
+        /// <paramref name="binaryPath"/>
+        /// is supplied
+        /// </param>
         protected internal Type1Font(String metricsPath, String binaryPath, byte[] afm, byte[] pfb)
             : this(metricsPath, binaryPath, afm, pfb, null) {
         }
@@ -147,6 +182,8 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>Creates a lightweight Type 1 font program for a named base font without parsing metrics.</summary>
+        /// <param name="baseFont">PostScript base-font name</param>
         protected internal Type1Font(String baseFont)
             : this() {
             GetFontNames().SetFontName(baseFont);
@@ -173,6 +210,12 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>Checks whether this program represents a built-in standard font.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// when no external font program is required
+        /// </returns>
         public virtual bool IsBuiltInFont() {
             return fontParser != null && fontParser.IsBuiltInFont();
         }
@@ -195,6 +238,16 @@ namespace iText.IO.Font {
             return flags;
         }
 
+        /// <summary>
+        /// Gets the AFM
+        /// <c>CharacterSet</c>
+        /// declaration.
+        /// </summary>
+        /// <returns>
+        /// character set description, or
+        /// <see langword="null"/>
+        /// when absent
+        /// </returns>
         public virtual String GetCharacterSet() {
             return characterSet;
         }
@@ -315,6 +368,7 @@ namespace iText.IO.Font {
             return Object.Equals(fontParser.GetAfmPath(), fontProgram);
         }
 
+        /// <summary>Parses AFM/PFM metrics, character metrics, and kerning pairs into this font program.</summary>
         protected internal virtual void Process() {
             RandomAccessFileOrArray raf = fontParser.GetMetricsFile();
             String line;

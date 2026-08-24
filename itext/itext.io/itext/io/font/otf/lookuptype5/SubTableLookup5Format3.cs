@@ -31,6 +31,14 @@ namespace iText.IO.Font.Otf.Lookuptype5 {
         internal ContextualSubstRule substitutionRule;
 //\endcond
 
+        /// <summary>Creates a new Contextual Substitution Subtable.</summary>
+        /// <param name="openReader">the OpenType font reader</param>
+        /// <param name="lookupFlag">
+        /// specifies processing options, e.g. whether to skip base glyphs, marks or
+        /// ligatures during glyph substitution or positioning. See
+        /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+        /// </param>
+        /// <param name="rule">the rule</param>
         public SubTableLookup5Format3(OpenTypeFontTableReader openReader, int lookupFlag, SubTableLookup5Format3.SubstRuleFormat3
              rule)
             : base(openReader, lookupFlag) {
@@ -45,6 +53,7 @@ namespace iText.IO.Font.Otf.Lookuptype5 {
             return JavaCollectionsUtil.EmptyList<ContextualSubstRule>();
         }
 
+        /// <summary>Represents the substitution rule format3 of an OpenType font.</summary>
         public class SubstRuleFormat3 : ContextualSubstRule {
 //\cond DO_NOT_DOCUMENT
             internal IList<ICollection<int>> coverages;
@@ -54,6 +63,9 @@ namespace iText.IO.Font.Otf.Lookuptype5 {
             internal SubstLookupRecord[] substLookupRecords;
 //\endcond
 
+            /// <summary>Creates a new substitution rule format3.</summary>
+            /// <param name="coverages">the coverages</param>
+            /// <param name="substLookupRecords">the substitution lookup records</param>
             public SubstRuleFormat3(IList<ICollection<int>> coverages, SubstLookupRecord[] substLookupRecords) {
                 this.coverages = coverages;
                 this.substLookupRecords = substLookupRecords;

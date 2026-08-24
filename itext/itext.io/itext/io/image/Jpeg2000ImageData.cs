@@ -25,7 +25,9 @@ using System.Collections.Generic;
 using iText.Commons.Logs;
 
 namespace iText.IO.Image {
+    /// <summary>Image data and parsed metadata for a JPEG 2000 image.</summary>
     public class Jpeg2000ImageData : ImageData {
+        /// <summary>Holds metadata parsed from a JPEG 2000 codestream or JP2 container.</summary>
         public class Parameters {
             private int numOfComps;
 
@@ -98,25 +100,56 @@ namespace iText.IO.Image {
             }
         }
 
+        /// <summary>Represents a JPEG 2000 color specification box.</summary>
+        /// <remarks>
+        /// Represents a JPEG 2000 color specification box.
+        /// <para />
+        /// The first four list values are the method, precedence, approximation, and enumerated color space.
+        /// </remarks>
         public class ColorSpecBox : List<int> {
             private byte[] colorProfile;
 
+            /// <summary>Gets the color-specification method.</summary>
+            /// <returns>
+            /// method value stored at index
+            /// <c>0</c>
+            /// </returns>
             public virtual int GetMeth() {
                 return (int)this[0];
             }
 
+            /// <summary>Gets the color-specification precedence.</summary>
+            /// <returns>
+            /// precedence value stored at index
+            /// <c>1</c>
+            /// </returns>
             public virtual int GetPrec() {
                 return (int)this[1];
             }
 
+            /// <summary>Gets the color-specification approximation.</summary>
+            /// <returns>
+            /// approximation value stored at index
+            /// <c>2</c>
+            /// </returns>
             public virtual int GetApprox() {
                 return (int)this[2];
             }
 
+            /// <summary>Gets the enumerated color space.</summary>
+            /// <returns>
+            /// color-space value stored at index
+            /// <c>3</c>
+            /// </returns>
             public virtual int GetEnumCs() {
                 return (int)this[3];
             }
 
+            /// <summary>Gets the embedded color profile.</summary>
+            /// <returns>
+            /// retained profile bytes, or
+            /// <see langword="null"/>
+            /// </returns>
             public virtual byte[] GetColorProfile() {
                 return colorProfile;
             }
@@ -128,22 +161,46 @@ namespace iText.IO.Image {
 //\endcond
         }
 
+        /// <summary>
+        /// Parsed JPEG 2000 parameters, or
+        /// <see langword="null"/>
+        /// before processing.
+        /// </summary>
         protected internal Jpeg2000ImageData.Parameters parameters;
 
+        /// <summary>Creates JPEG 2000 image data to be loaded from a URL.</summary>
+        /// <param name="url">
+        /// source URL, not
+        /// <see langword="null"/>
+        /// </param>
         protected internal Jpeg2000ImageData(Uri url)
             : base(url, ImageType.JPEG2000) {
         }
 
+        /// <summary>Creates JPEG 2000 image data from encoded bytes.</summary>
+        /// <param name="bytes">encoded JPEG 2000 bytes; the array is retained</param>
         protected internal Jpeg2000ImageData(byte[] bytes)
             : base(bytes, ImageType.JPEG2000) {
         }
 
+        /// <summary><inheritDoc/></summary>
+        /// <returns>
+        /// 
+        /// <see langword="false"/>
+        /// , because JPEG 2000 images require a JPXDecode filter
+        /// </returns>
         public override bool CanImageBeInline() {
             LazyLogger logger = new LazyLogger(typeof(ImageData));
             logger.Warn(() => iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER);
             return false;
         }
 
+        /// <summary>Gets metadata parsed from the JPEG 2000 image.</summary>
+        /// <returns>
+        /// parsed parameters, or
+        /// <see langword="null"/>
+        /// before processing
+        /// </returns>
         public virtual Jpeg2000ImageData.Parameters GetParameters() {
             return parameters;
         }

@@ -27,15 +27,20 @@ using iText.IO.Source;
 using iText.IO.Util;
 
 namespace iText.IO.Font.Otf {
+    /// <summary>Reads the common structures of an OpenType layout table.</summary>
     public abstract class OpenTypeFontTableReader {
         protected internal readonly RandomAccessFileOrArray rf;
 
+        /// <summary>Stores table location.</summary>
         protected internal readonly int tableLocation;
 
+        /// <summary>Stores lookup list.</summary>
         protected internal IList<OpenTableLookup> lookupList;
 
+        /// <summary>Stores scripts type.</summary>
         protected internal OpenTypeScript scriptsType;
 
+        /// <summary>Stores features type.</summary>
         protected internal OpenTypeFeature featuresType;
 
         private readonly IDictionary<int, Glyph> indexGlyphMap;
@@ -44,6 +49,12 @@ namespace iText.IO.Font.Otf {
 
         private readonly int unitsPerEm;
 
+        /// <summary>Creates a new reader.</summary>
+        /// <param name="rf">the source</param>
+        /// <param name="tableLocation">the table location</param>
+        /// <param name="gdef">the GDEF reader</param>
+        /// <param name="indexGlyphMap">the index glyph map</param>
+        /// <param name="unitsPerEm">the units per em</param>
         protected internal OpenTypeFontTableReader(RandomAccessFileOrArray rf, int tableLocation, OpenTypeGdefTableReader
              gdef, IDictionary<int, Glyph> indexGlyphMap, int unitsPerEm) {
             this.rf = rf;
@@ -53,10 +64,16 @@ namespace iText.IO.Font.Otf {
             this.unitsPerEm = unitsPerEm;
         }
 
+        /// <summary>Returns the glyph by index.</summary>
+        /// <param name="index">the index</param>
+        /// <returns>the requested result</returns>
         public virtual Glyph GetGlyph(int index) {
             return indexGlyphMap.Get(index);
         }
 
+        /// <summary>Returns the lookup table.</summary>
+        /// <param name="idx">the idx</param>
+        /// <returns>the requested result</returns>
         public virtual OpenTableLookup GetLookupTable(int idx) {
             if (idx < 0 || idx >= lookupList.Count) {
                 return null;
@@ -64,14 +81,26 @@ namespace iText.IO.Font.Otf {
             return lookupList[idx];
         }
 
+        /// <summary>Returns the script records.</summary>
+        /// <returns>the requested result</returns>
         public virtual IList<ScriptRecord> GetScriptRecords() {
             return scriptsType.GetScriptRecords();
         }
 
+        /// <summary>Returns the feature records.</summary>
+        /// <returns>the requested result</returns>
         public virtual IList<FeatureRecord> GetFeatureRecords() {
             return featuresType.GetRecords();
         }
 
+        /// <summary>
+        /// Returns the features represented by
+        /// <see cref="FeatureRecord"/>
+        /// list.
+        /// </summary>
+        /// <param name="scripts">the scripts</param>
+        /// <param name="language">the language</param>
+        /// <returns>the requested result</returns>
         public virtual IList<FeatureRecord> GetFeatures(String[] scripts, String language) {
             LanguageRecord rec = scriptsType.GetLanguageRecord(scripts, language);
             if (rec == null) {
@@ -84,6 +113,18 @@ namespace iText.IO.Font.Otf {
             return ret;
         }
 
+        /// <summary>
+        /// Returns the specific features represented by
+        /// <see cref="FeatureRecord"/>
+        /// list.
+        /// </summary>
+        /// <param name="features">
+        /// 
+        /// <see cref="FeatureRecord"/>
+        /// list
+        /// </param>
+        /// <param name="specific">specific tags of the feature record</param>
+        /// <returns>the requested result</returns>
         public virtual IList<FeatureRecord> GetSpecificFeatures(IList<FeatureRecord> features, String[] specific) {
             if (specific == null) {
                 return features;
@@ -102,6 +143,13 @@ namespace iText.IO.Font.Otf {
             return recs;
         }
 
+        /// <summary>
+        /// Returns the required feature represented by
+        /// <see cref="FeatureRecord"/>.
+        /// </summary>
+        /// <param name="scripts">the scripts</param>
+        /// <param name="language">the language</param>
+        /// <returns>the requested result</returns>
         public virtual FeatureRecord GetRequiredFeature(String[] scripts, String language) {
             LanguageRecord rec = scriptsType.GetLanguageRecord(scripts, language);
             if (rec == null) {
@@ -110,6 +158,9 @@ namespace iText.IO.Font.Otf {
             return featuresType.GetRecord(rec.GetFeatureRequired());
         }
 
+        /// <summary>Returns the lookups.</summary>
+        /// <param name="features">the features</param>
+        /// <returns>the requested result</returns>
         public virtual IList<OpenTableLookup> GetLookups(FeatureRecord[] features) {
             IntHashtable hash = new IntHashtable();
             foreach (FeatureRecord rec in features) {
@@ -124,6 +175,9 @@ namespace iText.IO.Font.Otf {
             return ret;
         }
 
+        /// <summary>Returns the lookups.</summary>
+        /// <param name="feature">the feature</param>
+        /// <returns>the requested result</returns>
         public virtual IList<OpenTableLookup> GetLookups(FeatureRecord feature) {
             IList<OpenTableLookup> ret = new List<OpenTableLookup>(feature.GetLookups().Length);
             foreach (int idx in feature.GetLookups()) {
@@ -132,22 +186,48 @@ namespace iText.IO.Font.Otf {
             return ret;
         }
 
-        public virtual bool IsSkip(int glyph, int flag) {
-            return gdef.IsSkip(glyph, flag);
+        /// <summary>Checks if lookup must ignore the specified glyph when processing glyph sequences.</summary>
+        /// <param name="glyph">glyph to check</param>
+        /// <param name="lookupFlag">
+        /// specifies processing options, e.g. whether to skip base glyphs, marks or
+        /// ligatures during glyph substitution or positioning. See
+        /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the specified glyph should be skipped,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        public virtual bool IsSkip(int glyph, int lookupFlag) {
+            return gdef.IsSkip(glyph, lookupFlag);
         }
 
+        /// <summary>Returns the glyph class.</summary>
+        /// <param name="glyphCode">the glyph code</param>
+        /// <returns>the requested result</returns>
         public virtual int GetGlyphClass(int glyphCode) {
             return gdef.GetGlyphClassTable().GetOtfClass(glyphCode);
         }
 
+        /// <summary>Returns the units per em.</summary>
+        /// <returns>the requested result</returns>
         public virtual int GetUnitsPerEm() {
             return unitsPerEm;
         }
 
+        /// <summary>Returns the language record.</summary>
+        /// <param name="otfScriptTag">the otf script tag</param>
+        /// <returns>the requested result</returns>
         public virtual LanguageRecord GetLanguageRecord(String otfScriptTag) {
             return GetLanguageRecord(otfScriptTag, null);
         }
 
+        /// <summary>Returns the language record.</summary>
+        /// <param name="otfScriptTag">the otf script tag</param>
+        /// <param name="langTag">the lang tag</param>
+        /// <returns>the requested result</returns>
         public virtual LanguageRecord GetLanguageRecord(String otfScriptTag, String langTag) {
             if (otfScriptTag == null) {
                 return null;
@@ -168,37 +248,71 @@ namespace iText.IO.Font.Otf {
             return null;
         }
 
+        /// <summary>Reads the lookup table from OpenType data.</summary>
+        /// <param name="lookupType">the lookup type</param>
+        /// <param name="lookupFlag">
+        /// specifies processing options, e.g. whether to skip base glyphs, marks or
+        /// ligatures during glyph substitution or positioning. See
+        /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+        /// </param>
+        /// <param name="subTableLocations">the sub table locations</param>
+        /// <returns>the requested result</returns>
         protected internal abstract OpenTableLookup ReadLookupTable(int lookupType, int lookupFlag, int[] subTableLocations
             );
 
+        /// <summary>Reads the class definition from OpenType data.</summary>
+        /// <param name="classLocation">the class location</param>
+        /// <returns>the requested result</returns>
         protected internal OtfClass ReadClassDefinition(int classLocation) {
             return OtfClass.Create(rf, classLocation);
         }
 
+        /// <summary>Reads the ushort array from OpenType data.</summary>
+        /// <param name="size">the size</param>
+        /// <param name="location">the location</param>
+        /// <returns>the requested result</returns>
         protected internal int[] ReadUShortArray(int size, int location) {
             return OtfReadCommon.ReadUShortArray(rf, size, location);
         }
 
+        /// <summary>Reads the ushort array from OpenType data.</summary>
+        /// <param name="size">the size</param>
+        /// <returns>the requested result</returns>
         protected internal int[] ReadUShortArray(int size) {
             return OtfReadCommon.ReadUShortArray(rf, size);
         }
 
+        /// <summary>Reads the coverages from OpenType data.</summary>
+        /// <param name="locations">the locations</param>
+        /// <param name="coverage">the coverage to retain the result</param>
         protected internal virtual void ReadCoverages(int[] locations, IList<ICollection<int>> coverage) {
             OtfReadCommon.ReadCoverages(rf, locations, coverage);
         }
 
+        /// <summary>Reads the coverage format from OpenType data.</summary>
+        /// <param name="coverageLocation">the coverage location</param>
+        /// <returns>the requested result</returns>
         protected internal IList<int> ReadCoverageFormat(int coverageLocation) {
             return OtfReadCommon.ReadCoverageFormat(rf, coverageLocation);
         }
 
+        /// <summary>Reads the substitution lookup records from OpenType data.</summary>
+        /// <param name="substCount">the substitution lookups count to read</param>
+        /// <returns>the requested result</returns>
         protected internal virtual SubstLookupRecord[] ReadSubstLookupRecords(int substCount) {
             return OtfReadCommon.ReadSubstLookupRecords(rf, substCount);
         }
 
+        /// <summary>Reads the positioning lookup records from OpenType data.</summary>
+        /// <param name="substCount">the positioning lookups count to read</param>
+        /// <returns>the requested result</returns>
         protected internal virtual PosLookupRecord[] ReadPosLookupRecords(int substCount) {
             return OtfReadCommon.ReadPosLookupRecords(rf, substCount);
         }
 
+        /// <summary>Reads the tag and locations from OpenType data.</summary>
+        /// <param name="baseLocation">the base location</param>
+        /// <returns>the requested result</returns>
         protected internal virtual TagAndLocation[] ReadTagAndLocations(int baseLocation) {
             int count = rf.ReadUnsignedShort();
             TagAndLocation[] tagslLocs = new TagAndLocation[count];
@@ -214,7 +328,7 @@ namespace iText.IO.Font.Otf {
 //\cond DO_NOT_DOCUMENT
         /// <summary>This is the starting point of the class.</summary>
         /// <remarks>
-        /// This is the starting point of the class. A sub-class must call this
+        /// This is the starting point of the class. A subclass must call this
         /// method to start getting call backs to the
         /// <see cref="ReadLookupTable(int, int, int[])"/>
         /// method.

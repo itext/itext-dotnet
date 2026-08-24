@@ -30,8 +30,10 @@ using iText.IO.Source;
 namespace iText.IO.Colors {
     /// <summary>Class used to represent the International Color Consortium profile</summary>
     public class IccProfile {
+        /// <summary>The raw ICC profile bytes.</summary>
         protected internal byte[] data;
 
+        /// <summary>The number of color components described by this profile.</summary>
         protected internal int numComponents;
 
         private static IDictionary<String, int?> cstags = new Dictionary<String, int?>();

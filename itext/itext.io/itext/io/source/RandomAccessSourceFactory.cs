@@ -87,6 +87,11 @@ namespace iText.IO.Source
 			return this;
 		}
 
+		/// <summary>
+		/// Configures whether file backed sources are opened with a read-write lock.
+		/// </summary>
+		/// <param name="exclusivelyLockFile"><see langword="true"/> to request an exclusive lock, <see langword="false"/> for read-only access</param>
+		/// <returns>this factory</returns>
 		public RandomAccessSourceFactory SetExclusivelyLockFile(bool
 			 exclusivelyLockFile)
 		{
@@ -109,6 +114,12 @@ namespace iText.IO.Source
 			return new ArrayRandomAccessSource(data);
 		}
 
+		/// <summary>
+		/// Creates a source that reads from an already open random access file.
+		/// The returned source owns and closes <see langword="raf"/>.
+		/// </summary>
+		/// <param name="raf">the file to wrap</param>
+		/// <returns>a source backed by <see langword="raf"/></returns>
         public IRandomAccessSource CreateSource(FileStream raf)
 		{
 			return new RAFRandomAccessSource(raf);
@@ -238,6 +249,15 @@ namespace iText.IO.Source
             return new RAFRandomAccessSource(new FileStream(filename, FileMode.Open, FileAccess.Read, exclusivelyLockFile ? FileShare.None : FileShare.Read));
 		}
 
+		/// <summary>
+		/// Creates a concatenated source from ranges of another source.
+		///
+		/// Each adjacent pair in <see langword="ranges"/> is an offset and length. Closing the returned source closes
+		/// the supplied source through each of its window views.
+		/// </summary>
+		/// <param name="source">the source from which ranges are exposed</param>
+		/// <param name="ranges">offset-length pairs defining the exposed ranges</param>
+		/// <returns>a source whose bytes are the requested ranges in order</returns>
         public IRandomAccessSource CreateRanged(IRandomAccessSource source, long[] ranges)
 		{
             IRandomAccessSource[] sources = new IRandomAccessSource[ranges.Length / 2];

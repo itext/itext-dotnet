@@ -23,11 +23,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 
 namespace iText.IO.Font.Otf {
+    /// <summary>Represents the OpenType font reading exception.</summary>
     public class FontReadingException : System.IO.IOException {
+        /// <summary>Creates a new OpenType font reading exception.</summary>
+        /// <param name="message">the message</param>
         public FontReadingException(String message)
             : base(message) {
         }
 
+        /// <summary>Creates a new OpenType font reading exception.</summary>
+        /// <param name="message">the message</param>
+        /// <param name="e">the cause exception</param>
         public FontReadingException(String message, Exception e)
             : base(message, e) {
         }

@@ -22,20 +22,39 @@ Copyright (c) 1998-2026 Apryse Group NV
  */
 namespace iText.IO.Util
 {
+	/// <summary>
+	/// A fixed-size, generic array backed by a list.
+	/// </summary>
+	/// <typeparam name="T">the element type</typeparam>
 	public class GenericArray<T>
 	{
 		T[] array;
 
+		/// <summary>
+		/// Creates a new generic array of the specified size.
+		/// </summary>
+		/// <param name="size">the number of entries</param>
 		public GenericArray(int size)
 		{
 			array = new T[size];
     	}
 
+		/// <summary>
+		/// Returns the element at an index.
+		/// </summary>
+		/// <param name="index">the zero-based index</param>
+		/// <returns>the element at <see langword="index"/></returns>
 		public virtual T Get(int index)
 		{
 			return array[index];
 		}
 
+		/// <summary>
+		/// Replaces the element at an index.
+		/// </summary>
+		/// <param name="index">the zero-based index</param>
+		/// <param name="element">the replacement element</param>
+		/// <returns>the previously stored element</returns>
 		public virtual T Set(int index, T element)
 		{
 			return array[index] = element;

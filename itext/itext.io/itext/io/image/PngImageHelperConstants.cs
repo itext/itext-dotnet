@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 
 namespace iText.IO.Image {
+    /// <summary>PDF attribute names and rendering intents used while processing PNG images.</summary>
     public class PngImageHelperConstants {
         public const String ABSOLUTE_COLORMETRIC = "/AbsoluteColormetric";
 

@@ -24,18 +24,33 @@ using System.IO;
 
 namespace iText.IO.Source
 {
+	/// <summary>
+	/// A byte-array output stream whose backing array can be assigned directly.
+	/// </summary>
 	public class ByteArrayOutputStream : MemoryStream
 	{
+		/// <summary>
+		/// Creates an empty stream with the default initial capacity.
+		/// </summary>
 		public ByteArrayOutputStream()
 			: base()
 		{
 		}
 
+		/// <summary>
+		/// Creates an empty stream with the specified initial capacity.
+		/// </summary>
+		/// <param name="size">the initial backing-array size</param>
 		public ByteArrayOutputStream(int size)
 			: base(size)
 		{
 		}
 
+		/// <summary>
+		/// Replaces this stream's backing array and logical byte count.
+		/// </summary>
+		/// <param name="bytes">the replacement backing array, retained without copying</param>
+		/// <param name="count">the number of bytes in <see langword="bytes"/> considered written</param>
 		public virtual void AssignBytes(byte[] bytes, int count)
 		{
 			SetLength(0);

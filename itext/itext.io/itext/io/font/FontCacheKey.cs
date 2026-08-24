@@ -24,25 +24,55 @@ using System;
 using iText.Commons.Utils;
 
 namespace iText.IO.Font {
+    /// <summary>Defines an equality key for a cached font program source.</summary>
+    /// <remarks>
+    /// Defines an equality key for a cached font program source.
+    /// <para />
+    /// See
+    /// <see cref="FontCache"/>
+    /// </remarks>
     public abstract class FontCacheKey {
+        /// <summary>Creates a cache key for a font name.</summary>
+        /// <param name="fontName">
+        /// the font name, possibly
+        /// <see langword="null"/>
+        /// </param>
+        /// <returns>a new name based cache key</returns>
         public static FontCacheKey Create(String fontName) {
             return new FontCacheKey.FontCacheStringKey(fontName);
         }
 
+        /// <summary>Creates a cache key for a font collection member identified by name.</summary>
+        /// <param name="fontName">the collection source name</param>
+        /// <param name="ttcIndex">the collection member index</param>
+        /// <returns>a new collection member cache key</returns>
         public static FontCacheKey Create(String fontName, int ttcIndex) {
             return new FontCacheKey.FontCacheTtcKey(fontName, ttcIndex);
         }
 
+        /// <summary>Creates a cache key for font program bytes.</summary>
+        /// <param name="fontProgram">
+        /// the font bytes, possibly
+        /// <see langword="null"/>
+        /// </param>
+        /// <returns>a new byte based cache key</returns>
         public static FontCacheKey Create(byte[] fontProgram) {
             return new FontCacheKey.FontCacheBytesKey(fontProgram);
         }
 
+        /// <summary>Creates a cache key for a font collection member identified by bytes.</summary>
+        /// <param name="fontProgram">
+        /// the collection bytes, possibly
+        /// <see langword="null"/>
+        /// </param>
+        /// <param name="ttcIndex">the collection member index</param>
+        /// <returns>a new collection member cache key</returns>
         public static FontCacheKey Create(byte[] fontProgram, int ttcIndex) {
             return new FontCacheKey.FontCacheTtcKey(fontProgram, ttcIndex);
         }
 
         private class FontCacheStringKey : FontCacheKey {
-            private String fontName;
+            private readonly String fontName;
 
 //\cond DO_NOT_DOCUMENT
             internal FontCacheStringKey(String fontName) {
@@ -71,7 +101,7 @@ namespace iText.IO.Font {
 
             private int fontLength;
 
-            private int hashcode;
+            private readonly int hashcode;
 
 //\cond DO_NOT_DOCUMENT
             internal FontCacheBytesKey(byte[] fontBytes) {
@@ -110,9 +140,9 @@ namespace iText.IO.Font {
         }
 
         private class FontCacheTtcKey : FontCacheKey {
-            private FontCacheKey ttcKey;
+            private readonly FontCacheKey ttcKey;
 
-            private int ttcIndex;
+            private readonly int ttcIndex;
 
 //\cond DO_NOT_DOCUMENT
             internal FontCacheTtcKey(String fontName, int ttcIndex) {

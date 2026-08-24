@@ -35,8 +35,8 @@ namespace iText.IO.Font.Otf {
 
         public const int GLYPH_MARK = 3;
 
-        //key is glyph, value is class inside all 2
-        private IntHashtable mapClass = new IntHashtable();
+        // Key is glyph, value is class inside all 2
+        private readonly IntHashtable mapClass = new IntHashtable();
 
         private OtfClass(RandomAccessFileOrArray rf, int classLocation) {
             rf.Seek(classLocation);
@@ -68,6 +68,21 @@ namespace iText.IO.Font.Otf {
             }
         }
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="OtfClass"/>
+        /// instance.
+        /// </summary>
+        /// <param name="rf">
+        /// 
+        /// <see cref="iText.IO.Source.RandomAccessFileOrArray"/>
+        /// </param>
+        /// <param name="classLocation">class location</param>
+        /// <returns>
+        /// new
+        /// <see cref="OtfClass"/>
+        /// instance
+        /// </returns>
         public static iText.IO.Font.Otf.OtfClass Create(RandomAccessFileOrArray rf, int classLocation) {
             iText.IO.Font.Otf.OtfClass otfClass;
             try {
@@ -81,18 +96,44 @@ namespace iText.IO.Font.Otf {
             return otfClass;
         }
 
+        /// <summary>Returns the otf class for the passed glyph.</summary>
+        /// <param name="glyph">the glyph</param>
+        /// <returns>the requested result</returns>
         public virtual int GetOtfClass(int glyph) {
             return mapClass.Get(glyph);
         }
 
+        /// <summary>Determines whether passed glyph is Mark or not.</summary>
+        /// <param name="glyph">the glyph to check</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the passed glyph is Mark; otherwise
+        /// <see langword="false"/>
+        /// </returns>
         public virtual bool IsMarkOtfClass(int glyph) {
             return HasClass(glyph) && GetOtfClass(glyph) == GLYPH_MARK;
         }
 
+        /// <summary>Determines whether passed glyph has class.</summary>
+        /// <param name="glyph">the glyph</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if has; otherwise
+        /// <see langword="false"/>.
+        /// </returns>
         public virtual bool HasClass(int glyph) {
             return mapClass.ContainsKey(glyph);
         }
 
+        /// <summary>Returns the otf class for the passed glyph.</summary>
+        /// <param name="glyph">the glyph</param>
+        /// <param name="strict">
+        /// boolean value identifying whether the check if passed glyph has class should be done first
+        /// (-1 is returned if glyph doesn't have class and strict is true)
+        /// </param>
+        /// <returns>the requested result</returns>
         public virtual int GetOtfClass(int glyph, bool strict) {
             if (strict) {
                 if (mapClass.ContainsKey(glyph)) {

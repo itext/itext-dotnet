@@ -35,10 +35,13 @@ namespace iText.IO.Font.Cmap {
     public class CMapCodepointToCid : AbstractCMap {
         private readonly IntHashtable map;
 
+        /// <summary>Creates an empty character code to CID map.</summary>
         public CMapCodepointToCid() {
             map = new IntHashtable();
         }
 
+        /// <summary>Creates a map by reversing a CID to code mapping.</summary>
+        /// <param name="reverseMap">the CID to code mapping to reverse</param>
         public CMapCodepointToCid(CMapCidToCodepoint reverseMap) {
             map = reverseMap.GetReversMap();
         }
@@ -57,6 +60,13 @@ namespace iText.IO.Font.Cmap {
         }
 //\endcond
 
+        /// <summary>Looks up the CID assigned to a character code.</summary>
+        /// <param name="codepoint">the integer representation of the encoded character code</param>
+        /// <returns>
+        /// the mapped CID, or
+        /// <c>0</c>
+        /// when absent
+        /// </returns>
         public virtual int Lookup(int codepoint) {
             return this.map.Get(codepoint);
         }

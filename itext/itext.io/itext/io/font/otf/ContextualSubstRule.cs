@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.IO.Font.Otf {
+    /// <summary>Represents the contextual substitution rule of an OpenType font.</summary>
     public abstract class ContextualSubstRule : ContextualRule {
         /// <summary>Retrieves the substitution lookup records.</summary>
         /// <remarks>

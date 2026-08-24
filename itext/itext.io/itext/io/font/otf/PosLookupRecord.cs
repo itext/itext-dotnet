@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.IO.Font.Otf {
+    /// <summary>Represents the positioning lookup record of an OpenType font.</summary>
     public class PosLookupRecord {
 //\cond DO_NOT_DOCUMENT
         internal int sequenceIndex;

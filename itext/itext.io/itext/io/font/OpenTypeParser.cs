@@ -408,7 +408,7 @@ namespace iText.IO.Font {
         /// instance based on raw font data.
         /// </summary>
         /// <param name="ttf">the raw font data</param>
-        /// <param name="isLenientMode">whether font parsing will be in lenient mode (when some tables are allowed to be absent) or not
+        /// <param name="isLenientMode">whether font parsing will be in lenient mode (when 'name' and 'OS/2' tables are allowed to be absent) or not
         ///     </param>
         public OpenTypeParser(byte[] ttf, bool isLenientMode) {
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(ttf));

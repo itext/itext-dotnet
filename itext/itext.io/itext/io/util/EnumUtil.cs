@@ -30,6 +30,12 @@ namespace iText.IO.Util {
     /// Be aware that its API and functionality may be changed in future.
     /// </summary>
     public static class EnumUtil {
+        /// <summary>
+        /// Returns an enum value, rejecting <see langword="null"/>.
+        /// </summary>
+        /// <param name="enumInstance">the enum value to validate</param>
+        /// <typeparam name="T">the enum type</typeparam>
+        /// <returns><see langword="enumInstance"/></returns>
         public static T ThrowIfNull<T>(T? enumInstance) where T : struct {
             if (enumInstance == null) {
                 throw new Exception("Expected not null enum instance");
@@ -38,6 +44,11 @@ namespace iText.IO.Util {
             return enumInstance.Value;
         }
 
+        /// <summary>
+        /// Returns all declared values of an enum type.
+        /// </summary>
+        /// <typeparam name="T">the enum type</typeparam>
+        /// <returns>a list containing the enum's declared values</returns>
         public static  List<T> GetAllValuesOfEnum<T>() where T : struct {
             var enumValues = Enum.GetValues( typeof(T));
             return enumValues.Cast<T>().ToList();

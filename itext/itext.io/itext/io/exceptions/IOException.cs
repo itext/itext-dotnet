@@ -29,7 +29,7 @@ using iText.Commons.Utils;
 namespace iText.IO.Exceptions {
     /// <summary>Exception class for exceptions in io module.</summary>
     public class IOException : ITextException {
-        /// <summary>Object for more details</summary>
+        /// <summary>The object that provides additional context for this exception.</summary>
         protected internal Object obj;
 
         private IList<Object> messageParams;

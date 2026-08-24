@@ -81,10 +81,20 @@ namespace iText.IO.Util {
             return c >= '\udc00' && c <= '\udfff';
         }
 
+        /// <summary>
+        /// Returns the high surrogate for a supplementary Unicode code point.
+        /// </summary>
+        /// <param name="codePoint">the Unicode code point</param>
+        /// <returns>the corresponding high surrogate</returns>
         public static char HighSurrogate(int codePoint) {
             return (char) ((int) ((uint) codePoint >> 10) + ('\uD800' - (int) ((uint) 0x010000 >> 10)));
         }
 
+        /// <summary>
+        /// Returns the low surrogate for a supplementary Unicode code point.
+        /// </summary>
+        /// <param name="codePoint">the Unicode code point</param>
+        /// <returns>the corresponding low surrogate</returns>
         public static char LowSurrogate(int codePoint) {
             return (char) ((codePoint & 0x3ff) + '\uDC00');
         }
@@ -140,6 +150,11 @@ namespace iText.IO.Util {
             return (text[idx] - 0xd800) * 0x400 + text[idx + 1] - 0xdc00 + 0x10000;
         }
 
+        /// <summary>
+        /// Converts a string to Unicode code points, preserving unpaired surrogate values.
+        /// </summary>
+        /// <param name="text">the string to convert, or <see langword="null"/></param>
+        /// <returns>the code points, or <see langword="null"/> when <see langword="text"/> is <see langword="null"/></returns>
         public static int[] ConvertToUtf32(String text) {
             if (text == null) {
                 return null;
@@ -201,10 +216,20 @@ namespace iText.IO.Util {
             return new char[] {(char) (codePoint / 0x400 + 0xd800), (char) (codePoint % 0x400 + 0xdc00)};
         }
 
+        /// <summary>
+        /// Determines whether a character is considered whitespace.
+        /// </summary>
+        /// <param name="ch">the character to inspect</param>
+        /// <returns><see langword="true"/> if the character is whitespace</returns>
         public static bool IsWhiteSpace(char ch) {
             return IsWhiteSpace((int) ch);
         }
 
+        /// <summary>
+        /// Determines whether a Unicode code point is considered whitespace.
+        /// </summary>
+        /// <param name="unicode">the Unicode code point to inspect</param>
+        /// <returns><see langword="true"/> if the code point is whitespace</returns>
         public static bool IsWhiteSpace(int unicode) {
             if (unicode == '\u00A0' || unicode == '\u2007' || unicode == '\u202F') {
                 // non-breaking space char
@@ -238,6 +263,8 @@ namespace iText.IO.Util {
         /// Determines if the specified character (Unicode code point) should be regarded
         /// as an ignorable character in a Java identifier or a Unicode identifier.
         /// </summary>
+        /// <param name="codePoint">the Unicode code point to inspect</param>
+        /// <returns><see langword="true"/> if the code point is ignorable for identifiers</returns>
         public static bool IsIdentifierIgnorable(int codePoint) {
             if (codePoint >= 0xE0020) return codePoint <= 0xE007F;
             return Array.BinarySearch(ignorableCodePoints, codePoint) > -1;
@@ -246,6 +273,8 @@ namespace iText.IO.Util {
         /// <summary>
         /// Determines if represented Glyph is '\n' or '\r' character.
         /// </summary>
+        /// <param name="glyph">the glyph to inspect</param>
+        /// <returns><see langword="true"/> if the glyph is a new line character</returns>
         public static bool IsNewLine(Glyph glyph) {
             int unicode = glyph.GetUnicode();
             return IsNewLine(unicode);
@@ -254,6 +283,8 @@ namespace iText.IO.Util {
         /// <summary>
         /// Determines if represented Glyph is '\n' or '\r' character.
         /// </summary>
+        /// <param name="c">the character to inspect</param>
+        /// <returns><see langword="true"/> if the character is a new line character</returns>
         public static bool IsNewLine(char c) {
             int unicode = (int) c;
             return IsNewLine(unicode);
@@ -262,10 +293,18 @@ namespace iText.IO.Util {
         /// <summary>
         /// Determines if represented Glyph is '\n' or '\r' character.
         /// </summary>
+        /// <param name="unicode">the Unicode code point to inspect</param>
+        /// <returns><see langword="true"/> if the code point is a new line character</returns>
         public static bool IsNewLine(int unicode) {
             return unicode == '\n' || unicode == '\r';
         }
 
+        /// <summary>
+        /// Determines whether a glyph line contains a CRLF pair at a position.
+        /// </summary>
+        /// <param name="glyphLine">the glyph line to inspect</param>
+        /// <param name="carriageReturnPosition">the position expected to contain a carriage return</param>
+        /// <returns><see langword="true"/> when the position begins a CRLF pair</returns>
         public static bool IsCarriageReturnFollowedByLineFeed(GlyphLine glyphLine, int carriageReturnPosition) {
             return glyphLine.Size() > 1
                    && carriageReturnPosition <= glyphLine.Size() - 2
@@ -276,6 +315,8 @@ namespace iText.IO.Util {
         /// <summary>
         /// Determines if represented Glyph is space or whitespace character.
         /// </summary>
+        /// <param name="glyph">the glyph to inspect</param>
+        /// <returns><see langword="true"/> if the glyph is a space or whitespace character</returns>
         public static bool IsSpaceOrWhitespace(Glyph glyph) {
             //\r, \n, and \t are whitespaces, but not space chars.
             //\u00a0 is SpaceChar, but not whitespace.
@@ -285,10 +326,17 @@ namespace iText.IO.Util {
         /// <summary>
         /// Determines if represented Glyph is whitespace character.
         /// </summary>
+        /// <param name="glyph">the glyph to inspect</param>
+        /// <returns><see langword="true"/> if the glyph is a whitespace character</returns>
         public static bool IsWhitespace(Glyph glyph) {
             return IsWhiteSpace(glyph.GetUnicode());
         }
 
+        /// <summary>
+        /// Determines whether a glyph represents a non-breaking hyphen.
+        /// </summary>
+        /// <param name="glyph">the glyph to inspect</param>
+        /// <returns><see langword="true"/> if the glyph represents U+2011</returns>
         public static bool IsNonBreakingHyphen(Glyph glyph) {
             return '\u2011' == glyph.GetUnicode();
         }
@@ -296,18 +344,35 @@ namespace iText.IO.Util {
         /// <summary>
         /// Determines if represented Glyph is ' ' (SPACE) character.
         /// </summary>
+        /// <param name="g">the glyph to inspect</param>
+        /// <returns><see langword="true"/> if the glyph is a SPACE character</returns>
         public static bool IsUni0020(Glyph g) {
             return g.GetUnicode() == ' ';
         }
 
+        /// <summary>
+        /// Determines whether a code point is ignorable or a soft hyphen.
+        /// </summary>
+        /// <param name="c">the Unicode code point</param>
+        /// <returns><see langword="true"/> if the code point is non-printable for text processing</returns>
         public static bool IsNonPrintable(int c) {
             return IsIdentifierIgnorable(c) || c == '\u00AD';
         }
 
+        /// <summary>
+        /// Determines whether a code point is whitespace or non-printable.
+        /// </summary>
+        /// <param name="code">the Unicode code point</param>
+        /// <returns><see langword="true"/> if the code point is whitespace or non-printable</returns>
         public static bool IsWhitespaceOrNonPrintable(int code) {
             return IsWhiteSpace((char) code) || IsNonPrintable(code);
         }
 
+        /// <summary>
+        /// Determines whether a glyph represents a Unicode letter or digit.
+        /// </summary>
+        /// <param name="glyph">the glyph to inspect</param>
+        /// <returns><see langword="true"/> if the glyph represents a letter or digit</returns>
         public static bool IsLetterOrDigit(Glyph glyph) {
             int unicode = glyph.GetUnicode();
             UnicodeCategory category = GetUnicodeCategory(unicode);
@@ -320,6 +385,11 @@ namespace iText.IO.Util {
                    || category == UnicodeCategory.DecimalDigitNumber;
         }
 
+        /// <summary>
+        /// Determines whether a glyph represents a Unicode mark character.
+        /// </summary>
+        /// <param name="glyph">the glyph to inspect</param>
+        /// <returns><see langword="true"/> if the glyph's Unicode category is a mark category</returns>
         public static bool IsMark(Glyph glyph) {
             int unicode = glyph.GetUnicode();
             UnicodeCategory category = GetUnicodeCategory(unicode);
@@ -329,18 +399,38 @@ namespace iText.IO.Util {
                    || category == UnicodeCategory.EnclosingMark;
         }
 
+        /// <summary>
+        /// Converts a Unicode code point to a character array.
+        /// </summary>
+        /// <param name="codePoint">the Unicode code point to convert</param>
+        /// <returns>the resulting character array</returns>
         public static char[] ToChars(int codePoint) {
             return char.ConvertFromUtf32(codePoint).ToCharArray();
         }
 
+        /// <summary>
+        /// Gets the number of UTF-16 code units needed to represent a Unicode code point.
+        /// </summary>
+        /// <param name="codePoint">the Unicode code point</param>
+        /// <returns>1 for BMP code points, 2 for supplementary code points</returns>
         public static int CharCount(int codePoint) {
             return codePoint >= CHARACTER_MIN_SUPPLEMENTARY_CODE_POINT ? 2 : 1;
         }
 
+        /// <summary>
+        /// Creates a new encoder instance.
+        /// </summary>
+        /// <param name="charset">the source encoding</param>
+        /// <returns>the encoder instance</returns>
         public static Encoding NewEncoder(Encoding charset) {
             return charset;
         }
 
+        /// <summary>
+        /// Determines whether a character set name is supported by the current runtime.
+        /// </summary>
+        /// <param name="charset">the character set name</param>
+        /// <returns><see langword="true"/> if the character set is supported</returns>
         public static bool CharsetIsSupported(string charset) {
             try {
                 var enc = EncodingUtil.GetEncoding(charset);

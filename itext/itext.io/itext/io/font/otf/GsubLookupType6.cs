@@ -27,6 +27,14 @@ using iText.IO.Font.Otf.Lookuptype6;
 namespace iText.IO.Font.Otf {
     /// <summary>LookupType 6: Chaining Contextual Substitution Subtable</summary>
     public class GsubLookupType6 : GsubLookupType5 {
+        /// <summary>Creates a new GSUB Lookup Type 6.</summary>
+        /// <param name="openReader">the OpenType font reader</param>
+        /// <param name="lookupFlag">
+        /// specifies processing options, e.g. whether to skip base glyphs, marks or
+        /// ligatures during glyph substitution or positioning. See
+        /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+        /// </param>
+        /// <param name="subTableLocations">the sub table locations</param>
         protected internal GsubLookupType6(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations
             )
             : base(openReader, lookupFlag, subTableLocations) {
@@ -109,6 +117,8 @@ namespace iText.IO.Font.Otf {
             subTables.Add(t);
         }
 
+        /// <summary>Reads the sub table format3 from OpenType data.</summary>
+        /// <param name="subTableLocation">the sub table location</param>
         protected internal override void ReadSubTableFormat3(int subTableLocation) {
             int backtrackGlyphCount = openReader.rf.ReadUnsignedShort();
             int[] backtrackCoverageOffsets = openReader.ReadUShortArray(backtrackGlyphCount, subTableLocation);

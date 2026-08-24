@@ -28,6 +28,7 @@ using iText.IO.Exceptions;
 using iText.IO.Util;
 
 namespace iText.IO.Font {
+    /// <summary>Provides PDF encoding names and conversion utilities between text and encoded byte sequences.</summary>
     public class PdfEncodings {
         //-Encodings--------------------------------------------------------------------------------------------------------
         /// <summary>The Unicode encoding with horizontal writing.</summary>

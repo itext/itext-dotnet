@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 
 namespace iText.IO.Image {
+    /// <summary>Raw image data originating from a BMP image.</summary>
     public class BmpImageData : RawImageData {
         private readonly bool noHeader;
 

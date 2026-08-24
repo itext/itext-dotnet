@@ -27,7 +27,11 @@ using iText.IO.Codec;
 using iText.IO.Exceptions;
 
 namespace iText.IO.Image {
+    /// <summary>Applies PDF image attributes to raw image data.</summary>
     public sealed class RawImageHelper {
+        /// <summary>Sets filters, decoding parameters, and attributes required to embed raw image data.</summary>
+        /// <param name="image">raw image to update</param>
+        /// <param name="additional">additional attributes to retain for non-CCITT images</param>
         public static void UpdateImageAttributes(RawImageData image, IDictionary<String, Object> additional) {
             if (!image.IsRawImage()) {
                 throw new ArgumentException("Raw image expected.");
@@ -121,6 +125,22 @@ namespace iText.IO.Image {
             image.data = data;
         }
 
+        /// <summary>Updates a raw image and optional component transparency ranges.</summary>
+        /// <remarks>
+        /// Updates a raw image and optional component transparency ranges.
+        /// <para />
+        /// Bilevel grayscale input is converted to CCITT Group 4 data.
+        /// </remarks>
+        /// <param name="image">image to mutate</param>
+        /// <param name="width">image width in pixels</param>
+        /// <param name="height">image height in pixels</param>
+        /// <param name="components">number of color components</param>
+        /// <param name="bpc">bits per component</param>
+        /// <param name="data">encoded sample bytes</param>
+        /// <param name="transparency">
+        /// component-value pairs, or
+        /// <see langword="null"/>
+        /// </param>
         protected internal static void UpdateRawImageParameters(RawImageData image, int width, int height, int components
             , int bpc, byte[] data, int[] transparency) {
             if (transparency != null && transparency.Length != components * 2) {
@@ -138,6 +158,22 @@ namespace iText.IO.Image {
             }
         }
 
+        /// <summary>Updates a CCITT-compressed raw image and optional transparency range.</summary>
+        /// <param name="image">image to mutate</param>
+        /// <param name="width">image width in pixels</param>
+        /// <param name="height">image height in pixels</param>
+        /// <param name="reverseBits">
+        /// whether to reverse bits in
+        /// <paramref name="data"/>
+        /// in place
+        /// </param>
+        /// <param name="typeCCITT">CCITT compression type</param>
+        /// <param name="parameters">CCITT decoding parameters</param>
+        /// <param name="data">CCITT-compressed bytes to retain</param>
+        /// <param name="transparency">
+        /// two-value transparency range, or
+        /// <see langword="null"/>
+        /// </param>
         protected internal static void UpdateRawImageParameters(RawImageData image, int width, int height, bool reverseBits
             , int typeCCITT, int parameters, byte[] data, int[] transparency) {
             if (transparency != null && transparency.Length != 2) {
@@ -148,6 +184,18 @@ namespace iText.IO.Image {
             image.SetTransparency(transparency);
         }
 
+        /// <summary>Updates dimensions and CCITT parameters of a raw image.</summary>
+        /// <param name="image">image to mutate</param>
+        /// <param name="width">image width in pixels</param>
+        /// <param name="height">image height in pixels</param>
+        /// <param name="reverseBits">
+        /// whether to reverse bits in
+        /// <paramref name="data"/>
+        /// in place
+        /// </param>
+        /// <param name="typeCcitt">CCITT compression type</param>
+        /// <param name="parameters">CCITT decoding parameters</param>
+        /// <param name="data">CCITT-compressed bytes to retain</param>
         protected internal static void UpdateCcittImageParameters(RawImageData image, int width, int height, bool 
             reverseBits, int typeCcitt, int parameters, byte[] data) {
             if (typeCcitt != RawImageData.CCITTG4 && typeCcitt != RawImageData.CCITTG3_1D && typeCcitt != RawImageData

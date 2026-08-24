@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using iText.IO.Source;
 
 namespace iText.IO.Font.Otf {
+    /// <summary>Reads glyph classification data from an OpenType GDEF table.</summary>
     public class OpenTypeGdefTableReader {
 //\cond DO_NOT_DOCUMENT
         internal const int FLAG_IGNORE_BASE = 2;
@@ -44,11 +45,15 @@ namespace iText.IO.Font.Otf {
 
         private OtfClass markAttachmentClass;
 
+        /// <summary>Creates a new GDEF reader.</summary>
+        /// <param name="rf">the raw source</param>
+        /// <param name="tableLocation">the table location</param>
         public OpenTypeGdefTableReader(RandomAccessFileOrArray rf, int tableLocation) {
             this.rf = rf;
             this.tableLocation = tableLocation;
         }
 
+        /// <summary>Reads the GDEF table from OpenType data.</summary>
         public virtual void ReadTable() {
             if (tableLocation > 0) {
                 rf.Seek(tableLocation);
@@ -69,6 +74,20 @@ namespace iText.IO.Font.Otf {
             }
         }
 
+        /// <summary>Checks if lookup must ignore the specified glyph when processing glyph sequences.</summary>
+        /// <param name="glyph">glyph to check</param>
+        /// <param name="flag">
+        /// specifies processing options, e.g. whether to skip base glyphs, marks or
+        /// ligatures during glyph substitution or positioning. See
+        /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the specified glyph should be skipped,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public virtual bool IsSkip(int glyph, int flag) {
             if (glyphClass != null && (flag & (FLAG_IGNORE_BASE | FLAG_IGNORE_LIGATURE | FLAG_IGNORE_MARK)) != 0) {
                 int cla = glyphClass.GetOtfClass(glyph);
@@ -96,6 +115,8 @@ namespace iText.IO.Font.Otf {
             return false;
         }
 
+        /// <summary>Returns the glyph class table.</summary>
+        /// <returns>the requested result</returns>
         public virtual OtfClass GetGlyphClassTable() {
             return glyphClass;
         }

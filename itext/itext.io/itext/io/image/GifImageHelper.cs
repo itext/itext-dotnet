@@ -30,6 +30,7 @@ using iText.IO.Font;
 using iText.IO.Util;
 
 namespace iText.IO.Image {
+    /// <summary>Decodes GIF image data into image frames.</summary>
     public sealed class GifImageHelper {
 //\cond DO_NOT_DOCUMENT
         // max decoder pixel stack size
@@ -37,6 +38,8 @@ namespace iText.IO.Image {
 //\endcond
 
         private class GifParameters {
+            /// <summary>Creates a parsing context for a GIF image.</summary>
+            /// <param name="image">GIF image being decoded</param>
             public GifParameters(GifImageData image) {
                 this.image = image;
             }

@@ -35,6 +35,9 @@ namespace iText.IO.Util {
         }
 
         // Do nothing
+        /// <summary>Decodes PDF name escape sequences in a byte array.</summary>
+        /// <param name="content">the encoded PDF name bytes</param>
+        /// <returns>the decoded name</returns>
         public static String DecodeName(byte[] content) {
             StringBuilder buf = new StringBuilder();
             try {

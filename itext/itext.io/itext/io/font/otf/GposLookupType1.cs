@@ -29,6 +29,14 @@ namespace iText.IO.Font.Otf {
     public class GposLookupType1 : OpenTableLookup {
         private readonly IDictionary<int, GposValueRecord> valueRecordMap = new Dictionary<int, GposValueRecord>();
 
+        /// <summary>Creates a new GPOS Lookup Type 1.</summary>
+        /// <param name="openReader">the OpenType font reader</param>
+        /// <param name="lookupFlag">
+        /// specifies processing options, e.g. whether to skip base glyphs, marks or
+        /// ligatures during glyph substitution or positioning. See
+        /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+        /// </param>
+        /// <param name="subTableLocations">the sub table locations</param>
         public GposLookupType1(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations)
             : base(openReader, lookupFlag, subTableLocations) {
             ReadSubTables();

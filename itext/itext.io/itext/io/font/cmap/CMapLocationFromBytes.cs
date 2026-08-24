@@ -24,13 +24,19 @@ using System;
 using iText.IO.Source;
 
 namespace iText.IO.Font.Cmap {
+    /// <summary>Supplies a CMap tokenizer backed by an in-memory byte array.</summary>
     public class CMapLocationFromBytes : ICMapLocation {
         private byte[] data;
 
+        /// <summary>Creates a location backed by the provided CMap bytes.</summary>
+        /// <param name="data">the CMap source bytes; retained without copying</param>
         public CMapLocationFromBytes(byte[] data) {
             this.data = data;
         }
 
+        /// <summary>Creates a tokenizer for the retained CMap bytes.</summary>
+        /// <param name="location">ignored because this implementation has one in-memory source</param>
+        /// <returns>a new tokenizer over the retained bytes</returns>
         public virtual PdfTokenizer GetLocation(String location) {
             return new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(data)));
         }

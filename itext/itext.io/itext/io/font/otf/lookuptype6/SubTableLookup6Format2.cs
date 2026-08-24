@@ -27,16 +27,27 @@ using iText.IO.Font.Otf;
 namespace iText.IO.Font.Otf.Lookuptype6 {
     /// <summary>Chaining Contextual Substitution Subtable: Class-based Chaining Context Glyph Substitution</summary>
     public class SubTableLookup6Format2 : ChainingContextualTable<ContextualSubstRule> {
-        private ICollection<int> substCoverageGlyphIds;
+        private readonly ICollection<int> substCoverageGlyphIds;
+
+        private readonly OtfClass backtrackClassDefinition;
+
+        private readonly OtfClass inputClassDefinition;
+
+        private readonly OtfClass lookaheadClassDefinition;
 
         private IList<IList<ContextualSubstRule>> subClassSets;
 
-        private OtfClass backtrackClassDefinition;
-
-        private OtfClass inputClassDefinition;
-
-        private OtfClass lookaheadClassDefinition;
-
+        /// <summary>Creates a new Chaining Contextual Substitution Subtable.</summary>
+        /// <param name="openReader">the OpenType font reader</param>
+        /// <param name="lookupFlag">
+        /// specifies processing options, e.g. whether to skip base glyphs, marks or
+        /// ligatures during glyph substitution or positioning. See
+        /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+        /// </param>
+        /// <param name="substCoverageGlyphIds">the substitution coverage glyph ids</param>
+        /// <param name="backtrackClassDefinition">the backtrack class definition</param>
+        /// <param name="inputClassDefinition">the input class definition</param>
+        /// <param name="lookaheadClassDefinition">the lookahead class definition</param>
         public SubTableLookup6Format2(OpenTypeFontTableReader openReader, int lookupFlag, ICollection<int> substCoverageGlyphIds
             , OtfClass backtrackClassDefinition, OtfClass inputClassDefinition, OtfClass lookaheadClassDefinition)
             : base(openReader, lookupFlag) {
@@ -46,6 +57,8 @@ namespace iText.IO.Font.Otf.Lookuptype6 {
             this.lookaheadClassDefinition = lookaheadClassDefinition;
         }
 
+        /// <summary>Updates the substitution class sets.</summary>
+        /// <param name="subClassSets">the substitution class sets</param>
         public virtual void SetSubClassSets(IList<IList<ContextualSubstRule>> subClassSets) {
             this.subClassSets = subClassSets;
         }
@@ -58,19 +71,26 @@ namespace iText.IO.Font.Otf.Lookuptype6 {
             return JavaCollectionsUtil.EmptyList<ContextualSubstRule>();
         }
 
+        /// <summary>Represents the substitution rule format2 of an OpenType font.</summary>
         public class SubstRuleFormat2 : ContextualSubstRule {
             // inputClassIds array omits the first class in the sequence,
             // the first class is defined by corresponding index of subClassSet array
-            private int[] backtrackClassIds;
+            private readonly int[] backtrackClassIds;
 
-            private int[] inputClassIds;
+            private readonly int[] inputClassIds;
 
-            private int[] lookAheadClassIds;
+            private readonly int[] lookAheadClassIds;
 
-            private SubstLookupRecord[] substLookupRecords;
+            private readonly SubstLookupRecord[] substLookupRecords;
 
-            private SubTableLookup6Format2 subTable;
+            private readonly SubTableLookup6Format2 subTable;
 
+            /// <summary>Creates a new substitution rule format2.</summary>
+            /// <param name="subTable">the substitution table</param>
+            /// <param name="backtrackClassIds">the backtrack class ids</param>
+            /// <param name="inputClassIds">the input class ids</param>
+            /// <param name="lookAheadClassIds">the look ahead class ids</param>
+            /// <param name="substLookupRecords">the substitution lookup records</param>
             public SubstRuleFormat2(SubTableLookup6Format2 subTable, int[] backtrackClassIds, int[] inputClassIds, int
                 [] lookAheadClassIds, SubstLookupRecord[] substLookupRecords) {
                 this.subTable = subTable;

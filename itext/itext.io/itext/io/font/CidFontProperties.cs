@@ -29,6 +29,7 @@ using iText.IO.Font.Constants;
 using iText.IO.Util;
 
 namespace iText.IO.Font {
+    /// <summary>Loads properties and CMap compatibility metadata for CID fonts.</summary>
     public class CidFontProperties {
         private static readonly IDictionary<String, IDictionary<String, Object>> allFonts = new Dictionary<String, 
             IDictionary<String, Object>>();
@@ -47,13 +48,13 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <summary>Checks if its a valid CJKFont font.</summary>
-        /// <param name="fontName">the font name.</param>
-        /// <param name="enc">the encoding.</param>
+        /// <summary>Checks if it's a valid CJKFont font.</summary>
+        /// <param name="fontName">the font name</param>
+        /// <param name="enc">the encoding</param>
         /// <returns>
         /// 
         /// <see langword="true"/>
-        /// if it is CJKFont.
+        /// if it is CJKFont
         /// </returns>
         public static bool IsCidFont(String fontName, String enc) {
             if (!registryNames.ContainsKey("fonts")) {
@@ -70,6 +71,13 @@ namespace iText.IO.Font {
             return encodings != null && encodings.Contains(enc);
         }
 
+        /// <summary>Finds a CID font compatible with an encoding.</summary>
+        /// <param name="enc">the CMap encoding name</param>
+        /// <returns>
+        /// a compatible font name, or
+        /// <see langword="null"/>
+        /// when none is available
+        /// </returns>
         public static String GetCompatibleFont(String enc) {
             foreach (KeyValuePair<String, ICollection<String>> e in registryNames) {
                 if (e.Value.Contains(enc)) {
@@ -84,10 +92,14 @@ namespace iText.IO.Font {
             return null;
         }
 
+        /// <summary>Returns loaded font properties.</summary>
+        /// <returns>the map of font properties</returns>
         public static IDictionary<String, IDictionary<String, Object>> GetAllFonts() {
             return allFonts;
         }
 
+        /// <summary>Returns loaded CID registry metadata.</summary>
+        /// <returns>the map of registry names and values</returns>
         public static IDictionary<String, ICollection<String>> GetRegistryNames() {
             return registryNames;
         }
