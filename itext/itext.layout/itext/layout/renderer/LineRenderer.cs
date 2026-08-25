@@ -425,13 +425,14 @@ namespace iText.Layout.Renderer {
                 bool shouldBreakLayoutingOnTextRenderer = shouldBreakLayouting && childResult is TextLayoutResult;
                 bool forceOverflowForTextRendererPartialResult = false;
                 if (shouldBreakLayoutingOnTextRenderer) {
-                    bool isWordHasBeenSplitLayoutRenderingMode = ((TextLayoutResult)childResult).IsWordHasBeenSplit() && RenderingMode
-                        .HTML_MODE != childRenderingMode && directChildRenderer is TextRenderer && !((TextRenderer)directChildRenderer
-                        ).TextContainsSpecialScriptGlyphs(true);
+                    bool isWordHasBeenSplitLayoutRenderingMode = ((TextLayoutResult)childResult).IsWordHasBeenSplit() && (RenderingMode
+                        .HTML_MODE != childRenderingMode || isVerticalWriting) && directChildRenderer is TextRenderer && !((TextRenderer
+                        )directChildRenderer).TextContainsSpecialScriptGlyphs(true);
                     bool enableSpecialScriptsWrapping = childRenderer is TextRenderer && !textSequenceOverflowXProcessing && !
                         newLineOccurred && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(true);
-                    bool enableTextSequenceWrapping = (RenderingMode.HTML_MODE == childRenderingMode || (directChildRenderer is
-                         FootnoteAnchorRenderer && childRenderer is TextRenderer)) && !newLineOccurred && !textSequenceOverflowXProcessing;
+                    bool enableTextSequenceWrapping = ((RenderingMode.HTML_MODE == childRenderingMode && !isVerticalWriting) ||
+                         (directChildRenderer is FootnoteAnchorRenderer && childRenderer is TextRenderer)) && !newLineOccurred
+                         && !textSequenceOverflowXProcessing;
                     if (isWordHasBeenSplitLayoutRenderingMode) {
                         forceOverflowForTextRendererPartialResult = IsForceOverflowForTextRendererPartialResult(childRenderer, wasXOverflowChanged
                             , oldXOverflow, layoutContext, layoutBox, wasParentsHeightClipped);
@@ -542,8 +543,10 @@ namespace iText.Layout.Renderer {
                         if (isVerticalWriting) {
                             float maxLineWidth = Math.Max(occupiedArea.GetBBox().GetWidth(), childResult.GetOccupiedArea().GetBBox().GetWidth
                                 ());
+                            // Html/css and browsers also use line height as line width for vertical text.
+                            float lineHeight = maxAscent - maxDescent;
                             occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox.GetHeight() - curMainAxisOccupiedSize
-                                , maxLineWidth, curMainAxisOccupiedSize));
+                                , Math.Max(lineHeight, maxLineWidth), curMainAxisOccupiedSize));
                         }
                         else {
                             occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox.GetHeight() - maxHeight, 
@@ -691,8 +694,13 @@ namespace iText.Layout.Renderer {
                 }
             }
             if (anythingPlaced || floatsPlacedInLine) {
-                toProcess.AdjustChildrenYLine().TrimLast();
-                toProcess.AdjustChildrenXLine();
+                if (isVerticalWriting) {
+                    toProcess.AdjustChildrenXLineVerticalWritingMode();
+                }
+                else {
+                    toProcess.AdjustChildrenYLine().AdjustChildrenXLine();
+                }
+                toProcess.TrimLast();
                 result.SetMinMaxWidth(minMaxWidth);
             }
             if (wasXOverflowChanged) {
@@ -883,24 +891,22 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual LineRenderer AdjustChildrenYLine() {
-            if (!IsVerticalWriting()) {
-                if (RenderingMode.HTML_MODE == this.GetProperty<RenderingMode?>(Property.RENDERING_MODE) && HasInlineBlocksWithVerticalAlignment
-                    ()) {
-                    InlineVerticalAlignmentHelper.AdjustChildrenYLineHtmlMode(this);
-                }
-                else {
-                    AdjustChildrenYLineDefaultMode();
-                }
+            if (RenderingMode.HTML_MODE == this.GetProperty<RenderingMode?>(Property.RENDERING_MODE) && HasInlineBlocksWithVerticalAlignment
+                ()) {
+                InlineVerticalAlignmentHelper.AdjustChildrenYLineHtmlMode(this);
+            }
+            else {
+                AdjustChildrenYLineDefaultMode();
             }
             return this;
         }
 
-        protected internal virtual void ApplyLeading(float deltaY) {
-            occupiedArea.GetBBox().MoveUp(deltaY);
-            occupiedArea.GetBBox().DecreaseHeight(deltaY);
+        protected internal virtual void ApplyLeading(float delta) {
+            occupiedArea.GetBBox().MoveUp(delta);
+            occupiedArea.GetBBox().DecreaseHeight(delta);
             foreach (IRenderer child in GetChildRenderers()) {
                 if (!FloatingHelper.IsRendererFloating(child)) {
-                    child.Move(0, deltaY);
+                    child.Move(0, delta);
                 }
             }
         }
@@ -1713,6 +1719,21 @@ namespace iText.Layout.Renderer {
                 }
             }
             return false;
+        }
+
+        private void AdjustChildrenXLineVerticalWritingMode() {
+            float lineWidth = (float)GetOccupiedArea().GetBBox().GetWidth();
+            foreach (IRenderer renderer in GetChildRenderers()) {
+                IRenderer unwrapped = UnwrapChildRendererIfNeeded(renderer);
+                if (unwrapped is TextRenderer) {
+                    TextRenderer textRenderer = (TextRenderer)unwrapped;
+                    float textChunkWidth = textRenderer.GetOccupiedArea().GetBBox().GetWidth();
+                    textRenderer.Move((lineWidth - textChunkWidth) / 2, 0);
+                }
+            }
+            if (HasInlineBlocksWithVerticalAlignment()) {
+                InlineVerticalAlignmentHelper.AdjustChildrenXLineVerticalText(this);
+            }
         }
 
         private void AdjustChildrenXLine() {

@@ -73,6 +73,7 @@ namespace iText.Layout {
                 , LoadCjkFont(NOTO_SANS_KR), 20).BackgroundColor(ColorConstants.LIGHT_GRAY);
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     document.Add(BuildParagraph(true, chineseSpec, japaneseSpec, koreanSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(false, chineseSpec, japaneseSpec, koreanSpec));
@@ -98,6 +99,7 @@ namespace iText.Layout {
                 , PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 20).BackgroundColor(ColorConstants.CYAN);
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     document.Add(BuildParagraph(true, chineseSpec, latinSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(false, chineseSpec, latinSpec));
@@ -121,6 +123,7 @@ namespace iText.Layout {
                 , LoadCjkFont(NOTO_SANS_SC), 22).BackgroundColor(ColorConstants.CYAN);
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     document.Add(BuildParagraph(true, mongolianSpec, chineseSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(false, mongolianSpec, chineseSpec));
@@ -149,6 +152,7 @@ namespace iText.Layout {
                 , LoadCjkFont(NOTO_SANS_MONGOLIAN), 30);
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     document.Add(BuildParagraph(true, chineseSpec, japaneseSpec, koreanSpec, mongolianSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(false, chineseSpec, japaneseSpec, koreanSpec, mongolianSpec));
@@ -176,6 +180,7 @@ namespace iText.Layout {
                 LoadCjkFont(NOTO_SANS_SC), 36).BackgroundColor(ColorConstants.LIGHT_GRAY);
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     document.Add(BuildParagraph(true, smallSpec, mediumSpec, largeSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(false, smallSpec, mediumSpec, largeSpec));
@@ -200,6 +205,7 @@ namespace iText.Layout {
                 "繁體：漢字 國", LoadCjkFont(NOTO_SANS_TC), 20).BackgroundColor(ColorConstants.CYAN);
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     document.Add(BuildParagraph(true, simplifiedSpec, traditionalSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(false, simplifiedSpec, traditionalSpec));

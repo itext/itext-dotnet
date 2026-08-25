@@ -252,8 +252,7 @@ namespace iText.Layout.Renderer {
                     () > 0;
                 bool isFit = processedRenderer != null;
                 float deltaY = 0;
-                if (isFit && this.GetProperty<RenderingMode?>(Property.RENDERING_MODE) != RenderingMode.HTML_MODE && !isVerticalWriting
-                    ) {
+                if (isFit && this.GetProperty<RenderingMode?>(Property.RENDERING_MODE) != RenderingMode.HTML_MODE) {
                     if (lineHasContent) {
                         float indentFromLastLine = previousDescent - lastLineBottomLeadingIndent - (leading != null ? processedRenderer
                             .GetTopLeadingIndent(leading) : 0) - processedRenderer.GetMaxAscent();
@@ -389,9 +388,7 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     if (leading != null) {
-                        if (!isVerticalWriting) {
-                            processedRenderer.ApplyLeading(deltaY);
-                        }
+                        processedRenderer.ApplyLeading(deltaY);
                         if (lineHasContent) {
                             lastYLine = processedRenderer.GetYLine();
                         }
@@ -399,14 +396,17 @@ namespace iText.Layout.Renderer {
                     if (lineHasContent) {
                         occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), processedRenderer.GetOccupiedArea
                             ().GetBBox()));
-                        FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
+                        // TODO DEVSIX-10163 Support overflow and wrapping properties for vertical text
+                        if (!isVerticalWriting) {
+                            FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
+                        }
                     }
                     firstLineInBox = false;
                     if (isVerticalWriting) {
-                        // TODO DEVSIX-10137 Distance between lines is currently equal to two line widths.
+                        // No distance between lines.
                         float lineWidth = processedRenderer.GetOccupiedArea().GetBBox().GetWidth();
-                        layoutBox.SetX(processedRenderer.GetOccupiedArea().GetBBox().GetX() + (lineWidth * 2));
-                        layoutBox.SetWidth(layoutBox.GetWidth() - (lineWidth * 2));
+                        layoutBox.SetX(processedRenderer.GetOccupiedArea().GetBBox().GetX() + lineWidth);
+                        layoutBox.SetWidth(layoutBox.GetWidth() - lineWidth);
                     }
                     else {
                         layoutBox.SetHeight(processedRenderer.GetOccupiedArea().GetBBox().GetY() - layoutBox.GetY());
@@ -429,6 +429,9 @@ namespace iText.Layout.Renderer {
                 }
                 occupiedArea.GetBBox().MoveDown(moveDown);
                 occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + moveDown);
+            }
+            if (isVerticalWriting) {
+                occupiedArea.GetBBox().SetWidth(occupiedArea.GetBBox().GetWidth() - layoutBox.GetWidth());
             }
             if (marginsCollapsingEnabled && !childRenderers.IsEmpty() && notAllKidsAreFloats) {
                 marginsCollapseHandler.EndChildMarginsHandling(layoutBox);

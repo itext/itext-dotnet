@@ -870,7 +870,7 @@ namespace iText.Layout {
         /// See
         /// <see cref="ElementPropertyContainer{T}.SetUnderline(iText.Kernel.Colors.Color, float, float, float, float, int)
         ///     "/>
-        /// for more fine tuning.
+        /// for more fine-tuning.
         /// </remarks>
         /// <returns>this element</returns>
         public virtual T SetLineThrough() {

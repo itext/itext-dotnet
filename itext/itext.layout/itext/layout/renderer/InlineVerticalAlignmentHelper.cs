@@ -54,6 +54,40 @@ namespace iText.Layout.Renderer {
                 (alignment), (alignment) => true);
         }
 
+//\cond DO_NOT_DOCUMENT
+        internal static void AdjustChildrenXLineVerticalText(LineRenderer lineRenderer) {
+            float baseline = lineRenderer.occupiedArea.GetBBox().GetX() + lineRenderer.occupiedArea.GetBBox().GetWidth
+                () / 2;
+            float[] fontInfo = LineHeightHelper.GetActualFontInfo(lineRenderer);
+            float fontWidth = fontInfo[LineHeightHelper.ASCENDER_INDEX] - fontInfo[LineHeightHelper.DESCENDER_INDEX] -
+                 fontInfo[LineHeightHelper.LEADING_INDEX];
+            float textLeft = baseline - fontWidth / 2;
+            float textRight = baseline + fontWidth / 2;
+            float maxRight = float.Epsilon;
+            float minLeft = float.MaxValue;
+            foreach (IRenderer renderer in lineRenderer.GetChildRenderers()) {
+                if (FloatingHelper.IsRendererFloating(renderer)) {
+                    continue;
+                }
+                InlineVerticalAlignment alignment = renderer.GetProperty<InlineVerticalAlignment>(Property.INLINE_VERTICAL_ALIGNMENT
+                    );
+                if (alignment == null) {
+                    alignment = new InlineVerticalAlignment();
+                }
+                Rectangle childBBox = GetAdjustedArea(renderer);
+                Rectangle parentBBox = lineRenderer.occupiedArea.GetBBox().Clone();
+                float offset = CalculateOffsetVerticalText(childBBox, alignment, parentBBox, textLeft, textRight);
+                if (Math.Abs(offset) > ADJUSTMENT_THRESHOLD) {
+                    renderer.Move(offset, 0);
+                }
+                Rectangle cBbox = GetAdjustedArea(renderer);
+                maxRight = Math.Max(maxRight, cBbox.GetRight());
+                minLeft = Math.Min(minLeft, cBbox.GetLeft());
+            }
+            AdjustBBoxVertical(lineRenderer, maxRight, minLeft);
+        }
+//\endcond
+
         private static bool IsBoxOrientedVerticalAlignment(InlineVerticalAlignment alignment) {
             return alignment.GetType() == InlineVerticalAlignmentType.TOP || alignment.GetType() == InlineVerticalAlignmentType
                 .BOTTOM;
@@ -117,6 +151,66 @@ namespace iText.Layout.Renderer {
                 ar.ApplyPaddings(rect, false);
             }
             return rect;
+        }
+
+        private static float CalculateOffsetVerticalText(Rectangle cBBox, InlineVerticalAlignment alignment, Rectangle
+             pBBox, float textLeft, float textRight) {
+            switch (alignment.GetType()) {
+                case InlineVerticalAlignmentType.TEXT_TOP: {
+                    return textRight - cBBox.GetRight();
+                }
+
+                case InlineVerticalAlignmentType.TEXT_BOTTOM: {
+                    return textLeft - cBBox.GetLeft();
+                }
+
+                case InlineVerticalAlignmentType.FIXED: {
+                    return alignment.GetValue();
+                }
+
+                case InlineVerticalAlignmentType.SUPER:
+                case InlineVerticalAlignmentType.SUB:
+                case InlineVerticalAlignmentType.FRACTION: {
+                    float offsetFraction = 0;
+                    if (alignment.GetType() == InlineVerticalAlignmentType.SUPER) {
+                        offsetFraction = SUPER_OFFSET;
+                    }
+                    else {
+                        if (alignment.GetType() == InlineVerticalAlignmentType.SUB) {
+                            offsetFraction = SUB_OFFSET;
+                        }
+                        else {
+                            offsetFraction = alignment.GetValue();
+                        }
+                    }
+                    return pBBox.GetWidth() * offsetFraction;
+                }
+
+                case InlineVerticalAlignmentType.BOTTOM: {
+                    return pBBox.GetLeft() - cBBox.GetLeft();
+                }
+
+                case InlineVerticalAlignmentType.TOP: {
+                    return pBBox.GetRight() - cBBox.GetRight();
+                }
+
+                case InlineVerticalAlignmentType.BASELINE:
+                case InlineVerticalAlignmentType.MIDDLE:
+                default: {
+                    return 0;
+                }
+            }
+        }
+
+        private static void AdjustBBoxVertical(LineRenderer lineRenderer, float maxRight, float minLeft) {
+            float originalRight = lineRenderer.occupiedArea.GetBBox().GetRight();
+            float originalLeft = lineRenderer.occupiedArea.GetBBox().GetLeft();
+            float deltaRight = maxRight > originalRight ? maxRight - originalRight : 0;
+            float deltaLeft = minLeft < originalLeft ? originalLeft - minLeft : 0;
+            lineRenderer.occupiedArea.GetBBox().IncreaseWidth(deltaRight + deltaLeft);
+            foreach (IRenderer renderer in lineRenderer.GetChildRenderers()) {
+                renderer.Move(deltaLeft, 0);
+            }
         }
 
         private static void AdjustBBox(LineRenderer lineRenderer, float maxHeight, float maxTop, float minBottom) {

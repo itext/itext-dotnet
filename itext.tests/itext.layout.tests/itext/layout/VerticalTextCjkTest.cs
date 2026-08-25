@@ -72,6 +72,7 @@ namespace iText.Layout {
                 (NOTO_SANS_SC), 24);
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     document.Add(BuildParagraph(true, spec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(false, spec));
@@ -94,6 +95,7 @@ namespace iText.Layout {
                 , LoadCjkFont(NOTO_SANS_JP), 24);
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     document.Add(BuildParagraph(true, spec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(false, spec));
@@ -118,6 +120,7 @@ namespace iText.Layout {
                 LoadCjkFont(NOTO_SANS_KR), 24);
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     document.Add(BuildParagraph(true, spec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(false, spec));
@@ -140,6 +143,7 @@ namespace iText.Layout {
                 (NOTO_SANS_MONGOLIAN), 24);
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     document.Add(BuildParagraph(true, spec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(false, spec));
@@ -161,6 +165,7 @@ namespace iText.Layout {
                 , LoadCjkFont(NOTO_SANS_JP), 24);
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     document.Add(BuildParagraph(true, spec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(false, spec));
@@ -184,6 +189,7 @@ namespace iText.Layout {
                 , LoadCjkFont(NOTO_SANS_JP), 20);
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     document.Add(BuildParagraph(true, spec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(false, spec));
@@ -211,6 +217,7 @@ namespace iText.Layout {
                 ), 24).BackgroundColor(ColorConstants.CYAN);
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     document.Add(BuildParagraph(true, sansSpec));
                     document.Add(BuildParagraph(true, serifSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
@@ -234,6 +241,7 @@ namespace iText.Layout {
                 , 20).BackgroundColor(ColorConstants.LIGHT_GRAY);
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     Paragraph verticalParagraph = BuildParagraph(true, spec);
                     verticalParagraph.SetHeight(150);
                     document.Add(verticalParagraph);
@@ -262,6 +270,7 @@ namespace iText.Layout {
                 1, .75F, 0, 0, 1 / 2F, PdfCanvasConstants.LineCapStyle.BUTT));
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     document.Add(BuildParagraph(true, underlinedSpec, strikethroughSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(false, underlinedSpec, strikethroughSpec));
@@ -287,6 +296,7 @@ namespace iText.Layout {
                 ), 24).BackgroundColor(ColorConstants.LIGHT_GRAY);
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     document.Add(BuildParagraph(true, regularSpec, simulatedBoldItalicSpec, realBoldSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(false, regularSpec, simulatedBoldItalicSpec, realBoldSpec));
@@ -312,6 +322,7 @@ namespace iText.Layout {
                 (NOTO_SANS_SC), 24).BackgroundColor(ColorConstants.CYAN);
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     document.Add(BuildParagraph(true, ideographicSpec));
                     document.Add(BuildParagraph(true, regularSpaceSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
@@ -336,6 +347,7 @@ namespace iText.Layout {
                 (NOTO_SANS_SC), 20).BackgroundColor(ColorConstants.CYAN);
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     document.Add(BuildParagraph(true, defaultLeadingSpec));
                     Paragraph customLeadingVertical = BuildParagraph(true, customLeadingSpec);
                     customLeadingVertical.SetMultipliedLeading(2.5F);
@@ -363,6 +375,7 @@ namespace iText.Layout {
                 (NOTO_SANS_SC), 20);
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     document.Add(BuildParagraph(true, spec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(false, spec));

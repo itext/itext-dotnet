@@ -42,6 +42,9 @@ namespace iText.Layout {
 
         private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/VerticalTextTest/";
 
+        private static readonly String EXPANDED_FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/BioRhymeExpanded-Regular.ttf";
+
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
@@ -52,8 +55,9 @@ namespace iText.Layout {
             String fileName = "basicVerticalText";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     Paragraph paragraph = new Paragraph();
                     paragraph.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
                     paragraph.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
@@ -70,8 +74,9 @@ namespace iText.Layout {
             String fileName = "verticalTextDifferentFontsInParagraph";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     Paragraph paragraph = new Paragraph();
                     paragraph.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
                     paragraph.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
@@ -97,8 +102,9 @@ namespace iText.Layout {
             String fileName = "verticalTextDifferentFontsInLineTest";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     Paragraph paragraph = new Paragraph();
                     paragraph.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
                     paragraph.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
@@ -132,8 +138,9 @@ namespace iText.Layout {
             String fileName = "severalTextChunksVerticalText";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     Paragraph paragraph = new Paragraph();
                     paragraph.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
                     paragraph.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
@@ -152,13 +159,14 @@ namespace iText.Layout {
             String fileName = "longVerticalText";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     Paragraph paragraph = new Paragraph();
                     paragraph.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
                     paragraph.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
-                    paragraph.Add(new Text("some long vertical text to trigger multiple line breaks. Font size will be also increased to make it easier."
-                        ));
+                    paragraph.Add(new Text("some long vertical text to trigger multiple line breaks. Font size will be also " 
+                        + "increased to make it easier."));
                     paragraph.SetFontSize(25);
                     document.Add(paragraph);
                 }
@@ -172,12 +180,13 @@ namespace iText.Layout {
             String fileName = "longVerticalTextWithLineBreaks";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     Paragraph paragraph = new Paragraph();
                     paragraph.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
                     paragraph.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
-                    paragraph.Add(new Text("some long vertical text\nto trigger multiple line breaks.\nFont size will be also increased\nto make it easier."
+                    paragraph.Add(new Text("some long vertical text\nto trigger multiple line breaks.\nFont size will be " + "also increased\nto make it easier."
                         ));
                     paragraph.SetFontSize(25);
                     paragraph.SetBorder(new SolidBorder(1));
@@ -193,14 +202,15 @@ namespace iText.Layout {
             String fileName = "longVerticalTextWithPageBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     Paragraph paragraph = new Paragraph();
                     paragraph.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
                     paragraph.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
-                    paragraph.Add(new Text("some long vertical\ntext to trigger multiple line breaks.\nFont size will be also increased to make it easier.\n"
+                    paragraph.Add(new Text("some long vertical\ntext to trigger multiple line breaks.\nFont size will be " + "also increased to make it easier.\n"
                         ));
-                    paragraph.Add(new Text("Additional chunk of text,\n to trigger page break.\nFont size increased even further."
+                    paragraph.Add(new Text("Additional chunk of text,\n to trigger page break.\n" + "Font size increased even further."
                         ));
                     paragraph.SetFontSize(35);
                     paragraph.SetBorder(new SolidBorder(1));
@@ -216,16 +226,17 @@ namespace iText.Layout {
             String fileName = "verticalTextWithStyleAdjustments";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    document.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    document.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
                     Paragraph paragraph = new Paragraph();
-                    paragraph.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
-                    paragraph.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
                     Text text = new Text("some text");
                     text.SetProperty(Property.ITALIC_SIMULATION, true);
                     text.SetProperty(Property.BOLD_SIMULATION, true);
                     text.SetProperty(Property.UNDERLINE, JavaCollectionsUtil.SingletonList(new Underline(ColorConstants.RED, 1
-                        , .75F, 0, 0, 1 / 4F, PdfCanvasConstants.LineCapStyle.BUTT)));
+                        , .75F, 0, 0, 1 / 2F, PdfCanvasConstants.LineCapStyle.BUTT)));
                     text.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
                     paragraph.Add(text);
                     paragraph.Add(new Text("Normal some text\nsome text").SetBackgroundColor(ColorConstants.LIGHT_GRAY));
@@ -242,8 +253,9 @@ namespace iText.Layout {
             String fileName = "verticalTextAndHorizontalText";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     Paragraph paragraph = new Paragraph();
                     paragraph.SetBorder(new SolidBorder(ColorConstants.BLACK, 2));
                     Text verticalText = new Text("vertical text.");
@@ -264,8 +276,9 @@ namespace iText.Layout {
             String fileName = "verticalTextWithLongWords";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     document.Add(new Paragraph("Long word, first line and first word:"));
                     Paragraph paragraph = new Paragraph();
                     paragraph.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
@@ -313,8 +326,9 @@ namespace iText.Layout {
             String fileName = "verticalTextWithMaxHeightParagraph";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     Paragraph paragraph = new Paragraph();
                     paragraph.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
                     paragraph.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
@@ -341,11 +355,10 @@ namespace iText.Layout {
             String fileName = "verticalTextSpaceTrimming";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     Text normalText = new Text("Normal\ntext").SetBackgroundColor(ColorConstants.CYAN);
-                    // TODO DEVSIX-10137 double line break is ignored,
-                    //  although it's suppose to create a separate line without any content.
                     Text whitespacesRiddenText = new Text("     Hello     \n \n World    \n        \n  ").SetBackgroundColor(ColorConstants
                         .LIGHT_GRAY);
                     Text threeMSpaceWrappedText = new Text(" MMM ").SetBackgroundColor(ColorConstants.LIGHT_GRAY);
@@ -394,73 +407,59 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        public virtual void LineTroughWithTextRiseTest() {
-            //TODO DEVSIX-10137 :Support baselining and line width for vertical drawing
-            String outFileName = DESTINATION_FOLDER + "lineTroughWithTextRise.pdf";
-            String cmpFileName = SOURCE_FOLDER + "cmp_lineTroughWithTextRise.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
-            Document document = new Document(pdfDocument);
-            Text textUp = new Text("textRise10f_with_lineThrough");
-            textUp.SetTextRise(-10f);
-            textUp.SetLineThrough();
-            textUp.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
-            textUp.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
-            Text textDown = new Text("textRise-10f_with_lineThrough");
-            textDown.SetTextRise(-10f);
-            textDown.SetLineThrough();
-            textDown.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
-            textDown.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
-            Paragraph n = new Paragraph("baseline");
-            n.Add(textUp).Add(textDown);
-            n.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
-            n.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
-            document.Add(n);
-            document.Close();
+        public virtual void LineThroughWithTextRiseTest() {
+            // TODO DEVSIX-10180 Support text rise in html mode for vertical text
+            String outFileName = DESTINATION_FOLDER + "lineThroughWithTextRise.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_lineThroughWithTextRise.pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    Text textUp = new Text("textRise10f_with_lineThrough");
+                    textUp.SetTextRise(-10f);
+                    textUp.SetLineThrough();
+                    textUp.SetFontColor(ColorConstants.GREEN);
+                    Text textDown = new Text("textRise-10f_with_lineThrough");
+                    textDown.SetTextRise(-10f);
+                    textDown.SetLineThrough();
+                    textDown.SetFontColor(ColorConstants.RED);
+                    Paragraph n = new Paragraph("baseline");
+                    n.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    n.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    n.Add(textUp).Add(textDown);
+                    document.Add(n);
+                }
+            }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff_"));
         }
 
         [NUnit.Framework.Test]
         public virtual void UnderlineTest() {
-            //TODO DEVSIX-10137 :Support line width for vertical drawing should
-            // fix issue for the last part of pages 2 and 3.
             String outFileName = DESTINATION_FOLDER + "underline.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_underline.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    Paragraph p = new Paragraph("Yellow text with pink stroked dashed underline.").SetFontSize(45).SetFontColor
-                        (ColorConstants.YELLOW);
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    document.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    document.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
                     Underline underline = new Underline(null, 0, 0.1f, 0, -0.1f, PdfCanvasConstants.LineCapStyle.BUTT).SetStrokeWidth
                         (2).SetStrokeColor(new TransparentColor(ColorConstants.PINK, 0.5f)).SetDashPattern(new float[] { 5, 5, 
                         10, 5 }, 5);
-                    p.SetUnderline(underline);
-                    p.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
-                    p.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    Paragraph p = new Paragraph("Yellow text with pink stroked dashed underline.").SetFontSize(45).SetFontColor
+                        (ColorConstants.YELLOW).SetUnderline(underline);
                     TransparentColor strokeColor = new TransparentColor(ColorConstants.GREEN, 0.5f);
-                    Paragraph p2 = new Paragraph("Text with line-through and default underline.").SetFontSize(50).SetStrokeWidth
-                        (1).SetFontColor(ColorConstants.DARK_GRAY).SetStrokeColor(strokeColor);
                     Underline underline2 = new Underline(ColorConstants.DARK_GRAY, 0, 0.1f, 0, 0.3f, PdfCanvasConstants.LineCapStyle
                         .BUTT).SetStrokeWidth(1).SetStrokeColor(strokeColor);
-                    p2.SetUnderline(underline2);
-                    p2.SetUnderline();
-                    p2.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
-                    p2.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    Paragraph p2 = new Paragraph("Text with line-through and default underline.").SetFontSize(50).SetStrokeWidth
+                        (1).SetFontColor(ColorConstants.DARK_GRAY).SetStrokeColor(strokeColor).SetUnderline(underline2).SetUnderline
+                        ();
                     Underline underline3 = new Underline(null, 0, 0.1f, 0, 0.9f, PdfCanvasConstants.LineCapStyle.BUTT);
                     Paragraph p3 = new Paragraph("Text with null font color and default overline.").SetFontSize(50).SetFontColor
-                        ((TransparentColor)null);
-                    p3.SetUnderline(underline3);
-                    p3.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
-                    p3.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
-                    //This line should be around the middle of the text compared to horizontal text.
+                        ((TransparentColor)null).SetUnderline(underline3);
+                    // This line should be around the middle of the text compared to horizontal text.
                     Underline underline4 = new Underline(null, 0, 0.1f, 15, 0f, PdfCanvasConstants.LineCapStyle.BUTT);
-                    Paragraph p4 = new Paragraph("Text with custom yPosition (15).").SetFontSize(50);
-                    p4.SetUnderline(underline4);
-                    p4.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
-                    p4.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
-                    document.Add(p);
-                    document.Add(p2);
-                    document.Add(p3);
-                    document.Add(p4);
+                    Paragraph p4 = new Paragraph("Text with custom yPosition (15).").SetFontSize(50).SetUnderline(underline4);
+                    document.Add(p).Add(p2).Add(p3).Add(p4);
                 }
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
@@ -471,35 +470,295 @@ namespace iText.Layout {
         public virtual void FontStyleSimulationTest01() {
             String outFileName = DESTINATION_FOLDER + "fontStyleSimulationTest01.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_fontStyleSimulationTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
-            Document document = new Document(pdfDocument);
-            Paragraph p = new Paragraph("I'm underlined").SetUnderline();
-            p.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
-            p.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
-            document.Add(p);
-            p = new Paragraph("I'm strikethrough").SetLineThrough();
-            p.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
-            p.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
-            document.Add(p);
-            p = new Paragraph(new Text("I'm a bold simulation font").SetBackgroundColor(ColorConstants.GREEN)).SimulateBold
-                ();
-            p.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
-            p.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
-            document.Add(p);
-            p = new Paragraph(new Text("I'm an italic simulation font").SetBackgroundColor(ColorConstants.GREEN)).SimulateItalic
-                ();
-            p.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
-            p.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
-            document.Add(p);
-            p = new Paragraph(new Text("I'm a super bold italic underlined linethrough piece of text and no one can be better than me, even if "
-                 + "such a long description will cause me to occupy two lines").SetBackgroundColor(ColorConstants.GREEN
-                )).SimulateItalic().SimulateBold().SetUnderline().SetLineThrough();
-            p.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
-            p.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
-            document.Add(p);
-            document.Close();
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    document.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    document.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    Paragraph p = new Paragraph("I'm underlined").SetUnderline();
+                    document.Add(p);
+                    p = new Paragraph("I'm strikethrough").SetLineThrough();
+                    document.Add(p);
+                    p = new Paragraph(new Text("I'm a bold simulation font").SetBackgroundColor(ColorConstants.GREEN)).SimulateBold
+                        ();
+                    document.Add(p);
+                    p = new Paragraph(new Text("I'm an italic simulation font").SetBackgroundColor(ColorConstants.GREEN)).SimulateItalic
+                        ();
+                    document.Add(p);
+                    p = new Paragraph(new Text("I'm a super bold italic underlined linethrough piece of text and no one " + "can be better than me, even if such a long description will cause me to occupy two lines"
+                        ).SetBackgroundColor(ColorConstants.GREEN)).SimulateItalic().SimulateBold().SetUnderline().SetLineThrough
+                        ();
+                    document.Add(p);
+                }
+            }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerticalTextLineWidthTest() {
+            String fileName = "verticalTextLineWidth";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    Div div = new Div();
+                    div.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    div.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    PdfFont helvetica = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+                    div.SetFont(helvetica);
+                    Paragraph paragraph = new Paragraph().SetHeight(500).SetFontSize(50).SetBackgroundColor(new DeviceRgb(187, 
+                        187, 255));
+                    Text text1 = new Text("WWWWWWW").SetBackgroundColor(ColorConstants.YELLOW);
+                    paragraph.Add(text1);
+                    Text text2 = new Text("aaaaaaaa").SetBackgroundColor(new DeviceRgb(173, 255, 47)).SetFontSize(20);
+                    paragraph.Add(text2);
+                    Text text3 = new Text("iiiiii").SetBackgroundColor(ColorConstants.YELLOW);
+                    paragraph.Add(text3);
+                    Text text4 = new Text("jjjj").SetBackgroundColor(new DeviceRgb(173, 255, 47)).SetFontSize(80);
+                    paragraph.Add(text4);
+                    Text text5 = new Text("......").SetBackgroundColor(ColorConstants.YELLOW);
+                    paragraph.Add(text5);
+                    Text text6 = new Text("Wow!").SetBackgroundColor(new DeviceRgb(173, 255, 47));
+                    paragraph.Add(text6);
+                    paragraph.Add("Hello World");
+                    Paragraph paragraph2 = new Paragraph().SetHeight(500).SetFontSize(20).SetBackgroundColor(new DeviceRgb(255
+                        , 0, 204));
+                    text1 = new Text("WWWWWWWwwwwWWWWW").SetBackgroundColor(ColorConstants.YELLOW);
+                    paragraph2.Add(text1);
+                    text2 = new Text("Waaaaaaaa").SetBackgroundColor(new DeviceRgb(173, 255, 47)).SetFontSize(20);
+                    paragraph2.Add(text2);
+                    text3 = new Text("i").SetBackgroundColor(ColorConstants.YELLOW).SetFontSize(80);
+                    paragraph2.Add(text3);
+                    text4 = new Text("Wjjj").SetBackgroundColor(new DeviceRgb(173, 255, 47)).SetFontSize(80);
+                    paragraph2.Add(text4);
+                    text5 = new Text("....").SetBackgroundColor(ColorConstants.YELLOW).SetFontSize(80);
+                    paragraph2.Add(text5);
+                    text6 = new Text("Wow!").SetBackgroundColor(new DeviceRgb(173, 255, 47)).SetFontSize(80);
+                    paragraph2.Add(text6);
+                    paragraph2.Add("Hello World");
+                    div.Add(paragraph).Add(new AreaBreak()).Add(paragraph2);
+                    document.Add(div);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerticalTextExpandedFontTest() {
+            String fileName = "verticalTextExpandedFont";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    Div div = new Div();
+                    div.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    div.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    PdfFont bioRhyme = PdfFontFactory.CreateFont(EXPANDED_FONT);
+                    div.SetFont(bioRhyme);
+                    Paragraph paragraph = new Paragraph().SetHeight(600).SetFontSize(40).SetBackgroundColor(new DeviceRgb(187, 
+                        187, 255));
+                    Text text1 = new Text("WWWWWWW").SetBackgroundColor(ColorConstants.YELLOW);
+                    paragraph.Add(text1);
+                    Text text2 = new Text("aaaaaaaa").SetBackgroundColor(new DeviceRgb(173, 255, 47)).SetFontSize(20);
+                    paragraph.Add(text2);
+                    Text text3 = new Text("iiiiii").SetBackgroundColor(ColorConstants.YELLOW);
+                    paragraph.Add(text3);
+                    Text text4 = new Text("jjjj").SetBackgroundColor(new DeviceRgb(173, 255, 47)).SetFontSize(80);
+                    paragraph.Add(text4);
+                    Text text5 = new Text("......").SetBackgroundColor(ColorConstants.YELLOW);
+                    paragraph.Add(text5);
+                    Text text6 = new Text("Wow!").SetBackgroundColor(new DeviceRgb(173, 255, 47));
+                    paragraph.Add(text6);
+                    paragraph.Add("Hello World");
+                    Paragraph paragraph2 = new Paragraph().SetHeight(600).SetFontSize(20).SetBackgroundColor(new DeviceRgb(255
+                        , 0, 204));
+                    text1 = new Text("WWWWWWWwwwwWWWWW").SetBackgroundColor(ColorConstants.YELLOW);
+                    paragraph2.Add(text1);
+                    text2 = new Text("Waaaaaaaa").SetBackgroundColor(new DeviceRgb(173, 255, 47)).SetFontSize(20);
+                    paragraph2.Add(text2);
+                    text3 = new Text("i").SetBackgroundColor(ColorConstants.YELLOW).SetFontSize(40);
+                    paragraph2.Add(text3);
+                    text4 = new Text("Wjjj").SetBackgroundColor(new DeviceRgb(173, 255, 47)).SetFontSize(40);
+                    paragraph2.Add(text4);
+                    text5 = new Text("....").SetBackgroundColor(ColorConstants.YELLOW).SetFontSize(50);
+                    paragraph2.Add(text5);
+                    text6 = new Text("Wow!").SetBackgroundColor(new DeviceRgb(173, 255, 47)).SetFontSize(50);
+                    paragraph2.Add(text6);
+                    paragraph2.Add("Hello World");
+                    div.Add(paragraph).Add(new AreaBreak()).Add(paragraph2);
+                    document.Add(div);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerticalAlignTextRiseTest() {
+            // TODO DEVSIX-10180 Support text rise in html mode for vertical text
+            String fileName = "verticalAlignTextRise";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    Div div = new Div();
+                    div.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    div.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    PdfFont helvetica = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+                    div.SetFont(helvetica);
+                    Paragraph paragraph = new Paragraph().SetFontSize(30).SetBackgroundColor(new DeviceRgb(187, 187, 255));
+                    Text text1 = new Text("Text").SetBackgroundColor(new DeviceRgb(255, 255, 211));
+                    Text text2 = new Text("rise").SetBackgroundColor(new DeviceRgb(229, 235, 253)).SetTextRise(20);
+                    Text text3 = new Text("1").SetBackgroundColor(new DeviceRgb(255, 255, 211));
+                    text3.SetProperty(Property.INLINE_VERTICAL_ALIGNMENT, new InlineVerticalAlignment(InlineVerticalAlignmentType
+                        .FIXED, -20));
+                    Text text4 = new Text("2").SetBackgroundColor(new DeviceRgb(229, 235, 253));
+                    text4.SetProperty(Property.INLINE_VERTICAL_ALIGNMENT, new InlineVerticalAlignment(InlineVerticalAlignmentType
+                        .FIXED, 20));
+                    Text text5 = new Text("check").SetBackgroundColor(new DeviceRgb(255, 255, 211));
+                    paragraph.Add(text1).Add(text2).Add(text3).Add(text4).Add(text5);
+                    document.Add(div.Add(paragraph));
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InlineVerticalAlignmentTest() {
+            String fileName = "inlineVerticalAlignment";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    Div div = new Div();
+                    div.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    div.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    PdfFont helvetica = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+                    div.SetFont(helvetica);
+                    Paragraph paragraph = new Paragraph().SetFontSize(60).SetBackgroundColor(new DeviceRgb(187, 187, 255));
+                    Text text = new Text("Text").SetBackgroundColor(new DeviceRgb(255, 255, 211));
+                    paragraph.Add(text);
+                    AddAlignedElement(paragraph, InlineVerticalAlignmentType.BASELINE);
+                    AddAlignedElement(paragraph, InlineVerticalAlignmentType.TEXT_TOP);
+                    AddAlignedElement(paragraph, InlineVerticalAlignmentType.TEXT_BOTTOM);
+                    paragraph.Add("\n");
+                    paragraph.Add(text);
+                    AddAlignedElement(paragraph, InlineVerticalAlignmentType.SUB);
+                    AddAlignedElement(paragraph, InlineVerticalAlignmentType.SUPER);
+                    AddAlignedElement(paragraph, InlineVerticalAlignmentType.FIXED);
+                    paragraph.Add("\n");
+                    paragraph.Add(text);
+                    AddAlignedElement(paragraph, InlineVerticalAlignmentType.FRACTION);
+                    AddAlignedElement(paragraph, InlineVerticalAlignmentType.MIDDLE);
+                    AddAlignedElement(paragraph, InlineVerticalAlignmentType.TOP);
+                    AddAlignedElement(paragraph, InlineVerticalAlignmentType.BOTTOM);
+                    paragraph.Add("\n");
+                    // Property.LEADING is not supported for vertical text for now.
+                    paragraph.SetProperty(Property.LINE_HEIGHT, LineHeight.CreateMultipliedValue(2));
+                    document.Add(div.Add(paragraph));
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OccupiedAreaDivTest() {
+            String fileName = "occupiedAreaDiv";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    Div div = new Div().SetFontSize(50).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetBorder(new SolidBorder
+                        (ColorConstants.DARK_GRAY, 1));
+                    PdfFont bioRhyme = PdfFontFactory.CreateFont(EXPANDED_FONT);
+                    div.SetFont(bioRhyme);
+                    div.SetProperty(Property.LINE_HEIGHT, LineHeight.CreateMultipliedValue(2));
+                    Div div1 = new Div().SetBackgroundColor(new DeviceRgb(210, 250, 179)).SetBorder(new SolidBorder(new DeviceRgb
+                        (0, 128, 0), 1));
+                    div1.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    div1.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    Div div2 = new Div().SetBackgroundColor(new DeviceRgb(210, 250, 179)).SetBorder(new SolidBorder(new DeviceRgb
+                        (0, 128, 0), 1));
+                    div2.SetProperty(Property.WRITING_MODE, WritingMode.HORIZONTAL_TB);
+                    Text text1 = new Text("W").SetBackgroundColor(new DeviceRgb(255, 255, 211));
+                    Text text2 = new Text("j").SetBackgroundColor(new DeviceRgb(229, 235, 253)).SetBorder(new SolidBorder(ColorConstants
+                        .GREEN, 1));
+                    Text text3 = new Text("50").SetBackgroundColor(new DeviceRgb(255, 255, 211));
+                    Text text4 = new Text("10").SetBackgroundColor(new DeviceRgb(229, 235, 253)).SetFontSize(10);
+                    Text text5 = new Text("30").SetBackgroundColor(new DeviceRgb(255, 255, 211)).SetBorder(new SolidBorder(ColorConstants
+                        .RED, 1)).SetFontSize(30);
+                    div1.Add(new Paragraph().Add(text1).Add(text2).Add(text3).Add(text4).Add(text5));
+                    div2.Add(new Paragraph().Add(text1).Add(text2).Add(text3).Add(text4).Add(text5));
+                    div.Add(div1).Add(div2);
+                    document.Add(div);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void OccupiedAreaParagraphTest() {
+            String fileName = "occupiedAreaParagraph";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    Div div = new Div().SetFontSize(50).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetBorder(new SolidBorder
+                        (ColorConstants.DARK_GRAY, 1));
+                    PdfFont bioRhyme = PdfFontFactory.CreateFont(EXPANDED_FONT);
+                    div.SetFont(bioRhyme);
+                    div.SetProperty(Property.LINE_HEIGHT, LineHeight.CreateMultipliedValue(2));
+                    Paragraph paragraph1 = new Paragraph().SetBackgroundColor(new DeviceRgb(210, 250, 179)).SetBorder(new SolidBorder
+                        (new DeviceRgb(0, 128, 0), 1));
+                    paragraph1.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    paragraph1.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    Paragraph paragraph2 = new Paragraph().SetBackgroundColor(new DeviceRgb(210, 250, 179)).SetBorder(new SolidBorder
+                        (new DeviceRgb(0, 128, 0), 1));
+                    paragraph2.SetProperty(Property.WRITING_MODE, WritingMode.HORIZONTAL_TB);
+                    Text text1 = new Text("W").SetBackgroundColor(new DeviceRgb(255, 255, 211));
+                    Text text2 = new Text("j").SetBackgroundColor(new DeviceRgb(229, 235, 253)).SetBorder(new SolidBorder(ColorConstants
+                        .GREEN, 1));
+                    Text text3 = new Text("50").SetBackgroundColor(new DeviceRgb(255, 255, 211));
+                    Text text4 = new Text("10").SetBackgroundColor(new DeviceRgb(229, 235, 253)).SetFontSize(10);
+                    Text text5 = new Text("30").SetBackgroundColor(new DeviceRgb(255, 255, 211)).SetBorder(new SolidBorder(ColorConstants
+                        .RED, 1)).SetFontSize(30);
+                    paragraph1.Add(text1).Add(text2).Add(text3).Add(text4).Add(text5);
+                    paragraph2.Add(text1).Add(text2).Add(text3).Add(text4).Add(text5);
+                    div.Add(paragraph1).Add(paragraph2);
+                    document.Add(div);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
+        }
+
+        private void AddAlignedElement(Paragraph p, InlineVerticalAlignmentType? verticalAlignment) {
+            Text text1 = new Text(" " + verticalAlignment + " ");
+            text1.SetFontSize(12).SetBackgroundColor(new DeviceRgb(229, 235, 253));
+            if (verticalAlignment == InlineVerticalAlignmentType.FIXED) {
+                text1.SetProperty(Property.INLINE_VERTICAL_ALIGNMENT, new InlineVerticalAlignment(verticalAlignment, 25));
+            }
+            else {
+                if (verticalAlignment == InlineVerticalAlignmentType.FRACTION) {
+                    text1.SetProperty(Property.INLINE_VERTICAL_ALIGNMENT, new InlineVerticalAlignment(verticalAlignment, 0.20F
+                        ));
+                }
+                else {
+                    text1.SetProperty(Property.INLINE_VERTICAL_ALIGNMENT, new InlineVerticalAlignment(verticalAlignment));
+                }
+            }
+            p.Add(text1);
         }
     }
 }
