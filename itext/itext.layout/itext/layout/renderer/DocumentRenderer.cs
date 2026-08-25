@@ -49,6 +49,8 @@ namespace iText.Layout.Renderer {
 
         protected internal TargetCounterHandler targetCounterHandler = new TargetCounterHandler();
 
+        private ICollection<int> contentProcessedPages = new HashSet<int>();
+
         private DocumentRenderer.PageMarginBoxesDrawingHandler marginBoxesHandler;
 
         private bool dynamicPageMarginsUsed = false;
@@ -142,6 +144,10 @@ namespace iText.Layout.Renderer {
                 () : null;
             SectionBreak sectionBreak = overflowResult != null && overflowResult.GetSectionBreak() != null ? overflowResult
                 .GetSectionBreak() : null;
+            if (overflowResult != null && overflowResult.GetOccupiedArea() != null) {
+                // Persist margins for pages that already received content before moving layout to another page.
+                SavePageMarginsForProcessedPage(overflowResult.GetOccupiedArea().GetPageNumber());
+            }
             int currentPageNumber = currentArea == null ? 0 : currentArea.GetPageNumber();
             if (areaBreak != null && areaBreak.GetAreaType() == AreaBreakType.LAST_PAGE) {
                 while (currentPageNumber < document.GetPdfDocument().GetNumberOfPages()) {
@@ -237,6 +243,15 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        protected internal override void ShrinkCurrentAreaAndProcessRenderer(IRenderer renderer, IList<IRenderer> 
+            resultRenderers, LayoutResult result) {
+            if (result != null && result.GetOccupiedArea() != null) {
+                // Freeze margins when page content is laid out
+                SavePageMarginsForProcessedPage(result.GetOccupiedArea().GetPageNumber());
+            }
+            base.ShrinkCurrentAreaAndProcessRenderer(renderer, resultRenderers, result);
+        }
+
         /// <summary>Adds new page with defined page size to PDF document.</summary>
         /// <param name="customPageSize">the size of new page, can be null</param>
         /// <returns>the page size of created page</returns>
@@ -266,6 +281,13 @@ namespace iText.Layout.Renderer {
                 lastPageSize = AddNewPage(customPageSize);
             }
             return lastPageSize;
+        }
+
+        private void SavePageMarginsForProcessedPage(int pageNumber) {
+            if (!contentProcessedPages.Contains(pageNumber)) {
+                contentProcessedPages.Add(pageNumber);
+                document.SetPageMargins(pageNumber, document.GetPageMargins(pageNumber));
+            }
         }
 
         private Rectangle GetCurrentPageEffectiveArea(PageSize pageSize) {

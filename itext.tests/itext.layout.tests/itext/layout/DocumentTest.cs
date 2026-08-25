@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using iText.Commons.Actions;
 using iText.Commons.Actions.Sequence;
 using iText.Commons.Utils;
@@ -30,6 +31,7 @@ using iText.Kernel.Actions.Events;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Event;
 using iText.Kernel.Pdf.Xobject;
 using iText.Layout.Element;
@@ -179,6 +181,73 @@ namespace iText.Layout {
                 if (!pdfDocument.IsClosed()) {
                     document.Close();
                 }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ProcessedPagesKeepMarginsAfterPredicateTest() {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            String marker = "LATE_MARGIN_MARKER";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(baos)))) {
+                for (int i = 0; i < 80; i++) {
+                    document.Add(new Paragraph("Paragraph " + i + " ").SetMarginBottom(12));
+                }
+                document.Flush();
+                NUnit.Framework.Assert.IsTrue(document.GetPdfDocument().GetNumberOfPages() >= 2);
+                PageMarginBoxes pageMargins = new PageMarginBoxes(JavaCollectionsUtil.SingletonList(new PageMarginContent(
+                    MarginBoxName.TOP, new Div().Add(new Paragraph(marker)).SetHeight(40))));
+                document.SetPageMargins((pageNum) => pageNum % 2 == 0, pageMargins);
+            }
+            using (PdfDocument result = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())))) {
+                String secondPageText = PdfTextExtractor.GetTextFromPage(result.GetPage(2));
+                NUnit.Framework.Assert.IsFalse(secondPageText.Contains(marker));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarginsAreDrawnOnPagesAfterPredicateTest() {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            String marker = "FUTURE_PAGE_MARGIN_MARKER";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(baos)))) {
+                document.Add(new Paragraph("Page 1 content"));
+                document.Flush();
+                PageMarginBoxes pageMargins = new PageMarginBoxes(JavaCollectionsUtil.SingletonList(new PageMarginContent(
+                    MarginBoxName.TOP, new Div().Add(new Paragraph(marker)).SetHeight(30))));
+                document.SetPageMargins((pageNum) => pageNum < 5, pageMargins);
+                document.Add(new AreaBreak());
+                document.Add(new Paragraph("Page 2 content"));
+            }
+            using (PdfDocument result = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())))) {
+                String firstPageText = PdfTextExtractor.GetTextFromPage(result.GetPage(1));
+                String secondPageText = PdfTextExtractor.GetTextFromPage(result.GetPage(2));
+                NUnit.Framework.Assert.IsFalse(firstPageText.Contains(marker));
+                NUnit.Framework.Assert.IsTrue(secondPageText.Contains(marker));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NoMarginsOnOldPagesButDrawnOnNewPagesTest() {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            String marker = "EVEN_LATER_PAGE_MARGIN_MARKER";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(baos)))) {
+                document.Add(new Paragraph("Page 1 content"));
+                document.Add(new AreaBreak());
+                document.Add(new Paragraph("Page 2 content"));
+                document.Flush();
+                NUnit.Framework.Assert.IsTrue(document.GetPdfDocument().GetNumberOfPages() >= 2);
+                PageMarginBoxes pageMargins = new PageMarginBoxes(JavaCollectionsUtil.SingletonList(new PageMarginContent(
+                    MarginBoxName.TOP, new Div().Add(new Paragraph(marker)).SetHeight(30))));
+                document.SetPageMargins((pageNum) => pageNum % 2 == 0, pageMargins);
+                document.Add(new AreaBreak());
+                document.Add(new Paragraph("Page 3 content"));
+                document.Add(new AreaBreak());
+                document.Add(new Paragraph("Page 4 content"));
+            }
+            using (PdfDocument result = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())))) {
+                String page2Text = PdfTextExtractor.GetTextFromPage(result.GetPage(2));
+                String page4Text = PdfTextExtractor.GetTextFromPage(result.GetPage(4));
+                NUnit.Framework.Assert.IsFalse(page2Text.Contains(marker));
+                NUnit.Framework.Assert.IsTrue(page4Text.Contains(marker));
             }
         }
 
