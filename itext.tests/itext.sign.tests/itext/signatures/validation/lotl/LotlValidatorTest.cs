@@ -728,28 +728,38 @@ namespace iText.Signatures.Validation.Lotl {
         [NUnit.Framework.Test]
         [LogMessage(SignLogMessageConstant.COUNTRY_SPECIFIC_FETCHING_FAILED)]
         public virtual void CacheRefreshWithValidationWorksButCertsNotIncluded() {
+            // This test is similar to cacheRefreshWithValidationWorksButCertsNotIncludedMultipleCountries.
+            // Here we load LOTL data into cache, then make cache stale (that is why the staleness is that small).
+            // Then we request LOTL data again, but this time the country specific LOTL file is invalid.
+            // The cache refresh should not update the cache with the invalid data and the validator should still be valid.
+            // But the number of certificates should decrease.
             LotlFetchingProperties properties = new LotlFetchingProperties(new RemoveOnFailingCountryData());
             properties.SetCountryNames("NL");
-            properties.SetCacheStalenessInMilliseconds(50);
+            properties.SetCacheStalenessInMilliseconds(100);
             properties.SetRefreshIntervalCalculator((f) => int.MaxValue);
             int originalAmountOfCertificates;
             LotlValidator validator2;
+            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(properties.GetCacheStalenessInMilliseconds()
+                , properties.GetOnCountryFetchFailureStrategy());
             using (LotlService service = new EuropeanLotlService(properties)) {
                 service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
+                service.WithLotlServiceCache(cache);
                 // Simulate a failure in the cache refresh
-                service.WithCountrySpecificLotlFetcher(new _CountrySpecificLotlFetcher_727(service));
+                service.WithCountrySpecificLotlFetcher(new _CountrySpecificLotlFetcher_736(service));
                 service.InitializeCache();
                 LotlValidator validator = service.GetLotlValidator();
                 validator.Validate();
                 originalAmountOfCertificates = validator.GetNationalTrustedCertificates().Count;
                 NUnit.Framework.Assert.IsTrue(originalAmountOfCertificates > 0, "Expected some certificates to be present after the first validation, but got: "
                      + originalAmountOfCertificates);
-                Thread.Sleep(80);
-                // Increase cache staleness to stabilize the refresh during the simulated failure
-                properties.SetCacheStalenessInMilliseconds(10000000);
-                service.WithLotlServiceCache(new InMemoryLotlServiceCache(properties.GetCacheStalenessInMilliseconds(), properties
-                    .GetOnCountryFetchFailureStrategy()));
+                // Make cache stale
+                Thread.Sleep(120);
                 service.TryAndRefreshCache();
+                // Protect all caches from becoming stale except for the NL country specific LOTL file
+                // which will be invalidated. We need this to ensure validator will not meet any staleness again after
+                // service.tryAndRefreshCache(). To test if this is needed you can call Thread.sleep(1200)
+                // before validation. Without unstaleCacheExceptNL(cache) the validator will fail.
+                UnstaleCacheExceptNL(cache);
                 validator2 = service.GetLotlValidator();
                 ValidationReport report = validator2.Validate();
                 NUnit.Framework.Assert.IsTrue(report.GetValidationResult() == ValidationReport.ValidationResult.VALID, "Expected the validation to be valid, but got: "
@@ -762,8 +772,8 @@ namespace iText.Signatures.Validation.Lotl {
             }
         }
 
-        private sealed class _CountrySpecificLotlFetcher_727 : CountrySpecificLotlFetcher {
-            public _CountrySpecificLotlFetcher_727(LotlService baseArg1)
+        private sealed class _CountrySpecificLotlFetcher_736 : CountrySpecificLotlFetcher {
+            public _CountrySpecificLotlFetcher_736(LotlService baseArg1)
                 : base(baseArg1) {
                 this.firstTime = true;
             }
@@ -793,28 +803,34 @@ namespace iText.Signatures.Validation.Lotl {
         [NUnit.Framework.Test]
         [LogMessage(SignLogMessageConstant.COUNTRY_SPECIFIC_FETCHING_FAILED)]
         public virtual void CacheRefreshWithValidationWorksButCertsNotIncludedMultipleCountries() {
+            // See the description of cacheRefreshWithValidationWorksButCertsNotIncluded for the test logic
             LotlFetchingProperties properties = new LotlFetchingProperties(new RemoveOnFailingCountryData());
             properties.SetCountryNames("NL", "BE");
-            properties.SetCacheStalenessInMilliseconds(50);
+            properties.SetCacheStalenessInMilliseconds(100);
             properties.SetRefreshIntervalCalculator((f) => int.MaxValue);
             int originalAmountOfCertificates;
             LotlValidator validator2;
+            InMemoryLotlServiceCache cache = new InMemoryLotlServiceCache(properties.GetCacheStalenessInMilliseconds()
+                , properties.GetOnCountryFetchFailureStrategy());
             using (LotlService service = new EuropeanLotlService(properties)) {
                 service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
+                service.WithLotlServiceCache(cache);
                 // Simulate a failure in the cache refresh
-                service.WithCountrySpecificLotlFetcher(new _CountrySpecificLotlFetcher_800(service));
+                service.WithCountrySpecificLotlFetcher(new _CountrySpecificLotlFetcher_818(service));
                 service.InitializeCache();
                 LotlValidator validator = service.GetLotlValidator();
                 validator.Validate();
                 originalAmountOfCertificates = validator.GetNationalTrustedCertificates().Count;
                 NUnit.Framework.Assert.IsTrue(originalAmountOfCertificates > 0, "Expected some certificates to be present after the first validation, but got: "
                      + originalAmountOfCertificates);
-                Thread.Sleep(80);
-                // Increase cache staleness to stabilize the refresh during the simulated failure
-                properties.SetCacheStalenessInMilliseconds(10000000);
-                service.WithLotlServiceCache(new InMemoryLotlServiceCache(properties.GetCacheStalenessInMilliseconds(), properties
-                    .GetOnCountryFetchFailureStrategy()));
+                // Make cache stale
+                Thread.Sleep(120);
                 service.TryAndRefreshCache();
+                // Protect all caches from becoming stale except for the NL country specific LOTL file
+                // which will be invalidated. We need this to ensure validator will not meet any staleness again after
+                // service.tryAndRefreshCache(). To test if this is needed you can call Thread.sleep(1200)
+                // before validation. Without unstaleCacheExceptNL(cache) the validator will fail.
+                UnstaleCacheExceptNL(cache);
                 validator2 = service.GetLotlValidator();
                 ValidationReport report = validator2.Validate();
                 NUnit.Framework.Assert.IsTrue(report.GetValidationResult() == ValidationReport.ValidationResult.VALID, "Expected the validation to be valid, but got: "
@@ -825,8 +841,8 @@ namespace iText.Signatures.Validation.Lotl {
             }
         }
 
-        private sealed class _CountrySpecificLotlFetcher_800 : CountrySpecificLotlFetcher {
-            public _CountrySpecificLotlFetcher_800(LotlService baseArg1)
+        private sealed class _CountrySpecificLotlFetcher_818 : CountrySpecificLotlFetcher {
+            public _CountrySpecificLotlFetcher_818(LotlService baseArg1)
                 : base(baseArg1) {
                 this.firstTime = true;
             }
@@ -858,15 +874,15 @@ namespace iText.Signatures.Validation.Lotl {
             using (LotlService service = new EuropeanLotlService(new LotlFetchingProperties(new RemoveOnFailingCountryData
                 ()))) {
                 service.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
-                CountrySpecificLotlFetcher lotlFetcher = new _CountrySpecificLotlFetcher_854(service);
+                CountrySpecificLotlFetcher lotlFetcher = new _CountrySpecificLotlFetcher_876(service);
                 service.WithCountrySpecificLotlFetcher(lotlFetcher);
                 service.InitializeCache();
                 NUnit.Framework.Assert.DoesNotThrow(() => service.GetLotlValidator().Validate());
             }
         }
 
-        private sealed class _CountrySpecificLotlFetcher_854 : CountrySpecificLotlFetcher {
-            public _CountrySpecificLotlFetcher_854(LotlService baseArg1)
+        private sealed class _CountrySpecificLotlFetcher_876 : CountrySpecificLotlFetcher {
+            public _CountrySpecificLotlFetcher_876(LotlService baseArg1)
                 : base(baseArg1) {
             }
 
@@ -882,15 +898,15 @@ namespace iText.Signatures.Validation.Lotl {
             p.SetCountryNames("NL");
             Exception e;
             using (LotlService service = new EuropeanLotlService(p)) {
-                EuropeanLotlFetcher lotlByteFetcher = new _EuropeanLotlFetcher_873(service);
+                EuropeanLotlFetcher lotlByteFetcher = new _EuropeanLotlFetcher_895(service);
                 service.WithEuropeanLotlFetcher(lotlByteFetcher);
                 e = NUnit.Framework.Assert.Catch(typeof(Exception), () => service.InitializeCache());
             }
             NUnit.Framework.Assert.AreEqual("Test exception", e.Message);
         }
 
-        private sealed class _EuropeanLotlFetcher_873 : EuropeanLotlFetcher {
-            public _EuropeanLotlFetcher_873(LotlService baseArg1)
+        private sealed class _EuropeanLotlFetcher_895 : EuropeanLotlFetcher {
+            public _EuropeanLotlFetcher_895(LotlService baseArg1)
                 : base(baseArg1) {
             }
 
@@ -911,6 +927,20 @@ namespace iText.Signatures.Validation.Lotl {
 
         private static LotlFetchingProperties GetLotlFetchingProperties() {
             return new LotlFetchingProperties(new RemoveOnFailingCountryData());
+        }
+
+        private static void UnstaleCacheExceptNL(InMemoryLotlServiceCache cache) {
+            Dictionary<String, long?> newTimestamps = new Dictionary<String, long?>();
+            foreach (KeyValuePair<String, long?> timeStampEntry in cache.GetTimeStamps()) {
+                if ("NL_https://www.rdi.nl/site/binaries/site-content/collections/documents/current-tsl.xml".Equals(timeStampEntry
+                    .Key)) {
+                    newTimestamps.Put(timeStampEntry.Key, timeStampEntry.Value);
+                }
+                else {
+                    newTimestamps.Put(timeStampEntry.Key, long.MaxValue);
+                }
+            }
+            cache.SetTimeStamps(newTimestamps);
         }
     }
 }
