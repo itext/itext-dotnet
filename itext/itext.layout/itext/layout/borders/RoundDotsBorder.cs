@@ -35,13 +35,13 @@ namespace iText.Layout.Borders {
         /// <summary>The modifier to be applied on the width to have the initial gap size</summary>
         private const float GAP_MODIFIER = 2.5f;
 
-        /// <summary>Creates a RoundDotsBorder with the specified wit?dth and sets the color to black.</summary>
+        /// <summary>Creates a RoundDotsBorder with the specified width and sets the color to black.</summary>
         /// <param name="width">width of the border</param>
         public RoundDotsBorder(float width)
             : base(width) {
         }
 
-        /// <summary>Creates a RoundDotsBorder with the specified wit?dth and the specified color.</summary>
+        /// <summary>Creates a RoundDotsBorder with the specified width and the specified color.</summary>
         /// <param name="color">color of the border</param>
         /// <param name="width">width of the border</param>
         public RoundDotsBorder(Color color, float width)
