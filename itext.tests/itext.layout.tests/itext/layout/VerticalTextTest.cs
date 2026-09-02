@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.IO.Font.Constants;
 using iText.Kernel.Colors;
@@ -250,6 +251,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void VerticalTextAndHorizontalTextTest() {
+            // TODO DEVSIX-10183 vertical and horizontal text in one paragraph.
             String fileName = "verticalTextAndHorizontalText";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
@@ -741,6 +743,279 @@ namespace iText.Layout {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerticalTextWithWordSpaceTest() {
+            String fileName = "verticalTextWithWordSpaceTest";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    Paragraph paragraph = new Paragraph();
+                    paragraph.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    paragraph.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    paragraph.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                    paragraph.SetHeight(500);
+                    Text wordSpacing30 = new Text("word-spacing 30pt with line\nbreak.\n\n\n");
+                    wordSpacing30.SetBackgroundColor(ColorConstants.GREEN);
+                    wordSpacing30.SetWordSpacing(30);
+                    paragraph.Add(wordSpacing30);
+                    Text wordSpacing10 = new Text("word-spacing 10pt with line\nbreak.\n\n\n");
+                    wordSpacing10.SetBackgroundColor(ColorConstants.ORANGE);
+                    wordSpacing10.SetWordSpacing(10);
+                    paragraph.Add(wordSpacing10);
+                    Text wordSpacingMinus15 = new Text("word-spacing minus 15pt with line\nbreak.\n\n\n");
+                    wordSpacingMinus15.SetBackgroundColor(ColorConstants.RED);
+                    wordSpacingMinus15.SetWordSpacing(-15);
+                    paragraph.Add(wordSpacingMinus15);
+                    document.Add(paragraph);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerticalTextWithCharacterSpaceTest() {
+            String fileName = "verticalTextWithCharacterSpaceTest";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    Paragraph paragraph = new Paragraph();
+                    paragraph.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    paragraph.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    paragraph.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                    paragraph.SetHeight(500);
+                    Text characterSpacing30 = new Text("character-spacing 30pt with line\nbreak.\n\n\n");
+                    characterSpacing30.SetBackgroundColor(ColorConstants.GREEN);
+                    characterSpacing30.SetCharacterSpacing(30);
+                    paragraph.Add(characterSpacing30);
+                    Text characterSpacing10 = new Text("character-spacing 10pt with line\nbreak.\n\n\n");
+                    characterSpacing10.SetBackgroundColor(ColorConstants.ORANGE);
+                    characterSpacing10.SetCharacterSpacing(10);
+                    paragraph.Add(characterSpacing10);
+                    Text characterSpacingMinus5 = new Text("character-spacing minus 5pt with line\nbreak.\n\n\n");
+                    characterSpacingMinus5.SetBackgroundColor(ColorConstants.RED);
+                    characterSpacingMinus5.SetCharacterSpacing(-5);
+                    paragraph.Add(characterSpacingMinus5);
+                    document.Add(paragraph);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
+        public virtual void VerticalTextWithCharacterAndWordSpaceExtremeValuesTest() {
+            String fileName = "verticalTextWithCharacterAndWordSpaceExtremeValuesTest";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    Paragraph paragraph = new Paragraph();
+                    paragraph.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    paragraph.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    paragraph.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                    paragraph.SetHeight(500);
+                    paragraph.SetPaddingTop(400);
+                    Text characterSpacingMinus30 = new Text("character-spacing minus 30pt with line\nbreak.\n\n\n");
+                    characterSpacingMinus30.SetBackgroundColor(ColorConstants.GREEN);
+                    characterSpacingMinus30.SetCharacterSpacing(-30);
+                    paragraph.Add(characterSpacingMinus30);
+                    Text wordSpacingMinus300 = new Text("word-spacing minus 300pt with line\nbreak.\n\n\n");
+                    wordSpacingMinus300.SetBackgroundColor(ColorConstants.ORANGE);
+                    wordSpacingMinus300.SetWordSpacing(-300);
+                    paragraph.Add(wordSpacingMinus300);
+                    Text characterSpacing300 = new Text("character-spacing 300pt with line\nbreak.\n\n\n");
+                    characterSpacing300.SetBackgroundColor(ColorConstants.RED);
+                    characterSpacing300.SetCharacterSpacing(300);
+                    paragraph.Add(characterSpacing300);
+                    document.Add(paragraph);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void JustifiedAlignmentTest() {
+            String fileName = "justifiedAlignmentTest";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    Paragraph container = new Paragraph();
+                    Text alignedText1 = new Text("text to be aligned with line\nbreak.");
+                    alignedText1.SetBackgroundColor(ColorConstants.GREEN);
+                    Text alignedText2 = new Text("text to be aligned with line\nbreak.");
+                    alignedText2.SetBackgroundColor(ColorConstants.ORANGE);
+                    Text alignedText3 = new Text("text to be aligned with line\nbreak.");
+                    alignedText3.SetBackgroundColor(ColorConstants.RED);
+                    Paragraph paragraph0 = new Paragraph();
+                    paragraph0.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    paragraph0.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    paragraph0.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                    paragraph0.SetTextAlignment(TextAlignment.LEFT);
+                    paragraph0.SetHeight(700);
+                    paragraph0.SetMargin(10);
+                    paragraph0.Add(alignedText1);
+                    paragraph0.Add(alignedText2);
+                    paragraph0.Add(alignedText3);
+                    container.Add(paragraph0);
+                    Paragraph paragraph1 = new Paragraph();
+                    paragraph1.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    paragraph1.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    paragraph1.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                    paragraph1.SetHeight(700);
+                    paragraph1.SetTextAlignment(TextAlignment.JUSTIFIED_ALL);
+                    paragraph1.SetMargin(10);
+                    // Extremely large ratio results in word spacing being negative. However, any further increase doesn't affect word spacing.
+                    paragraph1.SetSpacingRatio(10000f);
+                    paragraph1.Add(alignedText1);
+                    paragraph1.Add(alignedText2);
+                    paragraph1.Add(alignedText3);
+                    container.Add(paragraph1);
+                    Paragraph paragraph2 = new Paragraph();
+                    paragraph2.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    paragraph2.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    paragraph2.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                    paragraph2.SetHeight(700);
+                    paragraph2.SetTextAlignment(TextAlignment.JUSTIFIED_ALL);
+                    paragraph2.SetMargin(10);
+                    paragraph2.SetSpacingRatio(1f);
+                    paragraph2.Add(alignedText1);
+                    paragraph2.Add(alignedText2);
+                    paragraph2.Add(alignedText3);
+                    container.Add(paragraph2);
+                    Paragraph paragraph3 = new Paragraph();
+                    paragraph3.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    paragraph3.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    paragraph3.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                    paragraph3.SetHeight(700);
+                    paragraph3.SetTextAlignment(TextAlignment.JUSTIFIED_ALL);
+                    paragraph3.SetMargin(10);
+                    // Extremely low ration results in word-spacing being close to zero, and character spacing taking over.
+                    paragraph3.SetSpacingRatio(0.0001f);
+                    paragraph3.Add(alignedText1);
+                    paragraph3.Add(alignedText2);
+                    paragraph3.Add(alignedText3);
+                    container.Add(paragraph3);
+                    document.Add(container);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DifferentAlignmentValuesTogetherTest() {
+            String fileName = "differentAlignmentValuesTogetherTest";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    Paragraph container = new Paragraph();
+                    Text alignedText1 = new Text("text to be aligned with line\nbreak.");
+                    alignedText1.SetBackgroundColor(ColorConstants.GREEN);
+                    Text alignedText2 = new Text("text to be aligned with line\nbreak.");
+                    alignedText2.SetBackgroundColor(ColorConstants.ORANGE);
+                    Text alignedText3 = new Text("text to be aligned with line\nbreak.");
+                    alignedText3.SetBackgroundColor(ColorConstants.RED);
+                    Paragraph paragraph0 = new Paragraph();
+                    paragraph0.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    paragraph0.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    paragraph0.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                    paragraph0.SetTextAlignment(TextAlignment.LEFT);
+                    paragraph0.SetHeight(700);
+                    paragraph0.SetMargin(10);
+                    paragraph0.Add(alignedText1);
+                    paragraph0.Add(alignedText2);
+                    paragraph0.Add(alignedText3);
+                    container.Add(paragraph0);
+                    Paragraph paragraph1 = new Paragraph();
+                    paragraph1.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    paragraph1.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    paragraph1.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                    paragraph1.SetHeight(700);
+                    paragraph1.SetTextAlignment(TextAlignment.CENTER);
+                    paragraph1.SetMargin(10);
+                    paragraph1.Add(alignedText1);
+                    paragraph1.Add(alignedText2);
+                    paragraph1.Add(alignedText3);
+                    container.Add(paragraph1);
+                    Paragraph paragraph2 = new Paragraph();
+                    paragraph2.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    paragraph2.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    paragraph2.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                    paragraph2.SetHeight(700);
+                    paragraph2.SetTextAlignment(TextAlignment.RIGHT);
+                    paragraph2.SetMargin(10);
+                    paragraph2.Add(alignedText1);
+                    paragraph2.Add(alignedText2);
+                    paragraph2.Add(alignedText3);
+                    container.Add(paragraph2);
+                    Paragraph paragraph3 = new Paragraph();
+                    paragraph3.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    paragraph3.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    paragraph3.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                    paragraph3.SetHeight(700);
+                    paragraph3.SetTextAlignment(TextAlignment.JUSTIFIED_ALL);
+                    paragraph3.SetMargin(10);
+                    paragraph3.Add(alignedText1);
+                    paragraph3.Add(alignedText2);
+                    paragraph3.Add(alignedText3);
+                    container.Add(paragraph3);
+                    document.Add(container);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
+        }
+
+        [NUnit.Framework.TestCaseSource("AlignmentValues")]
+        public virtual void VerticalTextWithAlignmentTest(TextAlignment? alignment) {
+            String fileName = "verticalTextWithAlignment" + alignment;
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    Paragraph paragraph = new Paragraph();
+                    paragraph.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    paragraph.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    paragraph.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                    paragraph.SetHeight(500);
+                    paragraph.SetTextAlignment(alignment);
+                    // TextAlignment.JUSTIFIED does nothing since line ends with a line break.
+                    Text alignedText1 = new Text("text to be aligned with line\nbreak.");
+                    alignedText1.SetBackgroundColor(ColorConstants.GREEN);
+                    paragraph.Add(alignedText1);
+                    // TextAlignment.JUSTIFIED does nothing since line ends with a line break.
+                    Text alignedText2 = new Text("text to be aligned with line\nbreak.");
+                    alignedText2.SetBackgroundColor(ColorConstants.ORANGE);
+                    paragraph.Add(alignedText2);
+                    // TextAlignment.JUSTIFIED justifies the content.
+                    Text alignedText3 = new Text("text to be aligned without line break.");
+                    alignedText3.SetBackgroundColor(ColorConstants.RED);
+                    paragraph.Add(alignedText3);
+                    document.Add(paragraph);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
+        }
+
+        public static ICollection<TextAlignment> AlignmentValues() {
+            return JavaUtil.ArraysAsList(TextAlignment.LEFT, TextAlignment.CENTER, TextAlignment.RIGHT, TextAlignment.
+                JUSTIFIED, TextAlignment.JUSTIFIED_ALL);
         }
 
         private void AddAlignedElement(Paragraph p, InlineVerticalAlignmentType? verticalAlignment) {

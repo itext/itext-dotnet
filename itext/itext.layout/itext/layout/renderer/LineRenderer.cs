@@ -91,8 +91,14 @@ namespace iText.Layout.Renderer {
             LineLayoutContext lineLayoutContext = layoutContext is LineLayoutContext ? (LineLayoutContext)layoutContext
                  : new LineLayoutContext(layoutContext);
             if (lineLayoutContext.GetTextIndent() != 0) {
-                layoutBox.MoveRight(lineLayoutContext.GetTextIndent()).SetWidth(layoutBox.GetWidth() - lineLayoutContext.GetTextIndent
-                    ());
+                if (isVerticalWriting) {
+                    layoutBox.MoveDown(lineLayoutContext.GetTextIndent()).SetHeight(layoutBox.GetHeight() - lineLayoutContext.
+                        GetTextIndent());
+                }
+                else {
+                    layoutBox.MoveRight(lineLayoutContext.GetTextIndent()).SetWidth(layoutBox.GetWidth() - lineLayoutContext.GetTextIndent
+                        ());
+                }
             }
             occupiedArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), layoutBox.Clone().MoveUp(layoutBox.
                 GetHeight()).SetHeight(0).SetWidth(0));
@@ -727,6 +733,10 @@ namespace iText.Layout.Renderer {
             return occupiedArea.GetBBox().GetY() - maxDescent;
         }
 
+        protected internal override bool AllowLastYLineRecursiveExtraction() {
+            return !IsVerticalWriting();
+        }
+
         public virtual float GetLeadingValue(Leading leading) {
             switch (leading.GetLeadingType()) {
                 case Leading.FIXED: {
@@ -769,34 +779,61 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal override float? GetLastYLineRecursively() {
+            if (!AllowLastYLineRecursiveExtraction()) {
+                return null;
+            }
             return GetYLine();
         }
 
-        public virtual void Justify(float width) {
+        /// <summary>Justifies words equally inside a single line.</summary>
+        /// <remarks>Justifies words equally inside a single line. The behavior is similar to CSS "align-text: justify".
+        ///     </remarks>
+        /// <param name="availableSpace">space available along the main axis of a layout box</param>
+        public virtual void Justify(float availableSpace) {
             float ratio = (float)this.GetPropertyAsFloat(Property.SPACING_RATIO);
             IRenderer lastChildRenderer = GetLastNonFloatChildRenderer();
             if (lastChildRenderer == null) {
                 return;
             }
-            float freeWidth = occupiedArea.GetBBox().GetX() + width - lastChildRenderer.GetOccupiedArea().GetBBox().GetX
-                () - lastChildRenderer.GetOccupiedArea().GetBBox().GetWidth();
+            float freeSpace;
+            bool verticalWriting = IsVerticalWriting();
+            if (verticalWriting) {
+                freeSpace = availableSpace - occupiedArea.GetBBox().GetHeight();
+            }
+            else {
+                freeSpace = occupiedArea.GetBBox().GetX() + availableSpace - lastChildRenderer.GetOccupiedArea().GetBBox()
+                    .GetX() - lastChildRenderer.GetOccupiedArea().GetBBox().GetWidth();
+            }
             int numberOfSpaces = GetNumberOfSpaces();
             int baseCharsCount = BaseCharactersCount();
-            float baseFactor = freeWidth / (ratio * numberOfSpaces + (1 - ratio) * (baseCharsCount - 1));
+            float baseFactor = freeSpace / (ratio * numberOfSpaces + (1 - ratio) * (baseCharsCount - 1));
             //Prevent a NaN when trying to justify a single word with spacing_ratio == 1.0
             if (float.IsInfinity(baseFactor) || float.IsNaN(baseFactor)) {
                 baseFactor = 0;
             }
             float wordSpacing = ratio * baseFactor;
             float characterSpacing = (1 - ratio) * baseFactor;
-            float lastRightPos = occupiedArea.GetBBox().GetX();
+            float lastPosition;
+            if (verticalWriting) {
+                lastPosition = occupiedArea.GetBBox().GetTop();
+            }
+            else {
+                lastPosition = occupiedArea.GetBBox().GetX();
+            }
             foreach (IRenderer child in GetChildRenderers()) {
                 if (FloatingHelper.IsRendererFloating(child)) {
                     continue;
                 }
-                float childX = child.GetOccupiedArea().GetBBox().GetX();
-                child.Move(lastRightPos - childX, 0);
-                childX = lastRightPos;
+                float childPosition;
+                if (verticalWriting) {
+                    childPosition = child.GetOccupiedArea().GetBBox().GetTop();
+                    child.Move(0, lastPosition - childPosition);
+                }
+                else {
+                    childPosition = child.GetOccupiedArea().GetBBox().GetX();
+                    child.Move(lastPosition - childPosition, 0);
+                }
+                childPosition = lastPosition;
                 if (child is TextRenderer) {
                     float childHSCale = (float)((TextRenderer)child).GetPropertyAsFloat(Property.HORIZONTAL_SCALING, 1f);
                     float? oldCharacterSpacing = ((TextRenderer)child).GetPropertyAsFloat(Property.CHARACTER_SPACING);
@@ -806,13 +843,30 @@ namespace iText.Layout.Renderer {
                     child.SetProperty(Property.WORD_SPACING, (null == oldWordSpacing ? 0 : (float)oldWordSpacing) + wordSpacing
                          / childHSCale);
                     bool isLastTextRenderer = child == lastChildRenderer;
-                    float widthAddition = (isLastTextRenderer ? (((TextRenderer)child).LineLength() - 1) : ((TextRenderer)child
+                    float spaceAddition = (isLastTextRenderer ? (((TextRenderer)child).LineLength() - 1) : ((TextRenderer)child
                         ).LineLength()) * characterSpacing + wordSpacing * ((TextRenderer)child).GetNumberOfSpaces();
-                    child.GetOccupiedArea().GetBBox().SetWidth(child.GetOccupiedArea().GetBBox().GetWidth() + widthAddition);
+                    if (verticalWriting) {
+                        child.GetOccupiedArea().GetBBox().SetHeight(child.GetOccupiedArea().GetBBox().GetHeight() + spaceAddition);
+                        child.GetOccupiedArea().GetBBox().MoveDown(spaceAddition);
+                    }
+                    else {
+                        child.GetOccupiedArea().GetBBox().SetWidth(child.GetOccupiedArea().GetBBox().GetWidth() + spaceAddition);
+                    }
                 }
-                lastRightPos = childX + child.GetOccupiedArea().GetBBox().GetWidth();
+                if (verticalWriting) {
+                    lastPosition = childPosition - child.GetOccupiedArea().GetBBox().GetHeight();
+                }
+                else {
+                    lastPosition = childPosition + child.GetOccupiedArea().GetBBox().GetWidth();
+                }
             }
-            GetOccupiedArea().GetBBox().SetWidth(width);
+            if (verticalWriting) {
+                GetOccupiedArea().GetBBox().MoveDown(freeSpace);
+                GetOccupiedArea().GetBBox().SetHeight(availableSpace);
+            }
+            else {
+                GetOccupiedArea().GetBBox().SetWidth(availableSpace);
+            }
         }
 
         protected internal virtual int GetNumberOfSpaces() {
