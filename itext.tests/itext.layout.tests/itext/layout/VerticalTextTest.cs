@@ -437,6 +437,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void UnderlineTest() {
+            // TODO fix underline positioning
             String outFileName = DESTINATION_FOLDER + "underline.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_underline.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
@@ -448,19 +449,20 @@ namespace iText.Layout {
                         (2).SetStrokeColor(new TransparentColor(ColorConstants.PINK, 0.5f)).SetDashPattern(new float[] { 5, 5, 
                         10, 5 }, 5);
                     Paragraph p = new Paragraph("Yellow text with pink stroked dashed underline.").SetFontSize(45).SetFontColor
-                        (ColorConstants.YELLOW).SetUnderline(underline);
+                        (ColorConstants.YELLOW).SetUnderline(underline).SetBorder(new SolidBorder(ColorConstants.RED, 1));
                     TransparentColor strokeColor = new TransparentColor(ColorConstants.GREEN, 0.5f);
                     Underline underline2 = new Underline(ColorConstants.DARK_GRAY, 0, 0.1f, 0, 0.3f, PdfCanvasConstants.LineCapStyle
                         .BUTT).SetStrokeWidth(1).SetStrokeColor(strokeColor);
                     Paragraph p2 = new Paragraph("Text with line-through and default underline.").SetFontSize(50).SetStrokeWidth
                         (1).SetFontColor(ColorConstants.DARK_GRAY).SetStrokeColor(strokeColor).SetUnderline(underline2).SetUnderline
-                        ();
+                        ().SetBorder(new SolidBorder(ColorConstants.RED, 1));
                     Underline underline3 = new Underline(null, 0, 0.1f, 0, 0.9f, PdfCanvasConstants.LineCapStyle.BUTT);
                     Paragraph p3 = new Paragraph("Text with null font color and default overline.").SetFontSize(50).SetFontColor
-                        ((TransparentColor)null).SetUnderline(underline3);
+                        ((TransparentColor)null).SetUnderline(underline3).SetBorder(new SolidBorder(ColorConstants.RED, 1));
                     // This line should be around the middle of the text compared to horizontal text.
                     Underline underline4 = new Underline(null, 0, 0.1f, 15, 0f, PdfCanvasConstants.LineCapStyle.BUTT);
-                    Paragraph p4 = new Paragraph("Text with custom yPosition (15).").SetFontSize(50).SetUnderline(underline4);
+                    Paragraph p4 = new Paragraph("Text with custom yPosition (15).").SetFontSize(50).SetUnderline(underline4).
+                        SetBorder(new SolidBorder(ColorConstants.RED, 1));
                     document.Add(p).Add(p2).Add(p3).Add(p4);
                 }
             }
@@ -747,6 +749,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void VerticalTextWithWordSpaceTest() {
+            //TODO Background last item too narrow
             String fileName = "verticalTextWithWordSpaceTest";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
@@ -779,6 +782,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void VerticalTextWithCharacterSpaceTest() {
+            //TODO Background last item too narrow
             String fileName = "verticalTextWithCharacterSpaceTest";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";

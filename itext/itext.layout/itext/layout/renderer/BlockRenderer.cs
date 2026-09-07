@@ -130,7 +130,7 @@ namespace iText.Layout.Renderer {
                 areas = InitElementAreas(new LayoutArea(pageNumber, parentBBox));
             }
             occupiedArea = new LayoutArea(pageNumber, new Rectangle(parentBBox.GetX(), parentBBox.GetY() + parentBBox.
-                GetHeight(), parentBBox.GetWidth(), 0));
+                GetHeight(), IsVerticalWriting() ? 0 : parentBBox.GetWidth(), 0));
             ShrinkOccupiedAreaForAbsolutePosition();
             TargetCounterHandler.AddPageByID(this);
             int currentAreaPos = 0;

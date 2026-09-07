@@ -547,8 +547,8 @@ namespace iText.Layout.Renderer {
                     }
                     if (!forceOverflowForTextRendererPartialResult) {
                         if (isVerticalWriting) {
-                            float maxLineWidth = Math.Max(occupiedArea.GetBBox().GetWidth(), childResult.GetOccupiedArea().GetBBox().GetWidth
-                                ());
+                            float maxLineWidth = Math.Max(occupiedArea.GetBBox().GetWidth(), childResult.GetStatus() == LayoutResult.NOTHING
+                                 ? 0 : childResult.GetOccupiedArea().GetBBox().GetWidth());
                             // Html/css and browsers also use line height as line width for vertical text.
                             float lineHeight = maxAscent - maxDescent;
                             occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox.GetHeight() - curMainAxisOccupiedSize

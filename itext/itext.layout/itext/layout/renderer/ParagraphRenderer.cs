@@ -160,7 +160,7 @@ namespace iText.Layout.Renderer {
                 areas = InitElementAreas(new LayoutArea(pageNumber, parentBBox));
             }
             occupiedArea = new LayoutArea(pageNumber, new Rectangle(parentBBox.GetX(), parentBBox.GetY() + parentBBox.
-                GetHeight(), parentBBox.GetWidth(), 0));
+                GetHeight(), IsVerticalWriting() ? 0 : parentBBox.GetWidth(), 0));
             ShrinkOccupiedAreaForAbsolutePosition();
             TargetCounterHandler.AddPageByID(this);
             int currentAreaPos = 0;
@@ -183,6 +183,7 @@ namespace iText.Layout.Renderer {
                 marginsCollapseHandler.StartChildMarginsHandling(null, layoutBox);
             }
             bool includeFloatsInOccupiedArea = BlockFormattingContextUtil.IsRendererCreateBfc(this);
+            Rectangle originalLayoutBox = layoutBox.Clone();
             while (currentRenderer != null) {
                 currentRenderer.SetProperty(Property.TAB_DEFAULT, this.GetPropertyAsFloat(Property.TAB_DEFAULT));
                 currentRenderer.SetProperty(Property.TAB_STOPS, this.GetProperty<Object>(Property.TAB_STOPS));
@@ -431,15 +432,12 @@ namespace iText.Layout.Renderer {
                 occupiedArea.GetBBox().MoveDown(moveDown);
                 occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + moveDown);
             }
-            if (isVerticalWriting) {
-                occupiedArea.GetBBox().SetWidth(occupiedArea.GetBBox().GetWidth() - layoutBox.GetWidth());
-            }
             if (marginsCollapsingEnabled && !childRenderers.IsEmpty() && notAllKidsAreFloats) {
                 marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
             }
             if (includeFloatsInOccupiedArea) {
                 FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this, nonChildFloatingRendererAreas);
-                FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
+                FixOccupiedAreaIfOverflowedX(overflowX, originalLayoutBox);
             }
             if (wasHeightClipped) {
                 FixOccupiedAreaIfOverflowedY(overflowY, layoutBox);

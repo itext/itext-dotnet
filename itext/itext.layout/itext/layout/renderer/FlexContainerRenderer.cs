@@ -379,8 +379,13 @@ namespace iText.Layout.Renderer {
             ) {
             Rectangle oldBBox = occupiedArea.GetBBox().Clone();
             Rectangle recalculatedRectangle = Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), resultBBox);
-            occupiedArea.GetBBox().SetY(recalculatedRectangle.GetY());
-            occupiedArea.GetBBox().SetHeight(recalculatedRectangle.GetHeight());
+            if (IsVerticalWriting()) {
+                occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), resultBBox));
+            }
+            else {
+                occupiedArea.GetBBox().SetY(recalculatedRectangle.GetY());
+                occupiedArea.GetBBox().SetHeight(recalculatedRectangle.GetHeight());
+            }
             if (oldBBox.GetTop() < occupiedArea.GetBBox().GetTop()) {
                 occupiedArea.GetBBox().DecreaseHeight(occupiedArea.GetBBox().GetTop() - oldBBox.GetTop());
             }
@@ -551,11 +556,11 @@ namespace iText.Layout.Renderer {
         }
 
         private static void OrderChildRenderers(IList<IRenderer> renderers) {
-            JavaCollectionsUtil.Sort(renderers, new _IComparer_578());
+            JavaCollectionsUtil.Sort(renderers, new _IComparer_583());
         }
 
-        private sealed class _IComparer_578 : IComparer<IRenderer> {
-            public _IComparer_578() {
+        private sealed class _IComparer_583 : IComparer<IRenderer> {
+            public _IComparer_583() {
             }
 
             public int Compare(IRenderer a, IRenderer b) {
