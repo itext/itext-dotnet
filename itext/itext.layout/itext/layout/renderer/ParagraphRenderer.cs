@@ -160,7 +160,7 @@ namespace iText.Layout.Renderer {
                 areas = InitElementAreas(new LayoutArea(pageNumber, parentBBox));
             }
             occupiedArea = new LayoutArea(pageNumber, new Rectangle(parentBBox.GetX(), parentBBox.GetY() + parentBBox.
-                GetHeight(), IsVerticalWriting() ? 0 : parentBBox.GetWidth(), 0));
+                GetHeight(), isVerticalWriting ? 0 : parentBBox.GetWidth(), 0));
             ShrinkOccupiedAreaForAbsolutePosition();
             TargetCounterHandler.AddPageByID(this);
             int currentAreaPos = 0;
@@ -356,7 +356,9 @@ namespace iText.Layout.Renderer {
                                     if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
                                         occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), currentRenderer.GetOccupiedArea(
                                             ).GetBBox()));
-                                        FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
+                                        if (!isVerticalWriting || blockWidth != null) {
+                                            FixOccupiedAreaIfOverflowedX(isVerticalWriting, overflowX, layoutBox);
+                                        }
                                         parent.SetProperty(Property.FULL, true);
                                         lines.Add(currentRenderer);
                                         // Force placement of children we have and do not force placement of the others
@@ -398,9 +400,8 @@ namespace iText.Layout.Renderer {
                     if (lineHasContent) {
                         occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), processedRenderer.GetOccupiedArea
                             ().GetBBox()));
-                        // TODO DEVSIX-10163 Support overflow and wrapping properties for vertical text
-                        if (!isVerticalWriting) {
-                            FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
+                        if (!isVerticalWriting || blockWidth != null) {
+                            FixOccupiedAreaIfOverflowedX(isVerticalWriting, overflowX, layoutBox);
                         }
                     }
                     firstLineInBox = false;
@@ -441,6 +442,19 @@ namespace iText.Layout.Renderer {
             }
             if (wasHeightClipped) {
                 FixOccupiedAreaIfOverflowedY(overflowY, layoutBox);
+            }
+            // Adjust occupied area width for vertical text after lines layout.
+            if (isVerticalWriting && blockWidth != null && !IsOverflowFit(overflowX)) {
+                // Increase occupied area in case specified paragraph width is more than actual lines width.
+                if (layoutBox.GetWidth() > 0 && occupiedArea.GetBBox().GetRight() < layoutBox.GetRight()) {
+                    float difference = layoutBox.GetRight() - occupiedArea.GetBBox().GetRight();
+                    occupiedArea.GetBBox().IncreaseWidth(difference);
+                }
+                // Decrease occupied area in case specified paragraph width is less than actual lines width.
+                if (layoutBox.GetWidth() < 0 && occupiedArea.GetBBox().GetRight() > layoutBox.GetRight()) {
+                    float difference = occupiedArea.GetBBox().GetRight() - layoutBox.GetRight();
+                    occupiedArea.GetBBox().DecreaseWidth(difference);
+                }
             }
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler.EndMarginsCollapse(layoutBox);
@@ -711,6 +725,19 @@ namespace iText.Layout.Renderer {
             float firstLineIndent = (float)overflowRenderer.GetPropertyAsFloat(Property.FIRST_LINE_INDENT);
             if (firstLineIndent != 0) {
                 overflowRenderer.SetProperty(Property.FIRST_LINE_INDENT, 0f);
+            }
+        }
+
+        private void FixOccupiedAreaIfOverflowedX(bool isVerticalWriting, OverflowPropertyValue? overflowX, Rectangle
+             layoutBox) {
+            if (isVerticalWriting && !IsOverflowFit(overflowX)) {
+                if (layoutBox.GetWidth() < 0 && occupiedArea.GetBBox().GetRight() > layoutBox.GetRight()) {
+                    float difference = occupiedArea.GetBBox().GetRight() - layoutBox.GetRight();
+                    occupiedArea.GetBBox().DecreaseWidth(difference);
+                }
+            }
+            else {
+                FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
             }
         }
 

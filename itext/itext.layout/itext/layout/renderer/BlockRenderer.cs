@@ -1004,8 +1004,8 @@ namespace iText.Layout.Renderer {
             if (IsOverflowFit(overflowX)) {
                 return;
             }
-            if ((occupiedArea.GetBBox().GetWidth() > layoutBox.GetWidth() || occupiedArea.GetBBox().GetLeft() < layoutBox
-                .GetLeft())) {
+            if (occupiedArea.GetBBox().GetWidth() > layoutBox.GetWidth() || occupiedArea.GetBBox().GetLeft() < layoutBox
+                .GetLeft()) {
                 occupiedArea.GetBBox().SetX(layoutBox.GetX()).SetWidth(layoutBox.GetWidth());
             }
         }

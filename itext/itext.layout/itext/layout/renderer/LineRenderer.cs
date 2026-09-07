@@ -65,14 +65,15 @@ namespace iText.Layout.Renderer {
         private float maxBlockDescent;
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
-            bool textSequenceOverflowXProcessing = false;
             int firstChildToRelayout = -1;
             Rectangle layoutBox = layoutContext.GetArea().GetBBox().Clone();
             bool wasParentsHeightClipped = layoutContext.IsClippedHeight();
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
-            OverflowPropertyValue? oldXOverflow = null;
             bool isVerticalWriting = IsVerticalWriting();
-            bool wasXOverflowChanged = false;
+            bool textSequenceOverflowProcessing = false;
+            OverflowPropertyValue? oldOverflow = null;
+            int overflowProperty = isVerticalWriting ? Property.OVERFLOW_Y : Property.OVERFLOW_X;
+            bool wasOverflowChanged = false;
             bool floatsPlacedBeforeLine = false;
             if (floatRendererAreas != null) {
                 float layoutWidth = layoutBox.GetWidth();
@@ -82,8 +83,8 @@ namespace iText.Layout.Renderer {
                 FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, layoutBox);
                 if (layoutWidth > layoutBox.GetWidth() || layoutHeight > layoutBox.GetHeight()) {
                     floatsPlacedBeforeLine = true;
-                    oldXOverflow = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
-                    wasXOverflowChanged = true;
+                    oldOverflow = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
+                    wasOverflowChanged = true;
                     SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
                 }
             }
@@ -229,9 +230,9 @@ namespace iText.Layout.Renderer {
                     // also not taking it into account (i.e. not setting it on child renderer) results in differences with
                     // html when floating span is split on other line;
                     // TODO DEVSIX-1730: may be process floating spans as inline blocks always?
-                    if (!wasXOverflowChanged && childPos > 0) {
-                        oldXOverflow = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
-                        wasXOverflowChanged = true;
+                    if (!wasOverflowChanged && childPos > 0) {
+                        oldOverflow = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
+                        wasOverflowChanged = true;
                         SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
                     }
                     if (!lineLayoutContext.IsFloatOverflowedToNextPageWithNothing() && floatsOverflowedToNextLine.IsEmpty() &&
@@ -367,18 +368,18 @@ namespace iText.Layout.Renderer {
                         .TextContainsSpecialScriptGlyphs(true);
                     bool setOverflowFitCausedByTextRendererInHtmlMode = RenderingMode.HTML_MODE == childRenderingMode && childRenderer
                          is TextRenderer && !((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(true);
-                    if (!wasXOverflowChanged && (childPos > 0 || setOverflowFitCausedBySpecialScripts || setOverflowFitCausedByTextRendererInHtmlMode
-                        ) && !textSequenceOverflowXProcessing) {
-                        oldXOverflow = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
-                        wasXOverflowChanged = true;
-                        SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
+                    if (!wasOverflowChanged && (childPos > 0 || setOverflowFitCausedBySpecialScripts || setOverflowFitCausedByTextRendererInHtmlMode
+                        ) && !textSequenceOverflowProcessing) {
+                        oldOverflow = this.GetProperty<OverflowPropertyValue?>(overflowProperty);
+                        wasOverflowChanged = true;
+                        SetProperty(overflowProperty, OverflowPropertyValue.FIT);
                     }
-                    TextSequenceWordWrapping.PreprocessTextSequenceOverflowX(this, textSequenceOverflowXProcessing, childRenderer
-                        , wasXOverflowChanged, oldXOverflow);
+                    TextSequenceWordWrapping.PreprocessTextSequenceOverflow(this, textSequenceOverflowProcessing, childRenderer
+                        , wasOverflowChanged, oldOverflow, overflowProperty);
                     childResult = directChildRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber
                         (), bbox), wasParentsHeightClipped));
-                    shouldBreakLayouting = TextSequenceWordWrapping.PostprocessTextSequenceOverflowX(this, textSequenceOverflowXProcessing
-                        , childPos, childRenderer, childResult, wasXOverflowChanged);
+                    shouldBreakLayouting = TextSequenceWordWrapping.PostprocessTextSequenceOverflow(this, textSequenceOverflowProcessing
+                        , childPos, childRenderer, childResult, wasOverflowChanged, overflowProperty);
                     TextSequenceWordWrapping.UpdateTextSequenceLayoutResults(textRendererLayoutResults, false, childRenderer, 
                         childPos, childResult);
                     TextSequenceWordWrapping.UpdateTextSequenceLayoutResults(specialScriptLayoutResults, true, childRenderer, 
@@ -431,27 +432,26 @@ namespace iText.Layout.Renderer {
                 bool shouldBreakLayoutingOnTextRenderer = shouldBreakLayouting && childResult is TextLayoutResult;
                 bool forceOverflowForTextRendererPartialResult = false;
                 if (shouldBreakLayoutingOnTextRenderer) {
-                    bool isWordHasBeenSplitLayoutRenderingMode = ((TextLayoutResult)childResult).IsWordHasBeenSplit() && (RenderingMode
-                        .HTML_MODE != childRenderingMode || isVerticalWriting) && directChildRenderer is TextRenderer && !((TextRenderer
-                        )directChildRenderer).TextContainsSpecialScriptGlyphs(true);
-                    bool enableSpecialScriptsWrapping = childRenderer is TextRenderer && !textSequenceOverflowXProcessing && !
-                        newLineOccurred && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(true);
-                    bool enableTextSequenceWrapping = ((RenderingMode.HTML_MODE == childRenderingMode && !isVerticalWriting) ||
-                         (directChildRenderer is FootnoteAnchorRenderer && childRenderer is TextRenderer)) && !newLineOccurred
-                         && !textSequenceOverflowXProcessing;
+                    bool isWordHasBeenSplitLayoutRenderingMode = ((TextLayoutResult)childResult).IsWordHasBeenSplit() && RenderingMode
+                        .HTML_MODE != childRenderingMode && directChildRenderer is TextRenderer && !((TextRenderer)directChildRenderer
+                        ).TextContainsSpecialScriptGlyphs(true);
+                    bool enableSpecialScriptsWrapping = childRenderer is TextRenderer && !textSequenceOverflowProcessing && !newLineOccurred
+                         && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(true);
+                    bool enableTextSequenceWrapping = (RenderingMode.HTML_MODE == childRenderingMode || (directChildRenderer is
+                         FootnoteAnchorRenderer && childRenderer is TextRenderer)) && !newLineOccurred && !textSequenceOverflowProcessing;
                     if (isWordHasBeenSplitLayoutRenderingMode) {
-                        forceOverflowForTextRendererPartialResult = IsForceOverflowForTextRendererPartialResult(childRenderer, wasXOverflowChanged
-                            , oldXOverflow, layoutContext, layoutBox, wasParentsHeightClipped);
+                        forceOverflowForTextRendererPartialResult = IsForceOverflowForTextRendererPartialResult(childRenderer, wasOverflowChanged
+                            , oldOverflow, layoutContext, layoutBox, wasParentsHeightClipped, overflowProperty);
                     }
                     else {
                         if (enableSpecialScriptsWrapping) {
-                            bool isOverflowFit = wasXOverflowChanged ? (oldXOverflow == OverflowPropertyValue.FIT) : IsOverflowFit(this
-                                .GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X));
+                            bool isOverflowFit = wasOverflowChanged ? (oldOverflow == OverflowPropertyValue.FIT) : IsOverflowFit(this.
+                                GetProperty<OverflowPropertyValue?>(overflowProperty));
                             TextSequenceWordWrapping.LastFittingChildRendererData lastFittingChildRendererData = TextSequenceWordWrapping
                                 .GetIndexAndLayoutResultOfTheLastTextRendererContainingSpecialScripts(this, childPos, specialScriptLayoutResults
                                 , wasParentsHeightClipped, isOverflowFit);
                             if (lastFittingChildRendererData == null) {
-                                textSequenceOverflowXProcessing = true;
+                                textSequenceOverflowProcessing = true;
                                 shouldBreakLayouting = false;
                                 firstChildToRelayout = childPos;
                             }
@@ -468,13 +468,13 @@ namespace iText.Layout.Renderer {
                         }
                         else {
                             if (enableTextSequenceWrapping) {
-                                bool isOverflowFit = wasXOverflowChanged ? (oldXOverflow == OverflowPropertyValue.FIT) : IsOverflowFit(this
-                                    .GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X));
+                                bool isOverflowFit = wasOverflowChanged ? (oldOverflow == OverflowPropertyValue.FIT) : IsOverflowFit(this.
+                                    GetProperty<OverflowPropertyValue?>(overflowProperty));
                                 TextSequenceWordWrapping.LastFittingChildRendererData lastFittingChildRendererData = TextSequenceWordWrapping
                                     .GetIndexAndLayoutResultOfTheLastTextRendererWithNoSpecialScripts(this, childPos, textRendererLayoutResults
                                     , wasParentsHeightClipped, isOverflowFit, floatsPlacedInLine || floatsPlacedBeforeLine);
                                 if (lastFittingChildRendererData == null) {
-                                    textSequenceOverflowXProcessing = true;
+                                    textSequenceOverflowProcessing = true;
                                     shouldBreakLayouting = false;
                                     firstChildToRelayout = childPos;
                                 }
@@ -709,13 +709,13 @@ namespace iText.Layout.Renderer {
                 toProcess.TrimLast();
                 result.SetMinMaxWidth(minMaxWidth);
             }
-            if (wasXOverflowChanged) {
-                SetProperty(Property.OVERFLOW_X, oldXOverflow);
+            if (wasOverflowChanged) {
+                SetProperty(overflowProperty, oldOverflow);
                 if (null != result.GetSplitRenderer()) {
-                    result.GetSplitRenderer().SetProperty(Property.OVERFLOW_X, oldXOverflow);
+                    result.GetSplitRenderer().SetProperty(overflowProperty, oldOverflow);
                 }
                 if (null != result.GetOverflowRenderer()) {
-                    result.GetOverflowRenderer().SetProperty(Property.OVERFLOW_X, oldXOverflow);
+                    result.GetOverflowRenderer().SetProperty(overflowProperty, oldOverflow);
                 }
             }
             return result;
@@ -1436,21 +1436,26 @@ namespace iText.Layout.Renderer {
         /// <summary>Checks if the word that's been split when has been layouted on this line can fit the next line without splitting.
         ///     </summary>
         /// <param name="childRenderer">the childRenderer containing the split word</param>
-        /// <param name="wasXOverflowChanged">
+        /// <param name="wasOverflowChanged">
         /// true if
         /// <see cref="iText.Layout.Properties.Property.OVERFLOW_X"/>
+        /// or
+        /// <see cref="iText.Layout.Properties.Property.OVERFLOW_Y"/>
         /// has been changed
         /// during layouting of
         /// <see cref="LineRenderer"/>
         /// </param>
-        /// <param name="oldXOverflow">
+        /// <param name="oldOverflow">
         /// the value of
         /// <see cref="iText.Layout.Properties.Property.OVERFLOW_X"/>
-        /// before it's been changed
-        /// during layouting of
+        /// or
+        /// <see cref="iText.Layout.Properties.Property.OVERFLOW_Y"/>
+        /// before it's been changed during layouting of
         /// <see cref="LineRenderer"/>
         /// or null if
         /// <see cref="iText.Layout.Properties.Property.OVERFLOW_X"/>
+        /// or
+        /// <see cref="iText.Layout.Properties.Property.OVERFLOW_Y"/>
         /// hasn't been changed
         /// </param>
         /// <param name="layoutContext">
@@ -1459,17 +1464,25 @@ namespace iText.Layout.Renderer {
         /// </param>
         /// <param name="layoutBox">current layoutBox</param>
         /// <param name="wasParentsHeightClipped">true if layoutBox's height has been clipped</param>
+        /// <param name="overflowProperty">
+        /// either
+        /// <see cref="iText.Layout.Properties.Property.OVERFLOW_X"/>
+        /// for horizontal text
+        /// or
+        /// <see cref="iText.Layout.Properties.Property.OVERFLOW_Y"/>
+        /// for vertical text
+        /// </param>
         /// <returns>true if the split word can fit the next line without splitting</returns>
-        internal virtual bool IsForceOverflowForTextRendererPartialResult(IRenderer childRenderer, bool wasXOverflowChanged
-            , OverflowPropertyValue? oldXOverflow, LayoutContext layoutContext, Rectangle layoutBox, bool wasParentsHeightClipped
-            ) {
-            if (wasXOverflowChanged) {
-                SetProperty(Property.OVERFLOW_X, oldXOverflow);
+        internal virtual bool IsForceOverflowForTextRendererPartialResult(IRenderer childRenderer, bool wasOverflowChanged
+            , OverflowPropertyValue? oldOverflow, LayoutContext layoutContext, Rectangle layoutBox, bool wasParentsHeightClipped
+            , int overflowProperty) {
+            if (wasOverflowChanged) {
+                SetProperty(overflowProperty, oldOverflow);
             }
             LayoutResult newLayoutResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea
                 ().GetPageNumber(), layoutBox), wasParentsHeightClipped));
-            if (wasXOverflowChanged) {
-                SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
+            if (wasOverflowChanged) {
+                SetProperty(overflowProperty, OverflowPropertyValue.FIT);
             }
             return newLayoutResult is TextLayoutResult && !((TextLayoutResult)newLayoutResult).IsWordHasBeenSplit();
         }

@@ -161,20 +161,21 @@ namespace iText.Layout.Renderer {
             LayoutArea area = layoutContext.GetArea();
             Rectangle layoutBox = area.GetBBox().Clone();
             bool noSoftWrap = true.Equals(this.parent.GetOwnProperty<bool?>(Property.NO_SOFT_WRAP_INLINE));
-            OverflowPropertyValue? overflowX = this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
+            bool isVerticalWriting = IsVerticalWriting();
+            OverflowPropertyValue? overflow = isVerticalWriting ? this.parent.GetProperty<OverflowPropertyValue?>(Property
+                .OVERFLOW_Y) : this.parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
             OverflowWrapPropertyValue? overflowWrap = this.GetProperty<OverflowWrapPropertyValue?>(Property.OVERFLOW_WRAP
                 );
-            bool isVerticalWriting = IsVerticalWriting();
             bool overflowWrapNotNormal = overflowWrap == OverflowWrapPropertyValue.ANYWHERE || overflowWrap == OverflowWrapPropertyValue
                 .BREAK_WORD;
             if (overflowWrapNotNormal) {
-                overflowX = OverflowPropertyValue.FIT;
+                overflow = OverflowPropertyValue.FIT;
             }
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             FloatPropertyValue? floatPropertyValue = this.GetProperty<FloatPropertyValue?>(Property.FLOAT);
             if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
                 FloatingHelper.AdjustFloatedBlockLayoutBox(this, layoutBox, null, floatRendererAreas, floatPropertyValue, 
-                    overflowX);
+                    overflow);
             }
             float preMarginBorderPaddingWidth = layoutBox.GetWidth();
             UnitValue[] margins = GetMargins();
@@ -260,7 +261,7 @@ namespace iText.Layout.Renderer {
             char? tabAnchorCharacter = this.GetProperty<char?>(Property.TAB_ANCHOR);
             TextLayoutResult result = null;
             OverflowPropertyValue? overflowY = !layoutContext.IsClippedHeight() ? OverflowPropertyValue.FIT : this.parent
-                .GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
+                .GetProperty<OverflowPropertyValue?>(isVerticalWriting ? Property.OVERFLOW_X : Property.OVERFLOW_Y);
             // true in situations like "\nHello World" or "Hello\nWorld"
             bool isSplitForcedByNewLine = false;
             // needed in situation like "\nHello World" or " Hello World", when split occurs on first character, but we want to leave it on previous line
@@ -365,8 +366,9 @@ namespace iText.Layout.Renderer {
                         ) {
                         firstCharacterWhichExceedsAllowedSpace = ind;
                         bool spaceOrWhitespace = iText.IO.Util.TextUtil.IsSpaceOrWhitespace(text.Get(ind));
-                        OverflowPropertyValue? parentOverflowX = parent.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_X);
-                        if (spaceOrWhitespace || overflowWrapNotNormal && !IsOverflowFit(parentOverflowX)) {
+                        OverflowPropertyValue? parentOverflow = parent.GetProperty<OverflowPropertyValue?>(isVerticalWriting ? Property
+                            .OVERFLOW_Y : Property.OVERFLOW_X);
+                        if (spaceOrWhitespace || overflowWrapNotNormal && !IsOverflowFit(parentOverflow)) {
                             if (spaceOrWhitespace) {
                                 wordBreakGlyphAtLineEnding = currentGlyph;
                             }
@@ -391,7 +393,7 @@ namespace iText.Layout.Renderer {
                             nonBreakingHyphenRelatedChunkWidth = 0;
                         }
                     }
-                    if (firstCharacterWhichExceedsAllowedSpace == -1 || !IsOverflowFit(overflowX)) {
+                    if (firstCharacterWhichExceedsAllowedSpace == -1 || !IsOverflowFit(overflow)) {
                         nonBreakablePartWidthWhichDoesNotExceedAllowedWidth = AccumulateWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth
                             , glyphWidth + xAdvance, isVerticalWriting);
                         nonBreakablePartHeightWhichDoesNotExceedAllowedHeight = AccumulateHeight(nonBreakablePartHeightWhichDoesNotExceedAllowedHeight
@@ -406,7 +408,7 @@ namespace iText.Layout.Renderer {
                     previousCharPos = ind;
                     if (!noSoftWrap && symbolNotFitOnLine && (0 == nonBreakingHyphenRelatedChunkWidth || ind + 1 == text.GetEnd
                         () || !GlyphBelongsToNonBreakingHyphenRelatedChunk(text, ind + 1))) {
-                        if (IsOverflowFit(overflowX)) {
+                        if (IsOverflowFit(overflow)) {
                             // we have extracted all the information we wanted, and we do not want to continue.
                             // we will have to split the word anyway.
                             break;
@@ -560,7 +562,7 @@ namespace iText.Layout.Renderer {
                             }
                         }
                         bool specialScriptWordSplit = TextContainsSpecialScriptGlyphs(true) && !isSplitForcedByNewLine && IsOverflowFit
-                            (overflowX);
+                            (overflow);
                         if ((!anythingPlaced && !hyphenationApplied) || forcePartialSplitOnFirstChar || -1 != nonBreakingHyphenRelatedChunkStart
                              || specialScriptWordSplit) {
                             // if the word is too long for a single line we will have to split it
@@ -570,12 +572,12 @@ namespace iText.Layout.Renderer {
                                 line.SetStart(currentTextPos);
                             }
                             if (!crlf) {
-                                currentTextPos = (forcePartialSplitOnFirstChar || IsOverflowFit(overflowX) || specialScriptWordSplit) ? firstCharacterWhichExceedsAllowedSpace
+                                currentTextPos = (forcePartialSplitOnFirstChar || IsOverflowFit(overflow) || specialScriptWordSplit) ? firstCharacterWhichExceedsAllowedSpace
                                      : (nonBreakablePartEnd + 1);
                             }
                             line.SetEnd(Math.Max(line.GetEnd(), currentTextPos));
                             wordSplit = !forcePartialSplitOnFirstChar && (text.GetEnd() != currentTextPos);
-                            if (wordSplit || !(forcePartialSplitOnFirstChar || IsOverflowFit(overflowX))) {
+                            if (wordSplit || !(forcePartialSplitOnFirstChar || IsOverflowFit(overflow))) {
                                 currentLineAscender = Math.Max(currentLineAscender, nonBreakablePartMaxAscender);
                                 currentLineHeight = AccumulateHeight(currentLineHeight, nonBreakablePartHeightWhichDoesNotExceedAllowedHeight
                                     , isVerticalWriting);

@@ -379,7 +379,7 @@ namespace iText.Layout.Renderer {
         /// to be overflowed beyond the available area.
         /// </summary>
         /// <param name="lineRenderer">line renderer containing text sequence to process</param>
-        /// <param name="textSequenceOverflowXProcessing">
+        /// <param name="textSequenceOverflowProcessing">
         /// true if it is
         /// <see cref="TextRenderer"/>
         /// sequence processing in overflowX mode
@@ -389,13 +389,13 @@ namespace iText.Layout.Renderer {
         /// <see cref="LineRenderer"/>
         /// 's child to be preprocessed
         /// </param>
-        /// <param name="wasXOverflowChanged">
+        /// <param name="wasOverflowChanged">
         /// true if value of
         /// <see cref="iText.Layout.Properties.Property.OVERFLOW_X"/>
         /// has been changed during
         /// layouting
         /// </param>
-        /// <param name="oldXOverflow">
+        /// <param name="oldOverflow">
         /// the value of
         /// <see cref="iText.Layout.Properties.Property.OVERFLOW_X"/>
         /// before it's been changed
@@ -405,32 +405,41 @@ namespace iText.Layout.Renderer {
         /// <see cref="iText.Layout.Properties.Property.OVERFLOW_X"/>
         /// hasn't been changed
         /// </param>
-        public static void PreprocessTextSequenceOverflowX(LineRenderer lineRenderer, bool textSequenceOverflowXProcessing
-            , IRenderer childRenderer, bool wasXOverflowChanged, OverflowPropertyValue? oldXOverflow) {
+        /// <param name="overflowProperty">
+        /// either
+        /// <see cref="iText.Layout.Properties.Property.OVERFLOW_X"/>
+        /// for horizontal text
+        /// or
+        /// <see cref="iText.Layout.Properties.Property.OVERFLOW_Y"/>
+        /// for vertical text
+        /// </param>
+        public static void PreprocessTextSequenceOverflow(LineRenderer lineRenderer, bool textSequenceOverflowProcessing
+            , IRenderer childRenderer, bool wasOverflowChanged, OverflowPropertyValue? oldOverflow, int overflowProperty
+            ) {
             bool specialScripts = childRenderer is TextRenderer && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs
                 (true);
-            if (textSequenceOverflowXProcessing && specialScripts) {
+            if (textSequenceOverflowProcessing && specialScripts) {
                 int firstPossibleBreakWithinTheRenderer = ((TextRenderer)childRenderer).GetSpecialScriptsWordBreakPoints()
                     [0];
                 if (firstPossibleBreakWithinTheRenderer != -1) {
                     ((TextRenderer)childRenderer).SetSpecialScriptFirstNotFittingIndex(firstPossibleBreakWithinTheRenderer);
                 }
-                if (wasXOverflowChanged) {
-                    lineRenderer.SetProperty(Property.OVERFLOW_X, oldXOverflow);
+                if (wasOverflowChanged) {
+                    lineRenderer.SetProperty(overflowProperty, oldOverflow);
                 }
             }
-            if (textSequenceOverflowXProcessing && !specialScripts && wasXOverflowChanged) {
-                lineRenderer.SetProperty(Property.OVERFLOW_X, oldXOverflow);
+            if (textSequenceOverflowProcessing && !specialScripts && wasOverflowChanged) {
+                lineRenderer.SetProperty(overflowProperty, oldOverflow);
             }
         }
 
         /// <summary>
         /// Checks if the layouting should be stopped on current child and resets configurations set on
-        /// <see cref="PreprocessTextSequenceOverflowX(LineRenderer, bool, IRenderer, bool, iText.Layout.Properties.OverflowPropertyValue?)
+        /// <see cref="PreprocessTextSequenceOverflow(LineRenderer, bool, IRenderer, bool, iText.Layout.Properties.OverflowPropertyValue?, int)
         ///     "/>.
         /// </summary>
         /// <param name="lineRenderer">line renderer containing text sequence to process</param>
-        /// <param name="textSequenceOverflowXProcessing">
+        /// <param name="textSequenceOverflowProcessing">
         /// true if it is
         /// <see cref="TextRenderer"/>
         /// sequence processing in overflowX mode
@@ -440,36 +449,44 @@ namespace iText.Layout.Renderer {
         /// <see cref="LineRenderer"/>
         /// 's child to be preprocessed
         /// </param>
-        /// <param name="wasXOverflowChanged">
+        /// <param name="wasOverflowChanged">
         /// true if value of
         /// <see cref="iText.Layout.Properties.Property.OVERFLOW_X"/>
-        /// has been changed during
-        /// layouting
+        /// has been changed during layouting
         /// </param>
-        public static bool PostprocessTextSequenceOverflowX(LineRenderer lineRenderer, bool textSequenceOverflowXProcessing
-            , int childPos, IRenderer childRenderer, LayoutResult childResult, bool wasXOverflowChanged) {
+        /// <param name="overflowProperty">
+        /// either
+        /// <see cref="iText.Layout.Properties.Property.OVERFLOW_X"/>
+        /// for horizontal text
+        /// or
+        /// <see cref="iText.Layout.Properties.Property.OVERFLOW_Y"/>
+        /// for vertical text
+        /// </param>
+        public static bool PostprocessTextSequenceOverflow(LineRenderer lineRenderer, bool textSequenceOverflowProcessing
+            , int childPos, IRenderer childRenderer, LayoutResult childResult, bool wasOverflowChanged, int overflowProperty
+            ) {
             bool specialScripts = childRenderer is TextRenderer && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs
                 (true);
             bool shouldBreakLayouting = false;
             bool lastElemOfTextSequence = childPos + 1 == lineRenderer.childRenderers.Count || LineRenderer.IsChildFloating
                 (GetRenderer(lineRenderer, childPos + 1)) || !(GetRenderer(lineRenderer, childPos + 1) is TextRenderer
                 );
-            if (textSequenceOverflowXProcessing && specialScripts) {
+            if (textSequenceOverflowProcessing && specialScripts) {
                 if (((TextRenderer)childRenderer).GetSpecialScriptFirstNotFittingIndex() > 0 || lastElemOfTextSequence) {
                     shouldBreakLayouting = true;
                 }
                 ((TextRenderer)childRenderer).SetSpecialScriptFirstNotFittingIndex(-1);
-                if (wasXOverflowChanged) {
-                    lineRenderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
+                if (wasOverflowChanged) {
+                    lineRenderer.SetProperty(overflowProperty, OverflowPropertyValue.FIT);
                 }
             }
-            if (textSequenceOverflowXProcessing && !specialScripts) {
+            if (textSequenceOverflowProcessing && !specialScripts) {
                 if ((childResult is TextLayoutResult && ((TextLayoutResult)childResult).IsContainsPossibleBreak()) || lastElemOfTextSequence
                     ) {
                     shouldBreakLayouting = true;
                 }
-                if (wasXOverflowChanged) {
-                    lineRenderer.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
+                if (wasOverflowChanged) {
+                    lineRenderer.SetProperty(overflowProperty, OverflowPropertyValue.FIT);
                 }
             }
             return shouldBreakLayouting;
