@@ -67,7 +67,7 @@ namespace iText.Bouncycastle.Openssl {
             try {
                 readObject = parser.ReadObject();
             }
-            catch (PasswordException) {
+            catch (Org.BouncyCastle.OpenSsl.PasswordException) {
                 return new PrivateKeyBC(null);
             }
             if (readObject is X509Certificate) {

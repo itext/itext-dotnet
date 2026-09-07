@@ -33,7 +33,7 @@ namespace iText.Bouncycastle {
 
         // Empty constructor.
         public virtual String GetCertificateInfoTestConst() {
-            return "corrupted stream - out of bounds length found: 8 >= 6";
+            return "corrupted stream - out of bounds length found: 8 > 6";
         }
     }
 //\endcond
