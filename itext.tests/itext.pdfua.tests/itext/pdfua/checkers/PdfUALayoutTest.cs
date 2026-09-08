@@ -36,6 +36,7 @@ using iText.Kernel.Validation;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 using iText.Pdfua;
 using iText.Test;
 using iText.Test.Attributes;
@@ -93,6 +94,24 @@ namespace iText.Pdfua.Checkers {
             }
             );
             framework.AssertBothValid("simpleParagraphWithUnderline");
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void VerticalTaggingDocumentTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfFont font = LoadFont();
+                Document doc = new Document(pdfDoc);
+                doc.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                Paragraph verticalText = new Paragraph().SetFont(font);
+                verticalText.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                verticalText.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                verticalText.SetHeight(70);
+                verticalText.Add(new Text("Simple layout UA document with vertical text."));
+                doc.Add(verticalText);
+            }
+            );
+            framework.AssertBothValid("verticalTaggingDocument");
         }
 
         [NUnit.Framework.TestCaseSource("RoleData")]
@@ -154,7 +173,7 @@ namespace iText.Pdfua.Checkers {
             if (!conformance.IsPdfUA()) {
                 return;
             }
-            PdfDocument pdfDoc = new _PdfUADocument_189(new PdfWriter(new MemoryStream()), new PdfUAConfig(conformance
+            PdfDocument pdfDoc = new _PdfUADocument_213(new PdfWriter(new MemoryStream()), new PdfUAConfig(conformance
                 .GetUAConformance(), "Hello", "en-US"));
             PdfFont font = LoadFont();
             Document doc = new Document(pdfDoc);
@@ -169,8 +188,8 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.IsTrue(e.Message.Contains("has contrast ratio: 5"));
         }
 
-        private sealed class _PdfUADocument_189 : PdfUADocument {
-            public _PdfUADocument_189(PdfWriter baseArg1, PdfUAConfig baseArg2)
+        private sealed class _PdfUADocument_213 : PdfUADocument {
+            public _PdfUADocument_213(PdfWriter baseArg1, PdfUAConfig baseArg2)
                 : base(baseArg1, baseArg2) {
             }
 
@@ -188,7 +207,7 @@ namespace iText.Pdfua.Checkers {
             if (!conformance.IsPdfUA()) {
                 return;
             }
-            PdfUADocument pdfDoc = new _PdfUADocument_218(new PdfWriter(new MemoryStream()), new PdfUAConfig(conformance
+            PdfUADocument pdfDoc = new _PdfUADocument_242(new PdfWriter(new MemoryStream()), new PdfUAConfig(conformance
                 .GetUAConformance(), "Hello", "en-US"));
             PdfFont font = LoadFont();
             Document doc = new Document(pdfDoc);
@@ -204,8 +223,8 @@ namespace iText.Pdfua.Checkers {
             NUnit.Framework.Assert.IsTrue(e.Message.Contains("has contrast ratio: 2"));
         }
 
-        private sealed class _PdfUADocument_218 : PdfUADocument {
-            public _PdfUADocument_218(PdfWriter baseArg1, PdfUAConfig baseArg2)
+        private sealed class _PdfUADocument_242 : PdfUADocument {
+            public _PdfUADocument_242(PdfWriter baseArg1, PdfUAConfig baseArg2)
                 : base(baseArg1, baseArg2) {
             }
 

@@ -52,6 +52,7 @@ namespace iText.Layout.Renderer {
             PdfDictionary attributes = new PdfDictionary();
             attributes.Put(PdfName.O, PdfName.Layout);
             // TODO DEVSIX-7016 WritingMode attribute applying when needed
+            ApplyGlyphOrientationVerticalLayoutAttribute(renderer, attributes, tagType);
             ApplyCommonLayoutAttributes(renderer, attributes);
             if (tagType == AccessibleTypes.BlockLevel) {
                 ApplyBlockLevelLayoutAttributes(role, renderer, attributes);
@@ -255,6 +256,14 @@ namespace iText.Layout.Renderer {
                     attributes.Put(PdfName.TextDecorationThickness, new PdfNumber(underline.GetThickness(fontSize.GetValue()))
                         );
                 }
+            }
+        }
+
+        private static void ApplyGlyphOrientationVerticalLayoutAttribute(AbstractRenderer renderer, PdfDictionary 
+            attributes, int tagType) {
+            if ((tagType == AccessibleTypes.BlockLevel || tagType == AccessibleTypes.InlineLevel) && renderer.IsVerticalWriting
+                ()) {
+                attributes.Put(PdfName.GlyphOrientationVertical, new PdfNumber(0));
             }
         }
 
