@@ -72,6 +72,12 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// </summary>
         protected internal int clippingRule;
 
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Tracks Form XObjects currently being processed to detect circular references</summary>
+        internal readonly ICollection<PdfIndirectReference> processingXObjectReferences = new HashSet<PdfIndirectReference
+            >();
+//\endcond
+
         /// <summary>A map with all supported operators (PDF syntax).</summary>
         private IDictionary<String, IContentOperator> operators;
 
@@ -79,7 +85,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <remarks>
         /// Resources for the content stream.
         /// Current resources are always at the top of the stack.
-        /// Stack is needed in case if some "inner" content stream with it's own resources
+        /// Stack is needed in case if some "inner" content stream with its own resources
         /// is encountered (like Form XObject).
         /// </remarks>
         private IList<PdfResources> resourcesStack;
@@ -211,6 +217,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             resourcesStack = new List<PdfResources>();
             isClip = false;
             currentPath = new Path();
+            processingXObjectReferences.Clear();
         }
 
         /// <summary>
@@ -1292,33 +1299,54 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private class FormXObjectDoHandler : IXObjectDoHandler {
             public virtual void HandleXObject(PdfCanvasProcessor processor, Stack<CanvasTag> canvasTagHierarchy, PdfStream
                  xObjectStream, PdfName xObjectName) {
-                PdfDictionary resourcesDic = xObjectStream.GetAsDictionary(PdfName.Resources);
-                PdfResources resources;
-                if (resourcesDic == null) {
-                    resources = processor.GetResources();
+                PdfIndirectReference xObjectReference = xObjectStream.GetIndirectReference();
+                if (xObjectReference != null) {
+                    if (processor.processingXObjectReferences.Contains(xObjectReference)) {
+                        throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.FORM_XOBJECT_HAS_CIRCULAR_REFERENCES
+                            , xObjectReference.GetObjNumber(), xObjectReference.GetGenNumber()));
+                    }
+                    else {
+                        processor.processingXObjectReferences.Add(xObjectReference);
+                    }
                 }
-                else {
-                    resources = new PdfResources(resourcesDic);
+                try {
+                    PdfDictionary resourcesDic = xObjectStream.GetAsDictionary(PdfName.Resources);
+                    PdfResources resources;
+                    if (resourcesDic == null) {
+                        resources = processor.GetResources();
+                    }
+                    else {
+                        resources = new PdfResources(resourcesDic);
+                    }
+                    // we read the content bytes up here so if it fails we don't leave the graphics state stack corrupted
+                    // this is probably not necessary (if we fail on this, probably the entire content stream processing
+                    // operation should be rejected
+                    byte[] contentBytes;
+                    contentBytes = xObjectStream.GetBytes();
+                    PdfArray matrix = xObjectStream.GetAsArray(PdfName.Matrix);
+                    new PdfCanvasProcessor.PushGraphicsStateOperator().Invoke(processor, null, null);
+                    try {
+                        if (matrix != null) {
+                            float a = matrix.GetAsNumber(0).FloatValue();
+                            float b = matrix.GetAsNumber(1).FloatValue();
+                            float c = matrix.GetAsNumber(2).FloatValue();
+                            float d = matrix.GetAsNumber(3).FloatValue();
+                            float e = matrix.GetAsNumber(4).FloatValue();
+                            float f = matrix.GetAsNumber(5).FloatValue();
+                            Matrix formMatrix = new Matrix(a, b, c, d, e, f);
+                            processor.GetGraphicsState().UpdateCtm(formMatrix);
+                        }
+                        processor.ProcessContent(contentBytes, resources);
+                    }
+                    finally {
+                        new PdfCanvasProcessor.PopGraphicsStateOperator().Invoke(processor, null, null);
+                    }
                 }
-                // we read the content bytes up here so if it fails we don't leave the graphics state stack corrupted
-                // this is probably not necessary (if we fail on this, probably the entire content stream processing
-                // operation should be rejected
-                byte[] contentBytes;
-                contentBytes = xObjectStream.GetBytes();
-                PdfArray matrix = xObjectStream.GetAsArray(PdfName.Matrix);
-                new PdfCanvasProcessor.PushGraphicsStateOperator().Invoke(processor, null, null);
-                if (matrix != null) {
-                    float a = matrix.GetAsNumber(0).FloatValue();
-                    float b = matrix.GetAsNumber(1).FloatValue();
-                    float c = matrix.GetAsNumber(2).FloatValue();
-                    float d = matrix.GetAsNumber(3).FloatValue();
-                    float e = matrix.GetAsNumber(4).FloatValue();
-                    float f = matrix.GetAsNumber(5).FloatValue();
-                    Matrix formMatrix = new Matrix(a, b, c, d, e, f);
-                    processor.GetGraphicsState().UpdateCtm(formMatrix);
+                finally {
+                    if (xObjectReference != null) {
+                        processor.processingXObjectReferences.Remove(xObjectReference);
+                    }
                 }
-                processor.ProcessContent(contentBytes, resources);
-                new PdfCanvasProcessor.PopGraphicsStateOperator().Invoke(processor, null, null);
             }
         }
 

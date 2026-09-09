@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
@@ -123,15 +124,21 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-3608: this test currently throws StackOverflowError, which cannot be caught in .NET"
-            )]
         public virtual void ParseCircularReferencesInResourcesTest() {
             String fileName = "circularReferencesInResources.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + fileName))) {
                 PdfCanvasProcessor processor = new PdfCanvasProcessor(new PdfCanvasProcessorIntegrationTest.NoOpEventListener
                     ());
-                PdfPage page = pdfDocument.GetFirstPage();
-                NUnit.Framework.Assert.Catch(typeof(OutOfMemoryException), () => processor.ProcessPageContent(page));
+                for (int i = 1; i <= pdfDocument.GetNumberOfPages(); ++i) {
+                    processor.Reset();
+                    PdfPage page = pdfDocument.GetPage(i);
+                    Exception exception = NUnit.Framework.Assert.Catch(typeof(PdfException), () => processor.ProcessPageContent
+                        (page));
+                    NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(KernelExceptionMessageConstant.FORM_XOBJECT_HAS_CIRCULAR_REFERENCES
+                        , i == 1 ? 12 : 14, 0), exception.Message);
+                    NUnit.Framework.Assert.IsTrue(processor.processingXObjectReferences.IsEmpty(), "The processingXObjectReferences set should be empty after processing a page."
+                        );
+                }
             }
         }
 
