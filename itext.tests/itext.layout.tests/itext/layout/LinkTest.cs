@@ -33,6 +33,7 @@ using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Font;
 using iText.Layout.Logs;
 using iText.Layout.Properties;
 using iText.Test;
@@ -41,10 +42,13 @@ using iText.Test.Attributes;
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
     public class LinkTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/LinkTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/layout/LinkTest/";
+        public static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/";
+
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/LinkTest/";
 
         private const String LONG_TEXT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam nec condimentum odio. Duis sed ipsum semper, imperdiet risus sit amet, pellentesque leo. Proin eget libero quis orci sagittis efficitur et a justo. Phasellus ac ipsum id lacus fermentum malesuada. Morbi vulputate ultricies ligula a pretium. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam eget leo maximus velit placerat condimentum. Nulla in fermentum ex, in fermentum risus. Phasellus gravida ante sit amet magna porta fermentum. Nunc nec urna quis enim facilisis scelerisque. Praesent risus est, efficitur eget quam nec, dignissim mollis nunc. Mauris in sodales nulla.\n"
              + "Sed sodales pharetra sapien, eget tristique magna fringilla at. Quisque ligula eros, auctor sit amet varius a, tincidunt non mauris. Sed diam mi, dignissim id magna accumsan, viverra scelerisque risus. Etiam blandit condimentum quam non bibendum. Sed vehicula justo quis lectus consequat, sit amet tempor sem mollis. Sed turpis nibh, luctus in arcu mattis, consequat laoreet est. Integer tempor, ante a gravida efficitur, velit libero dapibus nibh, et scelerisque diam nulla a orci. Vestibulum eleifend rutrum elit, sed pellentesque arcu lacinia nec. Nam semper, velit eget rhoncus efficitur, odio libero molestie mi, ut eleifend libero purus ut ex. Quisque hendrerit vehicula hendrerit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis elit eu dolor pellentesque viverra non eget purus. Nam nisi erat, efficitur sed malesuada ut, ornare sit amet risus. Nunc eu vestibulum turpis.\n"
@@ -55,32 +59,32 @@ namespace iText.Layout {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateOrClearDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.OneTimeTearDown]
         public static void AfterClass() {
-            CompareTool.Cleanup(destinationFolder);
+            CompareTool.Cleanup(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void LinkTest01() {
-            String outFileName = destinationFolder + "linkTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_linkTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "linkTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_linkTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
             Link link = new Link("TestLink", action);
             doc.Add(new Paragraph(link));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
         }
 
         [NUnit.Framework.Test]
         public virtual void LinkTest02() {
-            String outFileName = destinationFolder + "linkTest02.pdf";
-            String cmpFileName = sourceFolder + "cmp_linkTest02.pdf";
+            String outFileName = DESTINATION_FOLDER + "linkTest02.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_linkTest02.pdf";
             PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new AreaBreak()).Add(new AreaBreak());
@@ -89,15 +93,15 @@ namespace iText.Layout {
             Link link = new Link("TestLink", action);
             doc.Add(new Paragraph(link));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.ACTION_WAS_SET_TO_LINK_ANNOTATION_WITH_DESTINATION)]
         public virtual void LinkTest03() {
-            String outFileName = destinationFolder + "linkTest03.pdf";
-            String cmpFileName = sourceFolder + "cmp_linkTest03.pdf";
+            String outFileName = DESTINATION_FOLDER + "linkTest03.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_linkTest03.pdf";
             PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             PdfArray array = new PdfArray();
@@ -111,22 +115,22 @@ namespace iText.Layout {
             link.SetAction(PdfAction.CreateURI("http://itextpdf.com/", false));
             doc.Add(new Paragraph(link));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
         }
 
         [NUnit.Framework.Test]
         public virtual void BorderedLinkTest() {
-            String outFileName = destinationFolder + "borderedLinkTest.pdf";
-            String cmpFileName = sourceFolder + "cmp_borderedLinkTest.pdf";
+            String outFileName = DESTINATION_FOLDER + "borderedLinkTest.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_borderedLinkTest.pdf";
             PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Link link = new Link("Link with orange border", PdfAction.CreateURI("http://itextpdf.com"));
             link.SetBorder(new SolidBorder(ColorConstants.ORANGE, 5));
             doc.Add(new Paragraph(link));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
         }
 
         /// <summary>
@@ -145,8 +149,8 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void TestCreateLocalLinkInRotatedCell() {
-            String outFileName = destinationFolder + "linkInRotatedCell.pdf";
-            String cmpFileName = sourceFolder + "cmp_linkInRotatedCell.pdf";
+            String outFileName = DESTINATION_FOLDER + "linkInRotatedCell.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_linkInRotatedCell.pdf";
             PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Table table = new Table(UnitValue.CreatePercentArray(new float[] { 1, 2 }));
@@ -156,28 +160,28 @@ namespace iText.Layout {
             table.AddCell(new Paragraph().Add(chunk));
             document.Add(table);
             document.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
         }
 
         [NUnit.Framework.Test]
         public virtual void RotatedLinkAtFixedPosition() {
-            String outFileName = destinationFolder + "rotatedLinkAtFixedPosition.pdf";
-            String cmpFileName = sourceFolder + "cmp_rotatedLinkAtFixedPosition.pdf";
+            String outFileName = DESTINATION_FOLDER + "rotatedLinkAtFixedPosition.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_rotatedLinkAtFixedPosition.pdf";
             Document doc = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)));
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
             Link link = new Link("TestLink", action);
             doc.Add(new Paragraph(link).SetMargin(0).SetRotationAngle(Math.PI / 4).SetFixedPosition(300, 623, 100));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
         }
 
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void RotatedLinkInnerRotation() {
-            String outFileName = destinationFolder + "rotatedLinkInnerRotation.pdf";
-            String cmpFileName = sourceFolder + "cmp_rotatedLinkInnerRotation.pdf";
+            String outFileName = DESTINATION_FOLDER + "rotatedLinkInnerRotation.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_rotatedLinkInnerRotation.pdf";
             Document doc = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)));
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
             Link link = new Link("TestLink", action);
@@ -185,14 +189,14 @@ namespace iText.Layout {
             Div div = new Div().Add(p).SetRotationAngle(Math.PI / 3).SetBackgroundColor(ColorConstants.BLUE);
             doc.Add(div);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
         }
 
         [NUnit.Framework.Test]
         public virtual void SimpleMarginsTest01() {
-            String outFileName = destinationFolder + "simpleMarginsTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_simpleMarginsTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "simpleMarginsTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_simpleMarginsTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
@@ -202,14 +206,14 @@ namespace iText.Layout {
             link.SetProperty(Property.MARGIN_RIGHT, UnitValue.CreatePointValue(50));
             doc.Add(new Paragraph(link).SetBorder(new SolidBorder(10)));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
         }
 
         [NUnit.Framework.Test]
         public virtual void MultiLineLinkTest01() {
-            String outFileName = destinationFolder + "multiLineLinkTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_multiLineLinkTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "multiLineLinkTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_multiLineLinkTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
@@ -220,14 +224,14 @@ namespace iText.Layout {
             Link link = new Link(text, action);
             doc.Add(new Paragraph(link));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
         }
 
         [NUnit.Framework.Test]
         public virtual void TableHeaderLinkTest01() {
-            String outFileName = destinationFolder + "tableHeaderLinkTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_tableHeaderLinkTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "tableHeaderLinkTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_tableHeaderLinkTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
@@ -247,14 +251,14 @@ namespace iText.Layout {
             }
             doc.Add(table);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
         }
 
         [NUnit.Framework.Test]
         public virtual void LinkWithCustomRectangleTest01() {
-            String outFileName = destinationFolder + "linkWithCustomRectangleTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_linkWithCustomRectangleTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "linkWithCustomRectangleTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_linkWithCustomRectangleTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             String text = "Hello World";
@@ -268,14 +272,14 @@ namespace iText.Layout {
             Link linkByAction = new Link(text, action);
             doc.Add(new Paragraph(linkByAction));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 ));
         }
 
         [NUnit.Framework.Test]
         public virtual void SplitLinkTest01() {
-            String outFileName = destinationFolder + "splitLinkTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_splitLinkTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "splitLinkTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_splitLinkTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             pdfDocument.SetTagged();
@@ -286,14 +290,14 @@ namespace iText.Layout {
             // This paragraph is so long that it will be present on the first, second and third pages
             doc.Add(new Paragraph(linkByAnnotation));
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 ));
         }
 
         [NUnit.Framework.Test]
         public virtual void LinkAnnotationOnDivSplitTest01() {
-            String outFileName = destinationFolder + "linkAnnotationOnDivSplitTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_linkAnnotationOnDivSplitTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "linkAnnotationOnDivSplitTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_linkAnnotationOnDivSplitTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
                 ().SetPdfVersion(PdfVersion.PDF_2_0)));
             Document doc = new Document(pdfDocument);
@@ -304,14 +308,14 @@ namespace iText.Layout {
             div.SetProperty(Property.LINK_ANNOTATION, annotation);
             doc.Add(div);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 ));
         }
 
         [NUnit.Framework.Test]
         public virtual void LinkActionOnDivSplitTest01() {
-            String outFileName = destinationFolder + "linkActionOnDivSplitTest01.pdf";
-            String cmpFileName = sourceFolder + "cmp_linkActionOnDivSplitTest01.pdf";
+            String outFileName = DESTINATION_FOLDER + "linkActionOnDivSplitTest01.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_linkActionOnDivSplitTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com");
@@ -319,14 +323,14 @@ namespace iText.Layout {
             div.SetAction(action);
             doc.Add(div);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 ));
         }
 
         [NUnit.Framework.Test]
         public virtual void IntraForwardLinkTest() {
-            String outFileName = destinationFolder + "intraForwardLink.pdf";
-            String cmpFileName = sourceFolder + "cmp_intraForwardLink.pdf";
+            String outFileName = DESTINATION_FOLDER + "intraForwardLink.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_intraForwardLink.pdf";
             PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)));
             pdfDoc.SetTagged();
@@ -345,14 +349,14 @@ namespace iText.Layout {
             customText.SetProperty(Property.DESTINATION, destinations);
             doc.Add(customText);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
         }
 
         [NUnit.Framework.Test]
         public virtual void IntraBackwardLinkTest() {
-            String outFileName = destinationFolder + "intraBackwardLink.pdf";
-            String cmpFileName = sourceFolder + "cmp_intraBackwardLink.pdf";
+            String outFileName = DESTINATION_FOLDER + "intraBackwardLink.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_intraBackwardLink.pdf";
             PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0)));
             pdfDoc.SetTagged();
@@ -373,14 +377,14 @@ namespace iText.Layout {
             pdfDoc.GetPage(2).Flush();
             doc.Add(text);
             doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
         }
 
         [NUnit.Framework.Test]
         public virtual void LinkWithSetDestinationTest() {
-            String outFileName = destinationFolder + "linkWithSetDestination.pdf";
-            String cmpFileName = sourceFolder + "cmp_linkWithSetDestination.pdf";
+            String outFileName = DESTINATION_FOLDER + "linkWithSetDestination.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_linkWithSetDestination.pdf";
             using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)))) {
                 Link link = new Link("link", PdfAction.CreateGoTo("destination"));
                 document.Add(new Paragraph().Add(link));
@@ -389,14 +393,14 @@ namespace iText.Layout {
                 target.SetDestination("destination");
                 document.Add(target);
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
         }
 
         [NUnit.Framework.Test]
         public virtual void DestinationToFlushedPageTest() {
-            String outFileName = destinationFolder + "destinationToFlushedPage.pdf";
-            String cmpFileName = sourceFolder + "cmp_destinationToFlushedPage.pdf";
+            String outFileName = DESTINATION_FOLDER + "destinationToFlushedPage.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_destinationToFlushedPage.pdf";
             using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName, new WriterProperties
                 ().SetPdfVersion(PdfVersion.PDF_2_0)))) {
                 using (Document doc = new Document(pdfDoc)) {
@@ -408,8 +412,30 @@ namespace iText.Layout {
                     doc.Add(new Paragraph(link));
                 }
             }
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , "diff"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinkWithCustomFontTest() {
+            // This test only tests that IoLogMessageConstant.CREATE_COPY_SHOULD_BE_OVERRIDDEN is not logged.
+            // LinkRenderer is a pure TextRenderer after all so we can't create an integration test
+            // that LinkRenderer is used. Unit tests are in the LinkRendererUnitTest.
+            String outFileName = DESTINATION_FOLDER + "linkWithCustomFont.pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_linkWithCustomFont.pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                using (Document doc = new Document(pdfDoc)) {
+                    FontProvider f = new FontProvider();
+                    f.AddFont(FONTS_FOLDER + "NotoSans-Regular.ttf", null);
+                    Paragraph p = new Paragraph();
+                    p.SetFontFamily("NotoSans");
+                    doc.SetFontProvider(f);
+                    p.Add(new Link("Click here to be scammed please", PdfAction.CreateURI("https://example.com")));
+                    doc.Add(p);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
         }
     }
 }

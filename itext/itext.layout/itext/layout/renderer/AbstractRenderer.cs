@@ -140,6 +140,8 @@ namespace iText.Layout.Renderer {
 
         protected internal bool isLastRendererForModelElement = true;
 
+        private bool relativePositioningTranslationApplied = false;
+
         /// <summary>Creates a renderer.</summary>
         protected internal AbstractRenderer() {
         }
@@ -1970,6 +1972,9 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual void ApplyRelativePositioningTranslation(bool reverse) {
+            if (reverse != relativePositioningTranslationApplied) {
+                return;
+            }
             float top = (float)this.GetPropertyAsFloat(Property.TOP, 0f);
             float bottom = (float)this.GetPropertyAsFloat(Property.BOTTOM, 0f);
             float left = (float)this.GetPropertyAsFloat(Property.LEFT, 0f);
@@ -1980,6 +1985,7 @@ namespace iText.Layout.Renderer {
             if (dxRight != 0 || dyUp != 0) {
                 Move(dxRight, dyUp);
             }
+            relativePositioningTranslationApplied = !reverse;
         }
 
         protected internal virtual void ApplyDestination(PdfDocument document) {

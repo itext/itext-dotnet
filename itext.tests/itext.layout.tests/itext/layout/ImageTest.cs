@@ -602,7 +602,6 @@ namespace iText.Layout {
                 , "diff"));
         }
 
-        //TODO(DEVSIX-1022)
         [NUnit.Framework.Test]
         public virtual void ImageRelativePositionTest() {
             String outFileName = destinationFolder + "imageRelativePositionTest.pdf";

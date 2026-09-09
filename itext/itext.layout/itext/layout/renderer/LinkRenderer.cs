@@ -23,6 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Commons.Logs;
 using iText.Commons.Utils;
+using iText.IO.Font.Otf;
+using iText.Kernel.Font;
 using iText.Layout.Element;
 
 namespace iText.Layout.Renderer {
@@ -54,17 +56,18 @@ namespace iText.Layout.Renderer {
             : base(linkElement, text) {
         }
 
-        public override void Draw(DrawContext drawContext) {
-            if (occupiedArea == null) {
-                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED
-                    , "Drawing won't be performed."));
-                return;
-            }
-            base.Draw(drawContext);
-            bool isRelativePosition = IsRelativePosition();
-            if (isRelativePosition) {
-                ApplyRelativePositioningTranslation(false);
-            }
+        /// <summary>
+        /// Creates a new
+        /// <see cref="LinkRenderer"/>
+        /// as a copy of the given one.
+        /// </summary>
+        /// <param name="other">
+        /// the
+        /// <see cref="LinkRenderer"/>
+        /// to copy
+        /// </param>
+        protected internal LinkRenderer(iText.Layout.Renderer.LinkRenderer other)
+            : base(other) {
         }
 
         /// <summary>
@@ -88,6 +91,17 @@ namespace iText.Layout.Renderer {
         public override IRenderer GetNextRenderer() {
             LogWarningIfGetNextRendererNotOverridden(typeof(iText.Layout.Renderer.LinkRenderer), this.GetType());
             return new iText.Layout.Renderer.LinkRenderer((Link)modelElement);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override TextRenderer CreateCopy(GlyphLine gl, PdfFont font) {
+            if (typeof(iText.Layout.Renderer.LinkRenderer) != this.GetType()) {
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.CREATE_COPY_SHOULD_BE_OVERRIDDEN
+                    ));
+            }
+            iText.Layout.Renderer.LinkRenderer copy = new iText.Layout.Renderer.LinkRenderer(this);
+            copy.SetProcessedGlyphLineAndFont(gl, font);
+            return copy;
         }
     }
 }

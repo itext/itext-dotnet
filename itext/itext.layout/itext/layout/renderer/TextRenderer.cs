@@ -143,6 +143,16 @@ namespace iText.Layout.Renderer {
             this.strToBeConverted = text;
         }
 
+        /// <summary>
+        /// Creates a new
+        /// <see cref="TextRenderer"/>
+        /// as a copy of the given one.
+        /// </summary>
+        /// <param name="other">
+        /// the
+        /// <see cref="TextRenderer"/>
+        /// to copy
+        /// </param>
         protected internal TextRenderer(iText.Layout.Renderer.TextRenderer other)
             : base(other) {
             this.text = other.text;
@@ -926,7 +936,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             if (isRelativePosition) {
-                ApplyRelativePositioningTranslation(false);
+                ApplyRelativePositioningTranslation(true);
             }
             if (isTagged && !isArtifact) {
                 if (isLastRendererForModelElement) {

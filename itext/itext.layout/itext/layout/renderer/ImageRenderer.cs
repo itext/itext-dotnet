@@ -337,6 +337,9 @@ namespace iText.Layout.Renderer {
             }
             ApplyMargins(initialOccupiedAreaBBox, true);
             ApplyBorderBox(initialOccupiedAreaBBox, true);
+            if (isRelativePosition) {
+                ApplyRelativePositioningTranslation(true);
+            }
             return initialOccupiedAreaBBox;
         }
 
