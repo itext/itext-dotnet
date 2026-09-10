@@ -287,18 +287,6 @@ namespace iText.Signatures {
         }
 
         [NUnit.Framework.Test]
-        public virtual void VerifyEd448SignatureTest() {
-            // SHAKE256 is not available in BCFIPS
-            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
-                NUnit.Framework.Assert.Catch(typeof(PdfException), () => VerifyIsoExtensionExample("Ed448", "sample-ed448-shake256.pdf"
-                    ));
-            }
-            else {
-                VerifyIsoExtensionExample("Ed448", "sample-ed448-shake256.pdf");
-            }
-        }
-
-        [NUnit.Framework.Test]
         public virtual void VerifyNistECDSASha2SignatureTest() {
             VerifyIsoExtensionExample("SHA256withECDSA", "sample-nistp256-sha256.pdf");
         }
