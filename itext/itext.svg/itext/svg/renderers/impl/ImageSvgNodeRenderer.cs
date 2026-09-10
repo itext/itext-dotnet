@@ -89,7 +89,13 @@ namespace iText.Svg.Renderers.Impl {
                 String align = alignAndMeet[0];
                 String meetOrSlice = alignAndMeet[1];
                 Rectangle currentViewPort = new Rectangle(0, 0, width, height);
-                Rectangle viewBox = new Rectangle(0, 0, xObject.GetWidth(), xObject.GetHeight());
+                Rectangle viewBox;
+                if (xObject.GetWidth() <= 0 || xObject.GetHeight() <= 0) {
+                    viewBox = new Rectangle(currentViewPort);
+                }
+                else {
+                    viewBox = new Rectangle(0, 0, xObject.GetWidth(), xObject.GetHeight());
+                }
                 Rectangle appliedViewBox = SvgCoordinateUtils.ApplyViewBox(viewBox, currentViewPort, align, meetOrSlice);
                 float scaleWidth = appliedViewBox.GetWidth() / viewBox.GetWidth();
                 float scaleHeight = appliedViewBox.GetHeight() / viewBox.GetHeight();
