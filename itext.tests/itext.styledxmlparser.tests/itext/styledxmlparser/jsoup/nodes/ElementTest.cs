@@ -8,6 +8,7 @@ using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Select;
+using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
 using iText.Test;
 
 namespace iText.StyledXmlParser.Jsoup.Nodes {
@@ -1644,13 +1645,13 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             iText.StyledXmlParser.Jsoup.Nodes.Element div = doc.SelectFirst("div");
             AtomicLong counter = new AtomicLong(0);
             iText.StyledXmlParser.Jsoup.Nodes.Element div2 = (iText.StyledXmlParser.Jsoup.Nodes.Element)div.Traverse(new 
-                _NodeVisitor_1749(counter));
+                _NodeVisitor_1750(counter));
             NUnit.Framework.Assert.AreEqual(7, counter.Get());
             NUnit.Framework.Assert.AreEqual(div2, div);
         }
 
-        private sealed class _NodeVisitor_1749 : NodeVisitor {
-            public _NodeVisitor_1749(AtomicLong counter) {
+        private sealed class _NodeVisitor_1750 : NodeVisitor {
+            public _NodeVisitor_1750(AtomicLong counter) {
                 this.counter = counter;
             }
 
@@ -1670,12 +1671,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>One<p>Two<p>Three");
             iText.StyledXmlParser.Jsoup.Nodes.Element div = doc.SelectFirst("div");
             iText.StyledXmlParser.Jsoup.Nodes.Element div2 = (iText.StyledXmlParser.Jsoup.Nodes.Element)div.Filter(new 
-                _NodeFilter_1771());
+                _NodeFilter_1772());
             NUnit.Framework.Assert.AreSame(div, div2);
         }
 
-        private sealed class _NodeFilter_1771 : NodeFilter {
-            public _NodeFilter_1771() {
+        private sealed class _NodeFilter_1772 : NodeFilter {
+            public _NodeFilter_1772() {
             }
 
             public override NodeFilter.FilterResult Head(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {
@@ -1936,6 +1937,23 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             NUnit.Framework.Assert.AreEqual(0, els.Count);
             els.Add(new iText.StyledXmlParser.Jsoup.Nodes.Element("a"));
             NUnit.Framework.Assert.AreEqual(1, els.Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetMissingLanguageTest() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div>Some div without a language set</div>");
+            iText.StyledXmlParser.Jsoup.Nodes.Element el = doc.SelectFirst("body");
+            JsoupElementNode node = new JsoupElementNode(el);
+            NUnit.Framework.Assert.IsNull(node.GetLang());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetLanguageTest() {
+            Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div lang=\"en\">Some div without a language set</div>"
+                );
+            iText.StyledXmlParser.Jsoup.Nodes.Element el = doc.SelectFirst("div");
+            JsoupElementNode node = new JsoupElementNode(el);
+            NUnit.Framework.Assert.AreEqual("en", node.GetLang());
         }
     }
 }

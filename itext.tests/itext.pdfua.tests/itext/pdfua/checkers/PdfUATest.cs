@@ -204,6 +204,30 @@ namespace iText.Pdfua.Checkers {
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
+        public virtual void EmptyLangInStructureElementTest(PdfConformance conformance) {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
+            framework.AddBeforeGenerationHook((pdfDocument) => {
+                Document doc = new Document(pdfDocument);
+                PdfFont font;
+                try {
+                    font = PdfFontFactory.CreateFont(FONT, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+                        );
+                }
+                catch (System.IO.IOException e) {
+                    throw new PdfException(e.Message);
+                }
+                doc.SetFont(font);
+                Paragraph p = new Paragraph("Some paragraph in unknown language");
+                p.GetAccessibilityProperties().SetLanguage("");
+                doc.Add(p);
+            }
+            );
+            // TODO DEVSIX-10196 - iText should also fail here
+            // Also create a test for some other not valid lang entry like "en-GB-123"
+            framework.AssertOnlyVeraPdfFail("emptyLangInStructureElement");
+        }
+
+        [NUnit.Framework.TestCaseSource("Data")]
         public virtual void DocumentWithInvalidLangEntryTest(PdfConformance conformance) {
             UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, conformance);
             PdfDocument pdfDoc = framework.CreatePdfDocument(null, DESTINATION_FOLDER + "invalidLang" + framework.PathSafeConformance

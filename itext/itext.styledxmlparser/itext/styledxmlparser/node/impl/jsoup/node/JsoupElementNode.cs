@@ -49,6 +49,8 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup.Node {
         /// <summary>The language.</summary>
         private String lang = null;
 
+        private bool langRetrieved = false;
+
         /// <summary>
         /// Creates a new
         /// <see cref="JsoupElementNode"/>
@@ -118,17 +120,13 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup.Node {
         * @see com.itextpdf.styledxmlparser.html.node.IElementNode#getLang()
         */
         public virtual String GetLang() {
-            if (lang != null) {
+            if (lang != null || langRetrieved) {
                 return lang;
             }
             else {
                 INode parent = parentNode;
                 lang = parent is IElementNode ? ((IElementNode)parent).GetLang() : null;
-                if (lang == null) {
-                    // Set to empty string to "cache", i.e. not to traverse parent chain each time the method is called for
-                    // documents with no "lang" attribute
-                    lang = "";
-                }
+                langRetrieved = true;
                 return lang;
             }
         }
