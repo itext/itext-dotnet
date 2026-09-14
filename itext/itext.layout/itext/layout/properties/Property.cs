@@ -447,6 +447,11 @@ namespace iText.Layout.Properties {
 
         private const int MAX_INHERITED_PROPERTY_ID = 170;
 
+        /// <summary>
+        /// The indent (left margin) applied to nested lists that are direct children of a parent list.
+        /// </summary>
+        public const int LIST_INDENT = 166;
+
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.APPEARANCE_STREAM_LAYOUT] = true;
