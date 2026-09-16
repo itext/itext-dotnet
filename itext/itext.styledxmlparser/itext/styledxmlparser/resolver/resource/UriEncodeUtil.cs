@@ -90,6 +90,7 @@ namespace iText.StyledXmlParser.Resolver.Resource
             unreservedAndReserved.Set(',', true);
             unreservedAndReserved.Set(';', true);
             unreservedAndReserved.Set('=', true);
+            unreservedAndReserved.Set('%', true);
 
         }
 
