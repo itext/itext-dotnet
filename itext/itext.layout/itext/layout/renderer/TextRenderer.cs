@@ -636,7 +636,9 @@ namespace iText.Layout.Renderer {
             }
             // indicates whether the placing is forced while the layout result is LayoutResult.NOTHING
             bool isPlacingForcedWhileNothing = false;
-            bool lineWidthExceeds_1 = currentLineWidth > layoutBox.GetWidth() + HEIGHT_WIDTH_EPS;
+            float verticalWritingLineWidth = CalculateLineHeight(ascender, descender, fontSize, textRise, 0F, 0F, null
+                );
+            bool lineWidthExceeds_1 = verticalWritingLineWidth > layoutBox.GetWidth() + HEIGHT_WIDTH_EPS;
             bool lineHeightExceeds_1 = currentLineHeight > layoutBox.GetHeight() + HEIGHT_WIDTH_EPS;
             if (isVerticalWriting ? lineWidthExceeds_1 : lineHeightExceeds_1) {
                 if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) && IsOverflowFit(overflowY)) {
@@ -662,8 +664,7 @@ namespace iText.Layout.Renderer {
                 float lineStart = line.GetStart();
                 float lineEnd = line.GetEnd();
                 if (lineStart != lineEnd) {
-                    float symbolHeight = CalculateLineHeight(ascender, descender, fontSize, textRise, 0f, 0f, null);
-                    occupiedArea.GetBBox().SetWidth(symbolHeight);
+                    occupiedArea.GetBBox().SetWidth(verticalWritingLineWidth);
                 }
             }
             else {

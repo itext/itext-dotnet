@@ -380,7 +380,7 @@ namespace iText.Layout.Renderer {
             Rectangle oldBBox = occupiedArea.GetBBox().Clone();
             Rectangle recalculatedRectangle = Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), resultBBox);
             if (IsVerticalWriting()) {
-                occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), resultBBox));
+                occupiedArea.SetBBox(recalculatedRectangle);
             }
             else {
                 occupiedArea.GetBBox().SetY(recalculatedRectangle.GetY());

@@ -925,7 +925,7 @@ namespace iText.Layout.Renderer {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal virtual void ApplyWidth(Rectangle parentBBox, float? blockWidth, OverflowPropertyValue? overflowX
+        internal virtual bool ApplyWidth(Rectangle parentBBox, float? blockWidth, OverflowPropertyValue? overflowX
             ) {
             // maxWidth has already taken in attention in blockWidth,
             // therefore only `parentBBox > minWidth` needs to be checked.
@@ -933,14 +933,17 @@ namespace iText.Layout.Renderer {
             if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || IsPositioned() || rotation != null || (!IsOverflowFit
                 (overflowX)))) {
                 parentBBox.SetWidth((float)blockWidth);
+                return true;
             }
             else {
                 float? minWidth = RetrieveMinWidth(parentBBox.GetWidth());
                 //Shall we check overflow-x here?
                 if (minWidth != null && minWidth > parentBBox.GetWidth()) {
                     parentBBox.SetWidth((float)minWidth);
+                    return true;
                 }
             }
+            return false;
         }
 //\endcond
 

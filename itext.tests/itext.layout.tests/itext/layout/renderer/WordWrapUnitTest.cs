@@ -65,7 +65,7 @@ namespace iText.Layout.Renderer {
             textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(THAI_FONT, PdfEncodings.IDENTITY_H));
             textRenderer.SetText(THAI_TEXT);
             NUnit.Framework.Assert.IsTrue(TextSequenceWordWrapping.IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing
-                (textRenderer));
+                (textRenderer, true));
         }
 
         [NUnit.Framework.Test]
@@ -75,14 +75,14 @@ namespace iText.Layout.Renderer {
             textRenderer.SetText(THAI_TEXT);
             textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>());
             NUnit.Framework.Assert.IsFalse(TextSequenceWordWrapping.IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing
-                (textRenderer));
+                (textRenderer, true));
         }
 
         [NUnit.Framework.Test]
         public virtual void IsNotTextRenderer() {
             TabRenderer tabRenderer = new TabRenderer(new Tab());
             NUnit.Framework.Assert.IsFalse(TextSequenceWordWrapping.IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing
-                (tabRenderer));
+                (tabRenderer, true));
         }
 
         [NUnit.Framework.Test]
@@ -92,7 +92,7 @@ namespace iText.Layout.Renderer {
             textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(REGULAR_FONT, PdfEncodings.IDENTITY_H));
             textRenderer.SetText(nonSpecialScriptText);
             NUnit.Framework.Assert.IsNull(textRenderer.GetSpecialScriptsWordBreakPoints());
-            TextSequenceWordWrapping.IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing(textRenderer);
+            TextSequenceWordWrapping.IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing(textRenderer, true);
             NUnit.Framework.Assert.IsNotNull(textRenderer.GetSpecialScriptsWordBreakPoints());
             NUnit.Framework.Assert.IsTrue(textRenderer.GetSpecialScriptsWordBreakPoints().IsEmpty());
             // layout is needed prior to calling #split() in order to fill TextRenderer fields required to be non-null
@@ -559,7 +559,7 @@ namespace iText.Layout.Renderer {
                 new TextSequenceWordWrapping.MinMaxWidthOfTextRendererSequenceHelper(0f, 0f, false);
             AbstractWidthHandler widthHandler = new MaxSumWidthHandler(new MinMaxWidth());
             TextSequenceWordWrapping.ResetTextSequenceIfItEnded(textRendererLayoutResults, false, tabRenderer, 1, minMaxWidthOfTextRendererSequenceHelper
-                , false, widthHandler);
+                , false, widthHandler, true);
             NUnit.Framework.Assert.IsTrue(textRendererLayoutResults.IsEmpty());
         }
 
@@ -578,7 +578,7 @@ namespace iText.Layout.Renderer {
             AbstractWidthHandler widthHandler = new MaxSumWidthHandler(new MinMaxWidth());
             int childPosDuringResetAttempt = 1;
             TextSequenceWordWrapping.ResetTextSequenceIfItEnded(textRendererLayoutResults, false, tabRenderer, childPosDuringResetAttempt
-                , minMaxWidthOfTextRendererSequenceHelper, true, widthHandler);
+                , minMaxWidthOfTextRendererSequenceHelper, true, widthHandler, true);
             NUnit.Framework.Assert.IsTrue(textRendererLayoutResults.IsEmpty());
         }
 
@@ -589,7 +589,8 @@ namespace iText.Layout.Renderer {
             TabRenderer tabRenderer = new TabRenderer(tab);
             int childPosNotToBeAdded = 1;
             TextSequenceWordWrapping.UpdateTextSequenceLayoutResults(textRendererLayoutResults, true, tabRenderer, childPosNotToBeAdded
-                , new LayoutResult(LayoutResult.FULL, new LayoutArea(1, new Rectangle(10, 10)), null, null, null));
+                , new LayoutResult(LayoutResult.FULL, new LayoutArea(1, new Rectangle(10, 10)), null, null, null), true
+                );
             NUnit.Framework.Assert.IsTrue(textRendererLayoutResults.IsEmpty());
         }
 
@@ -604,7 +605,7 @@ namespace iText.Layout.Renderer {
                 new TextSequenceWordWrapping.MinMaxWidthOfTextRendererSequenceHelper(0f, 0f, false);
             AbstractWidthHandler widthHandler = new MaxSumWidthHandler(new MinMaxWidth());
             TextSequenceWordWrapping.ResetTextSequenceIfItEnded(specialScriptLayoutResults, true, textRenderer, 1, minMaxWidthOfTextRendererSequenceHelper
-                , true, widthHandler);
+                , true, widthHandler, true);
             NUnit.Framework.Assert.IsTrue(specialScriptLayoutResults.IsEmpty());
         }
 
@@ -615,7 +616,7 @@ namespace iText.Layout.Renderer {
             LayoutResult res = new LayoutResult(LayoutResult.NOTHING, new LayoutArea(0, new Rectangle(0, 0, 10, 10)), 
                 null, null);
             TextSequenceWordWrapping.UpdateTextSequenceLayoutResults(specialScriptLayoutResults, true, textRenderer, 1
-                , res);
+                , res, true);
             NUnit.Framework.Assert.IsTrue(specialScriptLayoutResults.IsEmpty());
         }
 
@@ -633,7 +634,7 @@ namespace iText.Layout.Renderer {
             AbstractWidthHandler widthHandler = new MaxSumWidthHandler(new MinMaxWidth());
             int secondKey = firstKey + 1;
             TextSequenceWordWrapping.ResetTextSequenceIfItEnded(specialScriptLayoutResults, true, textRenderer, secondKey
-                , minMaxWidthOfTextRendererSequenceHelper, true, widthHandler);
+                , minMaxWidthOfTextRendererSequenceHelper, true, widthHandler, true);
             NUnit.Framework.Assert.AreEqual(1, specialScriptLayoutResults.Count);
             NUnit.Framework.Assert.IsTrue(specialScriptLayoutResults.ContainsKey(firstKey));
         }
@@ -649,7 +650,7 @@ namespace iText.Layout.Renderer {
             textRenderer.SetSpecialScriptsWordBreakPoints(new List<int>(JavaCollectionsUtil.SingletonList(-1)));
             int secondKey = firstKey + 1;
             TextSequenceWordWrapping.UpdateTextSequenceLayoutResults(specialScriptLayoutResults, true, textRenderer, secondKey
-                , res);
+                , res, true);
             NUnit.Framework.Assert.IsTrue(specialScriptLayoutResults.ContainsKey(firstKey));
             NUnit.Framework.Assert.IsTrue(specialScriptLayoutResults.ContainsKey(secondKey));
             NUnit.Framework.Assert.AreEqual(2, specialScriptLayoutResults.Count);

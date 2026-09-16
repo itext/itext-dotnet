@@ -135,6 +135,7 @@ namespace iText.Layout.Renderer {
             if (rotation != null || IsFixedLayout()) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
             }
+            float parentHeight = parentBBox.GetHeight();
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler.StartMarginsCollapse(parentBBox);
             }
@@ -148,7 +149,7 @@ namespace iText.Layout.Renderer {
             }
             ApplyPaddings(parentBBox, paddings, false);
             float additionalWidth = parentWidth - parentBBox.GetWidth();
-            ApplyWidth(parentBBox, blockWidth, overflowX);
+            bool widthSet = ApplyWidth(parentBBox, blockWidth, overflowX);
             wasHeightClipped = ApplyMaxHeight(parentBBox, blockMaxHeight, marginsCollapseHandler, false, overflowY);
             MinMaxWidth minMaxWidth = new MinMaxWidth(additionalWidth);
             AbstractWidthHandler widthHandler = new MaxMaxWidthHandler(minMaxWidth);
@@ -159,8 +160,12 @@ namespace iText.Layout.Renderer {
             else {
                 areas = InitElementAreas(new LayoutArea(pageNumber, parentBBox));
             }
+            float occupiedAreaInitialWidth = parentBBox.GetWidth();
+            if (isVerticalWriting && !widthSet) {
+                occupiedAreaInitialWidth = 0F;
+            }
             occupiedArea = new LayoutArea(pageNumber, new Rectangle(parentBBox.GetX(), parentBBox.GetY() + parentBBox.
-                GetHeight(), isVerticalWriting ? 0 : parentBBox.GetWidth(), 0));
+                GetHeight(), occupiedAreaInitialWidth, 0));
             ShrinkOccupiedAreaForAbsolutePosition();
             TargetCounterHandler.AddPageByID(this);
             int currentAreaPos = 0;
@@ -176,6 +181,8 @@ namespace iText.Layout.Renderer {
             bool onlyOverflowedFloatsLeft = false;
             IList<IRenderer> inlineFloatsOverflowedToNextPage = new List<IRenderer>();
             bool floatOverflowedToNextPageWithNothing = false;
+            TextAlignment? textAlignment = (TextAlignment?)this.GetProperty<TextAlignment?>(Property.TEXT_ALIGNMENT, TextAlignment
+                .LEFT);
             // rectangles are compared by instances
             ICollection<Rectangle> nonChildFloatingRendererAreas = new HashSet<Rectangle>(floatRendererAreas);
             if (marginsCollapsingEnabled && !childRenderers.IsEmpty()) {
@@ -184,6 +191,8 @@ namespace iText.Layout.Renderer {
             }
             bool includeFloatsInOccupiedArea = BlockFormattingContextUtil.IsRendererCreateBfc(this);
             Rectangle originalLayoutBox = layoutBox.Clone();
+            IDictionary<LineRenderer, LineLayoutResult> lineLayoutResults = new LinkedDictionary<LineRenderer, LineLayoutResult
+                >();
             while (currentRenderer != null) {
                 currentRenderer.SetProperty(Property.TAB_DEFAULT, this.GetPropertyAsFloat(Property.TAB_DEFAULT));
                 currentRenderer.SetProperty(Property.TAB_STOPS, this.GetProperty<Object>(Property.TAB_STOPS));
@@ -242,10 +251,13 @@ namespace iText.Layout.Renderer {
                     // overflowed floating elements.
                     processedRenderer = null;
                 }
-                TextAlignment? textAlignment = (TextAlignment?)this.GetProperty<TextAlignment?>(Property.TEXT_ALIGNMENT, TextAlignment
-                    .LEFT);
-                ApplyTextAlignment(textAlignment, result, processedRenderer, layoutBox, floatRendererAreas, onlyOverflowedFloatsLeft
-                    , lineIndent, isVerticalWriting);
+                if (isVerticalWriting && processedRenderer != null) {
+                    lineLayoutResults.Put(processedRenderer, result);
+                }
+                else {
+                    ApplyTextAlignment(textAlignment, result, processedRenderer, layoutBox, floatRendererAreas, onlyOverflowedFloatsLeft
+                        , lineIndent, false);
+                }
                 Leading leading = RenderingMode.HTML_MODE.Equals(this.GetProperty<RenderingMode?>(Property.RENDERING_MODE)
                     ) ? null : this.GetProperty<Leading>(Property.LEADING);
                 // could be false if e.g. line contains only floats
@@ -304,7 +316,7 @@ namespace iText.Layout.Renderer {
                             bool includeFloatsInOccupiedAreaOnSplit = !onlyOverflowedFloatsLeft || includeFloatsInOccupiedArea;
                             if (includeFloatsInOccupiedAreaOnSplit) {
                                 FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this, nonChildFloatingRendererAreas);
-                                FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
+                                FixOccupiedAreaIfOverflowedX(isVerticalWriting, overflowX, layoutBox);
                             }
                             if (marginsCollapsingEnabled) {
                                 marginsCollapseHandler.EndMarginsCollapse(layoutBox);
@@ -356,7 +368,7 @@ namespace iText.Layout.Renderer {
                                     if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
                                         occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), currentRenderer.GetOccupiedArea(
                                             ).GetBBox()));
-                                        if (!isVerticalWriting || blockWidth != null) {
+                                        if (!isVerticalWriting || widthSet) {
                                             FixOccupiedAreaIfOverflowedX(isVerticalWriting, overflowX, layoutBox);
                                         }
                                         parent.SetProperty(Property.FULL, true);
@@ -400,7 +412,7 @@ namespace iText.Layout.Renderer {
                     if (lineHasContent) {
                         occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), processedRenderer.GetOccupiedArea
                             ().GetBBox()));
-                        if (!isVerticalWriting || blockWidth != null) {
+                        if (!isVerticalWriting || widthSet) {
                             FixOccupiedAreaIfOverflowedX(isVerticalWriting, overflowX, layoutBox);
                         }
                     }
@@ -438,23 +450,14 @@ namespace iText.Layout.Renderer {
             }
             if (includeFloatsInOccupiedArea) {
                 FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this, nonChildFloatingRendererAreas);
-                FixOccupiedAreaIfOverflowedX(overflowX, originalLayoutBox);
+                FixOccupiedAreaIfOverflowedX(isVerticalWriting, overflowX, originalLayoutBox);
             }
-            if (wasHeightClipped) {
+            if (blockMaxHeight != null && blockMaxHeight < parentHeight + EPS) {
                 FixOccupiedAreaIfOverflowedY(overflowY, layoutBox);
             }
             // Adjust occupied area width for vertical text after lines layout.
-            if (isVerticalWriting && blockWidth != null && !IsOverflowFit(overflowX)) {
-                // Increase occupied area in case specified paragraph width is more than actual lines width.
-                if (layoutBox.GetWidth() > 0 && occupiedArea.GetBBox().GetRight() < layoutBox.GetRight()) {
-                    float difference = layoutBox.GetRight() - occupiedArea.GetBBox().GetRight();
-                    occupiedArea.GetBBox().IncreaseWidth(difference);
-                }
-                // Decrease occupied area in case specified paragraph width is less than actual lines width.
-                if (layoutBox.GetWidth() < 0 && occupiedArea.GetBBox().GetRight() > layoutBox.GetRight()) {
-                    float difference = occupiedArea.GetBBox().GetRight() - layoutBox.GetRight();
-                    occupiedArea.GetBBox().DecreaseWidth(difference);
-                }
+            if (isVerticalWriting && widthSet) {
+                FixOccupiedAreaIfOverflowedX(true, overflowX, layoutBox);
             }
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler.EndMarginsCollapse(layoutBox);
@@ -489,6 +492,15 @@ namespace iText.Layout.Renderer {
                             return new MinMaxWidthLayoutResult(LayoutResult.NOTHING, null, null, this, this);
                         }
                     }
+                }
+            }
+            float lineIndent_1 = (float)this.GetPropertyAsFloat(Property.FIRST_LINE_INDENT);
+            if (isVerticalWriting) {
+                foreach (KeyValuePair<LineRenderer, LineLayoutResult> lineResult in lineLayoutResults) {
+                    ApplyTextAlignment(textAlignment, lineResult.Value, lineResult.Key, GetInnerAreaBBox(), floatRendererAreas
+                        , false, lineIndent_1, true);
+                    // FIRST_LINE_INDENT is only relevant for first LineRenderer.
+                    lineIndent_1 = 0;
                 }
             }
             ApplyVerticalAlignment();
@@ -744,8 +756,9 @@ namespace iText.Layout.Renderer {
         private void ApplyTextAlignment(TextAlignment? textAlignment, LineLayoutResult result, LineRenderer processedRenderer
             , Rectangle layoutBox, IList<Rectangle> floatRendererAreas, bool onlyOverflowedFloatsLeft, float lineIndent
             , bool isVerticalWriting) {
-            if (textAlignment == TextAlignment.JUSTIFIED && result.GetStatus() == LayoutResult.PARTIAL && !result.IsSplitForcedByNewline
-                () && !onlyOverflowedFloatsLeft || textAlignment == TextAlignment.JUSTIFIED_ALL) {
+            if (textAlignment == TextAlignment.JUSTIFIED && result != null && result.GetStatus() == LayoutResult.PARTIAL
+                 && !result.IsSplitForcedByNewline() && !onlyOverflowedFloatsLeft || textAlignment == TextAlignment.JUSTIFIED_ALL
+                ) {
                 if (processedRenderer != null) {
                     Rectangle actualLineLayoutBox = layoutBox.Clone();
                     FloatingHelper.AdjustLineAreaAccordingToFloats(floatRendererAreas, actualLineLayoutBox);

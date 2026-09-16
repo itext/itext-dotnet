@@ -36,10 +36,17 @@ namespace iText.Layout.Renderer {
         private TextSequenceWordWrapping() {
         }
 
-        public static bool IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing(IRenderer childRenderer) {
-            return childRenderer is TextRenderer && ((TextRenderer)childRenderer).GetSpecialScriptsWordBreakPoints() ==
-                 null && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(false) && !LineRenderer.IsChildFloating
+        public static bool IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing(IRenderer childRenderer, bool
+             sameDirection) {
+            return childRenderer is TextRenderer && sameDirection && ((TextRenderer)childRenderer).GetSpecialScriptsWordBreakPoints
+                () == null && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(false) && !LineRenderer.IsChildFloating
                 (childRenderer);
+        }
+
+        public static bool IsTextRendererAndParentWritingCorrespondsToChild(IRenderer childRenderer, bool forSpecialScripts
+            , bool sameDirection) {
+            return childRenderer is TextRenderer && sameDirection && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs
+                (true) == forSpecialScripts;
         }
 
         /// <summary>
@@ -94,18 +101,19 @@ namespace iText.Layout.Renderer {
         }
 
         public static void UpdateTextSequenceLayoutResults(IDictionary<int, LayoutResult> textRendererLayoutResults
-            , bool specialScripts, IRenderer childRenderer, int childPos, LayoutResult childResult) {
-            if (childRenderer is TextRenderer && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(true) ==
-                 specialScripts) {
+            , bool specialScripts, IRenderer childRenderer, int childPos, LayoutResult childResult, bool sameDirection
+            ) {
+            if (IsTextRendererAndParentWritingCorrespondsToChild(childRenderer, specialScripts, sameDirection)) {
                 textRendererLayoutResults.Put(childPos, childResult);
             }
         }
 
         public static void ResetTextSequenceIfItEnded(IDictionary<int, LayoutResult> textRendererLayoutResults, bool
              specialScripts, IRenderer childRenderer, int childPos, TextSequenceWordWrapping.MinMaxWidthOfTextRendererSequenceHelper
-             minMaxWidthOfTextRendererSequenceHelper, bool noSoftWrap, AbstractWidthHandler widthHandler) {
-            if (childRenderer is TextRenderer && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(true) ==
-                 specialScripts && !LineRenderer.IsChildFloating(childRenderer)) {
+             minMaxWidthOfTextRendererSequenceHelper, bool noSoftWrap, AbstractWidthHandler widthHandler, bool sameDirection
+            ) {
+            if (IsTextRendererAndParentWritingCorrespondsToChild(childRenderer, specialScripts, sameDirection) && !LineRenderer
+                .IsChildFloating(childRenderer)) {
                 return;
             }
             if (!textRendererLayoutResults.IsEmpty()) {
@@ -127,9 +135,9 @@ namespace iText.Layout.Renderer {
 
         public static LineRenderer.LineAscentDescentState UpdateTextRendererSequenceAscentDescent(LineRenderer lineRenderer
             , IDictionary<int, float[]> textRendererSequenceAscentDescent, int childPos, float[] childAscentDescent
-            , LineRenderer.LineAscentDescentState preTextSequenceAscentDescent) {
+            , LineRenderer.LineAscentDescentState preTextSequenceAscentDescent, bool sameDirection) {
             IRenderer childRenderer = GetRenderer(lineRenderer, childPos);
-            if (childRenderer is TextRenderer && !((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(true)) {
+            if (IsTextRendererAndParentWritingCorrespondsToChild(childRenderer, false, sameDirection)) {
                 if (textRendererSequenceAscentDescent.IsEmpty()) {
                     preTextSequenceAscentDescent = new LineRenderer.LineAscentDescentState(lineRenderer.maxAscent, lineRenderer
                         .maxDescent, lineRenderer.maxTextAscent, lineRenderer.maxTextDescent);
@@ -148,9 +156,9 @@ namespace iText.Layout.Renderer {
         public static TextSequenceWordWrapping.MinMaxWidthOfTextRendererSequenceHelper UpdateTextRendererSequenceMinMaxWidth
             (LineRenderer lineRenderer, AbstractWidthHandler widthHandler, int childPos, TextSequenceWordWrapping.MinMaxWidthOfTextRendererSequenceHelper
              minMaxWidthOfTextRendererSequenceHelper, bool anythingPlaced, IDictionary<int, LayoutResult> textRendererLayoutResults
-            , IDictionary<int, LayoutResult> specialScriptLayoutResults, float textIndent) {
+            , IDictionary<int, LayoutResult> specialScriptLayoutResults, float textIndent, bool sameDirection) {
             IRenderer childRenderer = GetRenderer(lineRenderer, childPos);
-            if (childRenderer is TextRenderer) {
+            if (childRenderer is TextRenderer && sameDirection) {
                 bool firstTextRendererWithSpecialScripts = ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(true
                     ) && specialScriptLayoutResults.Count == 1;
                 bool firstTextRendererWithoutSpecialScripts = !((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs
@@ -178,9 +186,11 @@ namespace iText.Layout.Renderer {
             }
             lastAnalyzedTextLayoutResult = null;
             int lastAnalyzedTextRenderer = childPos;
+            bool verticalWriting = lineRenderer.IsVerticalWriting();
             for (int i = childPos; i >= 0; i--) {
                 IRenderer childRenderer = GetRenderer(lineRenderer, i);
-                if (childRenderer is TextRenderer && !LineRenderer.IsChildFloating(childRenderer)) {
+                if (childRenderer is TextRenderer && verticalWriting == ((TextRenderer)childRenderer).IsVerticalWriting() 
+                    && !LineRenderer.IsChildFloating(childRenderer)) {
                     TextRenderer textRenderer = (TextRenderer)childRenderer;
                     if (!textRenderer.TextContainsSpecialScriptGlyphs(true)) {
                         TextLayoutResult textLayoutResult = (TextLayoutResult)textSequenceLayoutResults.Get(i);
@@ -413,10 +423,17 @@ namespace iText.Layout.Renderer {
         /// <see cref="iText.Layout.Properties.Property.OVERFLOW_Y"/>
         /// for vertical text
         /// </param>
+        /// <param name="sameDirection">
+        /// 
+        /// <see langword="true"/>
+        /// if child
+        /// <see cref="TextRenderer"/>
+        /// writing-mode is equal to parent's.
+        /// </param>
         public static void PreprocessTextSequenceOverflow(LineRenderer lineRenderer, bool textSequenceOverflowProcessing
             , IRenderer childRenderer, bool wasOverflowChanged, OverflowPropertyValue? oldOverflow, int overflowProperty
-            ) {
-            bool specialScripts = childRenderer is TextRenderer && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs
+            , bool sameDirection) {
+            bool specialScripts = childRenderer is TextRenderer && sameDirection && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs
                 (true);
             if (textSequenceOverflowProcessing && specialScripts) {
                 int firstPossibleBreakWithinTheRenderer = ((TextRenderer)childRenderer).GetSpecialScriptsWordBreakPoints()
@@ -435,7 +452,7 @@ namespace iText.Layout.Renderer {
 
         /// <summary>
         /// Checks if the layouting should be stopped on current child and resets configurations set on
-        /// <see cref="PreprocessTextSequenceOverflow(LineRenderer, bool, IRenderer, bool, iText.Layout.Properties.OverflowPropertyValue?, int)
+        /// <see cref="PreprocessTextSequenceOverflow(LineRenderer, bool, IRenderer, bool, iText.Layout.Properties.OverflowPropertyValue?, int, bool)
         ///     "/>.
         /// </summary>
         /// <param name="lineRenderer">line renderer containing text sequence to process</param>
@@ -462,10 +479,17 @@ namespace iText.Layout.Renderer {
         /// <see cref="iText.Layout.Properties.Property.OVERFLOW_Y"/>
         /// for vertical text
         /// </param>
+        /// <param name="sameDirection">
+        /// 
+        /// <see langword="true"/>
+        /// if child
+        /// <see cref="TextRenderer"/>
+        /// writing-mode is equal to parent's.
+        /// </param>
         public static bool PostprocessTextSequenceOverflow(LineRenderer lineRenderer, bool textSequenceOverflowProcessing
             , int childPos, IRenderer childRenderer, LayoutResult childResult, bool wasOverflowChanged, int overflowProperty
-            ) {
-            bool specialScripts = childRenderer is TextRenderer && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs
+            , bool sameDirection) {
+            bool specialScripts = childRenderer is TextRenderer && sameDirection && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs
                 (true);
             bool shouldBreakLayouting = false;
             bool lastElemOfTextSequence = childPos + 1 == lineRenderer.childRenderers.Count || LineRenderer.IsChildFloating

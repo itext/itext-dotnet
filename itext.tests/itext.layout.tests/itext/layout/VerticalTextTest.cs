@@ -251,7 +251,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void VerticalTextAndHorizontalTextTest() {
-            // TODO DEVSIX-10183 vertical and horizontal text in one paragraph.
             String fileName = "verticalTextAndHorizontalText";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
@@ -437,7 +436,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void UnderlineTest() {
-            // TODO fix underline positioning
+            // TODO DEVSIX-10180 fix underline positioning
             String outFileName = DESTINATION_FOLDER + "underline.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_underline.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
@@ -750,7 +749,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void VerticalTextWithWordSpaceTest() {
-            //TODO Background last item too narrow
             String fileName = "verticalTextWithWordSpaceTest";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
@@ -783,7 +781,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void VerticalTextWithCharacterSpaceTest() {
-            //TODO Background last item too narrow
             String fileName = "verticalTextWithCharacterSpaceTest";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
@@ -906,7 +903,7 @@ namespace iText.Layout {
                     paragraph3.SetHeight(700);
                     paragraph3.SetTextAlignment(TextAlignment.JUSTIFIED_ALL);
                     paragraph3.SetMargin(10);
-                    // Extremely low ration results in word-spacing being close to zero, and character spacing taking over.
+                    // Extremely low ratio results in word-spacing being close to zero, and character spacing taking over.
                     paragraph3.SetSpacingRatio(0.0001f);
                     paragraph3.Add(alignedText1);
                     paragraph3.Add(alignedText2);
