@@ -29,9 +29,12 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
+using iText.Layout.Font;
 using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg;
+using iText.Svg.Processors;
 using iText.Svg.Renderers;
+using iText.Svg.Xobject;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Impl {
@@ -46,7 +49,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void ZeroSizedViewBoxDoesNotProduceExceptionTest() {
             PdfFormXObject zeroSizedXObject = new PdfFormXObject(new Rectangle(0, 0, 0, 0));
-            ResourceResolver resourceResolver = new _ResourceResolver_57(zeroSizedXObject, "");
+            ResourceResolver resourceResolver = new _ResourceResolver_62(zeroSizedXObject, "");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             using (PdfDocument document = new PdfDocument(new PdfWriter(baos))) {
                 PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
@@ -59,17 +62,17 @@ namespace iText.Svg.Renderers.Impl {
                 attributes.Put(SvgConstants.Attributes.HEIGHT, "50");
                 ImageSvgNodeRenderer renderer = new ImageSvgNodeRenderer();
                 renderer.SetAttributesAndStyles(attributes);
-                //should not throw a when view box is not existing
+                // Should not throw when a view box does not exist
                 renderer.DoDraw(context);
                 String contentStream = iText.Commons.Utils.JavaUtil.GetStringForBytes(canvas.GetContentStream().GetBytes()
                     , System.Text.Encoding.UTF8);
-                // 100px x 50px converted to points.
+                // 100px x 50px converted to points
                 NUnit.Framework.Assert.IsTrue(contentStream.Contains("75 0 0 -37.5 0 37.5 cm"));
             }
         }
 
-        private sealed class _ResourceResolver_57 : ResourceResolver {
-            public _ResourceResolver_57(PdfFormXObject zeroSizedXObject, String baseArg1)
+        private sealed class _ResourceResolver_62 : ResourceResolver {
+            public _ResourceResolver_62(PdfFormXObject zeroSizedXObject, String baseArg1)
                 : base(baseArg1) {
                 this.zeroSizedXObject = zeroSizedXObject;
             }
@@ -79,6 +82,62 @@ namespace iText.Svg.Renderers.Impl {
             }
 
             private readonly PdfFormXObject zeroSizedXObject;
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ZeroSizedSvgImageXObjectUpdatesBBoxTest() {
+            SvgImageXObject zeroSizedXObject = new SvgImageXObject(null, new ImageSvgNodeRendererUnitTest.TestSvgProcessorResult
+                (), new ResourceResolver(""));
+            ResourceResolver resourceResolver = new _ResourceResolver_99(zeroSizedXObject, "");
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            using (PdfDocument document = new PdfDocument(new PdfWriter(baos))) {
+                PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
+                SvgDrawContext context = new SvgDrawContext(resourceResolver, null);
+                context.AddViewPort(new Rectangle(0, 0, 500, 500));
+                context.PushCanvas(canvas);
+                IDictionary<String, String> attributes = new ConcurrentDictionary<String, String>();
+                attributes.Put(SvgConstants.Attributes.HREF, "any.svg");
+                attributes.Put(SvgConstants.Attributes.WIDTH, "100");
+                attributes.Put(SvgConstants.Attributes.HEIGHT, "50");
+                ImageSvgNodeRenderer renderer = new ImageSvgNodeRenderer();
+                renderer.SetAttributesAndStyles(attributes);
+                renderer.DoDraw(context);
+                NUnit.Framework.Assert.IsNotNull(zeroSizedXObject.GetBBox());
+                // 100px x 50px converted to points
+                NUnit.Framework.Assert.IsTrue(new Rectangle(0, 0, 75, 37.5f).EqualsWithEpsilon(zeroSizedXObject.GetBBox().
+                    ToRectangle()));
+            }
+        }
+
+        private sealed class _ResourceResolver_99 : ResourceResolver {
+            public _ResourceResolver_99(SvgImageXObject zeroSizedXObject, String baseArg1)
+                : base(baseArg1) {
+                this.zeroSizedXObject = zeroSizedXObject;
+            }
+
+            public override PdfXObject RetrieveImage(String src) {
+                return zeroSizedXObject;
+            }
+
+            private readonly SvgImageXObject zeroSizedXObject;
+        }
+
+        private class TestSvgProcessorResult : ISvgProcessorResult {
+            public virtual IDictionary<String, ISvgNodeRenderer> GetNamedObjects() {
+                return null;
+            }
+
+            public virtual ISvgNodeRenderer GetRootRenderer() {
+                return null;
+            }
+
+            public virtual FontProvider GetFontProvider() {
+                return null;
+            }
+
+            public virtual FontSet GetTempFonts() {
+                return null;
+            }
         }
     }
 }

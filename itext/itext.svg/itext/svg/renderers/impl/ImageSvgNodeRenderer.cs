@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using iText.Commons.Internal.Runtime;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.StyledXmlParser.Css.Util;
@@ -30,6 +31,7 @@ using iText.StyledXmlParser.Resolver.Resource;
 using iText.Svg;
 using iText.Svg.Renderers;
 using iText.Svg.Utils;
+using iText.Svg.Xobject;
 
 namespace iText.Svg.Renderers.Impl {
     /// <summary>Responsible for drawing Images to the canvas.</summary>
@@ -92,6 +94,11 @@ namespace iText.Svg.Renderers.Impl {
                 Rectangle viewBox;
                 if (xObject.GetWidth() <= 0 || xObject.GetHeight() <= 0) {
                     viewBox = new Rectangle(currentViewPort);
+                    // TODO DEVSIX-4107 - we do not support svg inside svg yet.
+                    // But at least we should not produce corrupted PDF files with form xobjects without BBox
+                    if (xObject is SvgImageXObject) {
+                        ((SvgImageXObject)xObject).SetBBox(new PdfArray(viewBox));
+                    }
                 }
                 else {
                     viewBox = new Rectangle(0, 0, xObject.GetWidth(), xObject.GetHeight());
