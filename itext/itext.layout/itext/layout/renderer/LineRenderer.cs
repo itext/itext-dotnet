@@ -72,11 +72,12 @@ namespace iText.Layout.Renderer {
             bool wasParentsHeightClipped = layoutContext.IsClippedHeight();
             IList<Rectangle> floatRendererAreas = layoutContext.GetFloatRendererAreas();
             bool isVerticalWriting = IsVerticalWriting();
+            WritingMode? writingMode = GetWritingMode(this);
             bool textSequenceOverflowProcessing = false;
             OverflowPropertyValue? oldOverflow = null;
             int overflowProperty = isVerticalWriting ? Property.OVERFLOW_Y : Property.OVERFLOW_X;
             bool wasOverflowChanged = false;
-            bool childVerticalWriting = false;
+            WritingMode? childWritingMode = writingMode;
             bool floatsPlacedBeforeLine = false;
             if (floatRendererAreas != null) {
                 float layoutWidth = layoutBox.GetWidth();
@@ -154,8 +155,8 @@ namespace iText.Layout.Renderer {
             while (childPos < GetChildRenderers().Count) {
                 IRenderer directChildRenderer = GetChildRenderers()[childPos];
                 IRenderer childRenderer = UnwrapChildRendererIfNeeded(directChildRenderer);
-                childVerticalWriting = IsChildVerticallyWritten(childPos);
-                bool sameDirection = childVerticalWriting == isVerticalWriting;
+                childWritingMode = GetWritingMode(childRenderer);
+                bool sameDirection = childWritingMode == writingMode;
                 LayoutResult childResult = null;
                 Rectangle bbox;
                 if (isVerticalWriting) {
@@ -435,8 +436,7 @@ namespace iText.Layout.Renderer {
                 if (!shouldBreakLayouting) {
                     shouldBreakLayouting = childResult.GetStatus() != LayoutResult.FULL || newLineOccurred;
                 }
-                if (isVerticalWriting != childVerticalWriting && childResult.GetStatus() == LayoutResult.PARTIAL && childResult
-                     is TextLayoutResult) {
+                if (!sameDirection && childResult.GetStatus() == LayoutResult.PARTIAL && childResult is TextLayoutResult) {
                     shouldBreakLayouting = false;
                     TextRenderer overflowRenderer = (TextRenderer)childResult.GetOverflowRenderer();
                     overflowRenderer.TrimFirst();
@@ -519,7 +519,7 @@ namespace iText.Layout.Renderer {
                     if (!forceOverflowForTextRendererPartialResult) {
                         UpdateAscentDescentAfterChildLayout(childAscentDescent, childRenderer, isChildFloating);
                     }
-                    if (childVerticalWriting) {
+                    if (IsChildVerticallyWritten(childPos)) {
                         if (childResult != null && childResult.GetOccupiedArea() != null) {
                             maxHeight = Math.Max(maxHeight, childResult.GetOccupiedArea().GetBBox().GetHeight());
                         }
@@ -737,13 +737,14 @@ namespace iText.Layout.Renderer {
                     toProcess.AdjustChildrenXLineVerticalWritingMode();
                 }
                 else {
-                    if (isVerticalWriting == childVerticalWriting && !childrenWithDifferentDirections) {
+                    if (writingMode == childWritingMode && !childrenWithDifferentDirections) {
                         toProcess.AdjustChildrenYLine().AdjustChildrenXLine();
                     }
                     else {
                         toProcess.AdjustChildrenYLineMixedWritingModes();
                     }
                 }
+                toProcess.AdjustChildrenBasedOnWritingMode();
                 toProcess.TrimLast();
                 result.SetMinMaxWidth(minMaxWidth);
             }
@@ -873,7 +874,7 @@ namespace iText.Layout.Renderer {
                     child.Move(lastPosition - childPosition, 0);
                 }
                 childPosition = lastPosition;
-                if (child is TextRenderer && ((TextRenderer)child).IsVerticalWriting() == this.IsVerticalWriting()) {
+                if (child is TextRenderer && GetWritingMode(child) == GetWritingMode(this)) {
                     float childHSCale = (float)((TextRenderer)child).GetPropertyAsFloat(Property.HORIZONTAL_SCALING, 1f);
                     float? oldCharacterSpacing = ((TextRenderer)child).GetPropertyAsFloat(Property.CHARACTER_SPACING);
                     float? oldWordSpacing = ((TextRenderer)child).GetPropertyAsFloat(Property.WORD_SPACING);
@@ -912,8 +913,8 @@ namespace iText.Layout.Renderer {
             int spaces = 0;
             foreach (IRenderer childRenderer in GetChildRenderers()) {
                 IRenderer child = UnwrapChildRendererIfNeeded(childRenderer);
-                if (child is TextRenderer && !FloatingHelper.IsRendererFloating(child) && ((TextRenderer)child).IsVerticalWriting
-                    () == this.IsVerticalWriting()) {
+                if (child is TextRenderer && !FloatingHelper.IsRendererFloating(child) && GetWritingMode(child) == GetWritingMode
+                    (this)) {
                     spaces += ((TextRenderer)child).GetNumberOfSpaces();
                 }
             }
@@ -943,8 +944,8 @@ namespace iText.Layout.Renderer {
             int count = 0;
             foreach (IRenderer childRenderer in GetChildRenderers()) {
                 IRenderer child = UnwrapChildRendererIfNeeded(childRenderer);
-                if (child is TextRenderer && !FloatingHelper.IsRendererFloating(child) && ((TextRenderer)child).IsVerticalWriting
-                    () == this.IsVerticalWriting()) {
+                if (child is TextRenderer && !FloatingHelper.IsRendererFloating(child) && GetWritingMode(child) == GetWritingMode
+                    (this)) {
                     count += ((TextRenderer)child).BaseCharactersCount();
                 }
             }
@@ -1242,11 +1243,21 @@ namespace iText.Layout.Renderer {
             return child;
         }
 
+        private static WritingMode? GetWritingMode(IRenderer renderer) {
+            WritingMode? writingMode = renderer.GetProperty<WritingMode?>(Property.WRITING_MODE);
+            if (writingMode != null && renderer.GetProperty<VerticalTextOrientation?>(Property.TEXT_ORIENTATION) == VerticalTextOrientation
+                .UPRIGHT) {
+                return writingMode;
+            }
+            return WritingMode.HORIZONTAL_TB;
+        }
+
         private bool ChildChangingWritingDirection(int childIndex) {
             if (childRenderers.Count > childIndex + 1) {
                 if (childRenderers[childIndex] is AbstractRenderer && childRenderers[childIndex + 1] is AbstractRenderer) {
-                    return ((AbstractRenderer)childRenderers[childIndex]).IsVerticalWriting() != ((AbstractRenderer)childRenderers
-                        [childIndex + 1]).IsVerticalWriting();
+                    AbstractRenderer renderer1 = (AbstractRenderer)childRenderers[childIndex];
+                    AbstractRenderer renderer2 = (AbstractRenderer)childRenderers[childIndex + 1];
+                    return GetWritingMode(renderer1) != GetWritingMode(renderer2);
                 }
             }
             return false;
@@ -1325,8 +1336,8 @@ namespace iText.Layout.Renderer {
             IRenderer result = null;
             for (int i = GetChildRenderers().Count - 1; i >= 0; --i) {
                 IRenderer current = GetChildRenderers()[i];
-                if (!FloatingHelper.IsRendererFloating(current) && current is TextRenderer && ((TextRenderer)current).IsVerticalWriting
-                    () == this.IsVerticalWriting()) {
+                if (!FloatingHelper.IsRendererFloating(current) && current is TextRenderer && GetWritingMode(current) == GetWritingMode
+                    (this)) {
                     result = current;
                     break;
                 }
@@ -1875,19 +1886,17 @@ namespace iText.Layout.Renderer {
 
         private void AdjustChildrenYLineMixedWritingModes() {
             float maxHeight = 0;
+            IList<TextRenderer> textChildren = new List<TextRenderer>();
             foreach (IRenderer renderer in GetChildRenderers()) {
                 IRenderer unwrapped = UnwrapChildRendererIfNeeded(renderer);
                 if (unwrapped is TextRenderer) {
                     maxHeight = Math.Max(maxHeight, unwrapped.GetOccupiedArea().GetBBox().GetHeight());
+                    textChildren.Add((TextRenderer)unwrapped);
                 }
             }
-            foreach (IRenderer renderer in GetChildRenderers()) {
-                IRenderer unwrapped = UnwrapChildRendererIfNeeded(renderer);
-                if (unwrapped is TextRenderer) {
-                    TextRenderer textRenderer = (TextRenderer)unwrapped;
-                    float textChunkHeight = textRenderer.GetOccupiedArea().GetBBox().GetHeight();
-                    textRenderer.Move(0, textChunkHeight - maxHeight);
-                }
+            foreach (TextRenderer textRenderer in textChildren) {
+                float textChunkHeight = textRenderer.GetOccupiedArea().GetBBox().GetHeight();
+                textRenderer.Move(0, textChunkHeight - maxHeight);
             }
         }
 
@@ -1909,6 +1918,59 @@ namespace iText.Layout.Renderer {
                 if (UnwrapChildRendererIfNeeded(renderer) is TextRenderer) {
                     renderer.Move(xShift, 0);
                 }
+            }
+        }
+
+        private void AdjustChildrenBasedOnWritingMode() {
+            int startIndex = 0;
+            bool reorder = false;
+            IPropertyContainer prevElement = null;
+            for (int i = 0; i < GetChildRenderers().Count; i++) {
+                IRenderer renderer = UnwrapChildRendererIfNeeded(GetChildRenderers()[i]);
+                WritingMode? childWritingMode = GetWritingMode(renderer);
+                if (childWritingMode == WritingMode.VERTICAL_RL) {
+                    IPropertyContainer currentElement = renderer.GetModelElement();
+                    if (!reorder) {
+                        prevElement = currentElement;
+                    }
+                    else {
+                        if (prevElement != currentElement) {
+                            CorrectLinesForRtlMode(startIndex, i);
+                            prevElement = currentElement;
+                            startIndex = i;
+                        }
+                    }
+                    reorder = true;
+                }
+                else {
+                    if (reorder) {
+                        CorrectLinesForRtlMode(startIndex, i);
+                    }
+                    startIndex = i + 1;
+                    reorder = false;
+                }
+            }
+            if (reorder) {
+                CorrectLinesForRtlMode(startIndex, GetChildRenderers().Count);
+            }
+        }
+
+        // Correct the lines for vertical-rl writing mode
+        // by mirroring them relative to the center of the text chunk occupied area.
+        private void CorrectLinesForRtlMode(int start, int end) {
+            if (start >= GetChildRenderers().Count) {
+                return;
+            }
+            Rectangle rectangle = GetChildRenderers()[start].GetOccupiedArea().GetBBox();
+            for (int i = start + 1; i < end; i++) {
+                rectangle = Rectangle.GetCommonRectangle(rectangle, GetChildRenderers()[i].GetOccupiedArea().GetBBox());
+            }
+            float middleX = rectangle.GetX() + rectangle.GetWidth() / 2;
+            for (int i = start; i < end; i++) {
+                IRenderer renderer = GetChildRenderers()[i];
+                float middleTextX = renderer.GetOccupiedArea().GetBBox().GetX() + renderer.GetOccupiedArea().GetBBox().GetWidth
+                    () / 2;
+                renderer.Move(2 * (middleX - middleTextX), 0);
             }
         }
 

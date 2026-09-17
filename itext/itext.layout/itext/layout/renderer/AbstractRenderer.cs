@@ -3077,8 +3077,9 @@ namespace iText.Layout.Renderer {
 //\cond DO_NOT_DOCUMENT
         internal virtual bool IsVerticalWriting() {
             if (isVerticalMode == null) {
-                isVerticalMode = this.GetProperty<WritingMode?>(Property.WRITING_MODE) == WritingMode.VERTICAL_LR && this.
-                    GetProperty<VerticalTextOrientation?>(Property.TEXT_ORIENTATION) == VerticalTextOrientation.UPRIGHT;
+                WritingMode? writingMode = this.GetProperty<WritingMode?>(Property.WRITING_MODE);
+                isVerticalMode = (writingMode == WritingMode.VERTICAL_LR || writingMode == WritingMode.VERTICAL_RL) && this
+                    .GetProperty<VerticalTextOrientation?>(Property.TEXT_ORIENTATION) == VerticalTextOrientation.UPRIGHT;
             }
             return isVerticalMode.Value;
         }

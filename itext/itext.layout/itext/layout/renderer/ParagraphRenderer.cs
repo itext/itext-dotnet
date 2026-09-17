@@ -318,6 +318,8 @@ namespace iText.Layout.Renderer {
                                 FloatingHelper.IncludeChildFloatsInOccupiedArea(floatRendererAreas, this, nonChildFloatingRendererAreas);
                                 FixOccupiedAreaIfOverflowedX(isVerticalWriting, overflowX, layoutBox);
                             }
+                            // Correct lines for split renderer in case of paragraph split.
+                            CorrectLinesForRtlMode();
                             if (marginsCollapsingEnabled) {
                                 marginsCollapseHandler.EndMarginsCollapse(layoutBox);
                             }
@@ -455,10 +457,12 @@ namespace iText.Layout.Renderer {
             if (blockMaxHeight != null && blockMaxHeight < parentHeight + EPS) {
                 FixOccupiedAreaIfOverflowedY(overflowY, layoutBox);
             }
-            // Adjust occupied area width for vertical text after lines layout.
             if (isVerticalWriting && widthSet) {
+                // Adjust occupied area width for vertical text after lines layout.
                 FixOccupiedAreaIfOverflowedX(true, overflowX, layoutBox);
             }
+            // Adjust lines for vertical-rl text after lines layout.
+            CorrectLinesForRtlMode();
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler.EndMarginsCollapse(layoutBox);
             }
@@ -750,6 +754,19 @@ namespace iText.Layout.Renderer {
             }
             else {
                 FixOccupiedAreaIfOverflowedX(overflowX, layoutBox);
+            }
+        }
+
+        private void CorrectLinesForRtlMode() {
+            if (this.GetProperty<WritingMode?>(Property.WRITING_MODE) == WritingMode.VERTICAL_RL && this.GetProperty<VerticalTextOrientation?
+                >(Property.TEXT_ORIENTATION) == VerticalTextOrientation.UPRIGHT) {
+                // Correct the lines for vertical-rl writing mode
+                // by mirroring them relative to the center of the occupied area.
+                float middleX = occupiedArea.GetBBox().GetX() + occupiedArea.GetBBox().GetWidth() / 2;
+                foreach (LineRenderer line in lines) {
+                    float middleLineX = line.occupiedArea.GetBBox().GetX() + line.occupiedArea.GetBBox().GetWidth() / 2;
+                    line.Move(2 * (middleX - middleLineX), 0);
+                }
             }
         }
 

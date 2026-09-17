@@ -566,6 +566,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant VERTICAL_LR.</summary>
         public const String VERTICAL_LR = "vertical-lr";
 
+        /// <summary>The Constant VERTICAL_RL.</summary>
+        public const String VERTICAL_RL = "vertical-rl";
+
         /// <summary>The Constant VISIBILITY.</summary>
         public const String VISIBILITY = "visibility";
 

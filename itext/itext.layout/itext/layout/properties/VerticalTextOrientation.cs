@@ -30,7 +30,7 @@ namespace iText.Layout.Properties {
     /// <see cref="VerticalTextOrientation"/>
     /// . This property is analogues to CSS text-orientation.
     /// It only has meaning when
-    /// <see cref="WritingMode"/>
+    /// <see cref="WritingMode?"/>
     /// is set to vertical drawing.
     /// </remarks>
     public enum VerticalTextOrientation {

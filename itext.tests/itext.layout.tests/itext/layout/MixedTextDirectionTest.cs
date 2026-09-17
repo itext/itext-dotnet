@@ -21,6 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
+using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -35,6 +37,10 @@ namespace iText.Layout {
             .CurrentContext.TestDirectory) + "/resources/itext/layout/MixedTextDirectionTest/";
 
         private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/MixedTextDirectionTest/";
+
+        public static ICollection<WritingMode> MixedVertical() {
+            return JavaUtil.ArraysAsList(WritingMode.HORIZONTAL_TB, WritingMode.VERTICAL_LR, WritingMode.VERTICAL_RL);
+        }
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -66,6 +72,94 @@ namespace iText.Layout {
                     paragraph.Add(text1);
                     paragraph.Add(text2);
                     paragraph.Add(text3);
+                    paragraph.Add(text2);
+                    document.Add(paragraph);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
+        }
+
+        [NUnit.Framework.TestCaseSource("MixedVertical")]
+        public virtual void ParagraphMixedVerticalTextTest(WritingMode? paragraphWritingMode) {
+            // TODO DEVSIX-10200 Consider text elements with different writing-mode as inline-blocks,
+            //  after that vertical RTL text chunks in vertical LTR paragraphs and vice versa will be fixed.
+            String fileName = "paragraphMixedVerticalText_" + paragraphWritingMode.ToString();
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    Paragraph paragraph = new Paragraph();
+                    paragraph.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                    paragraph.SetHeight(200);
+                    paragraph.SetProperty(Property.WRITING_MODE, paragraphWritingMode);
+                    paragraph.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    paragraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+                    paragraph.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
+                    Text text1 = new Text("vertical text chunk left-to-right ");
+                    text1.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    text1.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    text1.SetBackgroundColor(ColorConstants.MAGENTA);
+                    Text text2 = new Text("vertical text chunk right-to-left ");
+                    text2.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_RL);
+                    text2.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    text2.SetBackgroundColor(ColorConstants.CYAN);
+                    Text text3 = new Text("one more vertical text chunk left-to-right ");
+                    text3.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    text3.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    text3.SetBackgroundColor(ColorConstants.ORANGE);
+                    Text text4 = new Text("horizontal text ");
+                    text4.SetProperty(Property.WRITING_MODE, WritingMode.HORIZONTAL_TB);
+                    text4.SetBackgroundColor(ColorConstants.YELLOW);
+                    paragraph.Add(text1);
+                    paragraph.Add(text2);
+                    paragraph.Add(text3);
+                    paragraph.Add(text4);
+                    paragraph.Add(text2);
+                    document.Add(paragraph);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
+        }
+
+        [NUnit.Framework.TestCaseSource("MixedVertical")]
+        public virtual void ParagraphMixedVerticalTextNoHeightTest(WritingMode? paragraphWritingMode) {
+            // TODO DEVSIX-10200 Consider text elements with different writing-mode as inline-blocks,
+            //  after that vertical RTL text chunks in vertical LTR paragraphs and vice versa should be fixed.
+            // No line breaks in vertical text with different writing-mode looks like workaround for horizontal text.
+            String fileName = "paragraphMixedVerticalTextNoHeight_" + paragraphWritingMode.ToString();
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    Paragraph paragraph = new Paragraph();
+                    paragraph.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                    paragraph.SetProperty(Property.WRITING_MODE, paragraphWritingMode);
+                    paragraph.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    paragraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+                    paragraph.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.VISIBLE);
+                    Text text1 = new Text("vertical text chunk\nleft-to-right ");
+                    text1.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    text1.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    text1.SetBackgroundColor(ColorConstants.MAGENTA);
+                    Text text2 = new Text("vertical\ntext chunk\nright-to-left ");
+                    text2.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_RL);
+                    text2.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    text2.SetBackgroundColor(ColorConstants.CYAN);
+                    Text text3 = new Text("one more\nvertical text chunk\nleft-to-right ");
+                    text3.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
+                    text3.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+                    text3.SetBackgroundColor(ColorConstants.ORANGE);
+                    Text text4 = new Text("horizontal\ntext ");
+                    text4.SetProperty(Property.WRITING_MODE, WritingMode.HORIZONTAL_TB);
+                    text4.SetBackgroundColor(ColorConstants.YELLOW);
+                    paragraph.Add(text1);
+                    paragraph.Add(text2);
+                    paragraph.Add(text3);
+                    paragraph.Add(text4);
                     paragraph.Add(text2);
                     document.Add(paragraph);
                 }

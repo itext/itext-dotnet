@@ -186,11 +186,11 @@ namespace iText.Layout.Renderer {
             }
             lastAnalyzedTextLayoutResult = null;
             int lastAnalyzedTextRenderer = childPos;
-            bool verticalWriting = lineRenderer.IsVerticalWriting();
+            WritingMode? lineWritingMode = GetWritingMode(lineRenderer);
             for (int i = childPos; i >= 0; i--) {
                 IRenderer childRenderer = GetRenderer(lineRenderer, i);
-                if (childRenderer is TextRenderer && verticalWriting == ((TextRenderer)childRenderer).IsVerticalWriting() 
-                    && !LineRenderer.IsChildFloating(childRenderer)) {
+                if (childRenderer is TextRenderer && lineWritingMode == GetWritingMode((TextRenderer)childRenderer) && !LineRenderer
+                    .IsChildFloating(childRenderer)) {
                     TextRenderer textRenderer = (TextRenderer)childRenderer;
                     if (!textRenderer.TextContainsSpecialScriptGlyphs(true)) {
                         TextLayoutResult textLayoutResult = (TextLayoutResult)textSequenceLayoutResults.Get(i);
@@ -760,6 +760,15 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+        }
+
+        private static WritingMode? GetWritingMode(AbstractRenderer renderer) {
+            WritingMode? writingMode = renderer.GetProperty<WritingMode?>(Property.WRITING_MODE);
+            if (writingMode != null && renderer.GetProperty<VerticalTextOrientation?>(Property.TEXT_ORIENTATION) == VerticalTextOrientation
+                .UPRIGHT) {
+                return writingMode;
+            }
+            return WritingMode.HORIZONTAL_TB;
         }
 
         private static IRenderer GetRenderer(LineRenderer lineRenderer, int childPos) {

@@ -23,13 +23,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 namespace iText.Layout.Properties {
     /// <summary>
     /// Enum which defines values for
-    /// <see cref="WritingMode"/>
+    /// <see cref="WritingMode?"/>
     /// and defines the direction of a text.
     /// </summary>
     public enum WritingMode {
         /// <summary>Lays out text horizontally, lines progression is from top to bottom.</summary>
         HORIZONTAL_TB,
-        /// <summary>Lays out text vertically, lines progression is from left to right.</summary>
-        VERTICAL_LR
+        /// <summary>Lays out text vertically, line progression is from left to right.</summary>
+        VERTICAL_LR,
+        /// <summary>Lays out text vertically, line progression is from right to left.</summary>
+        VERTICAL_RL
     }
 }
