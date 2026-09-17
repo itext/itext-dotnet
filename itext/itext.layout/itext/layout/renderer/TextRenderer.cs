@@ -1516,7 +1516,10 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     float yLine = GetYLine();
-                    float underlineYPosition = underline.GetYPosition(fontSize) + yLine;
+                    // yLine compensates text rise which is set on canvas separately,
+                    // so we need to add it back to get correct underline position
+                    float underlineYPosition = underline.GetYPosition(fontSize) + yLine + (float)this.GetPropertyAsFloat(Property
+                        .TEXT_RISE);
                     float italicWidthSubtraction = .5f * fontSize * italicAngleTan;
                     underlineBBox = new Rectangle(innerAreaBbox.GetX(), underlineYPosition - underlineThickness / 2, innerAreaBbox
                         .GetWidth() - italicWidthSubtraction, underlineThickness);

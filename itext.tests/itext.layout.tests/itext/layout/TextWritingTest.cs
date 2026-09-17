@@ -381,7 +381,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void LineThroughTest() {
-            //TODO: update after DEVSIX-2623 fix
             String outFileName = DESTINATION_FOLDER + "lineThrough.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_lineThrough.pdf";
             PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
