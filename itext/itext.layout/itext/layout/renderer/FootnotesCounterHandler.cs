@@ -39,6 +39,8 @@ namespace iText.Layout.Renderer {
 
         private const int DEFAULT_TEXT_RISE = 7;
 
+        private bool footnoteAnchorsWereLaidOut;
+
         private readonly IDictionary<Footnote, FootnoteRenderer> footnotes = new LinkedDictionary<Footnote, FootnoteRenderer
             >();
 
@@ -52,6 +54,16 @@ namespace iText.Layout.Renderer {
 
 //\cond DO_NOT_DOCUMENT
         // Empty constructor.
+        internal static void AnchorLaidOut(IRenderer renderer) {
+            iText.Layout.Renderer.FootnotesCounterHandler footnotesCounterHandler = GetFootnotesCounterHandler(renderer
+                );
+            if (footnotesCounterHandler != null) {
+                footnotesCounterHandler.footnoteAnchorsWereLaidOut = true;
+            }
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Gets
         /// <see cref="FootnotesCounterHandler"/>
@@ -89,6 +101,7 @@ namespace iText.Layout.Renderer {
         /// before collecting placed footnotes.
         /// </summary>
         internal virtual void Reset() {
+            footnoteAnchorsWereLaidOut = false;
             footnotes.Clear();
         }
 //\endcond
@@ -109,6 +122,9 @@ namespace iText.Layout.Renderer {
             > footnotesAnchorsFound) {
             footnotesAnchorsFound.Clear();
             footnotes.Clear();
+            if (!footnoteAnchorsWereLaidOut) {
+                return footnotes;
+            }
             CollectFromTree(renderer, footnotes, footnotesAnchorsFound);
             return footnotes;
         }

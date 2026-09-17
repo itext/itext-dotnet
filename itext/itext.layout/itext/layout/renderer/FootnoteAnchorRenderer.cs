@@ -118,6 +118,7 @@ namespace iText.Layout.Renderer {
                 if (float.IsNaN(this.yPos)) {
                     this.yPos = this.occupiedArea.GetBBox().GetTop();
                 }
+                FootnotesCounterHandler.AnchorLaidOut(this);
             }
             if (layoutResult.GetSplitRenderer() != null) {
                 iText.Layout.Renderer.FootnoteAnchorRenderer splitRenderer = CreateSplitRenderer(layoutResult);
