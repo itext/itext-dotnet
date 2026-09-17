@@ -140,6 +140,8 @@ namespace iText.Layout.Renderer {
 
         protected internal bool isLastRendererForModelElement = true;
 
+        private bool? isVerticalMode;
+
         private bool relativePositioningTranslationApplied = false;
 
         /// <summary>Creates a renderer.</summary>
@@ -3074,10 +3076,11 @@ namespace iText.Layout.Renderer {
 
 //\cond DO_NOT_DOCUMENT
         internal virtual bool IsVerticalWriting() {
-            if (this.GetProperty<WritingMode?>(Property.WRITING_MODE) == WritingMode.VERTICAL_LR) {
-                return this.GetProperty<VerticalTextOrientation?>(Property.TEXT_ORIENTATION) == VerticalTextOrientation.UPRIGHT;
+            if (isVerticalMode == null) {
+                isVerticalMode = this.GetProperty<WritingMode?>(Property.WRITING_MODE) == WritingMode.VERTICAL_LR && this.
+                    GetProperty<VerticalTextOrientation?>(Property.TEXT_ORIENTATION) == VerticalTextOrientation.UPRIGHT;
             }
-            return false;
+            return isVerticalMode.Value;
         }
 //\endcond
 
