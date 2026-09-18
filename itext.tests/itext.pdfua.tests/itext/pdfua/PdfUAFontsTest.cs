@@ -422,7 +422,7 @@ namespace iText.Pdfua {
                     , 10).ShowText(glyphLine).EndText().RestoreState().CloseTag();
             }
             );
-            // TODO DEVSIX-10160 missing check on iText side for ToUnicode mapping to 0, fffe and feff
+            // TODO DEVSIX-10209 missing check on iText side for ToUnicode mapping to 0, fffe and feff
             framework.AssertVeraPdfFailITextValid("zeroUnicodeGlyph");
         }
 
@@ -483,7 +483,7 @@ namespace iText.Pdfua {
                     , 10).ShowText(glyphLine).EndText().RestoreState().CloseTag();
             }
             );
-            // TODO DEVSIX-10160 missing check on iText side for ToUnicode mapping to 0, fffe and feff
+            // TODO DEVSIX-10209 missing check on iText side for ToUnicode mapping to 0, fffe and feff
             framework.AssertBothFail("fontWithReplacementChar", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
                 .GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE, "�"));
         }

@@ -215,8 +215,8 @@ namespace iText.Pdfa {
             // But right now we check for used glyphs which don't exist in the font and throw exception
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
                 "symbolicTtfCharEncodingsPdfA1Test01.pdf", "iTextSymbolicFont.ttf", "", PdfAConformance.PDF_A_1B));
-            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                , e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , 'e'), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -225,8 +225,8 @@ namespace iText.Pdfa {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
                 "symbolicTtfCharEncodingsPdfA1Test02.pdf", "iTextSymbolicFont.ttf", PdfEncodings.MACROMAN, PdfAConformance
                 .PDF_A_1B));
-            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                , e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , 'e'), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -235,8 +235,8 @@ namespace iText.Pdfa {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
                 "symbolicTtfCharEncodingsPdfA1Test03.pdf", "iTextSymbolicFont.ttf", "ISO-8859-1", PdfAConformance.PDF_A_1B
                 ));
-            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                , e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , 'e'), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -244,8 +244,8 @@ namespace iText.Pdfa {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
                 "symbolicTtfCharEncodingsPdfA1Test04.pdf", "iTextSymbolicFont.ttf", PdfEncodings.WINANSI, PdfAConformance
                 .PDF_A_1B));
-            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                , e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , 'e'), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -256,8 +256,8 @@ namespace iText.Pdfa {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
                 "symbolicTtfCharEncodingsPdfA1Test05.pdf", "iTextSymbolicFont.ttf", PdfEncodings.IDENTITY_H, PdfAConformance
                 .PDF_A_1B));
-            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                , e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , 'e'), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -289,8 +289,8 @@ namespace iText.Pdfa {
             canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 36);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => canvas.ShowText("\u00C5 \u1987"
                 ));
-            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                , e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , "\u1987"), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -306,8 +306,8 @@ namespace iText.Pdfa {
             canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 36);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => canvas.ShowText("\u898B\u7A4D\u3082\u308A"
                 ));
-            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                , e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , "\u898B"), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -321,8 +321,8 @@ namespace iText.Pdfa {
             Paragraph p = new Paragraph("\u898B\u7A4D\u3082\u308A");
             p.SetFont(font);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => document.Add(p));
-            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                , e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , "\u898B"), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -625,8 +625,8 @@ namespace iText.Pdfa {
                     ();
             }
             );
-            framework.AssertBothFail("notdefGlyph", PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                );
+            framework.AssertBothFail("notdefGlyph", MessageFormatUtil.Format(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , "�"));
         }
 
         [NUnit.Framework.Test]
@@ -651,7 +651,7 @@ namespace iText.Pdfa {
                     ();
             }
             );
-            // TODO DEVSIX-10160 missing check on iText side for ToUnicode mapping to 0, fffe and feff
+            // TODO DEVSIX-10209 missing check on iText side for ToUnicode mapping to 0, fffe and feff
             framework.AssertVeraPdfFailITextValid("zeroUnicodeGlyph");
         }
 
@@ -707,9 +707,9 @@ namespace iText.Pdfa {
                     ();
             }
             );
-            // TODO DEVSIX-10160 missing check on iText side for ToUnicode mapping to 0, fffe and feff
-            framework.AssertBothFail("fontWithReplacementChar", PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                );
+            // TODO DEVSIX-10209 missing check on iText side for ToUnicode mapping to 0, fffe and feff
+            framework.AssertBothFail("fontWithReplacementChar", MessageFormatUtil.Format(PdfaExceptionMessageConstant.
+                EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS, "�"));
         }
 
         [NUnit.Framework.Test]

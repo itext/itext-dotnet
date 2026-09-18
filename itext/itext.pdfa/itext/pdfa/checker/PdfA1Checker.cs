@@ -313,8 +313,8 @@ namespace iText.Pdfa.Checker {
         public override void CheckText(String text, PdfFont font) {
             int index = FontCheckUtil.CheckGlyphsOfText(text, font, new PdfA1Checker.ACharacterChecker());
             if (index != -1) {
-                throw new PdfAConformanceException(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                    );
+                throw new PdfAConformanceException(MessageFormatUtil.Format(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                    , text[index]));
             }
         }
 
@@ -324,8 +324,8 @@ namespace iText.Pdfa.Checker {
                 Glyph glyph = glyphLine.Get(i);
                 if (glyph.GetCode() == 0 || font.GetFontProgram().GetGlyphByCode(glyph.GetCode()) == null) {
                     // .notdef glyph or glyph isn't present in a font
-                    throw new PdfAConformanceException(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                        );
+                    throw new PdfAConformanceException(MessageFormatUtil.Format(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                        , glyph.GetUnicodeString()));
                 }
             }
         }
