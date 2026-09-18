@@ -1,0 +1,18 @@
+<Project>
+    <!-- Build.targets file evaluated after .csrpoj file processing -->
+
+    <!-- 
+        1. TeamCity dotnet runner automatically create a response file which is attached to `dotnet test ...` command.
+        2. In that response file (.rsp) there is a following line "-p:VSTestTestAdapterPath=".;C:\TeamCity\buildAgent\plugins\dotnet\tools\vstest15"".
+        3. Dot at the start is resolved relative to the runner's current working directory: to the first framework's output directory, f.e. "...\bin\Release\net10.0".
+            So .NET 10 test adapter is used for all frameworks, and it's not compatible for .NET Framework target, it's why .NET Framework tests aren't executed on TeamCity.
+        4. To fix that problem, a dot that is a complete path entry is replaced by "$(TargetDir)". 
+            So value of "VSTestTestAdapterPath" from ".;C:\TeamCity\...\vstest15" becomes "$(TargetDir);C:\TeamCity\...\vstest15"
+     -->
+    <Target Name="SetPerFrameworkVSTestAdapterPath" BeforeTargets="VSTest;_VSTestConsole;_VSTestMSBuild" Condition="'$(TargetFramework)' != ''">
+        <PropertyGroup>
+            <TeamCityVSTestAdapterPath>$([System.Text.RegularExpressions.Regex]::Replace('$(VSTestTestAdapterPath)', '(^|;)\.(;|$)', '$1'))</TeamCityVSTestAdapterPath>
+            <VSTestTestAdapterPath>$(TargetDir);$(TeamCityVSTestAdapterPath)</VSTestTestAdapterPath>
+        </PropertyGroup>
+    </Target>
+</Project>
