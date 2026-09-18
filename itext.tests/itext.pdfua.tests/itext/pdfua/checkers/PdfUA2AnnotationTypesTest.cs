@@ -129,7 +129,7 @@ namespace iText.Pdfua.Checkers {
             }
             );
             if (PdfName.Redaction.Equals(annotType) || PdfName.Projection.Equals(annotType)) {
-                framework.AssertOnlyITextFail("markupAnnotationIsNotTagged_" + annotType.GetValue(), PdfUAExceptionMessageConstants
+                framework.AssertITextFailVeraPdfValid("markupAnnotationIsNotTagged_" + annotType.GetValue(), PdfUAExceptionMessageConstants
                     .MARKUP_ANNOT_IS_NOT_TAGGED_AS_ANNOT);
             }
             else {
@@ -157,7 +157,7 @@ namespace iText.Pdfua.Checkers {
             }
             );
             if (PdfName.Redaction.Equals(annotType) || PdfName.Projection.Equals(annotType)) {
-                framework.AssertOnlyITextFail("markupAnnotationIsNotTaggedAsAnnot_" + annotType.GetValue(), PdfUAExceptionMessageConstants
+                framework.AssertITextFailVeraPdfValid("markupAnnotationIsNotTaggedAsAnnot_" + annotType.GetValue(), PdfUAExceptionMessageConstants
                     .MARKUP_ANNOT_IS_NOT_TAGGED_AS_ANNOT);
             }
             else {
@@ -185,7 +185,7 @@ namespace iText.Pdfua.Checkers {
             );
             if (!conformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE)) {
                 if (PdfName.Redaction.Equals(annotType) || PdfName.Projection.Equals(annotType)) {
-                    framework.AssertOnlyITextFail("markupAnnotationRCAndContents_" + annotType.GetValue(), PdfUAExceptionMessageConstants
+                    framework.AssertITextFailVeraPdfValid("markupAnnotationRCAndContents_" + annotType.GetValue(), PdfUAExceptionMessageConstants
                         .RC_DIFFERENT_FROM_CONTENTS);
                 }
                 else {
@@ -195,7 +195,7 @@ namespace iText.Pdfua.Checkers {
             }
             if (conformance.ConformsTo(PdfConformance.WELL_TAGGED_PDF_FOR_REUSE) && !conformance.ConformsTo(PdfConformance
                 .WELL_TAGGED_PDF_FOR_ACCESSIBILITY)) {
-                framework.AssertOnlyITextFail("markupAnnotationRCAndContents_" + annotType.GetValue(), PdfUAExceptionMessageConstants
+                framework.AssertITextFailVeraPdfValid("markupAnnotationRCAndContents_" + annotType.GetValue(), PdfUAExceptionMessageConstants
                     .RC_DIFFERENT_FROM_CONTENTS);
             }
         }
@@ -236,8 +236,8 @@ namespace iText.Pdfua.Checkers {
                     , false);
             }
             else {
-                framework.AssertOnlyITextFail("rubberStampAnnotationNoNameAndContents", PdfUAExceptionMessageConstants.STAMP_ANNOT_SHALL_SPECIFY_NAME_OR_CONTENTS
-                    );
+                framework.AssertITextFailVeraPdfValid("rubberStampAnnotationNoNameAndContents", PdfUAExceptionMessageConstants
+                    .STAMP_ANNOT_SHALL_SPECIFY_NAME_OR_CONTENTS);
             }
         }
 
@@ -285,12 +285,12 @@ namespace iText.Pdfua.Checkers {
                     framework.AssertBothValid("annotationEmptyContents_" + annotType.GetValue());
                 }
                 else {
-                    framework.AssertOnlyITextFail("annotationEmptyContents_" + annotType.GetValue(), PdfUAExceptionMessageConstants
+                    framework.AssertITextFailVeraPdfValid("annotationEmptyContents_" + annotType.GetValue(), PdfUAExceptionMessageConstants
                         .ANNOT_CONTENTS_IS_NULL_OR_EMPTY);
                 }
             }
             else {
-                framework.AssertOnlyITextFail("annotationEmptyContents_" + annotType.GetValue(), PdfUAExceptionMessageConstants
+                framework.AssertITextFailVeraPdfValid("annotationEmptyContents_" + annotType.GetValue(), PdfUAExceptionMessageConstants
                     .ANNOT_CONTENTS_IS_NULL_OR_EMPTY);
             }
         }
@@ -456,7 +456,7 @@ namespace iText.Pdfua.Checkers {
                 pdfPage.AddAnnotation(annot);
             }
             );
-            framework.AssertOnlyITextFail("watermarkAnnotationAsRealContent", PdfUAExceptionMessageConstants.RC_DIFFERENT_FROM_CONTENTS
+            framework.AssertITextFailVeraPdfValid("watermarkAnnotationAsRealContent", PdfUAExceptionMessageConstants.RC_DIFFERENT_FROM_CONTENTS
                 );
         }
 

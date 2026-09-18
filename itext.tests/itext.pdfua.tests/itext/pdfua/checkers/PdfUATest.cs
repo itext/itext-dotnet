@@ -224,7 +224,7 @@ namespace iText.Pdfua.Checkers {
             );
             // TODO DEVSIX-10196 - iText should also fail here
             // Also create a test for some other not valid lang entry like "en-GB-123"
-            framework.AssertOnlyVeraPdfFail("emptyLangInStructureElement");
+            framework.AssertVeraPdfFailITextValid("emptyLangInStructureElement");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
@@ -541,7 +541,7 @@ namespace iText.Pdfua.Checkers {
             }
             );
             if (conformance.GetUAConformance() == PdfUAConformance.PDF_UA_1) {
-                framework.AssertOnlyITextFail("documentWithDuplicatingIdInStructTree", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
+                framework.AssertITextFailVeraPdfValid("documentWithDuplicatingIdInStructTree", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
                     .NON_UNIQUE_ID_ENTRY_IN_STRUCT_TREE_ROOT, "hello-element"));
             }
             else {

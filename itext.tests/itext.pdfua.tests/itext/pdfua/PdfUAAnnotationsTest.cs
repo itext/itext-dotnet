@@ -654,7 +654,7 @@ namespace iText.Pdfua {
             );
             if (conformance.Equals(PdfConformance.PDF_UA_1)) {
                 // Verapdf doesn't fail here but it should
-                framework.AssertOnlyITextFail("screenAnnotationWithInvalidMHMediaDataTest", PdfUAExceptionMessageConstants
+                framework.AssertITextFailVeraPdfValid("screenAnnotationWithInvalidMHMediaDataTest", PdfUAExceptionMessageConstants
                     .CT_OR_ALT_ENTRY_IS_MISSING_IN_MEDIA_CLIP);
             }
             else {

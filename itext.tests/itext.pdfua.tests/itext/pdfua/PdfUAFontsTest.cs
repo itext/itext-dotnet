@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
+using iText.IO.Font.Otf;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
@@ -41,11 +42,10 @@ namespace iText.Pdfua {
     public class PdfUAFontsTest : ExtendedITextTest {
         private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/pdfua/PdfUAFontsTest/";
 
-        private static readonly String FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/FreeSans.ttf";
-
-        private static readonly String FONT_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String FONTS_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/pdfua/font/";
+
+        private static readonly String FONT = FONTS_FOLDER + "FreeSans.ttf";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -194,7 +194,7 @@ namespace iText.Pdfua {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
                 try {
-                    font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(FONT_FOLDER + "cmr10.afm", FONT_FOLDER
+                    font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(FONTS_FOLDER + "cmr10.afm", FONTS_FOLDER
                          + "cmr10.pfb"), FontEncoding.FONT_SPECIFIC, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
                 }
                 catch (System.IO.IOException e) {
@@ -211,8 +211,9 @@ namespace iText.Pdfua {
         [NUnit.Framework.Test]
         public virtual void NonSymbolicTtfWithChangedCmapTest() {
             // TODO DEVSIX-9076 NPE when cmap of True Type Font doesn't contain Microsoft Unicode or Macintosh Roman encodings
-            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => PdfFontFactory.CreateFont(FONT_FOLDER +
-                 "FreeSans_changed_cmap.ttf", PdfEncodings.MACROMAN, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED));
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => PdfFontFactory.CreateFont(FONTS_FOLDER 
+                + "FreeSans_changed_cmap.ttf", PdfEncodings.MACROMAN, PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED)
+                );
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
@@ -264,7 +265,7 @@ namespace iText.Pdfua {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
                 try {
-                    font = PdfFontFactory.CreateFont(FONT_FOLDER + "iTextSymbolicFont.ttf", PdfEncodings.MACROMAN, PdfFontFactory.EmbeddingStrategy
+                    font = PdfFontFactory.CreateFont(FONTS_FOLDER + "iTextSymbolicFont.ttf", PdfEncodings.MACROMAN, PdfFontFactory.EmbeddingStrategy
                         .FORCE_EMBEDDED);
                 }
                 catch (System.IO.IOException e) {
@@ -285,7 +286,7 @@ namespace iText.Pdfua {
                 Document document = new Document(pdfDoc);
                 PdfFont font;
                 try {
-                    font = PdfFontFactory.CreateFont(FONT_FOLDER + "iTextSymbolicFont.ttf", PdfEncodings.MACROMAN, PdfFontFactory.EmbeddingStrategy
+                    font = PdfFontFactory.CreateFont(FONTS_FOLDER + "iTextSymbolicFont.ttf", PdfEncodings.MACROMAN, PdfFontFactory.EmbeddingStrategy
                         .FORCE_EMBEDDED);
                 }
                 catch (System.IO.IOException e) {
@@ -298,7 +299,7 @@ namespace iText.Pdfua {
             }
             );
             // VeraPDF is valid since iText fixes symbolic flag to non-symbolic on closing.
-            framework.AssertOnlyITextFail("symbolicTtfWithEncoding", PdfUAExceptionMessageConstants.SYMBOLIC_TTF_SHALL_NOT_CONTAIN_ENCODING
+            framework.AssertITextFailVeraPdfValid("symbolicTtfWithEncoding", PdfUAExceptionMessageConstants.SYMBOLIC_TTF_SHALL_NOT_CONTAIN_ENCODING
                 );
         }
 
@@ -323,11 +324,11 @@ namespace iText.Pdfua {
             );
             // VeraPDF is valid since iText fixes symbolic flag to non-symbolic on closing.
             if (PdfConformance.PDF_UA_1.Equals(conformance)) {
-                framework.AssertOnlyITextFail("symbolicTtfWithInvalidCmapTest", PdfUAExceptionMessageConstants.SYMBOLIC_TTF_SHALL_CONTAIN_EXACTLY_ONE_OR_AT_LEAST_MICROSOFT_SYMBOL_CMAP
+                framework.AssertITextFailVeraPdfValid("symbolicTtfWithInvalidCmapTest", PdfUAExceptionMessageConstants.SYMBOLIC_TTF_SHALL_CONTAIN_EXACTLY_ONE_OR_AT_LEAST_MICROSOFT_SYMBOL_CMAP
                     );
             }
             else {
-                framework.AssertOnlyITextFail("symbolicTtfWithInvalidCmapTest", PdfUAExceptionMessageConstants.SYMBOLIC_TTF_SHALL_CONTAIN_MAC_ROMAN_OR_MICROSOFT_SYMBOL_CMAP
+                framework.AssertITextFailVeraPdfValid("symbolicTtfWithInvalidCmapTest", PdfUAExceptionMessageConstants.SYMBOLIC_TTF_SHALL_CONTAIN_MAC_ROMAN_OR_MICROSOFT_SYMBOL_CMAP
                     );
             }
         }
@@ -353,20 +354,165 @@ namespace iText.Pdfua {
             );
             // VeraPDF is valid since the file itself is valid, but itext code is modified for testing.
             if (PdfConformance.PDF_UA_1.Equals(conformance)) {
-                framework.AssertOnlyITextFail("nonSymbolicTtfWithInvalidCmapTest", PdfUAExceptionMessageConstants.NON_SYMBOLIC_TTF_SHALL_CONTAIN_NON_SYMBOLIC_CMAP
-                    );
+                framework.AssertITextFailVeraPdfValid("nonSymbolicTtfWithInvalidCmapTest", PdfUAExceptionMessageConstants.
+                    NON_SYMBOLIC_TTF_SHALL_CONTAIN_NON_SYMBOLIC_CMAP);
             }
             else {
-                framework.AssertOnlyITextFail("nonSymbolicTtfWithInvalidCmapTest", PdfUAExceptionMessageConstants.NON_SYMBOLIC_TTF_SHALL_CONTAIN_MAC_ROMAN_OR_MICROSOFT_UNI_CMAP
-                    );
+                framework.AssertITextFailVeraPdfValid("nonSymbolicTtfWithInvalidCmapTest", PdfUAExceptionMessageConstants.
+                    NON_SYMBOLIC_TTF_SHALL_CONTAIN_MAC_ROMAN_OR_MICROSOFT_UNI_CMAP);
             }
         }
 
         [NUnit.Framework.Test]
         public virtual void SymbolicTtfWithChangedCmapTest() {
             // TODO DEVSIX-9076 NPE when cmap of True Type Font doesn't contain Microsoft Unicode or Macintosh Roman encodings
-            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => PdfFontFactory.CreateFont(FONT_FOLDER +
-                 "iTextSymbolicFontChangedCmap.ttf", PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED));
+            NUnit.Framework.Assert.Catch(typeof(NullReferenceException), () => PdfFontFactory.CreateFont(FONTS_FOLDER 
+                + "iTextSymbolicFontChangedCmap.ttf", PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotdefGlyphTest() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false, PdfConformance
+                .PDF_UA_2);
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfFont font = null;
+                try {
+                    font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoNaskhArabic-Regular.ttf");
+                }
+                catch (System.IO.IOException) {
+                }
+                // ignore
+                GlyphLine glyphLine = new GlyphLine();
+                FontProgram fontProgram = font.GetFontProgram();
+                // zero glyph in the font is .notdef glyph without Unicode
+                glyphLine.Add(fontProgram.GetGlyphByCode(0));
+                glyphLine.SetEnd(glyphLine.Size());
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                TagTreePointer tagPointer = new TagTreePointer(pdfDoc).SetPageForTagging(pdfDoc.GetFirstPage()).AddTag(StandardRoles
+                    .H1);
+                canvas.SaveState().OpenTag(tagPointer.GetTagReference()).BeginText().MoveText(36, 786).SetFontAndSize(font
+                    , 10).ShowText(glyphLine).EndText().RestoreState().CloseTag();
+            }
+            );
+            framework.AssertBothFail("notdefGlyph", MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
+                , "�"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ZeroUnicodeGlyphTest() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false, PdfConformance
+                .PDF_UA_2);
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfFont font = null;
+                try {
+                    font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoNaskhArabic-Regular.ttf");
+                }
+                catch (System.IO.IOException) {
+                }
+                // ignore
+                GlyphLine glyphLine = new GlyphLine();
+                FontProgram fontProgram = font.GetFontProgram();
+                // 1 index glyph in the font is .null glyph with Unicode U+0000
+                glyphLine.Add(fontProgram.GetGlyphByCode(1));
+                glyphLine.SetEnd(glyphLine.Size());
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                TagTreePointer tagPointer = new TagTreePointer(pdfDoc).SetPageForTagging(pdfDoc.GetFirstPage()).AddTag(StandardRoles
+                    .H1);
+                canvas.SaveState().OpenTag(tagPointer.GetTagReference()).BeginText().MoveText(36, 786).SetFontAndSize(font
+                    , 10).ShowText(glyphLine).EndText().RestoreState().CloseTag();
+            }
+            );
+            // TODO DEVSIX-10160 missing check on iText side for ToUnicode mapping to 0, fffe and feff
+            framework.AssertVeraPdfFailITextValid("zeroUnicodeGlyph");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GlyphsWithoutUnicodeTest() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false, PdfConformance
+                .PDF_UA_2);
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfFont font = null;
+                try {
+                    font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoNaskhArabic-Regular.ttf");
+                }
+                catch (System.IO.IOException) {
+                }
+                // ignore
+                GlyphLine glyphLine = new GlyphLine();
+                FontProgram fontProgram = font.GetFontProgram();
+                // 0 index glyph is .notdef without Unicode
+                // 1 index glyph is .null with Unicode U+0000
+                for (int i = 2; i < fontProgram.CountOfGlyphs(); i++) {
+                    glyphLine.Add(fontProgram.GetGlyphByCode(i));
+                }
+                glyphLine.SetEnd(glyphLine.Size());
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                TagTreePointer tagPointer = new TagTreePointer(pdfDoc).SetPageForTagging(pdfDoc.GetFirstPage()).AddTag(StandardRoles
+                    .H1);
+                canvas.SaveState().OpenTag(tagPointer.GetTagReference()).BeginText().MoveText(36, 786).SetFontAndSize(font
+                    , 10).ShowText(glyphLine).EndText().RestoreState().CloseTag();
+            }
+            );
+            framework.AssertBothFail("glyphsWithoutUnicode", MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
+                , "�"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FontWithReplacementCharTest() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false, PdfConformance
+                .PDF_UA_2);
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfFont font = null;
+                try {
+                    font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoSans-Regular.ttf");
+                }
+                catch (System.IO.IOException) {
+                }
+                // ignore
+                GlyphLine glyphLine = new GlyphLine();
+                FontProgram fontProgram = font.GetFontProgram();
+                // font contain replacement char U+FFFD
+                for (int i = 0; i < fontProgram.CountOfGlyphs(); i++) {
+                    glyphLine.Add(fontProgram.GetGlyphByCode(i));
+                }
+                glyphLine.SetEnd(glyphLine.Size());
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                TagTreePointer tagPointer = new TagTreePointer(pdfDoc).SetPageForTagging(pdfDoc.GetFirstPage()).AddTag(StandardRoles
+                    .H1);
+                canvas.SaveState().OpenTag(tagPointer.GetTagReference()).BeginText().MoveText(36, 786).SetFontAndSize(font
+                    , 10).ShowText(glyphLine).EndText().RestoreState().CloseTag();
+            }
+            );
+            // TODO DEVSIX-10160 missing check on iText side for ToUnicode mapping to 0, fffe and feff
+            // TODO DEVSIX-10160 glyphs without Unicode mapped to Replacement Char which exist in the font, it's why iText doesn't fail
+            framework.AssertVeraPdfFailITextValid("fontWithReplacementChar");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotdefGlyphType3FontTest() {
+            UaValidationTestFramework framework = new UaValidationTestFramework(DESTINATION_FOLDER, false, PdfConformance
+                .PDF_UA_2);
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfType3Font font = PdfFontFactory.CreateType3Font(pdfDoc, "itextFont", "itextFont", false);
+                Type3Glyph a = font.AddGlyph('A', 600, 0, 0, 600, 700);
+                a.SetLineWidth(100);
+                a.MoveTo(5, 5);
+                a.LineTo(300, 695);
+                a.LineTo(595, 5);
+                a.ClosePathFillStroke();
+                // Need to populate CharProcs, because it's done only on font flushing,
+                // but iText check that field before document closing
+                PdfDictionary charProcs = new PdfDictionary();
+                charProcs.Put(new PdfName("A"), a.GetContentStream());
+                font.GetPdfObject().Put(PdfName.CharProcs, charProcs);
+                Document doc = new Document(pdfDoc);
+                doc.SetFont(font);
+                // In simple fonts (which is Type3) we just ignore not defined glyphs, see PdfSimpleFont.createGlyphLine
+                Paragraph p = new Paragraph("AB");
+                doc.Add(p);
+            }
+            );
+            framework.AssertBothValid("notdefGlyphType3Font");
         }
 
         private class CustomSymbolicTrueTypeFont : TrueTypeFont {

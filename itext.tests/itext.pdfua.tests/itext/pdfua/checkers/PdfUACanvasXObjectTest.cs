@@ -89,7 +89,7 @@ namespace iText.Pdfua.Checkers {
                 framework.AssertBothValid("xobjectTesting");
             }
             else {
-                framework.AssertOnlyVeraPdfFail("xobjectTesting");
+                framework.AssertVeraPdfFailITextValid("xobjectTesting");
             }
         }
 
@@ -118,7 +118,7 @@ namespace iText.Pdfua.Checkers {
             );
             //itext should thrown an exception here but it does not.
             // because even if it's not tagged the inner content stream is not compliant as the font is not embeded
-            framework.AssertOnlyVeraPdfFail("copyPageAsFormXobjectWithUnTaggedPdf");
+            framework.AssertVeraPdfFailITextValid("copyPageAsFormXobjectWithUnTaggedPdf");
         }
 
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
@@ -170,7 +170,7 @@ namespace iText.Pdfua.Checkers {
                 }
             }
             );
-            framework.AssertOnlyVeraPdfFail("manuallyAddToCanvasWithUnTaggedContentButBadFont");
+            framework.AssertVeraPdfFailITextValid("manuallyAddToCanvasWithUnTaggedContentButBadFont");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]
@@ -287,7 +287,7 @@ namespace iText.Pdfua.Checkers {
                 framework.AssertBothValid("manuallyCanvasCorrectFontAndArtifact");
             }
             else {
-                framework.AssertOnlyVeraPdfFail("manuallyCanvasCorrectFontAndArtifact");
+                framework.AssertVeraPdfFailITextValid("manuallyCanvasCorrectFontAndArtifact");
             }
         }
 

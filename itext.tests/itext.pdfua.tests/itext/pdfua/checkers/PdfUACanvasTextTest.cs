@@ -109,7 +109,7 @@ namespace iText.Pdfua.Checkers {
                     // In case of "array" PdfCanvas#showText(PdfArray) is used. In this method we don't have this
                     // check, because
                     // of the complications regarding not symbolic fonts.
-                    framework.AssertOnlyVeraPdfFail(filename);
+                    framework.AssertVeraPdfFailITextValid(filename);
                 }
                 else {
                     framework.AssertBothFail(filename, PdfUAExceptionMessageConstants.PUA_CONTENT_WITHOUT_ALT);
@@ -264,7 +264,7 @@ namespace iText.Pdfua.Checkers {
                     // In case of "array" PdfCanvas#showText(PdfArray) is used. In this method we don't have this
                     // check, because
                     // of the complications regarding not symbolic fonts.
-                    framework.AssertOnlyVeraPdfFail(filename);
+                    framework.AssertVeraPdfFailITextValid(filename);
                 }
                 else {
                     framework.AssertBothFail(filename);
