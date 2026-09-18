@@ -484,8 +484,8 @@ namespace iText.Pdfua {
             }
             );
             // TODO DEVSIX-10160 missing check on iText side for ToUnicode mapping to 0, fffe and feff
-            // TODO DEVSIX-10160 glyphs without Unicode mapped to Replacement Char which exist in the font, it's why iText doesn't fail
-            framework.AssertVeraPdfFailITextValid("fontWithReplacementChar");
+            framework.AssertBothFail("fontWithReplacementChar", MessageFormatUtil.Format(PdfUAExceptionMessageConstants
+                .GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE, "�"));
         }
 
         [NUnit.Framework.Test]

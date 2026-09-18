@@ -653,7 +653,7 @@ namespace iText.Kernel.Pdf.Canvas {
                     );
             }
             CheckTextOnAddition(text);
-            document.CheckIsoConformance(new FontValidationContext(text.ToString(), currentGs.GetFont()));
+            document.CheckIsoConformance(new FontValidationContext(text, currentGs.GetFont()));
             float fontSize = FontProgram.ConvertTextSpaceToGlyphSpace(currentGs.GetFontSize());
             float charSpacing = currentGs.GetCharSpacing();
             float scaling = currentGs.GetHorizontalScaling() / 100f;

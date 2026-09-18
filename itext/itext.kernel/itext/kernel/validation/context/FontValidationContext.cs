@@ -21,12 +21,15 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.IO.Font.Otf;
 using iText.Kernel.Font;
 using iText.Kernel.Validation;
 
 namespace iText.Kernel.Validation.Context {
     /// <summary>Class for font validation context.</summary>
     public class FontValidationContext : IValidationContext {
+        private readonly GlyphLine glyphLine;
+
         private readonly String text;
 
         private readonly PdfFont font;
@@ -41,12 +44,32 @@ namespace iText.Kernel.Validation.Context {
         public FontValidationContext(String text, PdfFont font) {
             this.text = text;
             this.font = font;
+            this.glyphLine = null;
+        }
+
+        /// <summary>
+        /// Instantiates a new
+        /// <see cref="FontValidationContext"/>
+        /// based on glyph line and font.
+        /// </summary>
+        /// <param name="glyphLine">the glyph line</param>
+        /// <param name="font">the font</param>
+        public FontValidationContext(GlyphLine glyphLine, PdfFont font) {
+            this.glyphLine = glyphLine;
+            this.font = font;
+            this.text = null;
         }
 
         /// <summary>Gets the text.</summary>
         /// <returns>the text</returns>
         public virtual String GetText() {
             return text;
+        }
+
+        /// <summary>Gets the glyph line.</summary>
+        /// <returns>the glyph line</returns>
+        public virtual GlyphLine GetGlyphLine() {
+            return glyphLine;
         }
 
         /// <summary>Gets the font.</summary>

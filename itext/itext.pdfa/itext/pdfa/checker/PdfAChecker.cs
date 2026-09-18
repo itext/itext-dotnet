@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using iText.Commons.Logs;
 using iText.IO.Colors;
+using iText.IO.Font.Otf;
 using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
@@ -276,7 +277,12 @@ namespace iText.Pdfa.Checker {
 
                 case ValidationType.FONT: {
                     FontValidationContext fontContext = (FontValidationContext)context;
-                    CheckText(fontContext.GetText(), fontContext.GetFont());
+                    if (fontContext.GetGlyphLine() == null) {
+                        CheckText(fontContext.GetText(), fontContext.GetFont());
+                    }
+                    else {
+                        CheckGlyphLine(fontContext.GetGlyphLine(), fontContext.GetFont());
+                    }
                     break;
                 }
 
@@ -565,6 +571,15 @@ namespace iText.Pdfa.Checker {
         /// <param name="font">font to verify the text against</param>
         public abstract void CheckText(String text, PdfFont font);
 
+        /// <summary>Verify the conformity of the glyph line written by the specified font.</summary>
+        /// <param name="glyphLine">glyph line to verify</param>
+        /// <param name="font">font to verify the glyph line against</param>
+        protected internal virtual void CheckGlyphLine(GlyphLine glyphLine, PdfFont font) {
+        }
+
+        // Do nothing
+        // TODO DEVSIX-8808 iText Core related api breaks for the next major release
+        //  After major release the method must become abstract
         /// <summary>
         /// Validates the operators and operands in the given content stream against the
         /// applicable PDF/A specification level.

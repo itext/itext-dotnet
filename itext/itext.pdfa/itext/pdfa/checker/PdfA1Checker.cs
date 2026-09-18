@@ -27,6 +27,7 @@ using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.IO.Font;
+using iText.IO.Font.Otf;
 using iText.IO.Source;
 using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
@@ -314,6 +315,18 @@ namespace iText.Pdfa.Checker {
             if (index != -1) {
                 throw new PdfAConformanceException(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
                     );
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override void CheckGlyphLine(GlyphLine glyphLine, PdfFont font) {
+            for (int i = glyphLine.GetStart(); i < glyphLine.GetEnd(); i++) {
+                Glyph glyph = glyphLine.Get(i);
+                if (glyph.GetCode() == 0 || font.GetFontProgram().GetGlyphByCode(glyph.GetCode()) == null) {
+                    // .notdef glyph or glyph isn't present in a font
+                    throw new PdfAConformanceException(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                        );
+                }
             }
         }
 

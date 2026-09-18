@@ -28,6 +28,7 @@ using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
+using iText.IO.Font.Otf;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
@@ -280,6 +281,22 @@ namespace iText.Pdfua.Checkers {
             if (index != -1) {
                 throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
                     , str[index]));
+            }
+        }
+
+        /// <summary>Checks that embedded fonts define all glyphs referenced for rendering within the conforming file.
+        ///     </summary>
+        /// <param name="glyphLine">the glyph line to check</param>
+        /// <param name="font">the font to check</param>
+        protected internal virtual void CheckGlyphLine(GlyphLine glyphLine, PdfFont font) {
+            for (int i = glyphLine.GetStart(); i < glyphLine.GetEnd(); i++) {
+                Glyph glyph = glyphLine.Get(i);
+                if (glyph.GetCode() == 0 || font.GetFontProgram().GetGlyphByCode(glyph.GetCode()) == null || !glyph.HasValidUnicode
+                    ()) {
+                    // .notdef glyph or glyph isn't present in a font or glyph doesn't have a valid unicode value
+                    throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
+                        , glyph.GetUnicodeString()));
+                }
             }
         }
 

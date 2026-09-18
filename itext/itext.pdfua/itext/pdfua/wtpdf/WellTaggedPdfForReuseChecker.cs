@@ -57,7 +57,12 @@ namespace iText.Pdfua.Wtpdf {
 
                 case ValidationType.FONT: {
                     FontValidationContext fontContext = (FontValidationContext)context;
-                    CheckText(fontContext.GetText(), fontContext.GetFont());
+                    if (fontContext.GetGlyphLine() == null) {
+                        CheckText(fontContext.GetText(), fontContext.GetFont());
+                    }
+                    else {
+                        CheckGlyphLine(fontContext.GetGlyphLine(), fontContext.GetFont());
+                    }
                     break;
                 }
 
