@@ -121,6 +121,8 @@ namespace iText.Kernel.Logs {
         public const String BOTH_WCAG_AA_AND_AAA_COMPLIANCE_CHECKS_DISABLED = "Both WCAG AA and AAA compliance " +
              "checks are disabled. No contrast checks will be performed.";
 
+        public const String LUMINANCE_MODE_IS_NOT_SUPPORTED = "Luminance mode is not supported by this gradient builder. The builder is left unchanged.";
+
         private KernelLogMessageConstant() {
         }
         //Private constructor will prevent the instantiation of this class directly

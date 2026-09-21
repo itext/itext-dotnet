@@ -33,6 +33,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Colorspace.Shading;
 using iText.Kernel.Pdf.Function;
+using iText.Kernel.Utils;
 
 namespace iText.Kernel.Colors.Gradients {
     /// <summary>Base class for gradient builders implementations.</summary>
@@ -43,6 +44,8 @@ namespace iText.Kernel.Colors.Gradients {
         private readonly IList<GradientColorStop> stops = new List<GradientColorStop>();
 
         private GradientSpreadMethod spreadMethod = GradientSpreadMethod.NONE;
+
+        private bool svgLuminanceMode;
 
         /// <summary><inheritDoc/></summary>
         public virtual IGradientBuilder AddStopColor(GradientColorStop gradientColorStop) {
@@ -60,6 +63,12 @@ namespace iText.Kernel.Colors.Gradients {
             else {
                 this.spreadMethod = GradientSpreadMethod.NONE;
             }
+            return this;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public virtual IGradientBuilder SetSvgLuminanceMode(bool svgLuminanceMode) {
+            this.svgLuminanceMode = svgLuminanceMode;
             return this;
         }
 
@@ -296,7 +305,14 @@ namespace iText.Kernel.Colors.Gradients {
                 System.Diagnostics.Debug.Assert(coordinatesDomain[0] <= coordinatesDomain[1]);
                 actualCoordinates = CreateCoordsForNewDomain(coordinatesDomain, baseCoordinatesVector);
             }
-            return CreatePdfShading(new PdfDeviceCs.Rgb(), CreateCoordsDictEntry(actualCoordinates), new PdfArray(coordinatesDomain
+            PdfColorSpace colorSpace;
+            if (svgLuminanceMode) {
+                colorSpace = new PdfDeviceCs.Gray();
+            }
+            else {
+                colorSpace = new PdfDeviceCs.Rgb();
+            }
+            return CreatePdfShading(colorSpace, CreateCoordsDictEntry(actualCoordinates), new PdfArray(coordinatesDomain
                 ), ConstructFunction(stopsToConstruct));
         }
 
@@ -533,7 +549,7 @@ namespace iText.Kernel.Colors.Gradients {
             return adjustedStops;
         }
 
-        private static IPdfFunction ConstructFunction(IList<GradientColorStop> toConstruct) {
+        private IPdfFunction ConstructFunction(IList<GradientColorStop> toConstruct) {
             int functionsAmount = toConstruct.Count - 1;
             double[] bounds = new double[functionsAmount - 1];
             IList<AbstractPdfFunction<PdfDictionary>> type2Functions = new List<AbstractPdfFunction<PdfDictionary>>(functionsAmount
@@ -559,8 +575,8 @@ namespace iText.Kernel.Colors.Gradients {
             return new PdfType3Function(new double[] { domainStart, domainEnd }, null, type2Functions, bounds, encode);
         }
 
-        private static AbstractPdfFunction<PdfDictionary> ConstructSingleGradientSegmentFunction(GradientColorStop
-             from, GradientColorStop to) {
+        private AbstractPdfFunction<PdfDictionary> ConstructSingleGradientSegmentFunction(GradientColorStop from, 
+            GradientColorStop to) {
             double exponent = 1d;
             float[] fromColor = from.GetRgbArray();
             float[] toColor = to.GetRgbArray();
@@ -578,6 +594,10 @@ namespace iText.Kernel.Colors.Gradients {
                         exponent = Math.Log(0.5) / Math.Log(hintOffset);
                     }
                 }
+            }
+            if (svgLuminanceMode) {
+                fromColor = new float[] { ColorUtils.CalculateSvgLuminance(fromColor) };
+                toColor = new float[] { ColorUtils.CalculateSvgLuminance(toColor) };
             }
             return new PdfType2Function(new float[] { 0f, 1f }, null, fromColor, toColor, exponent);
         }

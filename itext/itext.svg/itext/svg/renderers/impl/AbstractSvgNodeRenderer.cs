@@ -29,6 +29,7 @@ using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Extgstate;
+using iText.Kernel.Utils;
 using iText.Layout.Properties;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Parse;
@@ -144,10 +145,7 @@ namespace iText.Svg.Renderers.Impl {
                     context.AddUsedId(attributesAndStyles.Get(SvgConstants.Attributes.ID));
                 }
             }
-            /* If a (non-empty) clipping path exists, drawing operations must be surrounded by q/Q operators
-            and may have to be drawn multiple times
-            */
-            if (!DrawInClipPath(context)) {
+            if (!DrawWithMask(context) && !DrawInClipPath(context)) {
                 PreDraw(context);
                 DoDraw(context);
                 PostDraw(context);
@@ -288,8 +286,9 @@ namespace iText.Svg.Renderers.Impl {
         /// <summary>Check if this renderer should draw the element based on its attributes (e.g. visibility/display)</summary>
         /// <returns>true if element won't be drawn, false otherwise</returns>
         protected internal virtual bool IsHidden() {
-            return CommonCssConstants.NONE.Equals(this.attributesAndStyles.Get(CommonCssConstants.DISPLAY)) || CommonCssConstants
-                .HIDDEN.Equals(this.attributesAndStyles.Get(CommonCssConstants.VISIBILITY));
+            return this.attributesAndStyles != null && (CommonCssConstants.NONE.Equals(this.attributesAndStyles.Get(CommonCssConstants
+                .DISPLAY)) || CommonCssConstants.HIDDEN.Equals(this.attributesAndStyles.Get(CommonCssConstants.VISIBILITY
+                )));
         }
 
 //\cond DO_NOT_DOCUMENT
@@ -467,7 +466,9 @@ namespace iText.Svg.Renderers.Impl {
             PdfExtGState opacityGraphicsState = new PdfExtGState();
             PdfCanvas currentCanvas = context.GetCurrentCanvas();
             if (fillProperties != null) {
-                currentCanvas.SetFillColor(fillProperties.GetColor());
+                Color fillColor = context.IsRenderingLuminosityMask() ? ColorUtils.ToDeviceGrayForSvgLuminanceMode(fillProperties
+                    .GetColor()) : fillProperties.GetColor();
+                currentCanvas.SetFillColor(fillColor);
                 if (!CssUtils.CompareFloats(fillProperties.GetOpacity(), 1f)) {
                     opacityGraphicsState.SetFillOpacity(fillProperties.GetOpacity());
                 }
@@ -480,7 +481,9 @@ namespace iText.Svg.Renderers.Impl {
                 }
                 // As default value for stroke is 'none' we should not set it in case value obtaining fails
                 if (strokeProperties.GetColor() != null) {
-                    currentCanvas.SetStrokeColor(strokeProperties.GetColor());
+                    Color strokeColor = context.IsRenderingLuminosityMask() ? ColorUtils.ToDeviceGrayForSvgLuminanceMode(strokeProperties
+                        .GetColor()) : strokeProperties.GetColor();
+                    currentCanvas.SetStrokeColor(strokeColor);
                 }
                 currentCanvas.SetLineWidth(strokeProperties.GetWidth());
                 currentCanvas.SetLineCapStyle(strokeProperties.GetLineCapStyle());
@@ -619,7 +622,8 @@ namespace iText.Svg.Renderers.Impl {
                         if (colorRenderer.GetParent() == null) {
                             colorRenderer.SetParent(this);
                         }
-                        resolvedColor = ((ISvgPaintServer)colorRenderer).CreateColor(context, GetObjectBoundingBox(context), objectBoundingBoxMargin
+                        Rectangle objectBoundingBox = GetObjectBoundingBox(context);
+                        resolvedColor = ((ISvgPaintServer)colorRenderer).CreateColor(context, objectBoundingBox, objectBoundingBoxMargin
                             , parentOpacity);
                     }
                     if (resolvedColor != null) {
@@ -682,16 +686,19 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         private bool DrawInClipPath(SvgDrawContext context) {
+            if (attributesAndStyles == null) {
+                return false;
+            }
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.CLIP_PATH)) {
                 String clipPathName = attributesAndStyles.Get(SvgConstants.Attributes.CLIP_PATH);
                 ISvgNodeRenderer template = context.GetNamedObject(NormalizeLocalUrlName(clipPathName));
                 if (template is ClipPathSvgNodeRenderer) {
-                    // Clone template to avoid muddying the state
+                    // Clone template to avoid muddying the state.
                     ClipPathSvgNodeRenderer clipPath = (ClipPathSvgNodeRenderer)template.CreateDeepCopy();
                     if (clipPath.IsHidden()) {
                         return false;
                     }
-                    // Resolve parent inheritance
+                    // Resolve parent inheritance.
                     SvgNodeRendererInheritanceResolver.ApplyInheritanceToSubTree(this, clipPath, context.GetCssContext());
                     clipPath.SetClippedRenderer(this);
                     clipPath.Draw(context);
@@ -701,8 +708,37 @@ namespace iText.Svg.Renderers.Impl {
             return false;
         }
 
+        private bool DrawWithMask(SvgDrawContext context) {
+            if (attributesAndStyles == null) {
+                return false;
+            }
+            String maskName = attributesAndStyles.Get(SvgConstants.Attributes.MASK);
+            String normalizedMaskValue = CssUtils.NormalizeCssProperty(maskName);
+            if (maskName == null || SvgConstants.Values.NONE.Equals(normalizedMaskValue) || CommonCssConstants.INHERIT
+                .Equals(normalizedMaskValue)) {
+                return false;
+            }
+            String normalizedMaskName = NormalizeLocalUrlName(maskName);
+            ISvgNodeRenderer template = context.GetNamedObject(normalizedMaskName);
+            if (!(template is MaskSvgNodeRenderer)) {
+                LOGGER.Warn(() => MessageFormatUtil.Format(SvgLogMessageConstant.INVALID_MASK_REFERENCE, maskName));
+                return false;
+            }
+            if (context.IsCurrentMaskId(normalizedMaskName)) {
+                return false;
+            }
+            // Clone template to avoid muddying the state.
+            MaskSvgNodeRenderer mask = (MaskSvgNodeRenderer)template.CreateDeepCopy();
+            SvgNodeRendererInheritanceResolver.ApplyInheritanceToSubTree(template.GetParent(), mask, context.GetCssContext
+                ());
+            mask.DrawMaskedObject(this, context, normalizedMaskName);
+            return true;
+        }
+
         private String NormalizeLocalUrlName(String name) {
-            return name.Replace("url(#", "").Replace(")", "").Trim();
+            String normalizedName = SvgTextUtil.FilterReferenceValue(name);
+            normalizedName = CssUtils.ExtractUnquotedString(normalizedName);
+            return normalizedName.Trim();
         }
 
         private float GetOpacity() {

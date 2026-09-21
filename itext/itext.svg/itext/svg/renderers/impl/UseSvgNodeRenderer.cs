@@ -39,62 +39,59 @@ namespace iText.Svg.Renderers.Impl {
         private static readonly LazyLogger LOGGER = new LazyLogger(typeof(UseSvgNodeRenderer));
 
         protected internal override void DoDraw(SvgDrawContext context) {
-            if (this.attributesAndStyles != null) {
-                String elementToReUse = GetAttribute(SvgConstants.Attributes.HREF);
-                if (elementToReUse == null) {
-                    elementToReUse = GetAttribute(SvgConstants.Attributes.XLINK_HREF);
-                }
-                if (elementToReUse != null && !String.IsNullOrEmpty(elementToReUse) && IsValidHref(elementToReUse)) {
-                    String normalizedName = SvgTextUtil.FilterReferenceValue(elementToReUse);
-                    if (!context.IsIdUsedByUseTagBefore(normalizedName)) {
-                        ISvgNodeRenderer template = context.GetNamedObject(normalizedName);
-                        // Clone template
-                        ISvgNodeRenderer clonedObject = template == null ? null : template.CreateDeepCopy();
-                        // Resolve parent inheritance
-                        SvgNodeRendererInheritanceResolver.ApplyInheritanceToSubTree(this, clonedObject, context.GetCssContext());
-                        if (clonedObject != null) {
-                            PdfCanvas currentCanvas = context.GetCurrentCanvas();
-                            // If X or Y attribute is null, then default 0 value will be returned
-                            float x = ParseHorizontalLength(GetAttribute(SvgConstants.Attributes.X), context);
-                            float y = ParseVerticalLength(GetAttribute(SvgConstants.Attributes.Y), context);
-                            AffineTransform inverseMatrix = null;
-                            if (!CssUtils.CompareFloats(x, 0) || !CssUtils.CompareFloats(y, 0)) {
-                                AffineTransform translation = AffineTransform.GetTranslateInstance(x, y);
-                                currentCanvas.ConcatMatrix(translation);
-                                if (GetParentClipPath() != null) {
-                                    try {
-                                        inverseMatrix = translation.CreateInverse();
-                                    }
-                                    catch (NoninvertibleTransformException ex) {
-                                        LOGGER.Warn(() => SvgLogMessageConstant.NONINVERTIBLE_TRANSFORMATION_MATRIX_USED_IN_CLIP_PATH, ex);
-                                    }
-                                }
-                            }
-                            // Setting the parent of the referenced element to this instance
-                            clonedObject.SetParent(this);
-                            // Width, and height have no effect on use elements, unless the element referenced has a viewBox
-                            // i.e. they only have an effect when use refers to a svg or symbol element.
-                            if (clonedObject is SvgTagSvgNodeRenderer || clonedObject is SymbolSvgNodeRenderer) {
-                                if (GetAttribute(SvgConstants.Attributes.WIDTH) != null) {
-                                    float width = ParseHorizontalLength(GetAttribute(SvgConstants.Attributes.WIDTH), context);
-                                    clonedObject.SetAttribute(SvgConstants.Attributes.WIDTH, Convert.ToString(width, System.Globalization.CultureInfo.InvariantCulture
-                                        ) + CommonCssConstants.PT);
-                                }
-                                if (GetAttribute(SvgConstants.Attributes.HEIGHT) != null) {
-                                    float height = ParseVerticalLength(GetAttribute(SvgConstants.Attributes.HEIGHT), context);
-                                    clonedObject.SetAttribute(SvgConstants.Attributes.HEIGHT, Convert.ToString(height, System.Globalization.CultureInfo.InvariantCulture
-                                        ) + CommonCssConstants.PT);
-                                }
-                            }
-                            clonedObject.Draw(context);
-                            // Unsetting the parent of the referenced element
-                            clonedObject.SetParent(null);
-                            if (inverseMatrix != null) {
-                                currentCanvas.ConcatMatrix(inverseMatrix);
-                            }
-                        }
+            String normalizedName = ResolveReferenceName();
+            if (normalizedName == null || context.IsIdUsedByUseTagBefore(normalizedName)) {
+                return;
+            }
+            ISvgNodeRenderer template = context.GetNamedObject(normalizedName);
+            // Clone template
+            ISvgNodeRenderer clonedObject = template == null ? null : template.CreateDeepCopy();
+            // Resolve parent inheritance
+            SvgNodeRendererInheritanceResolver.ApplyInheritanceToSubTree(this, clonedObject, context.GetCssContext());
+            if (clonedObject == null) {
+                return;
+            }
+            PdfCanvas currentCanvas = context.GetCurrentCanvas();
+            // If X or Y attribute is null, then default 0 value will be returned
+            float x = ParseHorizontalLength(GetAttribute(SvgConstants.Attributes.X), context);
+            float y = ParseVerticalLength(GetAttribute(SvgConstants.Attributes.Y), context);
+            AffineTransform inverseMatrix = null;
+            if (!CssUtils.CompareFloats(x, 0) || !CssUtils.CompareFloats(y, 0)) {
+                AffineTransform translation = AffineTransform.GetTranslateInstance(x, y);
+                currentCanvas.ConcatMatrix(translation);
+                if (GetParentClipPath() != null) {
+                    try {
+                        inverseMatrix = translation.CreateInverse();
+                    }
+                    catch (NoninvertibleTransformException ex) {
+                        LOGGER.Warn(() => SvgLogMessageConstant.NONINVERTIBLE_TRANSFORMATION_MATRIX_USED_IN_CLIP_PATH, ex);
                     }
                 }
+            }
+            // Setting the parent of the referenced element to this instance
+            clonedObject.SetParent(this);
+            // Width, and height have no effect on use elements, unless the element referenced has a viewBox
+            // i.e. they only have an effect when use refers to a svg or symbol element.
+            if (clonedObject is SvgTagSvgNodeRenderer || clonedObject is SymbolSvgNodeRenderer) {
+                if (GetAttribute(SvgConstants.Attributes.WIDTH) != null) {
+                    float width = ParseHorizontalLength(GetAttribute(SvgConstants.Attributes.WIDTH), context);
+                    clonedObject.SetAttribute(SvgConstants.Attributes.WIDTH, Convert.ToString(width, System.Globalization.CultureInfo.InvariantCulture
+                        ) + CommonCssConstants.PT);
+                }
+                if (GetAttribute(SvgConstants.Attributes.HEIGHT) != null) {
+                    float height = ParseVerticalLength(GetAttribute(SvgConstants.Attributes.HEIGHT), context);
+                    clonedObject.SetAttribute(SvgConstants.Attributes.HEIGHT, Convert.ToString(height, System.Globalization.CultureInfo.InvariantCulture
+                        ) + CommonCssConstants.PT);
+                }
+            }
+            // <symbol> is marked as no-draw in normal flow, but must render when referenced by <use>.
+            if (!(clonedObject is INoDrawSvgNodeRenderer) || clonedObject is SymbolSvgNodeRenderer) {
+                clonedObject.Draw(context);
+            }
+            // Unsetting the parent of the referenced element
+            clonedObject.SetParent(null);
+            if (inverseMatrix != null) {
+                currentCanvas.ConcatMatrix(inverseMatrix);
             }
         }
 
@@ -114,7 +111,58 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
-            return null;
+            if (IsHidden()) {
+                return null;
+            }
+            String normalizedName = ResolveReferenceName();
+            if (normalizedName == null || context == null || context.IsIdUsedByUseTagBefore(normalizedName)) {
+                return null;
+            }
+            context.AddUsedId(normalizedName);
+            try {
+                ISvgNodeRenderer template = context.GetNamedObject(normalizedName);
+                ISvgNodeRenderer clonedObject = template == null ? null : template.CreateDeepCopy();
+                if (clonedObject == null) {
+                    return null;
+                }
+                SvgNodeRendererInheritanceResolver.ApplyInheritanceToSubTree(this, clonedObject, context.GetCssContext());
+                clonedObject.SetParent(this);
+                if (clonedObject is SvgTagSvgNodeRenderer || clonedObject is SymbolSvgNodeRenderer) {
+                    if (GetAttribute(SvgConstants.Attributes.WIDTH) != null) {
+                        float width = ParseHorizontalLength(GetAttribute(SvgConstants.Attributes.WIDTH), context);
+                        clonedObject.SetAttribute(SvgConstants.Attributes.WIDTH, width + CommonCssConstants.PT);
+                    }
+                    if (GetAttribute(SvgConstants.Attributes.HEIGHT) != null) {
+                        float height = ParseVerticalLength(GetAttribute(SvgConstants.Attributes.HEIGHT), context);
+                        clonedObject.SetAttribute(SvgConstants.Attributes.HEIGHT, height + CommonCssConstants.PT);
+                    }
+                }
+                Rectangle referencedBoundingBox = clonedObject.GetObjectBoundingBox(context);
+                if (referencedBoundingBox == null) {
+                    return null;
+                }
+                float x = ParseHorizontalLength(GetAttribute(SvgConstants.Attributes.X), context);
+                float y = ParseVerticalLength(GetAttribute(SvgConstants.Attributes.Y), context);
+                return new Rectangle(referencedBoundingBox.GetX() + x, referencedBoundingBox.GetY() + y, referencedBoundingBox
+                    .GetWidth(), referencedBoundingBox.GetHeight());
+            }
+            finally {
+                context.RemoveUsedId(normalizedName);
+            }
+        }
+
+        private String ResolveReferenceName() {
+            if (attributesAndStyles == null) {
+                return null;
+            }
+            String elementToReUse = GetAttribute(SvgConstants.Attributes.HREF);
+            if (elementToReUse == null) {
+                elementToReUse = GetAttribute(SvgConstants.Attributes.XLINK_HREF);
+            }
+            if (elementToReUse == null || String.IsNullOrEmpty(elementToReUse) || !IsValidHref(elementToReUse)) {
+                return null;
+            }
+            return SvgTextUtil.FilterReferenceValue(elementToReUse);
         }
     }
 }

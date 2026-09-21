@@ -66,6 +66,7 @@ namespace iText.Svg.Renderers.Impl {
                 return null;
             }
             ConfigureGradientBuilderStopsAndSpread(builder, parentOpacity);
+            builder.SetSvgLuminanceMode(context.IsRenderingLuminosityMask());
             return builder.BuildColor(objectBoundingBox.ApplyMargins(objectBoundingBoxMargin, objectBoundingBoxMargin, 
                 objectBoundingBoxMargin, objectBoundingBoxMargin, true), context.GetCurrentCanvasTransform(), context.
                 GetCurrentCanvas().GetDocument());
@@ -83,7 +84,8 @@ namespace iText.Svg.Renderers.Impl {
 
         /// <summary><inheritDoc/></summary>
         protected internal override bool IsHidden() {
-            return CommonCssConstants.NONE.Equals(this.attributesAndStyles.Get(CommonCssConstants.DISPLAY));
+            return this.attributesAndStyles != null && CommonCssConstants.NONE.Equals(this.attributesAndStyles.Get(CommonCssConstants
+                .DISPLAY));
         }
 
         /// <summary>Checks whether the gradient units values are on user space on use or object bounding box</summary>

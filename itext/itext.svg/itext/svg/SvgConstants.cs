@@ -433,6 +433,18 @@ namespace iText.Svg {
             ///     </summary>
             public const String MARKER_UNITS = "markerUnits";
 
+            /// <summary>Attribute defining the mask to be applied to a specific shape or group of shapes.</summary>
+            public const String MASK = "mask";
+
+            /// <summary>Attribute defining the coordinate system for mask geometry attributes x, y, width and height.</summary>
+            public const String MASK_UNITS = "maskUnits";
+
+            /// <summary>Attribute defining the coordinate system for mask content.</summary>
+            public const String MASK_CONTENT_UNITS = "maskContentUnits";
+
+            /// <summary>Attribute defining whether mask values come from alpha or luminance.</summary>
+            public const String MASK_TYPE = "mask-type";
+
             /// <summary>Attribute defining the offset of a stop color for gradients.</summary>
             public const String OFFSET = "offset";
 
@@ -626,6 +638,9 @@ namespace iText.Svg {
         public sealed class Values {
             /// <summary>Value representing automatic orientation for the marker attribute orient.</summary>
             public const String AUTO = "auto";
+
+            /// <summary>Value representing alpha-based mask value extraction.</summary>
+            public const String ALPHA = "alpha";
 
             /// <summary>Value representing reverse automatic orientation for the start marker.</summary>
             public const String AUTO_START_REVERSE = "auto-start-reverse";

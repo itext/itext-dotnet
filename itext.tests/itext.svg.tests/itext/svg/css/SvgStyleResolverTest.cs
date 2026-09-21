@@ -75,6 +75,34 @@ namespace iText.Svg.Css {
         }
 
         [NUnit.Framework.Test]
+        public virtual void SvgCssResolverNormalizesInheritedPresentationAttributesTest() {
+            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupGroup = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("g"), "");
+            Attributes groupAttributes = jsoupGroup.Attributes();
+            groupAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute(SvgConstants.Attributes.CLIP_PATH, "url(#clip)"
+                ));
+            groupAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute(SvgConstants.Attributes.MASK, "url(#mask)"
+                ));
+            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupRect = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("rect"), "");
+            Attributes rectAttributes = jsoupRect.Attributes();
+            rectAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute(SvgConstants.Attributes.CLIP_PATH, " InHeRiT "
+                ));
+            rectAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute(SvgConstants.Attributes.MASK, "\tINHERIT\n"
+                ));
+            JsoupElementNode group = new JsoupElementNode(jsoupGroup);
+            JsoupElementNode rect = new JsoupElementNode(jsoupRect);
+            group.AddChild(rect);
+            SvgProcessorContext context = new SvgProcessorContext(new SvgConverterProperties());
+            SvgStyleResolver resolver = new SvgStyleResolver(group, context);
+            SvgCssContext cssContext = new SvgCssContext();
+            group.SetStyles(resolver.ResolveStyles(group, cssContext));
+            IDictionary<String, String> actual = resolver.ResolveStyles(rect, cssContext);
+            NUnit.Framework.Assert.AreEqual("url(#clip)", actual.Get(SvgConstants.Attributes.CLIP_PATH));
+            NUnit.Framework.Assert.AreEqual("url(#mask)", actual.Get(SvgConstants.Attributes.MASK));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void SvgCssResolverStylesheetTest() {
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupLink = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf(SvgConstants.Tags.LINK), "");

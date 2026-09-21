@@ -51,6 +51,10 @@ namespace iText.Svg.Renderers {
 
         private readonly Stack<String> patternIds = new Stack<String>();
 
+        private readonly Stack<String> maskIds = new Stack<String>();
+
+        private readonly Stack<bool> luminosityMaskRenderingModes = new Stack<bool>();
+
         private readonly ResourceResolver resourceResolver;
 
         private readonly FontProvider fontProvider;
@@ -367,6 +371,75 @@ namespace iText.Svg.Renderers {
         /// <summary>Pops the last template id from the stack.</summary>
         public virtual void PopPatternId() {
             this.patternIds.Pop();
+        }
+
+        /// <summary>Add mask id to stack.</summary>
+        /// <remarks>
+        /// Add mask id to stack. Check if the id is already in the stack.
+        /// If it is, return
+        /// <see langword="false"/>
+        /// ; otherwise add it and return
+        /// <see langword="true"/>.
+        /// </remarks>
+        /// <param name="maskId">mask id</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if mask id was pushed;
+        /// <see langword="false"/>
+        /// if it is already active
+        /// </returns>
+        public virtual bool PushMaskId(String maskId) {
+            if (this.maskIds.Contains(maskId)) {
+                return false;
+            }
+            this.maskIds.Push(maskId);
+            return true;
+        }
+
+        /// <summary>Checks whether the specified mask is the currently rendered mask.</summary>
+        /// <param name="maskId">mask id</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the specified mask is at the top of the active mask stack
+        /// </returns>
+        public virtual bool IsCurrentMaskId(String maskId) {
+            return maskId != null && !this.maskIds.IsEmpty() && maskId.Equals(this.maskIds.Peek());
+        }
+
+        /// <summary>Pops the last mask id from the stack.</summary>
+        public virtual void PopMaskId() {
+            this.maskIds.Pop();
+        }
+
+        /// <summary>Adds the rendering mode for the mask whose content is about to be drawn.</summary>
+        /// <param name="luminosity">
+        /// 
+        /// <see langword="true"/>
+        /// to convert vector paints to SVG luminance;
+        /// <see langword="false"/>
+        /// to preserve paints for an alpha mask
+        /// </param>
+        public virtual void PushMaskRenderingMode(bool luminosity) {
+            luminosityMaskRenderingModes.Push(luminosity);
+        }
+
+        /// <summary>Removes the current mask content rendering mode.</summary>
+        public virtual void PopMaskRenderingMode() {
+            if (!luminosityMaskRenderingModes.IsEmpty()) {
+                luminosityMaskRenderingModes.Pop();
+            }
+        }
+
+        /// <summary>Checks whether vector paints are currently being rendered as luminosity mask content.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// while rendering a luminosity mask
+        /// </returns>
+        public virtual bool IsRenderingLuminosityMask() {
+            return !luminosityMaskRenderingModes.IsEmpty() && luminosityMaskRenderingModes.Peek();
         }
 
         /// <summary>Sets a previous element text move.</summary>

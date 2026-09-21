@@ -43,6 +43,11 @@ namespace iText.Svg.Css {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "simpleGroupInheritance");
         }
 
+        [NUnit.Framework.Test]
+        public virtual void MixedCasePresentationAttributeInheritanceTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "mixedCasePresentationAttributeInheritance");
+        }
+
         //Inheritance in use tags
         [NUnit.Framework.Test]
         public virtual void UseFillInheritanceTest() {

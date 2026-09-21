@@ -27,6 +27,7 @@ using iText.Commons.Utils;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Utils;
 using iText.Layout.Element;
 using iText.Layout.Font;
 using iText.Layout.Layout;
@@ -447,7 +448,8 @@ namespace iText.Svg.Renderers.Impl {
         internal override void ApplyFillAndStrokeProperties(AbstractSvgNodeRenderer.FillProperties fillProperties, 
             AbstractSvgNodeRenderer.StrokeProperties strokeProperties, SvgDrawContext context) {
             if (fillProperties != null) {
-                context.GetSvgTextProperties().SetFillColor(fillProperties.GetColor());
+                context.GetSvgTextProperties().SetFillColor(context.IsRenderingLuminosityMask() ? ColorUtils.ToDeviceGrayForSvgLuminanceMode
+                    (fillProperties.GetColor()) : fillProperties.GetColor());
                 if (!CssUtils.CompareFloats(fillProperties.GetOpacity(), 1f)) {
                     context.GetSvgTextProperties().SetFillOpacity(fillProperties.GetOpacity());
                 }
@@ -460,7 +462,8 @@ namespace iText.Svg.Renderers.Impl {
                         ());
                 }
                 if (strokeProperties.GetColor() != null) {
-                    context.GetSvgTextProperties().SetStrokeColor(strokeProperties.GetColor());
+                    context.GetSvgTextProperties().SetStrokeColor(context.IsRenderingLuminosityMask() ? ColorUtils.ToDeviceGrayForSvgLuminanceMode
+                        (strokeProperties.GetColor()) : strokeProperties.GetColor());
                 }
                 context.GetSvgTextProperties().SetLineWidth(strokeProperties.GetWidth());
                 if (!CssUtils.CompareFloats(strokeProperties.GetOpacity(), 1f)) {

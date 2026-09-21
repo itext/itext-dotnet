@@ -40,6 +40,10 @@ using iText.Test;
 namespace iText.Svg.Renderers.Impl {
     [NUnit.Framework.Category("UnitTest")]
     public class ImageSvgNodeRendererUnitTest : ExtendedITextTest {
+        private const float EPSILON = 0.00001f;
+
+        private const String IMAGE_DATA = "data:image/png;base64," + "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
+
         [NUnit.Framework.Test]
         public virtual void NoObjectBoundingBoxTest() {
             ImageSvgNodeRenderer renderer = new ImageSvgNodeRenderer();
@@ -49,7 +53,7 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void ZeroSizedViewBoxDoesNotProduceExceptionTest() {
             PdfFormXObject zeroSizedXObject = new PdfFormXObject(new Rectangle(0, 0, 0, 0));
-            ResourceResolver resourceResolver = new _ResourceResolver_62(zeroSizedXObject, "");
+            ResourceResolver resourceResolver = new _ResourceResolver_66(zeroSizedXObject, "");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             using (PdfDocument document = new PdfDocument(new PdfWriter(baos))) {
                 PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
@@ -71,8 +75,8 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
-        private sealed class _ResourceResolver_62 : ResourceResolver {
-            public _ResourceResolver_62(PdfFormXObject zeroSizedXObject, String baseArg1)
+        private sealed class _ResourceResolver_66 : ResourceResolver {
+            public _ResourceResolver_66(PdfFormXObject zeroSizedXObject, String baseArg1)
                 : base(baseArg1) {
                 this.zeroSizedXObject = zeroSizedXObject;
             }
@@ -85,10 +89,27 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
+        public virtual void ObjectBoundingBoxTest() {
+            ImageSvgNodeRenderer renderer = new ImageSvgNodeRenderer();
+            renderer.SetAttribute(SvgConstants.Attributes.HREF, IMAGE_DATA);
+            renderer.SetAttribute(SvgConstants.Attributes.X, "10");
+            renderer.SetAttribute(SvgConstants.Attributes.Y, "20");
+            renderer.SetAttribute(SvgConstants.Attributes.WIDTH, "40");
+            renderer.SetAttribute(SvgConstants.Attributes.HEIGHT, "30");
+            renderer.SetAttribute(SvgConstants.Attributes.PRESERVE_ASPECT_RATIO, SvgConstants.Values.NONE);
+            SvgDrawContext context = new SvgDrawContext(null, null);
+            context.AddViewPort(new Rectangle(0, 0, 200, 200));
+            Rectangle objectBoundingBox = renderer.GetObjectBoundingBox(context);
+            NUnit.Framework.Assert.IsNotNull(objectBoundingBox);
+            NUnit.Framework.Assert.IsTrue(new Rectangle(7.5f, 15f, 30f, 22.5f).EqualsWithEpsilon(objectBoundingBox, EPSILON
+                ));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void ZeroSizedSvgImageXObjectUpdatesBBoxTest() {
             SvgImageXObject zeroSizedXObject = new SvgImageXObject(null, new ImageSvgNodeRendererUnitTest.TestSvgProcessorResult
                 (), new ResourceResolver(""));
-            ResourceResolver resourceResolver = new _ResourceResolver_99(zeroSizedXObject, "");
+            ResourceResolver resourceResolver = new _ResourceResolver_121(zeroSizedXObject, "");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             using (PdfDocument document = new PdfDocument(new PdfWriter(baos))) {
                 PdfCanvas canvas = new PdfCanvas(document.AddNewPage());
@@ -109,8 +130,8 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
-        private sealed class _ResourceResolver_99 : ResourceResolver {
-            public _ResourceResolver_99(SvgImageXObject zeroSizedXObject, String baseArg1)
+        private sealed class _ResourceResolver_121 : ResourceResolver {
+            public _ResourceResolver_121(SvgImageXObject zeroSizedXObject, String baseArg1)
                 : base(baseArg1) {
                 this.zeroSizedXObject = zeroSizedXObject;
             }

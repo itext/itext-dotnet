@@ -116,8 +116,9 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         protected internal override bool IsHidden() {
-            return CommonCssConstants.NONE.Equals(this.attributesAndStyles.Get(CommonCssConstants.DISPLAY)) && !CommonCssConstants
-                .HIDDEN.Equals(this.attributesAndStyles.Get(CommonCssConstants.VISIBILITY));
+            return this.attributesAndStyles != null && CommonCssConstants.NONE.Equals(this.attributesAndStyles.Get(CommonCssConstants
+                .DISPLAY)) && !CommonCssConstants.HIDDEN.Equals(this.attributesAndStyles.Get(CommonCssConstants.VISIBILITY
+                ));
         }
     }
 }

@@ -52,7 +52,7 @@ namespace iText.StyledXmlParser.Util {
         public static IDictionary<String, String> MergeParentStyleDeclaration(IDictionary<String, String> styles, 
             String styleProperty, String parentPropValue, String parentFontSizeString, ICollection<IStyleInheritance
             > inheritanceRules) {
-            String childPropValue = styles.Get(styleProperty);
+            String childPropValue = CssUtils.NormalizeCssProperty(styles.Get(styleProperty));
             if ((childPropValue == null && CheckInheritance(styleProperty, inheritanceRules)) || CommonCssConstants.INHERIT
                 .Equals(childPropValue)) {
                 if (ValueIsOfMeasurement(parentPropValue, CommonCssConstants.EM) || ValueIsOfMeasurement(parentPropValue, 

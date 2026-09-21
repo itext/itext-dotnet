@@ -55,6 +55,22 @@ namespace iText.Kernel.Colors.Gradients {
         /// <returns>the current builder instance</returns>
         IGradientBuilder SetSpread(GradientSpreadMethod gradientSpreadMethod);
 
+        /// <summary>Sets whether to build a DeviceGray gradient using the SVG luminance coefficients.</summary>
+        /// <remarks>
+        /// Sets whether to build a DeviceGray gradient using the SVG luminance coefficients.
+        /// This method is SVG-specific because PDF and SVG use different luminance formulas.
+        /// By default, gradients are built in DeviceRGB. The original RGB stop colors are not modified.
+        /// </remarks>
+        /// <param name="svgLuminanceMode">
+        /// 
+        /// <see langword="true"/>
+        /// to build a luminance gradient,
+        /// <see langword="false"/>
+        /// to build an RGB gradient
+        /// </param>
+        /// <returns>the current builder instance</returns>
+        IGradientBuilder SetSvgLuminanceMode(bool svgLuminanceMode);
+
         /// <summary>
         /// Builds the
         /// <see cref="iText.Kernel.Colors.Color"/>
