@@ -42,6 +42,8 @@ namespace iText.Layout.Renderer {
     /// <see cref="IRenderer">renderer</see>
     /// object for a
     /// <see cref="iText.Layout.Element.Paragraph"/>
+    /// or a
+    /// <see cref="iText.Layout.Element.VerticalParagraph"/>
     /// object.
     /// </summary>
     /// <remarks>
@@ -49,12 +51,16 @@ namespace iText.Layout.Renderer {
     /// <see cref="IRenderer">renderer</see>
     /// object for a
     /// <see cref="iText.Layout.Element.Paragraph"/>
+    /// or a
+    /// <see cref="iText.Layout.Element.VerticalParagraph"/>
     /// object. It will draw the glyphs of the textual content on the
     /// <see cref="DrawContext"/>.
     /// </remarks>
     public class ParagraphRenderer : BlockRenderer {
         private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Renderer.ParagraphRenderer)
             );
+
+        private readonly IDictionary<int, String> unsupportedProperties;
 
         protected internal IList<LineRenderer> lines = null;
 
@@ -66,6 +72,18 @@ namespace iText.Layout.Renderer {
         /// </param>
         public ParagraphRenderer(Paragraph modelElement)
             : base(modelElement) {
+            this.unsupportedProperties = modelElement.GetUnsupportedProperties();
+        }
+
+        /// <summary>Creates a ParagraphRenderer from its corresponding layout object.</summary>
+        /// <param name="modelElement">
+        /// the
+        /// <see cref="iText.Layout.Element.VerticalParagraph"/>
+        /// which this object should manage
+        /// </param>
+        public ParagraphRenderer(VerticalParagraph modelElement)
+            : base(modelElement) {
+            this.unsupportedProperties = modelElement.GetUnsupportedProperties();
         }
 
         /// <summary><inheritDoc/></summary>
@@ -563,6 +581,9 @@ namespace iText.Layout.Renderer {
         /// <returns>new renderer instance</returns>
         public override IRenderer GetNextRenderer() {
             LogWarningIfGetNextRendererNotOverridden(typeof(iText.Layout.Renderer.ParagraphRenderer), this.GetType());
+            if (modelElement is VerticalParagraph) {
+                return new iText.Layout.Renderer.ParagraphRenderer((VerticalParagraph)modelElement);
+            }
             return new iText.Layout.Renderer.ParagraphRenderer((Paragraph)modelElement);
         }
 
@@ -712,6 +733,18 @@ namespace iText.Layout.Renderer {
                 minMaxWidth.SetAdditionalWidth(CalculateAdditionalWidth(this));
             }
             return rotation != null ? RotationUtils.CalculateRotationMinMaxWidth(minMaxWidth, this) : minMaxWidth;
+        }
+
+        public override T1 GetProperty<T1>(int key) {
+            T1 value = base.GetProperty<T1>(key);
+            if (value != null && unsupportedProperties.ContainsKey(key)) {
+                if (GetModelElement() != null && !value.Equals(GetModelElement().GetDefaultProperty<T1>(key))) {
+                    LOGGER.Warn(() => MessageFormatUtil.Format(LayoutLogMessageConstant.UNSUPPORTED_PROPERTY, GetModelElement(
+                        ).GetType().Name, unsupportedProperties.Get(key)));
+                }
+                return (T1)(Object)null;
+            }
+            return value;
         }
 
         protected internal virtual iText.Layout.Renderer.ParagraphRenderer[] Split() {

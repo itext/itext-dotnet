@@ -74,9 +74,9 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(true, chineseSpec, japaneseSpec, koreanSpec));
+                    document.Add(BuildParagraph(new VerticalParagraph(), chineseSpec, japaneseSpec, koreanSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-                    document.Add(BuildParagraph(false, chineseSpec, japaneseSpec, koreanSpec));
+                    document.Add(BuildParagraph(new Paragraph(), chineseSpec, japaneseSpec, koreanSpec));
                 }
             }
             IDictionary<char, int?> extractedCounts = VerticalTextTestUtil.ExtractPageCharacterCounts(outFileName);
@@ -100,9 +100,9 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(true, chineseSpec, latinSpec));
+                    document.Add(BuildParagraph(new VerticalParagraph(), chineseSpec, latinSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-                    document.Add(BuildParagraph(false, chineseSpec, latinSpec));
+                    document.Add(BuildParagraph(new Paragraph(), chineseSpec, latinSpec));
                 }
             }
             IDictionary<char, int?> extractedCounts = VerticalTextTestUtil.ExtractPageCharacterCounts(outFileName);
@@ -124,9 +124,9 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(true, mongolianSpec, chineseSpec));
+                    document.Add(BuildParagraph(new VerticalParagraph(), mongolianSpec, chineseSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-                    document.Add(BuildParagraph(false, mongolianSpec, chineseSpec));
+                    document.Add(BuildParagraph(new Paragraph(), mongolianSpec, chineseSpec));
                 }
             }
             IDictionary<char, int?> extractedCounts = VerticalTextTestUtil.ExtractPageCharacterCounts(outFileName);
@@ -153,9 +153,10 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(true, chineseSpec, japaneseSpec, koreanSpec, mongolianSpec));
+                    document.Add(BuildParagraph(new VerticalParagraph(), chineseSpec, japaneseSpec, koreanSpec, mongolianSpec)
+                        );
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-                    document.Add(BuildParagraph(false, chineseSpec, japaneseSpec, koreanSpec, mongolianSpec));
+                    document.Add(BuildParagraph(new Paragraph(), chineseSpec, japaneseSpec, koreanSpec, mongolianSpec));
                 }
             }
             IDictionary<char, int?> extractedCounts = VerticalTextTestUtil.ExtractPageCharacterCounts(outFileName);
@@ -181,9 +182,9 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(true, smallSpec, mediumSpec, largeSpec));
+                    document.Add(BuildParagraph(new VerticalParagraph(), smallSpec, mediumSpec, largeSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-                    document.Add(BuildParagraph(false, smallSpec, mediumSpec, largeSpec));
+                    document.Add(BuildParagraph(new Paragraph(), smallSpec, mediumSpec, largeSpec));
                 }
             }
             IDictionary<char, int?> extractedCounts = VerticalTextTestUtil.ExtractPageCharacterCounts(outFileName);
@@ -206,9 +207,9 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(true, simplifiedSpec, traditionalSpec));
+                    document.Add(BuildParagraph(new VerticalParagraph(), simplifiedSpec, traditionalSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-                    document.Add(BuildParagraph(false, simplifiedSpec, traditionalSpec));
+                    document.Add(BuildParagraph(new Paragraph(), simplifiedSpec, traditionalSpec));
                 }
             }
             IDictionary<char, int?> extractedCounts = VerticalTextTestUtil.ExtractPageCharacterCounts(outFileName);
@@ -223,23 +224,9 @@ namespace iText.Layout {
                 );
         }
 
-        private static Paragraph VerticalParagraph() {
-            Paragraph paragraph = new Paragraph();
-            paragraph.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
-            paragraph.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
+        private static T BuildParagraph<T>(T paragraph, params VerticalTextCjkMixedFontsTest.CjkTextSpec[] specs)
+            where T : AbstractParagraph<T> {
             paragraph.SetBorder(new SolidBorder(1));
-            return paragraph;
-        }
-
-        private static Paragraph HorizontalParagraph() {
-            Paragraph paragraph = new Paragraph();
-            paragraph.SetBorder(new SolidBorder(1));
-            return paragraph;
-        }
-
-        private static Paragraph BuildParagraph(bool vertical, params VerticalTextCjkMixedFontsTest.CjkTextSpec[] 
-            specs) {
-            Paragraph paragraph = vertical ? VerticalParagraph() : HorizontalParagraph();
             foreach (VerticalTextCjkMixedFontsTest.CjkTextSpec spec in specs) {
                 Text text = new Text(spec.content);
                 text.SetFont(spec.font);
