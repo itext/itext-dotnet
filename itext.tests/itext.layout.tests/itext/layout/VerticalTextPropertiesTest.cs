@@ -133,7 +133,6 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.UNSUPPORTED_PROPERTY, Count = 2)]
         public virtual void RotationAngleTest() {
             String fileName = "rotationAngle";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
@@ -146,6 +145,12 @@ namespace iText.Layout {
                     paragraph.SetRotationAngle(Math.PI / 2);
                     document.Add(paragraph);
                     paragraph.SetRotationAngle(-Math.PI / 2);
+                    document.Add(paragraph);
+                    paragraph.SetRotationAngle(Math.PI / 4);
+                    document.Add(paragraph);
+                    paragraph.SetRotationAngle(-Math.PI / 4);
+                    document.Add(paragraph);
+                    paragraph.SetRotationAngle(Math.PI);
                     document.Add(paragraph);
                 }
             }
@@ -331,6 +336,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.UNSUPPORTED_PROPERTY, Count = 1)]
         public virtual void TabStopsTest() {
             String fileName = "tabStops";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
@@ -360,7 +366,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.UNSUPPORTED_PROPERTY)]
+        [LogMessage(LayoutLogMessageConstant.UNSUPPORTED_PROPERTY, Count = 1)]
         public virtual void TextAnchorTest() {
             String fileName = "textAnchor";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";

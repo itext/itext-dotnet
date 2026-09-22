@@ -60,7 +60,17 @@ namespace iText.Layout.Renderer {
         private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Renderer.ParagraphRenderer)
             );
 
-        private readonly IDictionary<int, String> unsupportedProperties;
+        private static readonly IDictionary<int, String> unsupportedPropertiesForVerticalWriting = new Dictionary<
+            int, String>();
+
+        static ParagraphRenderer() {
+            unsupportedPropertiesForVerticalWriting.Put(Property.FLOAT, "Float");
+            unsupportedPropertiesForVerticalWriting.Put(Property.TAB_STOPS, "Tab stops");
+            unsupportedPropertiesForVerticalWriting.Put(Property.TAB_LEADER, "Tab leader");
+            unsupportedPropertiesForVerticalWriting.Put(Property.TAB_DEFAULT, "Tab default");
+            unsupportedPropertiesForVerticalWriting.Put(Property.TAB_ANCHOR, "Tab anchor");
+            unsupportedPropertiesForVerticalWriting.Put(Property.TEXT_ANCHOR, "Text anchor");
+        }
 
         protected internal IList<LineRenderer> lines = null;
 
@@ -72,7 +82,6 @@ namespace iText.Layout.Renderer {
         /// </param>
         public ParagraphRenderer(Paragraph modelElement)
             : base(modelElement) {
-            this.unsupportedProperties = modelElement.GetUnsupportedProperties();
         }
 
         /// <summary>Creates a ParagraphRenderer from its corresponding layout object.</summary>
@@ -83,7 +92,6 @@ namespace iText.Layout.Renderer {
         /// </param>
         public ParagraphRenderer(VerticalParagraph modelElement)
             : base(modelElement) {
-            this.unsupportedProperties = modelElement.GetUnsupportedProperties();
         }
 
         /// <summary><inheritDoc/></summary>
@@ -105,6 +113,16 @@ namespace iText.Layout.Renderer {
             UpdateParentLines(this);
             UpdateParentLines((iText.Layout.Renderer.ParagraphRenderer)layoutResult.GetSplitRenderer());
             return layoutResult;
+        }
+
+        public override IRenderer SetParent(IRenderer parent) {
+            if (base.GetParent() == parent) {
+                return this;
+            }
+            base.SetParent(parent);
+            isVerticalMode = null;
+            CheckProperties();
+            return this;
         }
 
         protected internal virtual LayoutResult DirectLayout(LayoutContext layoutContext) {
@@ -671,6 +689,17 @@ namespace iText.Layout.Renderer {
             return null;
         }
 
+        private void CheckProperties() {
+            if (IsVerticalWriting()) {
+                foreach (KeyValuePair<int, String> entry in unsupportedPropertiesForVerticalWriting) {
+                    if (this.HasProperty(entry.Key)) {
+                        LOGGER.Warn(() => MessageFormatUtil.Format(LayoutLogMessageConstant.UNSUPPORTED_PROPERTY, "vertical text", 
+                            entry.Value));
+                    }
+                }
+            }
+        }
+
         private iText.Layout.Renderer.ParagraphRenderer CreateOverflowRenderer() {
             return (iText.Layout.Renderer.ParagraphRenderer)GetNextRenderer();
         }
@@ -733,18 +762,6 @@ namespace iText.Layout.Renderer {
                 minMaxWidth.SetAdditionalWidth(CalculateAdditionalWidth(this));
             }
             return rotation != null ? RotationUtils.CalculateRotationMinMaxWidth(minMaxWidth, this) : minMaxWidth;
-        }
-
-        public override T1 GetProperty<T1>(int key) {
-            T1 value = base.GetProperty<T1>(key);
-            if (value != null && unsupportedProperties.ContainsKey(key)) {
-                if (GetModelElement() != null && !value.Equals(GetModelElement().GetDefaultProperty<T1>(key))) {
-                    LOGGER.Warn(() => MessageFormatUtil.Format(LayoutLogMessageConstant.UNSUPPORTED_PROPERTY, GetModelElement(
-                        ).GetType().Name, unsupportedProperties.Get(key)));
-                }
-                return (T1)(Object)null;
-            }
-            return value;
         }
 
         protected internal virtual iText.Layout.Renderer.ParagraphRenderer[] Split() {

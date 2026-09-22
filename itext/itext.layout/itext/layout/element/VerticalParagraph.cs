@@ -21,11 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
-using iText.Commons.Internal.Runtime;
-using iText.Commons.Logs;
-using iText.Commons.Utils;
-using iText.Layout.Logs;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
@@ -36,21 +31,6 @@ namespace iText.Layout.Element {
     /// that is laid out vertically, with text flowing from top to bottom.
     /// </summary>
     public class VerticalParagraph : AbstractParagraph<iText.Layout.Element.VerticalParagraph> {
-        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Element.VerticalParagraph));
-
-        private static readonly IDictionary<int, String> unsupportedProperties = new Dictionary<int, String>();
-
-        static VerticalParagraph() {
-            unsupportedProperties.Put(Property.FLOAT, "Float");
-            unsupportedProperties.Put(Property.LEADING, "Leading");
-            unsupportedProperties.Put(Property.ROTATION_ANGLE, "Rotation angle");
-            unsupportedProperties.Put(Property.TAB_STOPS, "Tab stops");
-            unsupportedProperties.Put(Property.TAB_LEADER, "Tab leader");
-            unsupportedProperties.Put(Property.TAB_DEFAULT, "Tab default");
-            unsupportedProperties.Put(Property.TAB_ANCHOR, "Tab anchor");
-            unsupportedProperties.Put(Property.TEXT_ANCHOR, "Text anchor");
-        }
-
         /// <summary>
         /// Creates a new
         /// <see cref="VerticalParagraph"/>
@@ -121,21 +101,6 @@ namespace iText.Layout.Element {
         public VerticalParagraph(Text text, bool rightToLeftProgression)
             : this(rightToLeftProgression) {
             base.Add(text);
-        }
-
-        /// <summary><inheritDoc/></summary>
-        public override void SetProperty(int property, Object value) {
-            if (GetUnsupportedProperties().ContainsKey(property)) {
-                LOGGER.Warn(() => MessageFormatUtil.Format(LayoutLogMessageConstant.UNSUPPORTED_PROPERTY, GetType().Name, 
-                    GetUnsupportedProperties().Get(property)));
-                return;
-            }
-            base.SetProperty(property, value);
-        }
-
-        /// <summary><inheritDoc/></summary>
-        public override IDictionary<int, String> GetUnsupportedProperties() {
-            return unsupportedProperties;
         }
 
         /// <summary><inheritDoc/></summary>

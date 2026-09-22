@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using iText.Commons.Internal.Runtime;
-using iText.Commons.Utils;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Properties;
@@ -83,15 +82,30 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Adds a
-        /// <see cref="AbstractParagraph{T}"/>
+        /// <see cref="Paragraph"/>
         /// element.
         /// </summary>
         /// <param name="element">
         /// the content to be added, any
-        /// <see cref="AbstractParagraph{T}"/>
+        /// <see cref="Paragraph"/>
         /// </param>
         /// <returns>this Element</returns>
-        public virtual T Add(iText.Layout.Element.AbstractParagraph element) {
+        public virtual T Add(Paragraph element) {
+            childElements.Add(element);
+            return (T)this;
+        }
+
+        /// <summary>
+        /// Adds a
+        /// <see cref="VerticalParagraph"/>
+        /// element.
+        /// </summary>
+        /// <param name="element">
+        /// the content to be added, any
+        /// <see cref="VerticalParagraph"/>
+        /// </param>
+        /// <returns>this Element</returns>
+        public virtual T Add(VerticalParagraph element) {
             childElements.Add(element);
             return (T)this;
         }
@@ -192,17 +206,6 @@ namespace iText.Layout.Element {
                 tagProperties = new DefaultAccessibilityProperties(StandardRoles.P);
             }
             return tagProperties;
-        }
-
-        /// <summary>Returns a map of unsupported properties.</summary>
-        /// <remarks>
-        /// Returns a map of unsupported properties. The map is empty by default,
-        /// but can be overridden by subclasses to specify unsupported properties.
-        /// </remarks>
-        /// <returns>a map of unsupported properties, where the key is the property ID and the value is the property name
-        ///     </returns>
-        public virtual IDictionary<int, String> GetUnsupportedProperties() {
-            return JavaCollectionsUtil.EmptyMap<int, String>();
         }
 
         /// <summary>

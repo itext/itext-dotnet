@@ -140,7 +140,7 @@ namespace iText.Layout.Renderer {
 
         protected internal bool isLastRendererForModelElement = true;
 
-        private bool? isVerticalMode;
+        protected internal bool? isVerticalMode;
 
         private bool relativePositioningTranslationApplied = false;
 

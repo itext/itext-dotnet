@@ -178,24 +178,13 @@ namespace iText.Layout {
                     // Add another paragraph after the floated elements.
                     normalParagraph = new Paragraph("Normal text added after vertical paragraphs and divs.");
                     document.Add(normalParagraph);
-                    document.Add(new VerticalTextRTLTest.CustomVerticalParagraph("This is a vertical paragraph with a lot of text to "
-                         + "demonstrate how it interacts with floated elements. It should wrap around the floated elements " +
-                         "and continue on the next line if necessary. " + "The quick brown fox jumps over the lazy dog. 1234567890 ABCDEFG abcdefg."
+                    document.Add(new VerticalParagraph("This is a vertical paragraph with a lot of text to " + "demonstrate how it interacts with floated elements. It should wrap around the floated elements "
+                         + "and continue on the next line if necessary. " + "The quick brown fox jumps over the lazy dog. 1234567890 ABCDEFG abcdefg."
                         , true).SetHeight(300));
                 }
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 ));
-        }
-
-        private class CustomVerticalParagraph : VerticalParagraph {
-            public CustomVerticalParagraph(String text, bool rightToLeftProgression)
-                : base(text, rightToLeftProgression) {
-            }
-
-            public override IDictionary<int, String> GetUnsupportedProperties() {
-                return JavaCollectionsUtil.EmptyMap<int, String>();
-            }
         }
     }
 }
