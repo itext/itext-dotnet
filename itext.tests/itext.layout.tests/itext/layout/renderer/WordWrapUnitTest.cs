@@ -559,7 +559,7 @@ namespace iText.Layout.Renderer {
                 new TextSequenceWordWrapping.MinMaxWidthOfTextRendererSequenceHelper(0f, 0f, false);
             AbstractWidthHandler widthHandler = new MaxSumWidthHandler(new MinMaxWidth());
             TextSequenceWordWrapping.ResetTextSequenceIfItEnded(textRendererLayoutResults, false, tabRenderer, 1, minMaxWidthOfTextRendererSequenceHelper
-                , false, widthHandler, true);
+                , false, widthHandler, true, false);
             NUnit.Framework.Assert.IsTrue(textRendererLayoutResults.IsEmpty());
         }
 
@@ -578,7 +578,7 @@ namespace iText.Layout.Renderer {
             AbstractWidthHandler widthHandler = new MaxSumWidthHandler(new MinMaxWidth());
             int childPosDuringResetAttempt = 1;
             TextSequenceWordWrapping.ResetTextSequenceIfItEnded(textRendererLayoutResults, false, tabRenderer, childPosDuringResetAttempt
-                , minMaxWidthOfTextRendererSequenceHelper, true, widthHandler, true);
+                , minMaxWidthOfTextRendererSequenceHelper, true, widthHandler, true, false);
             NUnit.Framework.Assert.IsTrue(textRendererLayoutResults.IsEmpty());
         }
 
@@ -605,7 +605,7 @@ namespace iText.Layout.Renderer {
                 new TextSequenceWordWrapping.MinMaxWidthOfTextRendererSequenceHelper(0f, 0f, false);
             AbstractWidthHandler widthHandler = new MaxSumWidthHandler(new MinMaxWidth());
             TextSequenceWordWrapping.ResetTextSequenceIfItEnded(specialScriptLayoutResults, true, textRenderer, 1, minMaxWidthOfTextRendererSequenceHelper
-                , true, widthHandler, true);
+                , true, widthHandler, true, false);
             NUnit.Framework.Assert.IsTrue(specialScriptLayoutResults.IsEmpty());
         }
 
@@ -634,7 +634,7 @@ namespace iText.Layout.Renderer {
             AbstractWidthHandler widthHandler = new MaxSumWidthHandler(new MinMaxWidth());
             int secondKey = firstKey + 1;
             TextSequenceWordWrapping.ResetTextSequenceIfItEnded(specialScriptLayoutResults, true, textRenderer, secondKey
-                , minMaxWidthOfTextRendererSequenceHelper, true, widthHandler, true);
+                , minMaxWidthOfTextRendererSequenceHelper, true, widthHandler, true, false);
             NUnit.Framework.Assert.AreEqual(1, specialScriptLayoutResults.Count);
             NUnit.Framework.Assert.IsTrue(specialScriptLayoutResults.ContainsKey(firstKey));
         }

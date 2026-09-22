@@ -111,7 +111,7 @@ namespace iText.Layout.Renderer {
         public static void ResetTextSequenceIfItEnded(IDictionary<int, LayoutResult> textRendererLayoutResults, bool
              specialScripts, IRenderer childRenderer, int childPos, TextSequenceWordWrapping.MinMaxWidthOfTextRendererSequenceHelper
              minMaxWidthOfTextRendererSequenceHelper, bool noSoftWrap, AbstractWidthHandler widthHandler, bool sameDirection
-            ) {
+            , bool isVerticalWriting) {
             if (IsTextRendererAndParentWritingCorrespondsToChild(childRenderer, specialScripts, sameDirection) && !LineRenderer
                 .IsChildFloating(childRenderer)) {
                 return;
@@ -127,8 +127,10 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 LayoutResult childResult = textRendererLayoutResults.Get(lastChildInTextSequence);
-                UpdateMinMaxWidthOfLineRendererAfterTextRendererSequenceProcessing(noSoftWrap, lastChildInTextSequence, childResult
-                    , widthHandler, minMaxWidthOfTextRendererSequenceHelper, textRendererLayoutResults);
+                if (!isVerticalWriting) {
+                    UpdateMinMaxWidthOfLineRendererAfterTextRendererSequenceProcessing(noSoftWrap, lastChildInTextSequence, childResult
+                        , widthHandler, minMaxWidthOfTextRendererSequenceHelper, textRendererLayoutResults);
+                }
                 textRendererLayoutResults.Clear();
             }
         }

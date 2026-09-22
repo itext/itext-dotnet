@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using iText.Commons.Internal.Runtime;
 using iText.Commons.Logs;
@@ -152,7 +153,13 @@ namespace iText.Layout.Renderer {
             bool widthSet = ApplyWidth(parentBBox, blockWidth, overflowX);
             wasHeightClipped = ApplyMaxHeight(parentBBox, blockMaxHeight, marginsCollapseHandler, false, overflowY);
             MinMaxWidth minMaxWidth = new MinMaxWidth(additionalWidth);
-            AbstractWidthHandler widthHandler = new MaxMaxWidthHandler(minMaxWidth);
+            AbstractWidthHandler widthHandler;
+            if (isVerticalWriting) {
+                widthHandler = new SumSumWidthHandler(minMaxWidth);
+            }
+            else {
+                widthHandler = new MaxMaxWidthHandler(minMaxWidth);
+            }
             IList<Rectangle> areas;
             if (isPositioned) {
                 areas = JavaCollectionsUtil.SingletonList(parentBBox);
@@ -193,6 +200,20 @@ namespace iText.Layout.Renderer {
             Rectangle originalLayoutBox = layoutBox.Clone();
             IDictionary<LineRenderer, LineLayoutResult> lineLayoutResults = new LinkedDictionary<LineRenderer, LineLayoutResult
                 >();
+            // A workaround, to identify min-max width calculations, needed for vertical text layout.
+            // The value is still big enough so that no reasonable layout can pass the check.
+            if (layoutBox.GetHeight() > AbstractRenderer.INF - 1000F) {
+                if (isVerticalWriting || this.GetChildRenderers().Any((child) => child is AbstractRenderer && ((AbstractRenderer
+                    )child).IsVerticalWriting())) {
+                    float? parentRecursiveHeight = GetParentHeightRecursively(this);
+                    if (parentRecursiveHeight != null) {
+                        float heightDifference = layoutBox.GetHeight() - (float)parentRecursiveHeight;
+                        layoutBox.SetHeight((float)parentRecursiveHeight);
+                        layoutBox.SetY(layoutBox.GetY() + heightDifference);
+                        overflowY = this.GetProperty<OverflowPropertyValue?>(Property.OVERFLOW_Y);
+                    }
+                }
+            }
             while (currentRenderer != null) {
                 currentRenderer.SetProperty(Property.TAB_DEFAULT, this.GetPropertyAsFloat(Property.TAB_DEFAULT));
                 currentRenderer.SetProperty(Property.TAB_STOPS, this.GetProperty<Object>(Property.TAB_STOPS));
@@ -699,6 +720,26 @@ namespace iText.Layout.Renderer {
             splitRenderer.isLastRendererForModelElement = false;
             iText.Layout.Renderer.ParagraphRenderer overflowRenderer = CreateOverflowRenderer(parent);
             return new iText.Layout.Renderer.ParagraphRenderer[] { splitRenderer, overflowRenderer };
+        }
+
+        private static float? GetParentHeightRecursively(IRenderer renderer) {
+            if (renderer == null) {
+                return null;
+            }
+            // If the height is a percentage value, we ignore it and look for a point value.
+            if (renderer.GetProperty<UnitValue>(Property.HEIGHT) != null && renderer.GetProperty<UnitValue>(Property.HEIGHT
+                ).IsPointValue()) {
+                return renderer.GetProperty<UnitValue>(Property.HEIGHT).GetValue();
+            }
+            else {
+                if (renderer.GetModelElement() != null && renderer.GetModelElement().GetProperty<UnitValue>(Property.HEIGHT
+                    ) != null && renderer.GetModelElement().GetProperty<UnitValue>(Property.HEIGHT).IsPointValue()) {
+                    return renderer.GetModelElement().GetProperty<UnitValue>(Property.HEIGHT).GetValue();
+                }
+                else {
+                    return GetParentHeightRecursively(renderer.GetParent());
+                }
+            }
         }
 
         private static void AlignStaticKids(LineRenderer renderer, float shift, bool isVerticalWriting) {

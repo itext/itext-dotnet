@@ -714,6 +714,14 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+            if (isVerticalWriting && occupiedArea != null) {
+                // For vertical text max width is equal to min width, and it's single symbol width.
+                Rectangle innerArea = GetInnerAreaBBox();
+                countedMinMaxWidth.SetChildrenMinWidth(innerArea.GetWidth());
+                countedMinMaxWidth.SetChildrenMaxWidth(innerArea.GetWidth());
+                leftMinWidth = innerArea.GetWidth();
+                rightMinWidth = innerArea.GetWidth();
+            }
             result.SetMinMaxWidth(countedMinMaxWidth);
             if (!noSoftWrap) {
                 foreach (float dimension in leftMarginBorderPadding) {

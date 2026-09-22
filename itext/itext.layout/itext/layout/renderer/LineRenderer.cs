@@ -127,11 +127,16 @@ namespace iText.Layout.Renderer {
             int childPos = 0;
             MinMaxWidth minMaxWidth = new MinMaxWidth();
             AbstractWidthHandler widthHandler;
-            if (noSoftWrap) {
-                widthHandler = new SumSumWidthHandler(minMaxWidth);
+            if (isVerticalWriting) {
+                widthHandler = new MaxMaxWidthHandler(minMaxWidth);
             }
             else {
-                widthHandler = new MaxSumWidthHandler(minMaxWidth);
+                if (noSoftWrap) {
+                    widthHandler = new SumSumWidthHandler(minMaxWidth);
+                }
+                else {
+                    widthHandler = new MaxSumWidthHandler(minMaxWidth);
+                }
             }
             ResolveChildrenFonts();
             int totalNumberOfTrimmedGlyphs = TrimFirst();
@@ -157,6 +162,7 @@ namespace iText.Layout.Renderer {
                 IRenderer childRenderer = UnwrapChildRendererIfNeeded(directChildRenderer);
                 childWritingMode = GetWritingMode(childRenderer);
                 bool sameDirection = childWritingMode == writingMode;
+                bool childVerticalWriting = IsChildVerticallyWritten(childPos);
                 LayoutResult childResult = null;
                 Rectangle bbox;
                 if (isVerticalWriting) {
@@ -179,9 +185,9 @@ namespace iText.Layout.Renderer {
                     TextSequenceWordWrapping.ProcessSpecialScriptPreLayout(this, childPos);
                 }
                 TextSequenceWordWrapping.ResetTextSequenceIfItEnded(specialScriptLayoutResults, true, childRenderer, childPos
-                    , minMaxWidthOfTextRendererSequenceHelper, noSoftWrap, widthHandler, sameDirection);
+                    , minMaxWidthOfTextRendererSequenceHelper, noSoftWrap, widthHandler, sameDirection, isVerticalWriting);
                 TextSequenceWordWrapping.ResetTextSequenceIfItEnded(textRendererLayoutResults, false, childRenderer, childPos
-                    , minMaxWidthOfTextRendererSequenceHelper, noSoftWrap, widthHandler, sameDirection);
+                    , minMaxWidthOfTextRendererSequenceHelper, noSoftWrap, widthHandler, sameDirection, isVerticalWriting);
                 if (childRenderer is TextRenderer) {
                     // Delete these properties in case of relayout. We might have applied them during justify().
                     childRenderer.DeleteOwnProperty(Property.CHARACTER_SPACING);
@@ -355,7 +361,9 @@ namespace iText.Layout.Renderer {
                                 float childMinWidth = childBlockMinMaxWidth.GetMinWidth() + MIN_MAX_WIDTH_CORRECTION_EPS;
                                 inlineBlockWidth = Math.Max(childMinWidth, inlineBlockWidth);
                             }
-                            bbox.SetWidth(inlineBlockWidth);
+                            if (!childVerticalWriting) {
+                                bbox.SetWidth(inlineBlockWidth);
+                            }
                             if (childBlockMinMaxWidth.GetMinWidth() > bbox.GetWidth()) {
                                 LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.INLINE_BLOCK_ELEMENT_WILL_BE_CLIPPED);
                                 childRenderer.SetProperty(Property.FORCED_PLACEMENT, true);
@@ -519,7 +527,7 @@ namespace iText.Layout.Renderer {
                     if (!forceOverflowForTextRendererPartialResult) {
                         UpdateAscentDescentAfterChildLayout(childAscentDescent, childRenderer, isChildFloating);
                     }
-                    if (IsChildVerticallyWritten(childPos)) {
+                    if (childVerticalWriting) {
                         if (childResult != null && childResult.GetOccupiedArea() != null) {
                             maxHeight = Math.Max(maxHeight, childResult.GetOccupiedArea().GetBBox().GetHeight());
                         }
@@ -582,9 +590,11 @@ namespace iText.Layout.Renderer {
                                 float maxLineWidth = Math.Max(occupiedArea.GetBBox().GetWidth(), childResult.GetStatus() == LayoutResult.NOTHING
                                      ? 0 : childResult.GetOccupiedArea().GetBBox().GetWidth());
                                 // Html/css and browsers also use line height as line width for vertical text.
-                                float lineHeight = maxAscent - maxDescent;
+                                float lineHeight = Math.Max(maxAscent - maxDescent, maxLineWidth);
                                 occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox.GetHeight() - curMainAxisOccupiedSize
-                                    , Math.Max(lineHeight, maxLineWidth), curMainAxisOccupiedSize));
+                                    , lineHeight, curMainAxisOccupiedSize));
+                                widthHandler.UpdateMaxChildWidth(lineHeight);
+                                widthHandler.UpdateMinChildWidth(lineHeight);
                             }
                             else {
                                 occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox.GetHeight() - maxHeight, 
@@ -671,9 +681,9 @@ namespace iText.Layout.Renderer {
                 }
             }
             TextSequenceWordWrapping.ResetTextSequenceIfItEnded(specialScriptLayoutResults, true, null, childPos, minMaxWidthOfTextRendererSequenceHelper
-                , noSoftWrap, widthHandler, true);
+                , noSoftWrap, widthHandler, true, isVerticalWriting);
             TextSequenceWordWrapping.ResetTextSequenceIfItEnded(textRendererLayoutResults, false, null, childPos, minMaxWidthOfTextRendererSequenceHelper
-                , noSoftWrap, widthHandler, true);
+                , noSoftWrap, widthHandler, true, isVerticalWriting);
             if (result == null) {
                 bool noOverflowedFloats = floatsOverflowedToNextLine.IsEmpty() && floatsToNextPageOverflowRenderers.IsEmpty
                     ();
@@ -1252,6 +1262,13 @@ namespace iText.Layout.Renderer {
             return WritingMode.HORIZONTAL_TB;
         }
 
+        private bool IsChildVerticallyWritten(int childIndex) {
+            if (childRenderers.Count > childIndex && childRenderers[childIndex] is AbstractRenderer) {
+                return ((AbstractRenderer)childRenderers[childIndex]).IsVerticalWriting();
+            }
+            return false;
+        }
+
         private bool ChildChangingWritingDirection(int childIndex) {
             if (childRenderers.Count > childIndex + 1) {
                 if (childRenderers[childIndex] is AbstractRenderer && childRenderers[childIndex + 1] is AbstractRenderer) {
@@ -1262,15 +1279,6 @@ namespace iText.Layout.Renderer {
             }
             return false;
         }
-
-//\cond DO_NOT_DOCUMENT
-        internal virtual bool IsChildVerticallyWritten(int childIndex) {
-            if (childRenderers.Count > childIndex && childRenderers[childIndex] is AbstractRenderer) {
-                return ((AbstractRenderer)childRenderers[childIndex]).IsVerticalWriting();
-            }
-            return false;
-        }
-//\endcond
 
         private LineRenderer[] SplitNotFittingFloat(int childPos, LayoutResult childResult) {
             LineRenderer[] split = Split();
