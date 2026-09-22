@@ -96,7 +96,7 @@ namespace iText.Layout.Element {
         /// <see cref="ILeafElement"/>
         /// </param>
         /// <returns>
-        /// (T)this
+        /// this
         /// <see cref="Paragraph"/>
         /// </returns>
         public override iText.Layout.Element.Paragraph Add(ILeafElement element) {
@@ -114,7 +114,7 @@ namespace iText.Layout.Element {
         /// <see cref="IBlockElement"/>
         /// </param>
         /// <returns>
-        /// (T)this
+        /// this
         /// <see cref="Paragraph"/>
         /// </returns>
         public virtual iText.Layout.Element.Paragraph Add(IBlockElement element) {
@@ -154,12 +154,8 @@ namespace iText.Layout.Element {
         /// this
         /// <see cref="Paragraph"/>
         /// </returns>
-        public virtual iText.Layout.Element.Paragraph AddAll<T2>(IList<T2> elements)
-            where T2 : ILeafElement {
-            foreach (ILeafElement element in elements) {
-                Add(element);
-            }
-            return this;
+        public override iText.Layout.Element.Paragraph AddAll<T2>(IList<T2> elements) {
+            return base.AddAll(elements);
         }
 
         /// <summary>

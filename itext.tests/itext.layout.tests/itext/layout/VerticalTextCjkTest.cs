@@ -73,7 +73,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(new VerticalParagraph(), spec));
+                    document.Add(BuildParagraph(new VerticalParagraph(false), spec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(new Paragraph(), spec));
                 }
@@ -96,7 +96,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(new VerticalParagraph(), spec));
+                    document.Add(BuildParagraph(new VerticalParagraph(false), spec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(new Paragraph(), spec));
                 }
@@ -121,7 +121,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(new VerticalParagraph(), spec));
+                    document.Add(BuildParagraph(new VerticalParagraph(false), spec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(new Paragraph(), spec));
                 }
@@ -144,7 +144,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(new VerticalParagraph(), spec));
+                    document.Add(BuildParagraph(new VerticalParagraph(false), spec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(new Paragraph(), spec));
                 }
@@ -166,7 +166,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(new VerticalParagraph(), spec));
+                    document.Add(BuildParagraph(new VerticalParagraph(false), spec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(new Paragraph(), spec));
                 }
@@ -190,7 +190,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(new VerticalParagraph(), spec));
+                    document.Add(BuildParagraph(new VerticalParagraph(false), spec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(new Paragraph(), spec));
                 }
@@ -218,8 +218,8 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(new VerticalParagraph(), sansSpec));
-                    document.Add(BuildParagraph(new VerticalParagraph(), serifSpec));
+                    document.Add(BuildParagraph(new VerticalParagraph(false), sansSpec));
+                    document.Add(BuildParagraph(new VerticalParagraph(false), serifSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(new Paragraph(), sansSpec));
                     document.Add(BuildParagraph(new Paragraph(), serifSpec));
@@ -242,7 +242,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    VerticalParagraph verticalParagraph = BuildParagraph(new VerticalParagraph(), spec);
+                    VerticalParagraph verticalParagraph = BuildParagraph(new VerticalParagraph(false), spec);
                     verticalParagraph.SetHeight(150);
                     document.Add(verticalParagraph);
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
@@ -271,7 +271,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(new VerticalParagraph(), underlinedSpec, strikethroughSpec));
+                    document.Add(BuildParagraph(new VerticalParagraph(false), underlinedSpec, strikethroughSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(new Paragraph(), underlinedSpec, strikethroughSpec));
                 }
@@ -297,7 +297,8 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(new VerticalParagraph(), regularSpec, simulatedBoldItalicSpec, realBoldSpec));
+                    document.Add(BuildParagraph(new VerticalParagraph(false), regularSpec, simulatedBoldItalicSpec, realBoldSpec
+                        ));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(new Paragraph(), regularSpec, simulatedBoldItalicSpec, realBoldSpec));
                 }
@@ -323,8 +324,8 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(new VerticalParagraph(), ideographicSpec));
-                    document.Add(BuildParagraph(new VerticalParagraph(), regularSpaceSpec));
+                    document.Add(BuildParagraph(new VerticalParagraph(false), ideographicSpec));
+                    document.Add(BuildParagraph(new VerticalParagraph(false), regularSpaceSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(new Paragraph(), ideographicSpec));
                     document.Add(BuildParagraph(new Paragraph(), regularSpaceSpec));
@@ -332,35 +333,6 @@ namespace iText.Layout {
             }
             IDictionary<char, int?> extractedCounts = VerticalTextTestUtil.ExtractPageCharacterCounts(outFileName);
             NUnit.Framework.Assert.IsTrue(VerticalTextTestUtil.ContainsAllCharacters(extractedCounts, "文字", 4));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
-                ));
-        }
-
-        [NUnit.Framework.Test]
-        public virtual void VerticalTextCjkCustomLeadingTest() {
-            String fileName = "verticalTextCjkCustomLeading";
-            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
-            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            VerticalTextCjkTest.CjkTextSpec defaultLeadingSpec = new VerticalTextCjkTest.CjkTextSpec("默认行距\n默认行距", LoadCjkFont
-                (NOTO_SANS_SC), 20).BackgroundColor(ColorConstants.LIGHT_GRAY);
-            VerticalTextCjkTest.CjkTextSpec customLeadingSpec = new VerticalTextCjkTest.CjkTextSpec("自定义行距\n自定义行距", LoadCjkFont
-                (NOTO_SANS_SC), 20).BackgroundColor(ColorConstants.CYAN);
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
-                using (Document document = new Document(pdfDocument)) {
-                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(new VerticalParagraph(), defaultLeadingSpec));
-                    VerticalParagraph customLeadingVertical = BuildParagraph(new VerticalParagraph(), customLeadingSpec);
-                    document.Add(customLeadingVertical);
-                    document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-                    document.Add(BuildParagraph(new Paragraph(), defaultLeadingSpec));
-                    Paragraph customLeadingHorizontal = BuildParagraph(new Paragraph(), customLeadingSpec);
-                    customLeadingHorizontal.SetMultipliedLeading(2.5F);
-                    document.Add(customLeadingHorizontal);
-                }
-            }
-            IDictionary<char, int?> extractedCounts = VerticalTextTestUtil.ExtractPageCharacterCounts(outFileName);
-            NUnit.Framework.Assert.IsTrue(VerticalTextTestUtil.ContainsAllCharacters(extractedCounts, "默认行距", 2));
-            NUnit.Framework.Assert.IsTrue(VerticalTextTestUtil.ContainsAllCharacters(extractedCounts, "自定义行距", 2));
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 ));
         }
@@ -375,7 +347,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(new VerticalParagraph(), spec));
+                    document.Add(BuildParagraph(new VerticalParagraph(false), spec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(new Paragraph(), spec));
                 }

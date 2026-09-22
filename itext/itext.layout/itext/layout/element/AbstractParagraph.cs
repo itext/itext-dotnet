@@ -1,3 +1,25 @@
+/*
+This file is part of the iText (R) project.
+Copyright (c) 1998-2026 Apryse Group NV
+Authors: Apryse Software.
+
+This program is offered under a commercial and under the AGPL license.
+For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
+
+AGPL licensing:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 using System;
 using System.Collections.Generic;
 using iText.Commons.Internal.Runtime;
@@ -32,7 +54,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Adds a piece of text to this
-        /// <see cref="Paragraph"/>.
+        /// <see cref="AbstractParagraph{T}"/>.
         /// </summary>
         /// <param name="text">
         /// the content to be added, as a
@@ -45,9 +67,9 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Adds a
-        /// <see cref="ILeafElement">element</see>
-        /// to this
-        /// <see cref="Paragraph"/>.
+        /// <see cref="ILeafElement"/>
+        /// element to this
+        /// <see cref="AbstractParagraph{T}"/>.
         /// </summary>
         /// <param name="element">
         /// the content to be added, any
@@ -61,25 +83,48 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Adds a
-        /// <see cref="Paragraph">element</see>.
+        /// <see cref="AbstractParagraph{T}"/>
+        /// element.
         /// </summary>
         /// <param name="element">
         /// the content to be added, any
-        /// <see cref="Paragraph"/>
+        /// <see cref="AbstractParagraph{T}"/>
         /// </param>
         /// <returns>this Element</returns>
-        public virtual T Add(Paragraph element) {
+        public virtual T Add(iText.Layout.Element.AbstractParagraph element) {
             childElements.Add(element);
             return (T)this;
         }
 
         /// <summary>
+        /// Adds a
+        /// <see cref="System.Collections.IList{E}"/>
+        /// of layout elements to this
+        /// <see cref="AbstractParagraph{T}"/>.
+        /// </summary>
+        /// <param name="elements">the content to be added</param>
+        /// <typeparam name="T2">
+        /// any
+        /// <see cref="ILeafElement"/>
+        /// </typeparam>
+        /// <returns>this Element</returns>
+        public virtual T AddAll<T2>(IList<T2> elements)
+            where T2 : ILeafElement {
+            foreach (ILeafElement element in elements) {
+                Add(element);
+            }
+            return (T)this;
+        }
+
+        /// <summary>
         /// Sets the indent value for the first line of the
-        /// <see cref="Paragraph"/>.
+        /// <see cref="AbstractParagraph{T}"/>.
         /// </summary>
         /// <param name="indent">
         /// the indent value that must be applied to the first line of
-        /// the Paragraph, as a <c>float</c>
+        /// the
+        /// <see cref="AbstractParagraph{T}"/>
+        /// , as a <c>float</c>
         /// </param>
         /// <returns>this Element</returns>
         public virtual T SetFirstLineIndent(float indent) {
@@ -115,7 +160,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Sets orphans restriction on a
-        /// <see cref="Paragraph"/>.
+        /// <see cref="AbstractParagraph{T}"/>.
         /// </summary>
         /// <param name="orphansControl">
         /// an instance of
@@ -129,7 +174,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Sets widows restriction on a
-        /// <see cref="Paragraph"/>.
+        /// <see cref="AbstractParagraph{T}"/>.
         /// </summary>
         /// <param name="widowsControl">
         /// an instance of

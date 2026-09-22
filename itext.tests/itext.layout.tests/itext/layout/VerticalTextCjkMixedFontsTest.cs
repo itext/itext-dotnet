@@ -74,7 +74,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(new VerticalParagraph(), chineseSpec, japaneseSpec, koreanSpec));
+                    document.Add(BuildParagraph(new VerticalParagraph(false), chineseSpec, japaneseSpec, koreanSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(new Paragraph(), chineseSpec, japaneseSpec, koreanSpec));
                 }
@@ -100,7 +100,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(new VerticalParagraph(), chineseSpec, latinSpec));
+                    document.Add(BuildParagraph(new VerticalParagraph(false), chineseSpec, latinSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(new Paragraph(), chineseSpec, latinSpec));
                 }
@@ -124,7 +124,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(new VerticalParagraph(), mongolianSpec, chineseSpec));
+                    document.Add(BuildParagraph(new VerticalParagraph(false), mongolianSpec, chineseSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(new Paragraph(), mongolianSpec, chineseSpec));
                 }
@@ -153,8 +153,8 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(new VerticalParagraph(), chineseSpec, japaneseSpec, koreanSpec, mongolianSpec)
-                        );
+                    document.Add(BuildParagraph(new VerticalParagraph(false), chineseSpec, japaneseSpec, koreanSpec, mongolianSpec
+                        ));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(new Paragraph(), chineseSpec, japaneseSpec, koreanSpec, mongolianSpec));
                 }
@@ -182,7 +182,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(new VerticalParagraph(), smallSpec, mediumSpec, largeSpec));
+                    document.Add(BuildParagraph(new VerticalParagraph(false), smallSpec, mediumSpec, largeSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(new Paragraph(), smallSpec, mediumSpec, largeSpec));
                 }
@@ -207,7 +207,7 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    document.Add(BuildParagraph(new VerticalParagraph(), simplifiedSpec, traditionalSpec));
+                    document.Add(BuildParagraph(new VerticalParagraph(false), simplifiedSpec, traditionalSpec));
                     document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     document.Add(BuildParagraph(new Paragraph(), simplifiedSpec, traditionalSpec));
                 }

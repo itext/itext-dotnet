@@ -11,18 +11,18 @@ namespace iText.Layout.Element {
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.UNSUPPORTED_PROPERTY, LogLevel = LogLevelConstants.WARN, Count = 2)]
         public virtual void SettingUnsupportedPropertiesMustLogWarning() {
-            VerticalParagraph verticalParagraph = new VerticalParagraph();
+            VerticalParagraph verticalParagraph = new VerticalParagraph(false);
             Leading original = verticalParagraph.GetProperty<Leading>(Property.LEADING);
             verticalParagraph.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
             verticalParagraph.SetProperty(Property.LEADING, new Leading(Leading.MULTIPLIED, 3f));
-            //keep sonar happy; the real test is through the log messages, so we just assert true here
+            // Keep sonar happy; the real test is through the log messages, so we just assert true here.
             NUnit.Framework.Assert.AreEqual(original, verticalParagraph.GetProperty<Leading>(Property.LEADING));
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.UNSUPPORTED_PROPERTY, LogLevel = LogLevelConstants.WARN, Count = 1)]
+        [LogMessage(LayoutLogMessageConstant.UNSUPPORTED_PROPERTY, LogLevel = LogLevelConstants.WARN)]
         public virtual void UnsupportedInheritedPropertiesMustLogWarning() {
-            VerticalParagraph verticalParagraph = new VerticalParagraph();
+            VerticalParagraph verticalParagraph = new VerticalParagraph(false);
             VerticalParagraphTest.TestRenderer parentRenderer = new VerticalParagraphTest.TestRenderer();
             parentRenderer.SetProperty(Property.LEADING, new Leading(Leading.MULTIPLIED, 3f));
             parentRenderer.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);

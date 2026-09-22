@@ -55,11 +55,7 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    Paragraph paragraph = new Paragraph();
-                    paragraph.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_RL);
-                    paragraph.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
-                    paragraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+                    VerticalParagraph paragraph = new VerticalParagraph(true);
                     paragraph.SetHeight(300).SetFontSize(16).SetBorder(new SolidBorder(1));
                     if (width != 0F) {
                         paragraph.SetWidth((float)width);
@@ -79,12 +75,8 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     document.Add(new Div().SetHeight(600));
-                    Paragraph paragraph = new Paragraph();
-                    paragraph.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_RL);
-                    paragraph.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
-                    paragraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+                    VerticalParagraph paragraph = new VerticalParagraph(true);
                     paragraph.SetHeight(300).SetWidth(80).SetFontSize(16).SetBorder(new SolidBorder(1)).SetBackgroundColor(ColorConstants
                         .YELLOW);
                     paragraph.Add(new Text("The quick brown fox jumps over the lazy dog. 1234567890 ABCDEFG abcdefg."));
@@ -102,11 +94,7 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
-                    Paragraph paragraph = new Paragraph();
-                    paragraph.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_RL);
-                    paragraph.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
-                    paragraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
+                    VerticalParagraph paragraph = new VerticalParagraph(true);
                     paragraph.SetProperty(Property.BASE_DIRECTION, BaseDirection.RIGHT_TO_LEFT);
                     paragraph.SetProperty(Property.TEXT_ALIGNMENT, TextAlignment.RIGHT);
                     paragraph.SetHeight(300).SetFontSize(16).SetBorder(new SolidBorder(1)).SetBackgroundColor(ColorConstants.YELLOW
@@ -126,7 +114,6 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     Paragraph paragraph = new Paragraph();
                     paragraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
                     paragraph.SetHeight(300).SetFontSize(16).SetBorder(new SolidBorder(1));
@@ -167,6 +154,48 @@ namespace iText.Layout {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FloatWithVerticalRlTextTest() {
+            // Float + vertical-rl writing mode is not supported.
+            String fileName = "floatWithVerticalRlText";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    // Create a floated DIV
+                    Div floatedDiv = new Div().SetWidth(200).SetHeight(200).SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetBorder
+                        (new SolidBorder(ColorConstants.BLACK, 1)).Add(new Paragraph("Floated\nElement"));
+                    floatedDiv.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
+                    document.Add(floatedDiv);
+                    // Add paragraph between the floated elements
+                    Paragraph normalParagraph = new Paragraph("Normal text added after right floated div, " + "but before the next left floated div."
+                        );
+                    document.Add(normalParagraph);
+                    floatedDiv.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
+                    document.Add(floatedDiv);
+                    // Add another paragraph after the floated elements.
+                    normalParagraph = new Paragraph("Normal text added after vertical paragraphs and divs.");
+                    document.Add(normalParagraph);
+                    document.Add(new VerticalTextRTLTest.CustomVerticalParagraph("This is a vertical paragraph with a lot of text to "
+                         + "demonstrate how it interacts with floated elements. It should wrap around the floated elements " +
+                         "and continue on the next line if necessary. " + "The quick brown fox jumps over the lazy dog. 1234567890 ABCDEFG abcdefg."
+                        , true).SetHeight(300));
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
+        }
+
+        private class CustomVerticalParagraph : VerticalParagraph {
+            public CustomVerticalParagraph(String text, bool rightToLeftProgression)
+                : base(text, rightToLeftProgression) {
+            }
+
+            public override IDictionary<int, String> GetUnsupportedProperties() {
+                return JavaCollectionsUtil.EmptyMap<int, String>();
+            }
         }
     }
 }

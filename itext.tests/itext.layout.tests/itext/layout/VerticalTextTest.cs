@@ -59,7 +59,7 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    VerticalParagraph paragraph = new VerticalParagraph();
+                    VerticalParagraph paragraph = new VerticalParagraph(false);
                     paragraph.Add(new Text("some text"));
                     document.Add(paragraph);
                 }
@@ -75,8 +75,8 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    VerticalParagraph paragraph = new VerticalParagraph();
-                    paragraph.Add(new Text("some text"));
+                    VerticalParagraph paragraph = new VerticalParagraph(false);
+                    paragraph.Add(new Text("some text line 1\nsome text line 2"));
                     paragraph.SetFirstLineIndent(20F);
                     document.Add(paragraph);
                 }
@@ -92,7 +92,7 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    VerticalParagraph paragraph = new VerticalParagraph();
+                    VerticalParagraph paragraph = new VerticalParagraph(false);
                     Text text1 = new Text("some text in courier font.\nFont size is 25.\n");
                     PdfFont courier = PdfFontFactory.CreateFont(StandardFonts.COURIER);
                     text1.SetFont(courier);
@@ -117,7 +117,7 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    VerticalParagraph paragraph = new VerticalParagraph();
+                    VerticalParagraph paragraph = new VerticalParagraph(false);
                     Text text1 = new Text("some text in courier font. Font size is 25.");
                     PdfFont courier = PdfFontFactory.CreateFont(StandardFonts.COURIER);
                     text1.SetFont(courier);
@@ -150,7 +150,7 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    VerticalParagraph paragraph = new VerticalParagraph();
+                    VerticalParagraph paragraph = new VerticalParagraph(false);
                     paragraph.Add(new Text("first text chunk "));
                     paragraph.Add(new Text("second text chunk "));
                     paragraph.Add(new Text("third text chunk "));
@@ -168,7 +168,7 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    VerticalParagraph paragraph = new VerticalParagraph();
+                    VerticalParagraph paragraph = new VerticalParagraph(false);
                     paragraph.Add(new Text("some long vertical text to trigger multiple line breaks. Font size will be also " 
                         + "increased to make it easier."));
                     paragraph.SetFontSize(25);
@@ -186,7 +186,7 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    VerticalParagraph paragraph = new VerticalParagraph();
+                    VerticalParagraph paragraph = new VerticalParagraph(false);
                     paragraph.Add(new Text("some long vertical text\nto trigger multiple line breaks.\nFont size will be " + "also increased\nto make it easier."
                         ));
                     paragraph.SetFontSize(25);
@@ -205,7 +205,7 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    VerticalParagraph paragraph = new VerticalParagraph();
+                    VerticalParagraph paragraph = new VerticalParagraph(false);
                     paragraph.Add(new Text("some long vertical\ntext to trigger multiple line breaks.\nFont size will be " + "also increased to make it easier.\n"
                         ));
                     paragraph.Add(new Text("Additional chunk of text,\n to trigger page break.\n" + "Font size increased even further."
@@ -277,7 +277,9 @@ namespace iText.Layout {
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     document.Add(new Paragraph("Long word, first line and first word:"));
-                    VerticalParagraph paragraph = new VerticalParagraph();
+                    VerticalParagraph paragraph = new VerticalParagraph(false);
+                    paragraph.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.FIT);
+                    paragraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
                     Text longWordText = new Text("Tooooooooolongword");
                     longWordText.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
                     paragraph.SetBorder(new SolidBorder(1));
@@ -286,7 +288,9 @@ namespace iText.Layout {
                     paragraph.Add(" and usual words length now");
                     document.Add(paragraph);
                     document.Add(new Paragraph("Long word, first line and not first word:"));
-                    paragraph = new VerticalParagraph();
+                    paragraph = new VerticalParagraph(false);
+                    paragraph.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.FIT);
+                    paragraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
                     longWordText = new Text("Tooooooooolongword");
                     longWordText.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
                     paragraph.SetBorder(new SolidBorder(1));
@@ -296,7 +300,9 @@ namespace iText.Layout {
                     paragraph.Add(" and usual words length now");
                     document.Add(paragraph);
                     document.Add(new Paragraph("Long word, not first line:"));
-                    paragraph = new VerticalParagraph();
+                    paragraph = new VerticalParagraph(false);
+                    paragraph.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.FIT);
+                    paragraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
                     longWordText = new Text("Tooooooooolongword");
                     longWordText.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
                     paragraph.SetBorder(new SolidBorder(1));
@@ -312,14 +318,15 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 2)]
         public virtual void VerticalTextWithMaxHeightWidthParagraphTest() {
             String fileName = "verticalTextWithMaxHeightParagraph";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    VerticalParagraph paragraph = new VerticalParagraph();
+                    VerticalParagraph paragraph = new VerticalParagraph(false);
+                    paragraph.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.HIDDEN);
+                    paragraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.HIDDEN);
                     Text longText = new Text("Pretty long text example is provided here, " + "especially given its font-size is set to bigger value"
                         );
                     longText.SetFontSize(32);
@@ -349,7 +356,9 @@ namespace iText.Layout {
                     Text whitespacesRiddenText = new Text("     Hello     \n \n World    \n        \n  ").SetBackgroundColor(ColorConstants
                         .LIGHT_GRAY);
                     Text threeMSpaceWrappedText = new Text(" MMM ").SetBackgroundColor(ColorConstants.LIGHT_GRAY);
-                    VerticalParagraph vParagraph = new VerticalParagraph();
+                    VerticalParagraph vParagraph = new VerticalParagraph(false);
+                    vParagraph.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.FIT);
+                    vParagraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
                     vParagraph.SetBorder(new SolidBorder(1));
                     vParagraph.Add(whitespacesRiddenText);
                     vParagraph.Add(normalText);
@@ -359,7 +368,9 @@ namespace iText.Layout {
                     hParagraph.Add(whitespacesRiddenText);
                     hParagraph.Add(normalText);
                     document.Add(hParagraph);
-                    vParagraph = new VerticalParagraph();
+                    vParagraph = new VerticalParagraph(false);
+                    vParagraph.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.FIT);
+                    vParagraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
                     vParagraph.SetBorder(new SolidBorder(1));
                     // fine-tune height to fit threeMSpaceWrappedText characters
                     vParagraph.SetFontSize(12);
@@ -404,7 +415,7 @@ namespace iText.Layout {
                     textDown.SetTextRise(-10f);
                     textDown.SetLineThrough();
                     textDown.SetFontColor(ColorConstants.RED);
-                    VerticalParagraph n = new VerticalParagraph("baseline");
+                    VerticalParagraph n = new VerticalParagraph("baseline", false);
                     n.Add(textUp).Add(textDown);
                     document.Add(n);
                 }
@@ -588,6 +599,7 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
                     Div div = new Div();
                     div.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
                     div.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
@@ -700,8 +712,8 @@ namespace iText.Layout {
                     PdfFont bioRhyme = PdfFontFactory.CreateFont(EXPANDED_FONT);
                     div.SetFont(bioRhyme);
                     div.SetProperty(Property.LINE_HEIGHT, LineHeight.CreateMultipliedValue(2));
-                    VerticalParagraph paragraph1 = new VerticalParagraph().SetBackgroundColor(new DeviceRgb(210, 250, 179)).SetBorder
-                        (new SolidBorder(new DeviceRgb(0, 128, 0), 1));
+                    VerticalParagraph paragraph1 = new VerticalParagraph(false).SetBackgroundColor(new DeviceRgb(210, 250, 179
+                        )).SetBorder(new SolidBorder(new DeviceRgb(0, 128, 0), 1));
                     Paragraph paragraph2 = new Paragraph().SetBackgroundColor(new DeviceRgb(210, 250, 179)).SetBorder(new SolidBorder
                         (new DeviceRgb(0, 128, 0), 1));
                     paragraph2.SetProperty(Property.WRITING_MODE, WritingMode.HORIZONTAL_TB);
@@ -733,7 +745,7 @@ namespace iText.Layout {
                 using (Document document = new Document(pdfDocument)) {
  {
                         Paragraph title = new Paragraph("VerticalParagraph with 2 paragraph children").SetFontSize(20);
-                        VerticalParagraph paragraph = new VerticalParagraph();
+                        VerticalParagraph paragraph = new VerticalParagraph(false);
                         paragraph.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
                         paragraph.Add(new Paragraph("First child paragraph").SetBackgroundColor(ColorConstants.GREEN));
                         paragraph.Add(new Paragraph("Second child paragraph").SetBackgroundColor(ColorConstants.ORANGE));
@@ -744,7 +756,7 @@ namespace iText.Layout {
  {
                         Paragraph title = new Paragraph("VerticalParagraph with 1 paragraph child containing divs").SetFontSize(20
                             );
-                        VerticalParagraph paragraph = new VerticalParagraph();
+                        VerticalParagraph paragraph = new VerticalParagraph(false);
                         paragraph.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
                         Paragraph child = new Paragraph().SetBackgroundColor(ColorConstants.GREEN);
                         child.Add(new Div().SetBackgroundColor(ColorConstants.YELLOW).Add(new Paragraph("Child 1")));
@@ -756,7 +768,7 @@ namespace iText.Layout {
                     document.Add(new AreaBreak());
  {
                         Paragraph title = new Paragraph("VerticalParagraph with 1 image").SetFontSize(20);
-                        VerticalParagraph paragraph = new VerticalParagraph("Vertical paragraph");
+                        VerticalParagraph paragraph = new VerticalParagraph("Vertical paragraph", false);
                         paragraph.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
                         paragraph.Add(img);
                         document.Add(title);
@@ -766,7 +778,7 @@ namespace iText.Layout {
  {
                         Paragraph title = new Paragraph("VerticalParagraph with 1 paragraph child containing image").SetFontSize(20
                             );
-                        VerticalParagraph paragraph = new VerticalParagraph();
+                        VerticalParagraph paragraph = new VerticalParagraph(false);
                         paragraph.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
                         Paragraph child = new Paragraph().SetBackgroundColor(ColorConstants.GREEN);
                         child.Add(new Div().SetBackgroundColor(ColorConstants.YELLOW).Add(new Paragraph("Child 1")));
@@ -788,7 +800,7 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    VerticalParagraph paragraph = new VerticalParagraph();
+                    VerticalParagraph paragraph = new VerticalParagraph(false);
                     paragraph.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
                     paragraph.SetHeight(500);
                     Text wordSpacing30 = new Text("word-spacing 30pt with line\nbreak.\n\n\n");
@@ -817,7 +829,7 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    VerticalParagraph paragraph = new VerticalParagraph();
+                    VerticalParagraph paragraph = new VerticalParagraph(false);
                     paragraph.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
                     paragraph.SetHeight(500);
                     Text characterSpacing30 = new Text("character-spacing 30pt with line\nbreak.\n\n\n");
@@ -847,7 +859,9 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    VerticalParagraph paragraph = new VerticalParagraph();
+                    VerticalParagraph paragraph = new VerticalParagraph(false);
+                    paragraph.SetProperty(Property.OVERFLOW_Y, OverflowPropertyValue.FIT);
+                    paragraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.FIT);
                     paragraph.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
                     paragraph.SetHeight(500);
                     paragraph.SetPaddingTop(400);
@@ -884,7 +898,7 @@ namespace iText.Layout {
                     alignedText2.SetBackgroundColor(ColorConstants.ORANGE);
                     Text alignedText3 = new Text("text to be aligned with line\nbreak.");
                     alignedText3.SetBackgroundColor(ColorConstants.RED);
-                    VerticalParagraph paragraph0 = new VerticalParagraph();
+                    VerticalParagraph paragraph0 = new VerticalParagraph(false);
                     paragraph0.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
                     paragraph0.SetTextAlignment(TextAlignment.LEFT);
                     paragraph0.SetHeight(700);
@@ -893,7 +907,7 @@ namespace iText.Layout {
                     paragraph0.Add(alignedText2);
                     paragraph0.Add(alignedText3);
                     container.Add(paragraph0);
-                    VerticalParagraph paragraph1 = new VerticalParagraph();
+                    VerticalParagraph paragraph1 = new VerticalParagraph(false);
                     paragraph1.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
                     paragraph1.SetHeight(700);
                     paragraph1.SetTextAlignment(TextAlignment.JUSTIFIED_ALL);
@@ -904,7 +918,7 @@ namespace iText.Layout {
                     paragraph1.Add(alignedText2);
                     paragraph1.Add(alignedText3);
                     container.Add(paragraph1);
-                    VerticalParagraph paragraph2 = new VerticalParagraph();
+                    VerticalParagraph paragraph2 = new VerticalParagraph(false);
                     paragraph2.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
                     paragraph2.SetHeight(700);
                     paragraph2.SetTextAlignment(TextAlignment.JUSTIFIED_ALL);
@@ -914,7 +928,7 @@ namespace iText.Layout {
                     paragraph2.Add(alignedText2);
                     paragraph2.Add(alignedText3);
                     container.Add(paragraph2);
-                    VerticalParagraph paragraph3 = new VerticalParagraph();
+                    VerticalParagraph paragraph3 = new VerticalParagraph(false);
                     paragraph3.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
                     paragraph3.SetHeight(700);
                     paragraph3.SetTextAlignment(TextAlignment.JUSTIFIED_ALL);
@@ -946,7 +960,7 @@ namespace iText.Layout {
                     alignedText2.SetBackgroundColor(ColorConstants.ORANGE);
                     Text alignedText3 = new Text("text to be aligned with line\nbreak.");
                     alignedText3.SetBackgroundColor(ColorConstants.RED);
-                    VerticalParagraph paragraph0 = new VerticalParagraph();
+                    VerticalParagraph paragraph0 = new VerticalParagraph(false);
                     paragraph0.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
                     paragraph0.SetTextAlignment(TextAlignment.LEFT);
                     paragraph0.SetHeight(700);
@@ -955,7 +969,7 @@ namespace iText.Layout {
                     paragraph0.Add(alignedText2);
                     paragraph0.Add(alignedText3);
                     container.Add(paragraph0);
-                    VerticalParagraph paragraph1 = new VerticalParagraph();
+                    VerticalParagraph paragraph1 = new VerticalParagraph(false);
                     paragraph1.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
                     paragraph1.SetHeight(700);
                     paragraph1.SetTextAlignment(TextAlignment.CENTER);
@@ -964,7 +978,7 @@ namespace iText.Layout {
                     paragraph1.Add(alignedText2);
                     paragraph1.Add(alignedText3);
                     container.Add(paragraph1);
-                    VerticalParagraph paragraph2 = new VerticalParagraph();
+                    VerticalParagraph paragraph2 = new VerticalParagraph(false);
                     paragraph2.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
                     paragraph2.SetHeight(700);
                     paragraph2.SetTextAlignment(TextAlignment.RIGHT);
@@ -973,7 +987,7 @@ namespace iText.Layout {
                     paragraph2.Add(alignedText2);
                     paragraph2.Add(alignedText3);
                     container.Add(paragraph2);
-                    VerticalParagraph paragraph3 = new VerticalParagraph();
+                    VerticalParagraph paragraph3 = new VerticalParagraph(false);
                     paragraph3.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
                     paragraph3.SetHeight(700);
                     paragraph3.SetTextAlignment(TextAlignment.JUSTIFIED_ALL);
@@ -996,7 +1010,7 @@ namespace iText.Layout {
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
-                    VerticalParagraph paragraph = new VerticalParagraph();
+                    VerticalParagraph paragraph = new VerticalParagraph(false);
                     paragraph.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
                     paragraph.SetHeight(500);
                     paragraph.SetTextAlignment(alignment);
