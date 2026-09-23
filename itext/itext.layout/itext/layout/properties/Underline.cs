@@ -53,6 +53,10 @@ namespace iText.Layout.Properties {
 
         private float dashPhase = 0f;
 
+        private float? xPosition;
+
+        private float xPositionMul;
+
         /// <summary>Creates an Underline.</summary>
         /// <remarks>
         /// Creates an Underline. Both thickness and vertical positioning under
@@ -149,6 +153,35 @@ namespace iText.Layout.Properties {
         /// <returns>the y-position, as a <c>float</c>, in points</returns>
         public virtual float GetYPosition(float fontSize) {
             return yPosition + yPositionMul * fontSize;
+        }
+
+        /// <summary>Gets the horizontal position of the decoration for vertical writing.</summary>
+        /// <remarks>
+        /// Gets the horizontal position of the decoration for vertical writing.
+        /// Unless explicitly set, the position uses the same fixed and variable components as
+        /// <see cref="GetYPosition(float)"/>.
+        /// </remarks>
+        /// <param name="textWidth">the width of the text area used to calculate the variable position</param>
+        /// <returns>the distance in points from the left edge of the text area</returns>
+        public virtual float GetXPosition(float textWidth) {
+            return xPosition == null ? GetYPosition(textWidth) : (float)xPosition + xPositionMul * textWidth;
+        }
+
+        /// <summary>
+        /// Sets the horizontal position of the decoration for vertical writing without changing its horizontal-writing
+        /// position.
+        /// </summary>
+        /// <param name="xPosition">the fixed component of the position in points</param>
+        /// <param name="xPositionMul">the position multiplier relative to the width of the text area</param>
+        /// <returns>
+        /// this
+        /// <see cref="Underline"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Layout.Properties.Underline SetXPosition(float xPosition, float xPositionMul) {
+            this.xPosition = xPosition;
+            this.xPositionMul = xPositionMul;
+            return this;
         }
 
         /// <summary>Gets the multiplier for the vertical positioning of the text underline.</summary>

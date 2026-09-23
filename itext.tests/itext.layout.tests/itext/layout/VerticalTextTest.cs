@@ -402,13 +402,12 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void LineThroughWithTextRiseTest() {
-            // TODO DEVSIX-10180 Support text rise in html mode for vertical text
             String outFileName = DESTINATION_FOLDER + "lineThroughWithTextRise.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_lineThroughWithTextRise.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     Text textUp = new Text("textRise10f_with_lineThrough");
-                    textUp.SetTextRise(-10f);
+                    textUp.SetTextRise(10f);
                     textUp.SetLineThrough();
                     textUp.SetFontColor(ColorConstants.GREEN);
                     Text textDown = new Text("textRise-10f_with_lineThrough");
@@ -426,7 +425,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void UnderlineTest() {
-            // TODO DEVSIX-10180 fix underline positioning
             String outFileName = DESTINATION_FOLDER + "underline.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_underline.pdf";
             using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
@@ -440,8 +438,9 @@ namespace iText.Layout {
                     Paragraph p = new Paragraph("Yellow text with pink stroked dashed underline.").SetFontSize(45).SetFontColor
                         (ColorConstants.YELLOW).SetUnderline(underline).SetBorder(new SolidBorder(ColorConstants.RED, 1));
                     TransparentColor strokeColor = new TransparentColor(ColorConstants.GREEN, 0.5f);
+                    // Center the line-through across vertical text, independently of its horizontal baseline offset.
                     Underline underline2 = new Underline(ColorConstants.DARK_GRAY, 0, 0.1f, 0, 0.3f, PdfCanvasConstants.LineCapStyle
-                        .BUTT).SetStrokeWidth(1).SetStrokeColor(strokeColor);
+                        .BUTT).SetXPosition(0, 0.5f).SetStrokeWidth(1).SetStrokeColor(strokeColor);
                     Paragraph p2 = new Paragraph("Text with line-through and default underline.").SetFontSize(50).SetStrokeWidth
                         (1).SetFontColor(ColorConstants.DARK_GRAY).SetStrokeColor(strokeColor).SetUnderline(underline2).SetUnderline
                         ().SetBorder(new SolidBorder(ColorConstants.RED, 1));
@@ -593,7 +592,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void VerticalAlignTextRiseTest() {
-            // TODO DEVSIX-10180 Support text rise in html mode for vertical text
             String fileName = "verticalAlignTextRise";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";

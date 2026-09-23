@@ -26,6 +26,7 @@ using System.Linq;
 using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
+using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
@@ -55,7 +56,7 @@ namespace iText.Layout.Renderer {
         }
 
 //\cond DO_NOT_DOCUMENT
-        internal static void AdjustChildrenXLineVerticalText(LineRenderer lineRenderer) {
+        internal static void AdjustChildrenXLineVerticalText(LineRenderer lineRenderer, MinMaxWidth minMaxWidth) {
             float baseline = lineRenderer.occupiedArea.GetBBox().GetX() + lineRenderer.occupiedArea.GetBBox().GetWidth
                 () / 2;
             float[] fontInfo = LineHeightHelper.GetActualFontInfo(lineRenderer);
@@ -63,8 +64,8 @@ namespace iText.Layout.Renderer {
                  fontInfo[LineHeightHelper.LEADING_INDEX];
             float textLeft = baseline - fontWidth / 2;
             float textRight = baseline + fontWidth / 2;
-            float maxRight = float.Epsilon;
-            float minLeft = float.MaxValue;
+            float maxRight = baseline + fontWidth / 2;
+            float minLeft = baseline - fontWidth / 2;
             foreach (IRenderer renderer in lineRenderer.GetChildRenderers()) {
                 if (FloatingHelper.IsRendererFloating(renderer)) {
                     continue;
@@ -77,6 +78,13 @@ namespace iText.Layout.Renderer {
                 Rectangle childBBox = GetAdjustedArea(renderer);
                 Rectangle parentBBox = lineRenderer.occupiedArea.GetBBox().Clone();
                 float offset = CalculateOffsetVerticalText(childBBox, alignment, parentBBox, textLeft, textRight);
+                IRenderer unwrappedRenderer = renderer is FootnoteAnchorRenderer ? ((FootnoteAnchorRenderer)renderer).footnoteAnchor
+                     : renderer;
+                float? textRise = unwrappedRenderer.GetProperty<float?>(Property.TEXT_RISE);
+                if (textRise == null) {
+                    textRise = 0F;
+                }
+                offset += (float)textRise;
                 if (Math.Abs(offset) > ADJUSTMENT_THRESHOLD) {
                     renderer.Move(offset, 0);
                 }
@@ -84,7 +92,7 @@ namespace iText.Layout.Renderer {
                 maxRight = Math.Max(maxRight, cBbox.GetRight());
                 minLeft = Math.Min(minLeft, cBbox.GetLeft());
             }
-            AdjustBBoxVertical(lineRenderer, maxRight, minLeft);
+            AdjustBBoxVertical(lineRenderer, maxRight, minLeft, minMaxWidth);
         }
 //\endcond
 
@@ -144,8 +152,12 @@ namespace iText.Layout.Renderer {
 
         private static Rectangle GetAdjustedArea(IRenderer renderer) {
             Rectangle rect = renderer.GetOccupiedArea().GetBBox().Clone();
-            if (renderer is AbstractRenderer && !(renderer is BlockRenderer) && !renderer.HasProperty(Property.INLINE_VERTICAL_ALIGNMENT
-                )) {
+            // Vertical writing uses the full occupied width, including borders and padding, to size the line.
+            // Stripping them here would underestimate its left/right extents after an x-axis shift (e.g. text rise),
+            // leaving part of the child's box outside the line even with the default baseline alignment.
+            // See textRiseWithBorderAndPaddingTest.
+            if (renderer is AbstractRenderer && !(renderer is BlockRenderer) && !((AbstractRenderer)renderer).IsVerticalWriting
+                () && !renderer.HasProperty(Property.INLINE_VERTICAL_ALIGNMENT)) {
                 AbstractRenderer ar = (AbstractRenderer)renderer;
                 ar.ApplyBorderBox(rect, false);
                 ar.ApplyPaddings(rect, false);
@@ -202,14 +214,18 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private static void AdjustBBoxVertical(LineRenderer lineRenderer, float maxRight, float minLeft) {
-            float originalRight = lineRenderer.occupiedArea.GetBBox().GetRight();
+        private static void AdjustBBoxVertical(LineRenderer lineRenderer, float maxRight, float minLeft, MinMaxWidth
+             minMaxWidth) {
             float originalLeft = lineRenderer.occupiedArea.GetBBox().GetLeft();
-            float deltaRight = maxRight > originalRight ? maxRight - originalRight : 0;
-            float deltaLeft = minLeft < originalLeft ? originalLeft - minLeft : 0;
-            lineRenderer.occupiedArea.GetBBox().IncreaseWidth(deltaRight + deltaLeft);
+            float originalWidth = lineRenderer.occupiedArea.GetBBox().GetWidth();
+            float maxWidth = maxRight - minLeft;
+            if (maxWidth > originalWidth) {
+                lineRenderer.occupiedArea.GetBBox().SetWidth(maxWidth);
+                minMaxWidth.SetChildrenMaxWidth(maxWidth);
+            }
+            float offset = originalLeft - minLeft + (originalWidth > maxWidth ? (originalWidth - maxWidth) / 2 : 0);
             foreach (IRenderer renderer in lineRenderer.GetChildRenderers()) {
-                renderer.Move(deltaLeft, 0);
+                renderer.Move(offset, 0);
             }
         }
 

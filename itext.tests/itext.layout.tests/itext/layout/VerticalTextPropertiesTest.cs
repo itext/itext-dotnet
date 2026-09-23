@@ -396,7 +396,7 @@ namespace iText.Layout {
                     Text text2 = new Text("Raised").SetTextRise(5);
                     Text text3 = new Text("Lowered").SetTextRise(-5);
                     paragraph.Add(text1).Add(" ").Add(text2).Add(" ").Add(text3);
-                    paragraph.SetHeight(200).SetWidth(100).SetBorder(new SolidBorder(1));
+                    paragraph.SetHeight(300).SetWidth(100).SetBorder(new SolidBorder(1));
                     document.Add(paragraph);
                 }
             }

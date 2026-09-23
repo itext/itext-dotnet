@@ -1050,7 +1050,8 @@ namespace iText.Layout.Renderer {
         public virtual float GetDescent() {
             float mainAxisSize = IsVerticalWriting() ? GetOccupiedAreaBBox().GetWidth() : GetOccupiedAreaBBox().GetHeight
                 ();
-            return -(mainAxisSize - yLineOffset - (float)this.GetPropertyAsFloat(Property.TEXT_RISE));
+            float textRise = IsVerticalWriting() ? 0 : (float)this.GetPropertyAsFloat(Property.TEXT_RISE);
+            return -(mainAxisSize - yLineOffset - textRise);
         }
 
         /// <summary>
@@ -1064,14 +1065,9 @@ namespace iText.Layout.Renderer {
         /// <see cref="DrawContext"/>
         /// </returns>
         public virtual float GetYLine() {
-            // TODO DEVSIX-10180 We apply text rise shift for horizontal text here
-            return occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight() - yLineOffset - (float)this.GetPropertyAsFloat
-                (Property.TEXT_RISE);
-        }
-
-        private float GetXLine() {
-            // TODO DEVSIX-10180 Support text rise in html mode for vertical text
-            return occupiedArea.GetBBox().GetX();
+            // In vertical writing, text rise moves the occupied area along the x axis during line alignment.
+            float textRise = IsVerticalWriting() ? 0 : (float)this.GetPropertyAsFloat(Property.TEXT_RISE);
+            return occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight() - yLineOffset - textRise;
         }
 
         /// <summary>Moves the vertical position to the parameter's value.</summary>
@@ -1517,8 +1513,8 @@ namespace iText.Layout.Renderer {
                 Rectangle innerAreaBbox = GetInnerAreaBBox();
                 Rectangle underlineBBox;
                 if (IsVerticalWriting()) {
-                    float xLine = GetXLine();
-                    float underlineXPosition = xLine + underline.GetYPosition(occupiedArea.GetBBox().GetWidth());
+                    float innerLeft = innerAreaBbox.GetX();
+                    float underlineXPosition = innerLeft + underline.GetXPosition(innerAreaBbox.GetWidth());
                     underlineBBox = new Rectangle(underlineXPosition - underlineThickness / 2, innerAreaBbox.GetY(), underlineThickness
                         , innerAreaBbox.GetHeight());
                 }
@@ -1941,7 +1937,7 @@ namespace iText.Layout.Renderer {
                 fontColor.ApplyFillTransparency(canvas);
             }
             float? textRise = this.GetPropertyAsFloat(Property.TEXT_RISE);
-            if (textRise != null && textRise != 0) {
+            if (!verticalWriting && textRise != null && textRise != 0) {
                 canvas.SetTextRise((float)textRise);
             }
             float? characterSpacing = this.GetPropertyAsFloat(Property.CHARACTER_SPACING);

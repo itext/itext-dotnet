@@ -875,7 +875,8 @@ namespace iText.Layout {
         /// <returns>this element</returns>
         public virtual T SetLineThrough() {
             // 7/24 is the average between default browser behavior(1/4) and iText5 behavior(1/3)
-            return SetUnderline(null, .75f, 0, 0, 7 / 24f, PdfCanvasConstants.LineCapStyle.BUTT);
+            return SetUnderline(new Underline(null, .75f, 0, 0, 7 / 24f, PdfCanvasConstants.LineCapStyle.BUTT).SetXPosition
+                (0, 0.5f));
         }
 
         /// <summary>Sets default underline attributes for text.</summary>

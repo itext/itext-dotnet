@@ -744,7 +744,7 @@ namespace iText.Layout.Renderer {
             }
             if (anythingPlaced || floatsPlacedInLine) {
                 if (isVerticalWriting) {
-                    toProcess.AdjustChildrenXLineVerticalWritingMode();
+                    toProcess.AdjustChildrenXLineVerticalWritingMode(minMaxWidth);
                 }
                 else {
                     if (writingMode == childWritingMode && !childrenWithDifferentDirections) {
@@ -1880,15 +1880,18 @@ namespace iText.Layout.Renderer {
             return false;
         }
 
-        private void AdjustChildrenXLineVerticalWritingMode() {
+        private void AdjustChildrenXLineVerticalWritingMode(MinMaxWidth minMaxWidth) {
             float lineWidth = GetOccupiedArea().GetBBox().GetWidth();
+            bool hasTextRise = false;
             foreach (IRenderer renderer in GetChildRenderers()) {
                 IRenderer unwrapped = UnwrapChildRendererIfNeeded(renderer);
                 float textChunkWidth = unwrapped.GetOccupiedArea().GetBBox().GetWidth();
                 unwrapped.Move((lineWidth - textChunkWidth) / 2, 0);
+                hasTextRise = hasTextRise || (unwrapped is TextRenderer && ((TextRenderer)unwrapped).GetPropertyAsFloat(Property
+                    .TEXT_RISE) != 0);
             }
-            if (HasInlineBlocksWithVerticalAlignment()) {
-                InlineVerticalAlignmentHelper.AdjustChildrenXLineVerticalText(this);
+            if (hasTextRise || HasInlineBlocksWithVerticalAlignment()) {
+                InlineVerticalAlignmentHelper.AdjustChildrenXLineVerticalText(this, minMaxWidth);
             }
         }
 
