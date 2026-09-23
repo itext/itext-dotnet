@@ -53,6 +53,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant ALIGN_SELF.</summary>
         public const String ALIGN_SELF = "align-self";
 
+        /// <summary>The Constant ALL.</summary>
+        public const String ALL = "all";
+
         /// <summary>The constant ATTRIBUTE.</summary>
         public const String ATTRIBUTE = "attr";
 

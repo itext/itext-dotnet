@@ -311,7 +311,6 @@ namespace iText.Layout {
                 ));
         }
 
-        //TODO DEVSIX-10167: Update test after fix
         [NUnit.Framework.Test]
         public virtual void VerticalTextCjkIdeographicSpaceVsRegularSpaceTest() {
             String fileName = "verticalTextCjkIdeographicSpaceVsRegularSpace";
@@ -333,6 +332,72 @@ namespace iText.Layout {
             }
             IDictionary<char, int?> extractedCounts = VerticalTextTestUtil.ExtractPageCharacterCounts(outFileName);
             NUnit.Framework.Assert.IsTrue(VerticalTextTestUtil.ContainsAllCharacters(extractedCounts, "文字", 4));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerticalTextCjkDashVariantsRotationTest() {
+            String fileName = "verticalTextCjkDashVariantsRotation";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            String content = "前-中‐後‑終‒段–節—章―末−了";
+            VerticalTextCjkTest.CjkTextSpec spec = new VerticalTextCjkTest.CjkTextSpec(content, LoadCjkFont(NOTO_SANS_SC
+                ), 24).BackgroundColor(ColorConstants.LIGHT_GRAY);
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    document.Add(BuildParagraph(new VerticalParagraph(false), spec));
+                    document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+                    document.Add(BuildParagraph(new Paragraph(), spec));
+                }
+            }
+            IDictionary<char, int?> extractedCounts = VerticalTextTestUtil.ExtractPageCharacterCounts(outFileName);
+            NUnit.Framework.Assert.IsTrue(VerticalTextTestUtil.ContainsAllCharacters(extractedCounts, "前中後終段節章末了"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerticalTextCjkConsecutiveSpacesAndDashesTest() {
+            String fileName = "verticalTextCjkConsecutiveSpacesAndDashes";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            VerticalTextCjkTest.CjkTextSpec spaceSpec = new VerticalTextCjkTest.CjkTextSpec("甲  乙\u3000\u3000丙", LoadCjkFont
+                (NOTO_SANS_SC), 24).BackgroundColor(ColorConstants.LIGHT_GRAY);
+            VerticalTextCjkTest.CjkTextSpec dashSpec = new VerticalTextCjkTest.CjkTextSpec("丁--戊——己", LoadCjkFont(NOTO_SANS_SC
+                ), 24).BackgroundColor(ColorConstants.CYAN);
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    document.Add(BuildParagraph(new VerticalParagraph(false), spaceSpec, dashSpec));
+                    document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+                    document.Add(BuildParagraph(new Paragraph(), spaceSpec, dashSpec));
+                }
+            }
+            IDictionary<char, int?> extractedCounts = VerticalTextTestUtil.ExtractPageCharacterCounts(outFileName);
+            NUnit.Framework.Assert.IsTrue(VerticalTextTestUtil.ContainsAllCharacters(extractedCounts, "甲乙丙丁戊己"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void VerticalTextCjkDashBeforeAndAfterSpacesTest() {
+            String fileName = "verticalTextCjkDashBeforeAndAfterSpaces";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            VerticalTextCjkTest.CjkTextSpec spec = new VerticalTextCjkTest.CjkTextSpec("始 — 中 \u3000-\u3000 終", LoadCjkFont
+                (NOTO_SANS_SC), 24).BackgroundColor(ColorConstants.LIGHT_GRAY);
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    document.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
+                    document.Add(BuildParagraph(new VerticalParagraph(false), spec));
+                    document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+                    document.Add(BuildParagraph(new Paragraph(), spec));
+                }
+            }
+            IDictionary<char, int?> extractedCounts = VerticalTextTestUtil.ExtractPageCharacterCounts(outFileName);
+            NUnit.Framework.Assert.IsTrue(VerticalTextTestUtil.ContainsAllCharacters(extractedCounts, "始中終"));
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 ));
         }
@@ -391,45 +456,69 @@ namespace iText.Layout {
         }
 
         private sealed class CjkTextSpec {
-            protected internal readonly String content;
+//\cond DO_NOT_DOCUMENT
+            internal readonly String content;
+//\endcond
 
-            protected internal readonly PdfFont font;
+//\cond DO_NOT_DOCUMENT
+            internal readonly PdfFont font;
+//\endcond
 
-            protected internal readonly float fontSize;
+//\cond DO_NOT_DOCUMENT
+            internal readonly float fontSize;
+//\endcond
 
-            protected internal Color backgroundColor;
+//\cond DO_NOT_DOCUMENT
+            internal Color backgroundColor;
+//\endcond
 
-            protected internal iText.Layout.Properties.Underline underline;
+//\cond DO_NOT_DOCUMENT
+            internal iText.Layout.Properties.Underline underline;
+//\endcond
 
-            protected internal bool boldSimulation;
+//\cond DO_NOT_DOCUMENT
+            internal bool boldSimulation;
+//\endcond
 
-            protected internal bool italicSimulation;
+//\cond DO_NOT_DOCUMENT
+            internal bool italicSimulation;
+//\endcond
 
-            protected internal CjkTextSpec(String content, PdfFont font, float fontSize) {
+//\cond DO_NOT_DOCUMENT
+            internal CjkTextSpec(String content, PdfFont font, float fontSize) {
                 this.content = content;
                 this.font = font;
                 this.fontSize = fontSize;
             }
+//\endcond
 
-            protected internal VerticalTextCjkTest.CjkTextSpec BackgroundColor(Color color) {
+//\cond DO_NOT_DOCUMENT
+            internal VerticalTextCjkTest.CjkTextSpec BackgroundColor(Color color) {
                 this.backgroundColor = color;
                 return this;
             }
+//\endcond
 
-            protected internal VerticalTextCjkTest.CjkTextSpec Underline(iText.Layout.Properties.Underline underline) {
+//\cond DO_NOT_DOCUMENT
+            internal VerticalTextCjkTest.CjkTextSpec Underline(iText.Layout.Properties.Underline underline) {
                 this.underline = underline;
                 return this;
             }
+//\endcond
 
-            protected internal VerticalTextCjkTest.CjkTextSpec BoldSimulation() {
+//\cond DO_NOT_DOCUMENT
+            internal VerticalTextCjkTest.CjkTextSpec BoldSimulation() {
                 this.boldSimulation = true;
                 return this;
             }
+//\endcond
 
-            protected internal VerticalTextCjkTest.CjkTextSpec ItalicSimulation() {
+//\cond DO_NOT_DOCUMENT
+            internal VerticalTextCjkTest.CjkTextSpec ItalicSimulation() {
                 this.italicSimulation = true;
                 return this;
             }
+//\endcond
         }
     }
 }

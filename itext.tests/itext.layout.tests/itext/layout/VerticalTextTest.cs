@@ -945,6 +945,30 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CombineUprightTest() {
+            String fileName = "combineUprightTest";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDocument)) {
+                    VerticalParagraph paragraph = new VerticalParagraph(false);
+                    paragraph.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
+                    paragraph.SetHeight(700);
+                    paragraph.SetFontSize(20);
+                    paragraph.Add("combine-upright ");
+                    Text text = new Text("2026");
+                    text.SetProperty(Property.TEXT_COMBINE_UPRIGHT, TextCombineUpright.ALL);
+                    text.SetBackgroundColor(ColorConstants.ORANGE);
+                    paragraph.Add(text);
+                    paragraph.Add(" test.");
+                    document.Add(paragraph);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                ));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void DifferentAlignmentValuesTogetherTest() {
             String fileName = "differentAlignmentValuesTogetherTest";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";

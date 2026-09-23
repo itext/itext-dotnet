@@ -60,16 +60,16 @@ namespace iText.Layout.Renderer {
         private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Renderer.ParagraphRenderer)
             );
 
-        private static readonly IDictionary<int, String> unsupportedPropertiesForVerticalWriting = new Dictionary<
-            int, String>();
+        private static readonly IDictionary<int, String> UNSUPPORTED_PROPERTIES_FOR_VERTICAL_WRITING = new Dictionary
+            <int, String>();
 
         static ParagraphRenderer() {
-            unsupportedPropertiesForVerticalWriting.Put(Property.FLOAT, "Float");
-            unsupportedPropertiesForVerticalWriting.Put(Property.TAB_STOPS, "Tab stops");
-            unsupportedPropertiesForVerticalWriting.Put(Property.TAB_LEADER, "Tab leader");
-            unsupportedPropertiesForVerticalWriting.Put(Property.TAB_DEFAULT, "Tab default");
-            unsupportedPropertiesForVerticalWriting.Put(Property.TAB_ANCHOR, "Tab anchor");
-            unsupportedPropertiesForVerticalWriting.Put(Property.TEXT_ANCHOR, "Text anchor");
+            UNSUPPORTED_PROPERTIES_FOR_VERTICAL_WRITING.Put(Property.FLOAT, "Float");
+            UNSUPPORTED_PROPERTIES_FOR_VERTICAL_WRITING.Put(Property.TAB_STOPS, "Tab stops");
+            UNSUPPORTED_PROPERTIES_FOR_VERTICAL_WRITING.Put(Property.TAB_LEADER, "Tab leader");
+            UNSUPPORTED_PROPERTIES_FOR_VERTICAL_WRITING.Put(Property.TAB_DEFAULT, "Tab default");
+            UNSUPPORTED_PROPERTIES_FOR_VERTICAL_WRITING.Put(Property.TAB_ANCHOR, "Tab anchor");
+            UNSUPPORTED_PROPERTIES_FOR_VERTICAL_WRITING.Put(Property.TEXT_ANCHOR, "Text anchor");
         }
 
         protected internal IList<LineRenderer> lines = null;
@@ -103,8 +103,8 @@ namespace iText.Layout.Renderer {
                 return OrphansWidowsLayoutHelper.OrphansWidowsAwareLayout(this, layoutContext, orphansControl, widowsControl
                     );
             }
-            if (RenderingMode.SVG_MODE == this.GetProperty<RenderingMode?>(Property.RENDERING_MODE) && !TypographyUtils
-                .IsPdfCalligraphAvailable()) {
+            if (RenderingMode.SVG_MODE == this.GetProperty<RenderingMode?>(Property.RENDERING_MODE) && (!TypographyUtils
+                .IsPdfCalligraphAvailable() || IsVerticalWriting())) {
                 // BASE_DIRECTION property is always set to the SVG text since we can't easily check whether typography is
                 // available at svg module level, but it makes no sense without typography, so it is removed here.
                 this.DeleteProperty(Property.BASE_DIRECTION);
@@ -691,7 +691,7 @@ namespace iText.Layout.Renderer {
 
         private void CheckProperties() {
             if (IsVerticalWriting()) {
-                foreach (KeyValuePair<int, String> entry in unsupportedPropertiesForVerticalWriting) {
+                foreach (KeyValuePair<int, String> entry in UNSUPPORTED_PROPERTIES_FOR_VERTICAL_WRITING) {
                     if (this.HasProperty(entry.Key)) {
                         LOGGER.Warn(() => MessageFormatUtil.Format(LayoutLogMessageConstant.UNSUPPORTED_PROPERTY, "vertical text", 
                             entry.Value));

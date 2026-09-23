@@ -37,6 +37,7 @@ using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
+using iText.Layout.Renderer.Typography;
 
 namespace iText.Layout.Renderer {
     public class LineRenderer : AbstractRenderer {
@@ -181,7 +182,7 @@ namespace iText.Layout.Renderer {
                 }
                 RenderingMode? childRenderingMode = childRenderer.GetProperty<RenderingMode?>(Property.RENDERING_MODE);
                 if (TextSequenceWordWrapping.IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing(childRenderer, sameDirection
-                    ) && TypographyUtils.IsPdfCalligraphAvailable()) {
+                    ) && TypographyUtils.IsPdfCalligraphAvailable() && !isVerticalWriting) {
                     TextSequenceWordWrapping.ProcessSpecialScriptPreLayout(this, childPos);
                 }
                 TextSequenceWordWrapping.ResetTextSequenceIfItEnded(specialScriptLayoutResults, true, childRenderer, childPos
@@ -728,7 +729,14 @@ namespace iText.Layout.Renderer {
                 if (levels != null) {
                     Array.Copy(levels, 0, lineLevels, 0, splitIntoGlyphsData.GetLineGlyphs().Count);
                 }
-                int[] newOrder = TypographyUtils.ReorderLine(splitIntoGlyphsData.GetLineGlyphs(), lineLevels, levels);
+                int[] newOrder;
+                if (isVerticalWriting) {
+                    newOrder = new DefaultTypographyApplier().ReorderLine(splitIntoGlyphsData.GetLineGlyphs(), lineLevels, levels
+                        );
+                }
+                else {
+                    newOrder = TypographyUtils.ReorderLine(splitIntoGlyphsData.GetLineGlyphs(), lineLevels, levels);
+                }
                 if (newOrder != null) {
                     Reorder(toProcess, splitIntoGlyphsData, newOrder);
                     AdjustChildPositionsAfterReordering(toProcess.GetChildRenderers(), occupiedArea.GetBBox().GetLeft());
@@ -1798,8 +1806,14 @@ namespace iText.Layout.Renderer {
                     SequenceId sequenceId = pdfDocument == null ? null : pdfDocument.GetDocumentIdWrapper();
                     MetaInfoContainer metaInfoContainer = this.GetProperty<MetaInfoContainer>(Property.META_INFO);
                     IMetaInfo metaInfo = metaInfoContainer == null ? null : metaInfoContainer.GetMetaInfo();
-                    levels = TypographyUtils.GetBidiLevels(baseDirection, ArrayUtil.ToIntArray(unicodeIdsReorderingList), sequenceId
-                        , metaInfo);
+                    if (IsVerticalWriting()) {
+                        levels = new DefaultTypographyApplier().GetBidiLevels(baseDirection, ArrayUtil.ToIntArray(unicodeIdsReorderingList
+                            ), sequenceId, metaInfo);
+                    }
+                    else {
+                        levels = TypographyUtils.GetBidiLevels(baseDirection, ArrayUtil.ToIntArray(unicodeIdsReorderingList), sequenceId
+                            , metaInfo);
+                    }
                 }
                 else {
                     levels = null;

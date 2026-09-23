@@ -105,6 +105,7 @@ namespace iText.StyledXmlParser.Css.Resolve {
             defaultValues.Put(CommonCssConstants.POSITION, CommonCssConstants.STATIC);
             defaultValues.Put(CommonCssConstants.QUOTES, "\"\\00ab\" \"\\00bb\"");
             defaultValues.Put(CommonCssConstants.TEXT_ALIGN, CommonCssConstants.START);
+            defaultValues.Put(CommonCssConstants.TEXT_COMBINE_UPRIGHT, CommonCssConstants.NONE);
             defaultValues.Put(CommonCssConstants.TEXT_DECORATION, CommonCssConstants.NONE);
             defaultValues.Put(CommonCssConstants.TEXT_DECORATION_LINE, CommonCssConstants.NONE);
             defaultValues.Put(CommonCssConstants.TEXT_DECORATION_STYLE, CommonCssConstants.SOLID);

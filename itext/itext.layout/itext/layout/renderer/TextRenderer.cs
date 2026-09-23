@@ -47,6 +47,7 @@ using iText.Layout.Hyphenation;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
+using iText.Layout.Renderer.Typography;
 using iText.Layout.Splitting;
 using iText.Layout.Tagging;
 
@@ -87,6 +88,67 @@ namespace iText.Layout.Renderer {
 
         //Line height is recalculated several times during layout and small difference is expected.
         private const float HEIGHT_WIDTH_EPS = 5.1e-2F;
+
+        // Glyph that needs to be rotated for vertical writing according to Unicode Annex #50
+        // and https://unicode.org/Public/UCD/latest/ucd/VerticalOrientation.txt
+        private static readonly ICollection<int> VERTICAL_WRITING_ROTATED_GLYPHS = new HashSet<int>(JavaUtil.ArraysAsList
+            (
+                // Ideographic Space.
+                0x3000, 
+                // LEFT PARENTHESIS "(".
+                0x0028, 
+                // RIGHT PARENTHESIS ")".
+                0x0029, 
+                // LEFT SQUARE BRACKET "[".
+                0x005B, 
+                // RIGHT SQUARE BRACKET "]".
+                0x005D, 
+                // LEFT CURLY BRACKET "{".
+                0x007B, 
+                // RIGHT CURLY BRACKET "}".
+                0x007D, 
+                // LESS-THAN SIGN "<".
+                0x003C, 
+                // GREATER-THAN SIGN ">".
+                0x003E, 
+                // HYPHEN-MINUS "-".
+                0x002D, 
+                // HYPHEN "‐".
+                0x2010, 
+                // NON-BREAKING HYPHEN "‑".
+                0x2011, 
+                // FIGURE DASH "‒".
+                0x2012, 
+                // EN DASH "–".
+                0x2013, 
+                // EM DASH "—".
+                0x2014, 
+                // HORIZONTAL BAR "―".
+                0x2015, 
+                // MINUS SIGN "−".
+                0x2212, 
+                // SMALL EM DASH.
+                0xFE58, 
+                // LOW LINE "_".
+                0x005F, 
+                // SOLIDUS "/".
+                0x002F, 
+                // REVERSE SOLIDUS "\".
+                0x005C, 
+                // TILDE "~".
+                0x007E, 
+                // QUOTATION MARK ".
+                0x0022, 
+                // APOSTROPHE '.
+                0x0027, 
+                // LEFT DOUBLE QUOTATION MARK “.
+                0x201C, 
+                // RIGHT DOUBLE QUOTATION MARK ”.
+                0x201D, 
+                // LEFT SINGLE QUOTATION MARK ‘.
+                0x2018, 
+                // RIGHT SINGLE QUOTATION MARK ’.
+                0x2019));
 
         protected internal float yLineOffset;
 
@@ -168,6 +230,9 @@ namespace iText.Layout.Renderer {
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
             UpdateFontAndText();
+            TextCombineUprightGlyphLine combinedText = IsTextCombineUprightAll() ? CreateTextCombineUprightGlyphLine()
+                 : null;
+            GlyphLine text = combinedText == null ? this.text : combinedText;
             LayoutArea area = layoutContext.GetArea();
             Rectangle layoutBox = area.GetBBox().Clone();
             bool noSoftWrap = true.Equals(this.parent.GetOwnProperty<bool?>(Property.NO_SOFT_WRAP_INLINE));
@@ -245,6 +310,11 @@ namespace iText.Layout.Renderer {
                 fontSize.GetValue() : 0;
             float boldSimulationAddition = true.Equals(GetPropertyAsBoolean(Property.BOLD_SIMULATION)) ? BOLD_SIMULATION_STROKE_COEFF
                  * fontSize.GetValue() : 0;
+            if (combinedText != null) {
+                // Style and spacing are applied inside the cell when drawing, not to the placeholder's advance.
+                italicSkewAddition = 0;
+                boldSimulationAddition = 0;
+            }
             line = new GlyphLine(text);
             line.SetStart(-1);
             line.SetEnd(-1);
@@ -258,8 +328,8 @@ namespace iText.Layout.Renderer {
             int previousCharPos = -1;
             RenderingMode? mode = this.GetProperty<RenderingMode?>(Property.RENDERING_MODE);
             float[] ascenderDescender = CalculateAscenderDescender(font, mode);
-            ascender = ascenderDescender[0];
-            descender = ascenderDescender[1];
+            ascender = combinedText == null ? ascenderDescender[0] : combinedText.GetAscender();
+            descender = combinedText == null ? ascenderDescender[1] : combinedText.GetDescender();
             if (RenderingMode.HTML_MODE.Equals(mode) && !isVerticalWriting) {
                 currentLineAscender = ascenderDescender[0];
                 currentLineDescender = ascenderDescender[1];
@@ -362,8 +432,8 @@ namespace iText.Layout.Renderer {
                     float potentialSpace;
                     float remainingSpace;
                     if (isVerticalWriting) {
-                        potentialSpace = CalculateLineHeight(ascender, descender, fontSize, textRise, verticalCharacterSpacing, verticalWordSpacing
-                            , currentGlyph) + nonBreakablePartHeight + currentLineHeight;
+                        potentialSpace = CalculateVerticalGlyphAdvance(ascender, descender, fontSize, textRise, verticalCharacterSpacing
+                            , verticalWordSpacing, currentGlyph) + nonBreakablePartHeight + currentLineHeight;
                         remainingSpace = layoutBox.GetHeight();
                     }
                     else {
@@ -407,14 +477,15 @@ namespace iText.Layout.Renderer {
                         nonBreakablePartWidthWhichDoesNotExceedAllowedWidth = AccumulateWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth
                             , glyphWidth + xAdvance, isVerticalWriting);
                         nonBreakablePartHeightWhichDoesNotExceedAllowedHeight = AccumulateHeight(nonBreakablePartHeightWhichDoesNotExceedAllowedHeight
-                            , CalculateLineHeight(ascender, descender, fontSize, textRise, verticalCharacterSpacing, verticalWordSpacing
-                            , currentGlyph), isVerticalWriting);
+                            , CalculateGlyphMainAxisAdvance(ascender, descender, fontSize, textRise, verticalCharacterSpacing, verticalWordSpacing
+                            , currentGlyph, isVerticalWriting), isVerticalWriting);
                     }
                     nonBreakablePartWidth = AccumulateWidth(nonBreakablePartWidth, glyphWidth + xAdvance, isVerticalWriting);
                     nonBreakablePartMaxAscender = Math.Max(nonBreakablePartMaxAscender, ascender);
                     nonBreakablePartMaxDescender = Math.Min(nonBreakablePartMaxDescender, descender);
-                    nonBreakablePartHeight = (isVerticalWriting ? nonBreakablePartHeight : 0) + CalculateLineHeight(ascender, 
-                        descender, fontSize, textRise, verticalCharacterSpacing, verticalWordSpacing, currentGlyph);
+                    nonBreakablePartHeight = (isVerticalWriting ? nonBreakablePartHeight : 0) + CalculateGlyphMainAxisAdvance(
+                        ascender, descender, fontSize, textRise, verticalCharacterSpacing, verticalWordSpacing, currentGlyph, 
+                        isVerticalWriting);
                     previousCharPos = ind;
                     if (!noSoftWrap && symbolNotFitOnLine && (0 == nonBreakingHyphenRelatedChunkWidth || ind + 1 == text.GetEnd
                         () || !GlyphBelongsToNonBreakingHyphenRelatedChunk(text, ind + 1))) {
@@ -438,9 +509,9 @@ namespace iText.Layout.Renderer {
                     }
                     bool endOfWordBelongingToSpecialScripts = TextContainsSpecialScriptGlyphs(true) && FindPossibleBreaksSplitPosition
                         (specialScriptsWordBreakPoints, ind + 1, true) >= 0;
-                    bool endOfNonBreakablePartCausedBySplitCharacter = splitCharacters.IsSplitCharacter(text, ind) || (ind + 1
-                         < text.GetEnd() && (splitCharacters.IsSplitCharacter(text, ind + 1) && iText.IO.Util.TextUtil.IsSpaceOrWhitespace
-                        (text.Get(ind + 1))));
+                    bool endOfNonBreakablePartCausedBySplitCharacter = currentGlyph is TextCombineUprightGlyphLine.PlaceholderGlyph
+                         || splitCharacters.IsSplitCharacter(text, ind) || (ind + 1 < text.GetEnd() && (splitCharacters.IsSplitCharacter
+                        (text, ind + 1) && iText.IO.Util.TextUtil.IsSpaceOrWhitespace(text.Get(ind + 1))));
                     if (endOfNonBreakablePartCausedBySplitCharacter && firstCharacterWhichExceedsAllowedSpace == -1) {
                         containsPossibleBreak = true;
                     }
@@ -613,18 +684,30 @@ namespace iText.Layout.Renderer {
                                 // process empty line (e.g. '\n')
                                 currentLineAscender = ascender;
                                 currentLineDescender = descender;
-                                currentLineHeight = CalculateLineHeight(ascender, descender, fontSize, textRise, verticalCharacterSpacing, 
-                                    verticalWordSpacing, line.Get(line.GetStart())) + (isVerticalWriting ? currentLineHeight : 0);
+                                currentLineHeight = CalculateGlyphMainAxisAdvance(ascender, descender, fontSize, textRise, verticalCharacterSpacing
+                                    , verticalWordSpacing, line.Get(line.GetStart()), isVerticalWriting) + (isVerticalWriting ? currentLineHeight
+                                     : 0);
                                 currentLineWidth = AccumulateWidth(currentLineWidth, FontProgram.ConvertTextSpaceToGlyphSpace(GetCharWidth
                                     (line.Get(line.GetStart()), fontSize.GetValue(), hScale, characterSpacing, wordSpacing)), isVerticalWriting
                                     );
                             }
                         }
                         if (line.GetEnd() <= line.GetStart()) {
-                            bool[] startsEnds = IsStartsWithSplitCharWhiteSpaceAndEndsWithSplitChar(splitCharacters);
-                            return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this).SetContainsPossibleBreak
-                                (containsPossibleBreak).SetStartsWithSplitCharacterWhiteSpace(startsEnds[0]).SetEndsWithSplitCharacter
-                                (startsEnds[1]);
+                            if (combinedText == null) {
+                                bool[] startsEnds = IsStartsWithSplitCharWhiteSpaceAndEndsWithSplitChar(splitCharacters);
+                                return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this).SetContainsPossibleBreak
+                                    (containsPossibleBreak).SetStartsWithSplitCharacterWhiteSpace(startsEnds[0]).SetEndsWithSplitCharacter
+                                    (startsEnds[1]);
+                            }
+                            // An atomic glyph moves as a whole. Finish the common box/min-max calculation even on NOTHING.
+                            currentLineWidth = nonBreakablePartWidth;
+                            currentLineHeight = nonBreakablePartHeight;
+                            currentLineAscender = nonBreakablePartMaxAscender;
+                            currentLineDescender = nonBreakablePartMaxDescender;
+                            widthHandler.UpdateMinChildWidth(currentLineWidth);
+                            widthHandler.UpdateMaxChildWidth(currentLineWidth);
+                            leftMinWidth = currentLineWidth;
+                            result = new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
                         }
                         else {
                             result = new TextLayoutResult(LayoutResult.PARTIAL, occupiedArea, null, null).SetWordHasBeenSplit(wordSplit
@@ -656,6 +739,10 @@ namespace iText.Layout.Renderer {
             }
             yLineOffset = RenderingMode.SVG_MODE == mode ? 0 : FontProgram.ConvertTextSpaceToGlyphSpace(currentLineAscender
                  * fontSize.GetValue());
+            if (combinedText != null && currentLineHeight > 0) {
+                yLineOffset -= (CalculateLineHeight(ascender, descender, fontSize, 0, null, null, null) - fontSize.GetValue
+                    ()) / 2;
+            }
             occupiedArea.GetBBox().MoveDown(currentLineHeight);
             occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + currentLineHeight);
             occupiedArea.GetBBox().SetWidth(Math.Max(occupiedArea.GetBBox().GetWidth(), currentLineWidth));
@@ -664,7 +751,8 @@ namespace iText.Layout.Renderer {
                 float lineStart = line.GetStart();
                 float lineEnd = line.GetEnd();
                 if (lineStart != lineEnd) {
-                    occupiedArea.GetBBox().SetWidth(verticalWritingLineWidth);
+                    occupiedArea.GetBBox().SetWidth(combinedText == null ? verticalWritingLineWidth : Math.Max(fontSize.GetValue
+                        (), verticalWritingLineWidth));
                 }
             }
             else {
@@ -675,31 +763,40 @@ namespace iText.Layout.Renderer {
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
             ApplyMargins(occupiedArea.GetBBox(), margins, true);
             IncreaseYLineOffset(paddings, borders, margins);
+            if (combinedText != null) {
+                line = combinedText.Restore(line);
+                if (lineWidthExceeds_1 && IsOverflowFit(overflowY) && !true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT
+                    ))) {
+                    result = new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
+                }
+            }
             if (result == null) {
                 result = new TextLayoutResult(LayoutResult.FULL, occupiedArea, null, null, isPlacingForcedWhileNothing ? this
                      : null).SetContainsPossibleBreak(containsPossibleBreak);
             }
             else {
-                iText.Layout.Renderer.TextRenderer[] split;
-                if (ignoreNewLineSymbol || crlf) {
-                    // ignore '\n'
-                    split = SplitIgnoreFirstNewLine(currentTextPos);
-                }
-                else {
-                    split = Split(currentTextPos);
-                }
-                result.SetSplitForcedByNewline(isSplitForcedByNewLine);
-                result.SetSplitRenderer(split[0]);
-                if (wordBreakGlyphAtLineEnding != null) {
-                    split[0].SaveWordBreakIfNotYetSaved(wordBreakGlyphAtLineEnding);
-                }
-                // no sense to process empty renderer
-                if (split[1].text.GetStart() != split[1].text.GetEnd()) {
-                    result.SetOverflowRenderer(split[1]);
-                }
-                else {
-                    // LayoutResult with partial status should have non-null overflow renderer
-                    result.SetStatus(LayoutResult.FULL);
+                if (result.GetStatus() != LayoutResult.NOTHING) {
+                    iText.Layout.Renderer.TextRenderer[] split;
+                    if (ignoreNewLineSymbol || crlf) {
+                        // ignore '\n'
+                        split = SplitIgnoreFirstNewLine(currentTextPos, text);
+                    }
+                    else {
+                        split = Split(combinedText == null ? currentTextPos : combinedText.GetSourcePosition(currentTextPos));
+                    }
+                    result.SetSplitForcedByNewline(isSplitForcedByNewLine);
+                    result.SetSplitRenderer(split[0]);
+                    if (wordBreakGlyphAtLineEnding != null && combinedText == null) {
+                        split[0].SaveWordBreakIfNotYetSaved(wordBreakGlyphAtLineEnding);
+                    }
+                    // no sense to process empty renderer
+                    if (split[1].text.GetStart() != split[1].text.GetEnd()) {
+                        result.SetOverflowRenderer(split[1]);
+                    }
+                    else {
+                        // LayoutResult with partial status should have non-null overflow renderer
+                        result.SetStatus(LayoutResult.FULL);
+                    }
                 }
             }
             if (FloatingHelper.IsRendererFloating(this, floatPropertyValue)) {
@@ -813,8 +910,14 @@ namespace iText.Layout.Renderer {
                             // from text renderers (see LineRenderer#applyOtf).
                             SetProperty(Property.BASE_DIRECTION, BaseDirection.DEFAULT_BIDI);
                         }
-                        TypographyUtils.ApplyOtfScript(font.GetFontProgram(), text, scriptsRange.script, typographyConfig, sequenceId
-                            , metaInfo);
+                        if (IsVerticalWriting()) {
+                            new DefaultTypographyApplier().ApplyOtfScript((TrueTypeFont)font.GetFontProgram(), text, scriptsRange.script
+                                , typographyConfig, sequenceId, metaInfo);
+                        }
+                        else {
+                            TypographyUtils.ApplyOtfScript(font.GetFontProgram(), text, scriptsRange.script, typographyConfig, sequenceId
+                                , metaInfo);
+                        }
                         delta += text.GetEnd() - scriptsRange.rangeEnd;
                         scriptsRange.rangeEnd = shapingRangeStart = text.GetEnd();
                     }
@@ -824,7 +927,12 @@ namespace iText.Layout.Renderer {
                 FontKerning fontKerning = (FontKerning)this.GetProperty<FontKerning?>(Property.FONT_KERNING, FontKerning.NO
                     );
                 if (fontKerning == FontKerning.YES) {
-                    TypographyUtils.ApplyKerning(font.GetFontProgram(), text, sequenceId, metaInfo);
+                    if (IsVerticalWriting()) {
+                        new DefaultTypographyApplier().ApplyKerning(font.GetFontProgram(), text, sequenceId, metaInfo);
+                    }
+                    else {
+                        TypographyUtils.ApplyKerning(font.GetFontProgram(), text, sequenceId, metaInfo);
+                    }
                 }
                 otfFeaturesApplied = true;
             }
@@ -990,7 +1098,7 @@ namespace iText.Layout.Renderer {
 //\cond DO_NOT_DOCUMENT
         internal virtual float TrimLast() {
             float trimmedSpace = 0;
-            if (line.GetEnd() <= 0) {
+            if (line.GetEnd() <= 0 || IsTextCombineUprightAll()) {
                 return trimmedSpace;
             }
             UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
@@ -1015,9 +1123,9 @@ namespace iText.Layout.Renderer {
                     (line.Get(firstNonSpaceCharIndex - 1).GetXAdvance(), fontSize.GetValue(), hScale)) : 0;
                 RenderingMode? mode = this.GetProperty<RenderingMode?>(Property.RENDERING_MODE);
                 float[] ascenderDescender = CalculateAscenderDescender(font, mode);
-                float glyphHeight = CalculateLineHeight(ascenderDescender[0], ascenderDescender[1], fontSize, isVerticalWriting
+                float glyphHeight = CalculateGlyphMainAxisAdvance(ascenderDescender[0], ascenderDescender[1], fontSize, isVerticalWriting
                      ? 0 : (float)this.GetPropertyAsFloat(Property.TEXT_RISE), characterSpacing, wordSpacing, currentGlyph
-                    );
+                    , isVerticalWriting);
                 trimmedSpace += isVerticalWriting ? glyphHeight : (currentCharWidth - xAdvance);
                 if (isVerticalWriting) {
                     occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() - glyphHeight);
@@ -1220,13 +1328,12 @@ namespace iText.Layout.Renderer {
         }
 //\endcond
 
-        private iText.Layout.Renderer.TextRenderer[] SplitIgnoreFirstNewLine(int currentTextPos) {
-            if (iText.IO.Util.TextUtil.IsCarriageReturnFollowedByLineFeed(text, currentTextPos)) {
-                return Split(currentTextPos + 2);
-            }
-            else {
-                return Split(currentTextPos + 1);
-            }
+        private iText.Layout.Renderer.TextRenderer[] SplitIgnoreFirstNewLine(int currentTextPos, GlyphLine layoutText
+            ) {
+            int overflowPos = currentTextPos + (iText.IO.Util.TextUtil.IsCarriageReturnFollowedByLineFeed(layoutText, 
+                currentTextPos) ? 2 : 1);
+            return Split(layoutText is TextCombineUprightGlyphLine ? ((TextCombineUprightGlyphLine)layoutText).GetSourcePosition
+                (overflowPos) : overflowPos);
         }
 
         private GlyphLine ConvertToGlyphLine(String text) {
@@ -1782,6 +1889,9 @@ namespace iText.Layout.Renderer {
         /// </returns>
         internal virtual bool[] IsStartsWithSplitCharWhiteSpaceAndEndsWithSplitChar(ISplitCharacters splitCharacters
             ) {
+            if (IsTextCombineUprightAll()) {
+                return new bool[] { false, true };
+            }
             bool startsWithBreak = line.GetStart() < line.GetEnd() && splitCharacters.IsSplitCharacter(text, line.GetStart
                 ()) && iText.IO.Util.TextUtil.IsSpaceOrWhitespace(text.Get(line.GetStart()));
             bool endsWithBreak = line.GetStart() < line.GetEnd() && splitCharacters.IsSplitCharacter(text, line.GetEnd
@@ -1808,6 +1918,66 @@ namespace iText.Layout.Renderer {
             return lineHeight;
         }
 
+        private static float CalculateVerticalGlyphAdvance(float ascender, float descender, UnitValue fontSize, float
+             textRise, float? verticalCharacterSpacing, float? verticalWordSpacing, Glyph glyph) {
+            if (glyph is TextCombineUprightGlyphLine.PlaceholderGlyph) {
+                return fontSize.GetValue();
+            }
+            return CalculateLineHeight(ascender, descender, fontSize, textRise, verticalCharacterSpacing, verticalWordSpacing
+                , glyph);
+        }
+
+        private static float CalculateGlyphMainAxisAdvance(float ascender, float descender, UnitValue fontSize, float
+             textRise, float? characterSpacing, float? wordSpacing, Glyph glyph, bool isVerticalWriting) {
+            if (isVerticalWriting) {
+                return CalculateVerticalGlyphAdvance(ascender, descender, fontSize, textRise, characterSpacing, wordSpacing
+                    , glyph);
+            }
+            return CalculateLineHeight(ascender, descender, fontSize, textRise, characterSpacing, wordSpacing, glyph);
+        }
+
+        private static bool ShouldRotateGlyphInVerticalWriting(Glyph glyph) {
+            if (glyph == null || !glyph.HasValidUnicode()) {
+                return false;
+            }
+            return VERTICAL_WRITING_ROTATED_GLYPHS.Contains(glyph.GetUnicode());
+        }
+
+        private float CalculateGlyphCenterX(Glyph glyph, UnitValue fontSize, float fallbackCenterX) {
+            int[] bbox = ResolveGlyphBbox(glyph);
+            if (bbox == null || bbox.Length < 4) {
+                return fallbackCenterX;
+            }
+            float centerX = (bbox[0] + bbox[2]) / 2f;
+            return FontProgram.ConvertTextSpaceToGlyphSpace(centerX * fontSize.GetValue());
+        }
+
+        private float CalculateGlyphCenterY(Glyph glyph, UnitValue fontSize, float fallbackCenterY) {
+            int[] bbox = ResolveGlyphBbox(glyph);
+            if (bbox == null || bbox.Length < 4) {
+                return fallbackCenterY;
+            }
+            float centerY = (bbox[1] + bbox[3]) / 2f;
+            return FontProgram.ConvertTextSpaceToGlyphSpace(centerY * fontSize.GetValue());
+        }
+
+        private int[] ResolveGlyphBbox(Glyph glyph) {
+            if (glyph == null) {
+                return null;
+            }
+            int[] bbox = glyph.GetBbox();
+            if (bbox != null && bbox.Length >= 4) {
+                return bbox;
+            }
+            if (font != null && glyph.HasValidUnicode()) {
+                Glyph fontGlyph = font.GetGlyph(glyph.GetUnicode());
+                if (fontGlyph != null) {
+                    return fontGlyph.GetBbox();
+                }
+            }
+            return null;
+        }
+
         private static float AccumulateWidth(float accumulatedWidth, float newWidth, bool isVerticalWriting) {
             if (isVerticalWriting) {
                 return Math.Max(accumulatedWidth, newWidth);
@@ -1832,6 +2002,42 @@ namespace iText.Layout.Renderer {
             yLineOffset += margins[0] != null ? margins[0].GetValue() : 0;
         }
 
+        private bool IsTextCombineUprightAll() {
+            return IsVerticalWriting() && this.GetProperty<TextCombineUpright?>(Property.TEXT_COMBINE_UPRIGHT) == TextCombineUpright
+                .ALL;
+        }
+
+        private TextCombineUprightGlyphLine CreateTextCombineUprightGlyphLine() {
+            int newLinePos = text.GetStart();
+            while (newLinePos < text.GetEnd() && !iText.IO.Util.TextUtil.IsNewLine(text.Get(newLinePos))) {
+                ++newLinePos;
+            }
+            float[] metrics = CalculateAscenderDescender(font, this.GetProperty<RenderingMode?>(Property.RENDERING_MODE
+                ));
+            return new TextCombineUprightGlyphLine(text, metrics[0], metrics[1]);
+        }
+
+        private void DrawTextCombineUpright(PdfCanvas canvas, UnitValue fontSize, bool italicSimulation, int? textRenderingMode
+            , float? strokeWidth, TransparentColor fontColor, TransparentColor strokeColor) {
+            float hScale = (float)GetPropertyAsFloat(Property.HORIZONTAL_SCALING, 1f);
+            float width = 0;
+            width = GetGlyphLineWidth(line, fontSize.GetValue(), hScale, 0f, 0f);
+            if (italicSimulation) {
+                width += ITALIC_ANGLE * fontSize.GetValue();
+            }
+            if (true.Equals(GetPropertyAsBoolean(Property.BOLD_SIMULATION))) {
+                width += BOLD_SIMULATION_STROKE_COEFF * fontSize.GetValue();
+            }
+            float scale = width > fontSize.GetValue() ? fontSize.GetValue() / width : 1;
+            Rectangle innerBox = GetInnerAreaBBox();
+            float x = innerBox.GetX() + (innerBox.GetWidth() - width * scale) / 2;
+            canvas.SaveState();
+            canvas.ConcatMatrix(scale, 0, 0, 1, x, 0);
+            DrawText(canvas, fontSize, italicSimulation, textRenderingMode, strokeWidth, fontColor, strokeColor, line, 
+                GetYLine(), 0, false, false, 0, 0);
+            canvas.RestoreState();
+        }
+
         private void DrawVerticalText(PdfCanvas canvas, UnitValue fontSize, bool italicSimulation, int? textRenderingMode
             , float? strokeWidth, TransparentColor fontColor, TransparentColor strokeColor) {
             RenderingMode? mode = this.GetProperty<RenderingMode?>(Property.RENDERING_MODE);
@@ -1848,50 +2054,74 @@ namespace iText.Layout.Renderer {
             for (int j = 0; j < line.GetEnd() - line.GetStart(); ++j) {
                 Glyph currentGlyph = line.Get(line.GetStart() + j);
                 GlyphLine singleGlyphLine = new GlyphLine(JavaCollectionsUtil.SingletonList(currentGlyph));
-                float leftBBoxX = GetInnerAreaBBox().GetX();
-                float lineWidth = GetInnerAreaBBox().GetWidth();
                 float glyphWidth = FontProgram.ConvertTextSpaceToGlyphSpace(GetCharWidth(singleGlyphLine.Get(0), fontSize.
                     GetValue(), 1F, 0F, 0F));
-                leftBBoxX += (lineWidth - glyphWidth - italicSkewAddition - boldSimulationAddition) / 2;
-                float symbolHeight = CalculateLineHeight(ascender, descender, fontSize, 0F, characterSpacing, wordSpacing, 
-                    currentGlyph);
+                bool rotateGlyph = ShouldRotateGlyphInVerticalWriting(currentGlyph);
+                float symbolHeight = CalculateVerticalGlyphAdvance(ascender, descender, fontSize, 0F, characterSpacing, wordSpacing
+                    , currentGlyph);
+                float leftBBoxX = GetInnerAreaBBox().GetX();
+                float lineWidth = GetInnerAreaBBox().GetWidth();
+                float glyphVisualWidth = rotateGlyph ? symbolHeight : glyphWidth;
+                leftBBoxX += (lineWidth - glyphVisualWidth - italicSkewAddition - boldSimulationAddition) / 2;
                 DrawText(canvas, fontSize, italicSimulation, textRenderingMode, strokeWidth, fontColor, strokeColor, singleGlyphLine
-                    , yCoordinate, leftBBoxX, true);
+                    , yCoordinate, leftBBoxX, true, rotateGlyph, glyphWidth, symbolHeight);
                 yCoordinate -= symbolHeight;
             }
         }
 
         private void DrawText(PdfCanvas canvas, UnitValue fontSize, bool italicSimulation, int? textRenderingMode, 
             float? strokeWidth, TransparentColor fontColor, TransparentColor strokeColor) {
-            if (IsVerticalWriting()) {
-                DrawVerticalText(canvas, fontSize, italicSimulation, textRenderingMode, strokeWidth, fontColor, strokeColor
+            if (IsTextCombineUprightAll()) {
+                DrawTextCombineUpright(canvas, fontSize, italicSimulation, textRenderingMode, strokeWidth, fontColor, strokeColor
                     );
             }
             else {
-                DrawText(canvas, fontSize, italicSimulation, textRenderingMode, strokeWidth, fontColor, strokeColor, line, 
-                    GetYLine(), GetInnerAreaBBox().GetX(), false);
+                if (IsVerticalWriting()) {
+                    DrawVerticalText(canvas, fontSize, italicSimulation, textRenderingMode, strokeWidth, fontColor, strokeColor
+                        );
+                }
+                else {
+                    DrawText(canvas, fontSize, italicSimulation, textRenderingMode, strokeWidth, fontColor, strokeColor, line, 
+                        GetYLine(), GetInnerAreaBBox().GetX(), false, false, 0, 0);
+                }
             }
         }
 
         private void DrawText(PdfCanvas canvas, UnitValue fontSize, bool italicSimulation, int? textRenderingMode, 
             float? strokeWidth, TransparentColor fontColor, TransparentColor strokeColor, GlyphLine lineToDraw, float
-             yCoordinate, float leftBBoxX, bool verticalWriting) {
+             yCoordinate, float leftBBoxX, bool verticalWriting, bool rotateGlyphInVerticalWriting, float glyphWidth
+            , float symbolHeight) {
+            DrawText(canvas, fontSize, italicSimulation, textRenderingMode, strokeWidth, fontColor, strokeColor, lineToDraw
+                , yCoordinate, leftBBoxX, verticalWriting, rotateGlyphInVerticalWriting, glyphWidth, symbolHeight, font
+                );
+        }
+
+        private void DrawText(PdfCanvas canvas, UnitValue fontSize, bool italicSimulation, int? textRenderingMode, 
+            float? strokeWidth, TransparentColor fontColor, TransparentColor strokeColor, GlyphLine lineToDraw, float
+             yCoordinate, float leftBBoxX, bool verticalWriting, bool rotateGlyphInVerticalWriting, float glyphWidth
+            , float symbolHeight, PdfFont font) {
             canvas.BeginText().SetFontAndSize(font, fontSize.GetValue());
             float[] skew = this.GetProperty<float[]>(Property.SKEW);
             float verticalScale = (float)this.GetPropertyAsFloat(Property.VERTICAL_SCALING, 1f);
-            if (skew != null && skew.Length == 2) {
-                canvas.SetTextMatrix(1, skew[0], skew[1], verticalScale, leftBBoxX, yCoordinate);
+            if (rotateGlyphInVerticalWriting) {
+                SetTextMatrixForRotatedGlyph(canvas, fontSize, italicSimulation, lineToDraw, yCoordinate, leftBBoxX, glyphWidth
+                    , symbolHeight, font, skew, verticalScale);
             }
             else {
-                if (italicSimulation) {
-                    canvas.SetTextMatrix(1, 0, ITALIC_ANGLE, verticalScale, leftBBoxX, yCoordinate);
+                if (skew != null && skew.Length == 2) {
+                    canvas.SetTextMatrix(1, skew[0], skew[1], verticalScale, leftBBoxX, yCoordinate);
                 }
                 else {
-                    if (Math.Abs(verticalScale - 1) < EPS) {
-                        canvas.MoveText(leftBBoxX, yCoordinate);
+                    if (italicSimulation) {
+                        canvas.SetTextMatrix(1, 0, ITALIC_ANGLE, verticalScale, leftBBoxX, yCoordinate);
                     }
                     else {
-                        canvas.SetTextMatrix(1, 0, 0, verticalScale, leftBBoxX, yCoordinate);
+                        if (Math.Abs(verticalScale - 1) < EPS) {
+                            canvas.MoveText(leftBBoxX, yCoordinate);
+                        }
+                        else {
+                            canvas.SetTextMatrix(1, 0, 0, verticalScale, leftBBoxX, yCoordinate);
+                        }
                     }
                 }
             }
@@ -1941,8 +2171,13 @@ namespace iText.Layout.Renderer {
                 canvas.SetTextRise((float)textRise);
             }
             float? characterSpacing = this.GetPropertyAsFloat(Property.CHARACTER_SPACING);
-            if (characterSpacing != null && characterSpacing != 0) {
-                canvas.SetCharacterSpacing((float)characterSpacing);
+            if (IsTextCombineUprightAll()) {
+                canvas.SetCharacterSpacing(0).SetWordSpacing(0);
+            }
+            else {
+                if (characterSpacing != null && characterSpacing != 0) {
+                    canvas.SetCharacterSpacing((float)characterSpacing);
+                }
             }
             float? wordSpacing = this.GetPropertyAsFloat(Property.WORD_SPACING);
             if (wordSpacing != null && wordSpacing != 0 && !verticalWriting) {
@@ -2015,8 +2250,34 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        private void SetTextMatrixForRotatedGlyph(PdfCanvas canvas, UnitValue fontSize, bool italicSimulation, GlyphLine
+             lineToDraw, float yCoordinate, float leftBBoxX, float glyphWidth, float symbolHeight, PdfFont font, float
+            [] skew, float verticalScale) {
+            Glyph glyph = lineToDraw.Get(lineToDraw.GetStart());
+            float[] metrics = CalculateAscenderDescender(font, this.GetProperty<RenderingMode?>(Property.RENDERING_MODE
+                ));
+            float ascender = FontProgram.ConvertTextSpaceToGlyphSpace(metrics[0] * fontSize.GetValue());
+            float descender = FontProgram.ConvertTextSpaceToGlyphSpace(metrics[1] * fontSize.GetValue());
+            float slotCenterX = leftBBoxX + symbolHeight / 2;
+            // yCoordinate is the not rotated baseline, not the top of the glyph's slot.
+            float slotCenterY = yCoordinate + ascender - symbolHeight / 2;
+            float glyphCenterX = CalculateGlyphCenterX(glyph, fontSize, glyphWidth / 2);
+            float glyphCenterY = CalculateGlyphCenterY(glyph, fontSize, (ascender + descender) / 2);
+            bool hasSkew = skew != null && skew.Length == 2;
+            float skewAlpha = hasSkew ? skew[0] : 0;
+            float skewBeta = hasSkew ? skew[1] : (italicSimulation ? ITALIC_ANGLE : 0);
+            // Apply the glyph's style before rotating clockwise: (x, y) -> (y, -x).
+            // Center the transformed glyph, not its un-styled bbox, in the same slot.
+            float tx = slotCenterX - skewAlpha * glyphCenterX - verticalScale * glyphCenterY;
+            float ty = slotCenterY + glyphCenterX + skewBeta * glyphCenterY;
+            canvas.SetTextMatrix(skewAlpha, -1, verticalScale, -skewBeta, tx, ty);
+        }
+
         private float GetCharWidth(Glyph g, float fontSize, float? hScale, float? characterSpacing, float? wordSpacing
             ) {
+            if (g is TextCombineUprightGlyphLine.PlaceholderGlyph) {
+                return ((TextCombineUprightGlyphLine.PlaceholderGlyph)g).GetLayoutWidth() * fontSize;
+            }
             if (hScale == null) {
                 hScale = 1f;
             }
