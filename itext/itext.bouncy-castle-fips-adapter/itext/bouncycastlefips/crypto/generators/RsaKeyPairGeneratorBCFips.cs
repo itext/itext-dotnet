@@ -27,6 +27,8 @@ using iText.Commons.Utils;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Fips;
 using Org.BouncyCastle.Math;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Utilities;
 
 namespace iText.Bouncycastlefips.Crypto.Generators {
     /// <summary>
@@ -40,9 +42,16 @@ namespace iText.Bouncycastlefips.Crypto.Generators {
         /// <see cref="FipsRsa.KeyPairGenerator"/>.
         /// </summary>
         public RsaKeyPairGeneratorBCFips() {
+            byte[] personalizationString = Strings.ToUtf8ByteArray("some personalization string");
+            SecureRandom entropySource = new SecureRandom();
+            SecureRandom secureRandomForGenerator = CryptoServicesRegistrar.CreateService(FipsDrbg.Sha512)
+                .FromEntropySource(entropySource,true)
+                .SetPersonalizationString(personalizationString).Build(
+                    entropySource.GenerateSeed(256 / (2 * 8)), true, 
+                    Strings.ToByteArray("number only used once"));
             this.generator = CryptoServicesRegistrar.CreateGenerator(
                 new FipsRsa.KeyGenerationParameters(BigInteger.ValueOf(0x10001), 2048), 
-                new BouncyCastleFipsFactory().GetSecureRandom());
+                secureRandomForGenerator);
         }
         
         /// <summary>

@@ -24,6 +24,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Esf;
 using Org.BouncyCastle.Asn1.Ess;
@@ -1126,6 +1127,11 @@ namespace iText.Bouncycastle {
         /// <summary><inheritDoc/></summary>
         public bool IsNull(IAsn1Encodable encodable) {
             return ((Asn1EncodableBC)encodable).GetEncodable() == null;
+        }
+        
+        /// <summary><inheritDoc/></summary>
+        public RNGCryptoServiceProvider GetSecureRandom() {
+            return new RNGCryptoServiceProvider();
         }
         
         /// <summary><inheritDoc/></summary>

@@ -45,6 +45,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
         public const int ENVELOPE_ENCRYPTION_KEY_LENGTH = 256;
 
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
+        private static readonly BouncyCastleSecureRandomHolder RNG = new BouncyCastleSecureRandomHolder();
         
         private static readonly ICollection<string> UNSUPPORTED_ALGORITHMS = new HashSet<string>();
 
@@ -54,7 +55,9 @@ namespace iText.Kernel.Crypto.Securityhandler {
         }
 
         internal static byte[] GenerateSeed(int seedLength) {
-            return IVGenerator.GetIV(seedLength);
+            byte[] seed = new byte[seedLength];
+            RNG.GetSecureRandom().GetBytes(seed);
+            return seed;
         }
 
         internal static byte[] FetchEnvelopedData(IPrivateKey certificateKey, IX509Certificate certificate, PdfArray recipients) {
@@ -119,12 +122,12 @@ namespace iText.Kernel.Crypto.Securityhandler {
             DERForRecipientParams parameters = new DERForRecipientParams();
 
             IDerObjectIdentifier derob = FACTORY.CreateASN1ObjectIdentifier(ENVELOPE_ENCRYPTION_ALGORITHM_OID);
-
-            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
-            byte[] abyte0 = new byte[ENVELOPE_ENCRYPTION_KEY_LENGTH / 8];
-            rng.GetBytes(abyte0);
             
-            byte[] iv = IVGenerator.GetIV(16);
+            byte[] abyte0 = new byte[ENVELOPE_ENCRYPTION_KEY_LENGTH / 8];
+            RNG.GetSecureRandom().GetBytes(abyte0);
+            
+            byte[] iv = new byte[16];
+            RNG.GetSecureRandom().GetBytes(iv);
             ICryptoTransform encryptor = Aes.Create().CreateEncryptor(abyte0, iv);
 
             byte[] abyte1 = encryptor.TransformFinalBlock(@in, 0, @in.Length);
