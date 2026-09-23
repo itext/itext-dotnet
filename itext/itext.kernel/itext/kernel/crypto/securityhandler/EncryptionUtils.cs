@@ -33,8 +33,13 @@ using Org.BouncyCastle.X509;
 
 namespace iText.Kernel.Crypto.Securityhandler {
     internal sealed class EncryptionUtils {
+
+        private static readonly SecureRandomHolder RNG = new SecureRandomHolder();
+        
         internal static byte[] GenerateSeed(int seedLength) {
-            return IVGenerator.GetIV(seedLength);
+            byte[] seed = new byte[seedLength];
+            RNG.GetSecureRandom().GetBytes(seed);
+            return seed;
         }
 
         internal static byte[] FetchEnvelopedData(ICipherParameters certificateKey, X509Certificate certificate, PdfArray recipients) {
@@ -109,10 +114,13 @@ namespace iText.Kernel.Crypto.Securityhandler {
             byte[] outp = new byte[100];
             DerObjectIdentifier derob = new DerObjectIdentifier(s);
             // keyp
-            byte[] abyte0 = IVGenerator.GetIV(16);
+            byte[] abyte0 = new byte[16];
+            RNG.GetSecureRandom().GetBytes(abyte0);
+
             IBufferedCipher cf = CipherUtilities.GetCipher(derob);
             KeyParameter kp = new KeyParameter(abyte0);
-            byte[] iv = IVGenerator.GetIV(cf.GetBlockSize());
+            byte[] iv = new byte[cf.GetBlockSize()];
+            RNG.GetSecureRandom().GetBytes(iv);
             ParametersWithIV piv = new ParametersWithIV(kp, iv);
             cf.Init(true, piv);
             int len = cf.DoFinal(@in, outp, 0);
