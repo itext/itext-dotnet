@@ -49,6 +49,11 @@ namespace iText.Layout.Splitting {
         }
 
         // ---------------- Tests for https://www.w3.org/TR/jlreq/?lang=en#characters_not_starting_a_line section
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void ClosingBracketsNotStartingLineTest() {
             CreatePdfAndCompare("closingBracketsNotStartingLine", JavaUtil.ArraysAsList("’", "”", ")", "〕", "]", "}", 

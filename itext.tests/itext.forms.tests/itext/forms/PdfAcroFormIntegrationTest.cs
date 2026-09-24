@@ -43,6 +43,11 @@ namespace iText.Forms {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void OrphanedNamelessFormFieldTest() {
             using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "orphanedFormField.pdf"))) {
@@ -56,7 +61,8 @@ namespace iText.Forms {
             String srcFileName = SOURCE_FOLDER + "formWithSameFieldReferences.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_formWithSameFieldReferences.pdf";
             String outFileName = DESTINATION_FOLDER + "formWithSameFieldReferences.pdf";
-            using (PdfDocument sourceDoc = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(outFileName))) {
+            using (PdfDocument sourceDoc = new PdfDocument(new PdfReader(srcFileName), CompareTool.CreateTestPdfWriter
+                (outFileName))) {
                 PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(sourceDoc, true);
                 NUnit.Framework.Assert.AreEqual(1, acroForm.GetFields().Size());
                 NUnit.Framework.Assert.IsNull(acroForm.GetField("Field").GetKids());
@@ -70,7 +76,8 @@ namespace iText.Forms {
             String srcFileName = SOURCE_FOLDER + "fieldMergedWithWidget.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_mergeMergedFieldsWithTheSameNames.pdf";
             String outFileName = DESTINATION_FOLDER + "mergeMergedFieldsWithTheSameNames.pdf";
-            using (PdfDocument sourceDoc = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(outFileName))) {
+            using (PdfDocument sourceDoc = new PdfDocument(new PdfReader(srcFileName), CompareTool.CreateTestPdfWriter
+                (outFileName))) {
                 PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(sourceDoc, true);
                 NUnit.Framework.Assert.AreEqual(1, acroForm.GetFields().Size());
                 NUnit.Framework.Assert.IsNull(acroForm.GetField("Field").GetKids());
@@ -89,7 +96,7 @@ namespace iText.Forms {
         public virtual void AllowAddingFieldsWithTheSameNamesButDifferentValuesTest() {
             String cmpFileName = SOURCE_FOLDER + "cmp_fieldsWithTheSameNamesButDifferentValues.pdf";
             String outFileName = DESTINATION_FOLDER + "fieldsWithTheSameNamesButDifferentValues.pdf";
-            using (PdfDocument outputDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument outputDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 outputDoc.AddNewPage();
                 PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(outputDoc, true);
                 PdfFormField root = new TextFormFieldBuilder(outputDoc, "root").CreateText();
@@ -125,7 +132,8 @@ namespace iText.Forms {
         public virtual void ProcessFieldsWithTheSameNamesInWritingModeTest() {
             String srcFileName = SOURCE_FOLDER + "cmp_fieldsWithTheSameNamesButDifferentValues.pdf";
             String outFileName = DESTINATION_FOLDER + "processFieldsWithTheSameNamesInWritingMode.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(outFileName))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(srcFileName), CompareTool.CreateTestPdfWriter(
+                outFileName))) {
                 PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, true);
                 NUnit.Framework.Assert.AreEqual(1, acroForm.GetFields().Size());
                 PdfFormField root = acroForm.GetField("root");
@@ -144,7 +152,8 @@ namespace iText.Forms {
             String cmpFileName2 = SOURCE_FOLDER + "cmp_disableFieldRegenerationUpdated.pdf";
             String outFileName = DESTINATION_FOLDER + "disableFieldRegeneration.pdf";
             String outFileName2 = DESTINATION_FOLDER + "disableFieldRegenerationUpdated.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(outFileName))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(srcFileName), CompareTool.CreateTestPdfWriter(
+                outFileName))) {
                 PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, true);
                 acroForm.DisableRegenerationForAllFields();
                 foreach (PdfFormField field in acroForm.GetRootFormFields().Values) {
@@ -155,7 +164,8 @@ namespace iText.Forms {
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
                 , "diff_"));
-            using (PdfDocument document_1 = new PdfDocument(new PdfReader(cmpFileName), new PdfWriter(outFileName2))) {
+            using (PdfDocument document_1 = new PdfDocument(new PdfReader(cmpFileName), CompareTool.CreateTestPdfWriter
+                (outFileName2))) {
                 PdfFormCreator.GetAcroForm(document_1, true).EnableRegenerationForAllFields();
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName2, cmpFileName2, DESTINATION_FOLDER
@@ -167,7 +177,8 @@ namespace iText.Forms {
             String srcFileName = SOURCE_FOLDER + "cmp_disableFieldRegeneration.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_enableFieldRegeneration.pdf";
             String outFileName = DESTINATION_FOLDER + "enableFieldRegeneration.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfReader(srcFileName), new PdfWriter(outFileName))) {
+            using (PdfDocument document = new PdfDocument(new PdfReader(srcFileName), CompareTool.CreateTestPdfWriter(
+                outFileName))) {
                 PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(document, true);
                 acroForm.DisableRegenerationForAllFields();
                 foreach (PdfFormField field in acroForm.GetRootFormFields().Values) {

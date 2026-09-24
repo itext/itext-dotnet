@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Utils;
@@ -32,6 +31,8 @@ using iText.Kernel.Utils;
 namespace iText.Kernel.Pdf {
     /// <summary>Representation of a stream as described in the PDF Specification.</summary>
     public class PdfStream : PdfDictionary {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.PdfStream));
+
         protected internal int compressionLevel;
 
         // Output stream associated with PDF stream.
@@ -261,8 +262,7 @@ namespace iText.Kernel.Pdf {
                 throw new PdfException(KernelExceptionMessageConstant.CANNOT_OPERATE_WITH_FLUSHED_PDF_STREAM);
             }
             if (inputStream != null) {
-                ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfStream)).LogWarning("PdfStream was created by InputStream."
-                     + "getBytes() always returns null in this case");
+                LOGGER.Warn(() => "PdfStream was created by InputStream.getBytes() always returns null in this case");
                 return null;
             }
             byte[] bytes = null;

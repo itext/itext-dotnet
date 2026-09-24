@@ -49,6 +49,11 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void CellWithBigRowspanOnThreePagesTest() {
             String fileName = "cellWithBigRowspanOnThreePagesTest.pdf";
@@ -253,7 +258,7 @@ namespace iText.Layout {
         public virtual void WideBorderTest02() {
             String fileName = "wideBorderTest02.pdf";
             String outFileName = destinationFolder + fileName;
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument, new PageSize(902, 842));
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 91f));
@@ -352,7 +357,7 @@ namespace iText.Layout {
         public virtual void WideBorderTest03() {
             String fileName = "wideBorderTest03.pdf";
             String outFileName = destinationFolder + fileName;
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument, new PageSize(842, 400));
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.SetBorder(new SolidBorder(ColorConstants.GREEN, 90f));
@@ -381,7 +386,7 @@ namespace iText.Layout {
         public virtual void WideBorderTest04() {
             String fileName = "wideBorderTest04.pdf";
             String outFileName = destinationFolder + fileName;
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument, new PageSize(200, 150));
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.SetBorder(new SolidBorder(ColorConstants.RED, 5));
@@ -404,7 +409,7 @@ namespace iText.Layout {
         public virtual void BorderCollapseTest01() {
             String fileName = "borderCollapseTest01.pdf";
             String outFileName = destinationFolder + fileName;
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.SetBorder(new SolidBorder(ColorConstants.RED, 5));
@@ -421,7 +426,7 @@ namespace iText.Layout {
         public virtual void BorderCollapseTest02() {
             String fileName = "borderCollapseTest02.pdf";
             String outFileName = destinationFolder + fileName;
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Cell cell;
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
@@ -452,7 +457,7 @@ namespace iText.Layout {
         public virtual void BorderCollapseTest02A() {
             String fileName = "borderCollapseTest02A.pdf";
             String outFileName = destinationFolder + fileName;
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Cell cell;
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
@@ -482,7 +487,7 @@ namespace iText.Layout {
         public virtual void BorderCollapseTest03() {
             String fileName = "borderCollapseTest03.pdf";
             String outFileName = destinationFolder + fileName;
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Cell cell;
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
@@ -514,7 +519,7 @@ namespace iText.Layout {
         public virtual void SeparatedBorderTest01A() {
             String fileName = "separatedBorderTest01A.pdf";
             String outFileName = destinationFolder + fileName;
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.SetProperty(Property.BORDER_COLLAPSE, BorderCollapsePropertyValue.SEPARATE);
@@ -531,7 +536,7 @@ namespace iText.Layout {
         public virtual void SeparatedBorderTest01B() {
             String fileName = "separatedBorderTest01B.pdf";
             String outFileName = destinationFolder + fileName;
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.SetProperty(Property.BORDER_COLLAPSE, BorderCollapsePropertyValue.SEPARATE);
@@ -548,7 +553,7 @@ namespace iText.Layout {
         public virtual void SeparatedBorderTest01C() {
             String fileName = "separatedBorderTest01C.pdf";
             String outFileName = destinationFolder + fileName;
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.SetProperty(Property.BORDER_COLLAPSE, BorderCollapsePropertyValue.SEPARATE);
@@ -1219,7 +1224,7 @@ namespace iText.Layout {
         public virtual void TableWithHeaderFooterTest06A() {
             String fileName = "tableWithHeaderFooterTest06A.pdf";
             String outFileName = destinationFolder + fileName;
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument, PageSize.A6.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(5)).UseAllAvailableWidth();
             Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)")).SetHeight(30).SetBorderBottom(new SolidBorder
@@ -1249,7 +1254,7 @@ namespace iText.Layout {
         public virtual void VerticalBordersInfluenceHorizontalTopAndBottomBordersTest() {
             String fileName = "verticalBordersInfluenceHorizontalTopAndbottomBordersTest.pdf";
             String outFileName = destinationFolder + fileName;
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument, PageSize.A6.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(5)).UseAllAvailableWidth();
             Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)")).SetHeight(30).SetBorderBottom(new SolidBorder
@@ -1274,7 +1279,7 @@ namespace iText.Layout {
         public virtual void TableWithHeaderFooterTest06B() {
             String fileName = "tableWithHeaderFooterTest06B.pdf";
             String outFileName = destinationFolder + fileName;
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument, PageSize.A6.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(5)).UseAllAvailableWidth();
             Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)")).SetHeight(30).SetBorderBottom(new SolidBorder
@@ -1304,7 +1309,7 @@ namespace iText.Layout {
         public virtual void TableWithHeaderFooterTest07() {
             String fileName = "tableWithHeaderFooterTest07.pdf";
             String outFileName = destinationFolder + fileName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth().SetWidth(UnitValue.CreatePercentValue
                 (100)).SetFixedLayout();
@@ -1327,7 +1332,7 @@ namespace iText.Layout {
         public virtual void TableWithHeaderFooterTest08() {
             String fileName = "tableWithHeaderFooterTest08.pdf";
             String outFileName = destinationFolder + fileName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             table.AddFooterCell(new Cell(1, 2).SetHeight(50).Add(new Paragraph("Footer")));
@@ -1350,7 +1355,8 @@ namespace iText.Layout {
         public virtual void TableWithHeaderFooterTest09() {
             String fileName = "tableWithHeaderFooterTest09.pdf";
             String outFileName = destinationFolder + fileName;
-            Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)), PageSize.A3.Rotate());
+            Document doc = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)), PageSize.A3.Rotate
+                ());
             Cell headerCell1 = new Cell().Add(new Paragraph("I am header")).SetBorder(new SolidBorder(ColorConstants.GREEN
                 , 30)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
             Cell headerCell2 = new Cell().Add(new Paragraph("I am header")).SetBorder(new SolidBorder(ColorConstants.GREEN
@@ -1398,7 +1404,7 @@ namespace iText.Layout {
         public virtual void TableWithHeaderFooterTest10() {
             String fileName = "tableWithHeaderFooterTest10.pdf";
             String outFileName = destinationFolder + fileName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, new PageSize(380, 300));
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
             table.AddFooterCell(new Cell(1, 3).SetHeight(70).Add(new Paragraph("Footer")));
@@ -1459,7 +1465,7 @@ namespace iText.Layout {
             String testName = "tableWithHeaderFooterTest11A.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + cmpPrefix + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
             table.SetBorder(new SolidBorder(90));
@@ -1988,7 +1994,7 @@ namespace iText.Layout {
             String testName = "verticalMiddleBorderTest.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + cmpPrefix + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(UnitValue.CreatePercentArray(2)).UseAllAvailableWidth();
             for (int i = 0; i < 4; i++) {
@@ -2009,7 +2015,7 @@ namespace iText.Layout {
 
         private static Document CreateDocument(String fileName) {
             String outFileName = destinationFolder + fileName;
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             return new Document(pdfDocument);
         }
 

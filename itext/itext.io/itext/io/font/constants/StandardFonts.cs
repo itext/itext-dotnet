@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Commons.Utils;
 
 namespace iText.IO.Font.Constants {
+    /// <summary>Defines standard PDF Type 1 font names.</summary>
     public sealed class StandardFonts {
         private StandardFonts() {
         }
@@ -51,6 +52,13 @@ namespace iText.IO.Font.Constants {
             BUILTIN_FONTS = JavaCollectionsUtil.UnmodifiableSet(tempSet);
         }
 
+        /// <summary>Checks whether a font name identifies one of the standard PDF fonts.</summary>
+        /// <param name="fontName">the font name to check</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// when the name is a standard PDF font name
+        /// </returns>
         public static bool IsStandardFont(String fontName) {
             return BUILTIN_FONTS.Contains(fontName);
         }

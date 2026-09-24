@@ -47,6 +47,11 @@ namespace iText.Layout.Renderer {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void BlockRendererAddByIDTest() {
             DocumentRenderer documentRenderer = new DocumentRenderer(null);
@@ -136,7 +141,8 @@ namespace iText.Layout.Renderer {
         public virtual void TargetCounterHandlerEndToEndLayoutTest() {
             String targetPdf = DESTINATION_FOLDER + "targetCounterHandlerEndToEndLayoutTest.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_targetCounterHandlerEndToEndLayoutTest.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(targetPdf)), PageSize.A4, false);
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(targetPdf)), PageSize.A4, 
+                false);
             Text pageNumPlaceholder = new Text("x");
             String id = "1";
             pageNumPlaceholder.SetProperty(Property.ID, id);

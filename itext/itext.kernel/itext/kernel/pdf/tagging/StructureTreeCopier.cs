@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -33,6 +32,8 @@ namespace iText.Kernel.Pdf.Tagging {
 //\cond DO_NOT_DOCUMENT
     /// <summary>Internal helper class which is used to copy, clone or move tag structure across documents.</summary>
     internal class StructureTreeCopier {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(StructureTreeCopier));
+
         private static IList<PdfName> ignoreKeysForCopy = new List<PdfName>();
 
         private static IList<PdfName> ignoreKeysForClone = new List<PdfName>();
@@ -274,8 +275,7 @@ namespace iText.Kernel.Pdf.Tagging {
                         if (!mappingEntry.Value.Equals(destRoleMap.Get(mappingEntry.Key))) {
                             String srcMapping = mappingEntry.Key + " -> " + mappingEntry.Value;
                             String destMapping = mappingEntry.Key + " -> " + destRoleMap.Get(mappingEntry.Key);
-                            ILogger logger = ITextLogManager.GetLogger(typeof(StructureTreeCopier));
-                            logger.LogWarning(String.Format(iText.IO.Logs.IoLogMessageConstant.ROLE_MAPPING_FROM_SOURCE_IS_NOT_COPIED_ALREADY_EXIST
+                            LOGGER.Warn(() => String.Format(iText.IO.Logs.IoLogMessageConstant.ROLE_MAPPING_FROM_SOURCE_IS_NOT_COPIED_ALREADY_EXIST
                                 , srcMapping, destMapping));
                         }
                     }
@@ -512,8 +512,7 @@ namespace iText.Kernel.Pdf.Tagging {
                             copiedMapping = copiedMappingArray;
                         }
                         else {
-                            ILogger logger = ITextLogManager.GetLogger(typeof(StructureTreeCopier));
-                            logger.LogWarning(String.Format(iText.IO.Logs.IoLogMessageConstant.ROLE_MAPPING_FROM_SOURCE_IS_NOT_COPIED_INVALID
+                            LOGGER.Warn(() => String.Format(iText.IO.Logs.IoLogMessageConstant.ROLE_MAPPING_FROM_SOURCE_IS_NOT_COPIED_INVALID
                                 , entry.Key.ToString()));
                             continue;
                         }

@@ -28,7 +28,14 @@ using iText.IO.Source;
 using iText.IO.Util;
 
 namespace iText.IO.Font.Cmap {
+    /// <summary>Locates CMap programs in the bundled font resources.</summary>
     public class CMapLocationResource : ICMapLocation {
+        /// <summary>Opens a tokenizer for a bundled CMap resource.</summary>
+        /// <param name="location">
+        /// the CMap resource name relative to
+        /// <see cref="GetLocationPath()"/>
+        /// </param>
+        /// <returns>a tokenizer for the requested resource</returns>
         public virtual PdfTokenizer GetLocation(String location) {
             String fullName = GetLocationPath() + location;
             Stream inp = ResourceUtil.GetResourceStream(fullName);

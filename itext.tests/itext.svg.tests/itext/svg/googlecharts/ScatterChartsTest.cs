@@ -27,39 +27,39 @@ using iText.Test;
 namespace iText.Svg.Googlecharts {
     [NUnit.Framework.Category("IntegrationTest")]
     public class ScatterChartsTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/ScatterChartsTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/googlecharts/ScatterChartsTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/googlecharts/ScatterChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void ScatterCharts() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "scatterCharts");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "scatterCharts");
         }
 
         [NUnit.Framework.Test]
         public virtual void ScatterDualYChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "scatterDualYChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "scatterDualYChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void ScatterMaterialChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "scatterMaterialChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "scatterMaterialChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void ScatterStarsChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "scatterStarsChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "scatterStarsChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void ScatterTopXChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "scatterTopXChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "scatterTopXChart");
         }
     }
 }

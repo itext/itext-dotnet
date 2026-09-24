@@ -35,10 +35,6 @@ namespace iText.Layout.Properties.Margins {
     /// Footnote anchor indicates footnote in the text with superscript numbers (or letters or other symbols).
     /// </remarks>
     public class FootnoteAnchor : AbstractElement<iText.Layout.Properties.Margins.FootnoteAnchor>, IAccessibleElement {
-        private const int DEFAULT_FONT_SIZE = 6;
-
-        private const int DEFAULT_TEXT_RISE = 7;
-
         protected internal DefaultAccessibilityProperties tagProperties;
 
         private readonly Footnote footnote;
@@ -46,6 +42,8 @@ namespace iText.Layout.Properties.Margins {
         private IElement footnoteAnchor;
 
         private Style footnoteAnchorLabelStyle = null;
+
+        private bool defaultStyleNeeded = true;
 
         /// <summary>
         /// Creates new
@@ -60,6 +58,7 @@ namespace iText.Layout.Properties.Margins {
         public FootnoteAnchor(Footnote footnote)
             // Footnote anchor be set automatically based on FootnoteNumberingType. Asterisk is used as default value.
             : this(new Text("*"), footnote) {
+            defaultStyleNeeded = false;
         }
 
         /// <summary>
@@ -74,10 +73,7 @@ namespace iText.Layout.Properties.Margins {
         /// linked to this anchor
         /// </param>
         public FootnoteAnchor(String text, Footnote footnote)
-            // TODO DEVSIX-10031 Do not specify constant font size by default,
-            //  it should depend on parent paragraph font size.
-            : this(new Text(text).SetFontSize(DEFAULT_FONT_SIZE).SetTextRise(DEFAULT_TEXT_RISE).SetNeutralRole(), footnote
-                ) {
+            : this(new Text(text).SetNeutralRole(), footnote) {
         }
 
         /// <summary>
@@ -154,6 +150,12 @@ namespace iText.Layout.Properties.Margins {
         /// instance
         /// </returns>
         public virtual iText.Layout.Properties.Margins.FootnoteAnchor SetFootnoteAnchor(Text footnoteAnchor) {
+            // If we override the default (*) than we want to set defaultStyleNeeded to true.
+            // If we override any other we keep defaultStyleNeeded=true.
+            // And we can't create with default (*), then pass custom and then pass the same default.
+            if (this.footnoteAnchor != footnoteAnchor) {
+                defaultStyleNeeded = true;
+            }
             this.footnoteAnchor = footnoteAnchor;
             this.footnote.ApplyFootnoteAnchor(this);
             return this;
@@ -177,6 +179,7 @@ namespace iText.Layout.Properties.Margins {
         public virtual iText.Layout.Properties.Margins.FootnoteAnchor SetFootnoteAnchor(Image footnoteAnchor) {
             this.footnoteAnchor = footnoteAnchor;
             this.footnote.ApplyFootnoteAnchor(this);
+            defaultStyleNeeded = false;
             return this;
         }
 
@@ -243,6 +246,20 @@ namespace iText.Layout.Properties.Margins {
             this.footnoteAnchorLabelStyle = footnoteAnchorLabelStyle;
             this.footnote.ApplyFootnoteAnchor(this);
             return this;
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Checks whether this anchor uses default anchor text.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if this anchor has default anchor text,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        internal virtual bool IsDefaultStyleNeeded() {
+            return defaultStyleNeeded;
         }
 //\endcond
 

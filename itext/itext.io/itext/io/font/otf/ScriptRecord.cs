@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 
 namespace iText.IO.Font.Otf {
+    /// <summary>Represents the script record of an OpenType font.</summary>
     public class ScriptRecord {
         private String tag;
 

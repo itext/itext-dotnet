@@ -49,6 +49,11 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void SimpleBordersTest() {
             String fileName = "simpleBordersTest.pdf";
@@ -82,7 +87,7 @@ namespace iText.Layout {
         public virtual void DrawBordersByRectangleTest() {
             String outPdf = destinationFolder + "drawBordersByRectangle.pdf";
             String cmpPdf = sourceFolder + "cmp_drawBordersByRectangle.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outPdf))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
                 PdfPage page = pdfDocument.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 new SolidBorder(DeviceRgb.GREEN, 5).Draw(canvas, new Rectangle(50, 700, 100, 100));
@@ -261,7 +266,7 @@ namespace iText.Layout {
 
         private static Document CreateDocument(String fileName) {
             String outFileName = destinationFolder + fileName;
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             return new Document(pdfDocument);
         }
 

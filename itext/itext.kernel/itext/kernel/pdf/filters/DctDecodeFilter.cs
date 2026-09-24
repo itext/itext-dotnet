@@ -20,8 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
 
@@ -32,11 +31,11 @@ namespace iText.Kernel.Pdf.Filters {
     /// (in JPEG baseline format).
     /// </remarks>
     public class DctDecodeFilter : IFilterHandler {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(DctDecodeFilter));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(DctDecodeFilter));
 
         public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
             ) {
-            LOGGER.LogInformation(KernelLogMessageConstant.DCTDECODE_FILTER_DECODING);
+            LOGGER.Info(() => KernelLogMessageConstant.DCTDECODE_FILTER_DECODING);
             return b;
         }
     }

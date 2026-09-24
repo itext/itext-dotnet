@@ -30,6 +30,7 @@ using iText.IO.Source;
 using iText.IO.Util;
 
 namespace iText.IO.Font.Cmap {
+    /// <summary>Parses PDF syntax objects and commands used by CMap programs.</summary>
     public class CMapContentParser {
         /// <summary>Commands have this type.</summary>
         public const int COMMAND_TYPE = 200;
@@ -223,6 +224,9 @@ namespace iText.IO.Font.Cmap {
             return "[<" + ToHex4(high) + ToHex4(low) + ">]";
         }
 
+        /// <summary>Decodes a CMap string object to a Java string.</summary>
+        /// <param name="cMapObject">the CMap object containing a string value</param>
+        /// <returns>the decoded string value</returns>
         public static String DecodeCMapObject(CMapObject cMapObject) {
             if (cMapObject.IsHexString()) {
                 return PdfEncodings.ConvertToString(((String)cMapObject.GetValue()).GetBytes(), PdfEncodings.UNICODE_BIG_UNMARKED

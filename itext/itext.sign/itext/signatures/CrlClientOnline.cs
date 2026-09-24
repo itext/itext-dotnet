@@ -23,12 +23,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Extensions.Logging;
 using iText.Bouncycastleconnector;
-using iText.Commons;
 using iText.Commons.Bouncycastle;
+using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Resolver.Resource;
 
@@ -42,8 +42,7 @@ namespace iText.Signatures {
             ();
 
         /// <summary>The Logger instance.</summary>
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.CrlClientOnline
-            ));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Signatures.CrlClientOnline));
 
         /// <summary>The URLs of the CRLs.</summary>
         protected internal IList<Uri> urls = new List<Uri>();
@@ -81,7 +80,7 @@ namespace iText.Signatures {
         public CrlClientOnline(IX509Certificate[] chain) {
             foreach (IX509Certificate certificate in chain) {
                 IX509Certificate cert = (IX509Certificate)certificate;
-                LOGGER.LogInformation("Checking certificate: " + cert.GetSubjectDN());
+                LOGGER.Info(() => "Checking certificate: " + cert.GetSubjectDN());
                 IList<String> urls = CertificateUtil.GetCRLURLs(cert);
                 foreach (String url in urls) {
                     AddUrl(url);
@@ -104,8 +103,8 @@ namespace iText.Signatures {
             }
             IList<Uri> urlList = new List<Uri>(urls);
             if (urlList.IsEmpty()) {
-                LOGGER.LogInformation(MessageFormatUtil.Format("Looking for CRL for certificate {0}", BOUNCY_CASTLE_FACTORY
-                    .CreateX500Name(checkCert)));
+                IX500Name x500Name = BOUNCY_CASTLE_FACTORY.CreateX500Name(checkCert);
+                LOGGER.Info(() => MessageFormatUtil.Format("Looking for CRL for certificate {0}", x500Name));
                 try {
                     IList<String> urlsList = new List<String>();
                     if (url == null) {
@@ -119,17 +118,17 @@ namespace iText.Signatures {
                     }
                     foreach (String urlString in urlsList) {
                         urlList.Add(new Uri(urlString));
-                        LOGGER.LogInformation("Found CRL url: " + urlString);
+                        LOGGER.Info(() => "Found CRL url: " + urlString);
                     }
                 }
                 catch (Exception e) {
-                    LOGGER.LogInformation("Skipped CRL url: " + e.Message);
+                    LOGGER.Info(() => "Skipped CRL url: " + e.Message);
                 }
             }
             IList<byte[]> ar = new List<byte[]>();
             foreach (Uri urlt in urlList) {
                 try {
-                    LOGGER.LogInformation("Checking CRL: " + urlt);
+                    LOGGER.Info(() => "Checking CRL: " + urlt);
                     Stream inp = GetCrlResponse(checkCert, urlt);
                     byte[] buf = new byte[1024];
                     MemoryStream bout = new MemoryStream();
@@ -142,11 +141,11 @@ namespace iText.Signatures {
                     }
                     inp.Dispose();
                     ar.Add(bout.ToArray());
-                    LOGGER.LogInformation("Added CRL found at: " + urlt);
+                    LOGGER.Info(() => "Added CRL found at: " + urlt);
                 }
                 catch (Exception e) {
-                    LOGGER.LogInformation(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.INVALID_DISTRIBUTION_POINT
-                        , e.Message));
+                    LOGGER.Info(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.INVALID_DISTRIBUTION_POINT, 
+                        e.Message));
                 }
             }
             return ar;
@@ -219,7 +218,7 @@ namespace iText.Signatures {
                 AddUrl(new Uri(url));
             }
             catch (UriFormatException) {
-                LOGGER.LogInformation("Skipped CRL url (malformed): " + url);
+                LOGGER.Info(() => "Skipped CRL url (malformed): " + url);
             }
         }
 
@@ -227,11 +226,11 @@ namespace iText.Signatures {
         /// <param name="url">an URL object</param>
         protected internal virtual void AddUrl(Uri url) {
             if (urls.Contains(url)) {
-                LOGGER.LogInformation("Skipped CRL url (duplicate): " + url);
+                LOGGER.Info(() => "Skipped CRL url (duplicate): " + url);
                 return;
             }
             urls.Add(url);
-            LOGGER.LogInformation("Added CRL url: " + url);
+            LOGGER.Info(() => "Added CRL url: " + url);
         }
 
         /// <summary>Get an amount of URLs provided for this CRL.</summary>

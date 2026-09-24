@@ -28,91 +28,91 @@ using iText.Test.Attributes;
 namespace iText.Svg.Renderers.Impl {
     [NUnit.Framework.Category("IntegrationTest")]
     public class RectangleSvgNodeRendererIntegrationTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/RectangleSvgNodeRendererTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/renderers/impl/RectangleSvgNodeRendererTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/renderers/impl/RectangleSvgNodeRendererTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void BasicRectangleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicRectangle");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "basicRectangle");
         }
 
         [NUnit.Framework.Test]
         public virtual void BasicRectangleRxRyZeroTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicRectangleRxRyZero");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "basicRectangleRxRyZero");
         }
 
         [NUnit.Framework.Test]
         public virtual void BasicCircularRoundedRectangleRyZeroTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicCircularRoundedRectangleRyZero");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "basicCircularRoundedRectangleRyZero");
         }
 
         [NUnit.Framework.Test]
         public virtual void BasicCircularRoundedRectangleRxZeroTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicCircularRoundedRectangleRxZero");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "basicCircularRoundedRectangleRxZero");
         }
 
         [NUnit.Framework.Test]
         public virtual void BasicCircularRoundedRxRectangleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicCircularRoundedRxRectangle");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "basicCircularRoundedRxRectangle");
         }
 
         [NUnit.Framework.Test]
         public virtual void BasicCircularRoundedRyRectangleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicCircularRoundedRyRectangle");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "basicCircularRoundedRyRectangle");
         }
 
         [NUnit.Framework.Test]
         public virtual void BasicEllipticalRoundedRectangleXTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicEllipticalRoundedRectangleX");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "basicEllipticalRoundedRectangleX");
         }
 
         [NUnit.Framework.Test]
         public virtual void BasicEllipticalRoundedRectangleYTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicEllipticalRoundedRectangleY");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "basicEllipticalRoundedRectangleY");
         }
 
         [NUnit.Framework.Test]
         public virtual void BasicEllipticalWidthCappedRoundedRectangleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicEllipticalWidthCappedRoundedRectangle");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "basicEllipticalWidthCappedRoundedRectangle");
         }
 
         [NUnit.Framework.Test]
         public virtual void BasicEllipticalHeightCappedRoundedRectangleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicEllipticalHeightCappedRoundedRectangle");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "basicEllipticalHeightCappedRoundedRectangle");
         }
 
         [NUnit.Framework.Test]
         public virtual void BasicEllipticalNegativeWidthRoundedRectangleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicEllipticalNegativeWidthRoundedRectangle");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "basicEllipticalNegativeWidthRoundedRectangle");
         }
 
         [NUnit.Framework.Test]
         public virtual void BasicEllipticalNegativeHeightRoundedRectangleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicEllipticalNegativeHeightRoundedRectangle");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "basicEllipticalNegativeHeightRoundedRectangle");
         }
 
         [NUnit.Framework.Test]
         public virtual void ComplexRectangleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "complexRectangle");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "complexRectangle");
         }
 
         [NUnit.Framework.Test]
         [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION, 
             Count = 1)]
         public virtual void NoFillRectangleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "noFillRectangle");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "noFillRectangle");
         }
 
         [NUnit.Framework.Test]
         public virtual void RectangleNoWidthNoHeightTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "rectangleNoWidthNoHeight");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectangleNoWidthNoHeight");
         }
     }
 }

@@ -27,7 +27,7 @@ using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 
 namespace iText.Commons.Json {
-    /// <summary>Class representing json object value.</summary>
+    /// <summary>Class representing JSON object value.</summary>
     public sealed class JsonObject : JsonValue {
         private readonly IDictionary<String, JsonValue> fields;
 
@@ -45,19 +45,19 @@ namespace iText.Commons.Json {
         /// <see cref="JsonObject"/>
         /// with provided fields.
         /// </summary>
-        /// <param name="fields">fields to put into json object</param>
+        /// <param name="fields">fields to put into JSON object</param>
         public JsonObject(IDictionary<String, JsonValue> fields)
             : base() {
             this.fields = new LinkedDictionary<String, JsonValue>(fields);
         }
 
-        /// <summary>Gets a copy of the json object fields.</summary>
-        /// <returns>json object fields</returns>
+        /// <summary>Gets a copy of the JSON object fields.</summary>
+        /// <returns>JSON object fields</returns>
         public IDictionary<String, JsonValue> GetFields() {
             return new LinkedDictionary<String, JsonValue>(fields);
         }
 
-        /// <summary>Gets particular json object field.</summary>
+        /// <summary>Gets particular JSON object field.</summary>
         /// <param name="fieldName">
         /// 
         /// <see cref="System.String"/>
@@ -71,14 +71,20 @@ namespace iText.Commons.Json {
             return fields.Get(fieldName);
         }
 
-        /// <summary>Adds a new field into json object.</summary>
-        /// <param name="key">a key to add into json object fields</param>
+        /// <summary>Adds a new field into JSON object.</summary>
+        /// <param name="key">a key to add into JSON object fields</param>
         /// <param name="value">
-        /// a value to add into json object fields under the
+        /// a value to add into JSON object fields under the
         /// <paramref name="key"/>
         /// </param>
         public void Add(String key, JsonValue value) {
             fields.Put(key, value);
+        }
+
+        /// <summary>Removes a field from JSON object.</summary>
+        /// <param name="key">a key to remove a value for</param>
+        public void Remove(String key) {
+            fields.JRemove(key);
         }
 
         /// <summary><inheritDoc/></summary>

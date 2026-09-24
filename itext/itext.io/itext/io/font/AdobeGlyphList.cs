@@ -29,10 +29,11 @@ using iText.IO.Font.Constants;
 using iText.IO.Util;
 
 namespace iText.IO.Font {
+    /// <summary>Provides mappings between Adobe glyph names and Unicode code points.</summary>
     public class AdobeGlyphList {
-        private static IDictionary<int, String> unicode2names = new Dictionary<int, String>();
+        private static readonly IDictionary<int, String> unicode2names = new Dictionary<int, String>();
 
-        private static IDictionary<String, int?> names2unicode = new Dictionary<String, int?>();
+        private static readonly IDictionary<String, int?> names2unicode = new Dictionary<String, int?>();
 
         static AdobeGlyphList() {
             Stream resource = null;
@@ -95,6 +96,13 @@ namespace iText.IO.Font {
         }
 
         // empty on purpose
+        /// <summary>Resolves an Adobe glyph name to a Unicode code point.</summary>
+        /// <param name="name">the glyph name</param>
+        /// <returns>
+        /// the code point, or
+        /// <c>-1</c>
+        /// when the name is unknown
+        /// </returns>
         public static int NameToUnicode(String name) {
             int v = -1;
             if (names2unicode.ContainsKey(name)) {
@@ -110,14 +118,25 @@ namespace iText.IO.Font {
             return v;
         }
 
+        /// <summary>Resolves a Unicode code point to an Adobe glyph name.</summary>
+        /// <param name="num">the Unicode code point</param>
+        /// <returns>
+        /// the glyph name, or
+        /// <see langword="null"/>
+        /// when unknown
+        /// </returns>
         public static String UnicodeToName(int num) {
             return unicode2names.Get(num);
         }
 
+        /// <summary>Returns the number of loaded glyph names.</summary>
+        /// <returns>the number of loaded glyph-name mappings</returns>
         public static int GetNameToUnicodeLength() {
             return names2unicode.Count;
         }
 
+        /// <summary>Returns the number of loaded unicodes.</summary>
+        /// <returns>the number of loaded Unicode mappings</returns>
         public static int GetUnicodeToNameLength() {
             return unicode2names.Count;
         }

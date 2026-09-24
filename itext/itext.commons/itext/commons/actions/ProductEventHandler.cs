@@ -24,8 +24,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Actions.Confirmations;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Actions.Processors;
@@ -44,7 +42,7 @@ namespace iText.Commons.Actions {
             ();
 //\endcond
 
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Commons.Actions.ProductEventHandler
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Commons.Actions.ProductEventHandler
             ));
 
         // The constant has the following value for two reasons. First, to avoid the infinite loop.
@@ -180,7 +178,7 @@ namespace iText.Commons.Actions {
                         (), productEventProcessor.GetProducer());
                 }
                 else {
-                    LOGGER.LogWarning(MessageFormatUtil.Format(CommonsLogMessageConstant.UNREPORTED_EVENT, confirmedEvent.GetProductName
+                    LOGGER.Warn(() => MessageFormatUtil.Format(CommonsLogMessageConstant.UNREPORTED_EVENT, confirmedEvent.GetProductName
                         (), confirmedEvent.GetEventType()));
                 }
             }

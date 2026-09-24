@@ -22,10 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Datastructures;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields.Borders;
@@ -77,8 +76,7 @@ namespace iText.Forms.Fields {
         /// <summary>Value which represents "on" state of form field.</summary>
         public const String ON_STATE_VALUE = "Yes";
 
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormAnnotation
-            ));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Forms.Fields.PdfFormAnnotation));
 
         private const String LINE_ENDINGS_REGEXP = "\\r\\n|\\r|\\n";
 
@@ -1253,7 +1251,7 @@ namespace iText.Forms.Fields {
                 if (textField.IsComb()) {
                     if (textField.GetMaxLen() == 0 || textField.IsMultiline() || textField.IsPassword() || textField.IsFileSelect
                         ()) {
-                        LOGGER.LogError(iText.IO.Logs.IoLogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT);
+                        LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.COMB_FLAG_MAY_BE_SET_ONLY_IF_MAXLEN_IS_PRESENT);
                         return false;
                     }
                     return true;
@@ -1376,8 +1374,7 @@ namespace iText.Forms.Fields {
                 }
 
                 default: {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormAnnotation));
-                    logger.LogError(FormsLogMessageConstants.INCORRECT_WIDGET_ROTATION);
+                    LOGGER.Error(() => FormsLogMessageConstants.INCORRECT_WIDGET_ROTATION);
                     return null;
                 }
             }

@@ -240,11 +240,15 @@ namespace iText.Layout.Properties {
 
         public const int LEFT = 34;
 
+        public const int LINK_ANNOTATION = 88;
+
+        public const int LINE_CAP_STYLE = 166;
+
         public const int LINE_DRAWER = 35;
 
         public const int LINE_HEIGHT = 124;
 
-        public const int LINK_ANNOTATION = 88;
+        public const int LINE_JOIN_STYLE = 167;
 
         public const int LIST_START = 36;
 
@@ -281,6 +285,8 @@ namespace iText.Layout.Properties {
         public const int MIN_HEIGHT = 85;
 
         public const int MIN_WIDTH = 80;
+
+        public const int MITER_LIMIT = 168;
 
         public const int NO_SOFT_WRAP_INLINE = 118;
 
@@ -420,6 +426,12 @@ namespace iText.Layout.Properties {
 
         public const int POSITIONED_ELEMENT_WRAPPER_LAYOUT = 165;
 
+        public const int WRITING_MODE = 169;
+
+        public const int TEXT_ORIENTATION = 170;
+
+        public const int TEXT_COMBINE_UPRIGHT = 171;
+
         /// <summary>
         /// Some properties must be passed to
         /// <see cref="iText.Layout.IPropertyContainer"/>
@@ -435,7 +447,7 @@ namespace iText.Layout.Properties {
         /// </remarks>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 165;
+        private const int MAX_INHERITED_PROPERTY_ID = 171;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
@@ -486,6 +498,12 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.TREAT_AS_CONTINUOUS_CONTAINER] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.IGNORE_AREA_AND_SECTION_BREAKS] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.POSITIONED_ELEMENT_WRAPPER_LAYOUT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.LINE_CAP_STYLE] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.LINE_JOIN_STYLE] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.MITER_LIMIT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.WRITING_MODE] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.TEXT_ORIENTATION] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.TEXT_COMBINE_UPRIGHT] = true;
         }
 
         private Property() {

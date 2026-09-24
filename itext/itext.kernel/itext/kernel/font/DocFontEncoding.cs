@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
@@ -33,6 +32,8 @@ namespace iText.Kernel.Font {
 //\cond DO_NOT_DOCUMENT
     /// <summary>This class allow to parse document font's encoding.</summary>
     internal class DocFontEncoding : FontEncoding {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Font.DocFontEncoding));
+
         protected internal DocFontEncoding() {
         }
 
@@ -106,8 +107,7 @@ namespace iText.Kernel.Font {
                     }
                     else {
                         if (currentNumber > 255) {
-                            ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.DocFontEncoding));
-                            LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.DOCFONT_HAS_ILLEGAL_DIFFERENCES
+                            LOGGER.Warn(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.DOCFONT_HAS_ILLEGAL_DIFFERENCES
                                 , ((PdfName)obj).GetValue()));
                         }
                         else {

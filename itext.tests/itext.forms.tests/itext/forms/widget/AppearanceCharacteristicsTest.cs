@@ -45,11 +45,16 @@ namespace iText.Forms.Widget {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void FormFieldBordersTest() {
             String outPdf = destinationFolder + "formFieldBorders.pdf";
             String cmpPdf = sourceFolder + "cmp_formFieldBorders.pdf";
-            using (PdfDocument doc = new PdfDocument(new PdfWriter(outPdf))) {
+            using (PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
                 PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
                 PdfFormField simpleField = new TextFormFieldBuilder(doc, "simpleField").SetWidgetRectangle(new Rectangle(300
                     , 300, 200, 100)).CreateText();
@@ -88,7 +93,7 @@ namespace iText.Forms.Widget {
         public virtual void BeveledBorderWithBackgroundTest() {
             String outPdf = destinationFolder + "beveledBorderWithBackground.pdf";
             String cmpPdf = sourceFolder + "cmp_beveledBorderWithBackground.pdf";
-            using (PdfDocument doc = new PdfDocument(new PdfWriter(outPdf))) {
+            using (PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
                 PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
                 PdfFormField formField = new TextFormFieldBuilder(doc, "formField").SetWidgetRectangle(new Rectangle(100, 
                     600, 200, 100)).CreateText();
@@ -105,7 +110,7 @@ namespace iText.Forms.Widget {
         public virtual void DashedBorderWithBackgroundTest() {
             String outPdf = destinationFolder + "dashedBorderWithBackground.pdf";
             String cmpPdf = sourceFolder + "cmp_dashedBorderWithBackground.pdf";
-            using (PdfDocument doc = new PdfDocument(new PdfWriter(outPdf))) {
+            using (PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
                 PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
                 PdfFormField formField = new TextFormFieldBuilder(doc, "formField").SetWidgetRectangle(new Rectangle(100, 
                     600, 200, 100)).CreateText();
@@ -122,7 +127,7 @@ namespace iText.Forms.Widget {
         public virtual void TextStartsAfterFieldBorderTest() {
             String outPdf = destinationFolder + "textStartsAfterFieldBorderTest.pdf";
             String cmpPdf = sourceFolder + "cmp_textStartsAfterFieldBorderTest.pdf";
-            using (PdfDocument doc = new PdfDocument(new PdfWriter(outPdf))) {
+            using (PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
                 PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
                 PdfFormField insetFormField = new TextFormFieldBuilder(doc, "insetFormField").SetWidgetRectangle(new Rectangle
                     (90, 600, 200, 100)).CreateText();
@@ -156,8 +161,8 @@ namespace iText.Forms.Widget {
         public virtual void FillFormWithRotatedFieldAndPageTest() {
             String outPdf = destinationFolder + "fillFormWithRotatedFieldAndPageTest.pdf";
             String cmpPdf = sourceFolder + "cmp_fillFormWithRotatedFieldAndPageTest.pdf";
-            using (PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "pdfWithRotatedField.pdf"), new PdfWriter
-                (outPdf))) {
+            using (PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "pdfWithRotatedField.pdf"), CompareTool
+                .CreateTestPdfWriter(outPdf))) {
                 PdfAcroForm form1 = PdfFormCreator.GetAcroForm(doc, false);
                 form1.GetField("First field").SetValue("We filled this field").GetFirstFormAnnotation().SetBorderColor(ColorConstants
                     .BLACK);
@@ -172,7 +177,7 @@ namespace iText.Forms.Widget {
         public virtual void BorderStyleInCreatedFormFieldsTest() {
             String outPdf = destinationFolder + "borderStyleInCreatedFormFields.pdf";
             String cmpPdf = sourceFolder + "cmp_borderStyleInCreatedFormFields.pdf";
-            using (PdfDocument doc = new PdfDocument(new PdfWriter(outPdf))) {
+            using (PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
                 PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
                 PdfFormField formField1 = new TextFormFieldBuilder(doc, "firstField").SetWidgetRectangle(new Rectangle(100
                     , 600, 100, 50)).CreateText().SetValue("Hello, iText!");
@@ -199,7 +204,8 @@ namespace iText.Forms.Widget {
             String inputPdf = sourceFolder + "borderStyleInCreatedFormFields.pdf";
             String outPdf = destinationFolder + "updatingBorderStyleInFormFields.pdf";
             String cmpPdf = sourceFolder + "cmp_updatingBorderStyleInFormFields.pdf";
-            using (PdfDocument doc = new PdfDocument(new PdfReader(inputPdf), new PdfWriter(outPdf))) {
+            using (PdfDocument doc = new PdfDocument(new PdfReader(inputPdf), CompareTool.CreateTestPdfWriter(outPdf))
+                ) {
                 PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, false);
                 IDictionary<String, PdfFormField> fields = form.GetAllFormFields();
                 fields.Get("firstField").SetValue("New Value 1");

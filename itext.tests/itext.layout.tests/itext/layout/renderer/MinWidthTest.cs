@@ -29,7 +29,6 @@ using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
-using iText.Layout.Logs;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 using iText.Test;
@@ -48,11 +47,16 @@ namespace iText.Layout.Renderer {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void ParagraphTest() {
             String outFileName = destinationFolder + "paragraphTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_paragraphTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             String str = "Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me.";
             Paragraph p = new Paragraph(new Text(str).SetBorder(new SolidBorder(ColorConstants.BLACK, 5))).SetBorder(new 
@@ -70,7 +74,7 @@ namespace iText.Layout.Renderer {
         public virtual void DivTest() {
             String outFileName = destinationFolder + "divTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_divTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             String str = "Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me.";
             Paragraph p = new Paragraph(new Text(str)).SetPadding(1f).SetBorder(new SolidBorder(ColorConstants.BLACK, 
@@ -90,7 +94,7 @@ namespace iText.Layout.Renderer {
         public virtual void DivWithSmallRotatedParagraph() {
             String outFileName = destinationFolder + "divSmallRotatedParagraphTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_divSmallRotatedParagraphTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             String str = "Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me.";
             Paragraph p = new Paragraph(new Text(str)).SetPadding(1f).SetBorder(new SolidBorder(ColorConstants.BLACK, 
@@ -109,11 +113,10 @@ namespace iText.Layout.Renderer {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void DivWithBigRotatedParagraph() {
             String outFileName = destinationFolder + "divBigRotatedParagraphTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_divBigRotatedParagraphTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             String str = "Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me.";
             Paragraph p = new Paragraph(new Text(str)).SetPadding(1f).SetBorder(new SolidBorder(ColorConstants.BLACK, 
@@ -134,7 +137,7 @@ namespace iText.Layout.Renderer {
         public virtual void DivWithSmallRotatedDiv() {
             String outFileName = destinationFolder + "divSmallRotatedDivTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_divSmallRotatedDivTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             String str = "Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me.";
             Paragraph p = new Paragraph(new Text(str)).SetPadding(1f).SetBorder(new SolidBorder(ColorConstants.BLACK, 
@@ -156,7 +159,7 @@ namespace iText.Layout.Renderer {
         public virtual void DivWithBigRotatedDiv() {
             String outFileName = destinationFolder + "divBigRotatedDivTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_divBigRotatedDivTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             String str = "Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me.";
             Paragraph p = new Paragraph(new Text(str)).SetPadding(1f).SetBorder(new SolidBorder(ColorConstants.BLACK, 
@@ -178,7 +181,7 @@ namespace iText.Layout.Renderer {
         public virtual void DivWithPercentImage() {
             String outFileName = destinationFolder + "divPercentImage.pdf";
             String cmpFileName = sourceFolder + "cmp_divPercentImage.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(imageXObject);
@@ -203,7 +206,7 @@ namespace iText.Layout.Renderer {
         public virtual void DivWithRotatedPercentImage() {
             String outFileName = destinationFolder + "divRotatedPercentImage.pdf";
             String cmpFileName = sourceFolder + "cmp_divRotatedPercentImage.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(imageXObject).SetRotationAngle(Math.PI * 3
@@ -229,7 +232,7 @@ namespace iText.Layout.Renderer {
         public virtual void MultipleDivTest() {
             String outFileName = destinationFolder + "multipleDivTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_multipleDivTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Border[] borders = new Border[] { new SolidBorder(ColorConstants.BLUE, 2f), new SolidBorder(ColorConstants
                 .RED, 2f), new SolidBorder(ColorConstants.GREEN, 2f) };
@@ -258,7 +261,7 @@ namespace iText.Layout.Renderer {
         public virtual void SimpleTableTest() {
             String outFileName = destinationFolder + "simpleTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_simpleTableTest.pdf";
-            Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            Document doc = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)));
             Cell cell1 = new Cell().Add(new Paragraph("I am table")).SetBorder(new SolidBorder(ColorConstants.RED, 60)
                 ).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
             Cell cell2 = new Cell().Add(new Paragraph("I am table")).SetBorder(new SolidBorder(ColorConstants.YELLOW, 
@@ -285,7 +288,7 @@ namespace iText.Layout.Renderer {
         public virtual void ColspanTableTest() {
             String outFileName = destinationFolder + "colspanTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_colspanTableTest.pdf";
-            Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            Document doc = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)));
             Cell bigCell = new Cell(1, 2).Add(new Paragraph("I am veryveryvery big cell")).SetBorder(new SolidBorder(ColorConstants
                 .RED, 60)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
             Cell cell = new Cell().Add(new Paragraph("I am cell")).SetBorder(new SolidBorder(ColorConstants.YELLOW, 10
@@ -312,7 +315,7 @@ namespace iText.Layout.Renderer {
         public virtual void ColspanRowspanTableTest() {
             String outFileName = destinationFolder + "colspanRowspanTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_colspanRowspanTableTest.pdf";
-            Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            Document doc = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)));
             Cell colspanCell = new Cell(1, 2).Add(new Paragraph("I am veryveryvery big cell")).SetBorder(new SolidBorder
                 (ColorConstants.RED, 60)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(
                 0);
@@ -343,7 +346,7 @@ namespace iText.Layout.Renderer {
         public virtual void HeaderFooterTableTest() {
             String outFileName = destinationFolder + "headerFooterTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_headerFooterTableTest.pdf";
-            Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            Document doc = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)));
             Cell bigCell = new Cell().Add(new Paragraph("veryveryveryvery big cell")).SetBorder(new SolidBorder(ColorConstants
                 .RED, 40)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
             Cell mediumCell = new Cell().Add(new Paragraph("mediumsize cell")).SetBorder(new SolidBorder(ColorConstants

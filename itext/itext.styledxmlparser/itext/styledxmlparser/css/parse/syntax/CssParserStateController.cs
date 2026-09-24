@@ -24,9 +24,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Parse;
@@ -36,7 +35,7 @@ using iText.StyledXmlParser.Resolver.Resource;
 namespace iText.StyledXmlParser.Css.Parse.Syntax {
     /// <summary>State machine that will parse content into a style sheet.</summary>
     public sealed class CssParserStateController {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Parse.Syntax.CssParserStateController
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.StyledXmlParser.Css.Parse.Syntax.CssParserStateController
             ));
 
         /// <summary>Set of the supported rules.</summary>
@@ -457,7 +456,7 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
                 }
                 if (isPositionCorrect) {
                     if (resourceResolver == null) {
-                        LOGGER.LogError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.IMPORT_RULE_URL_CAN_NOT_BE_RESOLVED
+                        LOGGER.Error(() => iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.IMPORT_RULE_URL_CAN_NOT_BE_RESOLVED
                             );
                         return;
                     }
@@ -475,12 +474,12 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
                         }
                     }
                     catch (System.IO.IOException e) {
-                        LOGGER.LogError(e, iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE
-                            );
+                        LOGGER.Error(() => iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_PROCESS_EXTERNAL_CSS_FILE
+                            , e);
                     }
                 }
                 else {
-                    LOGGER.LogWarning(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.IMPORT_MUST_COME_BEFORE);
+                    LOGGER.Warn(() => iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.IMPORT_MUST_COME_BEFORE);
                 }
             }
             else {
@@ -504,7 +503,7 @@ namespace iText.StyledXmlParser.Css.Parse.Syntax {
         private bool IsCurrentRuleSupported() {
             bool isSupported = nestedAtRules.IsEmpty() || SUPPORTED_RULES.Contains(nestedAtRules.Peek().GetRuleName());
             if (!isSupported) {
-                LOGGER.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.RULE_IS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.RULE_IS_NOT_SUPPORTED
                     , nestedAtRules.Peek().GetRuleName()));
             }
             return isSupported;

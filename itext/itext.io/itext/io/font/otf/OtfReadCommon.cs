@@ -27,7 +27,13 @@ using iText.IO.Font;
 using iText.IO.Source;
 
 namespace iText.IO.Font.Otf {
+    /// <summary>Represents the OpenType font reading utility.</summary>
     public class OtfReadCommon {
+        /// <summary>Reads the ushort array from OpenType data.</summary>
+        /// <param name="rf">the raw source</param>
+        /// <param name="size">the size</param>
+        /// <param name="location">the location</param>
+        /// <returns>the requested result</returns>
         public static int[] ReadUShortArray(RandomAccessFileOrArray rf, int size, int location) {
             int[] ret = new int[size];
             for (int k = 0; k < size; ++k) {
@@ -37,10 +43,18 @@ namespace iText.IO.Font.Otf {
             return ret;
         }
 
+        /// <summary>Reads the ushort array from OpenType data</summary>
+        /// <param name="rf">the raw source</param>
+        /// <param name="size">the size</param>
+        /// <returns>the requested result</returns>
         public static int[] ReadUShortArray(RandomAccessFileOrArray rf, int size) {
             return ReadUShortArray(rf, size, 0);
         }
 
+        /// <summary>Reads the coverages from OpenType data.</summary>
+        /// <param name="rf">the raw source</param>
+        /// <param name="locations">the locations</param>
+        /// <param name="coverage">the coverage</param>
         public static void ReadCoverages(RandomAccessFileOrArray rf, int[] locations, IList<ICollection<int>> coverage
             ) {
             foreach (int location in locations) {
@@ -48,6 +62,10 @@ namespace iText.IO.Font.Otf {
             }
         }
 
+        /// <summary>Reads the coverage format from OpenType data.</summary>
+        /// <param name="rf">the raw source</param>
+        /// <param name="coverageLocation">the coverage location</param>
+        /// <returns>the requested result</returns>
         public static IList<int> ReadCoverageFormat(RandomAccessFileOrArray rf, int coverageLocation) {
             rf.Seek(coverageLocation);
             int coverageFormat = rf.ReadShort();
@@ -84,6 +102,10 @@ namespace iText.IO.Font.Otf {
             }
         }
 
+        /// <summary>Reads the GPOS value record from OpenType data.</summary>
+        /// <param name="tableReader">the table reader</param>
+        /// <param name="mask">the mask</param>
+        /// <returns>the requested result</returns>
         public static GposValueRecord ReadGposValueRecord(OpenTypeFontTableReader tableReader, int mask) {
             GposValueRecord vr = new GposValueRecord();
             if ((mask & 0x0001) != 0) {
@@ -117,6 +139,10 @@ namespace iText.IO.Font.Otf {
             return vr;
         }
 
+        /// <summary>Reads the GPOS anchor from OpenType data.</summary>
+        /// <param name="tableReader">the table reader</param>
+        /// <param name="location">the location</param>
+        /// <returns>the requested result</returns>
         public static GposAnchor ReadGposAnchor(OpenTypeFontTableReader tableReader, int location) {
             if (location == 0) {
                 return null;
@@ -137,6 +163,10 @@ namespace iText.IO.Font.Otf {
             return t;
         }
 
+        /// <summary>Reads the mark array from OpenType data.</summary>
+        /// <param name="tableReader">the table reader</param>
+        /// <param name="location">the location</param>
+        /// <returns>the requested result</returns>
         public static IList<OtfMarkRecord> ReadMarkArray(OpenTypeFontTableReader tableReader, int location) {
             tableReader.rf.Seek(location);
             int markCount = tableReader.rf.ReadUnsignedShort();
@@ -157,6 +187,10 @@ namespace iText.IO.Font.Otf {
             return marks;
         }
 
+        /// <summary>Reads the substitution lookup records from OpenType data.</summary>
+        /// <param name="rf">the raw source</param>
+        /// <param name="substCount">the subst count</param>
+        /// <returns>the requested result</returns>
         public static SubstLookupRecord[] ReadSubstLookupRecords(RandomAccessFileOrArray rf, int substCount) {
             SubstLookupRecord[] substLookUpRecords = new SubstLookupRecord[substCount];
             for (int i = 0; i < substCount; ++i) {
@@ -168,6 +202,10 @@ namespace iText.IO.Font.Otf {
             return substLookUpRecords;
         }
 
+        /// <summary>Reads the positioning lookup records from OpenType data.</summary>
+        /// <param name="rf">the raw source</param>
+        /// <param name="recordCount">the record count</param>
+        /// <returns>the requested result</returns>
         public static PosLookupRecord[] ReadPosLookupRecords(RandomAccessFileOrArray rf, int recordCount) {
             PosLookupRecord[] posLookUpRecords = new PosLookupRecord[recordCount];
             for (int i = 0; i < recordCount; ++i) {
@@ -179,6 +217,12 @@ namespace iText.IO.Font.Otf {
             return posLookUpRecords;
         }
 
+        /// <summary>Reads the anchor array from OpenType data.</summary>
+        /// <param name="tableReader">the table reader</param>
+        /// <param name="locations">the locations</param>
+        /// <param name="left">the left</param>
+        /// <param name="right">the right</param>
+        /// <returns>the requested result</returns>
         public static GposAnchor[] ReadAnchorArray(OpenTypeFontTableReader tableReader, int[] locations, int left, 
             int right) {
             GposAnchor[] anchors = new GposAnchor[right - left];
@@ -188,6 +232,11 @@ namespace iText.IO.Font.Otf {
             return anchors;
         }
 
+        /// <summary>Reads the base array from OpenType data.</summary>
+        /// <param name="tableReader">the table reader</param>
+        /// <param name="classCount">the class count</param>
+        /// <param name="location">the location</param>
+        /// <returns>the requested result</returns>
         public static IList<GposAnchor[]> ReadBaseArray(OpenTypeFontTableReader tableReader, int classCount, int location
             ) {
             IList<GposAnchor[]> baseArray = new List<GposAnchor[]>();
@@ -202,6 +251,11 @@ namespace iText.IO.Font.Otf {
             return baseArray;
         }
 
+        /// <summary>Reads the ligature array from OpenType data.</summary>
+        /// <param name="tableReader">the table reader</param>
+        /// <param name="classCount">the class count</param>
+        /// <param name="location">the location</param>
+        /// <returns>the requested result</returns>
         public static IList<IList<GposAnchor[]>> ReadLigatureArray(OpenTypeFontTableReader tableReader, int classCount
             , int location) {
             IList<IList<GposAnchor[]>> ligatureArray = new List<IList<GposAnchor[]>>();

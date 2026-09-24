@@ -22,9 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.IO.Colors;
+using iText.IO.Font.Otf;
 using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
@@ -58,6 +58,8 @@ namespace iText.Pdfa.Checker {
     /// iText - pdfa project.
     /// </remarks>
     public abstract class PdfAChecker : IValidationChecker {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Pdfa.Checker.PdfAChecker));
+
         /// <summary>
         /// The Red-Green-Blue color profile as defined by the International Color
         /// Consortium.
@@ -275,7 +277,12 @@ namespace iText.Pdfa.Checker {
 
                 case ValidationType.FONT: {
                     FontValidationContext fontContext = (FontValidationContext)context;
-                    CheckText(fontContext.GetText(), fontContext.GetFont());
+                    if (fontContext.GetGlyphLine() == null) {
+                        CheckText(fontContext.GetText(), fontContext.GetFont());
+                    }
+                    else {
+                        CheckGlyphLine(fontContext.GetGlyphLine(), fontContext.GetFont());
+                    }
                     break;
                 }
 
@@ -298,16 +305,14 @@ namespace iText.Pdfa.Checker {
                 if (!alreadyLoggedThatPageFlushingWasNotPerformed) {
                     alreadyLoggedThatPageFlushingWasNotPerformed = true;
                     // This log message will be printed once for one instance of the document.
-                    ITextLogManager.GetLogger(typeof(iText.Pdfa.Checker.PdfAChecker)).LogWarning(PdfALogMessageConstant.PDFA_PAGE_FLUSHING_WAS_NOT_PERFORMED
-                        );
+                    LOGGER.Warn(() => PdfALogMessageConstant.PDFA_PAGE_FLUSHING_WAS_NOT_PERFORMED);
                 }
             }
             else {
                 if (!alreadyLoggedThatObjectFlushingWasNotPerformed) {
                     alreadyLoggedThatObjectFlushingWasNotPerformed = true;
                     // This log message will be printed once for one instance of the document.
-                    ITextLogManager.GetLogger(typeof(iText.Pdfa.Checker.PdfAChecker)).LogWarning(PdfALogMessageConstant.PDFA_OBJECT_FLUSHING_WAS_NOT_PERFORMED
-                        );
+                    LOGGER.Warn(() => PdfALogMessageConstant.PDFA_OBJECT_FLUSHING_WAS_NOT_PERFORMED);
                 }
             }
             return false;
@@ -566,28 +571,92 @@ namespace iText.Pdfa.Checker {
         /// <param name="font">font to verify the text against</param>
         public abstract void CheckText(String text, PdfFont font);
 
-        /// <summary>Attest content stream conformance with appropriate specification.</summary>
+        /// <summary>Verify the conformity of the glyph line written by the specified font.</summary>
+        /// <param name="glyphLine">glyph line to verify</param>
+        /// <param name="font">font to verify the glyph line against</param>
+        protected internal virtual void CheckGlyphLine(GlyphLine glyphLine, PdfFont font) {
+        }
+
+        // Do nothing
+        // TODO DEVSIX-8808 iText Core related api breaks for the next major release
+        //  After major release the method must become abstract
+        /// <summary>
+        /// Validates the operators and operands in the given content stream against the
+        /// applicable PDF/A specification level.
+        /// </summary>
         /// <remarks>
-        /// Attest content stream conformance with appropriate specification.
+        /// Validates the operators and operands in the given content stream against the
+        /// applicable PDF/A specification level.
         /// <para />
-        /// Throws
-        /// <see cref="iText.Pdfa.Exceptions.PdfAConformanceException"/>
-        /// if any discrepancy was found.
+        /// This overload validates a
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+        /// without an explicitly provided
+        /// resource dictionary. Implementations typically extract bytes from the stream
+        /// and delegate to
+        /// <see cref="CheckContentStream(byte[], iText.Kernel.Pdf.PdfResources)"/>.
         /// </remarks>
-        /// <param name="contentStream">is a content stream to validate</param>
+        /// <param name="contentStream">the content stream to validate</param>
         protected internal abstract void CheckContentStream(PdfStream contentStream);
 
-        /// <summary>Attest content stream conformance with appropriate specification.</summary>
+        /// <summary>
+        /// Validates the operators and operands in the given content stream against the
+        /// applicable PDF/A specification level, using the supplied resource dictionary
+        /// to resolve named resources (color spaces, fonts, XObjects, etc.) referenced
+        /// inside the stream.
+        /// </summary>
         /// <remarks>
-        /// Attest content stream conformance with appropriate specification.
+        /// Validates the operators and operands in the given content stream against the
+        /// applicable PDF/A specification level, using the supplied resource dictionary
+        /// to resolve named resources (color spaces, fonts, XObjects, etc.) referenced
+        /// inside the stream.
         /// <para />
-        /// Throws
-        /// <see cref="iText.Pdfa.Exceptions.PdfAConformanceException"/>
-        /// if any discrepancy was found.
+        /// This overload is preferred over
+        /// <see cref="CheckContentStream(iText.Kernel.Pdf.PdfStream)"/>
+        /// when
+        /// the caller already holds the relevant
+        /// <see cref="iText.Kernel.Pdf.PdfResources"/>
+        /// , for example when
+        /// checking form XObjects or page content streams whose resources are known at
+        /// call time.
         /// </remarks>
-        /// <param name="contentStream">is a content stream to validate</param>
-        /// <param name="resources">the resources of the contentStream</param>
+        /// <param name="contentStream">the content stream to validate</param>
+        /// <param name="resources">
+        /// the resource dictionary associated with the content stream;
+        /// may be
+        /// <see langword="null"/>
+        /// if no resources are available
+        /// </param>
         protected internal virtual void CheckContentStream(PdfStream contentStream, PdfResources resources) {
+        }
+
+        // Do nothing
+        // TODO DEVSIX-8808 iText Core related api breaks for the next major release
+        //  After major release the method must become abstract
+        /// <summary>
+        /// Validates the raw bytes of a content stream against the applicable PDF/A
+        /// specification level, using the supplied resource dictionary to resolve named
+        /// resources referenced inside the stream.
+        /// </summary>
+        /// <remarks>
+        /// Validates the raw bytes of a content stream against the applicable PDF/A
+        /// specification level, using the supplied resource dictionary to resolve named
+        /// resources referenced inside the stream.
+        /// <para />
+        /// This overload is used when the content to check has already been read from
+        /// one or more
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+        /// objects and concatenated into a single byte
+        /// array (for example, when validating a page whose content is spread across
+        /// multiple content streams that form one logical stream).
+        /// </remarks>
+        /// <param name="streamContent">the raw content stream bytes to validate</param>
+        /// <param name="resources">
+        /// the resource dictionary associated with the content stream;
+        /// may be
+        /// <see langword="null"/>
+        /// if no resources are available
+        /// </param>
+        protected internal virtual void CheckContentStream(byte[] streamContent, PdfResources resources) {
         }
 
         // Do nothing
@@ -1080,17 +1149,27 @@ namespace iText.Pdfa.Checker {
             //This check is valid for pdf/a-4 only, but it's not a problem
             //to add additional restrictions on earlier versions
             CheckOutputIntents(pageDict);
-            int contentStreamCount = page.GetContentStreamCount();
-            for (int j = 0; j < contentStreamCount; ++j) {
-                PdfStream contentStream = page.GetContentStream(j);
-                CheckContentStream(contentStream, page.GetResources());
-                checkedObjects.Add(contentStream);
-            }
+            CheckPageContentStreams(page);
         }
 
         private void CheckOpenAction(PdfObject openAction) {
             if (openAction != null && openAction.IsDictionary()) {
                 CheckAction((PdfDictionary)openAction);
+            }
+        }
+
+        private void CheckPageContentStreams(PdfPage page) {
+            // A Contents array represents one logical content stream obtained by concatenating its streams.
+            bool contentStreamShouldBeChecked = IsFullCheckMode();
+            for (int i = 0; i < page.GetContentStreamCount(); ++i) {
+                PdfStream contentStream = page.GetContentStream(i);
+                if (contentStream.IsModified()) {
+                    contentStreamShouldBeChecked = true;
+                }
+                checkedObjects.Add(contentStream);
+            }
+            if (contentStreamShouldBeChecked) {
+                CheckContentStream(page.GetContentBytes(), page.GetResources());
             }
         }
 

@@ -27,6 +27,7 @@ using iText.Commons;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.IO.Util;
 
 namespace iText.Signatures {
@@ -37,9 +38,13 @@ namespace iText.Signatures {
     [System.ObsoleteAttribute(@"starting from 8.0.5.iText.Signatures.Validation.CRLValidator should be used instead."
         )]
     public class CRLVerifier : RootStoreVerifier {
-        /// <summary>The Logger instance</summary>
-        protected internal static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.CRLVerifier
-            ));
+        /// <summary>The Logger instance.</summary>
+        [Obsolete]
+        protected internal static readonly ILogger LOGGER = ITextLogManager
+                // on removal of slf4j logger field rename `LAZY_LOGGER` into LOGGER
+                .GetLogger(typeof(iText.Signatures.CRLVerifier));
+
+        private static readonly LazyLogger LAZY_LOGGER = new LazyLogger(typeof(iText.Signatures.CRLVerifier));
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>The list of CRLs to check for revocation date.</summary>
@@ -89,7 +94,8 @@ namespace iText.Signatures {
                 }
             }
             // show how many valid CRLs were found
-            LOGGER.LogInformation("Valid CRLs found: " + validCrlsFound);
+            String logMessage = "Valid CRLs found: " + validCrlsFound;
+            LAZY_LOGGER.Info(() => logMessage);
             if (validCrlsFound > 0) {
                 result.Add(new VerificationOK(signCert, this.GetType(), "Valid CRLs found: " + validCrlsFound + (online ? 
                     " (online)" : "")));
@@ -134,7 +140,7 @@ namespace iText.Signatures {
                 if (crlurl.IsEmpty()) {
                     return null;
                 }
-                LOGGER.LogInformation("Getting CRL from " + crlurl[0]);
+                LAZY_LOGGER.Info(() => "Getting CRL from " + crlurl[0]);
                 return (IX509Crl)SignUtils.ParseCrlFromStream(UrlUtil.OpenStream(new Uri(crlurl[0])));
             }
             catch (System.IO.IOException) {
@@ -157,7 +163,7 @@ namespace iText.Signatures {
                     return true;
                 }
                 catch (AbstractGeneralSecurityException) {
-                    LOGGER.LogWarning("CRL not issued by the same authority as the certificate that is being checked");
+                    LAZY_LOGGER.Warn(() => "CRL not issued by the same authority as the certificate that is being checked");
                 }
             }
             // check the CRL against trusted anchors

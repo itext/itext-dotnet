@@ -23,17 +23,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Extensions.Logging;
 using iText.Bouncycastleconnector;
-using iText.Commons;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
+using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Digest;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Source;
@@ -49,8 +49,7 @@ namespace iText.Signatures {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
 
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.LtvVerification
-            ));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Signatures.LtvVerification));
 
         private readonly PdfDocument document;
 
@@ -200,7 +199,7 @@ namespace iText.Signatures {
             }
             CheckSignatureExists(signatureName);
             PdfPKCS7 pk = sgnUtil.ReadSignatureData(signatureName);
-            LOGGER.LogInformation("Adding verification for " + signatureName);
+            LOGGER.Info(() => "Adding verification for " + signatureName);
             IX509Certificate[] certificateChain = pk.GetCertificates();
             IX509Certificate signingCert = pk.GetSigningCertificate();
             LtvVerification.ValidationData validationData = new LtvVerification.ValidationData();
@@ -327,8 +326,8 @@ namespace iText.Signatures {
                 (certChain) : certChain;
             foreach (IX509Certificate certificate in fullChain) {
                 IX509Certificate cert = (IX509Certificate)certificate;
-                LOGGER.LogInformation(MessageFormatUtil.Format("Certificate: {0}", BOUNCY_CASTLE_FACTORY.CreateX500Name(cert
-                    )));
+                IX500Name x500Name = BOUNCY_CASTLE_FACTORY.CreateX500Name(cert);
+                LOGGER.Info(() => MessageFormatUtil.Format("Certificate: {0}", x500Name));
                 if ((certOption == LtvVerification.CertificateOption.SIGNING_CERTIFICATE && !cert.Equals(signingCert)) || 
                     processedCerts.Contains(cert)) {
                     continue;
@@ -346,7 +345,7 @@ namespace iText.Signatures {
             byte[] validityAssured = SignUtils.GetExtensionValueByOid(cert, OID.X509Extensions.VALIDITY_ASSURED_SHORT_TERM
                 );
             if (validityAssured != null) {
-                LOGGER.LogInformation(MessageFormatUtil.Format(SignLogMessageConstant.REVOCATION_DATA_NOT_ADDED_VALIDITY_ASSURED
+                LOGGER.Info(() => MessageFormatUtil.Format(SignLogMessageConstant.REVOCATION_DATA_NOT_ADDED_VALIDITY_ASSURED
                     , cert.GetSubjectDN()));
                 return;
             }
@@ -360,7 +359,7 @@ namespace iText.Signatures {
                     ocsps.Add(LtvVerification.BuildOCSPResponse(ocspEnc));
                     validationData.SetOcsps(ocsps);
                     revocationDataAdded = true;
-                    LOGGER.LogInformation("OCSP added");
+                    LOGGER.Info(() => "OCSP added");
                     if (certOption == LtvVerification.CertificateOption.ALL_CERTIFICATES) {
                         AddRevocationDataForOcspCert(ocspEnc, signingCert, ocsp, crl, level, certInclude, certOption, validationData
                             , processedCerts);
@@ -387,7 +386,7 @@ namespace iText.Signatures {
                             IList<byte[]> crls = validationData.GetCrls();
                             crls.Add(cim);
                             validationData.SetCrls(crls);
-                            LOGGER.LogInformation("CRL added");
+                            LOGGER.Info(() => "CRL added");
                             if (certOption == LtvVerification.CertificateOption.ALL_CERTIFICATES) {
                                 IX509Certificate[] certsList = issuingCertificateRetriever.GetCrlIssuerCertificates(SignUtils.ParseCrlFromStream
                                     (new MemoryStream(cim)));

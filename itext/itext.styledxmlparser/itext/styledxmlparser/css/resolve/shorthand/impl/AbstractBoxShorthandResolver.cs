@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
@@ -36,6 +35,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
     /// implementation for box definitions.
     /// </summary>
     public abstract class AbstractBoxShorthandResolver : IShorthandResolver {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(AbstractBoxShorthandResolver));
+
         /// <summary>The template for -left properties.</summary>
         private const String _0_LEFT_1 = "{0}-left{1}";
 
@@ -75,8 +76,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             else {
                 foreach (String prop in props) {
                     if (CommonCssConstants.INHERIT.Equals(prop) || CommonCssConstants.INITIAL.Equals(prop)) {
-                        ILogger logger = ITextLogManager.GetLogger(typeof(AbstractBoxShorthandResolver));
-                        logger.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                        LOGGER.Warn(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
                             , shorthandExpression));
                         return JavaCollectionsUtil.EmptyList<CssDeclaration>();
                     }

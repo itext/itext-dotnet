@@ -41,6 +41,9 @@ namespace iText.Kernel.Logs {
         public const String FULL_COMPRESSION_APPEND_MODE_XREF_STREAM_INCONSISTENCY = "Full compression mode was requested to be switched off in append mode but the original document has "
              + "cross-reference stream, not cross-reference table. Falling back to cross-reference stream in " + "appended document and switching full compression on";
 
+        public const String GRADIENT_MAX_COLOR_STOPS = "Maximum number of color stops {0} exceeded for gradient." 
+            + "If you need to configure this limit use GradientPropertiesResolver class in" + "DocumentProperties#registerDependency or ConverterProperties#registerDependency methods.";
+
         public const String JPXDECODE_FILTER_DECODING = "JPXDecode filter decoding into the bit map is not supported. The stream data would be left in JPEG2000 "
              + "format";
 
@@ -117,6 +120,8 @@ namespace iText.Kernel.Logs {
 
         public const String BOTH_WCAG_AA_AND_AAA_COMPLIANCE_CHECKS_DISABLED = "Both WCAG AA and AAA compliance " +
              "checks are disabled. No contrast checks will be performed.";
+
+        public const String LUMINANCE_MODE_IS_NOT_SUPPORTED = "Luminance mode is not supported by this gradient builder. The builder is left unchanged.";
 
         private KernelLogMessageConstant() {
         }

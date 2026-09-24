@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font.Cmap;
 using iText.IO.Source;
@@ -31,6 +30,8 @@ using iText.IO.Source;
 namespace iText.IO.Font {
     /// <summary>Class representing CMap encoding in pdf document.</summary>
     public class CMapEncoding {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.IO.Font.CMapEncoding));
+
         private static readonly IList<byte[]> IDENTITY_H_V_CODESPACE_RANGES = JavaUtil.ArraysAsList(new byte[] { 0
             , 0 }, new byte[] { (byte)0xff, (byte)0xff });
 
@@ -88,8 +89,7 @@ namespace iText.IO.Font {
                 this.codeSpaceRanges = cid2Code.GetCodeSpaceRanges();
             }
             catch (System.IO.IOException) {
-                ITextLogManager.GetLogger(GetType()).LogError(iText.IO.Logs.IoLogMessageConstant.FAILED_TO_PARSE_ENCODING_STREAM
-                    );
+                LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.FAILED_TO_PARSE_ENCODING_STREAM);
             }
         }
 
@@ -189,6 +189,11 @@ namespace iText.IO.Font {
             return result;
         }
 
+        /// <summary>Encodes a CID into the supplied byte array.</summary>
+        /// <param name="cid">character identifier to encode</param>
+        /// <param name="array">destination array</param>
+        /// <param name="offset">destination offset</param>
+        /// <returns>new destination offset</returns>
         public virtual int FillCmapBytes(int cid, byte[] array, int offset) {
             if (isDirect) {
                 array[offset++] = (byte)((cid & 0xff00) >> 8);
@@ -203,6 +208,9 @@ namespace iText.IO.Font {
             return offset;
         }
 
+        /// <summary>Appends the encoded form of a CID to a byte buffer.</summary>
+        /// <param name="cid">character identifier to encode</param>
+        /// <param name="buffer">destination buffer</param>
         public virtual void FillCmapBytes(int cid, ByteBuffer buffer) {
             if (isDirect) {
                 buffer.Append((byte)((cid & 0xff00) >> 8));
@@ -214,6 +222,9 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>Gets the number of bytes required to encode a CID.</summary>
+        /// <param name="cid">character identifier to encode</param>
+        /// <returns>number of bytes required to encode a CID</returns>
         public virtual int GetCmapBytesLength(int cid) {
             if (isDirect) {
                 return 2;
@@ -223,6 +234,9 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>Converts a CMap code to its CID.</summary>
+        /// <param name="cmapCode">CMap code</param>
+        /// <returns>mapped CID</returns>
         public virtual int GetCidCode(int cmapCode) {
             if (isDirect) {
                 return cmapCode;
@@ -232,6 +246,8 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>Gets the CMap code space ranges.</summary>
+        /// <returns>list of low/high byte array pairs used by this encoding</returns>
         public virtual IList<byte[]> GetCodeSpaceRanges() {
             return codeSpaceRanges;
         }

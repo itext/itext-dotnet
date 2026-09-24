@@ -39,7 +39,7 @@ namespace iText.Layout.Minmaxwidth {
 
         private double maxWidthHeight;
 
-        /// <summary>Create new instance</summary>
+        /// <summary>Creates new instance</summary>
         /// <param name="minWidth">min-width of rotated element</param>
         /// <param name="maxWidth">max-width of rotated element</param>
         /// <param name="minWidthOrigin">the width of not rotated element, that will have min-width after rotation</param>
@@ -92,7 +92,7 @@ namespace iText.Layout.Minmaxwidth {
         /// <param name="angle">rotation angle in radians</param>
         /// <param name="area">the constant area</param>
         /// <param name="elementMinMaxWidth">NOT rotated element min-max-width</param>
-        /// <param name="availableWidth">the maximum width of area the element will occupy after rotation.</param>
+        /// <param name="availableWidth">the maximum width of area the element will occupy after rotation</param>
         /// <returns>possible min-max-width of element after rotation</returns>
         public static iText.Layout.Minmaxwidth.RotationMinMaxWidth Calculate(double angle, double area, MinMaxWidth
              elementMinMaxWidth, double availableWidth) {
@@ -119,15 +119,24 @@ namespace iText.Layout.Minmaxwidth {
         ///     </summary>
         /// <param name="area">the initial area</param>
         /// <param name="angle">the rotation angle in radians</param>
-        /// <returns>width of rotated area</returns>
+        /// <returns>width of the rotated area</returns>
         public static double CalculateRotatedWidth(Rectangle area, double angle) {
             return area.GetWidth() * Cos(angle) + area.GetHeight() * Sin(angle);
         }
 
-        /// <summary>This method use derivative of function defined on interval: [xMin, xMax] to find its local minimum and maximum.
+        /// <summary>Utility method for calculating rotated height of area in a similar way to other calculations in this class.
+        ///     </summary>
+        /// <param name="area">the initial area</param>
+        /// <param name="angle">the rotation angle in radians</param>
+        /// <returns>height of the rotated area</returns>
+        public static double CalculateRotatedHeight(Rectangle area, double angle) {
+            return area.GetHeight() * Cos(angle) + area.GetWidth() * Sin(angle);
+        }
+
+        /// <summary>This method uses derivative of function defined on interval: [xMin, xMax] to find its local minimum and maximum.
         ///     </summary>
         /// <remarks>
-        /// This method use derivative of function defined on interval: [xMin, xMax] to find its local minimum and maximum.
+        /// This method uses derivative of function defined on interval: [xMin, xMax] to find its local minimum and maximum.
         /// It also calculate other handy values needed for the creation of
         /// <see cref="RotationMinMaxWidth"/>.
         /// </remarks>
@@ -210,7 +219,7 @@ namespace iText.Layout.Minmaxwidth {
 
             private double area;
 
-            /// <summary>Create new instance</summary>
+            /// <summary>Creates new instance</summary>
             /// <param name="angle">rotation angle in radians</param>
             /// <param name="area">the constant area</param>
             public WidthFunction(double angle, double area) {
@@ -237,11 +246,12 @@ namespace iText.Layout.Minmaxwidth {
                 return x * sin + area * cos / x;
             }
 
-            /// <summary>Get's possible values of NOT rotated width of all element that have therer rotated width less that availableWidth
-            ///     </summary>
-            /// <param name="availableWidth">the highest possible width of rotated element.</param>
-            /// <returns>interval that specify biggest and smallest possible values of NOT rotated width of such elements.
-            ///     </returns>
+            /// <summary>
+            /// Gets possible values of NOT rotated width of all elements that have their rotated width less
+            /// than availableWidth
+            /// </summary>
+            /// <param name="availableWidth">the highest possible width of rotated element</param>
+            /// <returns>interval that specify biggest and smallest possible values of NOT rotated width of such elements</returns>
             public virtual RotationMinMaxWidth.WidthFunction.Interval GetValidOriginalWidths(double availableWidth) {
                 double minWidth;
                 double maxWidth;

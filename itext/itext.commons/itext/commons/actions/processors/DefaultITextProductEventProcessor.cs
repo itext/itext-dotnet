@@ -21,10 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Actions;
 using iText.Commons.Actions.Confirmations;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 
 namespace iText.Commons.Actions.Processors {
@@ -41,7 +40,7 @@ namespace iText.Commons.Actions.Processors {
              + "leHBsYWluIHRoZSBiZW5lZml0cyBvZiBiZWNvbWluZyBhIGN1c3RvbWVyLg==");
 //\endcond
 
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Commons.Actions.Processors.DefaultITextProductEventProcessor
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Commons.Actions.Processors.DefaultITextProductEventProcessor
             ));
 
         private static readonly long[] REPEAT = new long[] { 10000L, 5000L, 1000L };
@@ -81,7 +80,7 @@ namespace iText.Commons.Actions.Processors {
             if (isNeededToLogMessage) {
                 String message = iText.Commons.Utils.JavaUtil.GetStringForBytes(MESSAGE_FOR_LOGGING, iText.Commons.Utils.EncodingUtil.ISO_8859_1
                     );
-                LOGGER.LogInformation(message);
+                LOGGER.Info(() => message);
                 // System out added with purpose. This is not a debug code
                 System.Console.Out.WriteLine(message);
             }

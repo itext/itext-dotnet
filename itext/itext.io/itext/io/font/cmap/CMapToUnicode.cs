@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Util;
@@ -32,6 +31,8 @@ using iText.IO.Util;
 namespace iText.IO.Font.Cmap {
     /// <summary>This class represents a CMap file.</summary>
     public class CMapToUnicode : AbstractCMap {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.IO.Font.Cmap.CMapToUnicode));
+
         public static readonly iText.IO.Font.Cmap.CMapToUnicode EMPTY_CMAP = new iText.IO.Font.Cmap.CMapToUnicode(
             true);
 
@@ -51,6 +52,14 @@ namespace iText.IO.Font.Cmap {
             byteMappings = JavaCollectionsUtil.EmptyMap<int, char[]>();
         }
 
+        /// <summary>Creates a two-byte identity ToUnicode CMap.</summary>
+        /// <returns>
+        /// a new map that maps character codes from
+        /// <c>0</c>
+        /// through
+        /// <c>65536</c>
+        /// to themselves
+        /// </returns>
         public static iText.IO.Font.Cmap.CMapToUnicode GetIdentity() {
             iText.IO.Font.Cmap.CMapToUnicode uni = new iText.IO.Font.Cmap.CMapToUnicode();
             for (int i = 0; i < 65537; i++) {
@@ -116,18 +125,36 @@ namespace iText.IO.Font.Cmap {
             return result;
         }
 
+        /// <summary>Looks up a one- or two-byte character code.</summary>
+        /// <param name="code">the complete character-code byte sequence</param>
+        /// <returns>
+        /// the retained Unicode character array, or
+        /// <see langword="null"/>
+        /// when no mapping exists
+        /// </returns>
         public virtual char[] Lookup(byte[] code) {
             return Lookup(code, 0, code.Length);
         }
 
+        /// <summary>Looks up an integer character code.</summary>
+        /// <param name="code">the one- or two-byte character code represented as an integer</param>
+        /// <returns>
+        /// the retained Unicode character array, or
+        /// <see langword="null"/>
+        /// when no mapping exists
+        /// </returns>
         public virtual char[] Lookup(int code) {
             return byteMappings.Get(code);
         }
 
+        /// <summary>Returns the mapped character codes.</summary>
+        /// <returns>a live view of this map's character-code keys</returns>
         public virtual ICollection<int> GetCodes() {
             return byteMappings.Keys;
         }
 
+        /// <summary>Creates a mapping for single-character Unicode entries.</summary>
+        /// <returns>a new map from character code to Unicode scalar value</returns>
         public virtual IntHashtable CreateDirectMapping() {
             IntHashtable result = new IntHashtable();
             foreach (KeyValuePair<int, char[]> entry in byteMappings) {
@@ -138,6 +165,8 @@ namespace iText.IO.Font.Cmap {
             return result;
         }
 
+        /// <summary>Creates a reverse mapping for single-character Unicode entries.</summary>
+        /// <returns>a new map from Unicode scalar value to character code</returns>
         public virtual IDictionary<int, int?> CreateReverseMapping() {
             IDictionary<int, int?> result = new Dictionary<int, int?>();
             foreach (KeyValuePair<int, char[]> entry in byteMappings) {
@@ -179,8 +208,7 @@ namespace iText.IO.Font.Cmap {
                     byteMappings.Put((mark[0] << 8) + mark[1], dest);
                 }
                 else {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Font.Cmap.CMapToUnicode));
-                    logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.TOUNICODE_CMAP_MORE_THAN_2_BYTES_NOT_SUPPORTED);
+                    LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.TOUNICODE_CMAP_MORE_THAN_2_BYTES_NOT_SUPPORTED);
                 }
             }
         }

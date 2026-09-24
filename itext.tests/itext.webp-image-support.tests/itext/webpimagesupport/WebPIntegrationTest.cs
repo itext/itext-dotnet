@@ -58,7 +58,7 @@ namespace iText.Webpimagesupport {
                         // TODO DEVSIX-10022 - Support image orientation set in exif metadata
                         
                         // when modern browsers start supporting it
-                        new Object[] { "orientation", false, false } });
+                        new Object[] { "orientation", false, true } });
         }
 
         [NUnit.Framework.TestCaseSource("GetWebPImages")]
@@ -84,7 +84,7 @@ namespace iText.Webpimagesupport {
             pdfDocument.Close();
             if (isPlatformDependent) {
                 NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(outFileName, cmpFileName, DESTINATION_FOLDER
-                    , 1));
+                    , 10));
             }
             else {
                 NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER

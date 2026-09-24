@@ -28,8 +28,17 @@ using iText.IO.Font.Otf.Lookuptype5;
 namespace iText.IO.Font.Otf {
     /// <summary>LookupType 5: Contextual Substitution Subtable</summary>
     public class GsubLookupType5 : OpenTableLookup {
+        /// <summary>Stores sub tables.</summary>
         protected internal IList<ContextualTable<ContextualSubstRule>> subTables;
 
+        /// <summary>Creates a new GSUB Lookup Type 5.</summary>
+        /// <param name="openReader">the OpenType font reader</param>
+        /// <param name="lookupFlag">
+        /// specifies processing options, e.g. whether to skip base glyphs, marks or
+        /// ligatures during glyph substitution or positioning. See
+        /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+        /// </param>
+        /// <param name="subTableLocations">the sub table locations</param>
         protected internal GsubLookupType5(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations
             )
             : base(openReader, lookupFlag, subTableLocations) {
@@ -93,6 +102,8 @@ namespace iText.IO.Font.Otf {
             }
         }
 
+        /// <summary>Reads the sub table format1 from OpenType data.</summary>
+        /// <param name="subTableLocation">the sub table location</param>
         protected internal virtual void ReadSubTableFormat1(int subTableLocation) {
             IDictionary<int, IList<ContextualSubstRule>> substMap = new Dictionary<int, IList<ContextualSubstRule>>();
             int coverageOffset = openReader.rf.ReadUnsignedShort();
@@ -117,6 +128,8 @@ namespace iText.IO.Font.Otf {
             subTables.Add(new SubTableLookup5Format1(openReader, lookupFlag, substMap));
         }
 
+        /// <summary>Reads the sub table format2 from OpenType data.</summary>
+        /// <param name="subTableLocation">the sub table location</param>
         protected internal virtual void ReadSubTableFormat2(int subTableLocation) {
             int coverageOffset = openReader.rf.ReadUnsignedShort();
             int classDefOffset = openReader.rf.ReadUnsignedShort();
@@ -152,6 +165,8 @@ namespace iText.IO.Font.Otf {
             subTables.Add(t);
         }
 
+        /// <summary>Reads the sub table format3 from OpenType data.</summary>
+        /// <param name="subTableLocation">the sub table location</param>
         protected internal virtual void ReadSubTableFormat3(int subTableLocation) {
             int glyphCount = openReader.rf.ReadUnsignedShort();
             int substCount = openReader.rf.ReadUnsignedShort();

@@ -45,11 +45,16 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void SurrogatePairFrom2Chars() {
             String outFileName = destinationFolder + "surrogatePairFrom2Chars.pdf";
             String cmpFileName = sourceFolder + "cmp_" + "surrogatePairFrom2Chars.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoEmoji-Regular.ttf", PdfEncodings.IDENTITY_H);
             //😉
@@ -66,7 +71,7 @@ namespace iText.Layout {
         public virtual void SurrogatePair2Pairs() {
             String outFileName = destinationFolder + "surrogatePair2Pairs.pdf";
             String cmpFileName = sourceFolder + "cmp_" + "surrogatePair2Pairs.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoEmoji-Regular.ttf", PdfEncodings.IDENTITY_H);
             //🇧🇾
@@ -83,7 +88,7 @@ namespace iText.Layout {
         public virtual void SurrogatePairFullCharacter() {
             String outFileName = destinationFolder + "surrogatePairFullCharacter.pdf";
             String cmpFileName = sourceFolder + "cmp_" + "surrogatePairFullCharacter.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoEmoji-Regular.ttf", PdfEncodings.IDENTITY_H);
             //🛀
@@ -102,7 +107,7 @@ namespace iText.Layout {
         public virtual void SurrogatePairCombingFullSurrs() {
             String outFileName = destinationFolder + "surrogatePairCombingFullSurrs.pdf";
             String cmpFileName = sourceFolder + "cmp_" + "surrogatePairCombingFullSurrs.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoColorEmoji.ttf", PdfEncodings.IDENTITY_H);
             //🏴󠁧󠁢󠁥󠁮󠁧󠁿
@@ -128,7 +133,7 @@ namespace iText.Layout {
         public virtual void SurrogatePairCombingFullSurrsWithNoSurrs() {
             String outFileName = destinationFolder + "surrogatePairCombingFullSurrsWithNoSurrs.pdf";
             String cmpFileName = sourceFolder + "cmp_" + "surrogatePairCombingFullSurrsWithNoSurrs.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "NotoColorEmoji.ttf", PdfEncodings.IDENTITY_H);
             //World Map

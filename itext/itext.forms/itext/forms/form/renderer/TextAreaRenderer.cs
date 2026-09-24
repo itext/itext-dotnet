@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.Forms.Form;
@@ -48,6 +47,9 @@ namespace iText.Forms.Form.Renderer {
     /// implementation for text area fields.
     /// </summary>
     public class TextAreaRenderer : AbstractTextFieldRenderer {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Forms.Form.Renderer.TextAreaRenderer
+            ));
+
         /// <summary>
         /// Creates a new
         /// <see cref="TextAreaRenderer"/>
@@ -106,8 +108,7 @@ namespace iText.Forms.Form.Renderer {
                 if (width == null) {
                     UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
                     if (!fontSize.IsPointValue()) {
-                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Form.Renderer.TextAreaRenderer));
-                        logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                        LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                             , Property.FONT_SIZE));
                     }
                     float fontSizeValue = fontSize.GetValue();
@@ -129,7 +130,7 @@ namespace iText.Forms.Form.Renderer {
             UpdatePdfFont((ParagraphRenderer)flatRenderer);
             Rectangle flatBBox = flatRenderer.GetOccupiedArea().GetBBox();
             if (flatLines.IsEmpty() || font == null) {
-                ITextLogManager.GetLogger(GetType()).LogError(MessageFormatUtil.Format(FormsLogMessageConstants.ERROR_WHILE_LAYOUT_OF_FORM_FIELD_WITH_TYPE
+                LOGGER.Error(() => MessageFormatUtil.Format(FormsLogMessageConstants.ERROR_WHILE_LAYOUT_OF_FORM_FIELD_WITH_TYPE
                     , "text area"));
                 SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flatBBox.SetHeight(0);
@@ -155,8 +156,7 @@ namespace iText.Forms.Form.Renderer {
             String name = GetModelId();
             UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
             if (!fontSize.IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Form.Renderer.TextAreaRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.FONT_SIZE));
             }
             PdfDocument doc = drawContext.GetDocument();

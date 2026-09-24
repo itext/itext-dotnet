@@ -29,6 +29,12 @@ namespace iText.IO.Util {
     /// Be aware that its API and functionality may be changed in future.
     /// </summary>
     public class DecimalFormatUtil {
+        /// <summary>
+        /// Formats a number with the supplied pattern.
+        /// </summary>
+        /// <param name="d">the number to format</param>
+        /// <param name="pattern">the pattern</param>
+        /// <returns>the formatted number</returns>
         public static String FormatNumber(double d, String pattern) {
             return d.ToString(pattern, CultureInfo.InvariantCulture);
         }

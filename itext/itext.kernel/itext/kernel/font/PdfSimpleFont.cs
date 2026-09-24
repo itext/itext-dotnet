@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
@@ -288,11 +287,9 @@ namespace iText.Kernel.Font {
                     list.Add(glyph);
                 }
                 else {
-                    ILogger logger = ITextLogManager.GetLogger(this.GetType());
-                    if (logger.IsEnabled(LogLevel.Warning)) {
-                        logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE
-                            , code));
-                    }
+                    LazyLogger logger = new LazyLogger(this.GetType());
+                    logger.Warn(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE
+                        , code));
                     allCodesDecoded = false;
                 }
             }

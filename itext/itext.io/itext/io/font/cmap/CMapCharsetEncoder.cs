@@ -28,6 +28,9 @@ using iText.Commons.Exceptions;
 
 namespace iText.IO.Font.Cmap
 {
+    /// <summary>
+    /// Encodes Unicode code points for a standard CMap charset.
+    /// </summary>
     public sealed class CMapCharsetEncoder
     {
         private const char MIN_BMP_VALUE = '\u0000';
@@ -37,17 +40,32 @@ namespace iText.IO.Font.Cmap
 
         private readonly bool bmpOnly;
 
+        /// <summary>
+        /// Creates an encoder that accepts all Unicode code points supported by the charset.
+        /// </summary>
+        /// <param name="targetCharset">the charset used to encode code points</param>
         public CMapCharsetEncoder(Encoding targetCharset) : this(targetCharset, false)
         {
             // Empty constructor
         }
 
+        /// <summary>
+        /// Creates an encoder with an optional Basic Multilingual Plane restriction.
+        /// </summary>
+        /// <param name="targetCharset">the charset used to encode code points</param>
+        /// <param name="bmpOnly"><see langword="true"/> to reject supplementary code points</param>
         public CMapCharsetEncoder(Encoding targetCharset, bool bmpOnly)
         {
             this.targetCharset = targetCharset;
             this.bmpOnly = bmpOnly;
         }
 
+        /// <summary>
+        /// Encodes one Unicode code point.
+        /// </summary>
+        /// <param name="cp">the Unicode code point to encode</param>
+        /// <returns>a newly allocated encoded byte sequence</returns>
+        /// <exception cref="ITextException">if the code point cannot be encoded or is supplementary when BMP-only encoding is used</exception>
         public byte[] EncodeUnicodeCodePoint(int cp)
         {
             if (!isBmpCodePoint(cp) && bmpOnly)

@@ -116,7 +116,7 @@ namespace iText.Pdfua.Checkers {
                 // VeraPDF doesn't allow actions with structure destination being placed in D entry. Instead, it requires
                 // structure destination to be added into special SD entry. There is no such requirement in released
                 // PDF 2.0 spec. Although it is already mentioned in errata version.
-                framework.AssertOnlyVeraPdfFail("linkAnnotationWithReferenceTag_" + destLocation.GetValue());
+                framework.AssertVeraPdfFailITextValid("linkAnnotationWithReferenceTag_" + destLocation.GetValue());
             }
             else {
                 framework.AssertBothValid("linkAnnotationWithReferenceTag_" + destLocation.GetValue());

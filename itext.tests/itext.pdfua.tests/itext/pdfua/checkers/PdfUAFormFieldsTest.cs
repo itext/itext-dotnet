@@ -2018,7 +2018,7 @@ namespace iText.Pdfua.Checkers {
             else {
                 // TODO DEVSIX-9580. VeraPDF claims the document to be valid, although it's not.
                 //  We will need to update this test when veraPDF behavior is fixed and veraPDF version is updated.
-                framework.AssertOnlyITextFail("widgetNeitherFormNorArtifact", PdfUAExceptionMessageConstants.WIDGET_SHALL_BE_FORM_OR_ARTIFACT
+                framework.AssertITextFailVeraPdfValid("widgetNeitherFormNorArtifact", PdfUAExceptionMessageConstants.WIDGET_SHALL_BE_FORM_OR_ARTIFACT
                     );
             }
         }

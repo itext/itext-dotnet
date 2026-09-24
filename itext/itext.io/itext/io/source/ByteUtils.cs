@@ -21,13 +21,15 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.IO.Util;
 
 namespace iText.IO.Source {
+    /// <summary>Converts strings and numbers to ISO-8859-1 compatible byte representations.</summary>
     public sealed class ByteUtils {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(ByteUtils));
+
 //\cond DO_NOT_DOCUMENT
         internal static bool HighPrecision = false;
 //\endcond
@@ -41,6 +43,16 @@ namespace iText.IO.Source {
 
         private static readonly byte[] negOne = new byte[] { (byte)'-', 49 };
 
+        /// <summary>Converts each character in a string to its low byte.</summary>
+        /// <param name="text">the text to convert</param>
+        /// <returns>
+        /// a new byte array, or
+        /// <see langword="null"/>
+        /// when
+        /// <paramref name="text"/>
+        /// is
+        /// <see langword="null"/>
+        /// </returns>
         public static byte[] GetIsoBytes(String text) {
             if (text == null) {
                 return null;
@@ -53,10 +65,33 @@ namespace iText.IO.Source {
             return b;
         }
 
+        /// <summary>Converts a string to bytes and optionally prefixes it with a byte.</summary>
+        /// <param name="pre">the prefix byte; zero omits the prefix</param>
+        /// <param name="text">the text to convert</param>
+        /// <returns>
+        /// a new byte array, or
+        /// <see langword="null"/>
+        /// when
+        /// <paramref name="text"/>
+        /// is
+        /// <see langword="null"/>
+        /// </returns>
         public static byte[] GetIsoBytes(byte pre, String text) {
             return GetIsoBytes(pre, text, (byte)0);
         }
 
+        /// <summary>Converts a string to bytes and optionally surrounds it with bytes.</summary>
+        /// <param name="pre">the prefix byte; zero omits the prefix</param>
+        /// <param name="text">the text to convert</param>
+        /// <param name="post">the suffix byte; zero omits the suffix</param>
+        /// <returns>
+        /// a new byte array, or
+        /// <see langword="null"/>
+        /// when
+        /// <paramref name="text"/>
+        /// is
+        /// <see langword="null"/>
+        /// </returns>
         public static byte[] GetIsoBytes(byte pre, String text, byte post) {
             if (text == null) {
                 return null;
@@ -83,10 +118,16 @@ namespace iText.IO.Source {
             return b;
         }
 
+        /// <summary>Formats an integer as ISO-8859-1 compatible decimal bytes.</summary>
+        /// <param name="n">the integer to format</param>
+        /// <returns>the decimal representation</returns>
         public static byte[] GetIsoBytes(int n) {
             return GetIsoBytes(n, null);
         }
 
+        /// <summary>Formats a floating-point value as ISO-8859-1 compatible decimal bytes.</summary>
+        /// <param name="d">the value to format</param>
+        /// <returns>the decimal representation using the current global precision setting</returns>
         public static byte[] GetIsoBytes(double d) {
             return GetIsoBytes(d, null);
         }
@@ -130,8 +171,7 @@ namespace iText.IO.Source {
                     }
                 }
                 if (double.IsNaN(d)) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(ByteUtils));
-                    logger.LogError(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_PROCESS_NAN);
+                    LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.ATTEMPT_PROCESS_NAN);
                     d = 0;
                 }
                 byte[] result = DecimalFormatUtil.FormatNumber(d, "0.######").GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1
@@ -261,8 +301,7 @@ namespace iText.IO.Source {
                     }
                     else {
                         if (double.IsNaN(d)) {
-                            ILogger logger = ITextLogManager.GetLogger(typeof(ByteUtils));
-                            logger.LogError(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_PROCESS_NAN);
+                            LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.ATTEMPT_PROCESS_NAN);
                             // in java NaN casted to long results in 0, but in .NET it results in long.MIN_VALUE
                             d = 0;
                         }

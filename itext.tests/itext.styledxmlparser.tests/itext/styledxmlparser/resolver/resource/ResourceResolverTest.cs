@@ -476,5 +476,12 @@ namespace iText.StyledXmlParser.Resolver.Resource {
                 Assert.AreEqual(expected.ReadByte(), stream.ReadByte());
             }
         }
+
+        [Test]
+        [LogMessage(StyledXmlParserLogMessageConstant.UNABLE_TO_PROCESS_IMAGE_WITH_GIVEN_BASE_URI)]
+        public void RetrieveImageExceptionTest() {
+            ResourceResolver resourceResolver = new ResourceResolver(baseUri);
+            Assert.DoesNotThrow(()=>resourceResolver.RetrieveImage("imageWithSvg.svg"));
+        }
     }
 }

@@ -220,7 +220,7 @@ namespace iText.Signatures.Validation.Lotl {
             if (JsonNull.JSON_NULL != timestampsJson) {
                 JsonObject timestampsJsonObject = (JsonObject)timestampsJson;
                 foreach (KeyValuePair<String, JsonValue> timestampJson in timestampsJsonObject.GetFields()) {
-                    timestampsFromJson.Put(timestampJson.Key, (long)((JsonNumber)timestampJson.Value).GetValue());
+                    timestampsFromJson.Put(timestampJson.Key, ((JsonNumber)timestampJson.Value).GetLongValue());
                 }
             }
             lotlCacheDataFromJson.timeStamps = timestampsFromJson;

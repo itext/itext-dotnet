@@ -22,16 +22,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
 using iText.IO.Source;
 
 namespace iText.IO.Font {
+    /// <summary>Font program parsed from Adobe Type 1 AFM/PFM metrics and optional PFB outline data.</summary>
     public class Type1Font : FontProgram {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.IO.Font.Type1Font));
+
         private Type1Parser fontParser;
 
         private String characterSet;
@@ -52,6 +54,9 @@ namespace iText.IO.Font {
 
         private int[] fontStreamLengths;
 
+        /// <summary>Creates a font program for one of the PDF standard Type 1 fonts.</summary>
+        /// <param name="name">standard font name</param>
+        /// <returns>initialized standard-font program</returns>
         protected internal static iText.IO.Font.Type1Font CreateStandardFont(String name) {
             if (StandardFonts.IsStandardFont(name)) {
                 return new iText.IO.Font.Type1Font(name, null, null, null);
@@ -61,16 +66,124 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>Creates an empty Type 1 font program.</summary>
         protected internal Type1Font() {
             fontNames = new FontNames();
         }
 
+        /// <summary>Creates a Type 1 font program from AFM/PFM metrics and optional PFB data without remapping codes.
+        ///     </summary>
+        /// <param name="metricsPath">
+        /// metrics file path, built-in font name, or
+        /// <see langword="null"/>
+        /// when
+        /// <paramref name="afm"/>
+        /// is supplied
+        /// </param>
+        /// <param name="binaryPath">
+        /// PFB path, or
+        /// <see langword="null"/>
+        /// when
+        /// <paramref name="pfb"/>
+        /// is supplied
+        /// </param>
+        /// <param name="afm">
+        /// AFM/PFM bytes, or
+        /// <see langword="null"/>
+        /// when
+        /// <paramref name="metricsPath"/>
+        /// is supplied
+        /// </param>
+        /// <param name="pfb">
+        /// PFB bytes, or
+        /// <see langword="null"/>
+        /// when
+        /// <paramref name="binaryPath"/>
+        /// is supplied
+        /// </param>
         protected internal Type1Font(String metricsPath, String binaryPath, byte[] afm, byte[] pfb)
+            : this(metricsPath, binaryPath, afm, pfb, null) {
+        }
+
+        /// <summary>
+        /// Creates a
+        /// <see cref="Type1Font"/>
+        /// by parsing the AFM/PFM metrics and, optionally, the PFB binary
+        /// data, then applying an explicit encoding to the resulting glyph maps.
+        /// </summary>
+        /// <remarks>
+        /// Creates a
+        /// <see cref="Type1Font"/>
+        /// by parsing the AFM/PFM metrics and, optionally, the PFB binary
+        /// data, then applying an explicit encoding to the resulting glyph maps.
+        /// <para />
+        /// The font source may be supplied either as file-system paths or as raw byte arrays; one pair
+        /// (
+        /// <paramref name="metricsPath"/>
+        /// /
+        /// <paramref name="binaryPath"/>
+        /// or
+        /// <paramref name="afm"/>
+        /// /
+        /// <paramref name="pfb"/>
+        /// ) must be non-
+        /// <see langword="null"/>.
+        /// After parsing, if
+        /// <paramref name="fontEncoding"/>
+        /// is non-
+        /// <see langword="null"/>
+        /// ,
+        /// <see cref="InitializeGlyphs(FontEncoding)"/>
+        /// is called to remap character codes according to that encoding.
+        /// </remarks>
+        /// <param name="metricsPath">
+        /// path to the AFM or PFM metrics file, or a built-in standard font name,
+        /// or
+        /// <see langword="null"/>
+        /// if
+        /// <paramref name="afm"/>
+        /// bytes are provided instead
+        /// </param>
+        /// <param name="binaryPath">
+        /// path to the PFB binary file, or
+        /// <see langword="null"/>
+        /// if
+        /// <paramref name="pfb"/>
+        /// bytes are
+        /// provided or if the font is a built-in standard font
+        /// </param>
+        /// <param name="afm">
+        /// byte contents of the AFM or PFM metrics file, or
+        /// <see langword="null"/>
+        /// if
+        /// <paramref name="metricsPath"/>
+        /// is provided instead
+        /// </param>
+        /// <param name="pfb">
+        /// byte contents of the PFB binary file, or
+        /// <see langword="null"/>
+        /// if
+        /// <paramref name="binaryPath"/>
+        /// is provided or if the font is a built-in standard font
+        /// </param>
+        /// <param name="fontEncoding">
+        /// the encoding used to remap character codes to Unicode values after the font
+        /// has been parsed; may be
+        /// <see langword="null"/>
+        /// to skip glyph remapping
+        /// </param>
+        protected internal Type1Font(String metricsPath, String binaryPath, byte[] afm, byte[] pfb, FontEncoding fontEncoding
+            )
             : this() {
             fontParser = new Type1Parser(metricsPath, binaryPath, afm, pfb);
             Process();
+            if (fontEncoding != null) {
+                InitializeGlyphs(fontEncoding);
+            }
         }
 
+        /// <summary>Creates a lightweight Type 1 font program for a named base font without parsing metrics.</summary>
+        /// <param name="baseFont">PostScript base-font name</param>
         protected internal Type1Font(String baseFont)
             : this() {
             GetFontNames().SetFontName(baseFont);
@@ -82,6 +195,7 @@ namespace iText.IO.Font {
         /// map.
         /// </summary>
         /// <param name="fontEncoding">to be used to map unicode values to character codes.</param>
+        [System.ObsoleteAttribute(@"to make private")]
         public virtual void InitializeGlyphs(FontEncoding fontEncoding) {
             for (int i = 0; i < 256; i++) {
                 int unicode = fontEncoding.GetUnicode(i);
@@ -96,6 +210,12 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>Checks whether this program represents a built-in standard font.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// when no external font program is required
+        /// </returns>
         public virtual bool IsBuiltInFont() {
             return fontParser != null && fontParser.IsBuiltInFont();
         }
@@ -118,6 +238,16 @@ namespace iText.IO.Font {
             return flags;
         }
 
+        /// <summary>
+        /// Gets the AFM
+        /// <c>CharacterSet</c>
+        /// declaration.
+        /// </summary>
+        /// <returns>
+        /// character set description, or
+        /// <see langword="null"/>
+        /// when absent
+        /// </returns>
         public virtual String GetCharacterSet() {
             return characterSet;
         }
@@ -191,13 +321,11 @@ namespace iText.IO.Font {
                 int bytePtr = 0;
                 for (int k = 0; k < 3; ++k) {
                     if (raf.Read() != 0x80) {
-                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Font.Type1Font));
-                        logger.LogError(iText.IO.Logs.IoLogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE);
+                        LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE);
                         return null;
                     }
                     if (raf.Read() != PFB_TYPES[k]) {
-                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Font.Type1Font));
-                        logger.LogError("incorrect.segment.type.in.pfb.file");
+                        LOGGER.Error(() => "incorrect.segment.type.in.pfb.file");
                         return null;
                     }
                     int size = raf.Read();
@@ -208,8 +336,7 @@ namespace iText.IO.Font {
                     while (size != 0) {
                         int got = raf.Read(fontStreamBytes, bytePtr, size);
                         if (got < 0) {
-                            ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Font.Type1Font));
-                            logger.LogError("premature.end.in.pfb.file");
+                            LOGGER.Error(() => "premature.end.in.pfb.file");
                             return null;
                         }
                         bytePtr += got;
@@ -219,8 +346,7 @@ namespace iText.IO.Font {
                 return fontStreamBytes;
             }
             catch (Exception) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Font.Type1Font));
-                logger.LogError("type1.font.file.exception");
+                LOGGER.Error(() => "type1.font.file.exception");
                 return null;
             }
             finally {
@@ -242,6 +368,7 @@ namespace iText.IO.Font {
             return Object.Equals(fontParser.GetAfmPath(), fontProgram);
         }
 
+        /// <summary>Parses AFM/PFM metrics, character metrics, and kerning pairs into this font program.</summary>
         protected internal virtual void Process() {
             RandomAccessFileOrArray raf = fontParser.GetMetricsFile();
             String line;

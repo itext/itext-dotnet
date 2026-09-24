@@ -27,29 +27,29 @@ using iText.Test;
 namespace iText.Svg.Googlecharts {
     [NUnit.Framework.Category("IntegrationTest")]
     public class ColumnChartsTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/ColumnChartsTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/googlecharts/ColumnChartsTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/googlecharts/ColumnChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void ColumnDualYChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "columnDualYChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "columnDualYChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void ColumnMaterialChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "columnMaterialChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "columnMaterialChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void ColumnTopXChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "columnTopXChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "columnTopXChart");
         }
     }
 }

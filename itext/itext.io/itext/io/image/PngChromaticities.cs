@@ -21,6 +21,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.IO.Image {
+    /// <summary>
+    /// Stores the CIE
+    /// <c>x</c>
+    /// /
+    /// <c>y</c>
+    /// chromaticities declared by a PNG image.
+    /// </summary>
     public class PngChromaticities {
         private float xW;
 
@@ -38,6 +45,15 @@ namespace iText.IO.Image {
 
         private float yB;
 
+        /// <summary>Creates PNG chromaticities for the white point and RGB primaries.</summary>
+        /// <param name="xW">white-point x chromaticity</param>
+        /// <param name="yW">white-point y chromaticity</param>
+        /// <param name="xR">red-primary x chromaticity</param>
+        /// <param name="yR">red-primary y chromaticity</param>
+        /// <param name="xG">green-primary x chromaticity</param>
+        /// <param name="yG">green-primary y chromaticity</param>
+        /// <param name="xB">blue-primary x chromaticity</param>
+        /// <param name="yB">blue-primary y chromaticity</param>
         public PngChromaticities(float xW, float yW, float xR, float yR, float xG, float yG, float xB, float yB) {
             this.xW = xW;
             this.yW = yW;
@@ -49,34 +65,50 @@ namespace iText.IO.Image {
             this.yB = yB;
         }
 
+        /// <summary>Gets the white-point x chromaticity.</summary>
+        /// <returns>white-point x chromaticity</returns>
         public virtual float GetXW() {
             return xW;
         }
 
+        /// <summary>Gets the white-point y chromaticity.</summary>
+        /// <returns>white-point y chromaticity</returns>
         public virtual float GetYW() {
             return yW;
         }
 
+        /// <summary>Gets the red-primary x chromaticity.</summary>
+        /// <returns>red-primary x chromaticity</returns>
         public virtual float GetXR() {
             return xR;
         }
 
+        /// <summary>Gets the red-primary y chromaticity.</summary>
+        /// <returns>red-primary y chromaticity</returns>
         public virtual float GetYR() {
             return yR;
         }
 
+        /// <summary>Gets the green-primary x chromaticity.</summary>
+        /// <returns>green-primary x chromaticity</returns>
         public virtual float GetXG() {
             return xG;
         }
 
+        /// <summary>Gets the green-primary y chromaticity.</summary>
+        /// <returns>green-primary y chromaticity</returns>
         public virtual float GetYG() {
             return yG;
         }
 
+        /// <summary>Gets the blue-primary x chromaticity.</summary>
+        /// <returns>blue-primary x chromaticity</returns>
         public virtual float GetXB() {
             return xB;
         }
 
+        /// <summary>Gets the blue-primary y chromaticity.</summary>
+        /// <returns>blue-primary y chromaticity</returns>
         public virtual float GetYB() {
             return yB;
         }

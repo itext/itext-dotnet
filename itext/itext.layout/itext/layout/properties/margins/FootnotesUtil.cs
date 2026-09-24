@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 using iText.Commons.Internal.Runtime;
 using iText.Layout;
+using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 using iText.Layout.Tagging;
@@ -30,6 +31,10 @@ using iText.Layout.Tagging;
 namespace iText.Layout.Properties.Margins {
     /// <summary>Utility class to process footnotes for internal usage only.</summary>
     public sealed class FootnotesUtil {
+        private const float DEFAULT_FOOTNOTE_ANCHOR_FONT_SIZE_SCALE_FACTOR = 0.5F;
+
+        private const float DEFAULT_FOOTNOTE_ANCHOR_TEXT_RISE_SCALE_FACTOR = 0.6F;
+
         private FootnotesUtil() {
         }
 
@@ -63,8 +68,8 @@ namespace iText.Layout.Properties.Margins {
             foreach (FootnoteRenderer footnoteRederer in footnotesToAdd) {
                 Footnote footnote = (Footnote)footnoteRederer.GetModelElement();
                 footnotesContainer.Add(footnote, footnoteRederer.GetProperty<TaggingHintKey>(Property.TAGGING_HINT_KEY));
-                if (footnote.footnoteAnchor != null) {
-                    footnote.anchors.Put(pageNum, footnote.footnoteAnchor);
+                if (footnote.GetInjectedFootnoteAnchor() != null) {
+                    footnote.anchors.Put(pageNum, footnote.GetInjectedFootnoteAnchor());
                     footnote.ResetFootnoteAnchor();
                 }
             }
@@ -114,6 +119,87 @@ namespace iText.Layout.Properties.Margins {
         /// </param>
         public static void ApplyFootnoteAnchorStyle(FootnoteAnchor anchor, Style footnoteAnchorLabelStyle) {
             anchor.SetFootnoteAnchorLabelStyle(footnoteAnchorLabelStyle);
+        }
+
+        /// <summary>Gets injected footnote anchor element, which is a copy of a footnote anchor in the main content.</summary>
+        /// <param name="footnote">
+        /// 
+        /// <see cref="Footnote"/>
+        /// from which injected footnote anchor is retrieved
+        /// </param>
+        /// <returns>injected footnote anchor element</returns>
+        public static IElement GetInjectedFootnoteAnchor(Footnote footnote) {
+            return footnote.GetInjectedFootnoteAnchor();
+        }
+
+        /// <summary>Indicates whether a default style should be applied to injected footnote anchor copy.</summary>
+        /// <param name="footnote">
+        /// 
+        /// <see cref="Footnote"/>
+        /// containing injected anchor copy
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if default style is needed,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        public static bool IsDefaultStyleNeededForInjectedFootnoteAnchor(Footnote footnote) {
+            return footnote.IsDefaultStyleNeededForInjectedFootnoteAnchor();
+        }
+
+        /// <summary>Indicates whether a default style should be applied to the footnote anchor.</summary>
+        /// <param name="anchor">
+        /// 
+        /// <see cref="FootnoteAnchor"/>
+        /// to check
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if default style is needed,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        public static bool IsDefaultStyleNeeded(FootnoteAnchor anchor) {
+            return anchor.IsDefaultStyleNeeded();
+        }
+
+        /// <summary>Creates the default style for a footnote anchor in the main content.</summary>
+        /// <remarks>
+        /// Creates the default style for a footnote anchor in the main content.
+        /// <para />
+        /// The resulting style uses a reduced font size and positive text rise relative to the parent font size:
+        /// <para />
+        /// font size = parent font size * 0.5
+        /// <para />
+        /// text rise = parent font size * 0.6
+        /// <para />
+        /// If
+        /// <paramref name="parentFontSize"/>
+        /// is
+        /// <see langword="null"/>
+        /// 
+        /// <c>12pt</c>
+        /// is used as the base size.
+        /// </remarks>
+        /// <param name="parentFontSize">parent font size unit value</param>
+        /// <returns>default style for a footnote anchor</returns>
+        public static Style CreateDefaultFootnoteAnchorStyle(UnitValue parentFontSize) {
+            float fontSize;
+            if (parentFontSize == null) {
+                fontSize = 12;
+            }
+            else {
+                fontSize = parentFontSize.GetValue();
+            }
+            Style defaultStyle = new Style();
+            float defaultFontSize = fontSize * DEFAULT_FOOTNOTE_ANCHOR_FONT_SIZE_SCALE_FACTOR;
+            defaultStyle.SetProperty(Property.FONT_SIZE, UnitValue.CreatePointValue(defaultFontSize));
+            float defaultTextRise = fontSize * DEFAULT_FOOTNOTE_ANCHOR_TEXT_RISE_SCALE_FACTOR;
+            defaultStyle.SetProperty(Property.TEXT_RISE, defaultTextRise);
+            return defaultStyle;
         }
     }
 }

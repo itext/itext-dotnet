@@ -23,9 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Colors;
 using iText.IO.Exceptions;
@@ -34,7 +33,7 @@ using iText.IO.Util;
 namespace iText.IO.Image {
 //\cond DO_NOT_DOCUMENT
     internal class JpegImageHelper {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(JpegImageHelper));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(JpegImageHelper));
 
         /// <summary>This is a type of marker.</summary>
         private const int NOT_A_MARKER = -1;
@@ -136,7 +135,7 @@ namespace iText.IO.Image {
                     image.SetProfile(IccProfile.GetInstance(ficc, image.GetColorEncodingComponentsNumber()));
                 }
                 catch (Exception e) {
-                    LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.DURING_CONSTRUCTION_OF_ICC_PROFILE_ERROR_OCCURRED
+                    LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.DURING_CONSTRUCTION_OF_ICC_PROFILE_ERROR_OCCURRED
                         , e.GetType().Name, e.Message));
                 }
             }
@@ -310,21 +309,25 @@ namespace iText.IO.Image {
                             if (unitsx == 1 || unitsx == 2) {
                                 dx = (unitsx == 2 ? (int)(dx * 2.54f + 0.5f) : dx);
                                 // make sure this is consistent with JFIF data
-                                if (image.GetDpiX() != 0 && image.GetDpiX() != dx) {
-                                    LOGGER.LogDebug(MessageFormatUtil.Format("Inconsistent metadata (dpiX: {0} vs {1})", image.GetDpiX(), dx));
+                                if (image.GetDpiX() == 0 || image.GetDpiX() == dx) {
+                                    image.SetDpi(dx, image.GetDpiY());
                                 }
                                 else {
-                                    image.SetDpi(dx, image.GetDpiY());
+                                    int logDx = dx;
+                                    LOGGER.Debug(() => MessageFormatUtil.Format("Inconsistent metadata (dpiX: {0} vs {1})", image.GetDpiX(), logDx
+                                        ));
                                 }
                             }
                             if (unitsy == 1 || unitsy == 2) {
                                 dy = (unitsy == 2 ? (int)(dy * 2.54f + 0.5f) : dy);
                                 // make sure this is consistent with JFIF data
-                                if (image.GetDpiY() != 0 && image.GetDpiY() != dy) {
-                                    LOGGER.LogDebug(MessageFormatUtil.Format("Inconsistent metadata (dpiY: {0} vs {1})", image.GetDpiY(), dy));
+                                if (image.GetDpiY() == 0 || image.GetDpiY() == dy) {
+                                    image.SetDpi(image.GetDpiX(), dx);
                                 }
                                 else {
-                                    image.SetDpi(image.GetDpiX(), dx);
+                                    int logDy = dy;
+                                    LOGGER.Debug(() => MessageFormatUtil.Format("Inconsistent metadata (dpiY: {0} vs {1})", image.GetDpiY(), logDy
+                                        ));
                                 }
                             }
                         }

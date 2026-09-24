@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Image;
 using iText.Kernel.Exceptions;
@@ -41,6 +40,8 @@ using iText.Layout.Tagging;
 namespace iText.Layout.Element {
     /// <summary>A layout element that represents an image for inclusion in the document model.</summary>
     public class Image : AbstractElement<iText.Layout.Element.Image>, ILeafElement, IAccessibleElement {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Element.Image));
+
         protected internal PdfXObject xObject;
 
         protected internal DefaultAccessibilityProperties tagProperties;
@@ -226,11 +227,34 @@ namespace iText.Layout.Element {
             return xObject;
         }
 
-        /// <summary>Sets the rotation radAngle.</summary>
-        /// <param name="radAngle">a value in radians</param>
+        /// <summary>Sets the rotation angle for this image.</summary>
+        /// <remarks>
+        /// Sets the rotation angle for this image.
+        /// <para />
+        /// The angle is specified in radians and stored in
+        /// <see cref="iText.Layout.Properties.Property.ROTATION_ANGLE"/>.
+        /// Positive values rotate counter-clockwise; negative values rotate clockwise.
+        /// <para />
+        /// Rotation is applied during rendering, and layout computes an occupied area that
+        /// encloses the rotated image.
+        /// </remarks>
+        /// <param name="radAngle">the rotation angle, in radians</param>
         /// <returns>this element</returns>
         public virtual iText.Layout.Element.Image SetRotationAngle(double radAngle) {
             SetProperty(Property.ROTATION_ANGLE, radAngle);
+            return this;
+        }
+
+        /// <summary>Sets a transformation to be applied to this block element during rendering.</summary>
+        /// <param name="transform">
+        /// a
+        /// <see cref="iText.Layout.Properties.Transform"/>
+        /// describing the sequence of transform operations
+        /// (for example, translate, scale, rotate, skew)
+        /// </param>
+        /// <returns>this element</returns>
+        public virtual iText.Layout.Element.Image SetTransform(Transform transform) {
+            SetProperty(Property.TRANSFORM, transform);
             return this;
         }
 
@@ -465,8 +489,7 @@ namespace iText.Layout.Element {
             if (HasProperty(Property.AUTO_SCALE_WIDTH) && HasProperty(Property.AUTO_SCALE_HEIGHT) && autoScale && ((bool
                 )this.GetProperty<bool?>(Property.AUTO_SCALE_WIDTH) || (bool)this.GetProperty<bool?>(Property.AUTO_SCALE_HEIGHT
                 ))) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Element.Image));
-                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_AMBIGUOUS_SCALE);
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_AMBIGUOUS_SCALE);
             }
             SetProperty(Property.AUTO_SCALE, autoScale);
             return this;

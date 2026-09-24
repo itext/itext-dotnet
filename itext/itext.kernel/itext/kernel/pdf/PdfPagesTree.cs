@@ -22,10 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Datastructures;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.DI.Pagetree;
 using iText.Kernel.Exceptions;
@@ -38,11 +37,11 @@ namespace iText.Kernel.Pdf {
     /// tree
     /// </summary>
     internal class PdfPagesTree {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.PdfPagesTree));
+
 //\cond DO_NOT_DOCUMENT
         internal const int DEFAULT_LEAF_SIZE = 10;
 //\endcond
-
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPagesTree));
 
         private readonly int leafSize = DEFAULT_LEAF_SIZE;
 
@@ -120,13 +119,15 @@ namespace iText.Kernel.Pdf {
                         pdfPage.parentPages = parents[parentIndex];
                     }
                     else {
-                        LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE
-                            , pageNum + 1));
+                        int pageNumForLog = pageNum + 1;
+                        LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE
+                            , pageNumForLog));
                     }
                 }
                 else {
-                    LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE
-                        , pageNum + 1));
+                    int pageNumForLog = pageNum + 1;
+                    LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PAGE_TREE_IS_BROKEN_FAILED_TO_RETRIEVE_PAGE
+                        , pageNumForLog));
                 }
                 pages.Set(pageNum, pdfPage);
             }
@@ -269,7 +270,7 @@ namespace iText.Kernel.Pdf {
         public virtual PdfPage RemovePage(int pageNum) {
             PdfPage pdfPage = GetPage(pageNum);
             if (pdfPage.IsFlushed()) {
-                LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED);
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED);
             }
             if (InternalRemovePage(--pageNum)) {
                 return pdfPage;
@@ -297,8 +298,7 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         protected internal virtual PdfObject GenerateTree() {
             if (pageRefs.IsEmpty()) {
-                LOGGER.LogInformation(iText.IO.Logs.IoLogMessageConstant.ATTEMPT_TO_GENERATE_PDF_PAGES_TREE_WITHOUT_ANY_PAGES
-                    );
+                LOGGER.Info(() => iText.IO.Logs.IoLogMessageConstant.ATTEMPT_TO_GENERATE_PDF_PAGES_TREE_WITHOUT_ANY_PAGES);
                 document.AddNewPage();
             }
             if (generated) {

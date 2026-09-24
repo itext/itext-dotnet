@@ -68,8 +68,7 @@ namespace iText.Signatures.Validation.Extensions {
         /// , representing extended key usages OIDs
         /// </param>
         public ExtendedKeyUsageExtension(IList<String> extendedKeyUsageOids)
-            : base(OID.X509Extensions.EXTENDED_KEY_USAGE, FACTORY.CreateExtendedKeyUsage(CreateKeyPurposeIds(extendedKeyUsageOids
-                )).ToASN1Primitive()) {
+            : base(OID.X509Extensions.EXTENDED_KEY_USAGE, CreateExtensionValue(extendedKeyUsageOids)) {
             this.extendedKeyUsageOids = extendedKeyUsageOids;
         }
 
@@ -125,6 +124,13 @@ namespace iText.Signatures.Validation.Extensions {
             sb.Append(')');
             errorMessage = sb.ToString();
             return false;
+        }
+
+        private static IAsn1Object CreateExtensionValue(IList<String> extendedKeyUsageOids) {
+            if (extendedKeyUsageOids.Count == 0) {
+                return null;
+            }
+            return FACTORY.CreateExtendedKeyUsage(CreateKeyPurposeIds(extendedKeyUsageOids)).ToASN1Primitive();
         }
 
         private static IDerObjectIdentifier[] CreateKeyPurposeIds(IList<String> extendedKeyUsageOids) {

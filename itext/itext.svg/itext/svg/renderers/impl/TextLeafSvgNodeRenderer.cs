@@ -136,6 +136,9 @@ namespace iText.Svg.Renderers.Impl {
             text.SetStrokeColor(textProperties.GetStrokeColor(), textProperties.GetStrokeOpacity());
             text.SetDashPattern(textProperties.GetDashArray(), textProperties.GetDashPhase());
             text.SetProperty(Property.UNDERLINE, textProperties.GetTextDecoration());
+            text.SetLineCapStyle(textProperties.GetLineCapStyle());
+            text.SetLineJoinStyle(textProperties.GetLineJoinStyle());
+            text.SetMiterLimit(textProperties.GetMiterLimit());
         }
 
         private LineRenderer LayoutText(SvgDrawContext context) {

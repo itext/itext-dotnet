@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Layout;
@@ -33,6 +32,8 @@ using iText.Layout.Renderer;
 
 namespace iText.Layout.Minmaxwidth {
     public sealed class MinMaxWidthUtils {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(MinMaxWidthUtils));
+
         private const float eps = 0.01f;
 
         private const float max = 32760f;
@@ -105,14 +106,12 @@ namespace iText.Layout.Minmaxwidth {
         public static float GetMarginsWidth(IPropertyContainer element) {
             UnitValue rightMargin = element.GetProperty<UnitValue>(Property.MARGIN_RIGHT);
             if (null != rightMargin && !rightMargin.IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(MinMaxWidthUtils));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.MARGIN_RIGHT));
             }
             UnitValue leftMargin = element.GetProperty<UnitValue>(Property.MARGIN_LEFT);
             if (null != leftMargin && !leftMargin.IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(MinMaxWidthUtils));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.MARGIN_LEFT));
             }
             float rightMarginWidth = rightMargin != null ? rightMargin.GetValue() : 0;
@@ -129,14 +128,12 @@ namespace iText.Layout.Minmaxwidth {
         public static float GetPaddingWidth(IPropertyContainer element) {
             UnitValue rightPadding = element.GetProperty<UnitValue>(Property.PADDING_RIGHT);
             if (null != rightPadding && !rightPadding.IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(MinMaxWidthUtils));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.PADDING_RIGHT));
             }
             UnitValue leftPadding = element.GetProperty<UnitValue>(Property.PADDING_LEFT);
             if (null != leftPadding && !leftPadding.IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(MinMaxWidthUtils));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.PADDING_LEFT));
             }
             float rightPaddingWidth = rightPadding != null ? rightPadding.GetValue() : 0;

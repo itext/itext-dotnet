@@ -23,13 +23,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 
 namespace iText.IO.Font.Otf {
+    /// <summary>Class storing OpenType feature records.</summary>
     public class OpenTypeFeature {
-        private OpenTypeFontTableReader openTypeReader;
+        private readonly IList<FeatureRecord> records;
 
-        private IList<FeatureRecord> records;
-
+        /// <summary>Creates a new OpenType feature records.</summary>
+        /// <param name="openTypeReader">the open type reader</param>
+        /// <param name="locationFeatureTable">the location feature table</param>
         public OpenTypeFeature(OpenTypeFontTableReader openTypeReader, int locationFeatureTable) {
-            this.openTypeReader = openTypeReader;
             records = new List<FeatureRecord>();
             openTypeReader.rf.Seek(locationFeatureTable);
             TagAndLocation[] tagsLocs = openTypeReader.ReadTagAndLocations(locationFeatureTable);
@@ -44,10 +45,15 @@ namespace iText.IO.Font.Otf {
             }
         }
 
+        /// <summary>Returns the records.</summary>
+        /// <returns>the requested result</returns>
         public virtual IList<FeatureRecord> GetRecords() {
             return records;
         }
 
+        /// <summary>Returns the record.</summary>
+        /// <param name="idx">the record index</param>
+        /// <returns>the requested result</returns>
         public virtual FeatureRecord GetRecord(int idx) {
             if (idx < 0 || idx >= records.Count) {
                 return null;

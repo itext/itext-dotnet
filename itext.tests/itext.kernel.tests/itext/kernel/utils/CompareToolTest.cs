@@ -93,7 +93,9 @@ namespace iText.Kernel.Utils {
             CompareTool compareTool = new CompareTool();
             compareTool.SetCompareByContentErrorsLimit(10);
             compareTool.SetGenerateCompareByContentXmlReport(true);
-            String outPdf = sourceFolder + "tagged_pdf.pdf";
+            String outRefPdf = sourceFolder + "tagged_pdf.pdf";
+            String outPdf = destinationFolder + "tagged_pdf.pdf";
+            FileUtil.Copy(outRefPdf, outPdf);
             String cmpPdf = sourceFolder + "cmp_tagged_xml_neg.xml";
             String result = compareTool.CompareTagStructureAgainstXml(outPdf, cmpPdf);
             System.Console.Out.WriteLine("\nRESULT:\n" + result);
@@ -106,7 +108,9 @@ namespace iText.Kernel.Utils {
             CompareTool compareTool = new CompareTool();
             compareTool.SetCompareByContentErrorsLimit(10);
             compareTool.SetGenerateCompareByContentXmlReport(true);
-            String outPdf = sourceFolder + "tagged_pdf.pdf";
+            String outRefPdf = sourceFolder + "tagged_pdf.pdf";
+            String outPdf = destinationFolder + "tagged_pdf.pdf";
+            FileUtil.Copy(outRefPdf, outPdf);
             String cmpXml = sourceFolder + "cmp_tagged_xml_pos.xml";
             String result = compareTool.CompareTagStructureAgainstXml(outPdf, cmpXml);
             System.Console.Out.WriteLine("\nRESULT:\n" + result);
@@ -181,8 +185,8 @@ namespace iText.Kernel.Utils {
         public virtual void GsEnvironmentVariableSpecifiedIncorrectlyTest() {
             String outPdf = sourceFolder + "simple_pdf.pdf";
             String cmpPdf = sourceFolder + "cmp_simple_pdf.pdf";
-            Exception e = NUnit.Framework.Assert.Catch(typeof(CompareTool.CompareToolExecutionException), () => new CompareTool
-                ("unspecified", null).CompareVisually(outPdf, cmpPdf, destinationFolder, "diff_"));
+            Exception e = NUnit.Framework.Assert.Catch(typeof(Exception), () => new CompareTool("unspecified", null).CompareVisually
+                (outPdf, cmpPdf, destinationFolder, "diff_"));
             NUnit.Framework.Assert.AreEqual(IoExceptionMessageConstant.GS_ENVIRONMENT_VARIABLE_IS_NOT_SPECIFIED, e.Message
                 );
         }
@@ -286,7 +290,7 @@ namespace iText.Kernel.Utils {
         [NUnit.Framework.Test]
         public virtual void ConvertDocInfoToStringsTest() {
             String inPdf = sourceFolder + "test.pdf";
-            CompareTool compareTool = new _CompareTool_326();
+            CompareTool compareTool = new _CompareTool_331();
             using (PdfReader reader = new PdfReader(inPdf, compareTool.GetOutReaderProperties())) {
                 using (PdfDocument doc = new PdfDocument(reader)) {
                     String[] docInfo = compareTool.ConvertDocInfoToStrings(doc.GetDocumentInfo());
@@ -299,8 +303,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _CompareTool_326 : CompareTool {
-            public _CompareTool_326() {
+        private sealed class _CompareTool_331 : CompareTool {
+            public _CompareTool_331() {
             }
 
             protected internal override String[] ConvertDocInfoToStrings(PdfDocumentInfo info) {
@@ -327,6 +331,21 @@ namespace iText.Kernel.Utils {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(firstPdf, secondPdf, destinationFolder));
             NUnit.Framework.Assert.IsFalse(new FileInfo(firstPdf).Exists);
             NUnit.Framework.Assert.IsFalse(new FileInfo(secondPdf).Exists);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CompareByContentCleansUpOutPdfFromMemoryTest() {
+            String firstPdf = destinationFolder + "compareByContentCleansUpOutPdfFromMemoryTest.pdf";
+            String secondPdf = destinationFolder + "compareByContentCleansUpOutPdfFromMemoryTest2.pdf";
+            PdfDocument firstDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(firstPdf));
+            PdfDocument secondDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(secondPdf));
+            firstDocument.AddNewPage();
+            firstDocument.Close();
+            secondDocument.AddNewPage();
+            secondDocument.Close();
+            NUnit.Framework.Assert.IsNotNull(MemoryFirstPdfWriter.Get(firstPdf));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(firstPdf, secondPdf, destinationFolder));
+            NUnit.Framework.Assert.IsNull(MemoryFirstPdfWriter.Get(firstPdf));
         }
 
         [NUnit.Framework.Test]
@@ -417,6 +436,15 @@ namespace iText.Kernel.Utils {
             NUnit.Framework.Assert.IsNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, 0.8));
             NUnit.Framework.Assert.IsNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, null, ignoredAreas, 0.4
                 ));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CompareToolWithStreamToleranceTest() {
+            String outPdf = sourceFolder + "tolerance1.pdf";
+            String cmpPdf = sourceFolder + "tolerance2.pdf";
+            NUnit.Framework.Assert.IsNull(new CompareTool().SetContentStreamFloatTolerance(0.02f).CompareByContent(outPdf
+                , cmpPdf, destinationFolder));
+            NUnit.Framework.Assert.IsNotNull(new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder));
         }
     }
 }

@@ -94,6 +94,7 @@ namespace iText.Commons.Utils {
         /// <param name="fileName">the target name of the file inside zip after writing</param>
         /// <param name="objectToAdd">the object to serialize as JSON</param>
         /// <exception cref="IOException">if some I/O exception occurs</exception>
+        [Obsolete(@"Not used anywhere")]
         public void AddJsonEntry(String fileName, Object objectToAdd) {
             if (objectToAdd == null) {
                 throw new IOException(CommonsExceptionMessageConstant.JSON_OBJECT_CAN_NOT_BE_NULL);

@@ -42,11 +42,16 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void LineSeparatorWidthPercentageTest01() {
             String outFileName = destinationFolder + "lineSeparatorWidthPercentageTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_lineSeparatorWidthPercentageTest01.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf);
             ILineDrawer line1 = new SolidLine();
             line1.SetColor(ColorConstants.RED);
@@ -62,7 +67,7 @@ namespace iText.Layout {
         public virtual void LineSeparatorBackgroundTest01() {
             String outFileName = destinationFolder + "lineSeparatorBackgroundTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_lineSeparatorBackgroundTest01.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf);
             Style style = new Style();
             style.SetBackgroundColor(ColorConstants.YELLOW);
@@ -78,7 +83,7 @@ namespace iText.Layout {
         public virtual void RotatedLineSeparatorTest01() {
             String outFileName = destinationFolder + "rotatedLineSeparatorTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_rotatedLineSeparatorTest01.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf);
             document.Add(new LineSeparator(new DashedLine()).SetBackgroundColor(ColorConstants.RED).SetRotationAngle(Math
                 .PI / 2));
@@ -91,7 +96,7 @@ namespace iText.Layout {
         public virtual void RotatedLineSeparatorTest02() {
             String outFileName = destinationFolder + "rotatedLineSeparatorTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_rotatedLineSeparatorTest02.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf);
             document.Add(new Paragraph("Hello"));
             document.Add(new LineSeparator(new DashedLine()).SetWidth(100).SetHorizontalAlignment(HorizontalAlignment.

@@ -20,9 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
@@ -41,7 +39,7 @@ namespace iText.Kernel.Utils.Annotationsflattening {
     /// implementation.
     /// </remarks>
     public class DefaultAnnotationFlattener : IAnnotationFlattener {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Utils.Annotationsflattening.DefaultAnnotationFlattener
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Utils.Annotationsflattening.DefaultAnnotationFlattener
             ));
 
         /// <summary>
@@ -85,9 +83,8 @@ namespace iText.Kernel.Utils.Annotationsflattening {
                 page.RemoveAnnotation(annotation);
                 return true;
             }
-            String message = MessageFormatUtil.Format(KernelLogMessageConstant.FLATTENING_IS_NOT_YET_SUPPORTED, annotation
-                .GetSubtype());
-            LOGGER.LogWarning(message);
+            LOGGER.Warn(() => MessageFormatUtil.Format(KernelLogMessageConstant.FLATTENING_IS_NOT_YET_SUPPORTED, annotation
+                .GetSubtype()));
             return false;
         }
 

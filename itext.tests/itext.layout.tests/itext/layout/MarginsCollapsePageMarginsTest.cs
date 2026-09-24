@@ -45,12 +45,17 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void CollapsingMarginsWithSectionBreakTest() {
             String fileName = "collapsingMarginsSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetProperty(Property.COLLAPSING_MARGINS, true);
                     document.Add(MarginedDiv("TOP SIBLING", new DeviceRgb(65, 151, 29), 40, 40));
@@ -69,7 +74,7 @@ namespace iText.Layout {
             String fileName = "collapsingTwoSectionBreaks";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetProperty(Property.COLLAPSING_MARGINS, true);
                     AddSiblingBlock(document, "SECTION 1");
@@ -88,7 +93,7 @@ namespace iText.Layout {
             String fileName = "elemCollapsingWithSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div collapsing = new Div();
                     collapsing.SetProperty(Property.COLLAPSING_MARGINS, true);
@@ -113,7 +118,7 @@ namespace iText.Layout {
             String fileName = "parentChildCollapsingSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetProperty(Property.COLLAPSING_MARGINS, true);
                     Div parent = new Div().SetMarginTop(60).SetBackgroundColor(new DeviceRgb(220, 220, 220));
@@ -134,7 +139,7 @@ namespace iText.Layout {
             String fileName = "collapsingSameSectionBreakTwice";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetProperty(Property.COLLAPSING_MARGINS, true);
                     AddSiblingBlock(document, "SECTION 1");
@@ -153,7 +158,7 @@ namespace iText.Layout {
             String fileName = "collapsingAcrossAreaBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetProperty(Property.COLLAPSING_MARGINS, true);
                     document.SetPageMargins((pageNum) => true, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1()));
@@ -171,7 +176,7 @@ namespace iText.Layout {
             String fileName = "collapsingAltBreaks";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetProperty(Property.COLLAPSING_MARGINS, true);
                     AddSiblingBlock(document, "PAGE 1 — no margins");
@@ -194,7 +199,7 @@ namespace iText.Layout {
             String fileName = "collapsingAreaBreakPageSize";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetProperty(Property.COLLAPSING_MARGINS, true);
                     document.SetPageMargins((pageNum) => true, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins2()));
@@ -212,7 +217,7 @@ namespace iText.Layout {
             String fileName = "collapsingDocPageMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetProperty(Property.COLLAPSING_MARGINS, true);
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins2
@@ -232,7 +237,7 @@ namespace iText.Layout {
             String fileName = "collapsingPerPageDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetProperty(Property.COLLAPSING_MARGINS, true);
                     document.SetPageMargins((pageNum) => {
@@ -257,7 +262,7 @@ namespace iText.Layout {
             String fileName = "collapsingDocMarginsOverriddenBySectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetProperty(Property.COLLAPSING_MARGINS, true);
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins2
@@ -276,7 +281,7 @@ namespace iText.Layout {
             String fileName = "collapsingStaticDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetProperty(Property.COLLAPSING_MARGINS, true);
                     document.SetMargins(80, 80, 80, 80);
@@ -299,7 +304,7 @@ namespace iText.Layout {
         public virtual void CollapsingOnVsOffWithPageMarginsThrowsTest() {
             String fileName = "collapsingOnVsOff";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => true, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1()));
                     document.SetProperty(Property.COLLAPSING_MARGINS, false);
@@ -319,7 +324,7 @@ namespace iText.Layout {
             String fileName = "nestedDivsCollapsingSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetProperty(Property.COLLAPSING_MARGINS, true);
                     Div level1 = new Div().SetMarginTop(60);
@@ -343,7 +348,7 @@ namespace iText.Layout {
             String fileName = "nestedDivsCollapsingAreaBreakDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetProperty(Property.COLLAPSING_MARGINS, true);
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1

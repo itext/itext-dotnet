@@ -31,6 +31,8 @@ namespace iText.IO.Image {
 //\cond DO_NOT_DOCUMENT
     internal sealed class BmpImageHelper {
         private class BmpParameters {
+            /// <summary>Creates a parsing context for a BMP image.</summary>
+            /// <param name="image">image being decoded</param>
             public BmpParameters(BmpImageData image) {
                 this.image = image;
             }

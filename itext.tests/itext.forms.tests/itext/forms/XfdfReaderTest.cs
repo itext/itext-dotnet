@@ -41,11 +41,16 @@ namespace iText.Forms {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfNoFields() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfNoFields.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfNoFields.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfNoFields.pdf"));
             String xfdfFilename = sourceFolder + "xfdfNoFields.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -59,7 +64,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_NO_F_OBJECT_TO_COMPARE)]
         public virtual void XfdfNoFieldsNoFAttributes() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfNoFieldsNoFAttributes.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfNoFieldsNoFAttributes.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfNoFieldsNoFAttributes.pdf"));
             String xfdfFilename = sourceFolder + "xfdfNoFieldsNoFAttributes.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -73,8 +78,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfNoFieldsNoIdsAttributes() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfNoFieldsNoIdsAttributes.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfNoFieldsNoIdsAttributes.pdf"))
-                );
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfNoFieldsNoIdsAttributes.pdf"));
             String xfdfFilename = sourceFolder + "xfdfNoFieldsNoIdsAttributes.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -88,7 +92,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfWithFieldsWithValue() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfWithFieldsWithValue.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfWithFieldsWithValue.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfWithFieldsWithValue.pdf"));
             String xfdfFilename = sourceFolder + "xfdfWithFieldsWithValue.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -104,7 +108,7 @@ namespace iText.Forms {
         public virtual void XfdfValueRichText() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfValueRichText.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfValueRichText.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfValueRichText.pdf"));
             String xfdfFilename = sourceFolder + "xfdfValueRichText.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -119,7 +123,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_NO_SUCH_FIELD_IN_PDF_DOCUMENT, Count = 3)]
         public virtual void XfdfHierarchyFieldsTest() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "hierarchy_fields.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "hierarchy_fields.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "hierarchy_fields.pdf"));
             String xfdfFilename = sourceFolder + "hierarchy_fields.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -134,8 +138,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_NO_SUCH_FIELD_IN_PDF_DOCUMENT, Count = 3)]
         public virtual void XfdfWithFieldsWithValueParentAndChild() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfWithFieldsWithValueParentAndChild.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfWithFieldsWithValueParentAndChild.pdf"
-                )));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfWithFieldsWithValueParentAndChild.pdf"));
             String xfdfFilename = sourceFolder + "xfdfWithFieldsWithValueParentAndChild.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -148,8 +151,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void XfdfAnnotationHighlightedText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationHighlightedText.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationHighlightedText.pdf"
-                )));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationHighlightedText.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationHighlightedText.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -163,8 +165,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationUnderlineText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationUnderlineText.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationUnderlineText.pdf"))
-                );
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationUnderlineText.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationUnderlineText.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -178,8 +179,8 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationUnderlineTextRectWithTwoCoords() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationUnderlineTextRectWithTwoCoords.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationUnderlineTextRectWithTwoCoords.pdf"
-                )));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationUnderlineTextRectWithTwoCoords.pdf"
+                ));
             String xfdfFilename = sourceFolder + "xfdfAnnotationUnderlineTextRectWithTwoCoords.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -193,8 +194,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationUnderlinePopupAllFlags() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationUnderlinePopupAllFlags.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationUnderlinePopupAllFlags.pdf"
-                )));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationUnderlinePopupAllFlags.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationUnderlinePopupAllFlags.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -208,7 +208,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationText.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationText.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationText.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationText.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -222,7 +222,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationStrikeout() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationStrikeout.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationStrikeout.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationStrikeout.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationStrikeout.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -236,7 +236,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationSquigglyText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationSquigglyText.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationSquigglyText.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationSquigglyText.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationSquigglyText.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -252,7 +252,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_ANNOTATION_IS_NOT_SUPPORTED)]
         public virtual void XfdfAnnotationLine() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationLine.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationLine.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationLine.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationLine.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -266,7 +266,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationCircle() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationCircle.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationCircle.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationCircle.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationCircle.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -280,7 +280,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationSquare() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationSquare.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationSquare.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationSquare.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationSquare.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -294,7 +294,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationCaret() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationCaret.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationCaret.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationCaret.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationCaret.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -308,7 +308,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationPolygon() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationPolygon.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationPolygon.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationPolygon.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationPolygon.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -322,7 +322,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationPolyline() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationPolyline.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationPolyline.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationPolyline.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationPolyline.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -336,7 +336,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationStamp() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationStamp.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationStamp.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationStamp.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationStamp.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -351,7 +351,7 @@ namespace iText.Forms {
         public virtual void XfdfAnnotationInk() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationInk.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationInk.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationInk.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationInk.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -365,7 +365,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationFreeText() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationFreeText.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationFreeText.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationFreeText.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationFreeText.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -380,8 +380,7 @@ namespace iText.Forms {
         public virtual void XfdfAnnotationFileAttachment() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationFileAttachment.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationFileAttachment.pdf")
-                ));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationFileAttachment.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationFileAttachment.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -396,7 +395,7 @@ namespace iText.Forms {
         public virtual void XfdfAnnotationSound() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationSound.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationSound.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationSound.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationSound.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -410,7 +409,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationLink() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationLink.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationLink.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationLink.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationLink.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -425,7 +424,7 @@ namespace iText.Forms {
         public virtual void XfdfAnnotationRedact() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationRedact.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationRedact.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationRedact.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationRedact.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -440,7 +439,7 @@ namespace iText.Forms {
         public virtual void XfdfAnnotationProjection() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationProjection.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationProjection.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationProjection.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationProjection.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -454,8 +453,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationLinkAllParams() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationLinkAllParams.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationLinkAllParams.pdf"))
-                );
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationLinkAllParams.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationLinkAllParams.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -470,7 +468,7 @@ namespace iText.Forms {
         public virtual void XfdfAnnotationReplaceText() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationReplaceText.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationReplaceText.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationReplaceText.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationReplaceText.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -486,7 +484,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_ANNOTATION_IS_NOT_SUPPORTED)]
         public virtual void XfdfAnnotationArrow() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationArrow.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationArrow.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationArrow.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationArrow.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -501,7 +499,7 @@ namespace iText.Forms {
         public virtual void XfdfAnnotationCallout() {
             //TODO DEVSIX-7600 Support callout annotations
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationCallout.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationCallout.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationCallout.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationCallout.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -516,7 +514,7 @@ namespace iText.Forms {
         public virtual void XfdfAnnotationCloud() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationCloud.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationCloud.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationCloud.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationCloud.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -531,7 +529,7 @@ namespace iText.Forms {
         public virtual void XfdfAnnotationCloudNested() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationCloudNested.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationCloudNested.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationCloudNested.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationCloudNested.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -546,8 +544,7 @@ namespace iText.Forms {
         public virtual void XfdfAnnotationTextBoxAllParams() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationTextBoxAllParams.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationTextBoxAllParams.pdf"
-                )));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationTextBoxAllParams.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationTextBoxAllParams.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -562,7 +559,7 @@ namespace iText.Forms {
         public virtual void XfdfJavaScriptForms() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfJavaScriptForms.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfJavaScriptForms.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfJavaScriptForms.pdf"));
             String xfdfFilename = sourceFolder + "xfdfJavaScriptForms.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -576,7 +573,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfFormsFieldParams() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfFormsFieldParams.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfFormsFieldParams.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfFormsFieldParams.pdf"));
             String xfdfFilename = sourceFolder + "xfdfFormsFieldParams.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -591,7 +588,7 @@ namespace iText.Forms {
         public virtual void XfdfAnnotationAttrColor() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationAttrColor.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationAttrColor.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationAttrColor.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationAttrColor.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -605,8 +602,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_HREF_ATTRIBUTE_AND_PDF_DOCUMENT_NAME_ARE_DIFFERENT)]
         public virtual void XfdfAnnotationAttrFlagsOpacity() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationAttrFlagsOpacity.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationAttrFlagsOpacity.pdf"
-                )));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationAttrFlagsOpacity.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationAttrFlagsOpacity.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -621,7 +617,7 @@ namespace iText.Forms {
         public virtual void XfdfAnnotationAttrTitle() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfAnnotationAttrTitle.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationAttrTitle.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationAttrTitle.pdf"));
             String xfdfFilename = sourceFolder + "xfdfAnnotationAttrTitle.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -636,8 +632,7 @@ namespace iText.Forms {
         public virtual void XfdfReferenceFor3DMeasurement() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfReferenceFor3DMeasurement.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfReferenceFor3DMeasurement.pdf"
-                )));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfReferenceFor3DMeasurement.pdf"));
             String xfdfFilename = sourceFolder + "xfdfReferenceFor3DMeasurement.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -652,7 +647,7 @@ namespace iText.Forms {
         public virtual void XfdfReferenceFor3DAngular() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfReferenceFor3DAngular.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfReferenceFor3DAngular.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfReferenceFor3DAngular.pdf"));
             String xfdfFilename = sourceFolder + "xfdfReferenceFor3DAngular.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -667,7 +662,7 @@ namespace iText.Forms {
         public virtual void XfdfReferenceFor3DRadial() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfReferenceFor3DRadial.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfReferenceFor3DRadial.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfReferenceFor3DRadial.pdf"));
             String xfdfFilename = sourceFolder + "xfdfReferenceFor3DRadial.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -682,7 +677,7 @@ namespace iText.Forms {
         public virtual void XfdfSubelementContents() {
             //TODO DEVSIX-3215
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfSubelementContents.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfSubelementContents.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfSubelementContents.pdf"));
             String xfdfFilename = sourceFolder + "xfdfSubelementContents.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -697,8 +692,7 @@ namespace iText.Forms {
         public virtual void XfdfSubelementOverlayAppearance() {
             //TODO DEVSIX-3215 Support annots
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfSubelementOverlayAppearance.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfSubelementOverlayAppearance.pdf"
-                )));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfSubelementOverlayAppearance.pdf"));
             String xfdfFilename = sourceFolder + "xfdfSubelementOverlayAppearance.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -713,7 +707,7 @@ namespace iText.Forms {
         public virtual void XfdfButton() {
             //TODO DEVSIX-3215
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfButton.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfButton.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfButton.pdf"));
             String xfdfFilename = sourceFolder + "xfdfButton.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -728,7 +722,7 @@ namespace iText.Forms {
         public virtual void XfdfCheckBox() {
             //TODO DEVSIX-3215
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfCheckBox.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfCheckBox.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfCheckBox.pdf"));
             String xfdfFilename = sourceFolder + "xfdfCheckBox.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -743,7 +737,7 @@ namespace iText.Forms {
         public virtual void XfdfList() {
             //TODO DEVSIX-3215
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfList.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfList.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfList.pdf"));
             String xfdfFilename = sourceFolder + "xfdfList.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -758,7 +752,7 @@ namespace iText.Forms {
         public virtual void XfdfDropDown() {
             //TODO DEVSIX-3215 Support richtext
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(sourceFolder + "xfdfDropDown.pdf"
-                )), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfDropDown.pdf")));
+                )), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfDropDown.pdf"));
             String xfdfFilename = sourceFolder + "xfdfDropDown.xfdf";
             XfdfObjectFactory factory = new XfdfObjectFactory();
             XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -772,7 +766,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_NO_F_OBJECT_TO_COMPARE)]
         public virtual void XfdfBorderStyleAttributesTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "xfdfAnnotationsTemplate.pdf"), 
-                new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfBorderStyleAttributes.pdf")))) {
+                CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfBorderStyleAttributes.pdf"))) {
                 String xfdfFilename = sourceFolder + "xfdfBorderStyleAttributes.xfdf";
                 XfdfObjectFactory factory = new XfdfObjectFactory();
                 XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -787,7 +781,7 @@ namespace iText.Forms {
         public virtual void XfdfAnnotationAttributesTest() {
             //TODO DEVSIX-7600 update xfdf and cmp files after supporting all the annotation types mentioned in xfdf spec
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "xfdfAnnotationsTemplate.pdf"), 
-                new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfAnnotationAttributes.pdf")))) {
+                CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfAnnotationAttributes.pdf"))) {
                 String xfdfFilename = sourceFolder + "xfdfAnnotationAttributes.xfdf";
                 XfdfObjectFactory factory = new XfdfObjectFactory();
                 XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -802,8 +796,7 @@ namespace iText.Forms {
         public virtual void XfdfOnlyRequiredAnnotationAttributesTest() {
             //TODO DEVSIX-7600 update xfdf and src files after supporting all the annotation types mentioned in xfdf spec
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "xfdfAnnotationsTemplate.pdf"), 
-                new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfOnlyRequiredAnnotationAttributes.pdf"
-                )))) {
+                CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfOnlyRequiredAnnotationAttributes.pdf"))) {
                 String xfdfFilename = sourceFolder + "xfdfOnlyRequiredAnnotationAttributes.xfdf";
                 XfdfObjectFactory factory = new XfdfObjectFactory();
                 XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));
@@ -817,7 +810,7 @@ namespace iText.Forms {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.XFDF_NO_F_OBJECT_TO_COMPARE)]
         public virtual void XfdfInReplyToTest() {
             using (PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "xfdfAnnotationHighlightedText.pdf"
-                ), new PdfWriter(FileUtil.GetFileOutputStream(destinationFolder + "xfdfInReplyTo.pdf")))) {
+                ), CompareTool.CreateTestPdfWriter(destinationFolder + "xfdfInReplyTo.pdf"))) {
                 String xfdfFilename = sourceFolder + "xfdfInReplyTo.xfdf";
                 XfdfObjectFactory factory = new XfdfObjectFactory();
                 XfdfObject xfdfObject = factory.CreateXfdfObject(FileUtil.GetInputStreamForFile(xfdfFilename));

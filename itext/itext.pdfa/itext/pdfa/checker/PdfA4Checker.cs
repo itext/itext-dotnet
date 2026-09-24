@@ -24,9 +24,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Colors;
 using iText.Kernel.Exceptions;
@@ -79,7 +78,7 @@ namespace iText.Pdfa.Checker {
 
         private const String TRANSPARENCY_ERROR_MESSAGE = PdfaExceptionMessageConstant.THE_DOCUMENT_AND_THE_PAGE_DO_NOT_CONTAIN_A_PDFA_OUTPUTINTENT_BUT_PAGE_CONTAINS_TRANSPARENCY_AND_DOES_NOT_CONTAIN_BLENDING_COLOR_SPACE;
 
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(PdfAChecker));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(PdfAChecker));
 
         private static readonly ICollection<PdfName> forbiddenActionsE = JavaCollectionsUtil.UnmodifiableSet(new HashSet
             <PdfName>(JavaUtil.ArraysAsList(PdfName.Launch, PdfName.Sound, PdfName.Movie, PdfName.ResetForm, PdfName
@@ -210,7 +209,7 @@ namespace iText.Pdfa.Checker {
                     );
             }
             if (!fileSpec.ContainsKey(PdfName.Desc)) {
-                LOGGER.LogWarning(PdfAConformanceLogMessageConstant.FILE_SPECIFICATION_DICTIONARY_SHOULD_CONTAIN_DESC_KEY);
+                LOGGER.Warn(() => PdfAConformanceLogMessageConstant.FILE_SPECIFICATION_DICTIONARY_SHOULD_CONTAIN_DESC_KEY);
             }
         }
 

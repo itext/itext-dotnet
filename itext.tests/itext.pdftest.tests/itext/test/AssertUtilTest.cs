@@ -38,42 +38,42 @@ namespace iText.Test {
         [NUnit.Framework.Test]
         public void AssertPassedWithinTimeoutTestFailsFirstTime() {
             var callCount = 0;
-            NUnit.Framework.Assert.DoesNotThrow(() => AssertUtil.AssertPassedWithinTimeout(() => {
+            AssertUtil.AssertPassedWithinTimeout(() => {
                 if (callCount < 1) {
                     callCount++;
                     NUnit.Framework.Assert.Fail();
                 }
                 callCount++;
             }
-            , TimeSpan.FromMilliseconds(500)));
+            , TimeSpan.FromMilliseconds(500));
             NUnit.Framework.Assert.IsTrue(callCount > 1);
         }
 
         [NUnit.Framework.Test]
         public void AssertPassedWithinTimeoutTestFailsFirstTimes() {
             var callCount = 0;
-            NUnit.Framework.Assert.DoesNotThrow(() => AssertUtil.AssertPassedWithinTimeout(() => {
+            AssertUtil.AssertPassedWithinTimeout(() => {
                 if (callCount < 2) {
                     callCount++;
                     NUnit.Framework.Assert.Fail();
                 }
                 callCount++;
             }
-            , TimeSpan.FromMilliseconds(500)));
+            , TimeSpan.FromMilliseconds(500));
             NUnit.Framework.Assert.IsTrue(callCount > 2);
         }
 
         [NUnit.Framework.Test]
         public void AssertPassedWithinRandomTimeoutTestFailsFirstTimes() {
             var callCount = 0;
-            NUnit.Framework.Assert.DoesNotThrow(() => AssertUtil.AssertPassedWithinRandomTimeout(() => {
+            AssertUtil.AssertPassedWithinRandomTimeout(() => {
                 if (callCount < 2) {
                     callCount++;
                     NUnit.Framework.Assert.Fail();
                 }
                 callCount++;
             }
-            , TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(100)));
+            , TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(100));
             NUnit.Framework.Assert.IsTrue(callCount > 2);
         }
     }

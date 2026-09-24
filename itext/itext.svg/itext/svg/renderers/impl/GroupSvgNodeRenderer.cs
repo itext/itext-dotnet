@@ -20,9 +20,13 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
+using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
+using iText.Svg;
 using iText.Svg.Renderers;
+using iText.Svg.Utils;
 
 namespace iText.Svg.Renderers.Impl {
     /// <summary>This renderer represents a branch in an SVG tree.</summary>
@@ -46,7 +50,25 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         public override Rectangle GetObjectBoundingBox(SvgDrawContext context) {
-            return null;
+            if (IsHidden()) {
+                return null;
+            }
+            Rectangle commonRectangle = null;
+            foreach (ISvgNodeRenderer child in GetChildren()) {
+                if (child is AbstractSvgNodeRenderer && ((AbstractSvgNodeRenderer)child).IsHidden()) {
+                    continue;
+                }
+                Rectangle childBoundingBox = child.GetObjectBoundingBox(context);
+                String transformString = child.GetAttribute(SvgConstants.Attributes.TRANSFORM);
+                if (childBoundingBox != null && transformString != null && !String.IsNullOrEmpty(transformString)) {
+                    AffineTransform transformation = TransformUtils.ParseTransform(transformString);
+                    Point[] points = childBoundingBox.ToPointsArray();
+                    transformation.Transform(points, 0, points, 0, points.Length);
+                    childBoundingBox = Rectangle.CalculateBBox(JavaUtil.ArraysAsList(points));
+                }
+                commonRectangle = Rectangle.GetCommonRectangle(commonRectangle, childBoundingBox);
+            }
+            return commonRectangle;
         }
     }
 }

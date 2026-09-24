@@ -391,6 +391,15 @@ namespace iText.Svg {
             /// <summary>Attribute defining the transformations for a color gradient.</summary>
             public const String GRADIENT_TRANSFORM = "gradientTransform";
 
+            /// <summary>Attribute defining the radius of radial gradient focal point.</summary>
+            public const String FR = "fr";
+
+            /// <summary>Attribute defining the x value of radial gradient focal point.</summary>
+            public const String FX = "fx";
+
+            /// <summary>Attribute defining the y value of radial gradient focal point.</summary>
+            public const String FY = "fy";
+
             /// <summary>Attribute defining the height.</summary>
             /// <remarks>Attribute defining the height. Used in several elements.</remarks>
             public const String HEIGHT = "height";
@@ -423,6 +432,18 @@ namespace iText.Svg {
             /// <summary>Attribute defining the coordinate system for attributes ‘markerWidth’, ‘markerHeight’ and the contents of the ‘marker’.
             ///     </summary>
             public const String MARKER_UNITS = "markerUnits";
+
+            /// <summary>Attribute defining the mask to be applied to a specific shape or group of shapes.</summary>
+            public const String MASK = "mask";
+
+            /// <summary>Attribute defining the coordinate system for mask geometry attributes x, y, width and height.</summary>
+            public const String MASK_UNITS = "maskUnits";
+
+            /// <summary>Attribute defining the coordinate system for mask content.</summary>
+            public const String MASK_CONTENT_UNITS = "maskContentUnits";
+
+            /// <summary>Attribute defining whether mask values come from alpha or luminance.</summary>
+            public const String MASK_TYPE = "mask-type";
 
             /// <summary>Attribute defining the offset of a stop color for gradients.</summary>
             public const String OFFSET = "offset";
@@ -618,14 +639,28 @@ namespace iText.Svg {
             /// <summary>Value representing automatic orientation for the marker attribute orient.</summary>
             public const String AUTO = "auto";
 
+            /// <summary>Value representing alpha-based mask value extraction.</summary>
+            public const String ALPHA = "alpha";
+
             /// <summary>Value representing reverse automatic orientation for the start marker.</summary>
             public const String AUTO_START_REVERSE = "auto-start-reverse";
+
+            public const String BEVEL = "bevel";
 
             /// <summary>Value representing the default value for the stroke linecap.</summary>
             public const String BUTT = "butt";
 
             /// <summary>Value representing the default aspect ratio: xmidymid.</summary>
             public const String DEFAULT_ASPECT_RATIO = SvgConstants.Values.XMID_YMID;
+
+            /// <summary>Value representing the default miter limit.</summary>
+            /// <remarks>
+            /// Value representing the default miter limit.
+            /// <para />
+            /// Default miter limit in PDF is 10, but in SVG it's 4, see
+            /// <a href="https://w3c.github.io/svgwg/svg2-draft/painting.html#strokemiterlimitproperty">SVG specification</a>.
+            /// </remarks>
+            public const float DEFAULT_MITER_LIMIT = 4f;
 
             /// <summary>Default svg view port width value (300px * 0.75 = 225).</summary>
             /// <remarks>
@@ -669,6 +704,8 @@ namespace iText.Svg {
             /// <summary>Value representing the units relation "objectBoundingBox".</summary>
             public const String OBJECT_BOUNDING_BOX = "objectBoundingBox";
 
+            public const String ROUND = "round";
+
             /// <summary>The value representing slice for the preserve aspect ratio calculations;</summary>
             public const String SLICE = "slice";
 
@@ -693,6 +730,8 @@ namespace iText.Svg {
             /// <summary>The value for markerUnits that represent values in a coordinate system which has a single unit equal the size in user units of the current stroke width.
             ///     </summary>
             public const String STROKEWIDTH = "strokeWidth";
+
+            public const String SQUARE = "square";
 
             /// <summary>Value representing the units relation "userSpaceOnUse".</summary>
             public const String USER_SPACE_ON_USE = "userSpaceOnUse";

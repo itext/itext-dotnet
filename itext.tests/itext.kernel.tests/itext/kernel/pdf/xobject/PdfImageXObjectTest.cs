@@ -228,7 +228,7 @@ namespace iText.Kernel.Pdf.Xobject {
             PdfDocument cmpDoc = new PdfDocument(CompareTool.CreateOutputReader(cmpFilename));
             PdfStream cmpStream = cmpDoc.GetFirstPage().GetResources().GetResource(PdfName.XObject).GetAsStream(new PdfName
                 ("Im1"));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareStreamsStructure(outStream, cmpStream));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareStreamsByStructure(outStream, cmpStream));
             cmpDoc.Close();
             outDoc.Close();
         }
@@ -246,7 +246,7 @@ namespace iText.Kernel.Pdf.Xobject {
             PdfDocument cmpDoc = new PdfDocument(CompareTool.CreateOutputReader(cmpFilename));
             PdfStream cmpStream = cmpDoc.GetFirstPage().GetResources().GetResource(PdfName.XObject).GetAsStream(new PdfName
                 ("Im1"));
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareStreamsStructure(outStream, cmpStream));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareStreamsByStructure(outStream, cmpStream));
             cmpDoc.Close();
             outDoc.Close();
         }

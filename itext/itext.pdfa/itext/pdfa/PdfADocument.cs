@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Kernel.Validation;
@@ -56,6 +55,8 @@ namespace iText.Pdfa {
     /// <see cref="iText.Kernel.Pdf.PdfConformance"/>.
     /// </remarks>
     public class PdfADocument : PdfDocument {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Pdfa.PdfADocument));
+
         /// <summary>Constructs a new PdfADocument for writing purposes, i.e. from scratch.</summary>
         /// <remarks>
         /// Constructs a new PdfADocument for writing purposes, i.e. from scratch. A
@@ -203,8 +204,8 @@ namespace iText.Pdfa {
             writer.GetProperties().AddPdfAXmpMetadata(aConformance);
             PdfVersion aConformancePdfVersion = GetPdfVersionAccordingToConformance(aConformance);
             if (writer.GetPdfVersion() != null && !writer.GetPdfVersion().Equals(aConformancePdfVersion)) {
-                ITextLogManager.GetLogger(typeof(iText.Pdfa.PdfADocument)).LogWarning(MessageFormatUtil.Format(PdfALogMessageConstant
-                    .WRITER_PROPERTIES_PDF_VERSION_WAS_OVERRIDDEN, aConformancePdfVersion));
+                LOGGER.Warn(() => MessageFormatUtil.Format(PdfALogMessageConstant.WRITER_PROPERTIES_PDF_VERSION_WAS_OVERRIDDEN
+                    , aConformancePdfVersion));
             }
             writer.GetProperties().SetPdfVersion(aConformancePdfVersion);
             return writer;

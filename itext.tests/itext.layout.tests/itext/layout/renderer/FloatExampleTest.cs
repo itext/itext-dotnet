@@ -53,6 +53,11 @@ namespace iText.Layout.Renderer {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void FloatMaxWidthTest01() {
             /* This test illustrate behaviour of images with different width and mas_width properties, that have
@@ -66,7 +71,7 @@ namespace iText.Layout.Renderer {
             int firstImage = 0;
             int lastImage = 1;
             //Initialize PDF writer
-            PdfWriter writer = new PdfWriter(outFile);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFile);
             //Initialize PDF document
             PdfDocument pdf = new PdfDocument(writer);
             // Initialize document
@@ -127,7 +132,7 @@ namespace iText.Layout.Renderer {
             int firstImage = 0;
             int lastImage = 2;
             //Initialize PDF writer
-            PdfWriter writer = new PdfWriter(outFile);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFile);
             //Initialize PDF document with non-default size
             PdfDocument pdf = new PdfDocument(writer);
             pdf.SetDefaultPageSize(new PageSize(new Rectangle(537, 800)));

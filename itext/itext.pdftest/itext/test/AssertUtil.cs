@@ -75,30 +75,35 @@ namespace iText.Test {
         }
 
         private static void AssertPassedWithinTimeout(Action assertion, TimeSpan timeout, Func<long> timeoutCalc) {
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-
-            var elapsedMs = watch.ElapsedMilliseconds;
-            bool passed = false;
-            while (!passed)
+            // NUnit 3.10+ has its test context which tracks assertion fails.
+            // This leads to test fail results even when we handle AssertionException by ignoring it.
+            // So wrap the main retry logic in Assert.DoesNotThrow as it uses an independent context.
+            NUnit.Framework.Assert.DoesNotThrow(() =>
             {
-                try
+                var watch = System.Diagnostics.Stopwatch.StartNew();
+                
+                bool passed = false;
+                while (!passed)
                 {
-                    assertion.Invoke();
-                    passed = true;
-                }
-                catch (AssertionException e)
-                {
-                    if (timeout.TotalMilliseconds < watch.ElapsedMilliseconds)
+                    try
                     {
-                        throw e;
+                        assertion.Invoke();
+                        passed = true;
                     }
-                    int a = (int) timeoutCalc();
-                    Thread.Sleep((int) timeoutCalc());
-                    //ignore assertion failure if timeout not spent.                                                                                       
+                    catch (AssertionException e)
+                    {
+                        if (timeout.TotalMilliseconds < watch.ElapsedMilliseconds)
+                        {
+                            throw;
+                        }
+                        Thread.Sleep((int)timeoutCalc());
+                        //ignore assertion failure if timeout not spent.                                                                                       
+                    }
+
                 }
 
-            }
-            watch.Stop();
+                watch.Stop();
+            });
         }
 
         public static void AreEqual(long expected, long actual, Func<string> messageGenerator)

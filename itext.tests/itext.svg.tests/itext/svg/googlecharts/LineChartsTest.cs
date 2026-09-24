@@ -27,34 +27,34 @@ using iText.Test;
 namespace iText.Svg.Googlecharts {
     [NUnit.Framework.Category("IntegrationTest")]
     public class LineChartsTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/LineChartsTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/googlecharts/LineChartsTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/googlecharts/LineChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void LineChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "lineChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "lineChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void LineClassicChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "lineClassicChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "lineClassicChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void LineMaterialChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "lineMaterialChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "lineMaterialChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void LineTopXChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "lineTopXChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "lineTopXChart");
         }
     }
 }

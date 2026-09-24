@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
+using iText.Kernel.Pdf.Canvas;
 using iText.StyledXmlParser.Css.Util;
 using iText.Svg;
 using iText.Svg.Renderers;
@@ -36,14 +37,14 @@ namespace iText.Svg.Css {
         private SvgStrokeParameterConverter() {
         }
 
-        /// <summary>Convert stroke related SVG parameters and attributes into PDF line dash parameters.</summary>
-        /// <param name="strokeDashArray">'stroke-dasharray' css property value.</param>
-        /// <param name="strokeDashOffset">'stroke-dashoffset' css property value.</param>
-        /// <param name="fontSize">font size of the current element.</param>
-        /// <param name="context">the svg draw context.</param>
+        /// <summary>Converts stroke related SVG parameters and attributes into PDF line dash parameters.</summary>
+        /// <param name="strokeDashArray">'stroke-dasharray' css property value</param>
+        /// <param name="strokeDashOffset">'stroke-dashoffset' css property value</param>
+        /// <param name="fontSize">font size of the current element</param>
+        /// <param name="context">the svg draw context</param>
         /// <returns>
         /// PDF line dash parameters represented by
-        /// <see cref="PdfLineDashParameters"/>.
+        /// <see cref="PdfLineDashParameters"/>
         /// </returns>
         public static SvgStrokeParameterConverter.PdfLineDashParameters ConvertStrokeDashParameters(String strokeDashArray
             , String strokeDashOffset, float fontSize, SvgDrawContext context) {
@@ -72,6 +73,69 @@ namespace iText.Svg.Css {
                 }
             }
             return null;
+        }
+
+        /// <summary>Converts stroke line cap style from SVG to PDF.</summary>
+        /// <param name="strokeLineCap">'stroke-linecap' svg property value</param>
+        /// <returns>
+        /// PDF line cap style represented by
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.LineCapStyle"/>
+        /// </returns>
+        public static int ConvertStrokeLineCapStyle(String strokeLineCap) {
+            if (strokeLineCap != null) {
+                switch (strokeLineCap.ToLowerInvariant()) {
+                    case SvgConstants.Values.ROUND: {
+                        return PdfCanvasConstants.LineCapStyle.ROUND;
+                    }
+
+                    case SvgConstants.Values.SQUARE: {
+                        return PdfCanvasConstants.LineCapStyle.PROJECTING_SQUARE;
+                    }
+
+                    default: {
+                        return PdfCanvasConstants.LineCapStyle.BUTT;
+                    }
+                }
+            }
+            return PdfCanvasConstants.DEFAULT_LINE_CAP_STYLE;
+        }
+
+        /// <summary>Converts stroke line join style from SVG to PDF.</summary>
+        /// <param name="strokeLineJoin">'stroke-linejoin' svg property value</param>
+        /// <returns>
+        /// PDF line join style represented by
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.LineJoinStyle"/>
+        /// </returns>
+        public static int ConvertStrokeLineJoinStyle(String strokeLineJoin) {
+            if (strokeLineJoin != null) {
+                switch (strokeLineJoin.ToLowerInvariant()) {
+                    case SvgConstants.Values.ROUND: {
+                        return PdfCanvasConstants.LineJoinStyle.ROUND;
+                    }
+
+                    case SvgConstants.Values.BEVEL: {
+                        return PdfCanvasConstants.LineJoinStyle.BEVEL;
+                    }
+
+                    default: {
+                        return PdfCanvasConstants.LineJoinStyle.MITER;
+                    }
+                }
+            }
+            return PdfCanvasConstants.DEFAULT_LINE_JOIN_STYLE;
+        }
+
+        /// <summary>Converts stroke miter limit from SVG to PDF.</summary>
+        /// <param name="strokeMiterLimit">'stroke-miterlimit' svg property value</param>
+        /// <returns>PDF miter limit</returns>
+        public static float ConvertStrokeMiterLimit(String strokeMiterLimit) {
+            if (strokeMiterLimit != null) {
+                float? parsed = CssDimensionParsingUtils.ParseFloat(strokeMiterLimit);
+                if (parsed != null) {
+                    return (float)parsed;
+                }
+            }
+            return SvgConstants.Values.DEFAULT_MITER_LIMIT;
         }
 
         /// <summary>This class represents PDF dash parameters.</summary>

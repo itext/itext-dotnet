@@ -762,7 +762,7 @@ namespace iText.Pdfua.Checkers {
             }
             );
             if (conformance.Equals(PdfConformance.PDF_UA_1)) {
-                framework.AssertOnlyVeraPdfFail("usualHTest");
+                framework.AssertVeraPdfFailITextValid("usualHTest");
             }
             else {
                 framework.AssertBothFail("usualHTest", PdfUAExceptionMessageConstants.DOCUMENT_USES_H_TAG);

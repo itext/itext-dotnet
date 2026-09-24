@@ -26,19 +26,15 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using iText.Commons.Utils;
-using iText.IO.Util;
 using iText.Test;
 using iText.Test.Attributes;
-using System.Net;
-using iText.Commons.Internal.Runtime;
-using NUnit.Framework;
 
 namespace iText.IO.Resolver.Resource {
 //\cond DO_NOT_DOCUMENT
     [NUnit.Framework.Category("IntegrationTest")]
     internal class DefaultResourceRetrieverTest : ExtendedITextTest {
- 
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/resolver/resource/";
         [NUnit.Framework.Test]
         public virtual void ConnectTimeoutTest() {
             DefaultResourceRetriever resourceRetriever = new DefaultResourceRetriever();
@@ -63,34 +59,19 @@ namespace iText.IO.Resolver.Resource {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.RESOURCE_WITH_GIVEN_URL_WAS_FILTERED_OUT)]
         public virtual void FilterOutFilteredResourcesTest() {
+            Uri exampleDomPage = new Uri(new FileInfo(SOURCE_FOLDER + "example-dom-page.html").FullName);
             DefaultResourceRetriever resourceRetriever = new DefaultResourceRetrieverTest.FilteredResourceRetriever();
-            NUnit.Framework.Assert.IsFalse(resourceRetriever.UrlFilter(new Uri("https://example.com/resource")));
-            NUnit.Framework.Assert.IsNull(resourceRetriever.GetInputStreamByUrl(new Uri("https://example.com/resource"
-                )));
+            NUnit.Framework.Assert.IsFalse(resourceRetriever.UrlFilter(exampleDomPage));
+            NUnit.Framework.Assert.IsNull(resourceRetriever.GetInputStreamByUrl(exampleDomPage
+                ));
         }
 
         [NUnit.Framework.Test]
         public virtual void LoadGetByteArrayByUrl() {
             // Android-Conversion-Ignore-Test DEVSIX-6459 Some different random connect exceptions on Android
+            Uri itextBlogPost = new Uri(new FileInfo(SOURCE_FOLDER + "example-dom-page.html").FullName);
             DefaultResourceRetriever resourceRetriever = new DefaultResourceRetriever();
-            byte[] data = resourceRetriever.GetByteArrayByUrl(new Uri("https://itextpdf.com/blog/itext-news-technical-notes/get-excited-itext-8-here"
-                ));
-            NUnit.Framework.Assert.IsNotNull(data);
-            NUnit.Framework.Assert.IsTrue(data.Length > 0);
-        }
-
-        [NUnit.Framework.Test]
-        [Ignore("TODO DEVSIX-9938 - Flaky access on ci")]
-        public virtual void LoadWithRequestAndHeaders()
-        {
-            // Android-Conversion-Ignore-Test DEVSIX-6459 Some different random connect exceptions on Android
-            DefaultResourceRetriever resourceRetriever = new DefaultResourceRetriever();
-            IDictionary<String, String> headers = new Dictionary<String, String>(1);
-            headers.Put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
-                );
-            Stream @is = resourceRetriever.Get(new Uri("https://itextpdf.com/blog/itext-news-technical-notes/get-excited-itext-8-here"
-                ), new byte[0], headers);
-            byte[] data = StreamUtil.InputStreamToArray(@is);
+            byte[] data = resourceRetriever.GetByteArrayByUrl(itextBlogPost);
             NUnit.Framework.Assert.IsNotNull(data);
             NUnit.Framework.Assert.IsTrue(data.Length > 0);
         }

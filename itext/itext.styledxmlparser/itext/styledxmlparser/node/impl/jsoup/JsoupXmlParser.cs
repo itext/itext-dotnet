@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.StyledXmlParser;
 using iText.StyledXmlParser.Jsoup.Nodes;
@@ -34,7 +33,7 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup {
     /// <summary>Class that uses JSoup to parse HTML.</summary>
     public class JsoupXmlParser : IXmlParser {
         /// <summary>The logger.</summary>
-        private static ILogger logger = ITextLogManager.GetLogger(typeof(JsoupXmlParser));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(JsoupXmlParser));
 
         /* (non-Javadoc)
         * @see com.itextpdf.styledxmlparser.html.IXmlParser#parse(java.io.InputStream, java.lang.String)
@@ -110,7 +109,7 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup {
                                     }
                                     else {
                                         // Ignore. We should do this to avoid redundant log message
-                                        logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.ERROR_PARSING_COULD_NOT_MAP_NODE
+                                        LOGGER.Error(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.ERROR_PARSING_COULD_NOT_MAP_NODE
                                             , jsoupNode.GetType()));
                                     }
                                 }

@@ -23,9 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Exceptions;
@@ -35,7 +34,7 @@ using iText.Kernel.Pdf.Filters;
 namespace iText.Kernel.Pdf.Canvas.Parser.Util {
     /// <summary>Utility methods to help with processing of inline images</summary>
     public sealed class InlineImageParsingUtils {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Canvas.Parser.Util.InlineImageParsingUtils
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.Canvas.Parser.Util.InlineImageParsingUtils
             ));
 
         private InlineImageParsingUtils() {
@@ -473,7 +472,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
 
             public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
                 ) {
-                LOGGER.LogError(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNSUPPORTED_ENCODING_FOR_INLINE_IMAGE
+                LOGGER.Error(() => MessageFormatUtil.Format(KernelExceptionMessageConstant.UNSUPPORTED_ENCODING_FOR_INLINE_IMAGE
                     , name));
                 throw new NotSupportedException();
             }

@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
@@ -100,8 +99,8 @@ namespace iText.Layout.Element {
                     cellRenderer = (CellRenderer)renderer;
                 }
                 else {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(Table));
-                    logger.LogError("Invalid renderer for Table: must be inherited from TableRenderer");
+                    new LazyLogger(typeof(Table)).Error(() => "Invalid renderer for Table: must be inherited from TableRenderer"
+                        );
                 }
             }
             //cellRenderer could be null in case invalid type (see logger message above)

@@ -284,7 +284,9 @@ namespace iText.Kernel.Exceptions {
 
         public const String FONT_EMBEDDING_ISSUE = "Font embedding issue.";
 
-        public const String FORM_XOBJECT_MUST_HAVE_BBOX = "Form XObject must have BBox.";
+        public const String FORM_XOBJECT_MUST_HAVE_BBOX = "Form XObject must have a bounding box.";
+
+        public const String FORM_XOBJECT_HAS_CIRCULAR_REFERENCES = "Form XObject {0} {1} R has circular references.";
 
         public const String FUCTIONFACTORY_INVALID_FUNCTION_TYPE = "Invalid function type {0}";
 
@@ -296,6 +298,7 @@ namespace iText.Kernel.Exceptions {
 
         public const String FUNCTION_IS_NOT_COMPATIBLE_WITH_COLOR_SPACE = "Function is not compatible with " + "ColorSpace.";
 
+        [Obsolete]
         public const String FUNCTION_NOT_SET = "The output size depends on the functions, but no function is" + " set yet.";
 
         public const String GET_IMAGEBYTES_FOR_SEPARATION_COLOR_ONLY_SUPPORTS_RGB = "Only RGB alternate color spaces are currently supported for extracting separation color images";

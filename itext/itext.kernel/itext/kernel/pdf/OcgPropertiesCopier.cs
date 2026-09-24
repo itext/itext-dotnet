@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.Kernel.Logs;
@@ -34,8 +33,7 @@ using iText.Kernel.Pdf.Layer;
 namespace iText.Kernel.Pdf {
 //\cond DO_NOT_DOCUMENT
     internal sealed class OcgPropertiesCopier {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.OcgPropertiesCopier
-            ));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.OcgPropertiesCopier));
 
         private OcgPropertiesCopier() {
         }
@@ -67,8 +65,8 @@ namespace iText.Kernel.Pdf {
                     D), toOcProperties, destinationDocument);
             }
             catch (Exception e) {
-                LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCG_COPYING_ERROR, e.ToString(
-                    )));
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OCG_COPYING_ERROR, e.ToString
+                    ()));
             }
         }
 
@@ -242,7 +240,7 @@ namespace iText.Kernel.Pdf {
                 toOcProperties.GetAsArray(PdfName.OCGs).Add(toOcg);
             }
             if (hasConflictingNames) {
-                LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_HAS_CONFLICTING_OCG_NAMES);
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.DOCUMENT_HAS_CONFLICTING_OCG_NAMES);
             }
         }
 
@@ -304,10 +302,8 @@ namespace iText.Kernel.Pdf {
                 toDict.Put(fieldToCopy, fromName);
             }
             else {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.OcgPropertiesCopier));
-                String warnText = MessageFormatUtil.Format(KernelLogMessageConstant.INVALID_DDICTIONARY_FIELD_VALUE, fieldToCopy
-                    , fromName);
-                logger.LogWarning(warnText);
+                LOGGER.Warn(() => MessageFormatUtil.Format(KernelLogMessageConstant.INVALID_DDICTIONARY_FIELD_VALUE, fieldToCopy
+                    , fromName));
             }
         }
 
@@ -320,10 +316,8 @@ namespace iText.Kernel.Pdf {
                 toDict.Put(fieldToCopy, fromString);
             }
             else {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.OcgPropertiesCopier));
-                String warnText = MessageFormatUtil.Format(KernelLogMessageConstant.INVALID_DDICTIONARY_FIELD_VALUE, fieldToCopy
-                    , fromString);
-                logger.LogWarning(warnText);
+                LOGGER.Warn(() => MessageFormatUtil.Format(KernelLogMessageConstant.INVALID_DDICTIONARY_FIELD_VALUE, fieldToCopy
+                    , fromString));
             }
         }
 

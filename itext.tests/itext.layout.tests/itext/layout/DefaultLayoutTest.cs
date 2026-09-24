@@ -52,11 +52,16 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void MultipleAdditionsOfSameModelElementTest() {
             String outFileName = destinationFolder + "multipleAdditionsOfSameModelElementTest1.pdf";
             String cmpFileName = sourceFolder + "cmp_multipleAdditionsOfSameModelElementTest1.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Paragraph p = new Paragraph("Hello. I am a paragraph. I want you to process me correctly");
@@ -70,7 +75,7 @@ namespace iText.Layout {
         public virtual void RendererTest01() {
             String outFileName = destinationFolder + "rendererTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_rendererTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             String str = "Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me.";
             document.Add(new Paragraph(new Text(str).SetBackgroundColor(ColorConstants.RED)).SetBackgroundColor(ColorConstants
@@ -84,7 +89,7 @@ namespace iText.Layout {
         public virtual void EmptyParagraphsTest01() {
             String outFileName = destinationFolder + "emptyParagraphsTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_emptyParagraphsTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph());
             // this line should not cause any effect
@@ -103,7 +108,7 @@ namespace iText.Layout {
         public virtual void EmptyParagraphsTest02() {
             String outFileName = destinationFolder + "emptyParagraphsTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_emptyParagraphsTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("Hello, i'm the text of the first paragraph on the first line. Let's break me and meet on the next line!\nSee? I'm on the second line. Now let's create some empty lines,\n for example one\n\nor two\n\n\nor three\n\n\n\nNow let's do something else"
                 ));
@@ -118,7 +123,7 @@ namespace iText.Layout {
         public virtual void TextWithWhitespacesTest01() {
             String outFileName = destinationFolder + "textWithWhitespacesTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_textWithWhitespacesTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph("Test non-breaking spaces"));
             doc.Add(new Paragraph("\u00a0\u00a0\u00a0\u00a0test test"));
@@ -136,7 +141,7 @@ namespace iText.Layout {
         public virtual void AddParagraphOnShortPage1() {
             String outFileName = destinationFolder + "addParagraphOnShortPage1.pdf";
             String cmpFileName = sourceFolder + "cmp_addParagraphOnShortPage1.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, new PageSize(500, 70));
             Paragraph p = new Paragraph();
             p.Add("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
@@ -155,7 +160,7 @@ namespace iText.Layout {
         public virtual void AddParagraphOnShortPage2() {
             String outFileName = destinationFolder + "addParagraphOnShortPage2.pdf";
             String cmpFileName = sourceFolder + "cmp_addParagraphOnShortPage2.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, new PageSize(300, 50));
             Paragraph p = new Paragraph();
             p.Add("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
@@ -179,7 +184,7 @@ namespace iText.Layout {
             float shortHeight = 15;
             // The sum of either top and bottom page margins, or left and right page margins
             float margins = 36 + 36;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc, new PageSize(margins + contentWidth + EPS, margins + shortHeight));
             Paragraph p = new Paragraph("hello");
             // The area's height is not enough to place the paragraph.
@@ -194,7 +199,7 @@ namespace iText.Layout {
         public virtual void CloseEmptyDocumentTest() {
             String outFileName = destinationFolder + "closeEmptyDocumentTest.pdf";
             String cmpFileName = sourceFolder + "cmp_closeEmptyDocumentTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             NUnit.Framework.Assert.DoesNotThrow(() => document.Close());
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -205,7 +210,7 @@ namespace iText.Layout {
         public virtual void CloseEmptyDocumentWithEventOnAddingPageTest() {
             String outFileName = destinationFolder + "closeEmptyDocumentWithEventTest.pdf";
             String cmpFileName = sourceFolder + "cmp_closeEmptyDocumentWithEventTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             new PdfLayer("Some layer", pdfDocument);
             DefaultLayoutTest.ParagraphAdderHandler handler = new DefaultLayoutTest.ParagraphAdderHandler();
             pdfDocument.AddEventHandler(PdfDocumentEvent.START_PAGE, handler);
@@ -232,7 +237,7 @@ namespace iText.Layout {
         public virtual void CloseEmptyDocumentWithRemovingPageEventOnAddingPageTest() {
             String outFileName = destinationFolder + "closeEmptyDocumentWithRemovingEventTest.pdf";
             String cmpFileName = sourceFolder + "cmp_closeEmptyDocumentWithRemovingEventTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             DefaultLayoutTest.PageRemoverHandler handler = new DefaultLayoutTest.PageRemoverHandler();
             pdfDocument.AddEventHandler(PdfDocumentEvent.START_PAGE, handler);
             NUnit.Framework.Assert.DoesNotThrow(() => pdfDocument.Close());

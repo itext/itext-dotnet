@@ -22,15 +22,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Layout.Exceptions;
 using iText.Layout.Properties.Grid;
 
 namespace iText.Layout.Renderer {
 //\cond DO_NOT_DOCUMENT
     internal class GridTemplateResolver {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Renderer.GridTemplateResolver
+            ));
+
         private readonly float space;
 
         private readonly float gap;
@@ -105,8 +107,7 @@ namespace iText.Layout.Renderer {
                 return result.GetList();
             }
             catch (InvalidOperationException exception) {
-                ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.GridTemplateResolver)).LogWarning(exception.Message
-                    );
+                LOGGER.Warn(() => exception.Message);
                 Reset();
             }
             return null;

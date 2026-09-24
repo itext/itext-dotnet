@@ -53,14 +53,22 @@ namespace iText.Commons.Json {
 
             if (value is JsonNumber)
             {
-                double doubleValue = ((JsonNumber) value).GetValue();
-                if (double.NaN.Equals(doubleValue) || double.PositiveInfinity.Equals(doubleValue) || double.NegativeInfinity.Equals(doubleValue))
+                if (((JsonNumber) value).IsDouble())
                 {
-                    throw new JsonException("NAN and INFINITE are not supported");
-                }
+                    double doubleValue = ((JsonNumber) value).GetValue();
+                    if (double.NaN.Equals(doubleValue) || double.PositiveInfinity.Equals(doubleValue) || double.NegativeInfinity.Equals(doubleValue))
+                    {
+                        throw new JsonException("NAN and INFINITE are not supported");
+                    }
 
-                writer.WriteNumberValue(doubleValue);
-                return;
+                    writer.WriteNumberValue(doubleValue);
+                    return;
+                }
+                else
+                {
+                    writer.WriteNumberValue(((JsonNumber) value).GetLongValue());
+                    return;
+                }
             }
 
             if (value is JsonString)
@@ -119,6 +127,16 @@ namespace iText.Commons.Json {
             }
         }
 
+        internal static String ToPrettifiedJson(JsonValue value) {
+            var options = CreatePrettifiedJsonSerializerOptions();
+            try {
+                return JsonSerializer.Serialize(value, options).Replace("\r\n", "\n");
+            } catch (JsonException e) {
+                // Should never be here
+                throw new ITextException(MessageFormatUtil.Format(CommonsExceptionMessageConstant.JSON_SERIALIZATION_FAILED, e.Message));
+            }
+        }
+
         internal static JsonValue FromJson(String json) {
             var options = CreateJsonSerializerOptions();
             try {
@@ -140,6 +158,20 @@ namespace iText.Commons.Json {
             options.Converters.Add(new JsonValueConverter());
             return options;
         }
+
+        private static JsonSerializerOptions CreatePrettifiedJsonSerializerOptions() {
+            var options = new JsonSerializerOptions {
+                WriteIndented = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.Never,
+                TypeInfoResolver = new DefaultJsonTypeInfoResolver(),
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                ReadCommentHandling = JsonCommentHandling.Skip
+            };
+
+            options.Converters.Add(new JsonValueConverter());
+            return options;
+        }
+
         private JsonValue ReadValue(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
             switch (reader.TokenType)
@@ -148,7 +180,15 @@ namespace iText.Commons.Json {
                         return new JsonString(reader.GetString());
 
                     case JsonTokenType.Number:
-                        return new JsonNumber(reader.GetDouble());
+                        if (reader.TryGetInt64(out long longValue)) {
+                            return new JsonNumber(longValue);
+                        } else {
+                            double value = reader.GetDouble();
+                            if (value > long.MaxValue || value < long.MinValue) {
+                                throw new JsonException("Numeric value is out of range of long");
+                            }
+                            return new JsonNumber(value);
+                        }
 
                     case JsonTokenType.True:
                         return JsonBoolean.Of(true);
@@ -166,7 +206,7 @@ namespace iText.Commons.Json {
                         return ReadObject(ref reader, options);
 
                     default:
-                        throw new System.IO.IOException("Unexpected token: " + reader.TokenType);
+                        throw new JsonException("Unexpected token: " + reader.TokenType);
                 }
         }
 

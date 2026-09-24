@@ -23,33 +23,50 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 
 namespace iText.IO.Source {
+    /// <summary>
+    /// A synchronized wrapper around an
+    /// <see cref="IRandomAccessSource"/>.
+    /// </summary>
+    /// <remarks>
+    /// A synchronized wrapper around an
+    /// <see cref="IRandomAccessSource"/>.
+    /// <para />
+    /// Each operation is serialized on one lock, including
+    /// <see cref="Close()"/>.
+    /// </remarks>
     public class ThreadSafeRandomAccessSource : IRandomAccessSource {
         private readonly IRandomAccessSource source;
 
         private readonly Object lockObj = new Object();
 
+        /// <summary>Creates a synchronized wrapper for a source.</summary>
+        /// <param name="source">the source to access under this wrapper's lock</param>
         public ThreadSafeRandomAccessSource(IRandomAccessSource source) {
             this.source = source;
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual int Get(long position) {
             lock (lockObj) {
                 return source.Get(position);
             }
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual int Get(long position, byte[] bytes, int off, int len) {
             lock (lockObj) {
                 return source.Get(position, bytes, off, len);
             }
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual long Length() {
             lock (lockObj) {
                 return source.Length();
             }
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual void Close() {
             lock (lockObj) {
                 source.Close();

@@ -21,18 +21,17 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Actions;
+using iText.Commons.Logs;
 
 namespace iText.Kernel.Actions.Ecosystem {
     public class TestConfigurationEvent : AbstractITextConfigurationEvent {
         public const String MESSAGE = "Test configuration event was processed";
 
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(TestConfigurationEvent));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(TestConfigurationEvent));
 
         protected override void DoAction() {
-            LOGGER.LogWarning(MESSAGE);
+            LOGGER.Warn(() => MESSAGE);
         }
     }
 }

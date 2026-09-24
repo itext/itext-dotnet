@@ -29,6 +29,8 @@ namespace iText.IO.Source {
     internal class ArrayRandomAccessSource : IRandomAccessSource {
         private byte[] array;
 
+        /// <summary>Creates a source backed directly by the specified byte array.</summary>
+        /// <param name="array">the non-null array to read; subsequent mutations are visible to this source</param>
         public ArrayRandomAccessSource(byte[] array) {
             if (array == null) {
                 throw new ArgumentException("Passed byte array can not be null.");
@@ -36,6 +38,7 @@ namespace iText.IO.Source {
             this.array = array;
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual int Get(long offset) {
             if (array == null) {
                 throw new InvalidOperationException(IoExceptionMessageConstant.ALREADY_CLOSED);
@@ -46,6 +49,7 @@ namespace iText.IO.Source {
             return 0xff & array[(int)offset];
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual int Get(long offset, byte[] bytes, int off, int len) {
             if (array == null) {
                 throw new InvalidOperationException(IoExceptionMessageConstant.ALREADY_CLOSED);
@@ -60,6 +64,7 @@ namespace iText.IO.Source {
             return len;
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual long Length() {
             if (array == null) {
                 throw new InvalidOperationException(IoExceptionMessageConstant.ALREADY_CLOSED);
@@ -67,6 +72,7 @@ namespace iText.IO.Source {
             return array.Length;
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual void Close() {
             array = null;
         }

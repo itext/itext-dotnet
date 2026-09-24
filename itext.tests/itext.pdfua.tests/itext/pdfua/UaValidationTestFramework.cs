@@ -141,21 +141,13 @@ namespace iText.Pdfua {
             this.afterGeneratorHook.Add(action);
         }
 
-        public virtual void AssertOnlyVeraPdfFail(String filename) {
+        public virtual void AssertVeraPdfFailITextValid(String filename) {
             VeraPdfResult("vera_" + filename + PathSafeConformance() + ".pdf", true);
             Exception e = CheckErrorLayout("itext_" + filename + PathSafeConformance() + ".pdf");
             NUnit.Framework.Assert.IsNull(e);
         }
 
-        public virtual void AssertVeraPdfValid(String filename) {
-            String veraPdf = VeraPdfResult("vera_" + filename + PathSafeConformance() + ".pdf", false);
-            if (veraPdf == null) {
-                return;
-            }
-            NUnit.Framework.Assert.Fail("Expected no vera pdf message but was: \n" + veraPdf + "\n");
-        }
-
-        public virtual void AssertOnlyITextFail(String filename, String expectedMsg) {
+        public virtual void AssertITextFailVeraPdfValid(String filename, String expectedMsg) {
             CheckError(CheckErrorLayout("itext_" + filename + PathSafeConformance() + ".pdf"), expectedMsg);
             AssertVeraPdfValid(filename);
         }
@@ -211,6 +203,14 @@ namespace iText.Pdfua {
 
         public virtual PdfDocument CreatePdfDocument(String outputFile) {
             return CreatePdfDocument(null, outputFile, "English pangram", "en-US");
+        }
+
+        private void AssertVeraPdfValid(String filename) {
+            String veraPdf = VeraPdfResult("vera_" + filename + PathSafeConformance() + ".pdf", false);
+            if (veraPdf == null) {
+                return;
+            }
+            NUnit.Framework.Assert.Fail("Expected no vera pdf message but was: \n" + veraPdf + "\n");
         }
 
         private String VeraPdfResult(String filename, bool failureExpected) {

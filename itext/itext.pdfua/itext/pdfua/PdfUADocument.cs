@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Contrast;
 using iText.Kernel.Pdf;
@@ -41,7 +40,7 @@ namespace iText.Pdfua {
     /// It will add necessary validation to guide the user to create a PDF/UA compliant document.
     /// </remarks>
     public class PdfUADocument : PdfDocument {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Pdfua.PdfUADocument));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Pdfua.PdfUADocument));
 
         /// <summary>Creates a PdfUADocument instance.</summary>
         /// <param name="writer">The writer to write the PDF document</param>
@@ -86,7 +85,7 @@ namespace iText.Pdfua {
             )
             : base(reader, writer, properties) {
             if (!GetConformance().IsPdfUA()) {
-                LOGGER.LogWarning(PdfUALogMessageConstants.PDF_TO_PDF_UA_CONVERSION_IS_NOT_SUPPORTED);
+                LOGGER.Warn(() => PdfUALogMessageConstants.PDF_TO_PDF_UA_CONVERSION_IS_NOT_SUPPORTED);
             }
             SetupUAConfiguration(config);
             ValidationContainer validationContainer = new ValidationContainer();
@@ -151,12 +150,12 @@ namespace iText.Pdfua {
             writer.GetProperties().AddPdfUaXmpMetadata(uaConformance);
             if (writer.GetPdfVersion() != null) {
                 if (uaConformance == PdfUAConformance.PDF_UA_1 && !PdfVersion.PDF_1_7.Equals(writer.GetPdfVersion())) {
-                    LOGGER.LogWarning(MessageFormatUtil.Format(PdfUALogMessageConstants.WRITER_PROPERTIES_PDF_VERSION_WAS_OVERRIDDEN
+                    LOGGER.Warn(() => MessageFormatUtil.Format(PdfUALogMessageConstants.WRITER_PROPERTIES_PDF_VERSION_WAS_OVERRIDDEN
                         , PdfVersion.PDF_1_7));
                     writer.GetProperties().SetPdfVersion(PdfVersion.PDF_1_7);
                 }
                 if (uaConformance == PdfUAConformance.PDF_UA_2 && !PdfVersion.PDF_2_0.Equals(writer.GetPdfVersion())) {
-                    LOGGER.LogWarning(MessageFormatUtil.Format(PdfUALogMessageConstants.WRITER_PROPERTIES_PDF_VERSION_WAS_OVERRIDDEN
+                    LOGGER.Warn(() => MessageFormatUtil.Format(PdfUALogMessageConstants.WRITER_PROPERTIES_PDF_VERSION_WAS_OVERRIDDEN
                         , PdfVersion.PDF_2_0));
                     writer.GetProperties().SetPdfVersion(PdfVersion.PDF_2_0);
                 }

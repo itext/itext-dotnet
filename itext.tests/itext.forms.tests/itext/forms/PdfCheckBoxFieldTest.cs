@@ -48,11 +48,16 @@ namespace iText.Forms {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void CheckBoxFontSizeTest01() {
             String outPdf = destinationFolder + "checkBoxFontSizeTest01.pdf";
             String cmpPdf = sourceFolder + "cmp_checkBoxFontSizeTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             pdfDoc.AddNewPage();
             AddCheckBox(pdfDoc, 6, 750, 7, 7);
             pdfDoc.Close();
@@ -67,7 +72,7 @@ namespace iText.Forms {
         public virtual void CheckBoxFontSizeTest02() {
             String outPdf = destinationFolder + "checkBoxFontSizeTest02.pdf";
             String cmpPdf = sourceFolder + "cmp_checkBoxFontSizeTest02.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             pdfDoc.AddNewPage();
             AddCheckBox(pdfDoc, 0, 730, 7, 7);
             // fallback to default fontsize — 12 is expected.
@@ -90,7 +95,7 @@ namespace iText.Forms {
         public virtual void CheckBoxFontSizeTest03() {
             String outPdf = destinationFolder + "checkBoxFontSizeTest03.pdf";
             String cmpPdf = sourceFolder + "cmp_checkBoxFontSizeTest03.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             pdfDoc.AddNewPage();
             AddCheckBox(pdfDoc, 2, 730, 7, 7);
             pdfDoc.Close();
@@ -105,7 +110,7 @@ namespace iText.Forms {
         public virtual void CheckBoxFontSizeTest04() {
             String outPdf = destinationFolder + "checkBoxFontSizeTest04.pdf";
             String cmpPdf = sourceFolder + "cmp_checkBoxFontSizeTest04.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             pdfDoc.AddNewPage();
             AddCheckBox(pdfDoc, 0, 730, 10, new CheckBoxFormFieldBuilder(pdfDoc, "cb_1").SetWidgetRectangle(new Rectangle
                 (50, 730, 10, 10)).CreateCheckBox().SetCheckType(CheckBoxType.CIRCLE).SetValue("YES"));
@@ -129,7 +134,7 @@ namespace iText.Forms {
         public virtual void CheckBoxFontSizeTest05() {
             String outPdf = destinationFolder + "checkBoxFontSizeTest05.pdf";
             String cmpPdf = sourceFolder + "cmp_checkBoxFontSizeTest05.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             pdfDoc.AddNewPage();
             AddCheckBox(pdfDoc, 0, 730, 40, 40);
             AddCheckBox(pdfDoc, 0, 600, 100, 100);
@@ -146,7 +151,7 @@ namespace iText.Forms {
             String srcPdf = sourceFolder + "checkBoxToggledOn.pdf";
             String outPdf = destinationFolder + "checkBoxToggleTest01.pdf";
             String cmpPdf = sourceFolder + "cmp_checkBoxToggleTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcPdf), CompareTool.CreateTestPdfWriter(outPdf));
             PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfFormField checkBox = form.GetField("cb_fs_6_7_7");
             checkBox.SetValue("Off");
@@ -163,7 +168,7 @@ namespace iText.Forms {
             String srcPdf = sourceFolder + "checkBoxToggledOn.pdf";
             String outPdf = destinationFolder + "checkBoxToggleTest02.pdf";
             String cmpPdf = sourceFolder + "cmp_checkBoxToggleTest02.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(srcPdf), CompareTool.CreateTestPdfWriter(outPdf));
             PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
             PdfFormField checkBox = form.GetField("cb_fs_6_7_7");
             checkBox.SetValue("Off", false);
@@ -180,7 +185,7 @@ namespace iText.Forms {
             String srcPdf = destinationFolder + "keepCheckTypeTestInput.pdf";
             String outPdf = destinationFolder + "keepCheckTypeTest.pdf";
             String cmpPdf = sourceFolder + "cmp_keepCheckTypeTest.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(srcPdf))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(srcPdf))) {
                 PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 PdfButtonFormField checkField = new CheckBoxFormFieldBuilder(pdfDoc, "checkField").SetWidgetRectangle(new 
                     Rectangle(100, 600, 100, 100)).SetCheckType(CheckBoxType.CHECK).CreateCheckBox();
@@ -188,7 +193,8 @@ namespace iText.Forms {
                 checkField.SetFontSizeAutoScale();
                 form.AddField(checkField);
             }
-            using (PdfDocument pdfDoc_1 = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf))) {
+            using (PdfDocument pdfDoc_1 = new PdfDocument(CompareTool.CreateOutputReader(srcPdf), CompareTool.CreateTestPdfWriter
+                (outPdf))) {
                 PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc_1, true);
                 form.GetField("checkField").SetValue("Yes");
             }
@@ -200,7 +206,7 @@ namespace iText.Forms {
         public virtual void AppearanceRegenerationTest() {
             String outPdf = destinationFolder + "appearanceRegenerationTest.pdf";
             String cmpPdf = sourceFolder + "cmp_appearanceRegenerationTest.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
                 PdfAcroForm form = PdfFormCreator.GetAcroForm(pdfDoc, true);
                 PdfButtonFormField checkBox1 = new CheckBoxFormFieldBuilder(pdfDoc, "checkbox1").SetWidgetRectangle(new Rectangle
                     (10, 650, 40, 20)).CreateCheckBox();
@@ -223,7 +229,7 @@ namespace iText.Forms {
             String outPdf = destinationFolder + "setValueForMutuallyExclusiveCheckBox.pdf";
             String cmpPdf = sourceFolder + "cmp_setValueForMutuallyExclusiveCheckBox.pdf";
             String srcPdf = sourceFolder + "mutuallyExclusiveCheckBox.pdf";
-            using (PdfDocument doc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf))) {
+            using (PdfDocument doc = new PdfDocument(new PdfReader(srcPdf), CompareTool.CreateTestPdfWriter(outPdf))) {
                 PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(doc, true);
                 PdfFormField radioGroupField = acroForm.GetField("group");
                 radioGroupField.SetValue("1");
@@ -242,7 +248,7 @@ namespace iText.Forms {
             String outPdf = destinationFolder + "changeOnStateAppearanceNameForCheckBoxWidget.pdf";
             String cmpPdf = sourceFolder + "cmp_changeOnStateAppearanceNameForCheckBoxWidget.pdf";
             String srcPdf = sourceFolder + "mutuallyExclusiveCheckBox.pdf";
-            using (PdfDocument doc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf))) {
+            using (PdfDocument doc = new PdfDocument(new PdfReader(srcPdf), CompareTool.CreateTestPdfWriter(outPdf))) {
                 PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(doc, true);
                 PdfFormField checkBoxField = acroForm.GetField("check");
                 checkBoxField.SetValue("3");
@@ -257,7 +263,7 @@ namespace iText.Forms {
             String outPdf = destinationFolder + "changeOnStateAppearanceNameSeveralTimes.pdf";
             String cmpPdf = sourceFolder + "cmp_changeOnStateAppearanceNameSeveralTimes.pdf";
             String srcPdf = sourceFolder + "mutuallyExclusiveCheckBox.pdf";
-            using (PdfDocument doc = new PdfDocument(new PdfReader(srcPdf), new PdfWriter(outPdf))) {
+            using (PdfDocument doc = new PdfDocument(new PdfReader(srcPdf), CompareTool.CreateTestPdfWriter(outPdf))) {
                 PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(doc, true);
                 PdfFormField checkBoxField = acroForm.GetField("check");
                 checkBoxField.SetValue("3");
@@ -272,7 +278,7 @@ namespace iText.Forms {
         public virtual void CheckBoxWidgetAppearanceTest() {
             String outPdf = destinationFolder + "checkBoxWidgetAppearance.pdf";
             String cmpPdf = sourceFolder + "cmp_checkBoxWidgetAppearance.pdf";
-            using (PdfDocument doc = new PdfDocument(new PdfWriter(outPdf))) {
+            using (PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
                 PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(doc, true);
                 PdfButtonFormField checkBox = new CheckBoxFormFieldBuilder(doc, "checkbox").SetWidgetRectangle(new Rectangle
                     (10, 650, 40, 20)).CreateCheckBox();
@@ -302,7 +308,7 @@ namespace iText.Forms {
         public virtual void SetInvalidCheckBoxOnAppearanceTest() {
             String outPdf = destinationFolder + "setInvalidCheckBoxOnAppearance.pdf";
             String cmpPdf = sourceFolder + "cmp_setInvalidCheckBoxOnAppearance.pdf";
-            using (PdfDocument doc = new PdfDocument(new PdfWriter(outPdf))) {
+            using (PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
                 PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(doc, true);
                 PdfButtonFormField checkBox = new CheckBoxFormFieldBuilder(doc, "checkbox").SetWidgetRectangle(new Rectangle
                     (10, 650, 40, 20)).CreateCheckBox();
@@ -333,7 +339,7 @@ namespace iText.Forms {
         public virtual void CreateMutuallyExclusiveCheckBoxesTest() {
             String outPdf = destinationFolder + "createMutuallyExclusiveCheckBoxes.pdf";
             String cmpPdf = sourceFolder + "cmp_createMutuallyExclusiveCheckBoxes.pdf";
-            using (PdfDocument doc = new PdfDocument(new PdfWriter(outPdf))) {
+            using (PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
                 PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(doc, true);
                 PdfButtonFormField checkBox = new CheckBoxFormFieldBuilder(doc, "checkbox").SetWidgetRectangle(new Rectangle
                     (10, 650, 40, 20)).CreateCheckBox();
@@ -352,7 +358,7 @@ namespace iText.Forms {
         public virtual void CreateNotMutuallyExclusiveCheckBoxTest() {
             String outPdf = destinationFolder + "createNotMutuallyExclusiveCheckBox.pdf";
             String cmpPdf = sourceFolder + "cmp_createNotMutuallyExclusiveCheckBox.pdf";
-            using (PdfDocument doc = new PdfDocument(new PdfWriter(outPdf))) {
+            using (PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
                 PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(doc, true);
                 PdfButtonFormField checkBox = new CheckBoxFormFieldBuilder(doc, "checkbox").SetWidgetRectangle(new Rectangle
                     (10, 650, 40, 20)).CreateCheckBox();

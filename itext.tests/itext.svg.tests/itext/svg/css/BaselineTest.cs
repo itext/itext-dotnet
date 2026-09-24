@@ -27,10 +27,10 @@ using iText.Test;
 namespace iText.Svg.Css {
     [NUnit.Framework.Category("IntegrationTest")]
     public class BaselineTest : SvgIntegrationTest {
-        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/css/BaselineTest/";
 
-        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/css/BaselineTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/css/BaselineTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

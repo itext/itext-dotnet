@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
@@ -50,7 +49,7 @@ namespace iText.Kernel.Pdf {
     /// <seealso cref="ReaderProperties.SetMemoryLimitsAwareHandler(MemoryLimitsAwareHandler)"/>
     /// <seealso cref="iText.Kernel.Exceptions.MemoryLimitsAwareException"/>
     public class MemoryLimitsAwareHandler {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.MemoryLimitsAwareHandler
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.MemoryLimitsAwareHandler
             ));
 
         private const int SINGLE_SCALE_COEFFICIENT = 100;
@@ -133,7 +132,7 @@ namespace iText.Kernel.Pdf {
             to.maxNumberOfElementsInXrefStructure = this.maxNumberOfElementsInXrefStructure;
             to.maxXObjectsSizePerPage = this.maxXObjectsSizePerPage;
             if (this.GetType() != typeof(iText.Kernel.Pdf.MemoryLimitsAwareHandler)) {
-                LOGGER.LogWarning(KernelLogMessageConstant.MEMORYLIMITAWAREHANDLER_OVERRIDE_CREATENEWINSTANCE_METHOD);
+                LOGGER.Warn(() => KernelLogMessageConstant.MEMORYLIMITAWAREHANDLER_OVERRIDE_CREATENEWINSTANCE_METHOD);
             }
             return to;
         }

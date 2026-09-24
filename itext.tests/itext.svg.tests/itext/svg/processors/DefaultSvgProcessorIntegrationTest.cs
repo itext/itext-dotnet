@@ -33,12 +33,12 @@ using iText.Svg.Renderers;
 namespace iText.Svg.Processors {
     [NUnit.Framework.Category("IntegrationTest")]
     public class DefaultSvgProcessorIntegrationTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/processors/impl/DefaultSvgProcessorIntegrationTest/";
 
         [NUnit.Framework.Test]
         public virtual void DefaultBehaviourTest() {
-            String svgFile = sourceFolder + "RedCircle.svg";
+            String svgFile = SOURCE_FOLDER + "RedCircle.svg";
             Stream svg = FileUtil.GetInputStreamForFile(svgFile);
             JsoupXmlParser xmlParser = new JsoupXmlParser();
             IDocumentNode root = xmlParser.Parse(svg, null);
@@ -59,7 +59,7 @@ namespace iText.Svg.Processors {
 
         [NUnit.Framework.Test]
         public virtual void NamedObjectRectangleTest() {
-            String svgFile = sourceFolder + "namedObjectRectangleTest.svg";
+            String svgFile = SOURCE_FOLDER + "namedObjectRectangleTest.svg";
             Stream svg = FileUtil.GetInputStreamForFile(svgFile);
             JsoupXmlParser xmlParser = new JsoupXmlParser();
             IDocumentNode root = xmlParser.Parse(svg, null);

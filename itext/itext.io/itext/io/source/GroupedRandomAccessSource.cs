@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 
 namespace iText.IO.Source {
 //\cond DO_NOT_DOCUMENT
@@ -31,6 +30,9 @@ namespace iText.IO.Source {
     /// treating the sources as if they were a contiguous block of data.
     /// </summary>
     internal class GroupedRandomAccessSource : IRandomAccessSource {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.IO.Source.GroupedRandomAccessSource
+            ));
+
         /// <summary>The underlying sources (along with some meta data to quickly determine where each source begins and ends)
         ///     </summary>
         private readonly GroupedRandomAccessSource.SourceEntry[] sources;
@@ -187,13 +189,11 @@ namespace iText.IO.Source {
                         firstThrownIOExc = ex;
                     }
                     else {
-                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Source.GroupedRandomAccessSource));
-                        logger.LogError(ex, iText.IO.Logs.IoLogMessageConstant.ONE_OF_GROUPED_SOURCES_CLOSING_FAILED);
+                        LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.ONE_OF_GROUPED_SOURCES_CLOSING_FAILED, ex);
                     }
                 }
                 catch (Exception ex) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.IO.Source.GroupedRandomAccessSource));
-                    logger.LogError(ex, iText.IO.Logs.IoLogMessageConstant.ONE_OF_GROUPED_SOURCES_CLOSING_FAILED);
+                    LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.ONE_OF_GROUPED_SOURCES_CLOSING_FAILED, ex);
                 }
             }
             if (firstThrownIOExc != null) {

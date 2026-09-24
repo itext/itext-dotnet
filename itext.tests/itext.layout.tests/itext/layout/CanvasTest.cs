@@ -54,6 +54,11 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.UNABLE_TO_APPLY_PAGE_DEPENDENT_PROP_UNKNOWN_PAGE_ON_WHICH_ELEMENT_IS_DRAWN
             )]
@@ -61,7 +66,7 @@ namespace iText.Layout {
             String testName = "canvasNoPageLinkTest";
             String @out = DESTINATION_FOLDER + testName + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(@out));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(@out));
             PdfPage page = pdf.AddNewPage();
             Rectangle pageSize = page.GetPageSize();
             PdfCanvas pdfCanvas = new PdfCanvas(page.GetLastContentStream(), page.GetResources(), pdf);
@@ -80,7 +85,7 @@ namespace iText.Layout {
             String testName = "canvasWithPageLinkTest";
             String @out = DESTINATION_FOLDER + testName + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(@out));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(@out));
             PdfPage page = pdf.AddNewPage();
             Rectangle pageSize = page.GetPageSize();
             Rectangle rectangle = new Rectangle(pageSize.GetX() + 36, pageSize.GetTop() - 80, pageSize.GetWidth() - 72
@@ -98,7 +103,7 @@ namespace iText.Layout {
             String testName = "listItemWithoutMarginsInCanvasTest";
             String @out = DESTINATION_FOLDER + testName + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(@out));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(@out));
             PdfPage page = pdf.AddNewPage();
             Rectangle pageSize = page.GetPageSize();
             iText.Layout.Canvas canvas = new iText.Layout.Canvas(page, pageSize);
@@ -117,7 +122,7 @@ namespace iText.Layout {
             String testName = "notApplyingMarginsInCanvasTest";
             String @out = DESTINATION_FOLDER + testName + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(@out));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(@out));
             PdfPage page = pdf.AddNewPage();
             Rectangle pageSize = page.GetPageSize();
             iText.Layout.Canvas canvas = new iText.Layout.Canvas(page, pageSize);
@@ -133,7 +138,7 @@ namespace iText.Layout {
             String testName = "nullableMarginsInCanvasRenderer";
             String @out = DESTINATION_FOLDER + testName + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(@out));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(@out));
             PdfPage page = pdf.AddNewPage();
             Rectangle pageSize = page.GetPageSize();
             iText.Layout.Canvas canvas = new iText.Layout.Canvas(page, pageSize);
@@ -149,7 +154,7 @@ namespace iText.Layout {
             String testName = "canvasWithPageEnableTaggingTest01";
             String @out = DESTINATION_FOLDER + testName + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(@out));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(@out));
             pdf.SetTagged();
             PdfPage page = pdf.AddNewPage();
             Rectangle pageSize = page.GetPageSize();
@@ -171,7 +176,7 @@ namespace iText.Layout {
             String testName = "canvasWithPageEnableTaggingTest02";
             String @out = DESTINATION_FOLDER + testName + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(@out));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(@out));
             pdf.SetTagged();
             PdfPage page = pdf.AddNewPage();
             Rectangle pageSize = page.GetPageSize();
@@ -192,7 +197,7 @@ namespace iText.Layout {
             String testName = "elementWithAbsolutePositioningInCanvas";
             String @out = DESTINATION_FOLDER + testName + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
-            using (PdfDocument pdf = new PdfDocument(new PdfWriter(@out))) {
+            using (PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(@out))) {
                 pdf.AddNewPage();
                 iText.Layout.Canvas canvas = new iText.Layout.Canvas(new PdfCanvas(pdf.GetFirstPage()), new Rectangle(120, 
                     650, 60, 80));
@@ -213,7 +218,7 @@ namespace iText.Layout {
             String testName = "parentElemWithAbsolPositionKidNotSuitCanvas";
             String @out = DESTINATION_FOLDER + testName + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
-            using (PdfDocument pdf = new PdfDocument(new PdfWriter(@out))) {
+            using (PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(@out))) {
                 pdf.AddNewPage();
                 iText.Layout.Canvas canvas = new iText.Layout.Canvas(new PdfCanvas(pdf.GetFirstPage()), new Rectangle(120, 
                     650, 55, 80));
@@ -233,7 +238,7 @@ namespace iText.Layout {
             String testName = "nestedElementWithAbsolutePositioningInCanvas";
             String @out = DESTINATION_FOLDER + testName + ".pdf";
             String cmp = SOURCE_FOLDER + "cmp_" + testName + ".pdf";
-            using (PdfDocument pdf = new PdfDocument(new PdfWriter(@out))) {
+            using (PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(@out))) {
                 pdf.AddNewPage();
                 iText.Layout.Canvas canvas = new iText.Layout.Canvas(new PdfCanvas(pdf.GetFirstPage()), new Rectangle(120, 
                     650, 55, 80));

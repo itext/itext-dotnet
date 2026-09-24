@@ -36,14 +36,14 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 #endif
-using Microsoft.Extensions.Logging;
 
 namespace iText.Commons.Utils
 {
     /// <summary>Utility class for JSON serialization and deserialization operations. Not for public use.</summary>
+    [Obsolete(@"Use iText.Commons.Json.JsonValue and related classes for JSON operations instead.")]
     public sealed class JsonUtil
     {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(JsonUtil));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(JsonUtil));
         
         private JsonUtil()
         {
@@ -96,7 +96,7 @@ namespace iText.Commons.Utils
                 return stringWriter.ToString();
             }
             catch (Exception ex) {
-                LOGGER.LogWarning(MessageFormatUtil.Format(
+                LOGGER.Warn(() => MessageFormatUtil.Format(
                     CommonsLogMessageConstant.UNABLE_TO_SERIALIZE_OBJECT, ex.GetType().Name, ex.Message));
                 return null;
             }
@@ -119,7 +119,7 @@ namespace iText.Commons.Utils
                 return JsonSerializer.Serialize(value, jsonSerializerOptions);
             }
             catch (Exception ex) {
-                LOGGER.LogWarning(MessageFormatUtil.Format(
+                LOGGER.Warn(() => MessageFormatUtil.Format(
                     CommonsLogMessageConstant.UNABLE_TO_SERIALIZE_OBJECT, ex.GetType().Name, ex.Message));
                 return null;
             }
@@ -152,7 +152,7 @@ namespace iText.Commons.Utils
             }
             catch (Exception ex)
             {
-                LOGGER.LogWarning(MessageFormatUtil.Format(
+                LOGGER.Warn(() => MessageFormatUtil.Format(
                     CommonsLogMessageConstant.UNABLE_TO_SERIALIZE_OBJECT, ex.GetType().Name, ex.Message));
                 return null;
             }
@@ -175,7 +175,7 @@ namespace iText.Commons.Utils
             }
             catch (Exception ex)
             {
-                LOGGER.LogWarning(MessageFormatUtil.Format(
+                LOGGER.Warn(() => MessageFormatUtil.Format(
                     CommonsLogMessageConstant.UNABLE_TO_SERIALIZE_OBJECT, ex.GetType().Name, ex.Message));
                 return null;
             }
@@ -191,7 +191,7 @@ namespace iText.Commons.Utils
             }
             catch (Exception ex)
             {
-                LOGGER.LogWarning(MessageFormatUtil.Format(
+                LOGGER.Warn(() => MessageFormatUtil.Format(
                     CommonsLogMessageConstant.UNABLE_TO_SERIALIZE_OBJECT, ex.GetType().Name, ex.Message));
             }
 #else
@@ -210,7 +210,7 @@ namespace iText.Commons.Utils
             }
             catch (Exception ex)
             {
-                LOGGER.LogWarning(MessageFormatUtil.Format(
+                LOGGER.Warn(() => MessageFormatUtil.Format(
                     CommonsLogMessageConstant.UNABLE_TO_SERIALIZE_OBJECT, ex.GetType().Name, ex.Message));
             }
 #endif
@@ -224,7 +224,7 @@ namespace iText.Commons.Utils
                 JsonSerializer.Serialize(outputStream, value, jsonSerializerOptions);
             }
             catch (Exception ex) {
-                LOGGER.LogWarning(MessageFormatUtil.Format(
+                LOGGER.Warn(() => MessageFormatUtil.Format(
                     CommonsLogMessageConstant.UNABLE_TO_SERIALIZE_OBJECT, ex.GetType().Name, ex.Message));
             }
 #else
@@ -240,7 +240,7 @@ namespace iText.Commons.Utils
                 }
             }
             catch (Exception ex) {
-                LOGGER.LogWarning(MessageFormatUtil.Format(
+                LOGGER.Warn(() => MessageFormatUtil.Format(
                     CommonsLogMessageConstant.UNABLE_TO_SERIALIZE_OBJECT, ex.GetType().Name, ex.Message));
             }
 #endif
@@ -263,7 +263,7 @@ namespace iText.Commons.Utils
                 return (T) serializer.Deserialize(reader, typeof(T));
             }
             catch (JsonException ex) {
-                LOGGER.LogWarning(MessageFormatUtil.Format(
+                LOGGER.Warn(() => MessageFormatUtil.Format(
                     CommonsLogMessageConstant.UNABLE_TO_DESERIALIZE_JSON, ex.GetType(), ex.Message));
                 return default(T);
             }
@@ -287,7 +287,7 @@ namespace iText.Commons.Utils
                 return JsonSerializer.Deserialize<T>(content, defaultSerializerOptions);
             }
             catch (JsonException ex) {
-                LOGGER.LogWarning(MessageFormatUtil.Format(
+                LOGGER.Warn(() => MessageFormatUtil.Format(
                     CommonsLogMessageConstant.UNABLE_TO_DESERIALIZE_JSON, ex.GetType(), ex.Message));
                 return default(T);
             }
@@ -310,7 +310,7 @@ namespace iText.Commons.Utils
                 return JsonConvert.DeserializeObject<T>(content);
             }
             catch (JsonException ex) {
-                LOGGER.LogWarning(MessageFormatUtil.Format(
+                LOGGER.Warn(() => MessageFormatUtil.Format(
                     CommonsLogMessageConstant.UNABLE_TO_DESERIALIZE_JSON, ex.GetType(), ex.Message));
                 return default(T);
             }
@@ -334,7 +334,7 @@ namespace iText.Commons.Utils
                 return JsonSerializer.Deserialize<T>(content, defaultSerializerOptions);
             }
             catch (JsonException ex) {
-                LOGGER.LogWarning(MessageFormatUtil.Format(
+                LOGGER.Warn(() => MessageFormatUtil.Format(
                     CommonsLogMessageConstant.UNABLE_TO_DESERIALIZE_JSON, ex.GetType(), ex.Message));
                 return default(T);
             }

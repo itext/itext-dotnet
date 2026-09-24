@@ -45,9 +45,9 @@ namespace iText.Kernel.Pdf.Canvas {
         private Matrix ctm = new Matrix();
 
         // color
-        private Color strokeColor = DeviceGray.BLACK;
+        private Color strokeColor = PdfCanvasConstants.DEFAULT_STROKE_COLOR;
 
-        private Color fillColor = DeviceGray.BLACK;
+        private Color fillColor = PdfCanvasConstants.DEFAULT_FILL_COLOR;
 
         // text state
         private float charSpacing = 0f;
@@ -69,13 +69,13 @@ namespace iText.Kernel.Pdf.Canvas {
 
         private bool textKnockout = true;
 
-        private float lineWidth = 1f;
+        private float lineWidth = PdfCanvasConstants.DEFAULT_LINE_WIDTH;
 
-        private int lineCapStyle = PdfCanvasConstants.LineCapStyle.BUTT;
+        private int lineCapStyle = PdfCanvasConstants.DEFAULT_LINE_CAP_STYLE;
 
-        private int lineJoinStyle = PdfCanvasConstants.LineJoinStyle.MITER;
+        private int lineJoinStyle = PdfCanvasConstants.DEFAULT_LINE_JOIN_STYLE;
 
-        private float miterLimit = 10f;
+        private float miterLimit = PdfCanvasConstants.DEFAULT_MITER_LIMIT;
 
         /// <summary>A description of the dash pattern to be used when paths are stroked.</summary>
         /// <remarks>
@@ -99,9 +99,9 @@ namespace iText.Kernel.Pdf.Canvas {
         private PdfObject softMask = PdfName.None;
 
         // alpha constant
-        private float strokeAlpha = 1f;
+        private float strokeAlpha = PdfCanvasConstants.DEFAULT_STROKE_OPACITY;
 
-        private float fillAlpha = 1f;
+        private float fillAlpha = PdfCanvasConstants.DEFAULT_FILL_OPACITY;
 
         // alpha source
         private bool alphaIsShape = false;

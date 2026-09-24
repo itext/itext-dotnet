@@ -81,7 +81,7 @@ namespace iText.Svg.Renderers {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_RETRIEVE_IMAGE_WITH_GIVEN_BASE_URI
+        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNABLE_TO_PROCESS_IMAGE_WITH_GIVEN_BASE_URI
             )]
         public virtual void ImageWithSvgTest() {
             // TODO DEVSIX-8884 Support svg format for image href attribute

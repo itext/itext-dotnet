@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
@@ -44,6 +43,8 @@ using iText.Kernel.XMP.Options;
 
 namespace iText.Kernel.Pdf {
     public class PdfPage : PdfObjectWrapper<PdfDictionary> {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.PdfPage));
+
         private static readonly IList<PdfName> PAGE_EXCLUDED_KEYS = new List<PdfName>(JavaUtil.ArraysAsList(PdfName
             .Parent, PdfName.Annots, PdfName.StructParents, PdfName.B));
 
@@ -109,10 +110,20 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Gets page size, considering page rotation.</summary>
+        /// <remarks>
+        /// Gets page size, considering page rotation.
+        /// <para />
+        /// Rotation is applied as successive 90-degree clockwise quarter-turns using
+        /// <see cref="iText.Kernel.Geom.PageSize.Rotate()"/>
+        /// . The resulting rectangle is anchored at the rotated
+        /// origin point (its lower-left corner is rotated together with the page), rather
+        /// than being rebased to the lower-left corner of an enclosing axis-aligned
+        /// bounding box.
+        /// </remarks>
         /// <returns>
         /// 
         /// <see cref="iText.Kernel.Geom.Rectangle"/>
-        /// that specify size of rotated page.
+        /// that specifies size and position of the rotated page
         /// </returns>
         public virtual Rectangle GetPageSizeWithRotation() {
             PageSize rect = new PageSize(GetPageSize());
@@ -701,11 +712,8 @@ namespace iText.Kernel.Pdf {
             int mediaBoxSize;
             if ((mediaBoxSize = mediaBox.Size()) != 4) {
                 if (mediaBoxSize > 4) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPage));
-                    if (logger.IsEnabled(LogLevel.Error)) {
-                        logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.WRONG_MEDIABOX_SIZE_TOO_MANY_ARGUMENTS
-                            , mediaBoxSize));
-                    }
+                    LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.WRONG_MEDIABOX_SIZE_TOO_MANY_ARGUMENTS
+                        , mediaBoxSize));
                 }
                 if (mediaBoxSize < 4) {
                     throw new PdfException(KernelExceptionMessageConstant.WRONG_MEDIA_BOX_SIZE_TOO_FEW_ARGUMENTS).SetMessageParams
@@ -1531,8 +1539,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="fs">file specification dictionary of associated file</param>
         public virtual void AddAssociatedFile(String description, PdfFileSpec fs) {
             if (null == ((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship)) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPage));
-                logger.LogError(iText.IO.Logs.IoLogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
+                LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
             }
             if (null != description) {
                 PdfString key = new PdfString(description);
@@ -1706,12 +1713,14 @@ namespace iText.Kernel.Pdf {
             if (annotation is PdfLinkAnnotation) {
                 // "Link" and "Reference" tags were added starting from PDF 1.4
                 if (PdfVersion.PDF_1_3.CompareTo(GetDocument().GetPdfVersion()) < 0) {
-                    if (StandardRoles.REFERENCE.Equals(tagPointer.GetRole()) || StandardRoles.LINK.Equals(tagPointer.GetRole()
-                        )) {
+                    if (StandardRoles.LINK.Equals(tagPointer.GetRole())) {
                         return false;
                     }
                     String linkRole = ((PdfLinkAnnotation)annotation).GetRoleBasedOnDestination(GetDocument());
                     if (StandardRoles.REFERENCE.Equals(linkRole) && IsReferenceAllowed(tagPointer.GetRole())) {
+                        if (StandardRoles.REFERENCE.Equals(tagPointer.GetRole())) {
+                            return false;
+                        }
                         PdfNamespace currentNamespace = tagPointer.GetNamespaceForNewTags();
                         if (PdfVersion.PDF_2_0.CompareTo(GetDocument().GetPdfVersion()) <= 0) {
                             tagPointer.SetNamespaceForNewTags(PdfNamespace.GetDefault(GetDocument()));
@@ -1755,8 +1764,7 @@ namespace iText.Kernel.Pdf {
             }
             else {
                 if (!toDocument.GetWriter().isUserWarnedAboutAcroFormCopying && GetDocument().HasAcroForm()) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfPage));
-                    logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY);
+                    LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY);
                     toDocument.GetWriter().isUserWarnedAboutAcroFormCopying = true;
                 }
             }

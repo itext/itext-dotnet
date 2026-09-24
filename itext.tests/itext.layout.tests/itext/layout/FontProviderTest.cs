@@ -70,6 +70,11 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void StandardAndType3Fonts() {
             String fileName = "taggedDocumentWithType3Font";
@@ -78,8 +83,8 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + fileName + ".pdf";
             FontProviderTest.PdfFontProvider sel = new FontProviderTest.PdfFontProvider();
             sel.AddStandardPdfFonts();
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(srcFileName)), new PdfWriter
-                (FileUtil.GetFileOutputStream(outFileName)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(FileUtil.GetInputStreamForFile(srcFileName)), CompareTool
+                .CreateTestPdfWriter(outFileName));
             PdfType3Font pdfType3Font = (PdfType3Font)PdfFontFactory.CreateFont((PdfDictionary)pdfDoc.GetPdfObject(5));
             sel.AddPdfFont(pdfType3Font, "CustomFont");
             Document doc = new Document(pdfDoc);
@@ -107,7 +112,7 @@ namespace iText.Layout {
             // TODO DEVSIX-2119 Update if necessary
             fontProvider.GetFontSet().AddFont(StandardFonts.TIMES_ROMAN, null, "times");
             fontProvider.GetFontSet().AddFont(StandardFonts.HELVETICA);
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(fontProvider);
             Paragraph paragraph1 = new Paragraph("Default Helvetica should be selected.");
@@ -134,7 +139,7 @@ namespace iText.Layout {
             fontProvider.GetFontSet().AddFont(sourceFolder + "../fonts/FreeSans.ttf", PdfEncodings.IDENTITY_H);
             // TODO DEVSIX-2119 Update if necessary
             fontProvider.GetFontSet().AddFont(StandardFonts.TIMES_ROMAN, null, "times");
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(fontProvider);
             Paragraph paragraph = new Paragraph("There is no default font (Helvetica) inside the used FontProvider's instance. So the first font, that has been added, should be selected. Here it's FreeSans."
@@ -149,7 +154,7 @@ namespace iText.Layout {
         public virtual void FontProviderNotSetExceptionTest() {
             String fileName = "fontProviderNotSetExceptionTest.pdf";
             String outFileName = destinationFolder + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDoc);
                 Paragraph paragraph = new Paragraph("Hello world!").SetFontFamily("ABRACADABRA_NO_FONT_PROVIDER_ANYWAY");
                 Exception e = NUnit.Framework.Assert.Catch(typeof(InvalidOperationException), () => doc.Add(paragraph));

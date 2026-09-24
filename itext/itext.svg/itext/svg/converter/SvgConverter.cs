@@ -22,8 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
@@ -53,9 +51,6 @@ namespace iText.Svg.Converter {
     /// </summary>
     public sealed class SvgConverter {
         public const String SVG_DEFAULT_ROLE = StandardRoles.FIGURE;
-
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Svg.Converter.SvgConverter
-            ));
 
         private SvgConverter() {
         }

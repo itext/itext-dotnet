@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
@@ -38,7 +37,7 @@ namespace iText.Kernel.Pdf.Tagging {
     /// for specified page, by MCID or by struct parent index.
     /// </summary>
     internal class ParentTreeHandler {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagging.ParentTreeHandler
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.Tagging.ParentTreeHandler
             ));
 
         private PdfStructTreeRoot structTreeRoot;
@@ -139,7 +138,7 @@ namespace iText.Kernel.Pdf.Tagging {
         private void RegisterMcr(PdfMcr mcr, bool registeringOnInit) {
             PdfIndirectReference mcrPageIndRef = mcr.GetPageIndirectReference();
             if (mcrPageIndRef == null || (!(mcr is PdfObjRef) && mcr.GetMcid() < 0)) {
-                LOGGER.LogError(iText.IO.Logs.IoLogMessageConstant.ENCOUNTERED_INVALID_MCR);
+                LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.ENCOUNTERED_INVALID_MCR);
                 return;
             }
             ParentTreeHandler.PageMcrsContainer pageMcrs = pageToPageMcrs.Get(mcrPageIndRef);
@@ -175,7 +174,7 @@ namespace iText.Kernel.Pdf.Tagging {
                         xObjectToStructParentsInd.Put(stmIndRef, maxStructParentIndex);
                         xObjectStream.Put(PdfName.StructParents, new PdfNumber(maxStructParentIndex));
                         structTreeRoot.GetPdfObject().Put(PdfName.ParentTreeNextKey, new PdfNumber(maxStructParentIndex + 1));
-                        LOGGER.LogWarning(KernelLogMessageConstant.XOBJECT_STRUCT_PARENT_INDEX_MISSED_AND_RECREATED);
+                        LOGGER.Warn(() => KernelLogMessageConstant.XOBJECT_STRUCT_PARENT_INDEX_MISSED_AND_RECREATED);
                     }
                     else {
                         throw new PdfException(KernelExceptionMessageConstant.XOBJECT_STRUCT_PARENT_INDEX_MISSED);
@@ -204,7 +203,7 @@ namespace iText.Kernel.Pdf.Tagging {
                             pageMcrs.PutObjectReferenceMcr(maxStructParentIndex, mcr, structTreeRoot.GetPdfObject());
                             obj.Put(PdfName.StructParent, new PdfNumber(maxStructParentIndex));
                             structTreeRoot.GetPdfObject().Put(PdfName.ParentTreeNextKey, new PdfNumber(maxStructParentIndex + 1));
-                            LOGGER.LogWarning(KernelLogMessageConstant.STRUCT_PARENT_INDEX_MISSED_AND_RECREATED);
+                            LOGGER.Warn(() => KernelLogMessageConstant.STRUCT_PARENT_INDEX_MISSED_AND_RECREATED);
                         }
                         else {
                             throw new PdfException(KernelExceptionMessageConstant.STRUCT_PARENT_INDEX_NOT_FOUND_IN_TAGGED_OBJECT);
@@ -430,7 +429,7 @@ namespace iText.Kernel.Pdf.Tagging {
                     objRefs.Put(structParentIndex, mcr);
                     return;
                 }
-                LOGGER.LogWarning(KernelLogMessageConstant.DUPLICATE_STRUCT_PARENT_INDEX_IN_TAGGED_OBJECT_REFERENCES);
+                LOGGER.Warn(() => KernelLogMessageConstant.DUPLICATE_STRUCT_PARENT_INDEX_IN_TAGGED_OBJECT_REFERENCES);
                 if (FindStructTreeRoot(((PdfStructElem)mcr.GetParent()).GetPdfObject(), structTreeRootObject)) {
                     objRefs.Put(structParentIndex, mcr);
                 }

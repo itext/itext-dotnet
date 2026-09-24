@@ -55,6 +55,10 @@ namespace iText.Bouncycastlefips.Asn1.X509 {
         /// <summary><inheritDoc/></summary>
         public virtual IGeneralSubtree[] GetPermittedSubtrees() {
             Asn1Sequence permittedSubtreesSequence = GetNameConstraints().PermittedSubtrees;
+            if (permittedSubtreesSequence == null) {
+                return new IGeneralSubtree[0];
+            }
+
             IGeneralSubtree[] permittedSubtress = new IGeneralSubtree[permittedSubtreesSequence.Count];
             for (int i = 0; i < permittedSubtreesSequence.Count; ++i) {
                 permittedSubtress[i] = new GeneralSubtreeBCFips(GeneralSubtree.GetInstance(permittedSubtreesSequence[i]));
@@ -65,6 +69,10 @@ namespace iText.Bouncycastlefips.Asn1.X509 {
         /// <summary><inheritDoc/></summary>
         public virtual IGeneralSubtree[] GetExcludedSubtrees() {
             Asn1Sequence excludedSubtreesSequence = GetNameConstraints().ExcludedSubtrees;
+            if (excludedSubtreesSequence == null) {
+                return new IGeneralSubtree[0];
+            }
+
             IGeneralSubtree[] excludedSubtrees = new IGeneralSubtree[excludedSubtreesSequence.Count];
             for (int i = 0; i < excludedSubtreesSequence.Count; ++i) {
                 excludedSubtrees[i] = new GeneralSubtreeBCFips(GeneralSubtree.GetInstance(excludedSubtreesSequence[i]));

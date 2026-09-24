@@ -22,16 +22,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using iText.Commons.Actions;
 using iText.Commons.Actions.Sequence;
+using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Actions.Events;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Parser;
+using iText.Kernel.Pdf.Event;
 using iText.Kernel.Pdf.Xobject;
 using iText.Layout.Element;
 using iText.Layout.Exceptions;
+using iText.Layout.Properties.Margins;
+using iText.Layout.Renderer;
 using iText.Layout.Testutil;
 using iText.Test;
 
@@ -99,6 +105,232 @@ namespace iText.Layout {
                 NUnit.Framework.Assert.AreEqual(2, events.Count);
                 NUnit.Framework.Assert.IsTrue(events[0] is ITextCoreProductEvent);
                 NUnit.Framework.Assert.IsTrue(events[1] is TestProductEvent);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RelayoutWithImmediateFlushTest() {
+            using (Document document = new Document(new PdfDocument(new PdfWriter(new ByteArrayOutputStream())))) {
+                InvalidOperationException exception = (InvalidOperationException)NUnit.Framework.Assert.Catch(typeof(InvalidOperationException
+                    ), () => document.Relayout());
+                NUnit.Framework.Assert.AreEqual("Operation not supported with immediate flush", exception.Message);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RelayoutWithInvalidNextRendererTest() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            Document document = new Document(pdfDocument, pdfDocument.GetDefaultPageSize(), false);
+            DocumentTest.NullNextRendererDocumentRenderer customRenderer = new DocumentTest.NullNextRendererDocumentRenderer
+                (document);
+            document.SetRenderer(customRenderer);
+            try {
+                document.Add(new Paragraph("fallback renderer paragraph"));
+                document.Relayout();
+                NUnit.Framework.Assert.IsTrue(customRenderer.IsRemoveMarginBoxesEventHandlerCalled());
+                NUnit.Framework.Assert.AreNotSame(customRenderer, document.GetRenderer());
+                NUnit.Framework.Assert.AreEqual(typeof(DocumentRenderer), document.GetRenderer().GetType());
+                NUnit.Framework.Assert.DoesNotThrow(() => document.Close());
+            }
+            finally {
+                if (!pdfDocument.IsClosed()) {
+                    document.Close();
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RelayoutWithSameNextRendererTest() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            Document document = new Document(pdfDocument, pdfDocument.GetDefaultPageSize(), false);
+            DocumentTest.SameNextRendererDocumentRenderer customRenderer = new DocumentTest.SameNextRendererDocumentRenderer
+                (document);
+            document.SetRenderer(customRenderer);
+            try {
+                document.Add(new Paragraph("same renderer paragraph"));
+                document.Relayout();
+                NUnit.Framework.Assert.IsFalse(customRenderer.IsRemoveMarginBoxesEventHandlerCalled());
+                NUnit.Framework.Assert.AreSame(customRenderer, document.GetRenderer());
+                NUnit.Framework.Assert.DoesNotThrow(() => document.Close());
+            }
+            finally {
+                if (!pdfDocument.IsClosed()) {
+                    document.Close();
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RelayoutDoesNotKeepWrongEventHandlersDocumentRendererTest() {
+            DocumentTest.ThrowOnTooManyGetPagePdfDocument pdfDocument = new DocumentTest.ThrowOnTooManyGetPagePdfDocument
+                (new PdfWriter(new ByteArrayOutputStream()));
+            Document document = new Document(pdfDocument, pdfDocument.GetDefaultPageSize(), false);
+            try {
+                pdfDocument.AddEventHandler(PdfDocumentEvent.END_PAGE, new DocumentTest.GetPageProbeOnEndPageEventHandler(
+                    ));
+                document.SetPageMargins(1, new PageMarginBoxes(JavaCollectionsUtil.SingletonList(new PageMarginContent(MarginBoxName
+                    .TOP, 24f))));
+                document.Add(new Paragraph("test paragraph"));
+                document.Relayout();
+                pdfDocument.ResetGetPageCalls();
+                pdfDocument.SetMaxGetPageCalls(5);
+                NUnit.Framework.Assert.DoesNotThrow(() => document.Close());
+                NUnit.Framework.Assert.AreEqual(5, pdfDocument.GetPageCalls());
+            }
+            finally {
+                if (!pdfDocument.IsClosed()) {
+                    document.Close();
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ProcessedPagesKeepMarginsAfterPredicateTest() {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            String marker = "LATE_MARGIN_MARKER";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(baos)))) {
+                for (int i = 0; i < 80; i++) {
+                    document.Add(new Paragraph("Paragraph " + i + " ").SetMarginBottom(12));
+                }
+                document.Flush();
+                NUnit.Framework.Assert.IsTrue(document.GetPdfDocument().GetNumberOfPages() >= 2);
+                PageMarginBoxes pageMargins = new PageMarginBoxes(JavaCollectionsUtil.SingletonList(new PageMarginContent(
+                    MarginBoxName.TOP, new Div().Add(new Paragraph(marker)).SetHeight(40))));
+                document.SetPageMargins((pageNum) => pageNum % 2 == 0, pageMargins);
+            }
+            using (PdfDocument result = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())))) {
+                String secondPageText = PdfTextExtractor.GetTextFromPage(result.GetPage(2));
+                NUnit.Framework.Assert.IsFalse(secondPageText.Contains(marker));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarginsAreDrawnOnPagesAfterPredicateTest() {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            String marker = "FUTURE_PAGE_MARGIN_MARKER";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(baos)))) {
+                document.Add(new Paragraph("Page 1 content"));
+                document.Flush();
+                PageMarginBoxes pageMargins = new PageMarginBoxes(JavaCollectionsUtil.SingletonList(new PageMarginContent(
+                    MarginBoxName.TOP, new Div().Add(new Paragraph(marker)).SetHeight(30))));
+                document.SetPageMargins((pageNum) => pageNum < 5, pageMargins);
+                document.Add(new AreaBreak());
+                document.Add(new Paragraph("Page 2 content"));
+            }
+            using (PdfDocument result = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())))) {
+                String firstPageText = PdfTextExtractor.GetTextFromPage(result.GetPage(1));
+                String secondPageText = PdfTextExtractor.GetTextFromPage(result.GetPage(2));
+                NUnit.Framework.Assert.IsFalse(firstPageText.Contains(marker));
+                NUnit.Framework.Assert.IsTrue(secondPageText.Contains(marker));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NoMarginsOnOldPagesButDrawnOnNewPagesTest() {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            String marker = "EVEN_LATER_PAGE_MARGIN_MARKER";
+            using (Document document = new Document(new PdfDocument(new PdfWriter(baos)))) {
+                document.Add(new Paragraph("Page 1 content"));
+                document.Add(new AreaBreak());
+                document.Add(new Paragraph("Page 2 content"));
+                document.Flush();
+                NUnit.Framework.Assert.IsTrue(document.GetPdfDocument().GetNumberOfPages() >= 2);
+                PageMarginBoxes pageMargins = new PageMarginBoxes(JavaCollectionsUtil.SingletonList(new PageMarginContent(
+                    MarginBoxName.TOP, new Div().Add(new Paragraph(marker)).SetHeight(30))));
+                document.SetPageMargins((pageNum) => pageNum % 2 == 0, pageMargins);
+                document.Add(new AreaBreak());
+                document.Add(new Paragraph("Page 3 content"));
+                document.Add(new AreaBreak());
+                document.Add(new Paragraph("Page 4 content"));
+            }
+            using (PdfDocument result = new PdfDocument(new PdfReader(new MemoryStream(baos.ToArray())))) {
+                String page2Text = PdfTextExtractor.GetTextFromPage(result.GetPage(2));
+                String page4Text = PdfTextExtractor.GetTextFromPage(result.GetPage(4));
+                NUnit.Framework.Assert.IsFalse(page2Text.Contains(marker));
+                NUnit.Framework.Assert.IsTrue(page4Text.Contains(marker));
+            }
+        }
+
+        private sealed class ThrowOnTooManyGetPagePdfDocument : PdfDocument {
+            private int pageCalls = 0;
+
+            private int maxGetPageCalls = int.MaxValue;
+
+            public ThrowOnTooManyGetPagePdfDocument(PdfWriter writer)
+                : base(writer) {
+            }
+
+            public override PdfPage GetPage(int pageNum) {
+                ++pageCalls;
+                if (pageCalls > maxGetPageCalls) {
+                    throw new InvalidOperationException("getPage(int) called too many times: " + pageCalls + " (max " + maxGetPageCalls
+                         + ")");
+                }
+                return base.GetPage(pageNum);
+            }
+
+            public void ResetGetPageCalls() {
+                pageCalls = 0;
+            }
+
+            public void SetMaxGetPageCalls(int maxGetPageCalls) {
+                this.maxGetPageCalls = maxGetPageCalls;
+            }
+
+            public int GetPageCalls() {
+                return pageCalls;
+            }
+        }
+
+        private sealed class GetPageProbeOnEndPageEventHandler : AbstractPdfDocumentEventHandler {
+            protected override void OnAcceptedEvent(AbstractPdfDocumentEvent @event) {
+                if (@event is PdfDocumentEvent) {
+                    PdfDocumentEvent pageEvent = (PdfDocumentEvent)@event;
+                    int pageNumber = @event.GetDocument().GetPageNumber(pageEvent.GetPage());
+                    @event.GetDocument().GetPage(pageNumber);
+                }
+            }
+        }
+
+        private sealed class NullNextRendererDocumentRenderer : DocumentRenderer {
+            private bool removeMarginBoxesEventHandlerCalled;
+
+            public NullNextRendererDocumentRenderer(Document document)
+                : base(document, false) {
+            }
+
+            public override IRenderer GetNextRenderer() {
+                return null;
+            }
+
+            public override void RemoveEventHandlersForRelayout() {
+                removeMarginBoxesEventHandlerCalled = true;
+                base.RemoveEventHandlersForRelayout();
+            }
+
+            public bool IsRemoveMarginBoxesEventHandlerCalled() {
+                return removeMarginBoxesEventHandlerCalled;
+            }
+        }
+
+        private sealed class SameNextRendererDocumentRenderer : DocumentRenderer {
+            private bool removeMarginBoxesEventHandlerCalled;
+
+            public SameNextRendererDocumentRenderer(Document document)
+                : base(document, false) {
+            }
+
+            public override IRenderer GetNextRenderer() {
+                return this;
+            }
+
+            public override void RemoveEventHandlersForRelayout() {
+                removeMarginBoxesEventHandlerCalled = true;
+                base.RemoveEventHandlersForRelayout();
+            }
+
+            public bool IsRemoveMarginBoxesEventHandlerCalled() {
+                return removeMarginBoxesEventHandlerCalled;
             }
         }
     }

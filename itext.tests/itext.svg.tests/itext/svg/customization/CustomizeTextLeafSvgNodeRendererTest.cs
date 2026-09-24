@@ -40,20 +40,25 @@ using iText.Test;
 
 namespace iText.Svg.Customization {
     public class CustomizeTextLeafSvgNodeRendererTest : SvgIntegrationTest {
-        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/customization/CustomizeTextLeafSvgNodeRendererTest/";
 
-        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/customization/CustomizeTextLeafSvgNodeRendererTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/customization/CustomizeTextLeafSvgNodeRendererTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void TestCustomizeTextLeafSvgNodeRenderer() {
             String pdfFilename = "customizeTextLeafSvgNodeRenderer.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + pdfFilename));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + pdfFilename));
             doc.AddNewPage();
             SvgConverterProperties properties = new SvgConverterProperties();
             properties.SetRendererFactory(new CustomizeTextLeafSvgNodeRendererTest.CustomTextLeafOverridingSvgNodeRendererFactory

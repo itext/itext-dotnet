@@ -72,6 +72,11 @@ namespace iText.Layout {
             return objectList;
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.TestCaseSource("AlignItemsAndJustifyContentProperties")]
         public virtual void AlignmentDirectionTest(TextAlignment? itemTextAlignment, BaseDirection? itemBaseDirection
             , TextAlignment? listTextAlignment, BaseDirection? listBaseDirection) {
@@ -84,7 +89,7 @@ namespace iText.Layout {
                 (listBaseDirection));
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf);
             Style style = new Style().SetTextAlignment(itemTextAlignment).SetBaseDirection(itemBaseDirection);
             List list = CreateTestList(style);

@@ -21,9 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Layout.Properties;
@@ -37,6 +36,9 @@ namespace iText.Layout.Margincollapse {
     /// https://www.w3.org/TR/CSS2/box.html#collapsing-margins
     /// </summary>
     public class MarginsCollapseHandler {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Margincollapse.MarginsCollapseHandler
+            ));
+
         private IRenderer renderer;
 
         private MarginsCollapseInfo collapseInfo;
@@ -554,8 +556,7 @@ namespace iText.Layout.Margincollapse {
         private static float DefineMarginValueForCollapse(IRenderer renderer, int property) {
             UnitValue marginUV = renderer.GetModelElement().GetProperty<UnitValue>(property);
             if (null != marginUV && !marginUV.IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Margincollapse.MarginsCollapseHandler));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , property));
             }
             return marginUV != null && !(renderer is CellRenderer) ? marginUV.GetValue() : 0;
@@ -568,8 +569,7 @@ namespace iText.Layout.Margincollapse {
         private static bool HasPadding(IRenderer renderer, int property) {
             UnitValue padding = renderer.GetModelElement().GetProperty<UnitValue>(property);
             if (null != padding && !padding.IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Margincollapse.MarginsCollapseHandler));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , property));
             }
             return padding != null && padding.GetValue() > 0;

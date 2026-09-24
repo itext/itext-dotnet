@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.IO.Image {
+    /// <summary>Supported source image formats.</summary>
     public enum ImageType {
         JPEG,
         PNG,

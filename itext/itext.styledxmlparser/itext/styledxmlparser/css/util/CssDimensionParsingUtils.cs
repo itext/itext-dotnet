@@ -21,9 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Layout.Properties;
@@ -33,7 +32,7 @@ using iText.StyledXmlParser.Exceptions;
 namespace iText.StyledXmlParser.Css.Util {
     /// <summary>Utilities class for CSS dimension parsing operations.</summary>
     public sealed class CssDimensionParsingUtils {
-        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Util.CssDimensionParsingUtils
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.StyledXmlParser.Css.Util.CssDimensionParsingUtils
             ));
 
         /// <summary>
@@ -126,7 +125,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 )) {
                 return floatValue.Value;
             }
-            logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_METRIC_ANGLE_PARSED
+            LOGGER.Error(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_METRIC_ANGLE_PARSED
                 , unit.Equals("") ? defaultMetric : unit));
             return floatValue.Value;
         }
@@ -237,7 +236,7 @@ namespace iText.StyledXmlParser.Css.Util {
                     }
                 }
             }
-            logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
+            LOGGER.Error(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.UNKNOWN_ABSOLUTE_METRIC_LENGTH_PARSED
                 , unit.Equals("") ? defaultMetric : unit));
             return (float)f.Value;
         }
@@ -265,8 +264,8 @@ namespace iText.StyledXmlParser.Css.Util {
             // Use double type locally to have better precision of the result after applying arithmetic operations
             double? f = ParseDouble(relativeValue.JSubstring(0, pos));
             if (f == null) {
-                logger.LogInformation(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant
-                    .RELATIVE_VALUE_NOT_PARSED, relativeValue));
+                LOGGER.Info(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.RELATIVE_VALUE_NOT_PARSED
+                    , relativeValue));
                 return 0f;
             }
             String unit = relativeValue.Substring(pos);
@@ -479,8 +478,8 @@ namespace iText.StyledXmlParser.Css.Util {
             }
             double? f = ParseDouble(resolutionStr.JSubstring(0, pos));
             if (f == null) {
-                logger.LogInformation(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant
-                    .RESOLUTION_NOT_PARSED, resolutionStr));
+                LOGGER.Info(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.RESOLUTION_NOT_PARSED
+                    , resolutionStr));
                 return 0f;
             }
             String unit = resolutionStr.Substring(pos);
@@ -538,7 +537,8 @@ namespace iText.StyledXmlParser.Css.Util {
         public static float[] ParseRgbaColor(String colorValue) {
             float[] rgbaColor = WebColors.GetRGBAColor(colorValue);
             if (rgbaColor == null) {
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.COLOR_NOT_PARSED, colorValue));
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.COLOR_NOT_PARSED, colorValue
+                    ));
                 rgbaColor = new float[] { 0, 0, 0, 1 };
             }
             return rgbaColor;

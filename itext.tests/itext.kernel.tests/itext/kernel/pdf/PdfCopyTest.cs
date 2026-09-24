@@ -343,7 +343,7 @@ namespace iText.Kernel.Pdf {
             String outFileName = destinationFolder + "copyDocWithDDictionary.pdf";
             String cmpFileName = sourceFolder + "cmp_copyDocWithDDictionary.pdf";
             PdfDocument inPdf = new PdfDocument(new PdfReader(sourceFolder + "DocWithDDictionary.pdf"));
-            PdfDocument outPdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument outPdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             inPdf.CopyPagesTo(1, 1, outPdf);
             inPdf.Close();
             outPdf.Close();

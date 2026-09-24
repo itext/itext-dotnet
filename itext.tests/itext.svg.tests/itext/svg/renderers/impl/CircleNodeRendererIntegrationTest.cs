@@ -27,104 +27,104 @@ using iText.Test;
 namespace iText.Svg.Renderers.Impl {
     [NUnit.Framework.Category("IntegrationTest")]
     public class CircleNodeRendererIntegrationTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/CircleSvgNodeRendererTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/renderers/impl/CircleSvgNodeRendererTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/renderers/impl/CircleSvgNodeRendererTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void BasicCircleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "basicCircle");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "basicCircle");
         }
 
         [NUnit.Framework.Test]
         public virtual void RelativeCircleTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "relativeCircle");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "relativeCircle");
         }
 
         [NUnit.Framework.Test]
         public virtual void CircleCxCyAbsentTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "circleCxCyAbsent");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "circleCxCyAbsent");
         }
 
         [NUnit.Framework.Test]
         public virtual void CircleCxAbsentTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "circleCxAbsent");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "circleCxAbsent");
         }
 
         [NUnit.Framework.Test]
         public virtual void CircleCxNegativeTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "circleCxNegative");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "circleCxNegative");
         }
 
         [NUnit.Framework.Test]
         public virtual void CircleCyAbsentTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "circleCyAbsent");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "circleCyAbsent");
         }
 
         [NUnit.Framework.Test]
         public virtual void CircleCyNegativeTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "circleCyNegative");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "circleCyNegative");
         }
 
         [NUnit.Framework.Test]
         public virtual void CircleRAbsentTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "circleRAbsent");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "circleRAbsent");
         }
 
         [NUnit.Framework.Test]
         public virtual void CircleRNegativeTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "circleRNegative");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "circleRNegative");
         }
 
         [NUnit.Framework.Test]
         public virtual void CircleTranslatedTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "circleTranslated");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "circleTranslated");
         }
 
         [NUnit.Framework.Test]
         public virtual void CircleRotatedTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "circleRotated");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "circleRotated");
         }
 
         [NUnit.Framework.Test]
         public virtual void CircleScaledUpTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "circleScaledUp");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "circleScaledUp");
         }
 
         [NUnit.Framework.Test]
         public virtual void CircleScaledDownTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "circleScaledDown");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "circleScaledDown");
         }
 
         [NUnit.Framework.Test]
         public virtual void CircleScaledXYTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "circleScaledXY");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "circleScaledXY");
         }
 
         [NUnit.Framework.Test]
         public virtual void CircleSkewXTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "circleSkewX");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "circleSkewX");
         }
 
         [NUnit.Framework.Test]
         public virtual void CircleSkewYTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "circleSkewY");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "circleSkewY");
         }
 
         [NUnit.Framework.Test]
         public virtual void CircleWithBigStrokeWidthTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "circleWithBigStrokeWidth");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "circleWithBigStrokeWidth");
         }
 
         [NUnit.Framework.Test]
         public virtual void CircleShapeRenderingTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "shape-rendering");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "shape-rendering");
         }
     }
 }

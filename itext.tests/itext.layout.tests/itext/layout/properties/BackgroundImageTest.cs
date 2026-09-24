@@ -53,6 +53,11 @@ namespace iText.Layout.Properties {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void BackgroundImage() {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "itis.jpg"));
@@ -114,20 +119,22 @@ namespace iText.Layout.Properties {
 
         [NUnit.Framework.Test]
         public virtual void BackgroundImageWithLinearGradientTest() {
-            AbstractLinearGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().AddColorStop(new 
-                GradientColorStop(ColorConstants.RED.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants
-                .GREEN.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants.BLUE.GetColorValue()));
-            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetLinearGradientBuilder
+            StrategyBasedLinearGradientBuilder gradientBuilder = (StrategyBasedLinearGradientBuilder)new StrategyBasedLinearGradientBuilder
+                ().AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue())).AddStopColor(new GradientColorStop
+                (ColorConstants.GREEN.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue
+                ()));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetGradientBuilder
                 (gradientBuilder).Build();
             BackgroundImageGenericTest("backgroundImageWithLinearGradient", backgroundImage);
         }
 
         [NUnit.Framework.Test]
         public virtual void BackgroundImageWithLinearGradientAndPositionTest() {
-            AbstractLinearGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().AddColorStop(new 
-                GradientColorStop(ColorConstants.RED.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants
-                .GREEN.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants.BLUE.GetColorValue()));
-            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetLinearGradientBuilder
+            StrategyBasedLinearGradientBuilder gradientBuilder = (StrategyBasedLinearGradientBuilder)new StrategyBasedLinearGradientBuilder
+                ().AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue())).AddStopColor(new GradientColorStop
+                (ColorConstants.GREEN.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue
+                ()));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetGradientBuilder
                 (gradientBuilder).SetBackgroundPosition(new BackgroundPosition().SetYShift(UnitValue.CreatePointValue(
                 30)).SetXShift(UnitValue.CreatePointValue(50))).Build();
             BackgroundImageGenericTest("backgroundImageWithLinearGradientAndPosition", backgroundImage);
@@ -135,20 +142,22 @@ namespace iText.Layout.Properties {
 
         [NUnit.Framework.Test]
         public virtual void BackgroundImageWithLinearGradientAndRepeatTest() {
-            AbstractLinearGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().AddColorStop(new 
-                GradientColorStop(ColorConstants.RED.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants
-                .GREEN.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants.BLUE.GetColorValue()));
-            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetLinearGradientBuilder
+            StrategyBasedLinearGradientBuilder gradientBuilder = (StrategyBasedLinearGradientBuilder)new StrategyBasedLinearGradientBuilder
+                ().AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue())).AddStopColor(new GradientColorStop
+                (ColorConstants.GREEN.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue
+                ()));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetGradientBuilder
                 (gradientBuilder).SetBackgroundRepeat(new BackgroundRepeat()).Build();
             BackgroundImageGenericTest("backgroundImageWithLinearGradientAndRepeat", backgroundImage);
         }
 
         [NUnit.Framework.Test]
         public virtual void BackgroundImageWithLinearGradientAndPositionAndRepeatTest() {
-            AbstractLinearGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().AddColorStop(new 
-                GradientColorStop(ColorConstants.RED.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants
-                .GREEN.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants.BLUE.GetColorValue()));
-            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetLinearGradientBuilder
+            StrategyBasedLinearGradientBuilder gradientBuilder = (StrategyBasedLinearGradientBuilder)new StrategyBasedLinearGradientBuilder
+                ().AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue())).AddStopColor(new GradientColorStop
+                (ColorConstants.GREEN.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue
+                ()));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetGradientBuilder
                 (gradientBuilder).SetBackgroundRepeat(new BackgroundRepeat()).SetBackgroundPosition(new BackgroundPosition
                 ().SetYShift(UnitValue.CreatePointValue(30)).SetXShift(UnitValue.CreatePointValue(50))).Build();
             BackgroundImageGenericTest("backgroundImageWithLinearGradientAndPositionAndRepeat", backgroundImage);
@@ -157,10 +166,11 @@ namespace iText.Layout.Properties {
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, LogLevel = LogLevelConstants.WARN)]
         public virtual void BackgroundImageWithLinearGradientAndTransformTest() {
-            AbstractLinearGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().AddColorStop(new 
-                GradientColorStop(ColorConstants.RED.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants
-                .GREEN.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants.BLUE.GetColorValue()));
-            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetLinearGradientBuilder
+            StrategyBasedLinearGradientBuilder gradientBuilder = (StrategyBasedLinearGradientBuilder)new StrategyBasedLinearGradientBuilder
+                ().AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue())).AddStopColor(new GradientColorStop
+                (ColorConstants.GREEN.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue
+                ()));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetGradientBuilder
                 (gradientBuilder).Build();
             BackgroundImageGenericTest("backgroundImageWithLinearGradientAndTransform", backgroundImage, Math.PI / 4);
         }
@@ -177,8 +187,7 @@ namespace iText.Layout.Properties {
             NUnit.Framework.Assert.IsTrue(backgroundImage.IsBackgroundSpecified());
             String outFileName = DESTINATION_FOLDER + "backgroundImageForText.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageForText.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDocument);
                 Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                     );
@@ -198,8 +207,7 @@ namespace iText.Layout.Properties {
                 Build();
             String outFileName = DESTINATION_FOLDER + "backgroundImageWithPercentWidth.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageWithPercentWidth.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDocument);
                 Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                     );
@@ -220,8 +228,7 @@ namespace iText.Layout.Properties {
                 Build();
             String outFileName = DESTINATION_FOLDER + "backgroundImageWithPercentHeight.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageWithPercentHeight.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDocument);
                 Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                     );
@@ -242,8 +249,7 @@ namespace iText.Layout.Properties {
                 Build();
             String outFileName = DESTINATION_FOLDER + "backgroundImageWithPercentHeightAndWidth.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageWithPercentHeightAndWidth.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDocument);
                 Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                     );
@@ -265,8 +271,7 @@ namespace iText.Layout.Properties {
                 Build();
             String outFileName = DESTINATION_FOLDER + "backgroundImageWithPointWidth.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageWithPointWidth.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDocument);
                 Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                     );
@@ -287,8 +292,7 @@ namespace iText.Layout.Properties {
                 Build();
             String outFileName = DESTINATION_FOLDER + "backgroundImageWithPointHeight.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageWithPointHeight.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDocument);
                 Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                     );
@@ -309,8 +313,7 @@ namespace iText.Layout.Properties {
                 Build();
             String outFileName = DESTINATION_FOLDER + "backgroundImageWithPointHeightAndWidth.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageWithPointHeightAndWidth.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDocument);
                 Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                     );
@@ -332,8 +335,7 @@ namespace iText.Layout.Properties {
                 Build();
             String outFileName = DESTINATION_FOLDER + "backgroundImageWithLowWidthAndHeight.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_backgroundImageWithLowWidthAndHeight.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDocument);
                 Text textElement = new Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                     );
@@ -412,8 +414,7 @@ namespace iText.Layout.Properties {
             String filename = "backgroundXObject";
             String fileName = filename + ".pdf";
             String outFileName = DESTINATION_FOLDER + fileName;
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(CreateFormXObject
                     (pdfDocument, "itis.jpg")).Build();
                 NUnit.Framework.Assert.AreEqual(BackgroundRepeat.BackgroundRepeatValue.REPEAT, backgroundImage.GetRepeat()
@@ -429,8 +430,7 @@ namespace iText.Layout.Properties {
             String filename = "backgroundXObjectWithoutRepeatX";
             String fileName = filename + ".pdf";
             String outFileName = DESTINATION_FOLDER + fileName;
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(CreateFormXObject
                     (pdfDocument, "itis.jpg")).SetBackgroundRepeat(new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue
                     .NO_REPEAT, BackgroundRepeat.BackgroundRepeatValue.REPEAT)).Build();
@@ -447,8 +447,7 @@ namespace iText.Layout.Properties {
             String filename = "backgroundXObjectWithoutRepeatY";
             String fileName = filename + ".pdf";
             String outFileName = DESTINATION_FOLDER + fileName;
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(CreateFormXObject
                     (pdfDocument, "itis.jpg")).SetBackgroundRepeat(new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue
                     .REPEAT, BackgroundRepeat.BackgroundRepeatValue.NO_REPEAT)).Build();
@@ -465,8 +464,7 @@ namespace iText.Layout.Properties {
             String filename = "backgroundXObjectWithoutRepeatXY";
             String fileName = filename + ".pdf";
             String outFileName = DESTINATION_FOLDER + fileName;
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetImage(CreateFormXObject
                     (pdfDocument, "itis.jpg")).SetBackgroundRepeat(new BackgroundRepeat(BackgroundRepeat.BackgroundRepeatValue
                     .NO_REPEAT)).Build();
@@ -484,8 +482,7 @@ namespace iText.Layout.Properties {
             String fileName = filename + ".pdf";
             String outFileName = DESTINATION_FOLDER + fileName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + filename + ".pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDocument);
                 String text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                      + "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi " + "ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit "
@@ -515,8 +512,7 @@ namespace iText.Layout.Properties {
             String fileName = filename + ".pdf";
             String outFileName = DESTINATION_FOLDER + fileName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + filename + ".pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)))
-                ) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDocument);
                 String text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                      + "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi " + "ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit "
@@ -677,16 +673,16 @@ namespace iText.Layout.Properties {
         }
 
         private void BlendModeTest(BlendMode blendMode) {
-            AbstractLinearGradientBuilder gradientBuilder = new StrategyBasedLinearGradientBuilder().AddColorStop(new 
-                GradientColorStop(ColorConstants.BLACK.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants
-                .WHITE.GetColorValue()));
-            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetLinearGradientBuilder
+            StrategyBasedLinearGradientBuilder gradientBuilder = (StrategyBasedLinearGradientBuilder)new StrategyBasedLinearGradientBuilder
+                ().AddStopColor(new GradientColorStop(ColorConstants.BLACK.GetColorValue())).AddStopColor(new GradientColorStop
+                (ColorConstants.WHITE.GetColorValue()));
+            iText.Layout.Properties.BackgroundImage backgroundImage = new BackgroundImage.Builder().SetGradientBuilder
                 (gradientBuilder).Build();
-            AbstractLinearGradientBuilder topGradientBuilder = new StrategyBasedLinearGradientBuilder().SetGradientDirectionAsStrategy
-                (StrategyBasedLinearGradientBuilder.GradientStrategy.TO_RIGHT).AddColorStop(new GradientColorStop(ColorConstants
-                .RED.GetColorValue())).AddColorStop(new GradientColorStop(ColorConstants.GREEN.GetColorValue())).AddColorStop
-                (new GradientColorStop(ColorConstants.BLUE.GetColorValue()));
-            iText.Layout.Properties.BackgroundImage topBackgroundImage = new BackgroundImage.Builder().SetLinearGradientBuilder
+            StrategyBasedLinearGradientBuilder topGradientBuilder = (StrategyBasedLinearGradientBuilder)new StrategyBasedLinearGradientBuilder
+                ().SetGradientDirectionAsStrategy(StrategyBasedLinearGradientBuilder.GradientStrategy.TO_RIGHT).AddStopColor
+                (new GradientColorStop(ColorConstants.RED.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants
+                .GREEN.GetColorValue())).AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue()));
+            iText.Layout.Properties.BackgroundImage topBackgroundImage = new BackgroundImage.Builder().SetGradientBuilder
                 (topGradientBuilder).SetBackgroundBlendMode(blendMode).Build();
             BackgroundImageGenericTest("backgroundImageWithLinearGradientAndBlendMode_" + blendMode.GetPdfRepresentation
                 ().GetValue(), JavaUtil.ArraysAsList(topBackgroundImage, backgroundImage));
@@ -720,7 +716,7 @@ namespace iText.Layout.Properties {
             }
             String outFileName = DESTINATION_FOLDER + filename + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + filename + ".pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(FileUtil.GetFileOutputStream(outFileName)));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             String text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
                  + "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi " + "ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit "

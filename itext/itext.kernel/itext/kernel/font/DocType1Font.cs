@@ -21,9 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
 using iText.IO.Font.Otf;
@@ -32,6 +31,8 @@ using iText.Kernel.Pdf;
 namespace iText.Kernel.Font {
 //\cond DO_NOT_DOCUMENT
     internal class DocType1Font : Type1Font, IDocFontProgram {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Font.DocType1Font));
+
         private PdfStream fontFile;
 
         private PdfName fontFileName;
@@ -49,12 +50,12 @@ namespace iText.Kernel.Font {
              toUnicode) {
             String baseFont = GetBaseFont(fontDictionary);
             if (!fontDictionary.ContainsKey(PdfName.FontDescriptor)) {
-                Type1Font type1StdFont = GetType1Font(baseFont);
+                Type1Font type1StdFont = GetType1Font(baseFont, fontEncoding);
                 if (type1StdFont != null) {
-                    type1StdFont.InitializeGlyphs(fontEncoding);
                     return type1StdFont;
                 }
             }
+            // Here we don't cache font program on kernel level
             iText.Kernel.Font.DocType1Font fontProgram = new iText.Kernel.Font.DocType1Font(baseFont);
             PdfDictionary fontDesc = fontDictionary.GetAsDictionary(PdfName.FontDescriptor);
             fontProgram.subtype = fontDesc != null ? fontDesc.GetAsName(PdfName.Subtype) : null;
@@ -109,11 +110,9 @@ namespace iText.Kernel.Font {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal static Type1Font GetType1Font(String baseFont) {
+        internal static Type1Font GetType1Font(String baseFont, FontEncoding fontEncoding) {
             try {
-                //if there are no font modifiers, cached font could be used,
-                //otherwise a new instance should be created.
-                return (Type1Font)FontProgramFactory.CreateFont(baseFont, false);
+                return (Type1Font)FontProgramFactory.CreateType1Font(baseFont, fontEncoding, true);
             }
             catch (Exception) {
                 return null;
@@ -147,8 +146,7 @@ namespace iText.Kernel.Font {
 //\cond DO_NOT_DOCUMENT
         internal static void FillFontDescriptor(iText.Kernel.Font.DocType1Font font, PdfDictionary fontDesc) {
             if (fontDesc == null) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(FontUtil));
-                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.FONT_DICTIONARY_WITH_NO_FONT_DESCRIPTOR);
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.FONT_DICTIONARY_WITH_NO_FONT_DESCRIPTOR);
                 return;
             }
             PdfNumber v = fontDesc.GetAsNumber(PdfName.Ascent);

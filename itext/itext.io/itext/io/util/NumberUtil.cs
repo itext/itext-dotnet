@@ -23,12 +23,25 @@ Copyright (c) 1998-2026 Apryse Group NV
 using System;
 
 namespace iText.IO.Util {
+    /// <summary>
+    /// This file is a helper class for internal usage only.
+    /// Be aware that its API and functionality may be changed in future.
+    /// </summary>
     public static class NumberUtil {
-
+        /// <summary>
+        /// Converts a number to a float.
+        /// </summary>
+        /// <param name="obj">the number to convert, or <see langword="null"/></param>
+        /// <returns>the float value, or <see langword="null"/> when <see langword="obj"/> is <see langword="null"/></returns>
         public static float? AsFloat(Object obj) {
             return obj != null ? Convert.ToSingle(obj) : (float?)null;
         }
 
+        /// <summary>s
+        /// Converts a number to an integer.
+        /// </summary>
+        /// <param name="obj">the number to convert, or <see langword="null"/></param>
+        /// <returns>the integer value, or <see langword="null"/> when <see langword="obj"/> is <see langword="null"/></returns>
         public static int? AsInteger(Object obj) {
             return obj != null ? Convert.ToInt32(obj) : (int?)null;
         }

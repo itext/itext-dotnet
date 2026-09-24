@@ -42,12 +42,17 @@ namespace iText.Layout {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void LongListItemTest() {
             String outFileName = DESTINATION_FOLDER + "longListItemTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_longListItemTest.pdf";
             Rectangle customArea = new Rectangle(0, 15, 586, 723);
-            using (PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdf)) {
                     CustomCurrentAreaTest.ClauseRenderer renderer = new CustomCurrentAreaTest.ClauseRenderer(document, customArea
                         );

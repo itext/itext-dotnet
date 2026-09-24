@@ -34,54 +34,6 @@ namespace iText.Kernel.Pdf {
         }
 
 //\cond DO_NOT_DOCUMENT
-        internal static void AppendMetadataToInfo(XMPMeta meta, PdfDocumentInfo info) {
-            if (meta != null) {
-                try {
-                    XMPProperty title = meta.GetLocalizedText(XMPConst.NS_DC, PdfConst.Title, XMPConst.X_DEFAULT, XMPConst.X_DEFAULT
-                        );
-                    if (title != null) {
-                        info.SetTitle(title.GetValue());
-                    }
-                    String author = FetchArrayIntoString(meta, XMPConst.NS_DC, PdfConst.Creator);
-                    if (author != null) {
-                        info.SetAuthor(author);
-                    }
-                    // We assume that pdf:keywords has precedence over dc:subject
-                    XMPProperty keywords = meta.GetProperty(XMPConst.NS_PDF, PdfConst.Keywords);
-                    if (keywords != null) {
-                        info.SetKeywords(keywords.GetValue());
-                    }
-                    else {
-                        String keywordsStr = FetchArrayIntoString(meta, XMPConst.NS_DC, PdfConst.Subject);
-                        if (keywordsStr != null) {
-                            info.SetKeywords(keywordsStr);
-                        }
-                    }
-                    XMPProperty subject = meta.GetLocalizedText(XMPConst.NS_DC, PdfConst.Description, XMPConst.X_DEFAULT, XMPConst
-                        .X_DEFAULT);
-                    if (subject != null) {
-                        info.SetSubject(subject.GetValue());
-                    }
-                    XMPProperty creator = meta.GetProperty(XMPConst.NS_XMP, PdfConst.CreatorTool);
-                    if (creator != null) {
-                        info.SetCreator(creator.GetValue());
-                    }
-                    XMPProperty producer = meta.GetProperty(XMPConst.NS_PDF, PdfConst.Producer);
-                    if (producer != null) {
-                        info.Put(PdfName.Producer, new PdfString(producer.GetValue(), PdfEncodings.UNICODE_BIG));
-                    }
-                    XMPProperty trapped = meta.GetProperty(XMPConst.NS_PDF, PdfConst.Trapped);
-                    if (trapped != null) {
-                        info.SetTrapped(new PdfName(trapped.GetValue()));
-                    }
-                }
-                catch (XMPException) {
-                }
-            }
-        }
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
         internal static void AppendDocumentInfoToMetadata(PdfDocumentInfo info, XMPMeta xmpMeta) {
             PdfDictionary docInfo = info.GetPdfObject();
             if (docInfo != null) {
@@ -159,6 +111,54 @@ namespace iText.Kernel.Pdf {
                             }
                         }
                     }
+                }
+            }
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal static void AppendMetadataToInfo(XMPMeta meta, PdfDocumentInfo info) {
+            if (meta != null) {
+                try {
+                    XMPProperty title = meta.GetLocalizedText(XMPConst.NS_DC, PdfConst.Title, XMPConst.X_DEFAULT, XMPConst.X_DEFAULT
+                        );
+                    if (title != null) {
+                        info.SetTitle(title.GetValue());
+                    }
+                    String author = FetchArrayIntoString(meta, XMPConst.NS_DC, PdfConst.Creator);
+                    if (author != null) {
+                        info.SetAuthor(author);
+                    }
+                    // We assume that pdf:keywords has precedence over dc:subject
+                    XMPProperty keywords = meta.GetProperty(XMPConst.NS_PDF, PdfConst.Keywords);
+                    if (keywords != null) {
+                        info.SetKeywords(keywords.GetValue());
+                    }
+                    else {
+                        String keywordsStr = FetchArrayIntoString(meta, XMPConst.NS_DC, PdfConst.Subject);
+                        if (keywordsStr != null) {
+                            info.SetKeywords(keywordsStr);
+                        }
+                    }
+                    XMPProperty subject = meta.GetLocalizedText(XMPConst.NS_DC, PdfConst.Description, XMPConst.X_DEFAULT, XMPConst
+                        .X_DEFAULT);
+                    if (subject != null) {
+                        info.SetSubject(subject.GetValue());
+                    }
+                    XMPProperty creator = meta.GetProperty(XMPConst.NS_XMP, PdfConst.CreatorTool);
+                    if (creator != null) {
+                        info.SetCreator(creator.GetValue());
+                    }
+                    XMPProperty producer = meta.GetProperty(XMPConst.NS_PDF, PdfConst.Producer);
+                    if (producer != null) {
+                        info.Put(PdfName.Producer, new PdfString(producer.GetValue(), PdfEncodings.UNICODE_BIG));
+                    }
+                    XMPProperty trapped = meta.GetProperty(XMPConst.NS_PDF, PdfConst.Trapped);
+                    if (trapped != null) {
+                        info.SetTrapped(new PdfName(trapped.GetValue()));
+                    }
+                }
+                catch (XMPException) {
                 }
             }
         }

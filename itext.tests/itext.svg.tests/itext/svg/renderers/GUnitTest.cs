@@ -28,9 +28,9 @@ namespace iText.Svg.Renderers {
     [NUnit.Framework.Category("IntegrationTest")]
     public class GUnitTest : SvgIntegrationTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/gunit/";
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/GUnitTest/";
 
-        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/renderers/impl/gunit/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/renderers/GUnitTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {

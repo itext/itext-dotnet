@@ -48,10 +48,15 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void SimpleDocDefault() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "simpleDocDefault.pdf", new WriterProperties
-                ().SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "simpleDocDefault.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Paragraph h9 = new Paragraph("Header level 9");
@@ -66,7 +71,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void SimpleDocNullNsByDefault() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "simpleDocNullNsByDefault.pdf"
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "simpleDocNullNsByDefault.pdf"
                 , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             pdfDocument.GetTagStructureContext().SetDocumentDefaultNamespace(null);
@@ -82,7 +87,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void SimpleDocExplicitlyOldStdNs() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "simpleDocExplicitlyOldStdNs.pdf"
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "simpleDocExplicitlyOldStdNs.pdf"
                 , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             TagStructureContext tagsContext = pdfDocument.GetTagStructureContext();
@@ -100,8 +105,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void CustomRolesMappingPdf2() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "customRolesMappingPdf2.pdf", 
-                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "customRolesMappingPdf2.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             TagStructureContext tagsContext = pdfDocument.GetTagStructureContext();
             PdfNamespace stdNamespace2 = tagsContext.FetchNamespace(StandardNamespaces.PDF_2_0);
@@ -131,8 +136,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void CustomRolesMappingPdf17() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "customRolesMappingPdf17.pdf", 
-                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "customRolesMappingPdf17.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             PdfNamespace xhtmlNs = new PdfNamespace("http://www.w3.org/1999/xhtml");
             PdfNamespace html4Ns = new PdfNamespace("http://www.w3.org/TR/html4");
@@ -165,7 +170,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void DocWithExplicitAndImplicitDefaultNsAtTheSameTime() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithExplicitAndImplicitDefaultNsAtTheSameTime.pdf"
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "docWithExplicitAndImplicitDefaultNsAtTheSameTime.pdf"
                 , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             TagStructureContext tagsContext = pdfDocument.GetTagStructureContext();
@@ -216,8 +221,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void DocWithInvalidMapping01() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithInvalidMapping01.pdf", 
-                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "docWithInvalidMapping01.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             TagStructureContext tagsContext = pdfDocument.GetTagStructureContext();
             tagsContext.SetDocumentDefaultNamespace(null);
@@ -235,8 +240,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void DocWithInvalidMapping02() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithInvalidMapping02.pdf", 
-                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "docWithInvalidMapping02.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             TagStructureContext tagsContext = pdfDocument.GetTagStructureContext();
             tagsContext.SetDocumentDefaultNamespace(null);
@@ -253,8 +258,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void DocWithInvalidMapping03() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithInvalidMapping03.pdf", 
-                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "docWithInvalidMapping03.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             using (Document document = new Document(pdfDocument)) {
                 Paragraph customRolePara = new Paragraph("Hello world text.");
@@ -267,8 +272,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void DocWithInvalidMapping04() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithInvalidMapping04.pdf", 
-                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "docWithInvalidMapping04.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             TagStructureContext tagsCntxt = pdfDocument.GetTagStructureContext();
             PdfNamespace stdNs2 = tagsCntxt.FetchNamespace(StandardNamespaces.PDF_2_0);
@@ -287,8 +292,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void DocWithInvalidMapping05() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithInvalidMapping05.pdf", 
-                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "docWithInvalidMapping05.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             using (Document document = new Document(pdfDocument)) {
                 // deliberately creating namespace via constructor instead of using TagStructureContext#fetchNamespace
@@ -310,8 +315,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void DocWithInvalidMapping06() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithInvalidMapping06.pdf", 
-                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "docWithInvalidMapping06.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             TagStructureContext tagCntxt = pdfDocument.GetTagStructureContext();
@@ -337,8 +342,8 @@ namespace iText.Layout {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.CANNOT_RESOLVE_ROLE_IN_NAMESPACE_TOO_MUCH_TRANSITIVE_MAPPINGS
             , Count = 1)]
         public virtual void DocWithInvalidMapping07() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithInvalidMapping07.pdf", 
-                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "docWithInvalidMapping07.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             using (Document document = new Document(pdfDocument)) {
                 PdfNamespace stdNs2 = pdfDocument.GetTagStructureContext().FetchNamespace(StandardNamespaces.PDF_2_0);
@@ -362,8 +367,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void DocWithInvalidMapping08() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithInvalidMapping08.pdf", 
-                new WriterProperties().SetPdfVersion(PdfVersion.PDF_1_7)));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "docWithInvalidMapping08.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_1_7)));
             pdfDocument.SetTagged();
             using (Document document = new Document(pdfDocument)) {
                 Paragraph h9Para = new Paragraph("Header level 9");
@@ -377,8 +382,8 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.CREATED_ROOT_TAG_HAS_MAPPING)]
         public virtual void DocWithInvalidMapping09() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithInvalidMapping09.pdf", 
-                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "docWithInvalidMapping09.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             TagStructureContext tagsContext = pdfDocument.GetTagStructureContext();
             PdfNamespace ssn2 = tagsContext.FetchNamespace(StandardNamespaces.PDF_2_0);
@@ -392,8 +397,8 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.CREATED_ROOT_TAG_HAS_MAPPING)]
         public virtual void DocWithInvalidMapping10() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithInvalidMapping10.pdf", 
-                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "docWithInvalidMapping10.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             TagStructureContext tagsContext = pdfDocument.GetTagStructureContext();
             PdfNamespace ssn2 = tagsContext.FetchNamespace(StandardNamespaces.PDF_2_0);
@@ -407,8 +412,9 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void StampTest01() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleDocOldStdNs.pdf"), new PdfWriter
-                (destinationFolder + "stampTest01.pdf", new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleDocOldStdNs.pdf"), CompareTool
+                .CreateTestPdfWriter(destinationFolder + "stampTest01.pdf", new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_2_0)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             document.Add(new AreaBreak(AreaBreakType.LAST_PAGE)).Add(new AreaBreak(AreaBreakType.NEXT_PAGE)).Add(new Paragraph
@@ -419,7 +425,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void StampTest02() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleDocNoNs.pdf"), new PdfWriter
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleDocNoNs.pdf"), CompareTool.CreateTestPdfWriter
                 (destinationFolder + "stampTest02.pdf", new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
@@ -431,8 +437,9 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void StampTest03() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleDocNewStdNs.pdf"), new PdfWriter
-                (destinationFolder + "stampTest03.pdf", new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleDocNewStdNs.pdf"), CompareTool
+                .CreateTestPdfWriter(destinationFolder + "stampTest03.pdf", new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_2_0)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             document.Add(new AreaBreak(AreaBreakType.LAST_PAGE)).Add(new AreaBreak(AreaBreakType.NEXT_PAGE)).Add(new Paragraph
@@ -443,8 +450,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void StampTest04() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleDoc1_7.pdf"), new PdfWriter(
-                destinationFolder + "stampTest04.pdf", new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleDoc1_7.pdf"), CompareTool.CreateTestPdfWriter
+                (destinationFolder + "stampTest04.pdf", new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             document.Add(new AreaBreak(AreaBreakType.LAST_PAGE)).Add(new AreaBreak(AreaBreakType.NEXT_PAGE)).Add(new Paragraph
@@ -455,8 +462,9 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void StampTest05() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleDocNewStdNs.pdf"), new PdfWriter
-                (destinationFolder + "stampTest05.pdf", new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleDocNewStdNs.pdf"), CompareTool
+                .CreateTestPdfWriter(destinationFolder + "stampTest05.pdf", new WriterProperties().SetPdfVersion(PdfVersion
+                .PDF_2_0)));
             TagStructureContext tagCntxt = pdfDocument.GetTagStructureContext();
             PdfNamespace xhtmlNs = tagCntxt.FetchNamespace("http://www.w3.org/1999/xhtml");
             PdfNamespace ssn2 = tagCntxt.FetchNamespace(StandardNamespaces.PDF_2_0);
@@ -472,8 +480,8 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void CopyTest01() {
             PdfDocument srcPdf = new PdfDocument(new PdfReader(sourceFolder + "simpleDocNewStdNs.pdf"));
-            PdfDocument outPdf = new PdfDocument(new PdfWriter(destinationFolder + "copyTest01.pdf", new WriterProperties
-                ().SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfDocument outPdf = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "copyTest01.pdf", 
+                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             outPdf.SetTagged();
             srcPdf.CopyPagesTo(1, 1, outPdf);
             srcPdf.Close();
@@ -483,8 +491,8 @@ namespace iText.Layout {
 
         [NUnit.Framework.Test]
         public virtual void DocWithSectInPdf2() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithSectInPdf2.pdf", new WriterProperties
-                ().SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "docWithSectInPdf2.pdf"
+                , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Div section = new Div();
@@ -507,8 +515,8 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void CopyTest02() {
             PdfDocument srcPdf = new PdfDocument(new PdfReader(sourceFolder + "docSeveralNs.pdf"));
-            PdfDocument outPdf = new PdfDocument(new PdfWriter(destinationFolder + "copyTest02.pdf", new WriterProperties
-                ().SetPdfVersion(PdfVersion.PDF_2_0)));
+            PdfDocument outPdf = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "copyTest02.pdf", 
+                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             outPdf.SetTagged();
             srcPdf.CopyPagesTo(1, 1, outPdf);
             srcPdf.Close();
@@ -604,9 +612,9 @@ namespace iText.Layout {
             CompareTool compareTool = new CompareTool();
             String outPdf = destinationFolder + outFileName;
             String cmpPdf = sourceFolder + cmpFileName;
+            String taggedStructureDifferences = compareTool.CompareTagStructures(outPdf, cmpPdf);
             String contentDifferences = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, testName + "Diff_"
                 );
-            String taggedStructureDifferences = compareTool.CompareTagStructures(outPdf, cmpPdf);
             String errorMessage = "";
             errorMessage += taggedStructureDifferences == null ? "" : taggedStructureDifferences + "\n";
             errorMessage += contentDifferences == null ? "" : contentDifferences;

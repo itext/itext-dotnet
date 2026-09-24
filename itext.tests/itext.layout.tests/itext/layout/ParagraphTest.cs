@@ -43,11 +43,16 @@ namespace iText.Layout {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void CannotPlaceABigChunkOnALineTest01() {
             String outFileName = DESTINATION_FOLDER + "cannotPlaceABigChunkOnALineTest01.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_cannotPlaceABigChunkOnALineTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Paragraph p = new Paragraph().SetBorder(new SolidBorder(ColorConstants.YELLOW, 0));
             p.Add(new Text("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa").SetBorder
@@ -63,7 +68,7 @@ namespace iText.Layout {
         public virtual void CannotPlaceABigChunkOnALineTest02() {
             String outFileName = DESTINATION_FOLDER + "cannotPlaceABigChunkOnALineTest02.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_cannotPlaceABigChunkOnALineTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Paragraph p = new Paragraph().SetBorder(new SolidBorder(ColorConstants.YELLOW, 0));
             p.Add(new Text("smaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaall").SetFontSize(5).SetBorder
@@ -80,7 +85,7 @@ namespace iText.Layout {
         public virtual void ForceOverflowForTextRendererPartialResult01() {
             String outFileName = DESTINATION_FOLDER + "forceOverflowForTextRendererPartialResult01.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_forceOverflowForTextRendererPartialResult01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Paragraph p = new Paragraph().SetBorder(new SolidBorder(ColorConstants.YELLOW, 0)).SetTextAlignment(TextAlignment
                 .RIGHT);
@@ -100,7 +105,7 @@ namespace iText.Layout {
             // TODO DEVSIX-4622
             String outFileName = DESTINATION_FOLDER + "wordWasSplitAndItWillFitOntoNextLineTest02.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_wordWasSplitAndItWillFitOntoNextLineTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().Add(new Text("Short").SetBackgroundColor(ColorConstants.YELLOW)).Add
                 (new Text(" Loooooooooooooooooooong").SetBackgroundColor(ColorConstants.RED)).SetWidth(90).SetBorder(new 
@@ -115,7 +120,7 @@ namespace iText.Layout {
         public virtual void ParagraphUsingSvgRenderingModeTest() {
             String outFileName = DESTINATION_FOLDER + "paragraphUsingSvgRenderingMode.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_paragraphUsingSvgRenderingMode.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     Paragraph paragraph1 = new Paragraph().SetBorder(new SolidBorder(ColorConstants.YELLOW, 1));
                     paragraph1.SetWidth(200).SetHorizontalAlignment(HorizontalAlignment.RIGHT);
@@ -142,7 +147,7 @@ namespace iText.Layout {
         public virtual void LeadingInHtmlModeTest() {
             String outFileName = DESTINATION_FOLDER + "leadingInHtmlModeTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_leadingInHtmlModeTest.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDocument)) {
                     String longText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus magna. " + "Cras in mi at felis aliquet congue. Ut a est eget ligula molestie gravida. Curabitur massa.";
                     Paragraph paragraph1 = new Paragraph(longText).SetBorder(new SolidBorder(ColorConstants.GREEN, 1));

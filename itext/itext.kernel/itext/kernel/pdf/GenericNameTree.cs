@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 
 namespace iText.Kernel.Pdf {
@@ -33,8 +32,7 @@ namespace iText.Kernel.Pdf {
     /// such as the Dests tree, the ID tree of structure elements and the embedded file tree.
     /// </summary>
     public class GenericNameTree : IPdfNameTreeAccess {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.GenericNameTree
-            ));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.GenericNameTree));
 
         private const int NODE_SIZE = 40;
 
@@ -143,7 +141,7 @@ namespace iText.Kernel.Pdf {
                     return;
                 }
                 else {
-                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.NAME_ALREADY_EXISTS_IN_THE_NAME_TREE
+                    LOGGER.Warn(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.NAME_ALREADY_EXISTS_IN_THE_NAME_TREE
                         , key));
                     if (onErrorAction != null) {
                         onErrorAction(pdfDoc);

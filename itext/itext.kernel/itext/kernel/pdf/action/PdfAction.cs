@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.IO.Util;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
@@ -38,6 +37,8 @@ namespace iText.Kernel.Pdf.Action {
     /// An action dictionary defines the characteristics and behaviour of an action.
     /// </remarks>
     public class PdfAction : PdfObjectWrapper<PdfDictionary> {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.Action.PdfAction));
+
         /// <summary>A possible submit value</summary>
         public const int SUBMIT_EXCLUDE = 1;
 
@@ -233,8 +234,7 @@ namespace iText.Kernel.Pdf.Action {
                 action.Put(PdfName.D, destination.GetPdfObject());
             }
             else {
-                ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Action.PdfAction)).LogWarning(iText.IO.Logs.IoLogMessageConstant
-                    .EMBEDDED_GO_TO_DESTINATION_NOT_SPECIFIED);
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.EMBEDDED_GO_TO_DESTINATION_NOT_SPECIFIED);
             }
             if (targetDictionary != null) {
                 action.Put(PdfName.T, targetDictionary.GetPdfObject());
@@ -707,8 +707,8 @@ namespace iText.Kernel.Pdf.Action {
                                 );
                         }
                         else {
-                            ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Action.PdfAction)).LogWarning(iText.IO.Logs.IoLogMessageConstant
-                                .STRUCTURE_ELEMENT_REPLACED_BY_ITS_ID_IN_STRUCTURE_DESTINATION);
+                            LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.STRUCTURE_ELEMENT_REPLACED_BY_ITS_ID_IN_STRUCTURE_DESTINATION
+                                );
                             ((PdfArray)destination.GetPdfObject()).Set(0, id);
                             destination.GetPdfObject().SetModified();
                         }
@@ -730,8 +730,7 @@ namespace iText.Kernel.Pdf.Action {
         /// </param>
         private static void ValidateNotRemoteDestination(PdfDestination destination) {
             if (destination is PdfExplicitRemoteGoToDestination) {
-                ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Action.PdfAction)).LogWarning(iText.IO.Logs.IoLogMessageConstant
-                    .INVALID_DESTINATION_TYPE);
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.INVALID_DESTINATION_TYPE);
             }
             else {
                 if (destination is PdfExplicitDestination) {
@@ -739,8 +738,7 @@ namespace iText.Kernel.Pdf.Action {
                     // destination page is in a current PDF document. See section 12.3.2.2 of ISO 32000-1.
                     PdfObject firstObj = ((PdfArray)destination.GetPdfObject()).Get(0);
                     if (firstObj.IsNumber()) {
-                        ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Action.PdfAction)).LogWarning(iText.IO.Logs.IoLogMessageConstant
-                            .INVALID_DESTINATION_TYPE);
+                        LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.INVALID_DESTINATION_TYPE);
                     }
                 }
             }

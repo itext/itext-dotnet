@@ -43,14 +43,19 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
+        [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT, Count = 1)]
         // TODO DEVSIX-1977 partial layout result due to fixed height should not contain not layouted kids
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED, Count = 6)]
-        [NUnit.Framework.Test]
         public virtual void DivWithParagraphsAndFixedPositionTest() {
             String outFileName = destinationFolder + "blockWithLimitedHeightAndFixedPositionTest.pdf";
             String cmpFileName = sourceFolder + "cmp_blockWithLimitedHeightAndFixedPositionTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Div block = new Div();
             block.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
@@ -76,7 +81,7 @@ namespace iText.Layout {
         public virtual void ListWithFixedPositionTest() {
             String outFileName = destinationFolder + "listWithFixedPositionTest.pdf";
             String cmpFileName = sourceFolder + "cmp_listWithFixedPositionTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             List list = new List();
             list.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));

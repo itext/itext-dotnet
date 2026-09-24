@@ -101,7 +101,7 @@ namespace iText.Pdfua.Checkers {
                 }
                 else {
                     if (pdfConformance.GetUAConformance() == PdfUAConformance.PDF_UA_2) {
-                        framework.AssertOnlyITextFail("imageWithEmptyAltDescription", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT
+                        framework.AssertITextFailVeraPdfValid("imageWithEmptyAltDescription", PdfUAExceptionMessageConstants.IMAGE_SHALL_HAVE_ALT
                             );
                     }
                 }

@@ -646,7 +646,7 @@ namespace iText.Pdfua.Checkers {
                     ).CloseTag().RestoreState().CloseTag();
             }
             );
-            framework.AssertOnlyVeraPdfFail("validRoleAddedInsideMarkedContentMCR_IN_MCR");
+            framework.AssertVeraPdfFailITextValid("validRoleAddedInsideMarkedContentMCR_IN_MCR");
         }
 
         [NUnit.Framework.TestCaseSource("Data")]

@@ -29,10 +29,12 @@ using iText.Commons;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Bouncycastle.Asn1.Ocsp;
+using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
@@ -46,9 +48,13 @@ namespace iText.Signatures {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
 
-        /// <summary>The Logger instance</summary>
-        protected internal static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.LtvVerifier
-            ));
+        /// <summary>The Logger instance.</summary>
+        [Obsolete]
+        protected internal static readonly ILogger LOGGER = ITextLogManager
+                // on removal of slf4j logger field rename `LAZY_LOGGER` into LOGGER
+                .GetLogger(typeof(iText.Signatures.LtvVerifier));
+
+        private static readonly LazyLogger LAZY_LOGGER = new LazyLogger(typeof(iText.Signatures.LtvVerifier));
 
         /// <summary>Option to specify level of verification; signing certificate only or the entire chain.</summary>
         protected internal LtvVerification.CertificateOption option = LtvVerification.CertificateOption.SIGNING_CERTIFICATE;
@@ -148,7 +154,7 @@ namespace iText.Signatures {
         /// objects
         /// </returns>
         public virtual IList<VerificationOK> VerifySignature() {
-            LOGGER.LogInformation("Verifying signature.");
+            LAZY_LOGGER.Info(() => "Verifying signature.");
             IList<VerificationOK> result = new List<VerificationOK>();
             // Get the certificate chain
             IX509Certificate[] chain = pkcs7.GetSignCertificateChain();
@@ -170,7 +176,8 @@ namespace iText.Signatures {
                     issuerCert = (IX509Certificate)chain[i];
                 }
                 // now lets verify the certificate
-                LOGGER.LogInformation(BOUNCY_CASTLE_FACTORY.CreateX500Name(signCert).ToString());
+                IX500Name x500Name = BOUNCY_CASTLE_FACTORY.CreateX500Name(signCert);
+                LAZY_LOGGER.Info(() => x500Name.ToString());
                 IList<VerificationOK> list = Verify(signCert, issuerCert, signDate);
                 if (list.Count == 0) {
                     try {
@@ -215,7 +222,7 @@ namespace iText.Signatures {
                     chain[i - 1].Verify(chain[i].GetPublicKey());
                 }
             }
-            LOGGER.LogInformation("All certificates are valid on " + signDate.ToString());
+            LAZY_LOGGER.Info(() => "All certificates are valid on " + signDate.ToString());
         }
 
         /// <summary>Verifies certificates against a list of CRLs and OCSP responses.</summary>
@@ -246,7 +253,7 @@ namespace iText.Signatures {
 
         /// <summary>Switches to the previous revision.</summary>
         public virtual void SwitchToPreviousRevision() {
-            LOGGER.LogInformation("Switching to previous revision.");
+            LAZY_LOGGER.Info(() => "Switching to previous revision.");
             latestRevision = false;
             dss = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.DSS);
             DateTime cal = pkcs7.GetTimeStampDate();
@@ -264,12 +271,12 @@ namespace iText.Signatures {
                     names = sgnUtil.GetSignatureNames();
                     signatureName = names[names.Count - 1];
                     pkcs7 = CoversWholeDocument();
-                    LOGGER.LogInformation(MessageFormatUtil.Format("Checking {0}signature {1}", pkcs7.IsTsp() ? "document-level timestamp "
+                    LAZY_LOGGER.Info(() => MessageFormatUtil.Format("Checking {0}signature {1}", pkcs7.IsTsp() ? "document-level timestamp "
                          : "", signatureName));
                 }
             }
             else {
-                LOGGER.LogInformation("No signatures in revision");
+                LAZY_LOGGER.Info(() => "No signatures in revision");
                 pkcs7 = null;
             }
         }
@@ -350,7 +357,7 @@ namespace iText.Signatures {
             signatureName = names[names.Count - 1];
             this.signDate = DateTimeUtil.GetCurrentUtcTime();
             pkcs7 = CoversWholeDocument();
-            LOGGER.LogInformation(MessageFormatUtil.Format("Checking {0}signature {1}", pkcs7.IsTsp() ? "document-level timestamp "
+            LAZY_LOGGER.Info(() => MessageFormatUtil.Format("Checking {0}signature {1}", pkcs7.IsTsp() ? "document-level timestamp "
                  : "", signatureName));
         }
 
@@ -362,13 +369,13 @@ namespace iText.Signatures {
         protected internal virtual PdfPKCS7 CoversWholeDocument() {
             PdfPKCS7 pkcs7 = sgnUtil.ReadSignatureData(signatureName);
             if (sgnUtil.SignatureCoversWholeDocument(signatureName)) {
-                LOGGER.LogInformation("The timestamp covers whole document.");
+                LAZY_LOGGER.Info(() => "The timestamp covers whole document.");
             }
             else {
                 throw new VerificationException((IX509Certificate)null, "Signature doesn't cover whole document.");
             }
             if (pkcs7.VerifySignatureIntegrityAndAuthenticity()) {
-                LOGGER.LogInformation("The signed document has not been modified.");
+                LAZY_LOGGER.Info(() => "The signed document has not been modified.");
                 return pkcs7;
             }
             else {

@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
@@ -37,7 +36,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
     /// This property is a shorthand for the column-rule-width, column-rule-style, and column-rule-color  properties.
     /// </remarks>
     public class ColumnRuleShortHandResolver : IShorthandResolver {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.ColumnRuleShortHandResolver
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.ColumnRuleShortHandResolver
             ));
 
         private readonly CssEnumValidator borderStyleValidators = new CssEnumValidator(CommonCssConstants.BORDER_STYLE_VALUES
@@ -110,7 +109,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
 
         private static IList<CssDeclaration> HandleExpressionError(String logMessage, String attribute, String shorthandExpression
             ) {
-            LOGGER.LogWarning(MessageFormatUtil.Format(logMessage, attribute, shorthandExpression));
+            LOGGER.Warn(() => MessageFormatUtil.Format(logMessage, attribute, shorthandExpression));
             return JavaCollectionsUtil.EmptyList<CssDeclaration>();
         }
     }

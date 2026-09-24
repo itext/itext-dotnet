@@ -47,6 +47,11 @@ namespace iText.Forms.Fields {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         public static IEnumerable<Object[]> RotationRelatedProperties() {
             return JavaUtil.ArraysAsList(new Object[][] { new Object[] { new int[] { 360, 90, 180, 270 }, new int[] { 
                 0, 0, 0, 0 }, true, "fieldsOnRotatedPagesDefault" }, new Object[] { new int[] { 360, 90, 180, 270 }, new 
@@ -70,7 +75,7 @@ namespace iText.Forms.Fields {
         }
 
         private void FillForm(int[] pageRotation, int[] fieldRotation, bool ignorePageRotation, String outPdf) {
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 PdfAcroForm form = PdfFormCreator.GetAcroForm(document.GetPdfDocument(), true);
                 for (int i = 1; i < 5; ++i) {
                     String caption = GenerateCaption(pageRotation[i - 1], fieldRotation[i - 1]);

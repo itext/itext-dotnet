@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
@@ -38,7 +37,7 @@ using iText.Kernel.Validation.Context;
 namespace iText.Kernel.Pdf {
     /// <summary>The root of a document’s object hierarchy.</summary>
     public class PdfCatalog : PdfObjectWrapper<PdfDictionary> {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfCatalog));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.PdfCatalog));
 
         private const String ROOT_OUTLINE_TITLE = "Outlines";
 
@@ -181,8 +180,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>PdfCatalog will be flushed in PdfDocument.close().</summary>
         /// <remarks>PdfCatalog will be flushed in PdfDocument.close(). User mustn't flush PdfCatalog!</remarks>
         public override void Flush() {
-            ILogger logger = ITextLogManager.GetLogger(typeof(PdfDocument));
-            logger.LogWarning("PdfCatalog cannot be flushed manually");
+            LOGGER.Warn(() => "PdfCatalog cannot be flushed manually");
         }
 
         /// <summary>A value specifying a destination that shall be displayed when the document is opened.</summary>
@@ -737,7 +735,7 @@ namespace iText.Kernel.Pdf {
                             throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_DICTIONARY_HAS_INFINITE_LOOP
                                 , first));
                         }
-                        LOGGER.LogWarning(MessageFormatUtil.Format(KernelLogMessageConstant.CORRUPTED_OUTLINE_DICTIONARY_HAS_INFINITE_LOOP
+                        LOGGER.Warn(() => MessageFormatUtil.Format(KernelLogMessageConstant.CORRUPTED_OUTLINE_DICTIONARY_HAS_INFINITE_LOOP
                             , first));
                         return;
                     }
@@ -753,7 +751,7 @@ namespace iText.Kernel.Pdf {
                                 throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.CORRUPTED_OUTLINE_DICTIONARY_HAS_INFINITE_LOOP
                                     , next));
                             }
-                            LOGGER.LogWarning(MessageFormatUtil.Format(KernelLogMessageConstant.CORRUPTED_OUTLINE_DICTIONARY_HAS_INFINITE_LOOP
+                            LOGGER.Warn(() => MessageFormatUtil.Format(KernelLogMessageConstant.CORRUPTED_OUTLINE_DICTIONARY_HAS_INFINITE_LOOP
                                 , next));
                             return;
                         }
@@ -891,7 +889,7 @@ namespace iText.Kernel.Pdf {
                 }
                 catch (IndexOutOfRangeException) {
                     pageObj = null;
-                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OUTLINE_DESTINATION_PAGE_NUMBER_IS_OUT_OF_BOUNDS
+                    LOGGER.Warn(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.OUTLINE_DESTINATION_PAGE_NUMBER_IS_OUT_OF_BOUNDS
                         , pageNumber));
                 }
             }

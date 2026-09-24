@@ -44,7 +44,8 @@ namespace iText.Kernel.Font {
             String outFileName = DESTINATION_FOLDER + "flushMultCIDToSingleUnicodeDefaultMapping.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_flushMultCIDToSingleUnicodeDefaultMapping.pdf";
             int fontObjNumber = 4;
-            using (PdfDocument pdf = new PdfDocument(new PdfReader(sourceFileName), new PdfWriter(outFileName))) {
+            using (PdfDocument pdf = new PdfDocument(new PdfReader(sourceFileName), CompareTool.CreateTestPdfWriter(outFileName
+                ))) {
                 PdfType3Font font = (PdfType3Font)PdfFontFactory.CreateFont((PdfDictionary)pdf.GetPdfObject(fontObjNumber)
                     );
                 font.Flush();
@@ -59,7 +60,8 @@ namespace iText.Kernel.Font {
             String outFileName = DESTINATION_FOLDER + "flushMultCIDToSingleUnicodeToUnicodeCMap.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_flushMultCIDToSingleUnicodeToUnicodeCMap.pdf";
             int fontObjNumber = 4;
-            using (PdfDocument pdf = new PdfDocument(new PdfReader(sourceFileName), new PdfWriter(outFileName))) {
+            using (PdfDocument pdf = new PdfDocument(new PdfReader(sourceFileName), CompareTool.CreateTestPdfWriter(outFileName
+                ))) {
                 PdfType3Font font = (PdfType3Font)PdfFontFactory.CreateFont((PdfDictionary)pdf.GetPdfObject(fontObjNumber)
                     );
                 font.Flush();

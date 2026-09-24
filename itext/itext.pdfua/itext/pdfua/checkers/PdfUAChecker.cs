@@ -22,13 +22,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Datastructures;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Constants;
+using iText.IO.Font.Otf;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
@@ -53,6 +53,8 @@ namespace iText.Pdfua.Checkers {
     /// pdfua project.
     /// </remarks>
     public abstract class PdfUAChecker : IValidationChecker {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Pdfua.Checkers.PdfUAChecker));
+
 //\cond DO_NOT_DOCUMENT
         internal static readonly Func<String, PdfException> EXCEPTION_SUPPLIER = (msg) => new PdfUAConformanceException
             (msg);
@@ -72,8 +74,7 @@ namespace iText.Pdfua.Checkers {
         /// <summary>Logs a warn on page flushing that page flushing is disabled in PDF/UA mode.</summary>
         public virtual void WarnOnPageFlush() {
             if (!warnedOnPageFlush) {
-                ITextLogManager.GetLogger(typeof(iText.Pdfua.Checkers.PdfUAChecker)).LogWarning(PdfUALogMessageConstants.PAGE_FLUSHING_DISABLED
-                    );
+                LOGGER.Warn(() => PdfUALogMessageConstants.PAGE_FLUSHING_DISABLED);
                 warnedOnPageFlush = true;
             }
         }
@@ -280,6 +281,22 @@ namespace iText.Pdfua.Checkers {
             if (index != -1) {
                 throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
                     , str[index]));
+            }
+        }
+
+        /// <summary>Checks that embedded fonts define all glyphs referenced for rendering within the conforming file.
+        ///     </summary>
+        /// <param name="glyphLine">the glyph line to check</param>
+        /// <param name="font">the font to check</param>
+        protected internal virtual void CheckGlyphLine(GlyphLine glyphLine, PdfFont font) {
+            for (int i = glyphLine.GetStart(); i < glyphLine.GetEnd(); i++) {
+                Glyph glyph = glyphLine.Get(i);
+                if (glyph.GetCode() == 0 || font.GetFontProgram().GetGlyphByCode(glyph.GetCode()) == null || !glyph.HasValidUnicode
+                    ()) {
+                    // .notdef glyph or glyph isn't present in a font or glyph doesn't have a valid unicode value
+                    throw new PdfUAConformanceException(MessageFormatUtil.Format(PdfUAExceptionMessageConstants.GLYPH_IS_NOT_DEFINED_OR_WITHOUT_UNICODE
+                        , glyph.GetUnicodeString()));
+                }
             }
         }
 

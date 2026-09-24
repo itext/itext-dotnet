@@ -31,6 +31,14 @@ namespace iText.IO.Font.Otf {
     public class GposLookupType6 : OpenTableLookup {
         private readonly IList<GposLookupType6.MarkToBaseMark> marksbases;
 
+        /// <summary>Creates a new GPOS Lookup Type 6.</summary>
+        /// <param name="openReader">the OpenType font reader</param>
+        /// <param name="lookupFlag">
+        /// specifies processing options, e.g. whether to skip base glyphs, marks or
+        /// ligatures during glyph substitution or positioning. See
+        /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+        /// </param>
+        /// <param name="subTableLocations">the sub table locations</param>
         public GposLookupType6(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations)
             : base(openReader, lookupFlag, subTableLocations) {
             marksbases = new List<GposLookupType6.MarkToBaseMark>();

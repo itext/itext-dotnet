@@ -55,6 +55,11 @@ namespace iText.Forms.Form.Element {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void RenderingModeDefaultValueTest() {
             CheckBox checkBoxPdf = new CheckBox("test");
@@ -150,7 +155,7 @@ namespace iText.Forms.Form.Element {
         public virtual void BasicCheckBoxDrawingTestHtmlMode() {
             String outPdf = DESTINATION_FOLDER + "basicCheckBoxHtml.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_basicCheckBoxHtml.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 CheckBox checkBoxUnset = new CheckBox("test");
                 checkBoxUnset.SetBorder(new SolidBorder(ColorConstants.RED, 1));
                 checkBoxUnset.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);
@@ -179,7 +184,7 @@ namespace iText.Forms.Form.Element {
         public virtual void BasicCheckBoxDrawingTestPdfMode() {
             String outPdf = DESTINATION_FOLDER + "basicCheckBoxPdf.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_basicCheckBoxPdf.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 //should be invisble because there is no default border
                 CheckBox checkBoxUnset = new CheckBox("test");
                 checkBoxUnset.SetBorder(new SolidBorder(ColorConstants.RED, 1));
@@ -205,7 +210,7 @@ namespace iText.Forms.Form.Element {
         public virtual void BasicCheckBoxDrawingTestPdfAMode() {
             String outPdf = DESTINATION_FOLDER + "basicCheckBoxPdfA.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_basicCheckBoxPdfA.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 //should be invisble because there is no default border
                 CheckBox checkBoxUnset = new CheckBox("test").SetPdfConformance(PdfConformance.PDF_A_1B);
                 document.Add(checkBoxUnset);
@@ -229,7 +234,7 @@ namespace iText.Forms.Form.Element {
             String outPdf = DESTINATION_FOLDER + "checkBoxSetSize.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_checkBoxSetSize.pdf";
             int scaleFactor = 5;
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 for (int i = 1; i < 5; i++) {
                     int size = i * i * scaleFactor;
                     counter = GenerateCheckBoxesForAllRenderingModes(document, counter, (checkBox) => {
@@ -247,7 +252,7 @@ namespace iText.Forms.Form.Element {
             int counter = 0;
             String outPdf = DESTINATION_FOLDER + "checkBoxSetSizeBadSize.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_checkBoxSetSizeBadSize.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 counter = GenerateCheckBoxes(document, counter, (checkBox) => {
                     checkBox.SetSize(0);
                 }
@@ -265,7 +270,7 @@ namespace iText.Forms.Form.Element {
             int counter = 0;
             String outPdf = DESTINATION_FOLDER + "checkBox_setBorder.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_setBorder.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 counter = GenerateCheckBoxesForAllRenderingModes(document, counter, (checkBox) => {
                     checkBox.SetBorder(new SolidBorder(ColorConstants.GREEN, .5f));
                 }
@@ -287,7 +292,7 @@ namespace iText.Forms.Form.Element {
             int counter = 0;
             String outPdf = DESTINATION_FOLDER + "checkBox_setBackground.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_checkBox_setBackground.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 GenerateCheckBoxesForAllRenderingModes(document, counter, (checkBox) => {
                     checkBox.SetBackgroundColor(ColorConstants.MAGENTA);
                 }
@@ -300,7 +305,7 @@ namespace iText.Forms.Form.Element {
         public virtual void SetBorderTestSmallDefaultsToMinValue() {
             String outPdf = DESTINATION_FOLDER + "checkBox_setSmallBorder.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_checkBox_setSmallBorder.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 float?[] i = new float?[] { .1f };
                 document.Add(new Paragraph("Non interactive"));
                 for (int j = 0; j < 30; j++) {
@@ -327,7 +332,7 @@ namespace iText.Forms.Form.Element {
             int counter = 0;
             String outPdf = DESTINATION_FOLDER + "checkBox_setCheckType.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_checkBox_setCheckType.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 foreach (CheckBoxType enumConstant in EnumUtil.GetAllValuesOfEnum<CheckBoxType>()) {
                     counter = GenerateCheckBoxes(document, counter, (checkBox) => {
                         checkBox.SetCheckBoxType(enumConstant);
@@ -348,7 +353,7 @@ namespace iText.Forms.Form.Element {
             int counter = 0;
             String outPdf = DESTINATION_FOLDER + "checkBox_setConformanceLevel.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_checkBox_setConformanceLevel.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 foreach (CheckBoxType enumConstant in EnumUtil.GetAllValuesOfEnum<CheckBoxType>()) {
                     counter = GenerateCheckBoxes(document, counter, (checkBox) => {
                         checkBox.SetSize(20);
@@ -375,7 +380,7 @@ namespace iText.Forms.Form.Element {
                 );
             }
             MemoryStream bais = new MemoryStream(baos.ToArray());
-            PdfDocument pdfDocument = new PdfDocument(new PdfReader(bais), new PdfWriter(outPdf));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(bais), CompareTool.CreateTestPdfWriter(outPdf));
             PdfAcroForm acroForm = PdfFormCreator.GetAcroForm(pdfDocument, true);
             foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetAllFormFields()) {
                 String key = entry.Key;
@@ -390,7 +395,7 @@ namespace iText.Forms.Form.Element {
         public virtual void CheckBoxWithMarginsTest() {
             String outPdf = DESTINATION_FOLDER + "checkBoxWithMargins.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_checkBoxWithMargins.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Div div = new Div().SetBackgroundColor(ColorConstants.PINK);
                 CheckBox checkBox = new CheckBox("check");
                 checkBox.SetInteractive(true);
@@ -410,7 +415,7 @@ namespace iText.Forms.Form.Element {
         public virtual void BorderBoxesTest() {
             String outPdf = DESTINATION_FOLDER + "borderBoxes.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_borderBoxes.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 // BORDER_BOX
                 CheckBox interactiveCheckBox1 = new CheckBox("checkBox1").SetBorder(new SolidBorder(ColorConstants.PINK, 10
                     )).SetSize(50).SetChecked(false);
@@ -443,7 +448,7 @@ namespace iText.Forms.Form.Element {
         public virtual void AddFieldWithTwoWidgetsTest() {
             String outPdf = DESTINATION_FOLDER + "fieldWithTwoWidgets.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_fieldWithTwoWidgets.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 // Create checkboxes using html element.
                 CheckBox checkBox1 = new CheckBox("checkbox");
                 checkBox1.SetInteractive(true);
@@ -471,7 +476,7 @@ namespace iText.Forms.Form.Element {
         public virtual void MultiPageCheckboxFieldTest() {
             String outPdf = DESTINATION_FOLDER + "multiPageCheckboxField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_multiPageCheckBoxField.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfWriter(outPdf))) {
+            using (PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(document, true);
                 for (int i = 0; i < 10; i++) {
                     document.AddNewPage();
@@ -518,7 +523,7 @@ namespace iText.Forms.Form.Element {
             int counter = 0;
             String outPdf = DESTINATION_FOLDER + "basicCheckboxTagged.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_basicCheckboxTagged.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 document.GetPdfDocument().SetTagged();
                 counter = GenerateCheckBoxes(document, counter, (checkBox) => {
                 }
@@ -534,7 +539,7 @@ namespace iText.Forms.Form.Element {
         public virtual void SetBordersTest() {
             String outPdf = DESTINATION_FOLDER + "checkBoxSetBorders.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_checkBoxSetBorders.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 float?[] i = new float?[] { .1f, .2f, .3f, .4f };
                 document.Add(new Paragraph("Test different borders"));
                 for (int j = 0; j < 30; j++) {

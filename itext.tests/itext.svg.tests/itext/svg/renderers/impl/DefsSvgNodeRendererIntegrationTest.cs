@@ -27,34 +27,34 @@ using iText.Test;
 namespace iText.Svg.Renderers.Impl {
     [NUnit.Framework.Category("IntegrationTest")]
     public class DefsSvgNodeRendererIntegrationTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/DefsSvgNodeRendererTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/renderers/impl/DefsSvgNodeRendererTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/renderers/impl/DefsSvgNodeRendererTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void DefsWithNoChildrenTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "onlyDefsWithNoChildren");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "onlyDefsWithNoChildren");
         }
 
         [NUnit.Framework.Test]
         public virtual void DefsWithOneChildTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "onlyDefsWithOneChild");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "onlyDefsWithOneChild");
         }
 
         [NUnit.Framework.Test]
         public virtual void DefsWithMultipleChildrenTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "onlyDefsWithMultipleChildren");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "onlyDefsWithMultipleChildren");
         }
 
         [NUnit.Framework.Test]
         public virtual void DefsWithOneChildAndNonDefsBeingDrawnTest() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "defsWithOneChildAndNonDefsBeingDrawn");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "defsWithOneChildAndNonDefsBeingDrawn");
         }
     }
 }

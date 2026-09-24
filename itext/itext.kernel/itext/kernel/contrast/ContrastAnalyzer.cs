@@ -23,10 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Logging;
 using Paths = System.Collections.Generic.List<System.Collections.Generic.List<iText.Kernel.Pdf.Canvas.Parser.ClipperLib.IntPoint>>;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -84,8 +83,7 @@ namespace iText.Kernel.Contrast {
     /// <seealso cref="ColorContrastCalculator"/>
     public class ContrastAnalyzer {
         //TODO DEVSIX-9718 Improve clip path handling in contrast analysis
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Contrast.ContrastAnalyzer
-            ));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Contrast.ContrastAnalyzer));
 
         private bool checkForIndividualCharacters;
 
@@ -171,7 +169,7 @@ namespace iText.Kernel.Contrast {
         /// </returns>
         public virtual IList<ContrastResult> CheckPageContrast(PdfPage page) {
             if (IsPageOrUnderlyingStreamFlushed(page)) {
-                LOGGER.LogWarning(KernelLogMessageConstant.PAGE_IS_FLUSHED_NO_CONTRAST);
+                LOGGER.Warn(() => KernelLogMessageConstant.PAGE_IS_FLUSHED_NO_CONTRAST);
                 return new List<ContrastResult>();
             }
             IList<ContrastResult> contrastResults = new List<ContrastResult>();
@@ -268,7 +266,7 @@ namespace iText.Kernel.Contrast {
                 if (hasTooManyPoints) {
                     // instead of warning we could kinda flatten the paths here to reduce the amount of points
                     // the big amount of background mainly happens on svg images with lot of details
-                    LOGGER.LogWarning("Skipping contrast calculation between text and background for " + "text: '" + textContrastInfo
+                    LOGGER.Warn(() => "Skipping contrast calculation between text and background for " + "text: '" + textContrastInfo
                         .GetText() + "' on page " + pageNumber + " because one of them has too " + "many points in polygon. Text points: "
                          + textContrastInfo.GetPath().GetSubpaths().Count + " Background points: " + backGround.GetPath().GetSubpaths
                         ().Count + " if this is intended you can increase the maxAmountOfPointInPolygon property.");
@@ -338,7 +336,7 @@ namespace iText.Kernel.Contrast {
                                     return new DeviceRgb(components[0], components[1], components[2]);
                                 }
                                 else {
-                                    LOGGER.LogWarning(MessageFormatUtil.Format(KernelLogMessageConstant.UNSUPPORTED_COLOR_SPACE_CONTRAST, color
+                                    LOGGER.Warn(() => MessageFormatUtil.Format(KernelLogMessageConstant.UNSUPPORTED_COLOR_SPACE_CONTRAST, color
                                         .GetType().FullName));
                                     return null;
                                 }

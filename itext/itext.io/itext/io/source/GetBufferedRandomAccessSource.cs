@@ -23,14 +23,26 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 
 namespace iText.IO.Source {
+    /// <summary>
+    /// A random-access source that caches reads made through its single-byte
+    /// <see cref="Get(long)"/>
+    /// method.
+    /// </summary>
+    /// <remarks>
+    /// A random-access source that caches reads made through its single-byte
+    /// <see cref="Get(long)"/>
+    /// method.
+    /// <para />
+    /// This wrapper closes its underlying source and is not thread-safe.
+    /// </remarks>
     public class GetBufferedRandomAccessSource : IRandomAccessSource {
         private readonly IRandomAccessSource source;
 
         private readonly byte[] getBuffer;
 
-        private long getBufferStart = -1;
+        private long getBufferStart;
 
-        private long getBufferEnd = -1;
+        private long getBufferEnd;
 
         /// <summary>Constructs a new OffsetRandomAccessSource</summary>
         /// <param name="source">the source</param>

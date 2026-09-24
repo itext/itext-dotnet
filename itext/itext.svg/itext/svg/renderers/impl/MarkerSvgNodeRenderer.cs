@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.StyledXmlParser.Css;
@@ -40,6 +39,8 @@ namespace iText.Svg.Renderers.Impl {
     /// implementation for the &lt;marker&gt; tag.
     /// </summary>
     public class MarkerSvgNodeRenderer : AbstractBranchSvgNodeRenderer {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(MarkerSvgNodeRenderer));
+
         /// <summary>Attribute defining the marker index on polygon, line or polyline.</summary>
         /// <remarks>
         /// Attribute defining the marker index on polygon, line or polyline.
@@ -196,7 +197,6 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         private static bool MarkerWidthHeightAreCorrect(MarkerSvgNodeRenderer namedObject) {
-            ILogger log = ITextLogManager.GetLogger(typeof(MarkerSvgNodeRenderer));
             String markerWidth = namedObject.GetAttribute(SvgConstants.Attributes.MARKER_WIDTH);
             // TODO: DEVSIX-3923 remove normalization (.toLowerCase)
             if (markerWidth == null) {
@@ -212,12 +212,12 @@ namespace iText.Svg.Renderers.Impl {
             if (markerWidth != null) {
                 float absoluteMarkerWidthValue = CssDimensionParsingUtils.ParseAbsoluteLength(markerWidth);
                 if (absoluteMarkerWidthValue == 0) {
-                    log.LogWarning(SvgLogMessageConstant.MARKER_WIDTH_IS_ZERO_VALUE);
+                    LOGGER.Warn(() => SvgLogMessageConstant.MARKER_WIDTH_IS_ZERO_VALUE);
                     isCorrect = false;
                 }
                 else {
                     if (absoluteMarkerWidthValue < 0) {
-                        log.LogWarning(SvgLogMessageConstant.MARKER_WIDTH_IS_NEGATIVE_VALUE);
+                        LOGGER.Warn(() => SvgLogMessageConstant.MARKER_WIDTH_IS_NEGATIVE_VALUE);
                         isCorrect = false;
                     }
                 }
@@ -225,12 +225,12 @@ namespace iText.Svg.Renderers.Impl {
             if (markerHeight != null) {
                 float absoluteMarkerHeightValue = CssDimensionParsingUtils.ParseAbsoluteLength(markerHeight);
                 if (absoluteMarkerHeightValue == 0) {
-                    log.LogWarning(SvgLogMessageConstant.MARKER_HEIGHT_IS_ZERO_VALUE);
+                    LOGGER.Warn(() => SvgLogMessageConstant.MARKER_HEIGHT_IS_ZERO_VALUE);
                     isCorrect = false;
                 }
                 else {
                     if (absoluteMarkerHeightValue < 0) {
-                        log.LogWarning(SvgLogMessageConstant.MARKER_HEIGHT_IS_NEGATIVE_VALUE);
+                        LOGGER.Warn(() => SvgLogMessageConstant.MARKER_HEIGHT_IS_NEGATIVE_VALUE);
                         isCorrect = false;
                     }
                 }

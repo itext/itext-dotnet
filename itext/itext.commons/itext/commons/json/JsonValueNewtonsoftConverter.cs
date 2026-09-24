@@ -26,6 +26,10 @@ using iText.Commons.Exceptions;
 using iText.Commons.Utils;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -51,21 +55,29 @@ namespace iText.Commons.Json {
 
             if (value is JsonNumber)
             {
-                double doubleValue = ((JsonNumber) value).GetValue();
-                if (double.NaN.Equals(doubleValue) || double.PositiveInfinity.Equals(doubleValue) || double.NegativeInfinity.Equals(doubleValue))
+                if (((JsonNumber) value).IsDouble())
                 {
-                    throw new JsonException("NAN and INFINITE are not supported");
-                }
+                    double doubleValue = ((JsonNumber) value).GetValue();
+                    if (double.NaN.Equals(doubleValue) || double.PositiveInfinity.Equals(doubleValue) || double.NegativeInfinity.Equals(doubleValue))
+                    {
+                        throw new JsonException("NAN and INFINITE are not supported");
+                    }
 
-                if ((long) doubleValue == doubleValue)
-                {
-                    writer.WriteValue((long) doubleValue);
+                    if ((long) doubleValue == doubleValue)
+                    {
+                        writer.WriteValue((long) doubleValue);
+                    }
+                    else
+                    {
+                        writer.WriteValue(doubleValue);
+                    }
+                    return;
                 }
                 else
                 {
-                    writer.WriteValue(doubleValue);
+                    writer.WriteValue(((JsonNumber) value).GetLongValue());
+                    return;
                 }
-                return;
             }
 
             if (value is JsonString)
@@ -124,6 +136,29 @@ namespace iText.Commons.Json {
             }
         }
 
+        internal static String ToPrettifiedJson(JsonValue value) {
+            var settings = CreatePrettifiedJsonSerializerSettings();
+            try {
+                JsonSerializer serializer = JsonSerializer.Create(settings);
+                StringWriter stringWriter = new StringWriter(new StringBuilder(256), CultureInfo.InvariantCulture)
+                {
+                    NewLine = "\n"
+                };
+
+                using (JsonTextWriter jsonTextWriter = new JsonTextWriter(stringWriter))
+                {
+                    jsonTextWriter.CloseOutput = false;
+                    jsonTextWriter.Formatting = serializer.Formatting;
+                    serializer.Serialize(jsonTextWriter, value, typeof(JsonValue));
+                }
+
+                return stringWriter.ToString();
+            } catch (JsonException e) {
+                // Should never be here
+                throw new ITextException(MessageFormatUtil.Format(CommonsExceptionMessageConstant.JSON_SERIALIZATION_FAILED, e.Message));
+            }
+        }
+
         internal static JsonValue FromJson(String json) {
             var settings = CreateJsonSerializerSettings();
             try
@@ -153,6 +188,18 @@ namespace iText.Commons.Json {
             return settings;
         }
 
+        private static JsonSerializerSettings CreatePrettifiedJsonSerializerSettings() {
+            var settings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                NullValueHandling = NullValueHandling.Include,
+                DateParseHandling = DateParseHandling.None
+            };
+
+            settings.Converters.Add(new JsonValueConverter());
+            return settings;
+        }
+
         private JsonValue ReadValue(JToken token)
         {
             switch (token.Type)
@@ -161,8 +208,25 @@ namespace iText.Commons.Json {
                         return new JsonString(token.Value<string>());
 
                     case JTokenType.Integer:
+                        JValue jv = token as JValue;
+                        if (jv.Value is System.Numerics.BigInteger) {
+                            System.Numerics.BigInteger bi = token.Value<System.Numerics.BigInteger>();
+                            if (bi > long.MaxValue || bi < long.MinValue) {
+                                throw new JsonException("Numeric value is out of range of long");
+                            }
+                            return new JsonNumber((long) bi);
+                        }
+                        else
+                        {
+                            return new JsonNumber(token.Value<long>());
+                        }
+
                     case JTokenType.Float:
-                        return new JsonNumber(token.Value<double>());
+                        double value = token.Value<double>();
+                        if (value > long.MaxValue || value < long.MinValue) {
+                            throw new JsonException("Numeric value is out of range of long");
+                        }
+                        return new JsonNumber(value);
 
                     case JTokenType.Boolean:
                         return JsonBoolean.Of(token.Value<bool>());

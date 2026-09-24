@@ -27,39 +27,39 @@ using iText.Test;
 namespace iText.Svg.Googlecharts {
     [NUnit.Framework.Category("IntegrationTest")]
     public class TrendlinesChartsTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/TrendlinesChartsTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/googlecharts/TrendlinesChartsTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/googlecharts/TrendlinesChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void TrendlinesChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "trendlinesChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "trendlinesChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void Trendlines2Chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "trendlines2Chart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "trendlines2Chart");
         }
 
         [NUnit.Framework.Test]
         public virtual void Trendlines3Chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "trendlines3Chart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "trendlines3Chart");
         }
 
         [NUnit.Framework.Test]
         public virtual void Trendlines4Chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "trendlines4Chart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "trendlines4Chart");
         }
 
         [NUnit.Framework.Test]
         public virtual void Trendlines5Chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "trendlines5Chart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "trendlines5Chart");
         }
     }
 }

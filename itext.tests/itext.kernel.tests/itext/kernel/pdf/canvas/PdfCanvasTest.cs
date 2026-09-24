@@ -62,8 +62,13 @@ namespace iText.Kernel.Pdf.Canvas {
 
         private const String TITLE = "Empty iText Document";
 
-        private sealed class _ContentProvider_101 : PdfCanvasTest.ContentProvider {
-            public _ContentProvider_101() {
+        private static IEnumerable<Object[]> Rotations() {
+            return JavaUtil.ArraysAsList(new Object[][] { new Object[] { 0 }, new Object[] { 90 }, new Object[] { 180 }
+                , new Object[] { 270 }, new Object[] { 360 } });
+        }
+
+        private sealed class _ContentProvider_111 : PdfCanvasTest.ContentProvider {
+            public _ContentProvider_111() {
             }
 
             public void DrawOnCanvas(PdfCanvas canvas, int pageNumber) {
@@ -73,7 +78,7 @@ namespace iText.Kernel.Pdf.Canvas {
             }
         }
 
-        private static readonly PdfCanvasTest.ContentProvider DEFAULT_CONTENT_PROVIDER = new _ContentProvider_101(
+        private static readonly PdfCanvasTest.ContentProvider DEFAULT_CONTENT_PROVIDER = new _ContentProvider_111(
             );
 
         [NUnit.Framework.OneTimeSetUp]
@@ -248,12 +253,12 @@ namespace iText.Kernel.Pdf.Canvas {
             int pageCount = 1000;
             String filename = DESTINATION_FOLDER + "1000PagesDocumentWithText.pdf";
             PdfWriter writer = CompareTool.CreateTestPdfWriter(filename);
-            CreateStandardDocument(writer, pageCount, new _ContentProvider_402());
+            CreateStandardDocument(writer, pageCount, new _ContentProvider_412());
             AssertStandardDocument(filename, pageCount);
         }
 
-        private sealed class _ContentProvider_402 : PdfCanvasTest.ContentProvider {
-            public _ContentProvider_402() {
+        private sealed class _ContentProvider_412 : PdfCanvasTest.ContentProvider {
+            public _ContentProvider_412() {
             }
 
             public void DrawOnCanvas(PdfCanvas canvas, int pageNumber) {
@@ -866,7 +871,7 @@ namespace iText.Kernel.Pdf.Canvas {
         [NUnit.Framework.Test]
         public virtual void CanvasStreamFlushedNoException() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-            PdfStream stream = new _PdfStream_1137();
+            PdfStream stream = new _PdfStream_1147();
             stream.Put(PdfName.Filter, new PdfName("FlateDecode"));
             NUnit.Framework.Assert.DoesNotThrow(() => {
                 new PdfCanvas(stream, new PdfResources(), doc);
@@ -874,8 +879,8 @@ namespace iText.Kernel.Pdf.Canvas {
             );
         }
 
-        private sealed class _PdfStream_1137 : PdfStream {
-            public _PdfStream_1137() {
+        private sealed class _PdfStream_1147 : PdfStream {
+            public _PdfStream_1147() {
                 this.isFlushed = false;
             }
 
@@ -895,7 +900,7 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual void CanvasInitializationStampingExistingStreamMemoryLimitAware() {
             String srcFile = SOURCE_FOLDER + "pageWithContent.pdf";
             ReaderProperties properties = new ReaderProperties();
-            MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_1160();
+            MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_1170();
             handler.SetMaxSizeOfSingleDecompressedPdfStream(1);
             properties.SetMemoryLimitsAwareHandler(handler);
             PdfDocument document = new PdfDocument(new PdfReader(srcFile, properties));
@@ -906,8 +911,8 @@ namespace iText.Kernel.Pdf.Canvas {
             );
         }
 
-        private sealed class _MemoryLimitsAwareHandler_1160 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_1160() {
+        private sealed class _MemoryLimitsAwareHandler_1170 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_1170() {
             }
 
             public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {
@@ -1234,6 +1239,41 @@ namespace iText.Kernel.Pdf.Canvas {
                 canvas2.SaveState().BeginText().MoveText(180, 250).SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.
                     HELVETICA), 30).ShowText("but new content ignores page rotation").EndText().RestoreState();
                 page.Flush();
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
+                ));
+        }
+
+        [NUnit.Framework.TestCaseSource("Rotations")]
+        public virtual void IgnorePageRotationCoordsTest(int rotation) {
+            String intermPdf = DESTINATION_FOLDER + "ignorePageRotationCoordsInterm_" + JavaUtil.IntegerToString(rotation
+                ) + ".pdf";
+            String outPdf = DESTINATION_FOLDER + "ignorePageRotationCoords_" + JavaUtil.IntegerToString(rotation) + ".pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp_ignorePageRotationCoords_" + JavaUtil.IntegerToString(rotation) + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(CompareTool.CreateTestPdfWriter(intermPdf)))) {
+                float x = 100;
+                float y = 50;
+                float width = 300;
+                float height = 350;
+                pdfDoc.SetDefaultPageSize(new PageSize(new Rectangle(x, y, width, height)));
+                PdfPage newPage = pdfDoc.AddNewPage();
+                newPage.SetRotation(rotation);
+                PdfCanvas canvas = new PdfCanvas(newPage);
+                canvas.BeginText().SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 8).MoveText(x + 5, y
+                     + height - 15).ShowText("Original upper left corner...").EndText();
+            }
+            using (PdfDocument pdfDoc_1 = new PdfDocument(CompareTool.CreateOutputReader(intermPdf), new PdfWriter(CompareTool
+                .CreateTestPdfWriter(outPdf)))) {
+                PdfPage page = pdfDoc_1.GetPage(1);
+                page.SetIgnorePageRotationForContent(true);
+                Rectangle pageSize = page.GetPageSizeWithRotation();
+                float x = pageSize.GetLeft();
+                float y = pageSize.GetBottom();
+                PdfCanvas canvas = new PdfCanvas(page, true);
+                canvas.BeginText().SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 6).MoveText(x, y).ShowText
+                    ("STAMP lower left").EndText();
+                canvas.BeginText().SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.HELVETICA), 6).MoveText(x + pageSize
+                    .GetWidth() / 2, y + pageSize.GetHeight() / 2).ShowText("STAMP center").EndText();
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outPdf, cmpPdf, DESTINATION_FOLDER, "diff_"
                 ));

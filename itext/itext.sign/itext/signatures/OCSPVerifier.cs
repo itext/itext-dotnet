@@ -34,6 +34,7 @@ using iText.Commons.Bouncycastle.Cert.Ocsp;
 using iText.Commons.Bouncycastle.Operator;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Signatures.Logs;
 
@@ -48,9 +49,13 @@ namespace iText.Signatures {
         private static readonly IBouncyCastleFactory BOUNCY_CASTLE_FACTORY = BouncyCastleFactoryCreator.GetFactory
             ();
 
-        /// <summary>The Logger instance</summary>
-        protected internal static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.OCSPVerifier
-            ));
+        /// <summary>The Logger instance.</summary>
+        [Obsolete]
+        protected internal static readonly ILogger LOGGER = ITextLogManager
+                // on removal of slf4j logger field rename `LAZY_LOGGER` into LOGGER
+                .GetLogger(typeof(iText.Signatures.OCSPVerifier));
+
+        private static readonly LazyLogger LAZY_LOGGER = new LazyLogger(typeof(iText.Signatures.OCSPVerifier));
 
         protected internal const String id_kp_OCSPSigning = "1.3.6.1.5.5.7.3.9";
 
@@ -160,7 +165,8 @@ namespace iText.Signatures {
                 online = true;
             }
             // Show how many valid OCSP responses were found.
-            LOGGER.LogInformation("Valid OCSPs found: " + validOCSPsFound);
+            String logMessage = "Valid OCSPs found: " + validOCSPsFound;
+            LAZY_LOGGER.Info(() => logMessage);
             if (validOCSPsFound > 0) {
                 result.Add(new VerificationOK(signCert, this.GetType(), "Valid OCSPs Found: " + validOCSPsFound + (online ? 
                     (" (" + validOCSPsFoundOnline + " online)") : "")));
@@ -209,7 +215,7 @@ namespace iText.Signatures {
                         issuerCert = signCert;
                     }
                     if (!SignUtils.CheckIfIssuersMatch(iSingleResp.GetCertID(), issuerCert)) {
-                        LOGGER.LogInformation("OCSP: Issuers doesn't match.");
+                        LAZY_LOGGER.Info(() => "OCSP: Issuers doesn't match.");
                         continue;
                     }
                 }
@@ -229,7 +235,7 @@ namespace iText.Signatures {
                 // If nextUpdate is not set, the responder is indicating that newer revocation information
                 // is available all the time.
                 if (iSingleResp.GetNextUpdate() != null && signDate.After(iSingleResp.GetNextUpdate())) {
-                    LOGGER.LogInformation(MessageFormatUtil.Format("OCSP is no longer valid: {0} after {1}", signDate, iSingleResp
+                    LAZY_LOGGER.Info(() => MessageFormatUtil.Format("OCSP is no longer valid: {0} after {1}", signDate, iSingleResp
                         .GetNextUpdate()));
                     continue;
                 }
@@ -241,7 +247,7 @@ namespace iText.Signatures {
                     // Check if the OCSP response was genuine.
                     IsValidResponse(ocspResp, issuerCert, signDate);
                     if (!isStatusGood) {
-                        LOGGER.LogWarning(MessageFormatUtil.Format(SignLogMessageConstant.VALID_CERTIFICATE_IS_REVOKED, revokedStatus
+                        LAZY_LOGGER.Warn(() => MessageFormatUtil.Format(SignLogMessageConstant.VALID_CERTIFICATE_IS_REVOKED, revokedStatus
                             .GetRevocationTime()));
                     }
                     return true;

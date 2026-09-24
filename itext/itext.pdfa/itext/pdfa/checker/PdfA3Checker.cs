@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 using iText.Pdfa.Exceptions;
@@ -41,6 +40,8 @@ namespace iText.Pdfa.Checker {
     /// The specification implemented by this class is ISO 19005-3
     /// </remarks>
     public class PdfA3Checker : PdfA2Checker {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(PdfAChecker));
+
         protected internal static readonly ICollection<PdfName> allowedAFRelationships = JavaCollectionsUtil.UnmodifiableSet
             (new HashSet<PdfName>(JavaUtil.ArraysAsList(PdfName.Source, PdfName.Data, PdfName.Alternative, PdfName
             .Supplement, PdfName.Unspecified)));
@@ -96,8 +97,7 @@ namespace iText.Pdfa.Checker {
                 }
             }
             else {
-                ILogger logger = ITextLogManager.GetLogger(typeof(PdfAChecker));
-                logger.LogWarning(PdfAConformanceLogMessageConstant.EMBEDDED_FILE_SHOULD_CONTAIN_PARAMS_KEY);
+                LOGGER.Warn(() => PdfAConformanceLogMessageConstant.EMBEDDED_FILE_SHOULD_CONTAIN_PARAMS_KEY);
             }
         }
     }

@@ -53,7 +53,7 @@ namespace iText.Layout {
             String fileName = "flexSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div flex = CreateRowFlexContainer();
                     flex.Add(ColoredDiv("FLEX ITEM 1", new DeviceRgb(65, 151, 29)));
@@ -73,7 +73,7 @@ namespace iText.Layout {
             String fileName = "flexTwoSectionBreaks";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div flex = CreateRowFlexContainer();
                     flex.Add(ColoredDiv("ITEM A", new DeviceRgb(65, 151, 29)));
@@ -94,7 +94,7 @@ namespace iText.Layout {
             String fileName = "flexAltBreaks";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div flex1 = CreateRowFlexContainer();
                     flex1.Add(ColoredDiv("S1-A", new DeviceRgb(65, 151, 29)));
@@ -125,7 +125,7 @@ namespace iText.Layout {
             String fileName = "flexMultiPageSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div flex = CreateRowFlexContainer();
                     for (int i = 1; i <= 20; i++) {
@@ -147,7 +147,7 @@ namespace iText.Layout {
             String fileName = "flexMultiPageDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins2
                         ()));
@@ -173,7 +173,7 @@ namespace iText.Layout {
             String fileName = "flexPerPageDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => {
                         IList<PageMarginContent> margins = new List<PageMarginContent>();
@@ -204,7 +204,7 @@ namespace iText.Layout {
             String fileName = "flexDocMarginsOverriddenBySectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins2
                         ()));
@@ -229,7 +229,7 @@ namespace iText.Layout {
             String fileName = "flexElementMarginsSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div flex = CreateRowFlexContainer();
                     flex.SetMargins(50, 50, 50, 50).SetBackgroundColor(new DeviceRgb(220, 220, 220));
@@ -250,7 +250,7 @@ namespace iText.Layout {
             String fileName = "flexItemMarginsDocPageMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1
                         ()));
@@ -277,7 +277,7 @@ namespace iText.Layout {
             String fileName = "flexStaticMarginsAndSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetMargins(80, 80, 80, 80);
                     Div flex = CreateRowFlexContainer();
@@ -299,7 +299,7 @@ namespace iText.Layout {
             String fileName = "flexPageNumMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins(1, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1()));
                     Div flex = CreateColumnFlexContainer();
@@ -319,7 +319,7 @@ namespace iText.Layout {
             String fileName = "nestedFlexSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div outer1 = CreateColumnFlexContainer();
                     Div inner1 = CreateRowFlexContainer();
@@ -347,7 +347,7 @@ namespace iText.Layout {
             String fileName = "deepNestedFlexMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 != 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1
                         ()));
@@ -380,7 +380,7 @@ namespace iText.Layout {
             String fileName = "sectionBreakInsideFlexContainer";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div flex = CreateRowFlexContainer();
                     flex.Add(ColoredDiv("ITEM A", new DeviceRgb(65, 151, 29)));
@@ -399,7 +399,7 @@ namespace iText.Layout {
             String fileName = "sectionBreakOnFlexItemChild";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div flex = CreateRowFlexContainer();
                     Div item = new Div().SetBackgroundColor(new DeviceRgb(65, 151, 29)).SetWidth(UnitValue.CreatePercentValue(
@@ -421,7 +421,7 @@ namespace iText.Layout {
             String fileName = "flexItemChildAreaBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div flex = CreateColumnFlexContainer();
                     Div item = new Div().SetBackgroundColor(new DeviceRgb(209, 247, 29)).SetWidth(UnitValue.CreatePercentValue
@@ -445,7 +445,7 @@ namespace iText.Layout {
             String fileName = "flexAreaBreakDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1
                         ()));
@@ -466,7 +466,7 @@ namespace iText.Layout {
             String fileName = "flexAreaBreakThenSectionBreak";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div flex = CreateColumnFlexContainer();
                     flex.Add(ColoredDiv("Before break.", new DeviceRgb(65, 151, 29)));
@@ -487,7 +487,7 @@ namespace iText.Layout {
             String fileName = "nestedFlexMultiAreaBreakDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 != 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1
                         ()));
@@ -519,7 +519,7 @@ namespace iText.Layout {
             String fileName = "nestedFlexItemAreaBreakDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins2
                         ()));
@@ -547,7 +547,7 @@ namespace iText.Layout {
             String fileName = "flexAreaBreakPageSizeDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1
                         ()));
@@ -567,7 +567,7 @@ namespace iText.Layout {
             String fileName = "nestedFlexOuterElemMarginsDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1
                         ()));
@@ -596,7 +596,7 @@ namespace iText.Layout {
             String fileName = "nestedFlexAsymmetricDocMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins2
                         ()));
@@ -627,7 +627,7 @@ namespace iText.Layout {
             String fileName = "nestedFlexOverflowStaticMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetMargins(80, 80, 80, 80);
                     Div outer = CreateColumnFlexContainer();
@@ -652,7 +652,7 @@ namespace iText.Layout {
             String fileName = "nestedFlexOverflowPageNumMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     document.SetPageMargins(3, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins1()));
                     Div outer = CreateColumnFlexContainer();
@@ -677,7 +677,7 @@ namespace iText.Layout {
             String fileName = "nestedFlexSameMarginsTwice";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div flex1 = CreateColumnFlexContainer();
                     Div row1 = CreateRowFlexContainer();
@@ -709,7 +709,7 @@ namespace iText.Layout {
             String fileName = "flexWithTableHeaderAndFooter";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div flex = CreateRowFlexContainer();
                     Table table = new Table(3);
@@ -730,6 +730,162 @@ namespace iText.Layout {
                     flex.Add(table);
                     flex.Add(ColoredDiv("Second element", new DeviceRgb(65, 151, 29)));
                     document.Add(flex);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NoMarginsOnProcessedPageTest() {
+            String fileName = "noMarginsOnProcessedPage";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDoc)) {
+                    Div firstPageFlex = CreateColumnFlexContainer();
+                    for (int i = 0; i < 3; i++) {
+                        Div row = CreateRowFlexContainer();
+                        for (int j = 0; j < 3; j++) {
+                            row.Add(new Div().Add(new Paragraph("R" + i + "C" + j + "\n" + TestResourceUtil.GetByronStanza())).SetWidth
+                                (UnitValue.CreatePercentValue(30)).SetBackgroundColor(j % 2 == 0 ? new DeviceRgb(65, 151, 29) : new DeviceRgb
+                                (209, 247, 29)).SetMargin(5));
+                        }
+                        firstPageFlex.Add(row);
+                    }
+                    document.Add(firstPageFlex);
+                    document.SetPageMargins((pageNum) => pageNum % 2 == 0, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins2
+                        ()));
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarginsDrawOnLaterFlexPageTest() {
+            String fileName = "marginsDrawOnLaterFlexPage";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDoc)) {
+                    Div firstPageFlex = CreateRowFlexContainer();
+                    firstPageFlex.Add(ColoredDiv("no margins", new DeviceRgb(65, 151, 29)));
+                    firstPageFlex.Add(ColoredDiv("should be on this page", new DeviceRgb(209, 247, 29)));
+                    document.Add(firstPageFlex);
+                    document.SetPageMargins((pageNum) => pageNum < 5, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins2(
+                        )));
+                    document.Add(new AreaBreak());
+                    Div secondPageFlex = CreateRowFlexContainer();
+                    secondPageFlex.Add(ColoredDiv("all margins", new DeviceRgb(78, 151, 205)));
+                    secondPageFlex.Add(ColoredDiv("should be presented", new DeviceRgb(255, 165, 0)));
+                    document.Add(secondPageFlex);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LatePredicateMarginsNotAppliedTest() {
+            String fileName = "latePredicateMarginsNotApplied";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDoc)) {
+                    Div firstPageFlex = CreateRowFlexContainer();
+                    firstPageFlex.Add(ColoredDiv("content added", new DeviceRgb(65, 151, 29)));
+                    firstPageFlex.Add(ColoredDiv("before margins", new DeviceRgb(209, 247, 29)));
+                    document.Add(firstPageFlex);
+                    document.SetPageMargins((pageNum) => pageNum < 5, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins2(
+                        )));
+                    Div samePageFlex = CreateRowFlexContainer();
+                    samePageFlex.Add(ColoredDiv("so no margins", new DeviceRgb(78, 151, 205)));
+                    samePageFlex.Add(ColoredDiv("should be applied", new DeviceRgb(255, 165, 0)));
+                    document.Add(samePageFlex);
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LatePageMarginsAppliedOnContentTest() {
+            String fileName = "latePageMarginsAppliedOnContent";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDoc)) {
+                    Div firstPageFlex = CreateRowFlexContainer();
+                    firstPageFlex.Add(ColoredDiv("content added", new DeviceRgb(65, 151, 29)));
+                    firstPageFlex.Add(ColoredDiv("before margins", new DeviceRgb(209, 247, 29)));
+                    document.Add(firstPageFlex);
+                    document.SetPageMargins(1, new PageMarginBoxes(PageMarginsTestUtil.GetPageMargins2()));
+                    Div samePageFlex = CreateRowFlexContainer();
+                    samePageFlex.Add(ColoredDiv("margins expected", new DeviceRgb(78, 151, 205)));
+                    samePageFlex.Add(ColoredDiv("on top of content", new DeviceRgb(255, 165, 0)));
+                    document.Add(samePageFlex);
+                }
+            }
+            // It is expected that if explicit page-number margins are applied to page 1 after content is already placed,
+            // result will have overlaps of content and margin.
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SectionBreaksMarginsNotOverriddenTest() {
+            String fileName = "sectionBreaksMarginsNotOverridden";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDoc, PageSize.A4, false)) {
+                    Div page1Flex = CreateRowFlexContainer();
+                    page1Flex.Add(ColoredDiv("PAGE 1", new DeviceRgb(65, 151, 29)));
+                    page1Flex.Add(ColoredDiv("NO MARGINS", new DeviceRgb(209, 247, 29)));
+                    document.Add(page1Flex);
+                    document.Add(new SectionBreak(new PageMarginBoxes(PageMarginsTestUtil.GetMarginBoxesWithContent(new Div().
+                        Add(new Paragraph("OVERRIDDEN_MARGIN")).SetBackgroundColor(ColorConstants.PINK).SetTextAlignment(TextAlignment
+                        .CENTER).SetHeight(32), null, null, null))));
+                    document.Add(new SectionBreak(new PageMarginBoxes(PageMarginsTestUtil.GetMarginBoxesWithContent(new Div().
+                        Add(new Paragraph("SECTION_MARGIN_2")).SetBackgroundColor(ColorConstants.YELLOW).SetTextAlignment(TextAlignment
+                        .CENTER).SetHeight(32), null, null, null))));
+                    Div page3Flex = CreateRowFlexContainer();
+                    page3Flex.Add(ColoredDiv("PAGE 2", new DeviceRgb(200, 100, 100)));
+                    page3Flex.Add(ColoredDiv("SECTION 1", new DeviceRgb(100, 200, 100)));
+                    document.Add(page3Flex);
+                    document.SetPageMargins((pageNum) => pageNum % 2 != 0, new PageMarginBoxes(PageMarginsTestUtil.GetMarginBoxesWithContent
+                        (new Div().Add(new Paragraph("LATE_MARGIN")).SetBackgroundColor(ColorConstants.CYAN).SetTextAlignment(
+                        TextAlignment.CENTER).SetHeight(32), null, null, null)));
+                }
+            }
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER
+                , "diff_" + fileName));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void PartialResultMarginsNotOverriddenTest() {
+            String fileName = "partialResultMarginsNotOverridden";
+            String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
+            String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+                using (Document document = new Document(pdfDoc, PageSize.A4, false)) {
+                    Div page1Flex = CreateRowFlexContainer();
+                    page1Flex.Add(ColoredDiv("PAGE 1", new DeviceRgb(65, 151, 29)));
+                    page1Flex.Add(ColoredDiv("NO MARGINS", new DeviceRgb(209, 247, 29)).SetHeight(1500));
+                    document.Add(page1Flex);
+                    document.SetPageMargins((pageNum) => pageNum < 5, new PageMarginBoxes(PageMarginsTestUtil.GetMarginBoxesWithContent
+                        (new Div().Add(new Paragraph("LATE_MARGIN")).SetBackgroundColor(ColorConstants.CYAN).SetTextAlignment(
+                        TextAlignment.CENTER).SetHeight(32), null, null, null)));
+                    Div page2Flex = CreateRowFlexContainer();
+                    page2Flex.Add(ColoredDiv("PAGE 2", new DeviceRgb(78, 151, 205)));
+                    page2Flex.Add(ColoredDiv("SECTION 1", new DeviceRgb(255, 165, 0)));
+                    document.Add(page2Flex);
+                    document.Add(new AreaBreak());
+                    Div page3Flex = CreateRowFlexContainer();
+                    page3Flex.Add(ColoredDiv("PAGE 3", new DeviceRgb(200, 100, 100)));
+                    page3Flex.Add(ColoredDiv("SECTION 2", new DeviceRgb(100, 200, 100)));
+                    document.Add(page3Flex);
                 }
             }
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER

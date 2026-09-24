@@ -31,10 +31,20 @@ namespace iText.IO.Font {
     internal class WoffConverter {
         private const long woffSignature = 0x774F4646L;
 
+        /// <summary>Checks whether bytes begin with the WOFF signature.</summary>
+        /// <param name="woffBytes">the candidate font bytes</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// when the WOFF signature is present
+        /// </returns>
         public static bool IsWoffFont(byte[] woffBytes) {
             return BytesToUInt(woffBytes, 0) == woffSignature;
         }
 
+        /// <summary>Converts a WOFF font to an uncompressed OpenType font.</summary>
+        /// <param name="woffBytes">the complete WOFF source</param>
+        /// <returns>newly allocated OpenType bytes</returns>
         public static byte[] Convert(byte[] woffBytes) {
             int srcPos = 0;
             int destPos = 0;

@@ -41,9 +41,9 @@ namespace iText.Layout.Properties.Margins {
         internal readonly IDictionary<int, IElement> anchors = new Dictionary<int, IElement>();
 //\endcond
 
-//\cond DO_NOT_DOCUMENT
-        internal IElement footnoteAnchor = null;
-//\endcond
+        private IElement footnoteAnchor = null;
+
+        private bool defaultStyleNeededForInjectedFootnoteAnchor = false;
 
         private DefaultAccessibilityProperties tagProperties;
 
@@ -84,6 +84,14 @@ namespace iText.Layout.Properties.Margins {
             }
             return tagProperties;
         }
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>Gets injected footnote anchor element, which is a copy of a footnote anchor in the main content.</summary>
+        /// <returns>injected footnote anchor element</returns>
+        internal virtual IElement GetInjectedFootnoteAnchor() {
+            return footnoteAnchor;
+        }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>Injects footnote anchor before placing this footnote on the specified page.</summary>
@@ -135,6 +143,7 @@ namespace iText.Layout.Properties.Margins {
             if (footnoteAnchorSymbol == null) {
                 return;
             }
+            this.defaultStyleNeededForInjectedFootnoteAnchor = footnoteAnchor.IsDefaultStyleNeeded();
             this.footnoteAnchor = footnoteAnchorSymbol;
             paragraph.GetChildren().Add(0, this.footnoteAnchor);
         }
@@ -165,6 +174,12 @@ namespace iText.Layout.Properties.Margins {
                 }
             }
         }
+
+//\cond DO_NOT_DOCUMENT
+        internal virtual bool IsDefaultStyleNeededForInjectedFootnoteAnchor() {
+            return defaultStyleNeededForInjectedFootnoteAnchor;
+        }
+//\endcond
 
         private void RemoveFootnoteAnchorFromParagraph(Paragraph paragraph) {
             if (this.footnoteAnchor != null) {

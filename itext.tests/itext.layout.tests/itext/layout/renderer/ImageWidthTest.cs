@@ -49,11 +49,16 @@ namespace iText.Layout.Renderer {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void ImageWidthTest01() {
             String outFileName = destinationFolder + "imageWidthTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_imageWidthTest01.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph(new Text("First Line")));

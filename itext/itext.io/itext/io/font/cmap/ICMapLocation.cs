@@ -24,7 +24,11 @@ using System;
 using iText.IO.Source;
 
 namespace iText.IO.Font.Cmap {
+    /// <summary>Locates CMap source data by name.</summary>
     public interface ICMapLocation {
+        /// <summary>Opens a tokenizer for a named CMap source.</summary>
+        /// <param name="location">the CMap source name</param>
+        /// <returns>a tokenizer positioned at the source start</returns>
         PdfTokenizer GetLocation(String location);
     }
 }

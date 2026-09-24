@@ -26,6 +26,7 @@ using System.Linq;
 using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
+using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
@@ -53,6 +54,47 @@ namespace iText.Layout.Renderer {
             ProcessRenderers(lineRenderer, sortedRenderers, actualYLine, (alignment) => IsBoxOrientedVerticalAlignment
                 (alignment), (alignment) => true);
         }
+
+//\cond DO_NOT_DOCUMENT
+        internal static void AdjustChildrenXLineVerticalText(LineRenderer lineRenderer, MinMaxWidth minMaxWidth) {
+            float baseline = lineRenderer.occupiedArea.GetBBox().GetX() + lineRenderer.occupiedArea.GetBBox().GetWidth
+                () / 2;
+            float[] fontInfo = LineHeightHelper.GetActualFontInfo(lineRenderer);
+            float fontWidth = fontInfo[LineHeightHelper.ASCENDER_INDEX] - fontInfo[LineHeightHelper.DESCENDER_INDEX] -
+                 fontInfo[LineHeightHelper.LEADING_INDEX];
+            float textLeft = baseline - fontWidth / 2;
+            float textRight = baseline + fontWidth / 2;
+            float maxRight = baseline + fontWidth / 2;
+            float minLeft = baseline - fontWidth / 2;
+            foreach (IRenderer renderer in lineRenderer.GetChildRenderers()) {
+                if (FloatingHelper.IsRendererFloating(renderer)) {
+                    continue;
+                }
+                InlineVerticalAlignment alignment = renderer.GetProperty<InlineVerticalAlignment>(Property.INLINE_VERTICAL_ALIGNMENT
+                    );
+                if (alignment == null) {
+                    alignment = new InlineVerticalAlignment();
+                }
+                Rectangle childBBox = GetAdjustedArea(renderer);
+                Rectangle parentBBox = lineRenderer.occupiedArea.GetBBox().Clone();
+                float offset = CalculateOffsetVerticalText(childBBox, alignment, parentBBox, textLeft, textRight);
+                IRenderer unwrappedRenderer = renderer is FootnoteAnchorRenderer ? ((FootnoteAnchorRenderer)renderer).footnoteAnchor
+                     : renderer;
+                float? textRise = unwrappedRenderer.GetProperty<float?>(Property.TEXT_RISE);
+                if (textRise == null) {
+                    textRise = 0F;
+                }
+                offset += (float)textRise;
+                if (Math.Abs(offset) > ADJUSTMENT_THRESHOLD) {
+                    renderer.Move(offset, 0);
+                }
+                Rectangle cBbox = GetAdjustedArea(renderer);
+                maxRight = Math.Max(maxRight, cBbox.GetRight());
+                minLeft = Math.Min(minLeft, cBbox.GetLeft());
+            }
+            AdjustBBoxVertical(lineRenderer, maxRight, minLeft, minMaxWidth);
+        }
+//\endcond
 
         private static bool IsBoxOrientedVerticalAlignment(InlineVerticalAlignment alignment) {
             return alignment.GetType() == InlineVerticalAlignmentType.TOP || alignment.GetType() == InlineVerticalAlignmentType
@@ -110,13 +152,81 @@ namespace iText.Layout.Renderer {
 
         private static Rectangle GetAdjustedArea(IRenderer renderer) {
             Rectangle rect = renderer.GetOccupiedArea().GetBBox().Clone();
-            if (renderer is AbstractRenderer && !(renderer is BlockRenderer) && !renderer.HasProperty(Property.INLINE_VERTICAL_ALIGNMENT
-                )) {
+            // Vertical writing uses the full occupied width, including borders and padding, to size the line.
+            // Stripping them here would underestimate its left/right extents after an x-axis shift (e.g. text rise),
+            // leaving part of the child's box outside the line even with the default baseline alignment.
+            // See textRiseWithBorderAndPaddingTest.
+            if (renderer is AbstractRenderer && !(renderer is BlockRenderer) && !((AbstractRenderer)renderer).IsVerticalWriting
+                () && !renderer.HasProperty(Property.INLINE_VERTICAL_ALIGNMENT)) {
                 AbstractRenderer ar = (AbstractRenderer)renderer;
                 ar.ApplyBorderBox(rect, false);
                 ar.ApplyPaddings(rect, false);
             }
             return rect;
+        }
+
+        private static float CalculateOffsetVerticalText(Rectangle cBBox, InlineVerticalAlignment alignment, Rectangle
+             pBBox, float textLeft, float textRight) {
+            switch (alignment.GetType()) {
+                case InlineVerticalAlignmentType.TEXT_TOP: {
+                    return textRight - cBBox.GetRight();
+                }
+
+                case InlineVerticalAlignmentType.TEXT_BOTTOM: {
+                    return textLeft - cBBox.GetLeft();
+                }
+
+                case InlineVerticalAlignmentType.FIXED: {
+                    return alignment.GetValue();
+                }
+
+                case InlineVerticalAlignmentType.SUPER:
+                case InlineVerticalAlignmentType.SUB:
+                case InlineVerticalAlignmentType.FRACTION: {
+                    float offsetFraction = 0;
+                    if (alignment.GetType() == InlineVerticalAlignmentType.SUPER) {
+                        offsetFraction = SUPER_OFFSET;
+                    }
+                    else {
+                        if (alignment.GetType() == InlineVerticalAlignmentType.SUB) {
+                            offsetFraction = SUB_OFFSET;
+                        }
+                        else {
+                            offsetFraction = alignment.GetValue();
+                        }
+                    }
+                    return pBBox.GetWidth() * offsetFraction;
+                }
+
+                case InlineVerticalAlignmentType.BOTTOM: {
+                    return pBBox.GetLeft() - cBBox.GetLeft();
+                }
+
+                case InlineVerticalAlignmentType.TOP: {
+                    return pBBox.GetRight() - cBBox.GetRight();
+                }
+
+                case InlineVerticalAlignmentType.BASELINE:
+                case InlineVerticalAlignmentType.MIDDLE:
+                default: {
+                    return 0;
+                }
+            }
+        }
+
+        private static void AdjustBBoxVertical(LineRenderer lineRenderer, float maxRight, float minLeft, MinMaxWidth
+             minMaxWidth) {
+            float originalLeft = lineRenderer.occupiedArea.GetBBox().GetLeft();
+            float originalWidth = lineRenderer.occupiedArea.GetBBox().GetWidth();
+            float maxWidth = maxRight - minLeft;
+            if (maxWidth > originalWidth) {
+                lineRenderer.occupiedArea.GetBBox().SetWidth(maxWidth);
+                minMaxWidth.SetChildrenMaxWidth(maxWidth);
+            }
+            float offset = originalLeft - minLeft + (originalWidth > maxWidth ? (originalWidth - maxWidth) / 2 : 0);
+            foreach (IRenderer renderer in lineRenderer.GetChildRenderers()) {
+                renderer.Move(offset, 0);
+            }
         }
 
         private static void AdjustBBox(LineRenderer lineRenderer, float maxHeight, float maxTop, float minBottom) {

@@ -47,11 +47,16 @@ namespace iText.Forms {
             CreateDestinationFolder(DESTINATION_DIR);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_DIR);
+        }
+
         [NUnit.Framework.Test]
         public virtual void AddFieldTest() {
             String outputFile = "addFieldTest.pdf";
-            PdfDocument outputDoc = new PdfDocument(new PdfReader(INPUT_FILE_WITH_TWO_FORM_FIELDS), new PdfWriter(DESTINATION_DIR
-                 + outputFile), new StampingProperties().UseAppendMode());
+            PdfDocument outputDoc = new PdfDocument(new PdfReader(INPUT_FILE_WITH_TWO_FORM_FIELDS), CompareTool.CreateTestPdfWriter
+                (DESTINATION_DIR + outputFile), new StampingProperties().UseAppendMode());
             PdfFormField field = new CheckBoxFormFieldBuilder(outputDoc, "checkboxname").SetWidgetRectangle(new Rectangle
                 (10, 10, 24, 24)).CreateCheckBox().SetCheckType(CheckBoxType.CHECK).SetValue("On");
             PdfFormCreator.GetAcroForm(outputDoc, true).AddField(field);
@@ -62,8 +67,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void RemoveFieldTest() {
             String outputFile = "removeFieldTest.pdf";
-            PdfDocument outputDoc = new PdfDocument(new PdfReader(INPUT_FILE_WITH_TWO_FORM_FIELDS), new PdfWriter(DESTINATION_DIR
-                 + outputFile), new StampingProperties().UseAppendMode());
+            PdfDocument outputDoc = new PdfDocument(new PdfReader(INPUT_FILE_WITH_TWO_FORM_FIELDS), CompareTool.CreateTestPdfWriter
+                (DESTINATION_DIR + outputFile), new StampingProperties().UseAppendMode());
             PdfFormCreator.GetAcroForm(outputDoc, true).RemoveField("textfield2");
             outputDoc.Close();
             CompareWithCmp(outputFile);
@@ -73,7 +78,7 @@ namespace iText.Forms {
         public virtual void RemoveKidTest() {
             // Creating input document
             String inputFile = "in_removeKidTest.pdf";
-            PdfDocument inDoc = new PdfDocument(new PdfWriter(DESTINATION_DIR + inputFile));
+            PdfDocument inDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_DIR + inputFile));
             inDoc.AddNewPage();
             PdfFormField root = new NonTerminalFormFieldBuilder(inDoc, "root").CreateNonTerminalFormField();
             PdfFormField child = new NonTerminalFormFieldBuilder(inDoc, "child").CreateNonTerminalFormField();
@@ -82,8 +87,8 @@ namespace iText.Forms {
             inDoc.Close();
             // Creating stamping document
             String outputFile = "removeKidTest.pdf";
-            PdfReader reader = new PdfReader(DESTINATION_DIR + inputFile);
-            PdfWriter writer = new PdfWriter(DESTINATION_DIR + outputFile);
+            PdfReader reader = CompareTool.CreateOutputReader(DESTINATION_DIR + inputFile);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_DIR + outputFile);
             PdfDocument outputDoc = new PdfDocument(reader, writer, new StampingProperties().UseAppendMode());
             PdfFormCreator.GetAcroForm(outputDoc, true).RemoveField("root.child");
             outputDoc.Close();
@@ -93,8 +98,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void ReplaceFieldTest() {
             String outputFile = "replaceFieldTest.pdf";
-            PdfDocument outputDoc = new PdfDocument(new PdfReader(INPUT_FILE_WITH_TWO_FORM_FIELDS), new PdfWriter(DESTINATION_DIR
-                 + outputFile), new StampingProperties().UseAppendMode());
+            PdfDocument outputDoc = new PdfDocument(new PdfReader(INPUT_FILE_WITH_TWO_FORM_FIELDS), CompareTool.CreateTestPdfWriter
+                (DESTINATION_DIR + outputFile), new StampingProperties().UseAppendMode());
             PdfFormField newField = new TextFormFieldBuilder(outputDoc, "newfield").SetWidgetRectangle(new Rectangle(20
                 , 160, 100, 20)).CreateText().SetValue("new field");
             PdfFormCreator.GetAcroForm(outputDoc, true).ReplaceField("textfield1", newField);
@@ -105,7 +110,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void AddFieldToIndirectFieldsArrayTest() {
             String outputFile = "addFieldToIndirectFieldsArrayTest.pdf";
-            PdfDocument document = new PdfDocument(new PdfReader(INPUT_FILE_WITH_INDIRECT_FIELDS_ARRAY), new PdfWriter
+            PdfDocument document = new PdfDocument(new PdfReader(INPUT_FILE_WITH_INDIRECT_FIELDS_ARRAY), CompareTool.CreateTestPdfWriter
                 (DESTINATION_DIR + outputFile), new StampingProperties().UseAppendMode());
             PdfFormField field = new CheckBoxFormFieldBuilder(document, "checkboxname").SetWidgetRectangle(new Rectangle
                 (10, 10, 24, 24)).CreateCheckBox().SetCheckType(CheckBoxType.CHECK).SetValue("On");
@@ -118,8 +123,8 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void RemoveFieldFromIndirectFieldsArrayTest() {
             String outputFile = "removeFieldFromIndirectFieldsArrayTest.pdf";
-            PdfDocument outputDoc = new PdfDocument(new PdfReader(INPUT_FILE_WITH_INDIRECT_FIELDS_ARRAY), new PdfWriter
-                (DESTINATION_DIR + outputFile), new StampingProperties().UseAppendMode());
+            PdfDocument outputDoc = new PdfDocument(new PdfReader(INPUT_FILE_WITH_INDIRECT_FIELDS_ARRAY), CompareTool.
+                CreateTestPdfWriter(DESTINATION_DIR + outputFile), new StampingProperties().UseAppendMode());
             PdfFormCreator.GetAcroForm(outputDoc, true).RemoveField("textfield2");
             outputDoc.Close();
             CompareWithCmp(outputFile);
@@ -130,7 +135,7 @@ namespace iText.Forms {
             String inputFile = "in_removeKidFromIndirectKidsArrayTest.pdf";
             String outputFile = "removeKidFromIndirectKidsArrayTest.pdf";
             // Creating input document
-            PdfDocument inDoc = new PdfDocument(new PdfWriter(DESTINATION_DIR + inputFile));
+            PdfDocument inDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_DIR + inputFile));
             inDoc.AddNewPage();
             PdfFormField root = new NonTerminalFormFieldBuilder(inDoc, "root").CreateNonTerminalFormField();
             PdfFormField child = new NonTerminalFormFieldBuilder(inDoc, "child").CreateNonTerminalFormField();
@@ -140,8 +145,8 @@ namespace iText.Forms {
             PdfFormCreator.GetAcroForm(inDoc, true).GetField("root").GetKids().MakeIndirect(inDoc);
             inDoc.Close();
             // Creating stamping document
-            PdfReader reader = new PdfReader(DESTINATION_DIR + inputFile);
-            PdfWriter writer = new PdfWriter(DESTINATION_DIR + outputFile);
+            PdfReader reader = CompareTool.CreateOutputReader(DESTINATION_DIR + inputFile);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(DESTINATION_DIR + outputFile);
             PdfDocument outputDoc = new PdfDocument(reader, writer, new StampingProperties().UseAppendMode());
             PdfFormCreator.GetAcroForm(outputDoc, true).RemoveField("root.child");
             outputDoc.Close();
@@ -152,8 +157,8 @@ namespace iText.Forms {
         public virtual void AddFieldToDirectAcroFormTest() {
             String inputFile = SOURCE_DIR + "inputFileWithDirectAcroForm.pdf";
             String outputFile = "addFieldToDirectAcroFormTest.pdf";
-            PdfDocument outputDoc = new PdfDocument(new PdfReader(inputFile), new PdfWriter(DESTINATION_DIR + outputFile
-                ), new StampingProperties().UseAppendMode());
+            PdfDocument outputDoc = new PdfDocument(new PdfReader(inputFile), CompareTool.CreateTestPdfWriter(DESTINATION_DIR
+                 + outputFile), new StampingProperties().UseAppendMode());
             PdfFormField field = new CheckBoxFormFieldBuilder(outputDoc, "checkboxname").SetWidgetRectangle(new Rectangle
                 (10, 10, 24, 24)).CreateCheckBox().SetCheckType(CheckBoxType.CHECK).SetValue("On");
             PdfFormCreator.GetAcroForm(outputDoc, true).AddField(field);

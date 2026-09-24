@@ -20,7 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using System;
+using iText.Commons.Datastructures;
 using iText.Kernel.Geom;
 
 namespace iText.Kernel.Colors.Gradients {
@@ -40,6 +40,7 @@ namespace iText.Kernel.Colors.Gradients {
         public StrategyBasedLinearGradientBuilder() {
         }
 
+        // empty constructor
         /// <summary>
         /// Set the strategy to use the minimal coordinates vector that passes through the central point
         /// of the target rectangle area, rotated by the specified amount of radians counter clockwise
@@ -92,16 +93,25 @@ namespace iText.Kernel.Colors.Gradients {
             return isCentralRotationAngleStrategy;
         }
 
+        /// <summary><inheritDoc/></summary>
         protected internal override Point[] GetGradientVector(Rectangle targetBoundingBox, AffineTransform contextTransform
             ) {
-            if (targetBoundingBox == null) {
-                return null;
-            }
-            return this.isCentralRotationAngleStrategy ? BuildCentralRotationCoordinates(targetBoundingBox, this.rotateVectorAngle
-                ) : BuildCoordinatesWithGradientStrategy(targetBoundingBox, this.gradientStrategy);
+            return GetGradientVectorWithTransform(targetBoundingBox, contextTransform).GetFirst();
         }
 
-        private static Point[] BuildCoordinatesWithGradientStrategy(Rectangle targetBoundingBox, StrategyBasedLinearGradientBuilder.GradientStrategy
+        /// <summary><inheritDoc/></summary>
+        protected internal override Tuple2<Point[], AffineTransform> GetGradientVectorWithTransform(Rectangle targetBoundingBox
+            , AffineTransform contextTransform) {
+            if (targetBoundingBox == null) {
+                return new Tuple2<Point[], AffineTransform>(null, null);
+            }
+            Point[] vector = this.isCentralRotationAngleStrategy ? BuildCentralRotationCoordinates(targetBoundingBox, 
+                this.rotateVectorAngle) : BuildCoordinatesWithGradientStrategy(targetBoundingBox, this.gradientStrategy
+                );
+            return new Tuple2<Point[], AffineTransform>(vector, null);
+        }
+
+        private Point[] BuildCoordinatesWithGradientStrategy(Rectangle targetBoundingBox, StrategyBasedLinearGradientBuilder.GradientStrategy
              gradientStrategy) {
             double xCenter = targetBoundingBox.GetX() + targetBoundingBox.GetWidth() / 2;
             double yCenter = targetBoundingBox.GetY() + targetBoundingBox.GetHeight() / 2;
@@ -146,31 +156,39 @@ namespace iText.Kernel.Colors.Gradients {
             }
         }
 
-        private static Point[] BuildCentralRotationCoordinates(Rectangle targetBoundingBox, double angle) {
+        private Point[] BuildCentralRotationCoordinates(Rectangle targetBoundingBox, double angle) {
             double xCenter = targetBoundingBox.GetX() + targetBoundingBox.GetWidth() / 2;
             AffineTransform rotateInstance = AffineTransform.GetRotateInstance(angle, xCenter, targetBoundingBox.GetY(
                 ) + targetBoundingBox.GetHeight() / 2);
             return BuildCoordinates(targetBoundingBox, rotateInstance);
         }
 
-        private static Point[] BuildToCornerCoordinates(Rectangle targetBoundingBox, Point gradientCenterLineRightCorner
-            ) {
+        private Point[] BuildToCornerCoordinates(Rectangle targetBoundingBox, Point gradientCenterLineRightCorner) {
             AffineTransform transform = BuildToCornerTransform(new Point(targetBoundingBox.GetX() + targetBoundingBox.
                 GetWidth() / 2, targetBoundingBox.GetY() + targetBoundingBox.GetHeight() / 2), gradientCenterLineRightCorner
                 );
             return BuildCoordinates(targetBoundingBox, transform);
         }
 
+        private Point[] BuildCoordinates(Rectangle targetBoundingBox, AffineTransform transformation) {
+            double xCenter = targetBoundingBox.GetX() + targetBoundingBox.GetWidth() / 2;
+            Point start = transformation.Transform(new Point(xCenter, targetBoundingBox.GetBottom()), null);
+            Point end = transformation.Transform(new Point(xCenter, targetBoundingBox.GetTop()), null);
+            Point[] baseVector = new Point[] { start, end };
+            double[] targetDomain = ComputeCoveringDomain(baseVector, targetBoundingBox);
+            return CreateCoordsForNewDomain(targetDomain, baseVector);
+        }
+
         private static AffineTransform BuildToCornerTransform(Point center, Point gradientCenterLineRightCorner) {
             double scale = 1d / (center.Distance(gradientCenterLineRightCorner));
             double sin = (gradientCenterLineRightCorner.GetY() - center.GetY()) * scale;
             double cos = (gradientCenterLineRightCorner.GetX() - center.GetX()) * scale;
-            if (Math.Abs(cos) < ZERO_EPSILON) {
+            if (IsZero(cos)) {
                 cos = 0d;
                 sin = sin > 0d ? 1d : -1d;
             }
             else {
-                if (Math.Abs(sin) < ZERO_EPSILON) {
+                if (IsZero(sin)) {
                     sin = 0d;
                     cos = cos > 0d ? 1d : -1d;
                 }
@@ -178,15 +196,6 @@ namespace iText.Kernel.Colors.Gradients {
             double m02 = center.GetX() * (1d - cos) + center.GetY() * sin;
             double m12 = center.GetY() * (1d - cos) - center.GetX() * sin;
             return new AffineTransform(cos, sin, -sin, cos, m02, m12);
-        }
-
-        private static Point[] BuildCoordinates(Rectangle targetBoundingBox, AffineTransform transformation) {
-            double xCenter = targetBoundingBox.GetX() + targetBoundingBox.GetWidth() / 2;
-            Point start = transformation.Transform(new Point(xCenter, targetBoundingBox.GetBottom()), null);
-            Point end = transformation.Transform(new Point(xCenter, targetBoundingBox.GetTop()), null);
-            Point[] baseVector = new Point[] { start, end };
-            double[] targetDomain = EvaluateCoveringDomain(baseVector, targetBoundingBox);
-            return CreateCoordinatesForNewDomain(targetDomain, baseVector);
         }
 
         private static Point[] CreateCoordinates(double x1, double y1, double x2, double y2) {

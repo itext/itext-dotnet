@@ -46,6 +46,11 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void FillObjectFitTest() {
             String outFileName = destinationFolder + "objectFit_test_fill.pdf";
@@ -95,7 +100,7 @@ namespace iText.Layout {
         public virtual void ScaleDownSmallImageObjectFitTest() {
             String outFileName = destinationFolder + "objectFit_test_scale_down_small_image.pdf";
             String cmpFileName = sourceFolder + "cmp_objectFit_test_scale_down_small_image.pdf";
-            using (PdfWriter writer = new PdfWriter(outFileName)) {
+            using (PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName)) {
                 using (Document doc = new Document(new PdfDocument(writer))) {
                     PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
                     iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject).SetWidth(200).SetHeight(600).SetObjectFit
@@ -113,7 +118,7 @@ namespace iText.Layout {
         public virtual void TwoCoverObjectsFitTest() {
             String outFileName = destinationFolder + "objectFit_test_two_objects.pdf";
             String cmpFileName = sourceFolder + "cmp_objectFit_test_two_objects.pdf";
-            using (PdfWriter writer = new PdfWriter(outFileName)) {
+            using (PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName)) {
                 using (Document doc = new Document(new PdfDocument(writer))) {
                     PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
                     iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject).SetWidth(200).SetHeight(600).SetObjectFit
@@ -134,7 +139,7 @@ namespace iText.Layout {
         public virtual void ContainWithEffectsObjectsFitTest() {
             String outFileName = destinationFolder + "objectFit_test_with_effects.pdf";
             String cmpFileName = sourceFolder + "cmp_objectFit_test_with_effects.pdf";
-            using (PdfWriter writer = new PdfWriter(outFileName)) {
+            using (PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName)) {
                 using (Document doc = new Document(new PdfDocument(writer))) {
                     PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
                     iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject).SetWidth(200).SetHeight(600).SetBorder
@@ -155,7 +160,7 @@ namespace iText.Layout {
             // TODO DEVSIX-4286 object-fit property combined with rotation is not processed correctly
             String outFileName = destinationFolder + "objectFit_test_with_rotation.pdf";
             String cmpFileName = sourceFolder + "cmp_objectFit_test_with_rotation.pdf";
-            using (PdfWriter writer = new PdfWriter(outFileName)) {
+            using (PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName)) {
                 using (Document doc = new Document(new PdfDocument(writer))) {
                     PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
                     iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject).SetWidth(200).SetHeight(600).SetRotationAngle
@@ -170,7 +175,7 @@ namespace iText.Layout {
         }
 
         private void GenerateDocumentWithObjectFit(ObjectFit objectFit, String outFileName) {
-            using (PdfWriter writer = new PdfWriter(outFileName)) {
+            using (PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName)) {
                 using (Document doc = new Document(new PdfDocument(writer))) {
                     PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
                     iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject).SetWidth(200).SetHeight(600).SetObjectFit

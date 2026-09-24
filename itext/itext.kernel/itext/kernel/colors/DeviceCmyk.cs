@@ -20,13 +20,14 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.Kernel.Colors {
     /// <summary>Color space to specify colors according to CMYK color model.</summary>
     public class DeviceCmyk : Color {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Colors.DeviceCmyk));
+
         /// <summary>Predefined cyan DeviceCmyk color</summary>
         public static readonly iText.Kernel.Colors.DeviceCmyk CYAN = new iText.Kernel.Colors.DeviceCmyk(100, 0, 0, 
             0);
@@ -78,8 +79,7 @@ namespace iText.Kernel.Colors {
             : base(new PdfDeviceCs.Cmyk(), new float[] { c > 1 ? 1 : (c > 0 ? c : 0), m > 1 ? 1 : (m > 0 ? m : 0), y >
                  1 ? 1 : (y > 0 ? y : 0), k > 1 ? 1 : (k > 0 ? k : 0) }) {
             if (c > 1 || c < 0 || m > 1 || m < 0 || y > 1 || y < 0 || k > 1 || k < 0) {
-                ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Colors.DeviceCmyk));
-                LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.COLORANT_INTENSITIES_INVALID);
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.COLORANT_INTENSITIES_INVALID);
             }
         }
 

@@ -56,11 +56,16 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void FloatParagraphTest01() {
             String cmpFileName = sourceFolder + "cmp_floatParagraphTest01.pdf";
             String outFile = destinationFolder + "floatParagraphTest01.pdf";
-            PdfWriter writer = new PdfWriter(outFile);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFile);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             Paragraph p = new Paragraph();
@@ -90,7 +95,7 @@ namespace iText.Layout {
         public virtual void FloatParagraphTest02() {
             String cmpFileName = sourceFolder + "cmp_floatParagraphTest02.pdf";
             String outFile = destinationFolder + "floatParagraphTest02.pdf";
-            PdfWriter writer = new PdfWriter(outFile);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFile);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             Paragraph p = new Paragraph();
@@ -122,7 +127,7 @@ namespace iText.Layout {
         public virtual void FloatDivTest01() {
             String cmpFileName = sourceFolder + "cmp_floatDivTest01.pdf";
             String outFile = destinationFolder + "floatDivTest01.pdf";
-            PdfWriter writer = new PdfWriter(outFile);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFile);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             Div div = new Div();
@@ -144,7 +149,7 @@ namespace iText.Layout {
         public virtual void FloatDivTest02() {
             String cmpFileName = sourceFolder + "cmp_floatDivTest02.pdf";
             String outFile = destinationFolder + "floatDivTest02.pdf";
-            PdfWriter writer = new PdfWriter(outFile);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFile);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             Div div = new Div();
@@ -177,7 +182,7 @@ namespace iText.Layout {
         public virtual void FloatDivTest03() {
             String cmpFileName = sourceFolder + "cmp_floatDivTest03.pdf";
             String outFile = destinationFolder + "floatDivTest03.pdf";
-            PdfWriter writer = new PdfWriter(outFile);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFile);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             Div div = new Div();
@@ -208,7 +213,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_floatingImageInCell.pdf";
             String outFile = destinationFolder + "floatingImageInCell.pdf";
             String imageSrc = sourceFolder + "itis.jpg";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             iText.Layout.Element.Image img1 = new Image(ImageDataFactory.Create(imageSrc)).ScaleToFit(100, 100);
             iText.Layout.Element.Image img2 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
                 (100, 100);
@@ -233,7 +238,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_floatingImageToNextPage.pdf";
             String outFile = destinationFolder + "floatingImageToNextPage.pdf";
             String imageSrc = sourceFolder + "itis.jpg";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             iText.Layout.Element.Image img1 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
                 (100, 100);
             iText.Layout.Element.Image img2 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleAbsolute
@@ -257,7 +262,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_inlineFloatingImageToNextPage.pdf";
             String outFile = destinationFolder + "inlineFloatingImageToNextPage.pdf";
             String imageSrc = sourceFolder + "itis.jpg";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)).SetTagged());
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)).SetTagged());
             iText.Layout.Element.Image img1 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
                 (100, 100);
             iText.Layout.Element.Image img2 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleAbsolute
@@ -282,7 +287,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_floatingTwoImages.pdf";
             String outFile = destinationFolder + "floatingTwoImages.pdf";
             String imageSrc = sourceFolder + "itis.jpg";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             iText.Layout.Element.Image img1 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
                 (400, 400);
             iText.Layout.Element.Image img2 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
@@ -304,7 +309,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_floatingTwoImagesLR.pdf";
             String outFile = destinationFolder + "floatingTwoImagesLR.pdf";
             String imageSrc = sourceFolder + "itis.jpg";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             iText.Layout.Element.Image img1 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
                 (350, 350);
             iText.Layout.Element.Image img2 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
@@ -326,7 +331,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_floatingImageInParagraph.pdf";
             String outFile = destinationFolder + "floatingImageInParagraph.pdf";
             String imageSrc = sourceFolder + "itis.jpg";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             // Image floats on the left inside the paragraph
             iText.Layout.Element.Image img1 = new iText.Layout.Element.Image(ImageDataFactory.Create(imageSrc)).ScaleToFit
                 (100, 100);
@@ -381,7 +386,7 @@ namespace iText.Layout {
         public virtual void FloatsOnCanvas() {
             String cmpFileName = sourceFolder + "cmp_floatsOnCanvas.pdf";
             String outFile = destinationFolder + "floatsOnCanvas.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile)).SetTagged();
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)).SetTagged();
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas pdfCanvas = new PdfCanvas(page);
             iText.Layout.Canvas canvas = new iText.Layout.Canvas(pdfCanvas, page.GetPageSize().ApplyMargins(36, 36, 36
@@ -416,7 +421,7 @@ namespace iText.Layout {
         public virtual void FloatsFixedWidthTest01_floatRight() {
             String cmpFileName = sourceFolder + "cmp_floatsFixedWidthTest01_floatRight.pdf";
             String outFile = destinationFolder + "floatsFixedWidthTest01_floatRight.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Div containerDiv = new Div().SetBorder(new SolidBorder(3)).SetPadding(10);
             Div parentFixedDiv = new Div().SetWidth(300).SetMarginLeft(150).SetBorder(new SolidBorder(ColorConstants.BLUE
                 , 3));
@@ -440,7 +445,7 @@ namespace iText.Layout {
         public virtual void FloatsFixedWidth01_noFloat() {
             String cmpFileName = sourceFolder + "cmp_floatsFixedWidth01_noFloat.pdf";
             String outFile = destinationFolder + "floatsFixedWidth01_noFloat.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Div containerDiv = new Div().SetBorder(new SolidBorder(3)).SetPadding(10);
             Div parentFixedDiv = new Div().SetWidth(300).SetMarginLeft(150).SetBorder(new SolidBorder(ColorConstants.BLUE
                 , 3));
@@ -463,7 +468,7 @@ namespace iText.Layout {
         public virtual void FloatsFixedWidth01_floatLeft() {
             String cmpFileName = sourceFolder + "cmp_floatsFixedWidth01_floatLeft.pdf";
             String outFile = destinationFolder + "floatsFixedWidth01_floatLeft.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Div containerDiv = new Div().SetBorder(new SolidBorder(3)).SetPadding(10);
             Div parentFixedDiv = new Div().SetWidth(300).SetMarginLeft(150).SetBorder(new SolidBorder(ColorConstants.BLUE
                 , 3));
@@ -488,7 +493,7 @@ namespace iText.Layout {
         public virtual void FloatFixedHeightContentNotFit() {
             String cmpFileName = sourceFolder + "cmp_floatFixedHeightContentNotFit.pdf";
             String outFile = destinationFolder + "floatFixedHeightContentNotFit.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)).SetTagged());
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)).SetTagged());
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new Paragraph("Floating div.")).Add(new Paragraph(text));
             div.SetHeight(200).SetWidth(100);
@@ -516,7 +521,7 @@ namespace iText.Layout {
         public virtual void ClearanceFixedHeightPageSplitInRoot01() {
             String cmpFileName = sourceFolder + "cmp_clearanceFixedHeightPageSplitInRoot01.pdf";
             String outFile = destinationFolder + "clearanceFixedHeightPageSplitInRoot01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new Paragraph("Floating div."));
@@ -537,7 +542,7 @@ namespace iText.Layout {
         public virtual void ClearancePageSplitFloatPartialInRoot01() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatPartialInRoot01.pdf";
             String outFile = destinationFolder + "clearancePageSplitFloatPartialInRoot01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)).SetTagged());
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)).SetTagged());
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new Paragraph("Floating div."));
@@ -559,7 +564,7 @@ namespace iText.Layout {
         public virtual void ClearancePageSplitFloatPartialInRoot02() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatPartialInRoot02.pdf";
             String outFile = destinationFolder + "clearancePageSplitFloatPartialInRoot02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)).SetTagged());
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)).SetTagged());
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new Paragraph("Floating div."));
@@ -580,7 +585,7 @@ namespace iText.Layout {
         public virtual void ClearancePageSplitFloatPartialInRoot03() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatPartialInRoot03.pdf";
             String outFile = destinationFolder + "clearancePageSplitFloatPartialInRoot03.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)).SetTagged());
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)).SetTagged());
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new Paragraph("Floating div."));
@@ -606,7 +611,7 @@ namespace iText.Layout {
         public virtual void ClearancePageSplitFloatPartialInBlock01() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatPartialInBlock01.pdf";
             String outFile = destinationFolder + "clearancePageSplitFloatPartialInBlock01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
             containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
@@ -635,7 +640,7 @@ namespace iText.Layout {
         public virtual void ClearancePageSplitFloatPartialInBlock02() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatPartialInBlock02.pdf";
             String outFile = destinationFolder + "clearancePageSplitFloatPartialInBlock02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
             containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
@@ -659,7 +664,7 @@ namespace iText.Layout {
         public virtual void ClearancePageSplitFloatPartialInBlock03() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatPartialInBlock03.pdf";
             String outFile = destinationFolder + "clearancePageSplitFloatPartialInBlock03.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
             containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
@@ -692,7 +697,7 @@ namespace iText.Layout {
         public virtual void ClearancePageSplitFloatNothingInRoot01() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatNothingInRoot01.pdf";
             String outFile = destinationFolder + "clearancePageSplitFloatNothingInRoot01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetHeight(400));
@@ -714,7 +719,7 @@ namespace iText.Layout {
         public virtual void ClearancePageSplitFloatNothingInRoot02() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatNothingInRoot02.pdf";
             String outFile = destinationFolder + "clearancePageSplitFloatNothingInRoot02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetHeight(400).
@@ -737,7 +742,7 @@ namespace iText.Layout {
         public virtual void ClearancePageSplitFloatNothingInRoot03() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatNothingInRoot03.pdf";
             String outFile = destinationFolder + "clearancePageSplitFloatNothingInRoot03.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg")).SetHeight(400).
@@ -762,7 +767,7 @@ namespace iText.Layout {
         public virtual void ClearancePageSplitFloatNothingInBlock01() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatNothingInBlock01.pdf";
             String outFile = destinationFolder + "clearancePageSplitFloatNothingInBlock01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
             containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
@@ -787,7 +792,7 @@ namespace iText.Layout {
         public virtual void ClearancePageSplitFloatNothingInBlock02() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatNothingInBlock02.pdf";
             String outFile = destinationFolder + "clearancePageSplitFloatNothingInBlock02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
             containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
@@ -813,7 +818,7 @@ namespace iText.Layout {
         public virtual void ClearancePageSplitFloatNothingInBlock03() {
             String cmpFileName = sourceFolder + "cmp_clearancePageSplitFloatNothingInBlock03.pdf";
             String outFile = destinationFolder + "clearancePageSplitFloatNothingInBlock03.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
             containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
@@ -840,7 +845,7 @@ namespace iText.Layout {
         public virtual void ClearanceNoContentPageSplitFloatPartialInRoot01() {
             String cmpFileName = sourceFolder + "cmp_clearanceNoContentPageSplitFloatPartialInRoot01.pdf";
             String outFile = destinationFolder + "clearanceNoContentPageSplitFloatPartialInRoot01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new Paragraph("Floating div."));
@@ -864,7 +869,7 @@ namespace iText.Layout {
         public virtual void ClearanceNoContentPageSplitFloatPartialInBlock01() {
             String cmpFileName = sourceFolder + "cmp_clearanceNoContentPageSplitFloatPartialInBlock01.pdf";
             String outFile = destinationFolder + "clearanceNoContentPageSplitFloatPartialInBlock01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
             containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
@@ -890,7 +895,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit01() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit01.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
@@ -908,7 +913,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit02() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit02.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
@@ -926,7 +931,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit03() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit03.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit03.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             div.Add(new Paragraph(text).SetWidth(250));
@@ -945,7 +950,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit04() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit04.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit04.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
@@ -962,7 +967,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit05() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit05.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit05.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
@@ -985,7 +990,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit06_01() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit06_01.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit06_01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             // Setting fixed height for the div, that will be split between pages.
@@ -1007,7 +1012,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit06_02() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit06_02.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit06_02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             // Setting fixed height for the div, that will be split between pages.
@@ -1030,7 +1035,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit06_03() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit06_03.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit06_03.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             // Setting min height for the div, that will be split between pages.
@@ -1052,7 +1057,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit07() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit07.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit07.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
             containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
@@ -1075,7 +1080,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit08_01() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit08_01.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit08_01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
             containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
@@ -1099,7 +1104,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit08_02() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit08_02.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit08_02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
             containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
@@ -1123,7 +1128,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit08_03() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit08_03.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit08_03.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
             containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
@@ -1144,7 +1149,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit09() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit09.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit09.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
             containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
@@ -1168,7 +1173,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit10() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit10.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit10.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
             containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
@@ -1189,7 +1194,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit11() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit11.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit11.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div containerDiv = new Div();
             containerDiv.SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2));
@@ -1215,7 +1220,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit12_01() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit12_01.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit12_01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400).SetWidth(100);
@@ -1232,7 +1237,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit12_02() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit12_02.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit12_02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 )).SetHeight(400).SetWidth(100);
@@ -1249,7 +1254,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit14() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit14.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit14.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
             ImageData imgData = ImageDataFactory.Create(sourceFolder + "itis.jpg");
@@ -1269,7 +1274,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit15() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit15.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit15.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)).SetTagged());
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)).SetTagged());
             Div mainDiv = new Div().SetBorder(new SolidBorder(ColorConstants.CYAN, 3));
             mainDiv.Add(new Paragraph(text + text));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
@@ -1294,7 +1299,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit16() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit16.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit16.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Paragraph p = new Paragraph().SetBorder(new SolidBorder(ColorConstants.CYAN, 3));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
@@ -1319,7 +1324,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit17() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit17.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit17.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div div1 = new Div().SetWidth(100).SetHeight(500).SetBackgroundColor(ColorConstants.BLUE);
             Div div2 = new Div().SetWidth(100).SetHeight(500).SetBackgroundColor(ColorConstants.GREEN);
@@ -1339,7 +1344,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit18() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit18.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit18.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Div mainDiv = new Div();
             Div div1 = new Div().SetWidth(100).SetHeight(500).SetBackgroundColor(ColorConstants.BLUE);
@@ -1361,7 +1366,7 @@ namespace iText.Layout {
         public virtual void FloatsOnPageSplit19() {
             String cmpFileName = sourceFolder + "cmp_floatsOnPageSplit19.pdf";
             String outFile = destinationFolder + "floatsOnPageSplit19.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Paragraph mainP = new Paragraph();
             Div div1 = new Div().SetWidth(100).SetHeight(500).SetBackgroundColor(ColorConstants.BLUE);
@@ -1384,7 +1389,7 @@ namespace iText.Layout {
         public virtual void FloatsKeepTogetherOnPageSplit01() {
             String cmpFileName = sourceFolder + "cmp_floatsKeepTogetherOnPageSplit01.pdf";
             String outFile = destinationFolder + "floatsKeepTogetherOnPageSplit01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Paragraph floatP = new Paragraph(text + text).SetKeepTogether(true).SetWidth(300).SetBorder(new SolidBorder
                 (ColorConstants.RED, 3));
             floatP.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
@@ -1400,7 +1405,7 @@ namespace iText.Layout {
         public virtual void FloatsKeepTogetherOnPageSplit02() {
             String cmpFileName = sourceFolder + "cmp_floatsKeepTogetherOnPageSplit02.pdf";
             String outFile = destinationFolder + "floatsKeepTogetherOnPageSplit02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph("A bit of text."));
             Paragraph floatP = new Paragraph(text + text).SetKeepTogether(true).SetWidth(300).SetBorder(new SolidBorder
                 (ColorConstants.RED, 3));
@@ -1419,7 +1424,7 @@ namespace iText.Layout {
         public virtual void FloatsKeepTogetherOnPageSplit03() {
             String cmpFileName = sourceFolder + "cmp_floatsKeepTogetherOnPageSplit03.pdf";
             String outFile = destinationFolder + "floatsKeepTogetherOnPageSplit03.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text));
             Div floatedKeptTogetherDiv = new Div().Add(new Paragraph(text + text)).SetBackgroundColor(ColorConstants.BLUE
                 ).SetWidth(200).SetKeepTogether(true);
@@ -1437,7 +1442,7 @@ namespace iText.Layout {
         public virtual void FloatsInParagraphPartialSplit01() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit01.pdf";
             String outFile = destinationFolder + "floatsInParagraphPartialSplit01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Paragraph mainP = new Paragraph();
             Div div = new Div().SetWidth(100).SetBorder(new SolidBorder(ColorConstants.BLUE, 3));
@@ -1454,7 +1459,7 @@ namespace iText.Layout {
         public virtual void FloatsInParagraphPartialSplit02() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit02.pdf";
             String outFile = destinationFolder + "floatsInParagraphPartialSplit02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Paragraph mainP = new Paragraph();
             Div div0 = new Div().SetWidth(100).SetBorder(new SolidBorder(ColorConstants.BLUE, 3));
@@ -1475,7 +1480,7 @@ namespace iText.Layout {
         public virtual void FloatsInParagraphPartialSplit03() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit03.pdf";
             String outFile = destinationFolder + "floatsInParagraphPartialSplit03.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Paragraph mainP = new Paragraph();
             Div div0 = new Div().SetWidth(100).SetBorder(new SolidBorder(ColorConstants.BLUE, 3));
@@ -1496,7 +1501,7 @@ namespace iText.Layout {
         public virtual void FloatsInParagraphPartialSplit04() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit04.pdf";
             String outFile = destinationFolder + "floatsInParagraphPartialSplit04.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Paragraph mainP = new Paragraph();
             Div div0 = new Div().SetWidth(100).SetBorder(new SolidBorder(ColorConstants.BLUE, 3));
@@ -1517,7 +1522,7 @@ namespace iText.Layout {
         public virtual void FloatsInParagraphPartialSplit05() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit05.pdf";
             String outFile = destinationFolder + "floatsInParagraphPartialSplit05.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Paragraph mainP = new Paragraph();
             Div div0 = new Div().SetWidth(100).SetBorder(new SolidBorder(ColorConstants.BLUE, 3));
             div0.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
@@ -1534,7 +1539,7 @@ namespace iText.Layout {
         public virtual void FloatsInParagraphPartialSplit06() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit06.pdf";
             String outFile = destinationFolder + "floatsInParagraphPartialSplit06.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Paragraph mainP = new Paragraph();
             Div div0 = new Div().SetWidth(220).SetBorder(new SolidBorder(ColorConstants.RED, 3));
             Div div1 = new Div().SetWidth(220).SetBorder(new SolidBorder(ColorConstants.RED, 3));
@@ -1560,7 +1565,7 @@ namespace iText.Layout {
         public virtual void FloatsInParagraphPartialSplit07() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit07.pdf";
             String outFile = destinationFolder + "floatsInParagraphPartialSplit07.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Paragraph mainP = new Paragraph();
             Div div0 = new Div().SetWidth(200).SetBorder(new SolidBorder(ColorConstants.RED, 3));
             Div div1 = new Div().SetWidth(200).SetBorder(new SolidBorder(ColorConstants.RED, 3));
@@ -1586,7 +1591,7 @@ namespace iText.Layout {
         public virtual void FloatsInParagraphPartialSplit08() {
             String cmpFileName = sourceFolder + "cmp_floatsInParagraphPartialSplit08.pdf";
             String outFile = destinationFolder + "floatsInParagraphPartialSplit08.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Paragraph mainP = new Paragraph();
             Div div0 = new Div().SetWidth(200).SetBorder(new SolidBorder(ColorConstants.RED, 3));
             Div div1 = new Div().SetWidth(200).SetBorder(new SolidBorder(ColorConstants.RED, 3));
@@ -1611,7 +1616,7 @@ namespace iText.Layout {
         public virtual void FloatingTextInParagraphPartialSplit01() {
             String cmpFileName = sourceFolder + "cmp_floatingTextInParagraphPartialSplit01.pdf";
             String outFile = destinationFolder + "floatingTextInParagraphPartialSplit01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Paragraph mainP = new Paragraph().SetBorder(new SolidBorder(ColorConstants.BLUE, 1.5f));
             Text floatText = new Text(text).SetBorder(new SolidBorder(ColorConstants.RED, 3));
             floatText.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
@@ -1627,7 +1632,7 @@ namespace iText.Layout {
         public virtual void FloatingTextInParagraphPartialSplit02() {
             String cmpFileName = sourceFolder + "cmp_floatingTextInParagraphPartialSplit02.pdf";
             String outFile = destinationFolder + "floatingTextInParagraphPartialSplit02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Paragraph mainP = new Paragraph().SetBorder(new SolidBorder(ColorConstants.BLUE, 1.5f));
             Div div1 = new Div().SetWidth(220).SetBorder(new SolidBorder(ColorConstants.DARK_GRAY, 2.8f)).SetBorderBottom
                 (new SolidBorder(ColorConstants.DARK_GRAY, 1f)).SetFontColor(ColorConstants.DARK_GRAY);
@@ -1654,7 +1659,7 @@ namespace iText.Layout {
         public virtual void FloatingTextInParagraphPartialSplit03() {
             String cmpFileName = sourceFolder + "cmp_floatingTextInParagraphPartialSplit03.pdf";
             String outFile = destinationFolder + "floatingTextInParagraphPartialSplit03.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Paragraph mainP = new Paragraph().SetBorder(new SolidBorder(ColorConstants.BLUE, 1.5f));
             Div div1 = new Div().SetWidth(190).SetBorder(new SolidBorder(ColorConstants.DARK_GRAY, 3)).SetFontColor(ColorConstants
                 .DARK_GRAY);
@@ -1681,7 +1686,7 @@ namespace iText.Layout {
         public virtual void FloatsFirstOnPageNotFit01() {
             String cmpFileName = sourceFolder + "cmp_floatsFirstOnPageNotFit01.pdf";
             String outFile = destinationFolder + "floatsFirstOnPageNotFit01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Paragraph mainP = new Paragraph();
             Div div = new Div().SetWidth(150).SetBorder(new SolidBorder(ColorConstants.BLUE, 3)).SetKeepTogether(true);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
@@ -1701,7 +1706,7 @@ namespace iText.Layout {
         public virtual void FloatsFirstOnPageNotFit02() {
             String cmpFileName = sourceFolder + "cmp_floatsFirstOnPageNotFit02.pdf";
             String outFile = destinationFolder + "floatsFirstOnPageNotFit02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Div mainDiv = new Div();
             Div div = new Div().SetWidth(150).SetBorder(new SolidBorder(ColorConstants.BLUE, 3)).SetKeepTogether(true);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
@@ -1721,7 +1726,7 @@ namespace iText.Layout {
         public virtual void FloatsFirstOnPageNotFit03() {
             String cmpFileName = sourceFolder + "cmp_floatsFirstOnPageNotFit03.pdf";
             String outFile = destinationFolder + "floatsFirstOnPageNotFit03.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Div div = new Div().SetWidth(150).SetBorder(new SolidBorder(ColorConstants.BLUE, 3)).SetKeepTogether(true);
             div.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
             div.Add(new Paragraph(text).SetFontColor(ColorConstants.LIGHT_GRAY));
@@ -1738,7 +1743,7 @@ namespace iText.Layout {
         public virtual void FloatPartialSplitBigGapAtPageEnd01() {
             String cmpFileName = sourceFolder + "cmp_floatPartialSplitBigGapAtPageEnd01.pdf";
             String outFile = destinationFolder + "floatPartialSplitBigGapAtPageEnd01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Div div = new Div().SetWidth(350).SetBorder(new SolidBorder(ColorConstants.BLUE, 3));
             // specifying fill available area option
             div.SetFillAvailableAreaOnSplit(true);
@@ -1758,7 +1763,7 @@ namespace iText.Layout {
         public virtual void FloatPartialSplitBigGapAtPageEnd02() {
             String cmpFileName = sourceFolder + "cmp_floatPartialSplitBigGapAtPageEnd02.pdf";
             String outFile = destinationFolder + "floatPartialSplitBigGapAtPageEnd02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Div div = new Div().SetWidth(350).SetBorder(new SolidBorder(ColorConstants.BLUE, 3));
             // specifying fill available area option
             div.SetFillAvailableAreaOnSplit(true);
@@ -1783,7 +1788,7 @@ namespace iText.Layout {
         public virtual void FloatInParagraphLastLineLeadingOverflow01() {
             String cmpFileName = sourceFolder + "cmp_floatInParagraphLastLineLeadingOverflow01.pdf";
             String outFile = destinationFolder + "floatInParagraphLastLineLeadingOverflow01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text + text).SetMargin(0).SetMultipliedLeading(1.3f));
             Paragraph p = new Paragraph().SetFontColor(ColorConstants.RED).SetFixedLeading(20f);
             p.Add("First line of red paragraph.\n");
@@ -1802,7 +1807,7 @@ namespace iText.Layout {
         public virtual void FloatOverflowNothingInParagraph01() {
             String cmpFileName = sourceFolder + "cmp_floatOverflowNothingInParagraph01.pdf";
             String outFile = destinationFolder + "floatOverflowNothingInParagraph01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Paragraph p = new Paragraph().SetFontColor(ColorConstants.RED);
             ImageData img = ImageDataFactory.Create(sourceFolder + "itis.jpg");
@@ -1829,7 +1834,7 @@ namespace iText.Layout {
         public virtual void FloatOverflowNothingInParagraph02() {
             String cmpFileName = sourceFolder + "cmp_floatOverflowNothingInParagraph02.pdf";
             String outFile = destinationFolder + "floatOverflowNothingInParagraph02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Paragraph p = new Paragraph().SetFontColor(ColorConstants.RED);
             ImageData img = ImageDataFactory.Create(sourceFolder + "itis.jpg");
@@ -1846,7 +1851,7 @@ namespace iText.Layout {
         public virtual void FloatInlineBlockTest01() {
             String cmpFileName = sourceFolder + "cmp_floatInlineBlockTest01.pdf";
             String outFile = destinationFolder + "floatInlineBlockTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             Paragraph p = new Paragraph().SetBorder(new SolidBorder(1));
             p.Add("Float with large borders shall fit on first line with this text. ");
@@ -1867,7 +1872,7 @@ namespace iText.Layout {
         public virtual void FloatsHeightFixedInBlock01() {
             String cmpFileName = sourceFolder + "cmp_floatsHeightFixedInBlock01.pdf";
             String outFile = destinationFolder + "floatsHeightFixedInBlock01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2)).SetHeight(100);
             Paragraph p = new Paragraph(text);
             p.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
@@ -1883,7 +1888,7 @@ namespace iText.Layout {
         public virtual void FloatsHeightFixedInBlock02() {
             String cmpFileName = sourceFolder + "cmp_floatsHeightFixedInBlock02.pdf";
             String outFile = destinationFolder + "floatsHeightFixedInBlock02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text + text.JSubstring(0, text.Length / 2) + "."));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2)).SetHeight(200);
             Paragraph p = new Paragraph(text);
@@ -1900,7 +1905,7 @@ namespace iText.Layout {
         public virtual void FloatsHeightFixedInParagraph01() {
             String cmpFileName = sourceFolder + "cmp_floatsHeightFixedInParagraph01.pdf";
             String outFile = destinationFolder + "floatsHeightFixedInParagraph01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Paragraph parentParagraph = new Paragraph().SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2)).SetHeight
                 (100);
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
@@ -1918,7 +1923,7 @@ namespace iText.Layout {
         public virtual void FloatsHeightFixedInParagraph02() {
             String cmpFileName = sourceFolder + "cmp_floatsHeightFixedInParagraph02.pdf";
             String outFile = destinationFolder + "floatsHeightFixedInParagraph02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text + text.JSubstring(0, text.Length / 2) + "."));
             Paragraph parentParagraph = new Paragraph().SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2)).SetHeight
                 (200);
@@ -1937,7 +1942,7 @@ namespace iText.Layout {
         public virtual void FloatsMaxHeightFixedInBlock01() {
             String cmpFileName = sourceFolder + "cmp_floatsMaxHeightFixedInBlock01.pdf";
             String outFile = destinationFolder + "floatsMaxHeightFixedInBlock01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2)).SetMaxHeight(100);
             Paragraph p = new Paragraph(text);
             p.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
@@ -1953,7 +1958,7 @@ namespace iText.Layout {
         public virtual void FloatsMaxHeightFixedInBlock02() {
             String cmpFileName = sourceFolder + "cmp_floatsMaxHeightFixedInBlock02.pdf";
             String outFile = destinationFolder + "floatsMaxHeightFixedInBlock02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text + text.JSubstring(0, text.Length / 2) + "."));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2)).SetMaxHeight(200);
             Paragraph p = new Paragraph(text);
@@ -1970,7 +1975,7 @@ namespace iText.Layout {
         public virtual void FloatsMaxHeightFixedInParagraph01() {
             String cmpFileName = sourceFolder + "cmp_floatsMaxHeightFixedInParagraph01.pdf";
             String outFile = destinationFolder + "floatsMaxHeightFixedInParagraph01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Paragraph parentParagraph = new Paragraph().SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2)).SetMaxHeight
                 (100);
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
@@ -1988,7 +1993,7 @@ namespace iText.Layout {
         public virtual void FloatsMaxHeightFixedInParagraph02() {
             String cmpFileName = sourceFolder + "cmp_floatsMaxHeightFixedInParagraph02.pdf";
             String outFile = destinationFolder + "floatsMaxHeightFixedInParagraph02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text + text.JSubstring(0, text.Length / 2) + "."));
             Paragraph parentParagraph = new Paragraph().SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2)).SetMaxHeight
                 (200);
@@ -2006,7 +2011,7 @@ namespace iText.Layout {
         public virtual void FloatsMinHeightFixedInBlock01() {
             String cmpFileName = sourceFolder + "cmp_floatsMinHeightFixedInBlock01.pdf";
             String outFile = destinationFolder + "floatsMinHeightFixedInBlock01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2)).SetMinHeight(100);
             Paragraph p = new Paragraph(text);
             p.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
@@ -2021,7 +2026,7 @@ namespace iText.Layout {
         public virtual void FloatsMinHeightFixedInBlock02() {
             String cmpFileName = sourceFolder + "cmp_floatsMinHeightFixedInBlock02.pdf";
             String outFile = destinationFolder + "floatsMinHeightFixedInBlock02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text + text.JSubstring(0, text.Length / 2) + "."));
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2)).SetMinHeight(200);
             Paragraph p = new Paragraph(text);
@@ -2037,7 +2042,7 @@ namespace iText.Layout {
         public virtual void FloatsMinHeightFixedInParagraph01() {
             String cmpFileName = sourceFolder + "cmp_floatsMinHeightFixedInParagraph01.pdf";
             String outFile = destinationFolder + "floatsMinHeightFixedInParagraph01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Paragraph parentParagraph = new Paragraph().SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2)).SetMinHeight
                 (100);
             Div div = new Div().SetBorder(new SolidBorder(ColorConstants.RED, 2));
@@ -2054,7 +2059,7 @@ namespace iText.Layout {
         public virtual void FloatsMinHeightFixedInParagraph02() {
             String cmpFileName = sourceFolder + "cmp_floatsMinHeightFixedInParagraph02.pdf";
             String outFile = destinationFolder + "floatsMinHeightFixedInParagraph02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text + text.JSubstring(0, text.Length / 2) + "."));
             Paragraph parentParagraph = new Paragraph().SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2)).SetMinHeight
                 (200);
@@ -2072,7 +2077,7 @@ namespace iText.Layout {
         public virtual void FloatsMinHeightApplyingOnSplitTest01() {
             String cmpFileName = sourceFolder + "cmp_floatsMinHeightApplyingOnSplitTest01.pdf";
             String outFile = destinationFolder + "floatsMinHeightApplyingOnSplitTest01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text));
             // Gray area in this test is expected to be not split, continuous and have height equal
             // exactly to mainDiv min height property value. Floating elements shall not affect
@@ -2092,7 +2097,7 @@ namespace iText.Layout {
         public virtual void FloatsMinHeightApplyingOnSplitTest02() {
             String cmpFileName = sourceFolder + "cmp_floatsMinHeightApplyingOnSplitTest02.pdf";
             String outFile = destinationFolder + "floatsMinHeightApplyingOnSplitTest02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text));
             // Gray area in this test is expected to be not split, continuous and have height equal
             // exactly to mainDiv min height property value. Floating elements shall not affect
@@ -2113,7 +2118,7 @@ namespace iText.Layout {
         public virtual void FloatsMinHeightApplyingOnSplitTest03() {
             String cmpFileName = sourceFolder + "cmp_floatsMinHeightApplyingOnSplitTest03.pdf";
             String outFile = destinationFolder + "floatsMinHeightApplyingOnSplitTest03.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text));
             // Gray area in this test is expected to be split, however also not to have a gap before page end.
             // Min height shall be resolved exactly the way as it would be resolved if no floats were there.
@@ -2133,7 +2138,7 @@ namespace iText.Layout {
         public virtual void FloatsMinHeightApplyingOnSplitTest04() {
             String cmpFileName = sourceFolder + "cmp_floatsMinHeightApplyingOnSplitTest04.pdf";
             String outFile = destinationFolder + "floatsMinHeightApplyingOnSplitTest04.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Div mainDiv = new Div();
             mainDiv.SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetMaxHeight(750);
             mainDiv.Add(new Paragraph(text));
@@ -2160,7 +2165,7 @@ namespace iText.Layout {
         public virtual void FloatsMinHeightApplyingOnSplitTest05() {
             String cmpFileName = sourceFolder + "cmp_floatsMinHeightApplyingOnSplitTest05.pdf";
             String outFile = destinationFolder + "floatsMinHeightApplyingOnSplitTest05.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             // Since mainDiv is floating here, it encompasses all the floating children in it's occupied area.
             // In this case, behaviour is expected to be the same as with just normal content and min_height property:
             // height is not extended to all available height on first page in order not to "spend" height and ultimately
@@ -2192,7 +2197,7 @@ namespace iText.Layout {
         public virtual void FloatsFixedMaxHeightAndOverflowHidden01() {
             String cmpFileName = sourceFolder + "cmp_floatsFixedMaxHeightAndOverflowHidden01.pdf";
             String outFile = destinationFolder + "floatsFixedMaxHeightAndOverflowHidden01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text + text.JSubstring(0, text.Length / 2) + "."));
             Paragraph parentParagraph = new Paragraph().SetBorder(new SolidBorder(ColorConstants.MAGENTA, 2)).SetMaxHeight
                 (200);
@@ -2218,7 +2223,7 @@ namespace iText.Layout {
         public virtual void FloatsOverflowToNextLineAtPageEndInParagraph01() {
             String cmpFileName = sourceFolder + "cmp_floatsOverflowToNextLineAtPageEndInParagraph01.pdf";
             String outFile = destinationFolder + "floatsOverflowToNextLineAtPageEndInParagraph01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Paragraph mainP = new Paragraph().SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetBorder(new SolidBorder(
                 3)).SetMargin(0).SetFontSize(30).SetMinHeight(240);
@@ -2241,7 +2246,7 @@ namespace iText.Layout {
         public virtual void FloatsOverflowToNextLineAtPageEndInParagraph02() {
             String cmpFileName = sourceFolder + "cmp_floatsOverflowToNextLineAtPageEndInParagraph02.pdf";
             String outFile = destinationFolder + "floatsOverflowToNextLineAtPageEndInParagraph02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Paragraph mainP = new Paragraph().SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetBorder(new SolidBorder(
                 3)).SetMargin(0);
@@ -2262,7 +2267,7 @@ namespace iText.Layout {
         public virtual void FloatsOverflowToNextLineAtPageEndInParagraph03() {
             String cmpFileName = sourceFolder + "cmp_floatsOverflowToNextLineAtPageEndInParagraph03.pdf";
             String outFile = destinationFolder + "floatsOverflowToNextLineAtPageEndInParagraph03.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             document.Add(new Paragraph(text + text));
             Paragraph mainP = new Paragraph().SetBackgroundColor(ColorConstants.LIGHT_GRAY).SetBorder(new SolidBorder(
                 3)).SetMargin(0).SetMinHeight(240);
@@ -2311,7 +2316,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_floatRootElementNotFitPage01.pdf";
             String outFile = destinationFolder + "floatRootElementNotFitPage01.pdf";
             //Initialize PDF writer
-            PdfWriter writer = new PdfWriter(outFile);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFile);
             //Initialize PDF document
             PdfDocument pdf = new PdfDocument(writer);
             pdf.SetDefaultPageSize(new PageSize(600, 350));
@@ -2346,7 +2351,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_floatRootElementNotFitPage02.pdf";
             String outFile = destinationFolder + "floatRootElementNotFitPage02.pdf";
             //Initialize PDF writer
-            PdfWriter writer = new PdfWriter(outFile);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFile);
             //Initialize PDF document
             PdfDocument pdf = new PdfDocument(writer);
             pdf.SetDefaultPageSize(new PageSize(600, 350));
@@ -2386,7 +2391,7 @@ namespace iText.Layout {
         public virtual void FloatOverflowAlongWithNewContent01() {
             String cmpFileName = sourceFolder + "cmp_floatOverflowAlongWithNewContent01.pdf";
             String outFile = destinationFolder + "floatOverflowAlongWithNewContent01.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Div divContainer = new Div();
             divContainer.SetMargin(20);
             divContainer.SetBorder(new SolidBorder(ColorConstants.BLACK, 10));
@@ -2406,7 +2411,7 @@ namespace iText.Layout {
         public virtual void FloatOverflowAlongWithNewContent02() {
             String cmpFileName = sourceFolder + "cmp_floatOverflowAlongWithNewContent02.pdf";
             String outFile = destinationFolder + "floatOverflowAlongWithNewContent02.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Div divContainer = new Div();
             divContainer.SetMargin(20);
             divContainer.SetBorder(new SolidBorder(ColorConstants.BLACK, 10));
@@ -2427,7 +2432,7 @@ namespace iText.Layout {
         public virtual void FloatTableTest01() {
             String cmpFileName = sourceFolder + "cmp_floatTableTest01.pdf";
             String outFile = destinationFolder + "floatTableTest01.pdf";
-            PdfWriter writer = new PdfWriter(outFile);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFile);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             Div div = new Div();
@@ -2452,7 +2457,7 @@ namespace iText.Layout {
         public virtual void KeepTogetherEnoughSpaceOnNewPageWithFloatTest() {
             String cmpFileName = sourceFolder + "cmp_keepTogetherEnoughSpaceOnNewPageWithFloatTest.pdf";
             String outFile = destinationFolder + "keepTogetherEnoughSpaceOnNewPageWithFloatTest.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             FillWithKeptTogetherElement(document, text, 2, false, false);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
@@ -2464,7 +2469,7 @@ namespace iText.Layout {
         public virtual void KeepTogetherNotEnoughSpaceOnNewPageWithFloatEnoughOnEmptyTest() {
             String cmpFileName = sourceFolder + "cmp_keepTogetherNotEnoughSpaceOnNewPageWithFloatEnoughOnEmptyTest.pdf";
             String outFile = destinationFolder + "keepTogetherNotEnoughSpaceOnNewPageWithFloatEnoughOnEmptyTest.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             FillWithKeptTogetherElement(document, text, 3, false, false);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
@@ -2476,7 +2481,7 @@ namespace iText.Layout {
         public virtual void KeepTogetherNotEnoughSpaceOnNewEmptyPageTest() {
             String cmpFileName = sourceFolder + "cmp_keepTogetherNotEnoughSpaceOnNewEmptyPageTest.pdf";
             String outFile = destinationFolder + "keepTogetherNotEnoughSpaceOnNewEmptyPageTest.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             FillWithKeptTogetherElement(document, text, 4, false, false);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
@@ -2488,7 +2493,7 @@ namespace iText.Layout {
         public virtual void KeepTogetherNotEnoughSpaceOnNewEmptyPageShortFloatTest() {
             String cmpFileName = sourceFolder + "cmp_keepTogetherNotEnoughSpaceOnNewEmptyPageShortFloatTest.pdf";
             String outFile = destinationFolder + "keepTogetherNotEnoughSpaceOnNewEmptyPageShortFloatTest.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             FillWithKeptTogetherElement(document, "Some short text", 4, false, true);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
@@ -2500,7 +2505,7 @@ namespace iText.Layout {
         public virtual void InnerKeepTogetherEnoughSpaceOnNewPageWithFloatTest() {
             String cmpFileName = sourceFolder + "cmp_innerKeepTogetherEnoughSpaceOnNewPageWithFloatTest.pdf";
             String outFile = destinationFolder + "innerKeepTogetherEnoughSpaceOnNewPageWithFloatTest.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             FillWithKeptTogetherElement(document, text, 2, true, false);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
@@ -2512,7 +2517,7 @@ namespace iText.Layout {
         public virtual void InnerKeepTogetherNotEnoughSpaceOnNewPageWithFloatEnoughOnEmptyTest() {
             String cmpFileName = sourceFolder + "cmp_innerKeepTogetherNotEnoughSpaceOnNewPageWithFloatEnoughOnEmptyTest.pdf";
             String outFile = destinationFolder + "innerKeepTogetherNotEnoughSpaceOnNewPageWithFloatEnoughOnEmptyTest.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             FillWithKeptTogetherElement(document, text, 3, true, false);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
@@ -2524,7 +2529,7 @@ namespace iText.Layout {
         public virtual void InnerKeepTogetherNotEnoughSpaceOnNewEmptyPageTest() {
             String cmpFileName = sourceFolder + "cmp_innerKeepTogetherNotEnoughSpaceOnNewEmptyPageTest.pdf";
             String outFile = destinationFolder + "innerKeepTogetherNotEnoughSpaceOnNewEmptyPageTest.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             FillWithKeptTogetherElement(document, text, 4, true, false);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFile, cmpFileName, destinationFolder, 
@@ -2535,7 +2540,7 @@ namespace iText.Layout {
         public virtual void IndentInParagraphAndFloatInInnerDivTest() {
             String outFile = destinationFolder + "indentInParagraphAndFloatInInnerDiv.pdf";
             String cmpFileName = sourceFolder + "cmp_indentInParagraphAndFloatInInnerDiv.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Div div = new Div().Add(new Paragraph("Video provides a powerful way to help you prove" + " your point. When you click Online Video, you can"
                 ));
             div.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
@@ -2553,7 +2558,7 @@ namespace iText.Layout {
         public virtual void FloatAndIndentInFirstParagraphInDivTest() {
             String outFile = destinationFolder + "floatAndIndentInFirstParagraphInDiv.pdf";
             String cmpFileName = sourceFolder + "cmp_floatAndIndentInFirstParagraphInDiv.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Paragraph shortFloat = new Paragraph("Hello, iText! Hello, iText!").SetBackgroundColor(ColorConstants.CYAN
                 );
             shortFloat.SetFirstLineIndent(50).SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
@@ -2570,7 +2575,7 @@ namespace iText.Layout {
         public virtual void ShortFloatRightAndIndentInSecondParagraphInDivTest() {
             String outFile = destinationFolder + "shortFloatRightAndIndentInSecondParagraphInDiv.pdf";
             String cmpFileName = sourceFolder + "cmp_shortFloatRightAndIndentInSecondParagraphInDiv.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Paragraph shortFloat = new Paragraph("Hello, iText! Hello, iText!").SetBackgroundColor(ColorConstants.CYAN
                 );
             shortFloat.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
@@ -2587,7 +2592,7 @@ namespace iText.Layout {
         public virtual void ShortFloatLeftAndIndentInSecondParagraphInDivTest() {
             String outFile = destinationFolder + "shortFloatLeftAndIndentInSecondParagraphInDiv.pdf";
             String cmpFileName = sourceFolder + "cmp_shortFloatLeftAndIndentInSecondParagraphInDiv.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Paragraph shortFloat = new Paragraph("Hello, iText! Hello, iText!").SetBackgroundColor(ColorConstants.CYAN
                 );
             shortFloat.SetProperty(Property.FLOAT, FloatPropertyValue.LEFT);
@@ -2604,7 +2609,7 @@ namespace iText.Layout {
         public virtual void LongFloatAndIndentInSecondParagraphInDivTest() {
             String outFile = destinationFolder + "longFloatAndIndentInSecondParagraphInDiv.pdf";
             String cmpFileName = sourceFolder + "cmp_longFloatAndIndentInSecondParagraphInDiv.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Paragraph longFloat = new Paragraph(text).SetBackgroundColor(ColorConstants.CYAN);
             longFloat.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
             Paragraph p = new Paragraph(text).SetFirstLineIndent(50).SetBackgroundColor(ColorConstants.YELLOW);
@@ -2620,7 +2625,7 @@ namespace iText.Layout {
         public virtual void IndentInParentParagraphShortFirstFloatTest() {
             String outFile = destinationFolder + "indentInParentParagraphShortFirstFloat.pdf";
             String cmpFileName = sourceFolder + "cmp_indentInParentParagraphShortFirstFloat.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Paragraph parent = new Paragraph(text).SetFirstLineIndent(50);
             Paragraph shortFloat = new Paragraph(shortText).SetBackgroundColor(ColorConstants.CYAN);
             shortFloat.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);
@@ -2636,7 +2641,7 @@ namespace iText.Layout {
         public virtual void IndentInParentParagraphLongFirstFloatTest() {
             String outFile = destinationFolder + "indentInParentParagraphLongFirstFloat.pdf";
             String cmpFileName = sourceFolder + "cmp_indentInParentParagraphLongFirstFloat.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outFile)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)));
             Paragraph parent = new Paragraph(text).SetFirstLineIndent(50);
             Paragraph longFloat = new Paragraph(text).SetBackgroundColor(ColorConstants.CYAN);
             longFloat.SetProperty(Property.FLOAT, FloatPropertyValue.RIGHT);

@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.IO.Font;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -37,6 +36,8 @@ namespace iText.Kernel.Pdf.Annot {
     /// different standard types of annotations. See ISO-320001 12.5.6, "Annotation Types."
     /// </remarks>
     public abstract class PdfAnnotation : PdfObjectWrapper<PdfDictionary> {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.Annot.PdfAnnotation));
+
         /// <summary>Annotation flag.</summary>
         /// <remarks>
         /// Annotation flag.
@@ -495,7 +496,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <returns>
         /// 
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
-        /// that is a page pdf object or null if annotation is not added to the page yet.
+        /// that is a page PDF object or null if annotation is not added to the page yet.
         /// </returns>
         public virtual PdfDictionary GetPageObject() {
             return GetPdfObject().GetAsDictionary(PdfName.P);
@@ -542,7 +543,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// Keep in mind that this doesn't actually add an annotation to the page,
         /// it should be done via
         /// <see cref="iText.Kernel.Pdf.PdfPage.AddAnnotation(PdfAnnotation)"/>.
-        /// Also you don't need to set this property manually, this is done automatically on addition to the page.
+        /// Also, you don't need to set this property manually, this is done automatically on addition to the page.
         /// </remarks>
         /// <param name="page">
         /// the
@@ -691,7 +692,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="NO_ZOOM"/>
         /// - If set, do not scale the annotation’s appearance to match the magnification of
         /// the page. The location of the annotation on the page (defined by the upper-left corner of its annotation
-        /// rectangle) shall remain fixed, regardless of the page magnification.}
+        /// rectangle) shall remain fixed, regardless of the page magnification.
         /// </description></item>
         /// <item><description>
         /// <see cref="NO_ROTATE"/>
@@ -817,7 +818,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfName.D">Down</see>.
         /// </param>
         /// <returns>
-        /// null if their is no such appearance type or an appearance object which might be either
+        /// null if there is no such appearance type or an appearance object which might be either
         /// an appearance stream or an appearance subdictionary.
         /// </returns>
         public virtual PdfDictionary GetAppearanceObject(PdfName appearanceType) {
@@ -1164,7 +1165,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// specifying the characteristics of the annotation’s border.
         /// See
         /// <see cref="GetBorder()"/>
-        /// for more detailes.
+        /// for more details.
         /// </param>
         /// <returns>
         /// this
@@ -1182,7 +1183,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// specifying the characteristics of the annotation’s border.
         /// See
         /// <see cref="GetBorder()"/>
-        /// for more detailes.
+        /// for more details.
         /// </param>
         /// <returns>
         /// this
@@ -1296,11 +1297,11 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         /// <summary>
-        /// Sets he integer key of the annotation’s entry in the structural parent tree
+        /// Sets the integer key of the annotation’s entry in the structural parent tree
         /// (see ISO-320001 14.7.4.4, "Finding Structure Elements from Content Items").
         /// </summary>
         /// <remarks>
-        /// Sets he integer key of the annotation’s entry in the structural parent tree
+        /// Sets the integer key of the annotation’s entry in the structural parent tree
         /// (see ISO-320001 14.7.4.4, "Finding Structure Elements from Content Items").
         /// Note: Normally, there is no need to take care of this manually, struct parent index is set automatically
         /// if annotation is added to the tagged document's page.
@@ -1428,12 +1429,12 @@ namespace iText.Kernel.Pdf.Annot {
         /// <summary>PDF 2.0.</summary>
         /// <remarks>
         /// PDF 2.0. When regenerating the annotation's appearance stream, this is the
-        /// opacity value that shall be used for all nonstroking
+        /// opacity value that shall be used for all non stroking
         /// operations on all visible elements of the annotation in its closed state (including its
         /// background and border) but not the popup window that appears when the annotation is
         /// opened.
         /// </remarks>
-        /// <returns>opacity value for nonstroking operations. Returns 1.0 (default value) if entry is not present</returns>
+        /// <returns>opacity value for non stroking operations. Returns 1.0 (default value) if entry is not present</returns>
         public virtual float GetNonStrokingOpacity() {
             PdfNumber nonStrokingOpacity = GetPdfObject().GetAsNumber(PdfName.ca);
             return nonStrokingOpacity != null ? nonStrokingOpacity.FloatValue() : 1;
@@ -1442,12 +1443,12 @@ namespace iText.Kernel.Pdf.Annot {
         /// <summary>PDF 2.0.</summary>
         /// <remarks>
         /// PDF 2.0. When regenerating the annotation's appearance stream, this is the
-        /// opacity value that shall be used for all nonstroking
+        /// opacity value that shall be used for all non stroking
         /// operations on all visible elements of the annotation in its closed state (including its
         /// background and border) but not the popup window that appears when the annotation is
         /// opened.
         /// </remarks>
-        /// <param name="nonStrokingOpacity">opacity for nonstroking operations</param>
+        /// <param name="nonStrokingOpacity">opacity for non stroking operations</param>
         /// <returns>
         /// this
         /// <see cref="PdfAnnotation"/>
@@ -1488,7 +1489,7 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         /// <summary>
-        /// Inserts the value into into the underlying
+        /// Inserts the value into the underlying
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// of this
         /// <see cref="PdfAnnotation"/>
@@ -1496,7 +1497,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// with the specified key.
         /// </summary>
         /// <remarks>
-        /// Inserts the value into into the underlying
+        /// Inserts the value into the underlying
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// of this
         /// <see cref="PdfAnnotation"/>
@@ -1553,8 +1554,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <param name="fs">file specification dictionary of associated file</param>
         public virtual void AddAssociatedFile(PdfFileSpec fs) {
             if (null == ((PdfDictionary)fs.GetPdfObject()).Get(PdfName.AFRelationship)) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Annot.PdfAnnotation));
-                logger.LogError(iText.IO.Logs.IoLogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
+                LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.ASSOCIATED_FILE_SPEC_SHALL_INCLUDE_AFRELATIONSHIP);
             }
             PdfArray afArray = GetPdfObject().GetAsArray(PdfName.AF);
             if (afArray == null) {

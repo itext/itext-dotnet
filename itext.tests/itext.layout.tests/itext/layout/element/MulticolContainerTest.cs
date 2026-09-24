@@ -58,6 +58,11 @@ namespace iText.Layout.Element {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void ParagraphColumnContainerTest() {
             ExecuteTest("paragraphColumnContainerTest", (ctx) => {
@@ -91,7 +96,7 @@ namespace iText.Layout.Element {
         public virtual void ColumnedDivInsideTableTest() {
             String outFileName = DESTINATION_FOLDER + "columnedDivInsideTableTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_columnedDivInsideTableTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)))) {
                 Table table = new Table(2);
                 Div columnContainer = new MulticolContainer();
                 columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
@@ -463,7 +468,7 @@ namespace iText.Layout.Element {
         public virtual void SingleParagraphMultiPageTest() {
             String outFileName = DESTINATION_FOLDER + "singleParagraphMultiPageTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_singleParagraphMultiPageTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)))) {
                 document.Add(CreateFirstPageFiller());
                 Div columnContainer = new MulticolContainer();
                 columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
@@ -482,7 +487,7 @@ namespace iText.Layout.Element {
         public virtual void SingleParagraphWithBorderMultiPageTest() {
             String outFileName = DESTINATION_FOLDER + "singleParagraphWithBorderMultiPageTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_singleParagraphWithBorderMultiPageTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)))) {
                 document.Add(CreateFirstPageFiller());
                 Div columnContainer = new MulticolContainer();
                 columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
@@ -503,7 +508,7 @@ namespace iText.Layout.Element {
         public virtual void ParagraphWithImagesMultiPageTest() {
             String outFileName = DESTINATION_FOLDER + "paragraphWithImagesMultiPageTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_paragraphWithImagesMultiPageTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)))) {
                 document.Add(CreateFirstPageFiller());
                 Div columnContainer = new MulticolContainer();
                 columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
@@ -637,7 +642,7 @@ namespace iText.Layout.Element {
         public virtual void OverflowingDivWithParagraphMultipageTest() {
             String outFileName = DESTINATION_FOLDER + "overflowingDivWithParagraphMultipageTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_overflowingDivWithParagraphMultipageTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)))) {
                 document.Add(CreateFirstPageFiller());
                 Div columnContainer = new MulticolContainer();
                 columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
@@ -665,7 +670,7 @@ namespace iText.Layout.Element {
         public virtual void MarginCantFitCurrentPageTest() {
             String outFileName = DESTINATION_FOLDER + "marginCantFitCurrentPageTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_marginCantFitCurrentPageTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)))) {
                 document.Add(CreateFirstPageFiller());
                 Div columnContainer = new MulticolContainer();
                 columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
@@ -694,7 +699,7 @@ namespace iText.Layout.Element {
         public virtual void PaddingCantFitCurrentPageTest() {
             String outFileName = DESTINATION_FOLDER + "paddingCantFitCurrentPageTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_paddingCantFitCurrentPageTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)))) {
                 document.Add(CreateFirstPageFiller());
                 Div columnContainer = new MulticolContainer();
                 columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
@@ -724,7 +729,7 @@ namespace iText.Layout.Element {
         public virtual void KeepTogetherBlockingLayoutTest() {
             String outFileName = DESTINATION_FOLDER + "keepTogetherBlockingLayoutTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherBlockingLayoutTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)))) {
                 document.Add(CreateFirstPageFiller());
                 Div columnContainer = new MulticolContainer();
                 columnContainer.SetProperty(Property.COLUMN_COUNT, 3);
@@ -1006,7 +1011,7 @@ namespace iText.Layout.Element {
         public virtual void ParagraphWithColumnWidthTest() {
             String outFileName = DESTINATION_FOLDER + "paragraphWithColumnWidthTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_paragraphWithColumnWidthTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)))) {
                 Div columnContainer = new MulticolContainer();
                 columnContainer.SetProperty(Property.COLUMN_WIDTH, 200.0f);
                 Paragraph paragraph = CreateDummyParagraph();
@@ -1022,7 +1027,7 @@ namespace iText.Layout.Element {
         public virtual void ParagraphWithColumnWidthAndColumnCountTest() {
             String outFileName = DESTINATION_FOLDER + "paragraphWithColumnWidthAndColumnCountTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_paragraphWithColumnWidthAndColumnCountTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)))) {
                 Div columnContainer = new MulticolContainer();
                 //column width is ignored in this case, because column-count requires higher width
                 columnContainer.SetProperty(Property.COLUMN_WIDTH, 100.0f);
@@ -1056,7 +1061,7 @@ namespace iText.Layout.Element {
         public virtual void ParagraphWithColumnWidthAndGapTest() {
             String outFileName = DESTINATION_FOLDER + "paragraphWithColumnWidthAndGapTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_paragraphWithColumnWidthAndGapTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)))) {
                 Div columnContainer = new MulticolContainer();
                 columnContainer.SetProperty(Property.COLUMN_WIDTH, 100.0f);
                 columnContainer.SetProperty(Property.COLUMN_GAP, 100.0f);
@@ -1072,7 +1077,7 @@ namespace iText.Layout.Element {
         public virtual void ParagraphWithColumnCountAndGapTest() {
             String outFileName = DESTINATION_FOLDER + "paragraphWithColumnCountAndGapTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_paragraphWithColumnCountAndGapTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)))) {
                 Div columnContainer = new MulticolContainer();
                 columnContainer.SetProperty(Property.COLUMN_COUNT, 5);
                 columnContainer.SetProperty(Property.COLUMN_GAP, 50.0f);
@@ -1088,7 +1093,7 @@ namespace iText.Layout.Element {
         public virtual void ParagraphWithSimpleSolidColumnGapTest() {
             String outFileName = DESTINATION_FOLDER + "paragraphWithSimpleStyledColumnGapTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_paragraphWithSimpleStyledColumnGapTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)))) {
                 Div columnContainer = new MulticolContainer();
                 columnContainer.SetProperty(Property.COLUMN_COUNT, 5);
                 columnContainer.SetProperty(Property.COLUMN_GAP, 50.0f);
@@ -1105,7 +1110,7 @@ namespace iText.Layout.Element {
         public virtual void DivWithSimpleSolidColumnGapTest() {
             String outFileName = DESTINATION_FOLDER + "divWithSimpleStyledColumnGapTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_divWithSimpleStyledColumnGapTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)))) {
                 Div columnContainer = new MulticolContainer();
                 columnContainer.SetProperty(Property.COLUMN_COUNT, 5);
                 columnContainer.SetProperty(Property.COLUMN_GAP, 50.0f);
@@ -1126,7 +1131,7 @@ namespace iText.Layout.Element {
         public virtual void ParagraphWithNegativeValueSolidColumnGapTest() {
             String outFileName = DESTINATION_FOLDER + "paragraphWithNegativeValueSolidColumnGapTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_paragraphWithNegativeValueSolidColumnGapTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)))) {
                 Div columnContainer = new MulticolContainer();
                 columnContainer.SetProperty(Property.COLUMN_COUNT, 5);
                 columnContainer.SetProperty(Property.COLUMN_GAP_BORDER, new SolidBorder(0));
@@ -1142,7 +1147,7 @@ namespace iText.Layout.Element {
         public virtual void ParagraphWithBiggerValueSolidColumnGapTest() {
             String outFileName = DESTINATION_FOLDER + "paragraphWithBiggerValueSolidColumnGapTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_paragraphWithBiggerValueSolidColumnGapTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)))) {
                 Div columnContainer = new MulticolContainer();
                 columnContainer.SetProperty(Property.COLUMN_COUNT, 5);
                 columnContainer.SetProperty(Property.COLUMN_GAP_BORDER, new SolidBorder(600));
@@ -1158,7 +1163,7 @@ namespace iText.Layout.Element {
         public virtual void ParagraphWithNullValueSolidColumnGapTest() {
             String outFileName = DESTINATION_FOLDER + "paragraphWithNullValueSolidColumnGapTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_paragraphWithNullValueSolidColumnGapTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)))) {
                 Div columnContainer = new MulticolContainer();
                 columnContainer.SetProperty(Property.COLUMN_COUNT, 5);
                 columnContainer.SetProperty(Property.COLUMN_GAP_BORDER, null);

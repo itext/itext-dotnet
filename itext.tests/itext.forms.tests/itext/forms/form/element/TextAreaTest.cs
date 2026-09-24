@@ -45,11 +45,16 @@ namespace iText.Forms.Form.Element {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void BasicTextAreaTest() {
             String outPdf = DESTINATION_FOLDER + "basicTextArea.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_basicTextArea.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 TextArea formTextArea = new TextArea("form text area");
                 formTextArea.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formTextArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "form\ntext\narea");
@@ -67,7 +72,7 @@ namespace iText.Forms.Form.Element {
         public virtual void PercentFontTextAreaTest() {
             String outPdf = DESTINATION_FOLDER + "percentFontTextArea.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_percentFontTextArea.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 TextArea formTextArea = new TextArea("form text area");
                 formTextArea.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formTextArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "form\ntext\narea");
@@ -86,7 +91,7 @@ namespace iText.Forms.Form.Element {
         public virtual void HeightTextAreaTest() {
             String outPdf = DESTINATION_FOLDER + "heightTextArea.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_heightTextArea.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 TextArea flattenTextArea = new TextArea("flatten text area with height");
                 flattenTextArea.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flattenTextArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "flatten\ntext area\nwith height");
@@ -101,7 +106,7 @@ namespace iText.Forms.Form.Element {
         public virtual void MinHeightTextAreaTest() {
             String outPdf = DESTINATION_FOLDER + "minHeightTextArea.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_minHeightTextArea.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 TextArea flattenTextArea = new TextArea("flatten text area with height");
                 flattenTextArea.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flattenTextArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "flatten\ntext area\nwith height");
@@ -116,7 +121,7 @@ namespace iText.Forms.Form.Element {
         public virtual void HugeMarginPaddingBorderTest() {
             String outPdf = DESTINATION_FOLDER + "hugeMarginPaddingBorder.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_hugeMarginPaddingBorder.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 TextArea formTextArea = new TextArea("interactive text area with paddings");
                 formTextArea.SetInteractive(true);
                 formTextArea.SetValue("interactive\ntext area\nwith paddings");
@@ -151,7 +156,7 @@ namespace iText.Forms.Form.Element {
         public virtual void TextAreaDoesNotFitTest() {
             String outPdf = DESTINATION_FOLDER + "textAreaDoesNotFit.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_textAreaDoesNotFit.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Div div = new Div();
                 div.SetWidth(UnitValue.CreatePointValue(400));
                 div.SetHeight(UnitValue.CreatePointValue(730));
@@ -172,7 +177,7 @@ namespace iText.Forms.Form.Element {
         public virtual void TextAreaWith0FontSizeDoesNotFitTest() {
             String outPdf = DESTINATION_FOLDER + "textAreaWith0FontSizeDoesNotFit.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_textAreaWith0FontSizeDoesNotFit.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 document.Add(new Div().SetBackgroundColor(ColorConstants.RED).SetHeight(695));
                 TextArea textArea = new TextArea("text area");
                 textArea.SetInteractive(true);
@@ -199,7 +204,7 @@ namespace iText.Forms.Form.Element {
         public virtual void TextAreaWith0FontSizeFitsTest() {
             String outPdf = DESTINATION_FOLDER + "textAreaWith0FontSizeFits.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_textAreaWith0FontSizeFits.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 TextArea textArea = new TextArea("text area");
                 textArea.SetInteractive(true);
                 textArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "Font\n size \nof this\nText Area will \nbe approximated\nbased on the content"
@@ -224,7 +229,7 @@ namespace iText.Forms.Form.Element {
         public virtual void TextAreaWith0FontSizeWithoutHeightTest() {
             String outPdf = DESTINATION_FOLDER + "textAreaWith0FontSizeWithoutHeight.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_textAreaWith0FontSizeWithoutHeight.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 TextArea textArea = new TextArea("text area");
                 textArea.SetInteractive(true);
                 textArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "Font\n size \nof this\nText Area will not " + "\nbe approximated\nbased on the content\nbecause height is not set"
@@ -247,7 +252,7 @@ namespace iText.Forms.Form.Element {
         public virtual void TextAreaWithBorderLessThan1Test() {
             String outPdf = DESTINATION_FOLDER + "textAreaWithBorderLessThan1.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_textAreaWithBorderLessThan1.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 TextArea textArea = new TextArea("text area");
                 textArea.SetInteractive(true);
                 textArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "Is border visible?\nAnd after clicking on the field?\nIt should be by the way"
@@ -262,7 +267,7 @@ namespace iText.Forms.Form.Element {
         public virtual void TextAreaWithJustificationTest() {
             String outPdf = DESTINATION_FOLDER + "textAreaWithJustification.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_textAreaWithJustification.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 TextArea textArea = new TextArea("text area");
                 textArea.SetValue("text area with justification\nWords shall be in the center\nAre they?");
                 textArea.SetInteractive(true);
@@ -281,7 +286,7 @@ namespace iText.Forms.Form.Element {
         public virtual void TextAreaWithCustomBorderTest() {
             String outPdf = DESTINATION_FOLDER + "textAreaWithCustomBorder.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_textAreaWithCustomBorder.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 TextArea textArea = new TextArea("text area");
                 textArea.SetValue("text area with custom border\nBorder shall be orange, 10 points wide and dashed");
                 textArea.SetInteractive(true);
@@ -301,7 +306,7 @@ namespace iText.Forms.Form.Element {
         public virtual void MaxHeightTextAreaTest() {
             String outPdf = DESTINATION_FOLDER + "maxHeightTextArea.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_maxHeightTextArea.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 TextArea flattenTextArea = new TextArea("flatten text area with height");
                 flattenTextArea.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flattenTextArea.SetProperty(FormProperty.FORM_FIELD_VALUE, "flatten\ntext area\nwith height");
@@ -316,7 +321,7 @@ namespace iText.Forms.Form.Element {
         public virtual void TextAreaWithCustomLeadingTest() {
             String outPdf = DESTINATION_FOLDER + "textAreaWithCustomLeading.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_textAreaWithCustomLeading.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 TextArea textArea = new TextArea("text1").SetBorder(new SolidBorder(ColorConstants.PINK, 1));
                 textArea.SetValue("text area with 1 used as the basis for the leading calculation");
                 textArea.SetInteractive(true);

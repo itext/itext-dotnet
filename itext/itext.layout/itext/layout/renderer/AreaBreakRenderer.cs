@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Kernel.Geom;
 using iText.Layout;
 using iText.Layout.Element;
@@ -47,8 +46,8 @@ namespace iText.Layout.Renderer {
 
         protected internal LayoutArea occupiedArea;
 
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.AreaBreakRenderer
-            ));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Renderer.AreaBreakRenderer)
+            );
 
         /// <summary>Creates an AreaBreakRenderer.</summary>
         /// <param name="areaBreak">
@@ -72,14 +71,14 @@ namespace iText.Layout.Renderer {
         /// </param>
         public override void AddChild(IRenderer renderer) {
             if (this.GetProperty<bool?>(Property.IGNORE_AREA_AND_SECTION_BREAKS) == null) {
-                LOGGER.LogWarning(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED);
+                LOGGER.Warn(() => LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED);
             }
         }
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
             if (true.Equals(this.GetProperty<bool?>(Property.IGNORE_AREA_AND_SECTION_BREAKS))) {
                 if (occupiedArea == null) {
-                    LOGGER.LogWarning(LayoutLogMessageConstant.AREA_BREAK_IGNORED);
+                    LOGGER.Warn(() => LayoutLogMessageConstant.AREA_BREAK_IGNORED);
                 }
                 Rectangle layoutContextAreaBbox = layoutContext.GetArea().GetBBox();
                 Rectangle occupiedAreaBbox = new Rectangle(layoutContextAreaBbox.GetLeft(), layoutContextAreaBbox.GetTop()
@@ -102,7 +101,7 @@ namespace iText.Layout.Renderer {
         /// </param>
         public override void Draw(DrawContext drawContext) {
             if (this.GetProperty<bool?>(Property.IGNORE_AREA_AND_SECTION_BREAKS) == null) {
-                LOGGER.LogWarning(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED);
+                LOGGER.Warn(() => LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED);
             }
         }
 
@@ -141,7 +140,7 @@ namespace iText.Layout.Renderer {
         /// </param>
         public override void Move(float dx, float dy) {
             if (this.GetProperty<bool?>(Property.IGNORE_AREA_AND_SECTION_BREAKS) == null) {
-                LOGGER.LogWarning(LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED);
+                LOGGER.Warn(() => LayoutLogMessageConstant.AREA_BREAK_UNEXPECTED);
             }
         }
 

@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Node;
 
@@ -35,6 +34,9 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup.Node {
     /// class.
     /// </summary>
     public class JsoupNode : INode {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.StyledXmlParser.Node.Impl.Jsoup.Node.JsoupNode
+            ));
+
         /// <summary>The JSoup node instance.</summary>
         private iText.StyledXmlParser.Jsoup.Nodes.Node node;
 
@@ -72,8 +74,7 @@ namespace iText.StyledXmlParser.Node.Impl.Jsoup.Node {
                 ((iText.StyledXmlParser.Node.Impl.Jsoup.Node.JsoupNode)node).parentNode = this;
             }
             else {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Node.Impl.Jsoup.Node.JsoupNode));
-                logger.LogError(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.ERROR_ADDING_CHILD_NODE);
+                LOGGER.Error(() => iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.ERROR_ADDING_CHILD_NODE);
             }
         }
 

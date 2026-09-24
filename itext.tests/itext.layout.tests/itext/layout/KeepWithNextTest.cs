@@ -61,11 +61,16 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void KeepWithNextTest01() {
             String outFileName = destinationFolder + "keepWithNextTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_keepWithNextTest01.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf, PageSize.A4);
             for (int i = 0; i < 28; i++) {
                 document.Add(new Paragraph("dummy"));
@@ -85,7 +90,7 @@ namespace iText.Layout {
         public virtual void KeepWithNextTest02() {
             String outFileName = destinationFolder + "keepWithNextTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_keepWithNextTest02.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf, PageSize.A4);
             for (int i = 0; i < 28; i++) {
                 document.Add(new Paragraph("dummy"));
@@ -103,7 +108,7 @@ namespace iText.Layout {
         public virtual void KeepWithNextTest03() {
             String outFileName = destinationFolder + "keepWithNextTest03.pdf";
             String cmpFileName = sourceFolder + "cmp_keepWithNextTest03.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf, PageSize.A4);
             for (int i = 0; i < 27; i++) {
                 document.Add(new Paragraph("dummy"));
@@ -121,7 +126,7 @@ namespace iText.Layout {
         public virtual void KeepWithNextTest04() {
             String outFileName = destinationFolder + "keepWithNextTest04.pdf";
             String cmpFileName = sourceFolder + "cmp_keepWithNextTest04.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf, PageSize.A4);
             for (int i = 0; i < 22; i++) {
                 document.Add(new Paragraph("dummy"));
@@ -140,7 +145,7 @@ namespace iText.Layout {
         public virtual void KeepWithNextTest05() {
             String outFileName = destinationFolder + "keepWithNextTest05.pdf";
             String cmpFileName = sourceFolder + "cmp_keepWithNextTest05.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf, PageSize.A4);
             for (int i = 0; i < 22; i++) {
                 document.Add(new Paragraph("dummy"));
@@ -160,7 +165,7 @@ namespace iText.Layout {
         public virtual void KeepWithNextTest06() {
             String outFileName = destinationFolder + "keepWithNextTest06.pdf";
             String cmpFileName = sourceFolder + "cmp_keepWithNextTest06.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf, PageSize.A4);
             document.Add(new Paragraph(LONG_TEXT).SetKeepWithNext(true));
             document.Close();
@@ -172,7 +177,7 @@ namespace iText.Layout {
         public virtual void KeepWithNextTest07() {
             String outFileName = destinationFolder + "keepWithNextTest07.pdf";
             String cmpFileName = sourceFolder + "cmp_keepWithNextTest07.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf, PageSize.A4);
             document.SetProperty(Property.FIRST_LINE_INDENT, 20f);
             document.Add(new Paragraph(LONG_TEXT).SetKeepWithNext(true));
@@ -186,7 +191,7 @@ namespace iText.Layout {
         public virtual void KeepWithNextTest08() {
             String outFileName = destinationFolder + "keepWithNextTest08.pdf";
             String cmpFileName = sourceFolder + "cmp_keepWithNextTest08.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf, PageSize.A4);
             for (int i = 0; i < 25; i++) {
                 document.Add(new Paragraph("dummy"));
@@ -208,7 +213,7 @@ namespace iText.Layout {
         public virtual void KeepWithNextTest09() {
             String outFileName = destinationFolder + "keepWithNextTest09.pdf";
             String cmpFileName = sourceFolder + "cmp_keepWithNextTest09.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf, PageSize.A4);
             for (int i = 0; i < 28; i++) {
                 document.Add(new Paragraph("dummy"));
@@ -229,7 +234,7 @@ namespace iText.Layout {
         public virtual void KeepWithNextTest10() {
             String outFileName = destinationFolder + "keepWithNextTest10.pdf";
             String cmpFileName = sourceFolder + "cmp_keepWithNextTest10.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf, PageSize.A4);
             for (int i = 0; i < 25; i++) {
                 document.Add(new Paragraph("dummy"));
@@ -250,7 +255,7 @@ namespace iText.Layout {
         public virtual void KeepWithNextTest11() {
             String outFileName = destinationFolder + "keepWithNextTest11.pdf";
             String cmpFileName = sourceFolder + "cmp_keepWithNextTest11.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf);
             Style style = new Style();
             style.SetProperty(Property.KEEP_WITH_NEXT, true);
@@ -269,7 +274,7 @@ namespace iText.Layout {
             //if we have multiple objects with keepWithNext in a row only the last one seems to follow to the next page
             String outFileName = destinationFolder + "keepWithNextTest12.pdf";
             String cmpFileName = sourceFolder + "cmp_keepWithNextTest12.pdf";
-            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdf = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdf, PageSize.A4);
             for (int i = 0; i < 27; i++) {
                 document.Add(new Paragraph("dummy"));

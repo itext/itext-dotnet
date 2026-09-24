@@ -29,7 +29,8 @@ namespace iText.IO.Font.Otf {
     /// Parses an OpenTypeFont file and reads the Glyph Substitution Table. This table governs how two or more Glyphs should be merged
     /// to a single Glyph. This is especially useful for Asian languages like Bangla, Hindi, etc.
     /// <para />
-    /// This has been written according to the OPenTypeFont specifications. This may be found <a href="http://www.microsoft.com/typography/otspec/gsub.htm">here</a>.
+    /// This has been written according to the OPenTypeFont specifications.
+    /// See the OpenType <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/gsub">GSUB table</a>.
     /// </remarks>
     public class GlyphSubstitutionTableReader : OpenTypeFontTableReader {
         /// <summary>
@@ -55,6 +56,15 @@ namespace iText.IO.Font.Otf {
             StartReadingTable();
         }
 
+        /// <summary>Reads the lookup table from OpenType data.</summary>
+        /// <param name="lookupType">the lookup type</param>
+        /// <param name="lookupFlag">
+        /// specifies processing options, e.g. whether to skip base glyphs, marks or
+        /// ligatures during glyph substitution or positioning. See
+        /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+        /// </param>
+        /// <param name="subTableLocations">the sub table locations</param>
+        /// <returns>the lookup table</returns>
         protected internal override OpenTableLookup ReadLookupTable(int lookupType, int lookupFlag, int[] subTableLocations
             ) {
             if (lookupType == 7) {

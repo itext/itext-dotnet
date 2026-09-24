@@ -24,6 +24,7 @@ using System;
 using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Font;
+using iText.IO.Font.Otf;
 using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -214,8 +215,8 @@ namespace iText.Pdfa {
             // But right now we check for used glyphs which don't exist in the font and throw exception
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
                 "symbolicTtfCharEncodingsPdfA1Test01.pdf", "iTextSymbolicFont.ttf", "", PdfAConformance.PDF_A_1B));
-            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                , e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , 'e'), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -224,8 +225,8 @@ namespace iText.Pdfa {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
                 "symbolicTtfCharEncodingsPdfA1Test02.pdf", "iTextSymbolicFont.ttf", PdfEncodings.MACROMAN, PdfAConformance
                 .PDF_A_1B));
-            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                , e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , 'e'), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -234,8 +235,8 @@ namespace iText.Pdfa {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
                 "symbolicTtfCharEncodingsPdfA1Test03.pdf", "iTextSymbolicFont.ttf", "ISO-8859-1", PdfAConformance.PDF_A_1B
                 ));
-            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                , e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , 'e'), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -243,8 +244,8 @@ namespace iText.Pdfa {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
                 "symbolicTtfCharEncodingsPdfA1Test04.pdf", "iTextSymbolicFont.ttf", PdfEncodings.WINANSI, PdfAConformance
                 .PDF_A_1B));
-            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                , e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , 'e'), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -255,8 +256,8 @@ namespace iText.Pdfa {
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => CreateDocumentWithFont(
                 "symbolicTtfCharEncodingsPdfA1Test05.pdf", "iTextSymbolicFont.ttf", PdfEncodings.IDENTITY_H, PdfAConformance
                 .PDF_A_1B));
-            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                , e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , 'e'), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -277,8 +278,8 @@ namespace iText.Pdfa {
 
         [NUnit.Framework.Test]
         public virtual void NotdefInTrueTypeFontTest() {
-            String outPdf = DESTINATION_FOLDER + "notdefInTrueTypeFont.pdf";
-            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfWriter writer = new PdfWriter(new MemoryStream(), new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0
+                ));
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfDocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
@@ -288,14 +289,14 @@ namespace iText.Pdfa {
             canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 36);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => canvas.ShowText("\u00C5 \u1987"
                 ));
-            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                , e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , "\u1987"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void NotdefFontTest2() {
-            String outPdf = DESTINATION_FOLDER + "notdefFontTest2.pdf";
-            PdfWriter writer = new PdfWriter(outPdf, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            PdfWriter writer = new PdfWriter(new MemoryStream(), new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0
+                ));
             Stream @is = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
             PdfDocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
@@ -305,24 +306,23 @@ namespace iText.Pdfa {
             canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 36);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => canvas.ShowText("\u898B\u7A4D\u3082\u308A"
                 ));
-            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                , e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , "\u898B"), e.Message);
         }
 
         [NUnit.Framework.Test]
         public virtual void GlyphLineWithUndefinedGlyphsTest() {
-            String outPdf = DESTINATION_FOLDER + "glyphLineWithUndefinedGlyphs.pdf";
             Stream icm = FileUtil.GetInputStreamForFile(SOURCE_FOLDER + "sRGB Color Space Profile.icm");
-            Document document = new Document(new PdfADocument(new PdfWriter(outPdf, new WriterProperties().SetPdfVersion
-                (PdfVersion.PDF_2_0)), PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"
+            Document document = new Document(new PdfADocument(new PdfWriter(new MemoryStream(), new WriterProperties()
+                .SetPdfVersion(PdfVersion.PDF_2_0)), PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB ICC preference", icm)));
             PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoSans-Regular.ttf", "", PdfFontFactory.EmbeddingStrategy
                 .PREFER_EMBEDDED);
             Paragraph p = new Paragraph("\u898B\u7A4D\u3082\u308A");
             p.SetFont(font);
             Exception e = NUnit.Framework.Assert.Catch(typeof(PdfAConformanceException), () => document.Add(p));
-            NUnit.Framework.Assert.AreEqual(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                , e.Message);
+            NUnit.Framework.Assert.AreEqual(MessageFormatUtil.Format(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , "\u898B"), e.Message);
         }
 
         [NUnit.Framework.Test]
@@ -544,9 +544,9 @@ namespace iText.Pdfa {
         }
 
         [NUnit.Framework.Test]
-        public virtual void CheckPdfA4UmingTtcTest() {
-            String outPdf = DESTINATION_FOLDER + "pdfA4UmingTtcTest.pdf";
-            String cmpPdf = SOURCE_FOLDER + "cmp/PdfAFontTest/cmp_pdfA4UmingTtcTest.pdf";
+        public virtual void CheckPdfA4NNotoCJKTtcTest() {
+            String outPdf = DESTINATION_FOLDER + "pdfA4NotoCJKTtcTest.pdf";
+            String cmpPdf = SOURCE_FOLDER + "cmp/PdfAFontTest/cmp_pdfA4NotoCJKTtcTest.pdf";
             WriterProperties writerProperties = new WriterProperties();
             writerProperties.SetPdfVersion(PdfVersion.PDF_2_0);
             PdfWriter writer = new PdfWriter(outPdf, writerProperties);
@@ -554,8 +554,8 @@ namespace iText.Pdfa {
             PdfDocument doc = new PdfADocument(writer, PdfAConformance.PDF_A_4, new PdfOutputIntent("Custom", "", "http://www.color.org"
                 , "sRGB IEC61966-2.1", @is));
             PdfPage page = doc.AddNewPage();
-            PdfFont font = PdfFontFactory.CreateTtcFont(SOURCE_FOLDER + "uming.ttc", 0, "Identity-H", PdfFontFactory.EmbeddingStrategy
-                .FORCE_EMBEDDED, false);
+            PdfFont font = PdfFontFactory.CreateTtcFont(SOURCE_FOLDER + "fonts/NotoSerifCJK-VF.ttf.ttc", 0, "Identity-H"
+                , PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED, false);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().SetFillColor(ColorConstants.GREEN).BeginText().MoveText(36, 700).SetFontAndSize(font, 36
                 ).ShowText("Hello World! Pdf/A-4").EndText().RestoreState();
@@ -601,6 +601,142 @@ namespace iText.Pdfa {
                 ).ShowText("\uD83D\uDC7B \uD83D\uDE09").EndText().RestoreState();
             doc.Close();
             CompareResult(outPdf, cmpPdf, null);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotdefGlyphTest() {
+            AValidationTestFramework framework = new AValidationTestFramework(DESTINATION_FOLDER, false, PdfAConformance
+                .PDF_A_4);
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfFont font = null;
+                try {
+                    font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoNaskhArabic-Regular.ttf");
+                }
+                catch (System.IO.IOException) {
+                }
+                // ignore
+                GlyphLine glyphLine = new GlyphLine();
+                FontProgram fontProgram = font.GetFontProgram();
+                // zero glyph in the font is .notdef glyph without Unicode
+                glyphLine.Add(fontProgram.GetGlyphByCode(0));
+                glyphLine.SetEnd(glyphLine.Size());
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 10).ShowText(glyphLine).EndText().RestoreState
+                    ();
+            }
+            );
+            framework.AssertBothFail("notdefGlyph", MessageFormatUtil.Format(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                , "�"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ZeroUnicodeGlyphTest() {
+            AValidationTestFramework framework = new AValidationTestFramework(DESTINATION_FOLDER, false, PdfAConformance
+                .PDF_A_4);
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfFont font = null;
+                try {
+                    font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoNaskhArabic-Regular.ttf");
+                }
+                catch (System.IO.IOException) {
+                }
+                // ignore
+                GlyphLine glyphLine = new GlyphLine();
+                FontProgram fontProgram = font.GetFontProgram();
+                // 1 index glyph in the font is .null glyph with Unicode U+0000
+                glyphLine.Add(fontProgram.GetGlyphByCode(1));
+                glyphLine.SetEnd(glyphLine.Size());
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 10).ShowText(glyphLine).EndText().RestoreState
+                    ();
+            }
+            );
+            // TODO DEVSIX-10209 missing check on iText side for ToUnicode mapping to 0, fffe and feff
+            framework.AssertVeraPdfFailITextValid("zeroUnicodeGlyph");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GlyphsWithoutUnicodeTest() {
+            AValidationTestFramework framework = new AValidationTestFramework(DESTINATION_FOLDER, false, PdfAConformance
+                .PDF_A_4);
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfFont font = null;
+                try {
+                    font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoNaskhArabic-Regular.ttf");
+                }
+                catch (System.IO.IOException) {
+                }
+                // ignore
+                GlyphLine glyphLine = new GlyphLine();
+                FontProgram fontProgram = font.GetFontProgram();
+                // 0 index glyph is .notdef without Unicode
+                // 1 index glyph is .null with Unicode U+0000
+                for (int i = 2; i < fontProgram.CountOfGlyphs(); i++) {
+                    glyphLine.Add(fontProgram.GetGlyphByCode(i));
+                }
+                glyphLine.SetEnd(glyphLine.Size());
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 10).ShowText(glyphLine).EndText().RestoreState
+                    ();
+            }
+            );
+            framework.AssertBothValid("glyphsWithoutUnicode");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FontWithReplacementCharTest() {
+            AValidationTestFramework framework = new AValidationTestFramework(DESTINATION_FOLDER, false, PdfAConformance
+                .PDF_A_4);
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfFont font = null;
+                try {
+                    font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoSans-Regular.ttf");
+                }
+                catch (System.IO.IOException) {
+                }
+                // ignore
+                GlyphLine glyphLine = new GlyphLine();
+                FontProgram fontProgram = font.GetFontProgram();
+                // font contain replacement char U+FFFD
+                for (int i = 0; i < fontProgram.CountOfGlyphs(); i++) {
+                    glyphLine.Add(fontProgram.GetGlyphByCode(i));
+                }
+                glyphLine.SetEnd(glyphLine.Size());
+                PdfCanvas canvas = new PdfCanvas(pdfDoc.AddNewPage());
+                canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 10).ShowText(glyphLine).EndText().RestoreState
+                    ();
+            }
+            );
+            // TODO DEVSIX-10209 missing check on iText side for ToUnicode mapping to 0, fffe and feff
+            framework.AssertBothFail("fontWithReplacementChar", MessageFormatUtil.Format(PdfaExceptionMessageConstant.
+                EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS, "�"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NotdefGlyphType3FontTest() {
+            AValidationTestFramework framework = new AValidationTestFramework(DESTINATION_FOLDER, false, PdfAConformance
+                .PDF_A_4);
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfType3Font font = PdfFontFactory.CreateType3Font(pdfDoc, false);
+                Type3Glyph a = font.AddGlyph('A', 600, 0, 0, 600, 700);
+                a.SetLineWidth(100);
+                a.MoveTo(5, 5);
+                a.LineTo(300, 695);
+                a.LineTo(595, 5);
+                a.ClosePathFillStroke();
+                // Need to populate CharProcs, because it's done only on font flushing,
+                // but iText check that field before document closing
+                PdfDictionary charProcs = new PdfDictionary();
+                charProcs.Put(new PdfName("A"), a.GetContentStream());
+                font.GetPdfObject().Put(PdfName.CharProcs, charProcs);
+                Document doc = new Document(pdfDoc);
+                doc.SetFont(font);
+                // In simple fonts (which is Type3) we just ignore not defined glyphs, see PdfSimpleFont.createGlyphLine
+                Paragraph p = new Paragraph("AB");
+                doc.Add(p);
+            }
+            );
+            framework.AssertBothValid("notdefGlyphType3Font");
         }
 
         private void CreateDocumentWithFont(String outFileName, String fontFileName, String encoding, PdfAConformance

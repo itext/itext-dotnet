@@ -22,14 +22,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Signatures.Cms;
 
 namespace iText.Signatures.Validation.Report.Xml {
     /// <summary>Use this implementation when an xml report has to be created</summary>
     public class DefaultAdESReportAggregator : AdESReportAggregator {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.Validation.Report.Xml.DefaultAdESReportAggregator
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Signatures.Validation.Report.Xml.DefaultAdESReportAggregator
             ));
 
         private readonly ValidationObjects validationObjects = new ValidationObjects();
@@ -53,7 +52,7 @@ namespace iText.Signatures.Validation.Report.Xml {
             }
             catch (Exception e) {
                 // catching generic Exception here for portability
-                LOGGER.LogError(e, "Unable to parse signature container.");
+                LOGGER.Error(() => "Unable to parse signature container.", e);
                 throw new ArgumentException("Signature is not parsable", e);
             }
         }
@@ -67,7 +66,7 @@ namespace iText.Signatures.Validation.Report.Xml {
             }
             catch (Exception e) {
                 // catching generic Exception here for portability
-                LOGGER.LogError(e, "Unable to parse timestamp signature container.");
+                LOGGER.Error(() => "Unable to parse timestamp signature container.", e);
                 throw new ArgumentException("Timestamp signature is not parsable", e);
             }
         }

@@ -20,8 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Forms.Exceptions;
 using iText.Forms.Fields;
@@ -44,6 +43,9 @@ namespace iText.Forms.Fields.Merging {
     /// This strategy is used by default.
     /// </remarks>
     public class MergeFieldsStrategy : OnDuplicateFormFieldNameStrategy {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Forms.Fields.Merging.MergeFieldsStrategy
+            ));
+
         /// <summary>
         /// Creates an instance of
         /// <see cref="MergeFieldsStrategy"/>
@@ -75,8 +77,7 @@ namespace iText.Forms.Fields.Merging {
                         .GetPartialFieldName()));
                 }
                 else {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.Merging.MergeFieldsStrategy));
-                    logger.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.CANNOT_MERGE_FORMFIELDS, firstField.GetPartialFieldName
+                    LOGGER.Warn(() => MessageFormatUtil.Format(FormsLogMessageConstants.CANNOT_MERGE_FORMFIELDS, firstField.GetPartialFieldName
                         ()));
                     return false;
                 }

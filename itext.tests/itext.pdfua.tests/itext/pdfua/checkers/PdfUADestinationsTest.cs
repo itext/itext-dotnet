@@ -83,7 +83,7 @@ namespace iText.Pdfua.Checkers {
                     // structure destination to be added into special SD entry. There is no such requirement in released
                     // PDF 2.0 spec.
                     // Although it is already mentioned in errata version.
-                    framework.AssertOnlyVeraPdfFail(filename);
+                    framework.AssertVeraPdfFailITextValid(filename);
                     break;
                 }
             }
@@ -118,7 +118,7 @@ namespace iText.Pdfua.Checkers {
                     // We traverse whole document looking for a dictionary, which can represent GoTo action.
                     // That's why in this particular example we fail, however in reality GoTo action cannot be added
                     // directly to catalog.
-                    framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
+                    framework.AssertITextFailVeraPdfValid(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
                         );
                     break;
                 }
@@ -158,7 +158,7 @@ namespace iText.Pdfua.Checkers {
                 case "OutlineWithAction": {
                     // Verapdf doesn't allow name destination to contain dictionary with structure destination in D entry.
                     // Instead, it wants it to be in special SD entry.
-                    framework.AssertOnlyVeraPdfFail(filename);
+                    framework.AssertVeraPdfFailITextValid(filename);
                     break;
                 }
 
@@ -215,7 +215,7 @@ namespace iText.Pdfua.Checkers {
                     // We traverse whole document looking for a dictionary, which can represent GoTo action.
                     // That's why in this particular example we fail, however in reality GoTo action cannot be added
                     // directly to catalog.
-                    framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
+                    framework.AssertITextFailVeraPdfValid(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
                         );
                     break;
                 }
@@ -244,7 +244,7 @@ namespace iText.Pdfua.Checkers {
                     // SD is specifically reserved for structure destinations,
                     // that's why placing not structure destination in there is wrong in the first place.
                     // However, if one is placed there, UA-2 exception is expected.
-                    framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
+                    framework.AssertITextFailVeraPdfValid(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
                         );
                     break;
                 }
@@ -275,7 +275,7 @@ namespace iText.Pdfua.Checkers {
                 case "OutlineWithAction": {
                     // Verapdf doesn't allow named destination inside named destination, because it contradicts PDF 2.0
                     // spec.
-                    framework.AssertOnlyVeraPdfFail(filename);
+                    framework.AssertVeraPdfFailITextValid(filename);
                     break;
                 }
 
@@ -318,7 +318,7 @@ namespace iText.Pdfua.Checkers {
                     // We traverse whole document looking for a dictionary, which can represent GoTo action.
                     // That's why in this particular example we fail, however in reality GoTo action cannot be added
                     // directly to catalog.
-                    framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
+                    framework.AssertITextFailVeraPdfValid(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
                         );
                     break;
                 }
@@ -358,7 +358,7 @@ namespace iText.Pdfua.Checkers {
                 case "OutlineWithAction": {
                     // Verapdf doesn't allow name destination to contain dictionary with structure destination in D entry.
                     // Instead, it wants it to be in special SD entry.
-                    framework.AssertOnlyVeraPdfFail(filename);
+                    framework.AssertVeraPdfFailITextValid(filename);
                     break;
                 }
 
@@ -415,7 +415,7 @@ namespace iText.Pdfua.Checkers {
                     // We traverse whole document looking for a dictionary, which can represent GoTo action.
                     // That's why in this particular example we fail, however in reality GoTo action cannot be added
                     // directly to catalog.
-                    framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
+                    framework.AssertITextFailVeraPdfValid(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
                         );
                     break;
                 }
@@ -444,7 +444,7 @@ namespace iText.Pdfua.Checkers {
                     // SD is specifically reserved for structure destinations,
                     // that's why placing not structure destination in there is wrong in the first place.
                     // However, if one is placed there, UA-2 exception is expected.
-                    framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
+                    framework.AssertITextFailVeraPdfValid(filename, PdfUAExceptionMessageConstants.DESTINATION_NOT_STRUCTURE_DESTINATION
                         );
                     break;
                 }

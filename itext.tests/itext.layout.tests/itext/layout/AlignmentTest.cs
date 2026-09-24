@@ -52,11 +52,16 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void JustifyAlignmentTest01() {
             String outFileName = DESTINATION_FOLDER + "justifyAlignmentTest01.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_justifyAlignmentTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
             for (int i = 0; i < 21; i++) {
@@ -73,7 +78,7 @@ namespace iText.Layout {
         public virtual void JustifyAlignmentTest02() {
             String outFileName = DESTINATION_FOLDER + "justifyAlignmentTest02.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_justifyAlignmentTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
             paragraph.Add(new Text("Hello World!")).Add(new Text(" ")).Add(new Text("Hello People! ")).Add("End");
@@ -87,7 +92,7 @@ namespace iText.Layout {
         public virtual void JustifyAlignmentTest03() {
             String outFileName = DESTINATION_FOLDER + "justifyAlignmentTest03.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_justifyAlignmentTest03.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
             for (int i = 0; i < 21; i++) {
@@ -104,7 +109,7 @@ namespace iText.Layout {
         public virtual void JustifyAlignmentTest04() {
             String outFileName = DESTINATION_FOLDER + "justifyAlignmentTest04.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_justifyAlignmentTest04.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
             for (int i = 0; i < 21; i++) {
@@ -121,7 +126,7 @@ namespace iText.Layout {
         public virtual void JustifyAlignmentForcedNewlinesTest01() {
             String outFileName = DESTINATION_FOLDER + "justifyAlignmentForcedNewlinesTest01.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_justifyAlignmentForcedNewlinesTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
             paragraph.Add("Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add. You can also type a keyword to search online for the video that best fits your document.\n"
@@ -140,7 +145,7 @@ namespace iText.Layout {
         public virtual void JustifyAllTest01() {
             String outFileName = DESTINATION_FOLDER + "justifyAllTest01.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_justifyAllTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED_ALL);
             paragraph.Add("Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add. You can also type a keyword to search online for the video that best fits your document.\n"
@@ -159,7 +164,7 @@ namespace iText.Layout {
         public virtual void JustifyAllTest02() {
             String outFileName = DESTINATION_FOLDER + "justifyAllTest02.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_justifyAllTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             PdfFont type0 = PdfFontFactory.CreateFont(SOURCE_FOLDER + "/../fonts/NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H
                 );
@@ -179,7 +184,7 @@ namespace iText.Layout {
         public virtual void BlockAlignmentTest01() {
             String outFileName = DESTINATION_FOLDER + "blockAlignmentTest01.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_blockAlignmentTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             List list = new List(ListNumberingType.GREEK_LOWER);
             for (int i = 0; i < 10; i++) {
@@ -201,7 +206,7 @@ namespace iText.Layout {
         public virtual void BlockAlignmentTest02() {
             String outFileName = DESTINATION_FOLDER + "blockAlignmentTest02.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_blockAlignmentTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div div = new Div();
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(UrlUtil.ToURL(SOURCE_FOLDER + "Desert.jpg"
@@ -223,7 +228,7 @@ namespace iText.Layout {
         public virtual void ImageAlignmentTest01() {
             String outFileName = DESTINATION_FOLDER + "imageAlignmentTest01.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_imageAlignmentTest01.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(UrlUtil.ToURL(SOURCE_FOLDER + "Desert.jpg"
@@ -240,7 +245,7 @@ namespace iText.Layout {
         public virtual void EmptyLineJustification01() {
             String outFileName = DESTINATION_FOLDER + "emptyLineJustification01.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_emptyLineJustification01.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED));
@@ -253,7 +258,7 @@ namespace iText.Layout {
         public virtual void FloatAlignmentTest01() {
             String outFileName = DESTINATION_FOLDER + "floatAlignmentTest01.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_floatAlignmentTest01.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.SetDefaultPageSize(new PageSize(350, 450));
             Document doc = new Document(pdfDoc);
@@ -287,7 +292,7 @@ namespace iText.Layout {
         public virtual void FloatAlignmentTest02() {
             String outFileName = DESTINATION_FOLDER + "floatAlignmentTest02.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_floatAlignmentTest02.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.SetDefaultPageSize(new PageSize(350, 450));
             Document doc = new Document(pdfDoc);
@@ -405,7 +410,7 @@ namespace iText.Layout {
             // sub and super are resolved in html2Pdf to relative
             String outPdf = DESTINATION_FOLDER + "inlineVerticalAlignmentMixed.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_inlineVerticalAlignmentMixed.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
             Paragraph p = new Paragraph();
             p.SetBackgroundColor(new DeviceRgb(189, 239, 73));
@@ -478,7 +483,7 @@ namespace iText.Layout {
         public virtual void FloatAlignmentTest03() {
             String outFileName = DESTINATION_FOLDER + "floatAlignmentTest03.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_floatAlignmentTest03.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.SetDefaultPageSize(new PageSize(350, 450));
             Document doc = new Document(pdfDoc);
@@ -500,7 +505,7 @@ namespace iText.Layout {
         public virtual void FlexItemHorizontalAlignmentTest() {
             String outFileName = DESTINATION_FOLDER + "flexItemHorizontalAlignmentTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_flexItemHorizontalAlignmentTest.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document doc = new Document(pdfDoc);
                 DocumentRenderer documentRenderer = new DocumentRenderer(doc);
                 Div div = new Div();
@@ -524,7 +529,7 @@ namespace iText.Layout {
         public virtual void JustifiedAlignmentWithZeroFreeSpaceTest() {
             String outFileName = DESTINATION_FOLDER + "justifiedAlignmentWithZeroFreeSpaceTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_justifiedAlignmentWithZeroFreeSpaceTest.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document document = new Document(pdfDoc);
                 PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoSansCJKjp-Regular.otf");
                 Text t1 = new Text("期期期").SetFont(font);
@@ -541,7 +546,7 @@ namespace iText.Layout {
         public virtual void MiddleAlignmentWithTtfOS2Version3Test() {
             String outFileName = DESTINATION_FOLDER + "middleAlignmentWithTtfOS2Version3Test.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_middleAlignmentWithTtfOS2Version3Test.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document document = new Document(pdfDoc);
                 PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "OpenSans-Bold.ttf");
                 document.SetFont(font);
@@ -568,7 +573,7 @@ namespace iText.Layout {
         public virtual void MiddleAlignmentWithTtfOS2Version1Test() {
             String outFileName = DESTINATION_FOLDER + "middleAlignmentWithTtfOS2Version1Test.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_middleAlignmentWithTtfOS2Version1Test.pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 Document document = new Document(pdfDoc);
                 PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "FreeSans.ttf");
                 document.SetFont(font);
@@ -598,7 +603,7 @@ namespace iText.Layout {
 
         private static void CreateDocumentWithInlineAlignment(String outPdf, String cmpPdf, InlineVerticalAlignmentType?
              verticalAlignment1, AlignmentTest.IInlineTestObjectModifier adjustTestObjects) {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             Document doc = new Document(pdfDoc);
             Paragraph p = new Paragraph();
             p.SetBackgroundColor(new DeviceRgb(189, 239, 73));
@@ -634,7 +639,7 @@ namespace iText.Layout {
 
         private static void CreateDocumentWithAlignment(String outPdf, String cmpPdf, VerticalAlignment? verticalAlignment
             ) {
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             Document doc = new Document(pdfDoc);
             Paragraph p = new Paragraph();
             p.SetBackgroundColor(new DeviceRgb(189, 239, 73));

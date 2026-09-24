@@ -1030,7 +1030,7 @@ namespace iText.Kernel.Pdf {
             byte[] afm = StreamUtil.InputStreamToArray(FileUtil.GetInputStreamForFile(FONTS_FOLDER + "cmr10.afm"));
             PdfFont font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(afm, afm, false), null);
             byte[] streamContent = ((Type1Font)((PdfType1Font)font).GetFontProgram()).GetFontStreamBytes();
-            NUnit.Framework.Assert.IsTrue(streamContent == null, "Empty stream content expected");
+            NUnit.Framework.Assert.IsNull(streamContent, "Empty stream content expected");
         }
 
         [NUnit.Framework.Test]
@@ -1079,8 +1079,7 @@ namespace iText.Kernel.Pdf {
             String txt = "The quick brown fox";
             PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(filename));
             PdfPage page = doc.AddNewPage();
-            // TODO DEVSIX-9682 Replace uming.ttc in kernel
-            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "uming.ttc,1");
+            PdfFont font = PdfFontFactory.CreateFont(FONTS_FOLDER + "NotoSerifCJK-VF.ttf.ttc,1");
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 680).SetFontAndSize(font, 12).ShowText(txt).EndText().RestoreState
                 ();
@@ -1098,8 +1097,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            // TODO DEVSIX-9682 Replace uming.ttc in kernel
-            String font = FONTS_FOLDER + "uming.ttc";
+            String font = FONTS_FOLDER + "NotoSerifCJK-VF.ttf.ttc";
             PdfFont pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(font, 0, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
                 .FORCE_EMBEDDED, false);
             pdfTrueTypeFont.SetSubset(true);
@@ -1134,8 +1132,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            // TODO DEVSIX-9682 Replace uming.ttc in kernel
-            String font = FONTS_FOLDER + "uming.ttc";
+            String font = FONTS_FOLDER + "NotoSerifCJK-VF.ttf.ttc";
             PdfFont pdfTrueTypeFont = PdfFontFactory.CreateTtcFont(font, 0, PdfEncodings.WINANSI, PdfFontFactory.EmbeddingStrategy
                 .FORCE_NOT_EMBEDDED, false);
             pdfTrueTypeFont.SetSubset(true);
@@ -1354,9 +1351,8 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void TestCheckTTCSize() {
-            // TODO DEVSIX-9682 Replace uming.ttc in kernel
-            TrueTypeCollection collection = new TrueTypeCollection(FONTS_FOLDER + "uming.ttc");
-            NUnit.Framework.Assert.IsTrue(collection.GetTTCSize() == 4);
+            TrueTypeCollection collection = new TrueTypeCollection(FONTS_FOLDER + "NotoSerifCJK-VF.ttf.ttc");
+            NUnit.Framework.Assert.AreEqual(5, collection.GetTTCSize());
         }
 
         [NUnit.Framework.Test]
@@ -1404,10 +1400,10 @@ namespace iText.Kernel.Pdf {
         public virtual void TestSplitString() {
             PdfFont font = PdfFontFactory.CreateFont();
             IList<String> list1 = font.SplitString("Hello", 12f, 10);
-            NUnit.Framework.Assert.IsTrue(list1.Count == 3);
+            NUnit.Framework.Assert.AreEqual(3, list1.Count);
             IList<String> list2 = font.SplitString("Digitally signed by Dmitry Trusevich\nDate: 2015.10.25 14:43:56 MSK\nReason: Test 1\nLocation: Ghent"
                 , 12f, 176);
-            NUnit.Framework.Assert.IsTrue(list2.Count == 5);
+            NUnit.Framework.Assert.AreEqual(5, list2.Count);
         }
 
         [NUnit.Framework.Test]

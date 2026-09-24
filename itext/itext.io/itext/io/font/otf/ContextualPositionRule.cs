@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 namespace iText.IO.Font.Otf {
+    /// <summary>Represents the contextual position rule of an OpenType font.</summary>
     public abstract class ContextualPositionRule : ContextualRule {
         /// <summary>Retrieves the position lookup records.</summary>
         /// <remarks>

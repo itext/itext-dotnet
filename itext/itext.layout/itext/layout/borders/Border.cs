@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -32,6 +31,8 @@ using iText.Layout.Properties;
 namespace iText.Layout.Borders {
     /// <summary>Represents a border.</summary>
     public abstract class Border {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Borders.Border));
+
         /// <summary>The null Border, i.e. the presence of such border is equivalent to the absence of the border</summary>
         public static readonly iText.Layout.Borders.Border NO_BORDER = null;
 
@@ -268,8 +269,7 @@ namespace iText.Layout.Borders {
         public virtual void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float horizontalRadius1
             , float verticalRadius1, float horizontalRadius2, float verticalRadius2, Border.Side defaultSide, float
              borderWidthBefore, float borderWidthAfter) {
-            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Borders.Border));
-            logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.METHOD_IS_NOT_IMPLEMENTED_BY_DEFAULT_OTHER_METHOD_WILL_BE_USED
+            LOGGER.Warn(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.METHOD_IS_NOT_IMPLEMENTED_BY_DEFAULT_OTHER_METHOD_WILL_BE_USED
                 , "Border#draw(PdfCanvas, float, float, float, float, float, float, float, float, Side, float, float", 
                 "Border#draw(PdfCanvas, float, float, float, float, Side, float, float)"));
             Draw(canvas, x1, y1, x2, y2, defaultSide, borderWidthBefore, borderWidthAfter);

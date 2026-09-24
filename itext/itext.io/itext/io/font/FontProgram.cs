@@ -27,6 +27,12 @@ using iText.IO.Font.Constants;
 using iText.IO.Font.Otf;
 
 namespace iText.IO.Font {
+    /// <summary>Base representation of a font program and its glyph, naming, and metric data.</summary>
+    /// <remarks>
+    /// Base representation of a font program and its glyph, naming, and metric data.
+    /// <para />
+    /// Glyph metrics exposed by this abstraction use the normalized 1000-unit PDF glyph space.
+    /// </remarks>
     public abstract class FontProgram {
         public const int HORIZONTAL_SCALING_FACTOR = 100;
 
@@ -34,18 +40,42 @@ namespace iText.IO.Font {
 
         public const int UNITS_NORMALIZATION = 1000;
 
+        /// <summary>Converts a PDF text-space value to normalized glyph space.</summary>
+        /// <param name="value">value in text space</param>
+        /// <returns>
+        /// value divided by
+        /// <see cref="UNITS_NORMALIZATION"/>
+        /// </returns>
         public static float ConvertTextSpaceToGlyphSpace(float value) {
             return value / UNITS_NORMALIZATION;
         }
 
+        /// <summary>Converts a normalized glyph-space value to PDF text space.</summary>
+        /// <param name="value">value in normalized glyph space</param>
+        /// <returns>
+        /// value multiplied by
+        /// <see cref="UNITS_NORMALIZATION"/>
+        /// </returns>
         public static float ConvertGlyphSpaceToTextSpace(float value) {
             return value * UNITS_NORMALIZATION;
         }
 
+        /// <summary>Converts a normalized glyph-space value to PDF text space without losing double precision.</summary>
+        /// <param name="value">value in normalized glyph space</param>
+        /// <returns>
+        /// value multiplied by
+        /// <see cref="UNITS_NORMALIZATION"/>
+        /// </returns>
         public static double ConvertGlyphSpaceToTextSpace(double value) {
             return value * UNITS_NORMALIZATION;
         }
 
+        /// <summary>Converts an integral normalized glyph-space value to PDF text space.</summary>
+        /// <param name="value">value in normalized glyph space</param>
+        /// <returns>
+        /// value multiplied by
+        /// <see cref="UNITS_NORMALIZATION"/>
+        /// </returns>
         public static int ConvertGlyphSpaceToTextSpace(int value) {
             return value * UNITS_NORMALIZATION;
         }
@@ -56,14 +86,21 @@ namespace iText.IO.Font {
 
         protected internal IDictionary<int, Glyph> unicodeToGlyph = new Dictionary<int, Glyph>();
 
+        /// <summary>
+        /// Indicates that character codes are interpreted using the font's built-in encoding rather than a
+        /// Unicode-oriented encoding.
+        /// </summary>
         protected internal bool isFontSpecific;
 
+        /// <summary>Naming data extracted from the font program.</summary>
         protected internal FontNames fontNames;
 
+        /// <summary>Metrics extracted from the font program.</summary>
         protected internal FontMetrics fontMetrics = new FontMetrics();
 
         protected internal FontIdentification fontIdentification = new FontIdentification();
 
+        /// <summary>Average glyph width in normalized glyph units.</summary>
         protected internal int avgWidth;
 
         /// <summary>The font's encoding name.</summary>
@@ -74,30 +111,57 @@ namespace iText.IO.Font {
         /// </remarks>
         protected internal String encodingScheme = FontEncoding.FONT_SPECIFIC;
 
+        /// <summary>
+        /// CID registry name associated with this font, or
+        /// <see langword="null"/>
+        /// for fonts without a CID registry.
+        /// </summary>
         protected internal String registry;
 
+        /// <summary>Gets the amount of glyphs in this font program.</summary>
+        /// <returns>the amount of glyphs in this font program</returns>
         public virtual int CountOfGlyphs() {
             return Math.Max(codeToGlyph.Count, unicodeToGlyph.Count);
         }
 
+        /// <summary>Gets the parsed font naming data.</summary>
+        /// <returns>naming data owned by this program</returns>
         public virtual FontNames GetFontNames() {
             return fontNames;
         }
 
+        /// <summary>Gets the parsed font metric data.</summary>
+        /// <returns>metric data owned by this program</returns>
         public virtual FontMetrics GetFontMetrics() {
             return fontMetrics;
         }
 
+        /// <summary>Gets the parsed font identification data.</summary>
+        /// <returns>identification data owned by this program</returns>
         public virtual FontIdentification GetFontIdentification() {
             return fontIdentification;
         }
 
+        /// <summary>Gets the CID registry name.</summary>
+        /// <returns>
+        /// CID registry, or
+        /// <see langword="null"/>
+        /// when none was supplied
+        /// </returns>
         public virtual String GetRegistry() {
             return registry;
         }
 
+        /// <summary>Computes the PDF font descriptor flags for this program.</summary>
+        /// <returns>bit set defined by the PDF font descriptor specification</returns>
         public abstract int GetPdfFontFlags();
 
+        /// <summary>Checks whether this program uses its built-in character encoding.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// when character codes are font-specific
+        /// </returns>
         public virtual bool IsFontSpecific() {
             return isFontSpecific;
         }
@@ -110,6 +174,8 @@ namespace iText.IO.Font {
             return glyph != null ? glyph.GetWidth() : 0;
         }
 
+        /// <summary>Gets the average glyph width.</summary>
+        /// <returns>average width in normalized glyph units</returns>
         public virtual int GetAvgWidth() {
             return avgWidth;
         }
@@ -122,15 +188,36 @@ namespace iText.IO.Font {
             return glyph != null ? glyph.GetBbox() : null;
         }
 
+        /// <summary>Looks up a glyph by Unicode value.</summary>
+        /// <param name="unicode">Unicode scalar value</param>
+        /// <returns>
+        /// matching glyph, or
+        /// <see langword="null"/>
+        /// when unmapped
+        /// </returns>
         public virtual Glyph GetGlyph(int unicode) {
             return unicodeToGlyph.Get(unicode);
         }
 
-        // char code in case Type1 or index in case OpenType
+        /// <summary>Looks up a glyph by its format-specific code.</summary>
+        /// <param name="charCode">Type 1 character code or OpenType glyph index</param>
+        /// <returns>
+        /// matching glyph, or
+        /// <see langword="null"/>
+        /// when absent
+        /// </returns>
         public virtual Glyph GetGlyphByCode(int charCode) {
             return codeToGlyph.Get(charCode);
         }
 
+        /// <summary>Checks whether this program supplies kerning pairs.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if supplies,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
         public virtual bool HasKernPairs() {
             return false;
         }
@@ -166,6 +253,12 @@ namespace iText.IO.Font {
             return false;
         }
 
+        /// <summary>Sets the CID registry associated with this font program.</summary>
+        /// <param name="registry">
+        /// CID registry name, or
+        /// <see langword="null"/>
+        /// when unavailable
+        /// </param>
         protected internal virtual void SetRegistry(String registry) {
             this.registry = registry;
         }
@@ -227,6 +320,8 @@ namespace iText.IO.Font {
             fontMetrics.SetCapHeight(capHeight);
         }
 
+        /// <summary>Sets the x-height in source font units.</summary>
+        /// <param name="xHeight">height of lowercase flat characters above the baseline</param>
         protected internal virtual void SetXHeight(int xHeight) {
             fontMetrics.SetXHeight(xHeight);
         }
@@ -235,18 +330,30 @@ namespace iText.IO.Font {
         /// <remarks>
         /// Sets the PostScript italic angle.
         /// <para />
-        /// Italic angle in counter-clockwise degrees from the vertical. Zero for upright text, negative for text that leans
+        /// Italic angle in counterclockwise degrees from the vertical. Zero for upright text, negative for text that leans
         /// to the right (forward).
         /// </remarks>
-        /// <param name="italicAngle">in counter-clockwise degrees from the vertical</param>
+        /// <param name="italicAngle">in counterclockwise degrees from the vertical</param>
         protected internal virtual void SetItalicAngle(int italicAngle) {
             fontMetrics.SetItalicAngle(italicAngle);
         }
 
+        /// <summary>Sets the dominant vertical stem width.</summary>
+        /// <param name="stemV">
+        /// Type 1/CFF
+        /// <c>StdVW</c>
+        /// value in glyph units
+        /// </param>
         protected internal virtual void SetStemV(int stemV) {
             fontMetrics.SetStemV(stemV);
         }
 
+        /// <summary>Sets the dominant horizontal stem width.</summary>
+        /// <param name="stemH">
+        /// Type 1/CFF
+        /// <c>StdHW</c>
+        /// value in glyph units
+        /// </param>
         protected internal virtual void SetStemH(int stemH) {
             fontMetrics.SetStemH(stemH);
         }
@@ -269,6 +376,12 @@ namespace iText.IO.Font {
             fontNames.SetFontStretch(fontWidth);
         }
 
+        /// <summary>Sets whether the font declares a fixed width.</summary>
+        /// <param name="isFixedPitch">
+        /// 
+        /// <see langword="true"/>
+        /// for a monospaced font
+        /// </param>
         protected internal virtual void SetFixedPitch(bool isFixedPitch) {
             fontMetrics.SetIsFixedPitch(isFixedPitch);
         }
@@ -282,6 +395,8 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>Sets the normalized font bounding box from a four-element coordinate array.</summary>
+        /// <param name="bbox">lower-left x/y and upper-right x/y coordinates</param>
         protected internal virtual void SetBbox(int[] bbox) {
             fontMetrics.SetBbox(bbox[0], bbox[1], bbox[2], bbox[3]);
         }
@@ -306,6 +421,7 @@ namespace iText.IO.Font {
             }
         }
 
+        /// <summary>Ensures that an existing Unicode space glyph is also addressable through its font code.</summary>
         protected internal virtual void FixSpaceIssue() {
             Glyph space = unicodeToGlyph.Get(32);
             if (space != null) {

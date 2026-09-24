@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.Collections.Generic;
 using iText.Kernel.Colors;
+using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Properties;
 
 namespace iText.Svg.Utils {
@@ -41,21 +42,27 @@ namespace iText.Svg.Utils {
     /// Created for internal usage.
     /// </remarks>
     public class SvgTextProperties {
-        private Color fillColor = DeviceGray.BLACK;
+        private Color fillColor = PdfCanvasConstants.DEFAULT_FILL_COLOR;
 
-        private Color strokeColor = DeviceGray.BLACK;
+        private Color strokeColor = PdfCanvasConstants.DEFAULT_STROKE_COLOR;
 
-        private float fillOpacity = 1f;
+        private float fillOpacity = PdfCanvasConstants.DEFAULT_FILL_OPACITY;
 
-        private float strokeOpacity = 1f;
+        private float strokeOpacity = PdfCanvasConstants.DEFAULT_STROKE_OPACITY;
 
         private float[] dashArray = null;
 
         private float dashPhase = 0f;
 
-        private float lineWidth = 1f;
+        private float lineWidth = PdfCanvasConstants.DEFAULT_LINE_WIDTH;
 
         private IList<Underline> textDecoration = new List<Underline>();
+
+        private int lineCapStyle = PdfCanvasConstants.DEFAULT_LINE_CAP_STYLE;
+
+        private int lineJoinStyle = PdfCanvasConstants.DEFAULT_LINE_JOIN_STYLE;
+
+        private float miterLimit = PdfCanvasConstants.DEFAULT_MITER_LIMIT;
 
         /// <summary>
         /// Creates new
@@ -85,6 +92,63 @@ namespace iText.Svg.Utils {
             this.dashPhase = textProperties.GetDashPhase();
             this.lineWidth = textProperties.GetLineWidth();
             this.textDecoration = textProperties.GetTextDecoration();
+            this.lineCapStyle = textProperties.GetLineCapStyle();
+            this.lineJoinStyle = textProperties.GetLineJoinStyle();
+            this.miterLimit = textProperties.GetMiterLimit();
+        }
+
+        /// <summary>Gets line cap style.</summary>
+        /// <returns>line cap style</returns>
+        public virtual int GetLineCapStyle() {
+            return lineCapStyle;
+        }
+
+        /// <summary>Sets line cap style.</summary>
+        /// <param name="lineCapStyle">line cap style to set</param>
+        /// <returns>
+        /// this same
+        /// <see cref="SvgTextProperties"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Svg.Utils.SvgTextProperties SetLineCapStyle(int lineCapStyle) {
+            this.lineCapStyle = lineCapStyle;
+            return this;
+        }
+
+        /// <summary>Gets line join style.</summary>
+        /// <returns>line join style</returns>
+        public virtual int GetLineJoinStyle() {
+            return lineJoinStyle;
+        }
+
+        /// <summary>Sets line join style.</summary>
+        /// <param name="lineJoinStyle">line join style to set</param>
+        /// <returns>
+        /// this same
+        /// <see cref="SvgTextProperties"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Svg.Utils.SvgTextProperties SetLineJoinStyle(int lineJoinStyle) {
+            this.lineJoinStyle = lineJoinStyle;
+            return this;
+        }
+
+        /// <summary>Gets miter limit.</summary>
+        /// <returns>miter limit</returns>
+        public virtual float GetMiterLimit() {
+            return miterLimit;
+        }
+
+        /// <summary>Sets miter limit.</summary>
+        /// <param name="miterLimit">miter limit to set</param>
+        /// <returns>
+        /// this same
+        /// <see cref="SvgTextProperties"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Svg.Utils.SvgTextProperties SetMiterLimit(float miterLimit) {
+            this.miterLimit = miterLimit;
+            return this;
         }
 
         /// <summary>Gets text stroke color.</summary>

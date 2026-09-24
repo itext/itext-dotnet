@@ -49,6 +49,8 @@ namespace iText.IO.Image {
             }
         }
 
+        /// <summary>Parses the selected page of a JBIG2 image and populates its image attributes.</summary>
+        /// <param name="jbig2">JBIG2 image data to process</param>
         public static void ProcessImage(ImageData jbig2) {
             if (jbig2.GetOriginalType() != ImageType.JBIG2) {
                 throw new ArgumentException("JBIG2 image expected");

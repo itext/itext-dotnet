@@ -56,11 +56,16 @@ namespace iText.Forms.Form.Element {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void BasicButtonTest() {
             String outPdf = DESTINATION_FOLDER + "basicButton.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_basicButton.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Button formButton = new Button("form button");
                 formButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formButton.Add(new Paragraph("form button"));
@@ -82,7 +87,7 @@ namespace iText.Forms.Form.Element {
         public virtual void BasicButtonTestWithFontDiffersOnParagraph() {
             String outPdf = DESTINATION_FOLDER + "basicButtonWithFontDiffersOnParagraph.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_basicButtonWithFontDiffersOnParagraph.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Button formButton = new Button("form button");
                 formButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formButton.SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD));
@@ -106,7 +111,7 @@ namespace iText.Forms.Form.Element {
         public virtual void BasicButtonTestWithFont() {
             String outPdf = DESTINATION_FOLDER + "basicButtonWithFont.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_basicButtonWithFon.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Button formButton = new Button("form button");
                 formButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formButton.SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD));
@@ -130,7 +135,7 @@ namespace iText.Forms.Form.Element {
         public virtual void CustomizedButtonTest() {
             String outPdf = DESTINATION_FOLDER + "customizedButton.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_customizedButton.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Button formButton = new Button("form button");
                 formButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formButton.SetValue("form button");
@@ -154,7 +159,7 @@ namespace iText.Forms.Form.Element {
         public virtual void ButtonVerticalAlignmentTest() {
             String outPdf = DESTINATION_FOLDER + "buttonVerticalAlignment.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_buttonVerticalAlignment.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Button formButton = new Button("form button");
                 formButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formButton.SetValue("capture on bottom");
@@ -170,7 +175,7 @@ namespace iText.Forms.Form.Element {
             String outPdf = DESTINATION_FOLDER + "addButtonInTwoWays.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_addButtonInTwoWays.pdf";
             String imagePath = SOURCE_FOLDER + "Desert.jpg";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 // Create push button using html element
                 Button formButton = new Button("button");
                 formButton.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
@@ -198,7 +203,7 @@ namespace iText.Forms.Form.Element {
         public virtual void BorderBoxesTest() {
             String outPdf = DESTINATION_FOLDER + "borderBoxes.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_borderBoxes.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 // BORDER_BOX
                 Button interactiveButton = new Button("interactiveButton").SetBorder(new SolidBorder(ColorConstants.PINK, 
                     10));
@@ -237,7 +242,7 @@ namespace iText.Forms.Form.Element {
         public virtual void BorderTypesTest() {
             String outPdf = DESTINATION_FOLDER + "borderTypes.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_borderTypes.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 // DASHED
                 Button button = new Button("button").SetBorder(new DashedBorder(ColorConstants.PINK, 10)).SetBackgroundColor
                     (ColorConstants.YELLOW);
@@ -294,7 +299,7 @@ namespace iText.Forms.Form.Element {
         public virtual void ButtonAlternativeDescriptionTest() {
             String outPdf = DESTINATION_FOLDER + "buttonAlternativeDescription.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_buttonAlternativeDescription.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outPdf))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
                 using (Document document = new Document(pdfDocument)) {
                     pdfDocument.SetTagged();
                     Button formButton = new Button("form button");

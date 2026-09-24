@@ -53,7 +53,11 @@ namespace iText.IO.Font.Otf {
         /// <see cref="OpenTableLookup"/>.
         /// </summary>
         /// <param name="openReader">the OpenType font table reader</param>
-        /// <param name="lookupFlag">the lookup flag</param>
+        /// <param name="lookupFlag">
+        /// specifies processing options, e.g. whether to skip base glyphs, marks or
+        /// ligatures during glyph substitution or positioning. See
+        /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+        /// </param>
         /// <param name="subTableLocations">the subtables locations</param>
         protected internal OpenTableLookup(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations
             ) {
@@ -68,6 +72,8 @@ namespace iText.IO.Font.Otf {
         /// <para />
         /// The flag indicates to a text-processing client certain processing
         /// options to use when substituting or positioning glyphs.
+        /// e.g. whether to skip base glyphs, marks or ligatures during glyph substitution or positioning.
+        /// See <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
         /// </remarks>
         /// <returns>the lookup flag</returns>
         public virtual int GetLookupFlag() {
@@ -196,7 +202,11 @@ namespace iText.IO.Font.Otf {
 
             /// <summary>Reads the next glyph taking into account glyph class and lookup flag.</summary>
             /// <param name="openReader">the OpenType reader to check glyph class against lookup flag</param>
-            /// <param name="lookupFlag">the lookup flag</param>
+            /// <param name="lookupFlag">
+            /// specifies processing options, e.g. whether to skip base glyphs, marks or
+            /// ligatures during glyph substitution or positioning. See
+            /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+            /// </param>
             public virtual void NextGlyph(OpenTypeFontTableReader openReader, int lookupFlag) {
                 glyph = null;
                 while (++idx < line.GetEnd()) {
@@ -210,7 +220,11 @@ namespace iText.IO.Font.Otf {
 
             /// <summary>Reads the previous glyph taking into account glyph class and lookup flag.</summary>
             /// <param name="openReader">the OpenType reader to check glyph class against lookup flag</param>
-            /// <param name="lookupFlag">the lookup flag</param>
+            /// <param name="lookupFlag">
+            /// specifies processing options, e.g. whether to skip base glyphs, marks or
+            /// ligatures during glyph substitution or positioning. See
+            /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+            /// </param>
             public virtual void PreviousGlyph(OpenTypeFontTableReader openReader, int lookupFlag) {
                 glyph = null;
                 while (--idx >= line.GetStart()) {

@@ -57,11 +57,16 @@ namespace iText.Layout.Renderer {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void TrimFirstJapaneseCharactersTest() {
             String outFileName = destinationFolder + "trimFirstJapaneseCharacters.pdf";
             String cmpFileName = sourceFolder + "cmp_trimFirstJapaneseCharacters.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             // UTF-8 encoding table and Unicode characters
             byte[] bUtf16A = new byte[] { (byte)0xd8, (byte)0x40, (byte)0xdc, (byte)0x0b };
@@ -78,7 +83,7 @@ namespace iText.Layout.Renderer {
         public virtual void WordSplitAcrossTwoTextRenderers() {
             String outFileName = destinationFolder + "wordSplitAcrossTwoTextRenderers.pdf";
             String cmpFileName = sourceFolder + "cmp_wordSplitAcrossTwoTextRenderers.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             doc.SetFontSize(20);
             Text placeho = new Text("placeho").SetFontColor(ColorConstants.MAGENTA).SetBackgroundColor(ColorConstants.
@@ -102,7 +107,7 @@ namespace iText.Layout.Renderer {
         public virtual void WordSplitAcrossMultipleRenderers() {
             String outFileName = destinationFolder + "wordSplitAcrossMultipleRenderers.pdf";
             String cmpFileName = sourceFolder + "cmp_wordSplitAcrossMultipleRenderers.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             doc.SetFontSize(20);
             Text placeho = new Text("placeho").SetFontColor(ColorConstants.MAGENTA).SetBackgroundColor(ColorConstants.
@@ -128,7 +133,7 @@ namespace iText.Layout.Renderer {
         public virtual void WordEndsAndFollowingTextRendererStartsWithWhitespaces01() {
             String outFileName = destinationFolder + "wordEndsAndFollowingTextRendererStartsWithWhitespaces01.pdf";
             String cmpFileName = sourceFolder + "cmp_wordEndsAndFollowingTextRendererStartsWithWhitespaces01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             doc.SetFontSize(20);
             Text firstText = new Text("firstTextRenderer").SetFontColor(ColorConstants.MAGENTA).SetBackgroundColor(ColorConstants
@@ -149,7 +154,7 @@ namespace iText.Layout.Renderer {
         public virtual void WordEndsAndFollowingTextRendererStartsWithWhitespaces02() {
             String outFileName = destinationFolder + "wordEndsAndFollowingTextRendererStartsWithWhitespaces02.pdf";
             String cmpFileName = sourceFolder + "cmp_wordEndsAndFollowingTextRendererStartsWithWhitespaces02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             doc.SetFontSize(20);
             Text firstText = new Text("firstTextRenderer").SetFontColor(ColorConstants.MAGENTA).SetBackgroundColor(ColorConstants
@@ -168,7 +173,7 @@ namespace iText.Layout.Renderer {
         public virtual void ForcedWordSplit() {
             String outFileName = destinationFolder + "forcedWordSplit.pdf";
             String cmpFileName = sourceFolder + "cmp_forcedWordSplit.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             doc.SetFontSize(20);
             Text forcedWordSplit = new Text("forcedWordSplit forcedWordSplit").SetFontColor(ColorConstants.MAGENTA).SetBackgroundColor
@@ -191,7 +196,7 @@ namespace iText.Layout.Renderer {
         public virtual void WordSplitAcrossMultipleRenderersOverflowXVisibleWithPrecedingPlaceholder() {
             String outFileName = destinationFolder + "wordSplitAcrossMultipleRenderersOverflowXVisibleWithPrecedingPlaceholder.pdf";
             String cmpFileName = sourceFolder + "cmp_wordSplitAcrossMultipleRenderersOverflowXVisibleWithPrecedingPlaceholder.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             doc.SetFontSize(20);
             Text placeholder = new Text("placeholder ").SetFontColor(ColorConstants.MAGENTA).SetBackgroundColor(ColorConstants
@@ -216,7 +221,7 @@ namespace iText.Layout.Renderer {
         public virtual void WordSplitAcrossMultipleRenderersOverflowXVisible() {
             String outFileName = destinationFolder + "wordSplitAcrossMultipleRenderersOverflowXVisible.pdf";
             String cmpFileName = sourceFolder + "cmp_wordSplitAcrossMultipleRenderersOverflowXVisible.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             doc.SetFontSize(20);
             Text oooooooooover = new Text("oooooooooover").SetFontColor(ColorConstants.RED).SetBackgroundColor(ColorConstants
@@ -240,7 +245,7 @@ namespace iText.Layout.Renderer {
         public virtual void WordSplitRenderersWithFittingFloatingElementInBetween() {
             String outFileName = destinationFolder + "wordSplitRenderersWithFittingFloatingElementInBetween.pdf";
             String cmpFileName = sourceFolder + "cmp_wordSplitRenderersWithFittingFloatingElementInBetween.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             doc.SetFontSize(20);
             Text reg = new Text("reg").SetFontColor(ColorConstants.LIGHT_GRAY);
@@ -265,7 +270,7 @@ namespace iText.Layout.Renderer {
         public virtual void WordSplitRenderersWithNotFittingFloatingElementInBetween() {
             String outFileName = destinationFolder + "wordSplitRenderersWithNotFittingFloatingElementInBetween.pdf";
             String cmpFileName = sourceFolder + "cmp_wordSplitRenderersWithNotFittingFloatingElementInBetween.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             doc.SetFontSize(20);
             Text loooooooooooo = new Text("loooooooooooo").SetFontColor(ColorConstants.GREEN);
@@ -286,7 +291,7 @@ namespace iText.Layout.Renderer {
         public virtual void WordSplitRenderersWithFittingFloatingInBetweenInSecondWord() {
             String outFileName = destinationFolder + "wordSplitRenderersWithFittingFloatingInBetweenInSecondWord.pdf";
             String cmpFileName = sourceFolder + "cmp_wordSplitRenderersWithFittingFloatingInBetweenInSecondWord.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             doc.SetFontSize(20);
             Text itsAndSpace = new Text("It's ");
@@ -313,7 +318,7 @@ namespace iText.Layout.Renderer {
         public virtual void WordSplitRenderersWithOverflowedFloatingElementInBetween() {
             String outFileName = destinationFolder + "wordSplitRenderersWithOverflowedFloatingElementInBetween.pdf";
             String cmpFileName = sourceFolder + "cmp_wordSplitRenderersWithOverflowedFloatingElementInBetween.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             doc.SetFontSize(20);
             Text reg = new Text("reg").SetFontColor(ColorConstants.LIGHT_GRAY);
@@ -338,7 +343,7 @@ namespace iText.Layout.Renderer {
         public virtual void WordSplitAcrossMutipleTextRenderersWithinFloatingContainer() {
             String outFileName = destinationFolder + "wordSplitAcrossMutipleTextRenderersWithinFloatingContainer.pdf";
             String cmpFileName = sourceFolder + "cmp_wordSplitAcrossMutipleTextRenderersWithinFloatingContainer.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             doc.SetFontSize(20);
             Text oooooooooover = new Text("oooooooooover").SetFontColor(ColorConstants.LIGHT_GRAY);
@@ -364,7 +369,7 @@ namespace iText.Layout.Renderer {
         public virtual void WordSplitAcrossRenderersWithPrecedingImageRenderer() {
             String outFileName = destinationFolder + "wordSplitAcrossRenderersWithPrecedingImageRenderer.pdf";
             String cmpFileName = sourceFolder + "cmp_wordSplitAcrossRenderersWithPrecedingImageRenderer.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             doc.SetFontSize(20);
             iText.Layout.Element.Image image = new Image(ImageDataFactory.Create(sourceFolder + "bulb.gif"));
@@ -389,7 +394,7 @@ namespace iText.Layout.Renderer {
         public virtual void MinMaxWidthWordSplitAcrossMultipleTextRenderers() {
             String outFileName = destinationFolder + "minMaxWidthWordSplitAcrossMultipleTextRenderers.pdf";
             String cmpFileName = sourceFolder + "cmp_minMaxWidthWordSplitAcrossMultipleTextRenderers.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             doc.SetFontSize(20);
             Text wissen = new Text("Wissen").SetFontColor(ColorConstants.PINK).SetBackgroundColor(ColorConstants.YELLOW
@@ -415,7 +420,7 @@ namespace iText.Layout.Renderer {
         public virtual void MinWidthForWordInMultipleTextRenderersFollowedByFloatTest() {
             String outFileName = destinationFolder + "minWidthForSpanningWordFollowedByFloat.pdf";
             String cmpFileName = sourceFolder + "cmp_minWidthForSpanningWordFollowedByFloat.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             doc.SetFontSize(40);
             // add elements to the table in narrow parent div, so table width would be completely based on min-width
@@ -441,7 +446,7 @@ namespace iText.Layout.Renderer {
         public virtual void OverflowWrapBreakWordWithOverflowXTest() {
             String outFileName = destinationFolder + "overflowWrapBreakWordWithOverflowXTest.pdf";
             String cmpFileName = sourceFolder + "cmp_overflowWrapBreakWordWithOverflowXTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             doc.SetFontSize(40);
             Text text = new Text("wow");
@@ -461,23 +466,23 @@ namespace iText.Layout.Renderer {
         public virtual void CustomTextRendererShouldOverrideGetNextRendererTest() {
             String outFileName = destinationFolder + "customTextRendererShouldOverrideGetNextRendererTest.pdf";
             String cmpFileName = sourceFolder + "cmp_customTextRendererShouldOverrideGetNextRendererTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Text text = new Text("If getNextRenderer() is not overridden and text overflows to the next line," + " then customizations are not applied. "
                 );
-            text.SetNextRenderer(new _TextRenderer_744(text));
+            text.SetNextRenderer(new _TextRenderer_750(text));
             doc.Add(new Paragraph(text));
             text = new Text("If getNextRenderer() is overridden and text overflows to the next line, " + "then customizations are applied. "
                 );
-            text.SetNextRenderer(new _TextRenderer_760(text));
+            text.SetNextRenderer(new _TextRenderer_766(text));
             doc.Add(new Paragraph(text));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 ));
         }
 
-        private sealed class _TextRenderer_744 : TextRenderer {
-            public _TextRenderer_744(Text baseArg1)
+        private sealed class _TextRenderer_750 : TextRenderer {
+            public _TextRenderer_750(Text baseArg1)
                 : base(baseArg1) {
             }
 
@@ -488,8 +493,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_760 : TextRenderer {
-            public _TextRenderer_760(Text baseArg1)
+        private sealed class _TextRenderer_766 : TextRenderer {
+            public _TextRenderer_766(Text baseArg1)
                 : base(baseArg1) {
             }
 
@@ -508,7 +513,7 @@ namespace iText.Layout.Renderer {
         public virtual void NbspCannotBeFitAndIsTheOnlySymbolTest() {
             String outFileName = destinationFolder + "nbspCannotBeFitAndIsTheOnlySymbolTest.pdf";
             String cmpFileName = sourceFolder + "cmp_nbspCannotBeFitAndIsTheOnlySymbolTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             // No place for any symbol (page width is fully occupied by margins)
             Document doc = new Document(pdfDocument, new PageSize(72, 1000));
             Paragraph paragraph = new Paragraph().Add(new Text("\u00A0"));
@@ -524,7 +529,7 @@ namespace iText.Layout.Renderer {
         public virtual void NbspCannotBeFitAndMakesTheFirstChunkTest() {
             String outFileName = destinationFolder + "nbspCannotBeFitAndMakesTheFirstChunkTest.pdf";
             String cmpFileName = sourceFolder + "cmp_nbspCannotBeFitAndMakesTheFirstChunkTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             // No place for any symbol (page width is fully occupied by margins)
             Document doc = new Document(pdfDocument, new PageSize(72, 1000));
             Paragraph paragraph = new Paragraph().Add(new Text("\u00A0")).Add(new Text("SecondChunk"));
@@ -540,7 +545,7 @@ namespace iText.Layout.Renderer {
         public virtual void NbspCannotBeFitAndIsTheFirstSymbolOfChunkTest() {
             String outFileName = destinationFolder + "nbspCannotBeFitAndIsTheFirstSymbolOfChunkTest.pdf";
             String cmpFileName = sourceFolder + "cmp_nbspCannotBeFitAndIsTheFirstSymbolOfChunkTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             // No place for any symbol (page width is fully occupied by margins)
             Document doc = new Document(pdfDocument, new PageSize(72, 1000));
             Paragraph paragraph = new Paragraph().Add(new Text("\u00A0First"));
@@ -555,7 +560,7 @@ namespace iText.Layout.Renderer {
         public virtual void NbspCannotBeFitAndIsTheLastSymbolOfFirstChunkTest() {
             String outFileName = destinationFolder + "nbspCannotBeFitAndIsTheLastSymbolOfFirstChunkTest.pdf";
             String cmpFileName = sourceFolder + "cmp_nbspCannotBeFitAndIsTheLastSymbolOfFirstChunkTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             // No place for the second symbol
             Document doc = new Document(pdfDocument, new PageSize(81, 1000));
             Paragraph paragraph = new Paragraph().Add(new Text("H\u00A0")).Add(new Text("ello"));
@@ -571,7 +576,7 @@ namespace iText.Layout.Renderer {
         public virtual void CustomTextRendererShouldOverrideCreateCopyTest() {
             String outFileName = destinationFolder + "customTextRendererShouldOverrideCreateCopyTest.pdf";
             String cmpFileName = sourceFolder + "cmp_customTextRendererShouldOverrideCreateCopyTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             FontProvider fontProvider = new FontProvider();
             NUnit.Framework.Assert.IsTrue(fontProvider.AddFont(fontsFolder + "NotoSans-Regular.ttf"));
@@ -583,7 +588,7 @@ namespace iText.Layout.Renderer {
                 longTextBuilder.Append("Дзень добры, свет! Hallo Welt! ");
             }
             iText.Layout.Element.Text text = new iText.Layout.Element.Text(longTextBuilder.ToString());
-            text.SetNextRenderer(new _TextRenderer_895(text));
+            text.SetNextRenderer(new _TextRenderer_901(text));
             doc.Add(new Paragraph(text));
             text.SetNextRenderer(new TextRendererIntegrationTest.TextRendererWithOverriddenGetNextRenderer(text));
             doc.Add(new Paragraph(text));
@@ -592,8 +597,8 @@ namespace iText.Layout.Renderer {
                 ));
         }
 
-        private sealed class _TextRenderer_895 : TextRenderer {
-            public _TextRenderer_895(iText.Layout.Element.Text baseArg1)
+        private sealed class _TextRenderer_901 : TextRenderer {
+            public _TextRenderer_901(iText.Layout.Element.Text baseArg1)
                 : base(baseArg1) {
             }
 
@@ -617,7 +622,7 @@ namespace iText.Layout.Renderer {
                 iText.Layout.Element.Text text = new iText.Layout.Element.Text("test string").SetTextRise(0).SetWordSpacing
                     (0).SetSkew(10, 10).SetHorizontalScaling(2);
                 Paragraph paragraph = new Paragraph().Add(text);
-                paragraph.SetNextRenderer(new _TextRenderer_934(text));
+                paragraph.SetNextRenderer(new _TextRenderer_940(text));
                 doc.Add(paragraph);
                 String contentstream = iText.Commons.Utils.JavaUtil.GetStringForBytes(doc.GetPdfDocument().GetPage(1).GetContentBytes
                     (), System.Text.Encoding.UTF8);
@@ -625,8 +630,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_934 : TextRenderer {
-            public _TextRenderer_934(iText.Layout.Element.Text baseArg1)
+        private sealed class _TextRenderer_940 : TextRenderer {
+            public _TextRenderer_940(iText.Layout.Element.Text baseArg1)
                 : base(baseArg1) {
             }
 
@@ -650,7 +655,7 @@ namespace iText.Layout.Renderer {
                     .FILL_STROKE);
                 Paragraph paragraph = new Paragraph().Add(text).SetBackgroundColor(ColorConstants.YELLOW).SetWidth(10).SetStrokeWidth
                     (1f).SetStrokeColor((TransparentColor)null).SetBorder(new SolidBorder(1));
-                paragraph.SetNextRenderer(new _TextRenderer_972(text));
+                paragraph.SetNextRenderer(new _TextRenderer_978(text));
                 doc.Add(paragraph);
                 String contentstream = iText.Commons.Utils.JavaUtil.GetStringForBytes(doc.GetPdfDocument().GetPage(1).GetContentBytes
                     (), System.Text.Encoding.UTF8);
@@ -658,8 +663,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_972 : TextRenderer {
-            public _TextRenderer_972(iText.Layout.Element.Text baseArg1)
+        private sealed class _TextRenderer_978 : TextRenderer {
+            public _TextRenderer_978(iText.Layout.Element.Text baseArg1)
                 : base(baseArg1) {
             }
 
@@ -682,7 +687,7 @@ namespace iText.Layout.Renderer {
                 iText.Layout.Element.Text text = new iText.Layout.Element.Text("test string").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
                     .FILL_STROKE);
                 Paragraph paragraph = new Paragraph().Add(text);
-                paragraph.SetNextRenderer(new _TextRenderer_1005(text));
+                paragraph.SetNextRenderer(new _TextRenderer_1011(text));
                 doc.Add(paragraph);
                 String contentstream = iText.Commons.Utils.JavaUtil.GetStringForBytes(doc.GetPdfDocument().GetPage(1).GetContentBytes
                     (), System.Text.Encoding.UTF8);
@@ -690,8 +695,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_1005 : TextRenderer {
-            public _TextRenderer_1005(iText.Layout.Element.Text baseArg1)
+        private sealed class _TextRenderer_1011 : TextRenderer {
+            public _TextRenderer_1011(iText.Layout.Element.Text baseArg1)
                 : base(baseArg1) {
             }
 
@@ -713,20 +718,20 @@ namespace iText.Layout.Renderer {
             // This test just show that there is a not user-friendly way to achieve text clipping.
             String outFileName = destinationFolder + "simpleClippedTextTest.pdf";
             String cmpFileName = sourceFolder + "cmp_simpleClippedTextTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             doc.SetFontSize(20);
             PdfCanvas pdfCanvas = new PdfCanvas(pdfDocument.AddNewPage());
             iText.Layout.Canvas canvas = new iText.Layout.Canvas(pdfCanvas, pdfDocument.GetPage(1).GetMediaBox());
             Paragraph paragraph = new Paragraph("Hello World! Some long text to the end of the page").SetTextRenderingMode
                 (PdfCanvasConstants.TextRenderingMode.CLIP);
-            paragraph.SetProperty(Property.BEFORE_TEXT_RESTORE_EXECUTOR, new _IBeforeTextRestoreExecutor_1045(canvas));
+            paragraph.SetProperty(Property.BEFORE_TEXT_RESTORE_EXECUTOR, new _IBeforeTextRestoreExecutor_1051(canvas));
             doc.Add(paragraph);
             Paragraph paragraph2 = new Paragraph("Another text").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
                 .STROKE_CLIP);
             paragraph2.SetStrokeColor(ColorConstants.YELLOW);
             paragraph2.SetStrokeWidth(5);
-            paragraph2.SetProperty(Property.BEFORE_TEXT_RESTORE_EXECUTOR, new _IBeforeTextRestoreExecutor_1061(canvas)
+            paragraph2.SetProperty(Property.BEFORE_TEXT_RESTORE_EXECUTOR, new _IBeforeTextRestoreExecutor_1067(canvas)
                 );
             doc.Add(paragraph2);
             doc.Add(new Paragraph("Bye World!"));
@@ -735,8 +740,8 @@ namespace iText.Layout.Renderer {
                 ));
         }
 
-        private sealed class _IBeforeTextRestoreExecutor_1045 : IBeforeTextRestoreExecutor {
-            public _IBeforeTextRestoreExecutor_1045(iText.Layout.Canvas canvas) {
+        private sealed class _IBeforeTextRestoreExecutor_1051 : IBeforeTextRestoreExecutor {
+            public _IBeforeTextRestoreExecutor_1051(iText.Layout.Canvas canvas) {
                 this.canvas = canvas;
             }
 
@@ -751,8 +756,8 @@ namespace iText.Layout.Renderer {
             private readonly iText.Layout.Canvas canvas;
         }
 
-        private sealed class _IBeforeTextRestoreExecutor_1061 : IBeforeTextRestoreExecutor {
-            public _IBeforeTextRestoreExecutor_1061(iText.Layout.Canvas canvas) {
+        private sealed class _IBeforeTextRestoreExecutor_1067 : IBeforeTextRestoreExecutor {
+            public _IBeforeTextRestoreExecutor_1067(iText.Layout.Canvas canvas) {
                 this.canvas = canvas;
             }
 
@@ -771,7 +776,7 @@ namespace iText.Layout.Renderer {
         public virtual void ClippedTextWithoutDrawerTest() {
             String outFileName = destinationFolder + "clippedTextWithoutDrawerTest.pdf";
             String cmpFileName = sourceFolder + "cmp_clippedTextWithoutDrawerTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             doc.SetFontSize(20);
             Paragraph paragraph = new Paragraph("Hello World! Some long text to the end of the page").SetTextRenderingMode

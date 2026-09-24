@@ -49,12 +49,17 @@ namespace iText.Layout {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void ParenthesisTest01() {
             //TODO DEVSIX-3148
             String outFileName = destinationFolder + "parenthesisTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_parenthesisTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDoc, new PageSize(300, 500));
             Hyphenator hyphenator = new Hyphenator("de", "de", 3, 3);
             HyphenationConfig hyphenationConfig = new HyphenationConfig(hyphenator);
@@ -74,7 +79,7 @@ namespace iText.Layout {
         public virtual void UriTest01() {
             String outFileName = destinationFolder + "uriTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_uriTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document document = new Document(pdfDoc, new PageSize(140, 500));
             Hyphenator hyphenator = new Hyphenator("en", "en", 3, 3);
             HyphenationConfig hyphenationConfig = new HyphenationConfig(hyphenator);
@@ -104,7 +109,7 @@ namespace iText.Layout {
         public virtual void WidthTest01() {
             String outFileName = destinationFolder + "widthTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_widthTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Text text = new Text("Hier ein link https://stackoverflow " + "\n" + " (Sperrvermerk) (Sperrvermerk)" + "\n"
                  + "„Sperrvermerk“ „Sperrvermerk“" + "\n" + "Der Sperrvermerk Sperrvermerk" + "\n" + "correct Sperr|ver|merk"
@@ -123,7 +128,7 @@ namespace iText.Layout {
         public virtual void WidthTest02() {
             String outFileName = destinationFolder + "widthTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_widthTest02.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Text text = new Text("Der/Die Depot-/Kontoinhaber muss/m\u00FCssen sich im Klaren dar\u00FCber sein.");
             Paragraph paragraph = new Paragraph(text);
@@ -140,7 +145,7 @@ namespace iText.Layout {
         public virtual void WidthTest03() {
             String outFileName = destinationFolder + "widthTest03.pdf";
             String cmpFileName = sourceFolder + "cmp_widthTest03.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             String s = "";
             s = s + "Hier ein Link: https://stackoverflow" + "\n";
@@ -167,7 +172,7 @@ namespace iText.Layout {
         public virtual void NonBreakingHyphenTest01() {
             String outFileName = destinationFolder + "nonBreakingHyphenTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_nonBreakingHyphenTest01.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
             Text text = new Text("Dies ist ein Satz in deutscher Sprache. An hm kann man sehen, ob alle Buchstaben da sind. Und der Umbruch? 99\u2011Tage-Kaiser.\n"
@@ -190,7 +195,7 @@ namespace iText.Layout {
         public virtual void NonBreakingHyphenTest02() {
             String outFileName = destinationFolder + "nonBreakingHyphenTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_nonBreakingHyphenTest02.pdf";
-            PdfWriter writer = new PdfWriter(outFileName);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFileName);
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
             Div div = new Div();
@@ -214,7 +219,7 @@ namespace iText.Layout {
         public virtual void HyphenSymbolTest01() {
             String outFileName = destinationFolder + "hyphenSymbolTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_hyphenSymbolTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "Roboto-Regular.ttf", PdfEncodings.IDENTITY_H);
             Style style = new Style();
@@ -251,7 +256,7 @@ namespace iText.Layout {
             String SOFT_HYPHEN = "\u00AD";
             String text = "Soft hyphen at the mid" + SOFT_HYPHEN + "dle,\nhyphen at the end: abcdef" + SOFT_HYPHEN + "ghijklmnopqrst\n"
                  + SOFT_HYPHEN + "hyphen at the beginning.";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)))) {
                 document.Add(new Paragraph(text).SetWidth(150).SetBorder(new SolidBorder(1)).SetHyphenation(new HyphenationConfig
                     (1, 1)));
             }

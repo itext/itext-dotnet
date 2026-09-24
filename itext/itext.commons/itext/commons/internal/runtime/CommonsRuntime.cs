@@ -605,6 +605,11 @@ namespace iText.Commons.Internal.Runtime
         }
         
         
+        public static void EnsureCapacity<T>(this List<T> list, int capacity) {
+            if (capacity > list.Count) {
+                list.Capacity = capacity;
+            }
+        }
 
         public static void RemoveIf<T>(this ICollection<T> collection, Func<T, bool> predicate) {
             T element;

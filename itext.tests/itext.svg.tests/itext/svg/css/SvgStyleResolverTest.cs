@@ -39,7 +39,7 @@ using iText.Test.Attributes;
 namespace iText.Svg.Css {
     [NUnit.Framework.Category("UnitTest")]
     public class SvgStyleResolverTest : ExtendedITextTest {
-        private static readonly String baseUri = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String BASE_URI = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/css/SvgStyleResolver/";
 
         //Single element test
@@ -75,6 +75,34 @@ namespace iText.Svg.Css {
         }
 
         [NUnit.Framework.Test]
+        public virtual void SvgCssResolverNormalizesInheritedPresentationAttributesTest() {
+            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupGroup = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("g"), "");
+            Attributes groupAttributes = jsoupGroup.Attributes();
+            groupAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute(SvgConstants.Attributes.CLIP_PATH, "url(#clip)"
+                ));
+            groupAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute(SvgConstants.Attributes.MASK, "url(#mask)"
+                ));
+            iText.StyledXmlParser.Jsoup.Nodes.Element jsoupRect = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf("rect"), "");
+            Attributes rectAttributes = jsoupRect.Attributes();
+            rectAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute(SvgConstants.Attributes.CLIP_PATH, " InHeRiT "
+                ));
+            rectAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute(SvgConstants.Attributes.MASK, "\tINHERIT\n"
+                ));
+            JsoupElementNode group = new JsoupElementNode(jsoupGroup);
+            JsoupElementNode rect = new JsoupElementNode(jsoupRect);
+            group.AddChild(rect);
+            SvgProcessorContext context = new SvgProcessorContext(new SvgConverterProperties());
+            SvgStyleResolver resolver = new SvgStyleResolver(group, context);
+            SvgCssContext cssContext = new SvgCssContext();
+            group.SetStyles(resolver.ResolveStyles(group, cssContext));
+            IDictionary<String, String> actual = resolver.ResolveStyles(rect, cssContext);
+            NUnit.Framework.Assert.AreEqual("url(#clip)", actual.Get(SvgConstants.Attributes.CLIP_PATH));
+            NUnit.Framework.Assert.AreEqual("url(#mask)", actual.Get(SvgConstants.Attributes.MASK));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void SvgCssResolverStylesheetTest() {
             iText.StyledXmlParser.Jsoup.Nodes.Element jsoupLink = new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                 .ValueOf(SvgConstants.Tags.LINK), "");
@@ -88,7 +116,7 @@ namespace iText.Svg.Css {
             linkAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute("type", "text/css"));
             JsoupElementNode node = new JsoupElementNode(jsoupLink);
             SvgConverterProperties scp = new SvgConverterProperties();
-            scp.SetBaseUri(baseUri);
+            scp.SetBaseUri(BASE_URI);
             SvgProcessorContext processorContext = new SvgProcessorContext(scp);
             SvgStyleResolver sr = new SvgStyleResolver(node, processorContext);
             IDictionary<String, String> attr = sr.ResolveStyles(node, new SvgCssContext());
@@ -119,7 +147,7 @@ namespace iText.Svg.Css {
             linkAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute("type", "text/css"));
             JsoupElementNode node = new JsoupElementNode(jsoupLink);
             SvgConverterProperties scp = new SvgConverterProperties();
-            scp.SetBaseUri(baseUri);
+            scp.SetBaseUri(BASE_URI);
             SvgProcessorContext processorContext = new SvgProcessorContext(scp);
             SvgStyleResolver sr = new SvgStyleResolver(node, processorContext);
             IDictionary<String, String> attr = sr.ResolveStyles(node, new SvgCssContext());
@@ -140,11 +168,11 @@ namespace iText.Svg.Css {
             imageAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute("xlink:href", "itis.jpg"));
             JsoupElementNode node = new JsoupElementNode(jsoupImage);
             SvgConverterProperties scp = new SvgConverterProperties();
-            scp.SetBaseUri(baseUri);
+            scp.SetBaseUri(BASE_URI);
             SvgProcessorContext processorContext = new SvgProcessorContext(scp);
             SvgStyleResolver sr = new SvgStyleResolver(node, processorContext);
             IDictionary<String, String> attr = sr.ResolveStyles(node, new SvgCssContext());
-            String fileName = baseUri + "itis.jpg";
+            String fileName = BASE_URI + "itis.jpg";
             String expectedUrl = UrlUtil.ToNormalizedURI(fileName).ToString();
             String expectedUrlAnotherValidVersion;
             if (expectedUrl.StartsWith("file:///")) {
@@ -171,7 +199,7 @@ namespace iText.Svg.Css {
             imageAttributes.Put(new iText.StyledXmlParser.Jsoup.Nodes.Attribute("xlink:href", "#testid"));
             JsoupElementNode node = new JsoupElementNode(jsoupImage);
             SvgConverterProperties scp = new SvgConverterProperties();
-            scp.SetBaseUri(baseUri);
+            scp.SetBaseUri(BASE_URI);
             SvgProcessorContext processorContext = new SvgProcessorContext(scp);
             SvgStyleResolver sr = new SvgStyleResolver(node, processorContext);
             IDictionary<String, String> attr = sr.ResolveStyles(node, new SvgCssContext());

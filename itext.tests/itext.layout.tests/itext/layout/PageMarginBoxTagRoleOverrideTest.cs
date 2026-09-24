@@ -45,6 +45,11 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void RelativePositionWithPageMarginTagRoleOverrideGoldenTest() {
             String fileName = "relativePositionWithPageMarginTagRoleOverride";
@@ -63,9 +68,9 @@ namespace iText.Layout {
                 }
             }
             CompareTool ct = new CompareTool();
+            NUnit.Framework.Assert.IsNull(ct.CompareTagStructures(outFileName, cmpFileName));
             NUnit.Framework.Assert.IsNull(ct.CompareByContent(outFileName, cmpFileName, DESTINATION_FOLDER, "diff_" + 
                 fileName));
-            NUnit.Framework.Assert.IsNull(ct.CompareTagStructures(outFileName, cmpFileName));
         }
 
         private class ParagraphRolePageMarginBoxes : PageMarginBoxes {

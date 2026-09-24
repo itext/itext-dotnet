@@ -220,8 +220,7 @@ namespace iText.Kernel.Pdf.Annot {
 
         [NUnit.Framework.Test]
         public virtual void AddAndGetLinkAnnotations() {
-            PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(destinationFolder + "linkAnnotation03.pdf"
-                ));
+            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "linkAnnotation03.pdf"));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginText();

@@ -43,6 +43,8 @@ namespace iText.Commons.Json {
         [NUnit.Framework.Test]
         public virtual void RoundNumberTest() {
             NUnit.Framework.Assert.AreEqual("-4", new JsonNumber(-4).ToJson());
+            NUnit.Framework.Assert.AreEqual(-1, ((JsonNumber)JsonValue.FromJson(new JsonNumber(-1.2).ToJson())).GetLongValue
+                ());
         }
 
         [NUnit.Framework.Test]
@@ -81,6 +83,19 @@ namespace iText.Commons.Json {
             JsonValue resultJson = JsonValue.FromJson(resultString);
             JsonValue cmpJson = JsonValue.FromJson(cmpString);
             NUnit.Framework.Assert.AreEqual(cmpString, resultString);
+            NUnit.Framework.Assert.AreEqual(cmpJson, resultJson);
+            NUnit.Framework.Assert.AreEqual(cmpJson, complexStructure);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SerializeComplexStructureToPrettifiedJsonTest() {
+            String cmp = SOURCE_FOLDER + "complexStructurePrettifiedJson.json";
+            String cmpString = GetJsonStringFromFile(cmp);
+            JsonValue complexStructure = CreateComplexStructureObject();
+            String resultString = complexStructure.ToPrettifiedJson();
+            JsonValue resultJson = JsonValue.FromJson(resultString);
+            JsonValue cmpJson = JsonValue.FromJson(cmpString);
+            NUnit.Framework.Assert.AreEqual(cmpString.Replace("\r", ""), resultString.Replace("\r", ""));
             NUnit.Framework.Assert.AreEqual(cmpJson, resultJson);
             NUnit.Framework.Assert.AreEqual(cmpJson, complexStructure);
         }
@@ -134,6 +149,15 @@ namespace iText.Commons.Json {
             JsonNumber negInfNumber = new JsonNumber(double.NegativeInfinity);
             e = NUnit.Framework.Assert.Catch(typeof(ITextException), () => negInfNumber.ToJson());
             NUnit.Framework.Assert.IsTrue(e.Message.Contains("Failed to serialize json into string"));
+            JsonNumber maxLongNumber = new JsonNumber(long.MaxValue - 100);
+            String maxLongNumberStr = maxLongNumber.ToJson();
+            NUnit.Framework.Assert.AreEqual("9223372036854775707", maxLongNumberStr);
+            NUnit.Framework.Assert.AreEqual(long.MaxValue - 100, ((JsonNumber)JsonValue.FromJson(maxLongNumberStr)).GetValue
+                ());
+            JsonNumber minLongNumber = new JsonNumber(long.MinValue + 100);
+            NUnit.Framework.Assert.AreEqual("-9223372036854775708", minLongNumber.ToJson());
+            NUnit.Framework.Assert.AreEqual(long.MinValue + 100, ((JsonNumber)JsonValue.FromJson(minLongNumber.ToJson(
+                ))).GetValue());
         }
 
         [NUnit.Framework.Test]
@@ -174,6 +198,8 @@ namespace iText.Commons.Json {
             JsonObject obj = new JsonObject();
             obj.Add("key", new JsonString("first"));
             obj.Add("key", new JsonString("second"));
+            obj.Add("the other key", new JsonString("third"));
+            obj.Remove("the other key");
             String serialized = obj.ToJson();
             JsonValue deserialized = JsonValue.FromJson(serialized);
             // The second value should have overwritten the first
@@ -236,6 +262,13 @@ namespace iText.Commons.Json {
             String whitespaceJson = "   \t\n   ";
             Exception e = NUnit.Framework.Assert.Catch(typeof(ITextException), () => JsonValue.FromJson(whitespaceJson
                 ));
+            NUnit.Framework.Assert.IsTrue(e.Message.Contains("Failed to parse json string"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TooBigNumberTestTest() {
+            String numberJson = "999999999999999999999999999999";
+            Exception e = NUnit.Framework.Assert.Catch(typeof(ITextException), () => JsonValue.FromJson(numberJson));
             NUnit.Framework.Assert.IsTrue(e.Message.Contains("Failed to parse json string"));
         }
 

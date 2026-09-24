@@ -21,13 +21,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.Kernel.Colors {
     /// <summary>Color space to specify shades of gray color.</summary>
     public class DeviceGray : Color {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Colors.DeviceGray));
+
         /// <summary>Predefined white DeviceGray color.</summary>
         public static readonly iText.Kernel.Colors.DeviceGray WHITE = new iText.Kernel.Colors.DeviceGray(1f);
 
@@ -48,8 +49,7 @@ namespace iText.Kernel.Colors {
         public DeviceGray(float value)
             : base(new PdfDeviceCs.Gray(), new float[] { value > 1 ? 1 : (value > 0 ? value : 0) }) {
             if (value > 1 || value < 0) {
-                ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Colors.DeviceGray));
-                LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.COLORANT_INTENSITIES_INVALID);
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.COLORANT_INTENSITIES_INVALID);
             }
         }
 

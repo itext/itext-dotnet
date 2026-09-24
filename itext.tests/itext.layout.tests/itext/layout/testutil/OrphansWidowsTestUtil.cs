@@ -27,6 +27,7 @@ using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -49,7 +50,7 @@ namespace iText.Layout.Testutil {
         public static void ProduceOrphansWidowsTestCase(String outPdf, int linesLeft, bool orphans, Paragraph testPara
             , bool applyMarginsOnTestPara) {
             PageSize pageSize = new PageSize(PageSize.A4.GetWidth(), PageSize.A5.GetHeight());
-            Document doc = new Document(new PdfDocument(new PdfWriter(outPdf)), pageSize);
+            Document doc = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)), pageSize);
             Rectangle[] columns = InitUniformColumns(pageSize, 2);
             doc.SetRenderer(new ColumnDocumentRenderer(doc, columns));
             SetParagraphStylingProperties(testPara, applyMarginsOnTestPara);
@@ -85,7 +86,7 @@ namespace iText.Layout.Testutil {
         }
 
         public static void ProduceOrphansWidowsAndMaxHeightLimitTestCase(String outPdf, bool orphans) {
-            Document document = new Document(new PdfDocument(new PdfWriter(outPdf)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)));
             SingleMaxHeightCase(document, orphans, false);
             document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
             SingleMaxHeightCase(document, orphans, true);
@@ -93,7 +94,7 @@ namespace iText.Layout.Testutil {
         }
 
         public static void ProduceOrphansWidowsOnCanvasOfLimitedSizeTestCase(String outPdf, bool orphans) {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             Document document = new Document(pdfDocument);
             String orphansOrWidows = orphans ? "orphans" : "widows";
             Paragraph paraOnCanvas = SetParagraphStylingProperties(new Paragraph(PARA_TEXT), false);
@@ -119,7 +120,7 @@ namespace iText.Layout.Testutil {
         }
 
         public static void ProduceOrphansWidowsWithinDivOfLimitedSizeTestCase(String outPdf, bool orphans) {
-            Document document = new Document(new PdfDocument(new PdfWriter(outPdf)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)));
             String orphansOrWidows = orphans ? "orphans" : "widows";
             Paragraph testDescription = new Paragraph().SetBorder(new SolidBorder(ColorConstants.RED, 1));
             testDescription.Add("The paragraph beneath has property " + StringNormalizer.ToUpperCase(orphansOrWidows) 
@@ -144,7 +145,7 @@ namespace iText.Layout.Testutil {
         }
 
         public static void ProduceOrphansWidowsKeepTogetherTestCase(String outPdf, bool orphans, bool large) {
-            Document document = new Document(new PdfDocument(new PdfWriter(outPdf)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)));
             Paragraph paragraph = new Paragraph(PARA_TEXT).SetMargin(0).SetBackgroundColor(new DeviceRgb(232, 232, 232
                 ));
             if (large) {
@@ -198,7 +199,7 @@ namespace iText.Layout.Testutil {
         }
 
         public static void ProduceOrphansWidowsInlineImageTestCase(String outPdf, String imagePath, bool orphans) {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             Document document = new Document(pdfDocument);
             iText.Layout.Element.Image img = new Image(ImageDataFactory.Create(imagePath));
             SingleInlineImageCase(document, img, orphans, true);
@@ -209,7 +210,7 @@ namespace iText.Layout.Testutil {
 
         public static void ProduceOrphansWidowsHugeInlineImageTestCase(String outPdf, String imagePath, bool orphans
             ) {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             Document document = new Document(pdfDocument);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(imagePath));
             String text = "Just two lines\nJust two lines\n";
@@ -246,7 +247,7 @@ namespace iText.Layout.Testutil {
         }
 
         public static void ProduceOrphansWidowsInlineBlockTestCase(String outPdf, bool orphans) {
-            Document document = new Document(new PdfDocument(new PdfWriter(outPdf)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)));
             Paragraph inlineBlockParagraph = SetParagraphStylingProperties(new Paragraph(OrphansWidowsTestUtil.PARA_TEXT
                 ), false);
             Rectangle effectiveArea = document.GetPageEffectiveArea(document.GetPdfDocument().GetDefaultPageSize());
@@ -276,7 +277,7 @@ namespace iText.Layout.Testutil {
         }
 
         public static void ProduceOrphansWidowsInlineFloatTestCase(String outPdf, bool orphans) {
-            Document document = new Document(new PdfDocument(new PdfWriter(outPdf)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)));
             Paragraph inlineFloatParagraph = SetParagraphStylingProperties(new Paragraph(OrphansWidowsTestUtil.PARA_TEXT
                 ), false);
             float floatingParaWidth = 200;
@@ -313,7 +314,7 @@ namespace iText.Layout.Testutil {
         }
 
         public static void ProduceOrphansWidowsFloatingDivTestCase(String outPdf, bool orphans) {
-            Document document = new Document(new PdfDocument(new PdfWriter(outPdf)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)));
             Paragraph paraInFloatingDiv = SetParagraphStylingProperties(new Paragraph(OrphansWidowsTestUtil.PARA_TEXT)
                 , false);
             float floatingDivWidth = 200;
@@ -352,7 +353,7 @@ namespace iText.Layout.Testutil {
 
         public static void ProduceOrphansWidowsBiggerThanLinesCountTestCase(String outPdf, bool orphans, bool singleLine
             ) {
-            Document document = new Document(new PdfDocument(new PdfWriter(outPdf)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)));
             Paragraph smallParagraph = SetParagraphStylingProperties(new Paragraph(), false);
             if (singleLine) {
                 smallParagraph.Add("Single line!");
@@ -381,7 +382,7 @@ namespace iText.Layout.Testutil {
 
         public static void ProduceOrphansWidowsUnexpectedWidthOfNextAreaTestCase(String outPdf, bool widerNextPage
             ) {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outPdf));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf));
             Document document = new Document(pdfDocument);
             pdfDocument.AddNewPage();
             pdfDocument.AddNewPage(widerNextPage ? PageSize.A2 : PageSize.A6);
@@ -414,7 +415,7 @@ namespace iText.Layout.Testutil {
 
         public static void ProduceOrphansOrWidowsTestCase(String outPdf, int linesLeft, bool orphans, Paragraph testPara
             ) {
-            Document doc = new Document(new PdfDocument(new PdfWriter(outPdf)));
+            Document doc = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)));
             PageSize pageSize = new PageSize(PageSize.A4.GetWidth(), PageSize.A5.GetHeight());
             doc.GetPdfDocument().SetDefaultPageSize(pageSize);
             testPara.SetMargin(0).SetBackgroundColor(new DeviceRgb(232, 232, 232));
@@ -442,7 +443,7 @@ namespace iText.Layout.Testutil {
         }
 
         public static void ProduceOrphansAndWidowsTestCase(String outPdf, Paragraph testPara) {
-            Document doc = new Document(new PdfDocument(new PdfWriter(outPdf)));
+            Document doc = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)));
             PageSize pageSize = new PageSize(PageSize.A4.GetWidth(), PageSize.A5.GetHeight());
             doc.GetPdfDocument().SetDefaultPageSize(pageSize);
             Rectangle[] columns = InitUniformColumns(pageSize, 2);

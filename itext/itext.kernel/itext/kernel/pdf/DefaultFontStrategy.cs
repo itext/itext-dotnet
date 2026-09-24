@@ -20,8 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Kernel.Font;
 
 namespace iText.Kernel.Pdf {
@@ -32,6 +31,8 @@ namespace iText.Kernel.Pdf {
     /// <see cref="PdfDocument.GetDefaultFont()"/>.
     /// </summary>
     public class DefaultFontStrategy {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.DefaultFontStrategy));
+
         private readonly PdfDocument pdfDocument;
 
         private PdfFont defaultFont = null;
@@ -64,8 +65,7 @@ namespace iText.Kernel.Pdf {
                     }
                 }
                 catch (System.IO.IOException e) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.DefaultFontStrategy));
-                    logger.LogError(e, iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_CREATING_DEFAULT_FONT);
+                    LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.EXCEPTION_WHILE_CREATING_DEFAULT_FONT, e);
                     defaultFont = null;
                 }
             }

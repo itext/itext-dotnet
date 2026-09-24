@@ -23,9 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Crypto.Securityhandler;
@@ -44,7 +43,7 @@ namespace iText.Kernel.Pdf {
         public static readonly PdfReader.StrictnessLevel DEFAULT_STRICTNESS_LEVEL = PdfReader.StrictnessLevel.LENIENT;
 
         /// <summary>The Logger instance.</summary>
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.PdfReader));
 
         private const String endstream1 = "endstream";
 
@@ -912,45 +911,6 @@ namespace iText.Kernel.Pdf {
             return ReadObject(readAsDirect, false);
         }
 
-        protected internal virtual PdfObject ReadReference(bool readAsDirect) {
-            int num = tokens.GetObjNr();
-            if (num < 0) {
-                return CreatePdfNullInstance(readAsDirect);
-            }
-            PdfXrefTable table = pdfDocument.GetXref();
-            PdfIndirectReference reference = table.Get(num);
-            if (reference != null) {
-                if (reference.IsFree()) {
-                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE, 
-                        tokens.GetObjNr(), tokens.GetGenNr()));
-                    return CreatePdfNullInstance(readAsDirect);
-                }
-                if (reference.GetGenNumber() != tokens.GetGenNr()) {
-                    if (fixedXref) {
-                        LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE, 
-                            tokens.GetObjNr(), tokens.GetGenNr()));
-                        return CreatePdfNullInstance(readAsDirect);
-                    }
-                    else {
-                        throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.INVALID_INDIRECT_REFERENCE, 
-                            reference.GetObjNumber(), reference.GetGenNumber()), reference);
-                    }
-                }
-            }
-            else {
-                if (table.IsReadingCompleted()) {
-                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE, 
-                        tokens.GetObjNr(), tokens.GetGenNr()));
-                    return CreatePdfNullInstance(readAsDirect);
-                }
-                else {
-                    reference = table.Add((PdfIndirectReference)new PdfIndirectReference(pdfDocument, num, tokens.GetGenNr(), 
-                        0).SetState(PdfObject.READING));
-                }
-            }
-            return reference;
-        }
-
         protected internal virtual PdfObject ReadObject(bool readAsDirect, bool objStm) {
             tokens.NextValidToken();
             PdfTokenizer.TokenType type = tokens.GetTokenType();
@@ -1044,6 +1004,45 @@ namespace iText.Kernel.Pdf {
                     return null;
                 }
             }
+        }
+
+        protected internal virtual PdfObject ReadReference(bool readAsDirect) {
+            int num = tokens.GetObjNr();
+            if (num < 0) {
+                return CreatePdfNullInstance(readAsDirect);
+            }
+            PdfXrefTable table = pdfDocument.GetXref();
+            PdfIndirectReference reference = table.Get(num);
+            if (reference != null) {
+                if (reference.IsFree()) {
+                    LOGGER.Warn(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE, 
+                        tokens.GetObjNr(), tokens.GetGenNr()));
+                    return CreatePdfNullInstance(readAsDirect);
+                }
+                if (reference.GetGenNumber() != tokens.GetGenNr()) {
+                    if (fixedXref) {
+                        LOGGER.Warn(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE, 
+                            tokens.GetObjNr(), tokens.GetGenNr()));
+                        return CreatePdfNullInstance(readAsDirect);
+                    }
+                    else {
+                        throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.INVALID_INDIRECT_REFERENCE, 
+                            reference.GetObjNumber(), reference.GetGenNumber()), reference);
+                    }
+                }
+            }
+            else {
+                if (table.IsReadingCompleted()) {
+                    LOGGER.Warn(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.INVALID_INDIRECT_REFERENCE, 
+                        tokens.GetObjNr(), tokens.GetGenNr()));
+                    return CreatePdfNullInstance(readAsDirect);
+                }
+                else {
+                    reference = table.Add((PdfIndirectReference)new PdfIndirectReference(pdfDocument, num, tokens.GetGenNr(), 
+                        0).SetState(PdfObject.READING));
+                }
+            }
+            return reference;
         }
 
         protected internal virtual PdfName ReadPdfName(bool readAsDirect) {
@@ -1546,7 +1545,7 @@ namespace iText.Kernel.Pdf {
             String error = MessageFormatUtil.Format(KernelExceptionMessageConstant.UNEXPECTED_TOKEN, iText.Commons.Utils.JavaUtil.GetStringForBytes
                 (tokens.GetByteContent(), System.Text.Encoding.UTF8));
             if (PdfReader.StrictnessLevel.CONSERVATIVE.IsStricter(this.GetStrictnessLevel())) {
-                LOGGER.LogError(error);
+                LOGGER.Error(() => error);
             }
             else {
                 tokens.ThrowError(error);
@@ -1753,16 +1752,16 @@ namespace iText.Kernel.Pdf {
 
         private static void LogXrefException(Exception ex) {
             if (ex.InnerException != null) {
-                LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE
                     , ex.InnerException.Message));
             }
             else {
                 if (ex.Message != null) {
-                    LOGGER.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE
+                    LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT_WITH_CAUSE
                         , ex.Message));
                 }
                 else {
-                    LOGGER.LogError(iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT);
+                    LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT);
                 }
             }
         }

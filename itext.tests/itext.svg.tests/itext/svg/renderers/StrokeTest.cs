@@ -21,15 +21,17 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.Svg.Logs;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Svg.Renderers {
     [NUnit.Framework.Category("IntegrationTest")]
     public class StrokeTest : SvgIntegrationTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/StrokeTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/StrokeTest/";
 
-        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/renderers/impl/StrokeTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/renderers/StrokeTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -79,7 +81,6 @@ namespace iText.Svg.Renderers {
 
         [NUnit.Framework.Test]
         public virtual void AdvancedStrokeTest() {
-            //TODO: update cmp-file after DEVSIX-2258
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeAdvanced");
         }
 
@@ -95,8 +96,75 @@ namespace iText.Svg.Renderers {
 
         [NUnit.Framework.Test]
         public virtual void StrokeAttributesTest() {
-            //TODO DEVSIX-2258: update cmp after supporting
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-attributes");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeLinecapGraphicalElementsTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-linecap-graphical-elements");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, Count = 3)]
+        public virtual void StrokeLinecapTextElementsTest() {
+            // TODO DEVSIX-2255 SVG: Textpath element
+            // TODO DEVSIX-9306 SVG space collapsing removes spaces at the beginning and end of a tspan
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-linecap-text-elements");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, Count = 3)]
+        public virtual void StrokeLinecapDashedTextElementsTest() {
+            // TODO DEVSIX-2255 SVG: Textpath element
+            // TODO DEVSIX-9306 SVG space collapsing removes spaces at the beginning and end of a tspan
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-linecap-dashed-text-elements");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeLinejoinGraphicalElementsTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-linejoin-graphical-elements");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, Count = 3)]
+        public virtual void StrokeLinejoinTextElementsTest() {
+            // TODO DEVSIX-2255 SVG: Textpath element
+            // TODO DEVSIX-9306 SVG space collapsing removes spaces at the beginning and end of a tspan
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-linejoin-text-elements");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, Count = 3)]
+        public virtual void StrokeLinejoinDashedTextElementsTest() {
+            // TODO DEVSIX-2255 SVG: Textpath element
+            // TODO DEVSIX-9306 SVG space collapsing removes spaces at the beginning and end of a tspan
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-linejoin-dashed-text-elements");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeMiterlimitGraphicalElementsTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-miterlimit-graphical-elements");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, Count = 3)]
+        public virtual void StrokeMiterlimitTextElementsTest() {
+            // TODO DEVSIX-2255 SVG: Textpath element
+            // TODO DEVSIX-9306 SVG space collapsing removes spaces at the beginning and end of a tspan
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-miterlimit-text-elements");
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, Count = 3)]
+        public virtual void StrokeMiterlimitDashedTextElementsTest() {
+            // TODO DEVSIX-2255 SVG: Textpath element
+            // TODO DEVSIX-9306 SVG space collapsing removes spaces at the beginning and end of a tspan
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-miterlimit-dashed-text-elements");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StrokeCombinedGraphicalPropertiesTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "stroke-combined-graphical-properties");
         }
 
         [NUnit.Framework.Test]
@@ -121,7 +189,6 @@ namespace iText.Svg.Renderers {
 
         [NUnit.Framework.Test]
         public virtual void StrokeDashArrayLinesTest() {
-            //TODO: update cmp-file after DEVSIX-2258
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "strokeDashArrayLines");
         }
 

@@ -20,6 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
 using iText.Kernel.Pdf;
 using iText.Kernel.Validation;
 using iText.Kernel.Validation.Context;
@@ -31,13 +32,13 @@ namespace iText.Kernel.Utils {
         [NUnit.Framework.Test]
         public virtual void ValidateObjectTest() {
             ValidationContainer container = new ValidationContainer();
-            container.Validate(new FontValidationContext(null, null));
+            container.Validate(new FontValidationContext((String)null, null));
             ValidationContainerTest.CustomValidationChecker checker = new ValidationContainerTest.CustomValidationChecker
                 ();
             container.AddChecker(checker);
             NUnit.Framework.Assert.IsTrue(container.ContainsChecker(checker));
             NUnit.Framework.Assert.IsFalse(checker.objectValidationPerformed);
-            container.Validate(new FontValidationContext(null, null));
+            container.Validate(new FontValidationContext((String)null, null));
             NUnit.Framework.Assert.IsTrue(checker.objectValidationPerformed);
         }
 

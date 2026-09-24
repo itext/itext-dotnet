@@ -48,6 +48,11 @@ namespace iText.Layout.Renderer {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED, Count = 6)]
         public virtual void CalculateColumnWidthsNotPointValue() {
@@ -94,7 +99,7 @@ namespace iText.Layout.Renderer {
         public virtual void NestedTableWithSpecifiedWidthTest() {
             String outFileName = DESTINATION_FOLDER + "nestedTableWithSpecifiedWidth.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_nestedTableWithSpecifiedWidth.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(2);
             Cell cell1 = new Cell(1, 1);
@@ -124,7 +129,7 @@ namespace iText.Layout.Renderer {
         public virtual void CollapsedBorderRowspanOnPageSplitTest() {
             String outFileName = DESTINATION_FOLDER + "collapsedBorderRowspanOnPageSplit.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_collapsedBorderRowspanOnPageSplit.pdf";
-            using (Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)))) {
+            using (Document doc = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName)))) {
                 Div dummyDiv = new Div();
                 dummyDiv.SetBorder(new SolidBorder(ColorConstants.BLACK, 1.5f));
                 dummyDiv.SetWidth(400);

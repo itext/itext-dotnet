@@ -74,7 +74,7 @@ namespace iText.Kernel.Pdf.Layer {
                 using (PdfDocument cmpDoc = new PdfDocument(CompareTool.CreateOutputReader(cmpPdf))) {
                     PdfDictionary outOCP = outDoc.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties);
                     PdfDictionary cmpOCP = cmpDoc.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.OCProperties);
-                    NUnit.Framework.Assert.IsNull(new CompareTool().CompareDictionariesStructure(outOCP, cmpOCP));
+                    NUnit.Framework.Assert.IsNull(new CompareTool().CompareDictionariesByStructure(outOCP, cmpOCP));
                 }
             }
         }

@@ -28,8 +28,16 @@ using iText.IO.Font.Otf;
 namespace iText.IO.Font.Otf.Lookuptype8 {
     /// <summary>Chaining Context Positioning Format 1: Simple Glyph Contexts</summary>
     public class PosTableLookup8Format1 : ChainingContextualTable<ContextualPositionRule> {
-        private IDictionary<int, IList<ContextualPositionRule>> posMap;
+        private readonly IDictionary<int, IList<ContextualPositionRule>> posMap;
 
+        /// <summary>Creates a new Chaining Context Positioning Format 1.</summary>
+        /// <param name="openReader">the OpenType font reader</param>
+        /// <param name="lookupFlag">
+        /// specifies processing options, e.g. whether to skip base glyphs, marks or
+        /// ligatures during glyph substitution or positioning. See
+        /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+        /// </param>
+        /// <param name="posMap">the positioning map</param>
         public PosTableLookup8Format1(OpenTypeFontTableReader openReader, int lookupFlag, IDictionary<int, IList<ContextualPositionRule
             >> posMap)
             : base(openReader, lookupFlag) {
@@ -43,19 +51,23 @@ namespace iText.IO.Font.Otf.Lookuptype8 {
             return JavaCollectionsUtil.EmptyList<ContextualPositionRule>();
         }
 
+        /// <summary>Represents the positioning rule format1 of an OpenType font.</summary>
         public class PosRuleFormat1 : ContextualPositionRule {
-            private const long serialVersionUID = 2777822503157518715L;
-
             // inputGlyphIds array omits the first glyph in the sequence,
             // the first glyph is defined by corresponding coverage glyph
-            private int[] inputGlyphIds;
+            private readonly int[] inputGlyphIds;
 
-            private int[] backtrackGlyphIds;
+            private readonly int[] backtrackGlyphIds;
 
-            private int[] lookAheadGlyphIds;
+            private readonly int[] lookAheadGlyphIds;
 
-            private PosLookupRecord[] posLookupRecords;
+            private readonly PosLookupRecord[] posLookupRecords;
 
+            /// <summary>Creates a new positioning rule format1.</summary>
+            /// <param name="backtrackGlyphIds">the backtrack glyph ids</param>
+            /// <param name="inputGlyphIds">the input glyph ids</param>
+            /// <param name="lookAheadGlyphIds">the look ahead glyph ids</param>
+            /// <param name="posLookupRecords">the positioning lookup records</param>
             public PosRuleFormat1(int[] backtrackGlyphIds, int[] inputGlyphIds, int[] lookAheadGlyphIds, PosLookupRecord
                 [] posLookupRecords) {
                 this.backtrackGlyphIds = backtrackGlyphIds;

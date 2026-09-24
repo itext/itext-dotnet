@@ -22,12 +22,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.IO.Font;
+using iText.IO.Font.Otf;
 using iText.IO.Source;
 using iText.Kernel.Colors;
 using iText.Kernel.Exceptions;
@@ -78,7 +78,7 @@ namespace iText.Pdfa.Checker {
 
         private const int MAX_NUMBER_OF_DEVICEN_COLOR_COMPONENTS = 8;
 
-        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(PdfAChecker));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(PdfAChecker));
 
         /// <summary>Creates a PdfA1Checker with the required conformance</summary>
         /// <param name="aConformance">
@@ -313,8 +313,20 @@ namespace iText.Pdfa.Checker {
         public override void CheckText(String text, PdfFont font) {
             int index = FontCheckUtil.CheckGlyphsOfText(text, font, new PdfA1Checker.ACharacterChecker());
             if (index != -1) {
-                throw new PdfAConformanceException(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
-                    );
+                throw new PdfAConformanceException(MessageFormatUtil.Format(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                    , text[index]));
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override void CheckGlyphLine(GlyphLine glyphLine, PdfFont font) {
+            for (int i = glyphLine.GetStart(); i < glyphLine.GetEnd(); i++) {
+                Glyph glyph = glyphLine.Get(i);
+                if (glyph.GetCode() == 0 || font.GetFontProgram().GetGlyphByCode(glyph.GetCode()) == null) {
+                    // .notdef glyph or glyph isn't present in a font
+                    throw new PdfAConformanceException(MessageFormatUtil.Format(PdfaExceptionMessageConstant.EMBEDDED_FONTS_SHALL_DEFINE_ALL_REFERENCED_GLYPHS
+                        , glyph.GetUnicodeString()));
+                }
             }
         }
 
@@ -329,21 +341,25 @@ namespace iText.Pdfa.Checker {
 
         protected internal override void CheckContentStream(PdfStream contentStream, PdfResources resources) {
             if (IsFullCheckMode() || contentStream.IsModified()) {
-                byte[] contentBytes = contentStream.GetBytes();
-                PdfTokenizer tokenizer = new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource
-                    (contentBytes)));
-                PdfCanvasParser parser = new PdfCanvasParser(tokenizer, resources);
-                IList<PdfObject> operands = new List<PdfObject>();
-                try {
-                    while (parser.Parse(operands).Count > 0) {
-                        foreach (PdfObject operand in operands) {
-                            CheckContentStreamObject(operand);
-                        }
+                CheckContentStream(contentStream.GetBytes(), resources);
+            }
+        }
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override void CheckContentStream(byte[] streamContent, PdfResources resources) {
+            PdfTokenizer tokenizer = new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource
+                (streamContent)));
+            PdfCanvasParser parser = new PdfCanvasParser(tokenizer, resources);
+            IList<PdfObject> operands = new List<PdfObject>();
+            try {
+                while (parser.Parse(operands).Count > 0) {
+                    foreach (PdfObject operand in operands) {
+                        CheckContentStreamObject(operand);
                     }
                 }
-                catch (System.IO.IOException e) {
-                    throw new PdfException(PdfaExceptionMessageConstant.CANNOT_PARSE_CONTENT_STREAM, e);
-                }
+            }
+            catch (System.IO.IOException e) {
+                throw new PdfException(PdfaExceptionMessageConstant.CANNOT_PARSE_CONTENT_STREAM, e);
             }
         }
 
@@ -433,7 +449,7 @@ namespace iText.Pdfa.Checker {
                         );
                 }
                 if (!catalog.ContainsKey(PdfName.Lang)) {
-                    logger.LogWarning(PdfAConformanceLogMessageConstant.CATALOG_SHOULD_CONTAIN_LANG_ENTRY);
+                    LOGGER.Warn(() => PdfAConformanceLogMessageConstant.CATALOG_SHOULD_CONTAIN_LANG_ENTRY);
                 }
             }
         }
@@ -642,7 +658,7 @@ namespace iText.Pdfa.Checker {
             }
             if (CheckStructure(conformance)) {
                 if (contentAnnotations.Contains(subtype) && !annotDic.ContainsKey(PdfName.Contents)) {
-                    logger.LogWarning(MessageFormatUtil.Format(PdfAConformanceLogMessageConstant.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY
+                    LOGGER.Warn(() => MessageFormatUtil.Format(PdfAConformanceLogMessageConstant.ANNOTATION_OF_TYPE_0_SHOULD_HAVE_CONTENTS_KEY
                         , subtype.GetValue()));
                 }
             }

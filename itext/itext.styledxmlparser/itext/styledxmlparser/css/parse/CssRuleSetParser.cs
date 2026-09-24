@@ -23,9 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Selector;
@@ -35,7 +34,7 @@ namespace iText.StyledXmlParser.Css.Parse {
     /// <summary>Utilities class to parse CSS rule sets.</summary>
     public sealed class CssRuleSetParser {
         /// <summary>The logger.</summary>
-        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Parse.CssRuleSetParser
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.StyledXmlParser.Css.Parse.CssRuleSetParser
             ));
 
         /// <summary>
@@ -125,8 +124,8 @@ namespace iText.StyledXmlParser.Css.Parse {
                     ruleSets.Add(new CssRuleSet(new CssSelector(currentSelectorStr), declarations));
                 }
                 catch (Exception exc) {
-                    logger.LogError(exc, MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant
-                        .ERROR_PARSING_CSS_SELECTOR, currentSelectorStr));
+                    LOGGER.Error(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.ERROR_PARSING_CSS_SELECTOR
+                        , currentSelectorStr), exc);
                     //if any separated selector has errors, all others become invalid.
                     //in this case we just clear map, it is the easies way to support this.
                     declarations.Clear();
@@ -181,7 +180,7 @@ namespace iText.StyledXmlParser.Css.Parse {
             String[] result = new String[2];
             int position = property.IndexOf(":", StringComparison.Ordinal);
             if (position < 0) {
-                logger.LogError(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
                     , property.Trim()));
                 return null;
             }

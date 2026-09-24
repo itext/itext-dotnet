@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf.Colorspace;
 
@@ -72,8 +71,8 @@ namespace iText.Kernel.Colors {
             : base(new PdfDeviceCs.Rgb(), new float[] { r > 1 ? 1 : (r > 0 ? r : 0), g > 1 ? 1 : (g > 0 ? g : 0), b > 
                 1 ? 1 : (b > 0 ? b : 0) }) {
             if (r > 1 || r < 0 || g > 1 || g < 0 || b > 1 || b < 0) {
-                ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Colors.DeviceRgb));
-                LOGGER.LogWarning(iText.IO.Logs.IoLogMessageConstant.COLORANT_INTENSITIES_INVALID);
+                LazyLogger logger = new LazyLogger(typeof(iText.Kernel.Colors.DeviceRgb));
+                logger.Warn(() => iText.IO.Logs.IoLogMessageConstant.COLORANT_INTENSITIES_INVALID);
             }
         }
 
@@ -94,8 +93,8 @@ namespace iText.Kernel.Colors {
         public DeviceRgb(System.Drawing.Color color)
             : this(color.R, color.G, color.B) {
             if (color.A != 255) {
-                ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Colors.DeviceRgb));
-                LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.COLOR_ALPHA_CHANNEL_IS_IGNORED, color.A));
+                LazyLogger logger = new LazyLogger(typeof(iText.Kernel.Colors.DeviceRgb));
+                logger.Warn(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.COLOR_ALPHA_CHANNEL_IS_IGNORED, color.A));
             }
         }
 

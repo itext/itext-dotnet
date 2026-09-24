@@ -63,11 +63,16 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void KeepTogetherParagraphTest01() {
             String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherParagraphTest01.pdf";
             String outFile = DESTINATION_FOLDER + "keepTogetherParagraphTest01.pdf";
-            PdfWriter writer = new PdfWriter(outFile);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFile);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             for (int i = 0; i < 28; i++) {
@@ -101,7 +106,7 @@ namespace iText.Layout {
         public virtual void KeepTogetherParagraphTest02() {
             String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherParagraphTest02.pdf";
             String outFile = DESTINATION_FOLDER + "keepTogetherParagraphTest02.pdf";
-            PdfWriter writer = new PdfWriter(outFile);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFile);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             for (int i = 0; i < 28; i++) {
@@ -123,7 +128,7 @@ namespace iText.Layout {
         public virtual void KeepTogetherListTest01() {
             String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherListTest01.pdf";
             String outFile = DESTINATION_FOLDER + "keepTogetherListTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             for (int i = 0; i < 28; i++) {
                 doc.Add(new Paragraph("String number" + i));
@@ -141,7 +146,7 @@ namespace iText.Layout {
         public virtual void KeepTogetherDivTest01() {
             String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherDivTest01.pdf";
             String outFile = DESTINATION_FOLDER + "keepTogetherDivTest01.pdf";
-            PdfWriter writer = new PdfWriter(outFile);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFile);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             Paragraph p = new Paragraph("Test String");
@@ -163,7 +168,7 @@ namespace iText.Layout {
         public virtual void KeepTogetherMinHeightTest() {
             String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherMinHeightTest.pdf";
             String outFile = DESTINATION_FOLDER + "keepTogetherMinHeightTest.pdf";
-            PdfWriter writer = new PdfWriter(outFile);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(outFile);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             Paragraph p = new Paragraph("Test String");
@@ -186,7 +191,7 @@ namespace iText.Layout {
         public virtual void KeepTogetherDivTest02() {
             String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherDivTest02.pdf";
             String outFile = DESTINATION_FOLDER + "keepTogetherDivTest02.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             Rectangle[] columns = new Rectangle[] { new Rectangle(100, 100, 100, 500), new Rectangle(400, 100, 100, 500
                 ) };
@@ -207,7 +212,7 @@ namespace iText.Layout {
         public virtual void KeepTogetherDivWithInnerClearDiv() {
             String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherDivWithInnerClearDiv.pdf";
             String outFile = DESTINATION_FOLDER + "keepTogetherDivWithInnerClearDiv.pdf";
-            using (PdfWriter pdfWriter = new PdfWriter(outFile)) {
+            using (PdfWriter pdfWriter = CompareTool.CreateTestPdfWriter(outFile)) {
                 using (PdfDocument pdfDoc = new PdfDocument(pdfWriter)) {
                     using (Document doc = new Document(pdfDoc)) {
                         Div keepTogetherDiv = new Div();
@@ -258,7 +263,7 @@ namespace iText.Layout {
         public virtual void KeepTogetherDefaultTest01() {
             String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherDefaultTest01.pdf";
             String outFile = DESTINATION_FOLDER + "keepTogetherDefaultTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             Div div = new KeepTogetherTest.KeepTogetherDiv();
             doc.Add(new Paragraph("first string"));
@@ -276,7 +281,7 @@ namespace iText.Layout {
         public virtual void KeepTogetherInlineDiv01() {
             String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherInlineDiv01.pdf";
             String outFile = DESTINATION_FOLDER + "keepTogetherInlineDiv01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph("first string"));
             Div div = new Div().SetWidth(200);
@@ -295,7 +300,7 @@ namespace iText.Layout {
         public virtual void KeepTogetherInlineDiv02() {
             String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherInlineDiv02.pdf";
             String outFile = DESTINATION_FOLDER + "keepTogetherInlineDiv02.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph("first string"));
             Div div = new Div().SetWidth(200);
@@ -317,7 +322,7 @@ namespace iText.Layout {
             String testName = "narrowPageTest01.pdf";
             String outFileName = DESTINATION_FOLDER + testName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table tbl = new Table(UnitValue.CreatePointArray(new float[] { 30.0F, 30.0F, 30.0F, 30.0F }));
             tbl.SetWidth(120.0F);
@@ -345,7 +350,7 @@ namespace iText.Layout {
             String testName = "narrowPageTest02.pdf";
             String outFileName = DESTINATION_FOLDER + testName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.SetRenderer(new KeepTogetherTest.SpecialOddPagesDocumentRenderer(doc, new PageSize(102.0F, 132.0F)));
             Paragraph p = new Paragraph("row 10");
@@ -376,7 +381,7 @@ namespace iText.Layout {
             String testName = "narrowPageTest02A.pdf";
             String outFileName = DESTINATION_FOLDER + testName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.SetRenderer(new KeepTogetherTest.SpecialOddPagesDocumentRenderer(doc, new PageSize(102.0F, 102.0F)));
             Paragraph p = new Paragraph("row 10");
@@ -406,7 +411,7 @@ namespace iText.Layout {
             String testName = "updateHeightTest01.pdf";
             String outFileName = DESTINATION_FOLDER + testName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             pdfDoc.SetDefaultPageSize(new PageSize(102.0F, 102.0F));
             Document doc = new Document(pdfDoc);
             Div div = new Div();
@@ -430,7 +435,7 @@ namespace iText.Layout {
             String testName = "partialTest01.pdf";
             String outFileName = DESTINATION_FOLDER + testName;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             pdfDoc.SetDefaultPageSize(PageSize.A7);
             Document doc = new Document(pdfDoc);
             Div div = new Div();
@@ -451,7 +456,7 @@ namespace iText.Layout {
         public virtual void FixedHeightOverflowTest01() {
             String cmpFileName = SOURCE_FOLDER + "cmp_fixedHeightOverflowTest01.pdf";
             String outFile = DESTINATION_FOLDER + "fixedHeightOverflowTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph("first string"));
             // specifying height definitely bigger than page height
@@ -470,7 +475,7 @@ namespace iText.Layout {
         public virtual void MarginCollapseKeptTogetherDivGoesBackTest01() {
             String cmpFileName = SOURCE_FOLDER + "cmp_marginCollapseKeptTogetherDivGoesBackTest01.pdf";
             String outFile = DESTINATION_FOLDER + "marginCollapseKeptTogetherDivGoesBackTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
             Div div1 = new Div().SetMarginBottom(100).SetBackgroundColor(ColorConstants.RED).SetHeight(300).Add(new Paragraph
@@ -491,7 +496,7 @@ namespace iText.Layout {
             // TODO DEVSIX-3995 The margin between the divs occupies 100 points instead of 300. After a fix the cmp should be updated
             String cmpFileName = SOURCE_FOLDER + "cmp_marginCollapseKeptTogetherDivGoesBackTest02.pdf";
             String outFile = DESTINATION_FOLDER + "marginCollapseKeptTogetherDivGoesBackTest02.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
             Div div1 = new Div().SetMarginBottom(300).SetBackgroundColor(ColorConstants.RED).SetHeight(300).Add(new Paragraph
@@ -511,7 +516,7 @@ namespace iText.Layout {
         public virtual void KeepTogetherNotEmptyPageTest() {
             String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherNotEmptyPageTest.pdf";
             String outFile = DESTINATION_FOLDER + "keepTogetherNotEmptyPageTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
             // Make page not empty to trigger KEEP_TOGETHER actual processing
@@ -534,7 +539,7 @@ namespace iText.Layout {
         public virtual void KeepTogetherOnFirstInnerElementNotEmptyPageTest() {
             String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherOnFirstInnerElementNotEmptyPageTest.pdf";
             String outFile = DESTINATION_FOLDER + "keepTogetherOnFirstInnerElementNotEmptyPageTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             // Make page not empty to trigger KEEP_TOGETHER actual processing
             doc.Add(new Paragraph("Just some content to make this page not empty."));
@@ -558,7 +563,7 @@ namespace iText.Layout {
         public virtual void MarginCollapseKeptTogetherGoesOnNextAreaTest01() {
             String cmpFileName = SOURCE_FOLDER + "cmp_marginCollapseKeptTogetherGoesOnNextAreaTest01.pdf";
             String outFile = DESTINATION_FOLDER + "marginCollapseKeptTogetherGoesOnNextAreaTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
             Div div1 = new Div().SetMarginBottom(300).SetBackgroundColor(ColorConstants.RED).SetHeight(300).Add(new Paragraph
@@ -577,7 +582,7 @@ namespace iText.Layout {
         public virtual void MarginCollapseKeptTogetherGoesOnNextAreaTest02() {
             String cmpFileName = SOURCE_FOLDER + "cmp_marginCollapseKeptTogetherGoesOnNextAreaTest02.pdf";
             String outFile = DESTINATION_FOLDER + "marginCollapseKeptTogetherGoesOnNextAreaTest02.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
             Div div1 = new Div().SetMarginBottom(100).SetBackgroundColor(ColorConstants.RED).SetHeight(300).Add(new Paragraph
@@ -598,7 +603,7 @@ namespace iText.Layout {
             // TODO DEVSIX-4023 cmp should be updated
             String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherOnSecondInnerElementNotEmptyPageTest.pdf";
             String outFile = DESTINATION_FOLDER + "keepTogetherOnSecondInnerElementNotEmptyPageTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             // Make page not empty to trigger KEEP_TOGETHER actual processing
             doc.Add(new Paragraph("Just some content to make this page not empty."));
@@ -623,7 +628,7 @@ namespace iText.Layout {
         public virtual void SmallFloatInsideKeptTogetherDivTest01() {
             String cmpFileName = SOURCE_FOLDER + "cmp_smallFloatInsideKeptTogetherDivTest01.pdf";
             String outFile = DESTINATION_FOLDER + "smallFloatInsideKeptTogetherDivTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             // specifying height definitely bigger than page height
             int divHeight = 1000;
@@ -638,7 +643,7 @@ namespace iText.Layout {
         public virtual void SmallFloatInsideKeptTogetherDivTest02() {
             String cmpFileName = SOURCE_FOLDER + "cmp_smallFloatInsideKeptTogetherDivTest02.pdf";
             String outFile = DESTINATION_FOLDER + "smallFloatInsideKeptTogetherDivTest02.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             // add some content, so that the following kept together div will be forced to move forward (and then forced to move back)
             doc.Add(new Paragraph("Hello"));
@@ -655,7 +660,7 @@ namespace iText.Layout {
         public virtual void SmallFloatInsideKeptTogetherParagraphTest01() {
             String cmpFileName = SOURCE_FOLDER + "cmp_smallFloatInsideKeptTogetherParagraphTest01.pdf";
             String outFile = DESTINATION_FOLDER + "smallFloatInsideKeptTogetherParagraphTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             // specifying height definitely bigger than page height
             int paragraphHeight = 1000;
@@ -670,7 +675,7 @@ namespace iText.Layout {
         public virtual void SmallFloatInsideKeptTogetherParagraphTest02() {
             String cmpFileName = SOURCE_FOLDER + "cmp_smallFloatInsideKeptTogetherParagraphTest02.pdf";
             String outFile = DESTINATION_FOLDER + "smallFloatInsideKeptTogetherParagraphTest02.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             // add some content, so that the following kept together div will be forced to move forward (and then forced to move back)
             doc.Add(new Paragraph("Hello"));
@@ -688,7 +693,7 @@ namespace iText.Layout {
             // TODO DEVSIX-4023 cmp should be updated
             String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherOnInnerElementTestEmptyPageTest.pdf";
             String outFile = DESTINATION_FOLDER + "keepTogetherOnInnerElementTestEmptyPageTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
             bool first = false;
@@ -707,7 +712,7 @@ namespace iText.Layout {
             // TODO DEVSIX-4023 cmp should be updated
             String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherOnInnerElementMargin01EmptyPageTest.pdf";
             String outFile = DESTINATION_FOLDER + "keepTogetherOnInnerElementMargin01EmptyPageTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
             bool first = false;
@@ -728,7 +733,7 @@ namespace iText.Layout {
             // TODO DEVSIX-4023 cmp should be updated
             String cmpFileName = SOURCE_FOLDER + "cmp_keepTogetherOnInnerElementMargin02EmptyPageTest.pdf";
             String outFile = DESTINATION_FOLDER + "keepTogetherOnInnerElementMargin02EmptyPageTest.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
             bool first = false;
@@ -748,7 +753,7 @@ namespace iText.Layout {
         public virtual void SmallFloatInsideKeptTogetherTableTest01() {
             String cmpFileName = SOURCE_FOLDER + "cmp_smallFloatInsideKeptTogetherTableTest01.pdf";
             String outFile = DESTINATION_FOLDER + "smallFloatInsideKeptTogetherTableTest01.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             // specifying num of rows which will definitely occupy more space than page height
             int numOfRows = 20;
@@ -763,7 +768,7 @@ namespace iText.Layout {
         public virtual void SmallFloatInsideKeptTogetherTableTest02() {
             String cmpFileName = SOURCE_FOLDER + "cmp_smallFloatInsideKeptTogetherTableTest02.pdf";
             String outFile = DESTINATION_FOLDER + "smallFloatInsideKeptTogetherTableTest02.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             Document doc = new Document(pdfDoc);
             // add some content, so that the following kept together div will be forced to move forward (and then forced to move back)
             doc.Add(new Paragraph("Hello"));
@@ -781,7 +786,7 @@ namespace iText.Layout {
             String filename = "keepTogetherTreeWithParentNotFitOnDocument.pdf";
             String outFile = DESTINATION_FOLDER + filename;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + filename;
-            using (Document doc = new Document(new PdfDocument(new PdfWriter(outFile)))) {
+            using (Document doc = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)))) {
                 doc.GetPdfDocument().AddNewPage(PageSize.A5.Rotate());
                 Div main = new Div();
                 Div child1 = CreateChildDivWithText(main, null).SetKeepTogether(true);
@@ -805,7 +810,7 @@ namespace iText.Layout {
             String filename = "keepTogetherSubTreeWithParentNotFitOnDocument.pdf";
             String outFile = DESTINATION_FOLDER + filename;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + filename;
-            using (Document doc = new Document(new PdfDocument(new PdfWriter(outFile)))) {
+            using (Document doc = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)))) {
                 doc.GetPdfDocument().AddNewPage(PageSize.A5.Rotate());
                 Div main = new Div();
                 Div child1 = CreateChildDivWithText(main, null).SetKeepTogether(true);
@@ -830,7 +835,7 @@ namespace iText.Layout {
             String filename = "keepTogetherSubTreeWithChildKeepTogetherFalseAndParentNotFitOnDocument.pdf";
             String outFile = DESTINATION_FOLDER + filename;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + filename;
-            using (Document doc = new Document(new PdfDocument(new PdfWriter(outFile)))) {
+            using (Document doc = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)))) {
                 doc.GetPdfDocument().AddNewPage(PageSize.A5.Rotate());
                 Div main = new Div();
                 Div child1 = CreateChildDivWithText(main, null).SetKeepTogether(true);
@@ -855,7 +860,7 @@ namespace iText.Layout {
             String filename = "keepTogetherTreeWithParentNotFitOnPageCanvas.pdf";
             String outFile = DESTINATION_FOLDER + filename;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + filename;
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile))) {
                 PdfPage page = pdfDoc.AddNewPage(PageSize.A5.Rotate());
                 Rectangle rectangle = new Rectangle(10, 10, 500, 350);
                 PdfCanvas pdfCanvas = new PdfCanvas(page);
@@ -882,7 +887,7 @@ namespace iText.Layout {
             String filename = "keepTogetherInDivWithKidsFloat.pdf";
             String outFile = DESTINATION_FOLDER + filename;
             String cmpFileName = SOURCE_FOLDER + "cmp_" + filename;
-            using (Document doc = new Document(new PdfDocument(new PdfWriter(outFile)))) {
+            using (Document doc = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outFile)))) {
                 doc.GetPdfDocument().AddNewPage(PageSize.A5.Rotate());
                 Div main = new Div().SetKeepTogether(true);
                 main.SetBackgroundColor(ColorConstants.LIGHT_GRAY);
@@ -908,7 +913,7 @@ namespace iText.Layout {
             //TODO: update cmp file when DEVSIX-4681 will be fixed
             String cmpFileName = SOURCE_FOLDER + "cmp_floatingElementsInDivAndKeepTogetherElem.pdf";
             String outFile = DESTINATION_FOLDER + "floatingElementsInDivAndKeepTogetherElem.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             pdfDoc.AddNewPage();
             Document doc = new Document(pdfDoc);
             Div mainDiv = new Div();
@@ -937,7 +942,7 @@ namespace iText.Layout {
             //TODO: update cmp file when DEVSIX-4681 will be fixed
             String cmpFileName = SOURCE_FOLDER + "cmp_floatingEmptyElementsInDivAndKeepTogetherElem.pdf";
             String outFile = DESTINATION_FOLDER + "floatingEmptyElementsInDivAndKeepTogetherElem.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             pdfDoc.AddNewPage(PageSize.A5.Rotate());
             Document doc = new Document(pdfDoc);
             Div mainDiv = new Div();
@@ -964,7 +969,7 @@ namespace iText.Layout {
         public virtual void FloatingEmptyElementsAndKeepTogetherElemTest() {
             String cmpFileName = SOURCE_FOLDER + "cmp_floatingEmptyElementsAndKeepTogetherElem.pdf";
             String outFile = DESTINATION_FOLDER + "floatingEmptyElementsAndKeepTogetherElem.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFile));
+            PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFile));
             pdfDoc.AddNewPage(PageSize.A5.Rotate());
             Document doc = new Document(pdfDoc);
             Paragraph p1 = new Paragraph();

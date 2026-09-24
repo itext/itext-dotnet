@@ -30,122 +30,122 @@ using iText.Test.Attributes;
 namespace iText.Svg.Renderers.Impl {
     [NUnit.Framework.Category("IntegrationTest")]
     public class PathParsingIntegrationTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/renderers/impl/PathParsingIntegrationTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/renderers/impl/PathParsingIntegrationTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/renderers/impl/PathParsingIntegrationTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void NormalTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "normal");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "normal");
         }
 
         [NUnit.Framework.Test]
         public virtual void MixTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "mix");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "mix");
         }
 
         [NUnit.Framework.Test]
         public virtual void NoWhitespace() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "noWhitespace");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "noWhitespace");
         }
 
         [NUnit.Framework.Test]
         public virtual void ZOperator() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "zOperator");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "zOperator");
         }
 
         [NUnit.Framework.Test]
         public virtual void MissingOperandArgument() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "missingOperandArgument");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "missingOperandArgument");
         }
 
         [NUnit.Framework.Test]
         public virtual void DecimalPointHandlingTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "decimalPointHandling");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "decimalPointHandling");
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidOperatorTest() {
-            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => ConvertAndCompare(sourceFolder, destinationFolder
+            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER
                 , "invalidOperator"));
         }
 
         [NUnit.Framework.Test]
         public virtual void InvalidOperatorCSensTest() {
-            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => ConvertAndCompare(sourceFolder, destinationFolder
+            NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER
                 , "invalidOperatorCSens"));
         }
 
         [NUnit.Framework.Test]
         public virtual void MoreThanOneHParam() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "moreThanOneHParam");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "moreThanOneHParam");
         }
 
         [NUnit.Framework.Test]
         public virtual void NegativeAfterPositiveHandlingTest01() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "negativeAfterPositiveHandling");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "negativeAfterPositiveHandling");
         }
 
         [NUnit.Framework.Test]
         public virtual void NegativeAfterPositiveHandlingTest02() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "negativeAfterPositiveHandlingExtendedViewbox");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "negativeAfterPositiveHandlingExtendedViewbox");
         }
 
         [NUnit.Framework.Test]
         public virtual void InsignificantSpacesTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "insignificantSpaces");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "insignificantSpaces");
         }
 
         [NUnit.Framework.Test]
         public virtual void PrecedingSpacesTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "precedingSpaces");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "precedingSpaces");
         }
 
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG)]
         public virtual void TextPathTest() {
             //TODO: update cmp-file after DEVSIX-2255
-            ConvertAndCompare(sourceFolder, destinationFolder, "textpath");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textpath");
         }
 
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG)]
         public virtual void TextPathExample() {
             //TODO: update when DEVSIX-2255 implemented
-            ConvertAndCompare(sourceFolder, destinationFolder, "textPathExample");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textPathExample");
         }
 
         [NUnit.Framework.Test]
         [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG)]
         public virtual void TspanInTextPathTest() {
             //TODO: update when DEVSIX-2255 implemented
-            ConvertAndCompare(sourceFolder, destinationFolder, "tspanInTextPath");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanInTextPath");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathH() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathH");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pathH");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathV() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathV");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pathV");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathHV() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathHV");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pathHV");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathRelativeAbsoluteCombinedTest() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathRelativeAbsoluteCombined");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pathRelativeAbsoluteCombined");
         }
 
         [NUnit.Framework.Test]
@@ -154,40 +154,40 @@ namespace iText.Svg.Renderers.Impl {
             // and simply print them to the output PDF. Not all the viewers are able to process such large numbers
             // and hence different results in different viewers. Acrobat is not able to process the numbers
             // and the result is garbled visual representation. GhostScript, however, renders the PDF just fine
-            ConvertAndCompare(sourceFolder, destinationFolder, "pathHVExponential");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "pathHVExponential");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathABasic() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "pathABasic");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "pathABasic");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathAFlags() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "pathAFlags");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "pathAFlags");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathAAxisRotation() {
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "pathAAxisRotation");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "pathAAxisRotation");
         }
 
         [NUnit.Framework.Test]
         public virtual void PathAOutOfRange() {
             //TODO: update cmp when DEVSIX-3010 and DEVSIX-3011 fixed
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "pathAOutOfRange");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "pathAOutOfRange");
         }
 
         [NUnit.Framework.Test]
         public virtual void Arcs_end_point() {
             //TODO: update cmp when DEVSIX-3010 fixed
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "arcsEndPoint");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "arcsEndPoint");
         }
 
         [NUnit.Framework.Test]
         public virtual void Flags_out_of_range() {
             //TODO: update cmp when DEVSIX-3011 fixed
-            ConvertAndCompareSinglePage(sourceFolder, destinationFolder, "flags_out_of_range");
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "flags_out_of_range");
         }
     }
 }

@@ -27,8 +27,16 @@ using iText.IO.Font.Otf;
 namespace iText.IO.Font.Otf.Lookuptype8 {
     /// <summary>Chained Contexts Positioning Format 3: Coverage-based Glyph Contexts</summary>
     public class PosTableLookup8Format3 : ChainingContextualTable<ContextualPositionRule> {
-        private PosTableLookup8Format3.PosRuleFormat3 posRule;
+        private readonly PosTableLookup8Format3.PosRuleFormat3 posRule;
 
+        /// <summary>Creates a new Chained Contexts Positioning Format 3.</summary>
+        /// <param name="openReader">the OpenType font reader</param>
+        /// <param name="lookupFlag">
+        /// specifies processing options, e.g. whether to skip base glyphs, marks or
+        /// ligatures during glyph substitution or positioning. See
+        /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+        /// </param>
+        /// <param name="rule">the rule</param>
         public PosTableLookup8Format3(OpenTypeFontTableReader openReader, int lookupFlag, PosTableLookup8Format3.PosRuleFormat3
              rule)
             : base(openReader, lookupFlag) {
@@ -43,15 +51,21 @@ namespace iText.IO.Font.Otf.Lookuptype8 {
             return JavaCollectionsUtil.EmptyList<ContextualPositionRule>();
         }
 
+        /// <summary>Represents the positioning rule format3 of an OpenType font.</summary>
         public class PosRuleFormat3 : ContextualPositionRule {
-            private IList<ICollection<int>> inputCoverages;
+            private readonly IList<ICollection<int>> inputCoverages;
 
-            private IList<ICollection<int>> backtrackCoverages;
+            private readonly IList<ICollection<int>> backtrackCoverages;
 
-            private IList<ICollection<int>> lookaheadCoverages;
+            private readonly IList<ICollection<int>> lookaheadCoverages;
 
-            private PosLookupRecord[] posLookupRecords;
+            private readonly PosLookupRecord[] posLookupRecords;
 
+            /// <summary>Creates a new positioning rule format3.</summary>
+            /// <param name="backtrackCoverages">the backtrack coverages</param>
+            /// <param name="inputCoverages">the input coverages</param>
+            /// <param name="lookaheadCoverages">the lookahead coverages</param>
+            /// <param name="posLookupRecords">the positioning lookup records</param>
             public PosRuleFormat3(IList<ICollection<int>> backtrackCoverages, IList<ICollection<int>> inputCoverages, 
                 IList<ICollection<int>> lookaheadCoverages, PosLookupRecord[] posLookupRecords) {
                 this.backtrackCoverages = backtrackCoverages;
@@ -68,6 +82,9 @@ namespace iText.IO.Font.Otf.Lookuptype8 {
                 return inputCoverages.Count;
             }
 
+            /// <summary>Returns the input coverage.</summary>
+            /// <param name="idx">the idx</param>
+            /// <returns>the requested result</returns>
             public virtual ICollection<int> GetInputCoverage(int idx) {
                 return inputCoverages[idx];
             }

@@ -53,6 +53,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant ALIGN_SELF.</summary>
         public const String ALIGN_SELF = "align-self";
 
+        /// <summary>The Constant ALL.</summary>
+        public const String ALL = "all";
+
         /// <summary>The constant ATTRIBUTE.</summary>
         public const String ATTRIBUTE = "attr";
 
@@ -380,6 +383,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant HARD_LIGHT.</summary>
         public const String HARD_LIGHT = "hard-light";
 
+        /// <summary>The Constant HORIZONTAL_TB.</summary>
+        public const String HORIZONTAL_TB = "horizontal-tb";
+
         /// <summary>The Constant HUE.</summary>
         public const String HUE = "hue";
 
@@ -556,6 +562,15 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant UNICODE_BIDI.</summary>
         public const String UNICODE_BIDI = "unicode-bidi";
+
+        /// <summary>The Constant UPRIGHT.</summary>
+        public const String UPRIGHT = "upright";
+
+        /// <summary>The Constant VERTICAL_LR.</summary>
+        public const String VERTICAL_LR = "vertical-lr";
+
+        /// <summary>The Constant VERTICAL_RL.</summary>
+        public const String VERTICAL_RL = "vertical-rl";
 
         /// <summary>The Constant VISIBILITY.</summary>
         public const String VISIBILITY = "visibility";

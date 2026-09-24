@@ -26,6 +26,7 @@ using iText.Commons.Internal.Runtime;
 using iText.IO.Util;
 
 namespace iText.IO.Font.Cmap {
+    /// <summary>Maps character identifiers to their encoded character code byte sequences.</summary>
     public class CMapCidToCodepoint : AbstractCMap {
         private static readonly byte[] EMPTY = new byte[] {  };
 
@@ -42,6 +43,9 @@ namespace iText.IO.Font.Cmap {
         }
 //\endcond
 
+        /// <summary>Looks up the character code assigned to a CID.</summary>
+        /// <param name="cid">the character identifier</param>
+        /// <returns>the mapped byte sequence, or a shared empty array when no mapping exists</returns>
         public virtual byte[] Lookup(int cid) {
             byte[] ser = map.Get(cid);
             if (ser == null) {
@@ -52,6 +56,8 @@ namespace iText.IO.Font.Cmap {
             }
         }
 
+        /// <summary>Builds a mapping from integer character codes to CIDs.</summary>
+        /// <returns>a new reverse mapping</returns>
         public virtual IntHashtable GetReversMap() {
             IntHashtable code2cid = new IntHashtable(map.Count);
             foreach (KeyValuePair<int, byte[]> entry in map) {

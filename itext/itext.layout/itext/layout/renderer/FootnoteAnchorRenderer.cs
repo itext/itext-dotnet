@@ -21,11 +21,18 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
+using iText.Commons.Datastructures;
 using iText.Commons.Utils;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Action;
+using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Element;
+using iText.Layout.Exceptions;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
@@ -82,6 +89,7 @@ namespace iText.Layout.Renderer {
                     LayoutTaggingHelper.AddTreeHints(taggingHelper, footnoteAnchor);
                 }
             }
+            HandleFootnoteAnchorStyles();
             int pageNumber = layoutContext.GetArea().GetPageNumber();
             Rectangle pageRectangle = this.GetPdfDocument().GetPage(pageNumber).GetPageSize();
             IRenderer parentRenderer = GetParent();
@@ -100,7 +108,7 @@ namespace iText.Layout.Renderer {
                 parentRenderer = parentRenderer.GetParent();
             }
             this.footnoteRenderer.Layout(new LayoutContext(new LayoutArea(pageNumber, pageRectangle)));
-            LayoutResult layoutResult = footnoteAnchor.Layout(layoutContext);
+            LayoutResult layoutResult = footnoteAnchor.SetParent(this).Layout(layoutContext);
             this.occupiedArea = layoutResult.GetOccupiedArea();
             if (LayoutResult.NOTHING == layoutResult.GetStatus()) {
                 layoutResult.SetOverflowRenderer(this);
@@ -110,7 +118,7 @@ namespace iText.Layout.Renderer {
                 if (float.IsNaN(this.yPos)) {
                     this.yPos = this.occupiedArea.GetBBox().GetTop();
                 }
-                FootnotesCounterHandler.AddFootnoteAnchor(this);
+                FootnotesCounterHandler.AnchorLaidOut(this);
             }
             if (layoutResult.GetSplitRenderer() != null) {
                 iText.Layout.Renderer.FootnoteAnchorRenderer splitRenderer = CreateSplitRenderer(layoutResult);
@@ -129,6 +137,7 @@ namespace iText.Layout.Renderer {
             LayoutTaggingHelper taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
             FootnoteTaggingHelper.RepairFootnoteAnchorTagIfNeeded(this, taggingHelper);
             bool isTagged = drawContext.IsTaggingEnabled();
+            bool tagCreated = false;
             if (isTagged) {
                 taggingHelper = this.GetProperty<LayoutTaggingHelper>(Property.TAGGING_HELPER);
                 if (taggingHelper == null) {
@@ -136,8 +145,14 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     TagTreePointer tagPointer = taggingHelper.UseAutoTaggingPointerAndRememberItsPosition(this);
-                    taggingHelper.CreateTag(this, tagPointer);
+                    tagCreated = taggingHelper.CreateTag(this, tagPointer);
                 }
+            }
+            if (tagCreated || !isTagged) {
+                // We only don't set up links if tagging is enabled, but tag was not created,
+                // meaning this content is in fact an artifact. This happens because links contain annotations,
+                // and annotations need to be tagged. But since this content is an artifact, we can't properly tag it.
+                SetUpLinks(drawContext);
             }
             footnoteAnchor.Draw(drawContext);
             if (isTagged) {
@@ -167,6 +182,27 @@ namespace iText.Layout.Renderer {
         public override IRenderer GetNextRenderer() {
             return new iText.Layout.Renderer.FootnoteAnchorRenderer((FootnoteAnchor)modelElement);
         }
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Resolve
+        /// <see cref="iText.Layout.Properties.Property.FONT"/>
+        /// String[] value.
+        /// </summary>
+        /// <param name="newChildRenderers">all processed renderers are added to this list.</param>
+        internal virtual void ResolveFonts(ICollection<IRenderer> newChildRenderers) {
+            if (footnoteAnchor != null) {
+                IList<IRenderer> addedRenderers = new List<IRenderer>();
+                if (footnoteAnchor is TextRenderer) {
+                    ((TextRenderer)footnoteAnchor).ResolveFonts(addedRenderers);
+                    if (addedRenderers.Count > 1) {
+                        throw new PdfException(LayoutExceptionMessageConstant.FOOTNOTE_ANCHOR_LAYOUT_CONSISTENCY);
+                    }
+                    newChildRenderers.Add(this);
+                }
+            }
+        }
+//\endcond
 
         /// <summary><inheritDoc/></summary>
         protected internal override float? GetFirstYLineRecursively() {
@@ -204,6 +240,42 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        private static void SetUpLinks(IPropertyContainer from, IPropertyContainer to, String name, String altDescription
+            , PdfDocument document) {
+            int amountOfNamedDestinations = 0;
+            if (document.GetCatalog().GetNameTree(PdfName.Dests).GetNames() != null) {
+                amountOfNamedDestinations = document.GetCatalog().GetNameTree(PdfName.Dests).GetNames().Count;
+            }
+            PdfLinkAnnotation footnoteAnnotation = (PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0)).SetAction
+                (PdfAction.CreateGoTo(name + amountOfNamedDestinations)).SetFlags(PdfAnnotation.PRINT);
+            footnoteAnnotation.SetBorder(new PdfArray(new float[] { 0, 0, 0 }));
+            footnoteAnnotation.SetContents(altDescription);
+            from.SetProperty(Property.LINK_ANNOTATION, footnoteAnnotation);
+            ICollection<Object> footnoteDestinations = to.GetProperty<ICollection<Object>>(Property.DESTINATION);
+            if (footnoteDestinations == null) {
+                footnoteDestinations = new HashSet<Object>();
+            }
+            footnoteDestinations.Add(new Tuple2<String, PdfDictionary>(name + amountOfNamedDestinations, footnoteAnnotation
+                .GetAction()));
+            to.SetProperty(Property.DESTINATION, footnoteDestinations);
+        }
+
+        private void SetUpLinks(DrawContext drawContext) {
+            IPropertyContainer footnoteLabel = FootnotesUtil.GetInjectedFootnoteAnchor((Footnote)footnoteRenderer.GetModelElement
+                ());
+            if (footnoteLabel == null) {
+                // Footnote label is not supposed to be null. If it is, something is broken, and we don't add links.
+                return;
+            }
+            // We don't want to override existing link annotations, if any.
+            if (footnoteAnchor.GetProperty<PdfLinkAnnotation>(Property.LINK_ANNOTATION) == null && footnoteLabel.GetProperty
+                <PdfLinkAnnotation>(Property.LINK_ANNOTATION) == null) {
+                SetUpLinks(footnoteAnchor, footnoteLabel, "footnoteAnchor", "Go to footnote.", drawContext.GetDocument());
+                SetUpLinks(footnoteLabel, footnoteAnchor, "footnoteContent", "Go to footnote anchor.", drawContext.GetDocument
+                    ());
+            }
+        }
+
         private IRenderer CreateFootnoteAnchorRenderer() {
             IElement footnoteAnchorSymbol = ((FootnoteAnchor)this.modelElement).GetFootnoteAnchor();
             if (footnoteAnchorSymbol is Text) {
@@ -233,6 +305,70 @@ namespace iText.Layout.Renderer {
             splitRenderer.AddAllProperties(GetOwnProperties());
             splitRenderer.footnoteAnchor = layoutResult.GetSplitRenderer().SetParent(splitRenderer);
             return splitRenderer;
+        }
+
+        private void HandleFootnoteAnchorStyles() {
+            if (!(footnoteAnchor.GetModelElement() is IAbstractElement)) {
+                return;
+            }
+            IPropertyContainer footnoteAnchorModelElement = footnoteAnchor.GetModelElement();
+            FootnoteAnchor modelElement = ((FootnoteAnchor)this.GetModelElement());
+            FootnotesProperties footnotesProperties = this.GetProperty<FootnotesProperties>(Property.FOOTNOTES_PROPERTIES
+                );
+            Style customStyle = footnotesProperties.GetFootnoteAnchorStyle();
+            if (footnoteAnchorModelElement is Text) {
+                HandleFootnoteAnchorStyles(modelElement, (Text)footnoteAnchorModelElement, customStyle);
+            }
+            else {
+                if (footnoteAnchorModelElement is Image) {
+                    HandleFootnoteAnchorStyles(modelElement, (Image)footnoteAnchorModelElement, customStyle);
+                }
+            }
+        }
+
+        private void HandleFootnoteAnchorStyles<T>(FootnoteAnchor modelElement, AbstractElement<T> footnoteAnchorModelElement
+            , Style customStyle)
+            where T : IElement {
+            CopyPropertiesAndStyles(modelElement, footnoteAnchorModelElement);
+            if (customStyle != null) {
+                footnoteAnchorModelElement.AddStyleIfAbsent(customStyle);
+            }
+            if (FootnotesUtil.IsDefaultStyleNeeded(modelElement)) {
+                UnitValue parentFontSize = GetParent().GetProperty<UnitValue>(Property.FONT_SIZE);
+                Style defaultStyle = FootnotesUtil.CreateDefaultFootnoteAnchorStyle(parentFontSize);
+                if (!footnoteAnchorModelElement.GetOwnProperties().ContainsKey(Property.FONT_SIZE) && !HasStyleWithOwnProperty
+                    (footnoteAnchorModelElement, Property.FONT_SIZE)) {
+                    footnoteAnchor.SetProperty(Property.FONT_SIZE, defaultStyle.GetProperty<UnitValue>(Property.FONT_SIZE));
+                }
+                if (!footnoteAnchorModelElement.GetOwnProperties().ContainsKey(Property.TEXT_RISE) && !HasStyleWithOwnProperty
+                    (footnoteAnchorModelElement, Property.TEXT_RISE)) {
+                    footnoteAnchor.SetProperty(Property.TEXT_RISE, defaultStyle.GetProperty<float?>(Property.TEXT_RISE));
+                }
+            }
+            SetFootnoteAnchor(((FootnoteAnchor)this.modelElement), footnoteAnchorModelElement);
+        }
+
+        private static void CopyPropertiesAndStyles<T>(FootnoteAnchor sourceElement, AbstractElement<T> targetElement
+            )
+            where T : IElement {
+            foreach (KeyValuePair<int, Object> property in sourceElement.GetOwnProperties()) {
+                if (!targetElement.HasProperty(property.Key)) {
+                    targetElement.SetProperty(property.Key, property.Value);
+                }
+            }
+            foreach (Style style in sourceElement.GetStyles()) {
+                targetElement.AddStyleIfAbsent(style);
+            }
+        }
+
+        private static bool HasStyleWithOwnProperty<T>(AbstractElement<T> element, int property)
+            where T : IElement {
+            foreach (Style style in element.GetStyles()) {
+                if (style.HasOwnProperty(property)) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

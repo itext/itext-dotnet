@@ -22,14 +22,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Extgstate;
+using iText.Kernel.Utils;
 using iText.Layout.Properties;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Parse;
@@ -51,7 +51,7 @@ namespace iText.Svg.Renderers.Impl {
         private static readonly MarkerVertexType[] MARKER_VERTEX_TYPES = new MarkerVertexType[] { MarkerVertexType
             .MARKER_START, MarkerVertexType.MARKER_MID, MarkerVertexType.MARKER_END };
 
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(AbstractSvgNodeRenderer));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(AbstractSvgNodeRenderer));
 
         /// <summary>Map that contains attributes and styles used for drawing operations.</summary>
         protected internal IDictionary<String, String> attributesAndStyles;
@@ -145,10 +145,7 @@ namespace iText.Svg.Renderers.Impl {
                     context.AddUsedId(attributesAndStyles.Get(SvgConstants.Attributes.ID));
                 }
             }
-            /* If a (non-empty) clipping path exists, drawing operations must be surrounded by q/Q operators
-            and may have to be drawn multiple times
-            */
-            if (!DrawInClipPath(context)) {
+            if (!DrawWithMask(context) && !DrawInClipPath(context)) {
                 PreDraw(context);
                 DoDraw(context);
                 PostDraw(context);
@@ -289,8 +286,9 @@ namespace iText.Svg.Renderers.Impl {
         /// <summary>Check if this renderer should draw the element based on its attributes (e.g. visibility/display)</summary>
         /// <returns>true if element won't be drawn, false otherwise</returns>
         protected internal virtual bool IsHidden() {
-            return CommonCssConstants.NONE.Equals(this.attributesAndStyles.Get(CommonCssConstants.DISPLAY)) || CommonCssConstants
-                .HIDDEN.Equals(this.attributesAndStyles.Get(CommonCssConstants.VISIBILITY));
+            return this.attributesAndStyles != null && (CommonCssConstants.NONE.Equals(this.attributesAndStyles.Get(CommonCssConstants
+                .DISPLAY)) || CommonCssConstants.HIDDEN.Equals(this.attributesAndStyles.Get(CommonCssConstants.VISIBILITY
+                )));
         }
 
 //\cond DO_NOT_DOCUMENT
@@ -342,7 +340,7 @@ namespace iText.Svg.Renderers.Impl {
                     context.GetCurrentCanvas().ConcatMatrix(transform.CreateInverse());
                 }
                 catch (NoninvertibleTransformException) {
-                    LOGGER.LogWarning(SvgLogMessageConstant.NON_INVERTIBLE_TRANSFORMATION_MATRIX_FOR_NON_SCALING_STROKE);
+                    LOGGER.Warn(() => SvgLogMessageConstant.NON_INVERTIBLE_TRANSFORMATION_MATRIX_FOR_NON_SCALING_STROKE);
                     transform = null;
                 }
             }
@@ -468,7 +466,9 @@ namespace iText.Svg.Renderers.Impl {
             PdfExtGState opacityGraphicsState = new PdfExtGState();
             PdfCanvas currentCanvas = context.GetCurrentCanvas();
             if (fillProperties != null) {
-                currentCanvas.SetFillColor(fillProperties.GetColor());
+                Color fillColor = context.IsRenderingLuminosityMask() ? ColorUtils.ToDeviceGrayForSvgLuminanceMode(fillProperties
+                    .GetColor()) : fillProperties.GetColor();
+                currentCanvas.SetFillColor(fillColor);
                 if (!CssUtils.CompareFloats(fillProperties.GetOpacity(), 1f)) {
                     opacityGraphicsState.SetFillOpacity(fillProperties.GetOpacity());
                 }
@@ -481,9 +481,16 @@ namespace iText.Svg.Renderers.Impl {
                 }
                 // As default value for stroke is 'none' we should not set it in case value obtaining fails
                 if (strokeProperties.GetColor() != null) {
-                    currentCanvas.SetStrokeColor(strokeProperties.GetColor());
+                    Color strokeColor = context.IsRenderingLuminosityMask() ? ColorUtils.ToDeviceGrayForSvgLuminanceMode(strokeProperties
+                        .GetColor()) : strokeProperties.GetColor();
+                    currentCanvas.SetStrokeColor(strokeColor);
                 }
                 currentCanvas.SetLineWidth(strokeProperties.GetWidth());
+                currentCanvas.SetLineCapStyle(strokeProperties.GetLineCapStyle());
+                currentCanvas.SetLineJoinStyle(strokeProperties.GetLineJoinStyle());
+                if (strokeProperties.GetLineJoinStyle() == PdfCanvasConstants.LineJoinStyle.MITER) {
+                    currentCanvas.SetMiterLimit(strokeProperties.GetMiterLimit());
+                }
                 if (!CssUtils.CompareFloats(strokeProperties.GetOpacity(), 1f)) {
                     // TODO DEVSIX-8854 Draw SVG elements with transparent stroke in 2 steps
                     opacityGraphicsState.SetStrokeOpacity(strokeProperties.GetOpacity());
@@ -615,7 +622,8 @@ namespace iText.Svg.Renderers.Impl {
                         if (colorRenderer.GetParent() == null) {
                             colorRenderer.SetParent(this);
                         }
-                        resolvedColor = ((ISvgPaintServer)colorRenderer).CreateColor(context, GetObjectBoundingBox(context), objectBoundingBoxMargin
+                        Rectangle objectBoundingBox = GetObjectBoundingBox(context);
+                        resolvedColor = ((ISvgPaintServer)colorRenderer).CreateColor(context, objectBoundingBox, objectBoundingBoxMargin
                             , parentOpacity);
                     }
                     if (resolvedColor != null) {
@@ -678,16 +686,19 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         private bool DrawInClipPath(SvgDrawContext context) {
+            if (attributesAndStyles == null) {
+                return false;
+            }
             if (attributesAndStyles.ContainsKey(SvgConstants.Attributes.CLIP_PATH)) {
                 String clipPathName = attributesAndStyles.Get(SvgConstants.Attributes.CLIP_PATH);
                 ISvgNodeRenderer template = context.GetNamedObject(NormalizeLocalUrlName(clipPathName));
                 if (template is ClipPathSvgNodeRenderer) {
-                    // Clone template to avoid muddying the state
+                    // Clone template to avoid muddying the state.
                     ClipPathSvgNodeRenderer clipPath = (ClipPathSvgNodeRenderer)template.CreateDeepCopy();
                     if (clipPath.IsHidden()) {
                         return false;
                     }
-                    // Resolve parent inheritance
+                    // Resolve parent inheritance.
                     SvgNodeRendererInheritanceResolver.ApplyInheritanceToSubTree(this, clipPath, context.GetCssContext());
                     clipPath.SetClippedRenderer(this);
                     clipPath.Draw(context);
@@ -697,8 +708,37 @@ namespace iText.Svg.Renderers.Impl {
             return false;
         }
 
+        private bool DrawWithMask(SvgDrawContext context) {
+            if (attributesAndStyles == null) {
+                return false;
+            }
+            String maskName = attributesAndStyles.Get(SvgConstants.Attributes.MASK);
+            String normalizedMaskValue = CssUtils.NormalizeCssProperty(maskName);
+            if (maskName == null || SvgConstants.Values.NONE.Equals(normalizedMaskValue) || CommonCssConstants.INHERIT
+                .Equals(normalizedMaskValue)) {
+                return false;
+            }
+            String normalizedMaskName = NormalizeLocalUrlName(maskName);
+            ISvgNodeRenderer template = context.GetNamedObject(normalizedMaskName);
+            if (!(template is MaskSvgNodeRenderer)) {
+                LOGGER.Warn(() => MessageFormatUtil.Format(SvgLogMessageConstant.INVALID_MASK_REFERENCE, maskName));
+                return false;
+            }
+            if (context.IsCurrentMaskId(normalizedMaskName)) {
+                return false;
+            }
+            // Clone template to avoid muddying the state.
+            MaskSvgNodeRenderer mask = (MaskSvgNodeRenderer)template.CreateDeepCopy();
+            SvgNodeRendererInheritanceResolver.ApplyInheritanceToSubTree(template.GetParent(), mask, context.GetCssContext
+                ());
+            mask.DrawMaskedObject(this, context, normalizedMaskName);
+            return true;
+        }
+
         private String NormalizeLocalUrlName(String name) {
-            return name.Replace("url(#", "").Replace(")", "").Trim();
+            String normalizedName = SvgTextUtil.FilterReferenceValue(name);
+            normalizedName = CssUtils.ExtractUnquotedString(normalizedName);
+            return normalizedName.Trim();
         }
 
         private float GetOpacity() {
@@ -759,10 +799,16 @@ namespace iText.Svg.Renderers.Impl {
                 String strokeDashOffsetRawValue = GetAttribute(SvgConstants.Attributes.STROKE_DASHOFFSET);
                 SvgStrokeParameterConverter.PdfLineDashParameters lineDashParameters = SvgStrokeParameterConverter.ConvertStrokeDashParameters
                     (strokeDashArrayRawValue, strokeDashOffsetRawValue, GetCurrentFontSize(context), context);
+                int lineCap = SvgStrokeParameterConverter.ConvertStrokeLineCapStyle(GetAttribute(SvgConstants.Attributes.STROKE_LINECAP
+                    ));
+                int lineJoin = SvgStrokeParameterConverter.ConvertStrokeLineJoinStyle(GetAttribute(SvgConstants.Attributes
+                    .STROKE_LINEJOIN));
+                float miterLimit = SvgStrokeParameterConverter.ConvertStrokeMiterLimit(GetAttribute(SvgConstants.Attributes
+                    .STROKE_MITERLIMIT));
                 if (strokeWidth > 0) {
                     doStroke = true;
                     return new AbstractSvgNodeRenderer.StrokeProperties(strokeColor, strokeWidth, strokeOpacity, lineDashParameters
-                        );
+                        , lineCap, lineJoin, miterLimit);
                 }
             }
             return null;
@@ -811,29 +857,72 @@ namespace iText.Svg.Renderers.Impl {
             internal readonly SvgStrokeParameterConverter.PdfLineDashParameters lineDashParameters;
 //\endcond
 
-            public StrokeProperties(Color color, float width, float opacity, SvgStrokeParameterConverter.PdfLineDashParameters
-                 lineDashParameters) {
+//\cond DO_NOT_DOCUMENT
+            internal readonly int lineCapStyle;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal readonly int lineJoinStyle;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal readonly float miterLimit;
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal StrokeProperties(Color color, float width, float opacity, SvgStrokeParameterConverter.PdfLineDashParameters
+                 lineDashParameters, int lineCapStyle, int lineJoinStyle, float miterLimit) {
                 this.color = color;
                 this.width = width;
                 this.opacity = opacity;
                 this.lineDashParameters = lineDashParameters;
+                this.lineCapStyle = lineCapStyle;
+                this.lineJoinStyle = lineJoinStyle;
+                this.miterLimit = miterLimit;
             }
+//\endcond
 
-            public Color GetColor() {
+//\cond DO_NOT_DOCUMENT
+            internal Color GetColor() {
                 return color;
             }
+//\endcond
 
-            public float GetWidth() {
+//\cond DO_NOT_DOCUMENT
+            internal float GetWidth() {
                 return width;
             }
+//\endcond
 
-            public float GetOpacity() {
+//\cond DO_NOT_DOCUMENT
+            internal float GetOpacity() {
                 return opacity;
             }
+//\endcond
 
-            public SvgStrokeParameterConverter.PdfLineDashParameters GetLineDashParameters() {
+//\cond DO_NOT_DOCUMENT
+            internal SvgStrokeParameterConverter.PdfLineDashParameters GetLineDashParameters() {
                 return lineDashParameters;
             }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal int GetLineCapStyle() {
+                return lineCapStyle;
+            }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal int GetLineJoinStyle() {
+                return lineJoinStyle;
+            }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+            internal float GetMiterLimit() {
+                return miterLimit;
+            }
+//\endcond
         }
 //\endcond
 

@@ -50,6 +50,11 @@ namespace iText.Layout.Renderer {
             CreateDestinationFolder(DESTINATION);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION);
+        }
+
         [NUnit.Framework.Test]
         public virtual void CourierTest() {
             String name = "courierTest.pdf";
@@ -88,7 +93,7 @@ namespace iText.Layout.Renderer {
         }
 
         private void TestFont(PdfFont font, String outPdf) {
-            Document document = new Document(new PdfDocument(new PdfWriter(outPdf)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)));
             document.SetFont(font);
             Paragraph paragraph = new Paragraph(TEXT_SAMPLE);
             paragraph.SetProperty(Property.RENDERING_MODE, RenderingMode.HTML_MODE);

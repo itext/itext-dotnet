@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields.Properties;
@@ -44,8 +43,7 @@ namespace iText.Forms.Form.Element {
     /// is used instead of the default renderer for fields.
     /// </summary>
     public class CheckBox : FormField<iText.Forms.Form.Element.CheckBox> {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Forms.Form.Element.CheckBox
-            ));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Forms.Form.Element.CheckBox));
 
         /// <summary>
         /// Creates a new
@@ -80,7 +78,7 @@ namespace iText.Forms.Form.Element {
         /// <returns>this checkbox instance</returns>
         public virtual iText.Forms.Form.Element.CheckBox SetCheckBoxType(CheckBoxType checkBoxType) {
             if (checkBoxType == null) {
-                LOGGER.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.INVALID_VALUE_FALLBACK_TO_DEFAULT, "checkBoxType"
+                LOGGER.Warn(() => MessageFormatUtil.Format(FormsLogMessageConstants.INVALID_VALUE_FALLBACK_TO_DEFAULT, "checkBoxType"
                     , null));
                 return this;
             }
@@ -93,7 +91,7 @@ namespace iText.Forms.Form.Element {
         /// <returns>this checkbox instance</returns>
         public override iText.Forms.Form.Element.CheckBox SetSize(float size) {
             if (size <= 0) {
-                LOGGER.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.INVALID_VALUE_FALLBACK_TO_DEFAULT, "size"
+                LOGGER.Warn(() => MessageFormatUtil.Format(FormsLogMessageConstants.INVALID_VALUE_FALLBACK_TO_DEFAULT, "size"
                     , size));
                 return this;
             }

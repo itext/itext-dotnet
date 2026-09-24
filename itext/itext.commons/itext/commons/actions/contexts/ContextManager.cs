@@ -36,10 +36,9 @@ namespace iText.Commons.Actions.Contexts {
 
         static ContextManager() {
             iText.Commons.Actions.Contexts.ContextManager local = new iText.Commons.Actions.Contexts.ContextManager();
+            // Registering the default contexts
             local.RegisterGenericContext(NamespaceConstant.ITEXT_CORE_NAMESPACES, JavaCollectionsUtil.Singleton(ProductNameConstant
                 .ITEXT_CORE));
-            local.RegisterGenericContext(JavaCollectionsUtil.Singleton(NamespaceConstant.CORE_SIGN), JavaCollectionsUtil
-                .Singleton(ProductNameConstant.ITEXT_CORE_SIGN));
             local.RegisterGenericContext(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_HTML), JavaCollectionsUtil
                 .Singleton(ProductNameConstant.PDF_HTML));
             local.RegisterGenericContext(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_SWEEP), JavaCollectionsUtil
@@ -48,6 +47,10 @@ namespace iText.Commons.Actions.Contexts {
                 .Singleton(ProductNameConstant.PDF_OCR_TESSERACT4));
             local.RegisterGenericContext(JavaCollectionsUtil.SingletonList(NamespaceConstant.PDF_OCR_ONNX), JavaCollectionsUtil
                 .Singleton(ProductNameConstant.PDF_OCR_ONNX));
+            // Registering the custom contexts
+            // (need to be synchronized with ProductManager, so that custom contexts won't be overridden)
+            local.RegisterGenericContext(JavaCollectionsUtil.Singleton(NamespaceConstant.CORE_SIGN), JavaCollectionsUtil
+                .Singleton(ProductNameConstant.ITEXT_CORE_SIGN));
             INSTANCE = local;
         }
 

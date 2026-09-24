@@ -22,14 +22,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 
 namespace iText.Kernel.Pdf.Tagutils {
 //\cond DO_NOT_DOCUMENT
     internal class RootTagNormalizer {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.Tagutils.RootTagNormalizer
+            ));
+
         private TagStructureContext context;
 
         private PdfStructElem rootTagElement;
@@ -156,24 +158,26 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         private void LogCreatedRootTagHasMappingIssue(PdfNamespace rootTagOriginalNs, IRoleMappingResolver mapping
             ) {
-            String origRootTagNs = "";
-            if (rootTagOriginalNs != null && rootTagOriginalNs.GetNamespaceName() != null) {
-                origRootTagNs = " in \"" + rootTagOriginalNs.GetNamespaceName() + "\" namespace";
-            }
-            String mappingRole = " to ";
-            if (mapping != null) {
-                mappingRole += "\"" + mapping.GetRole() + "\"";
-                if (mapping.GetNamespace() != null && !StandardNamespaces.PDF_1_7.Equals(mapping.GetNamespace().GetNamespaceName
-                    ())) {
-                    mappingRole += " in \"" + mapping.GetNamespace().GetNamespaceName() + "\" namespace";
+            LOGGER.Warn(() => {
+                String origRootTagNs = "";
+                if (rootTagOriginalNs != null && rootTagOriginalNs.GetNamespaceName() != null) {
+                    origRootTagNs = " in \"" + rootTagOriginalNs.GetNamespaceName() + "\" namespace";
                 }
+                String mappingRole = " to ";
+                if (mapping != null) {
+                    mappingRole += "\"" + mapping.GetRole() + "\"";
+                    if (mapping.GetNamespace() != null && !StandardNamespaces.PDF_1_7.Equals(mapping.GetNamespace().GetNamespaceName
+                        ())) {
+                        mappingRole += " in \"" + mapping.GetNamespace().GetNamespaceName() + "\" namespace";
+                    }
+                }
+                else {
+                    mappingRole += "not standard role";
+                }
+                return String.Format(iText.IO.Logs.IoLogMessageConstant.CREATED_ROOT_TAG_HAS_MAPPING, origRootTagNs, mappingRole
+                    );
             }
-            else {
-                mappingRole += "not standard role";
-            }
-            ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.RootTagNormalizer));
-            logger.LogWarning(String.Format(iText.IO.Logs.IoLogMessageConstant.CREATED_ROOT_TAG_HAS_MAPPING, origRootTagNs
-                , mappingRole));
+            );
         }
     }
 //\endcond

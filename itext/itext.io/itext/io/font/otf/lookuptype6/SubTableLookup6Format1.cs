@@ -28,8 +28,16 @@ using iText.IO.Font.Otf;
 namespace iText.IO.Font.Otf.Lookuptype6 {
     /// <summary>Chaining Contextual Substitution Subtable: Simple Chaining Context Glyph Substitution</summary>
     public class SubTableLookup6Format1 : ChainingContextualTable<ContextualSubstRule> {
-        private IDictionary<int, IList<ContextualSubstRule>> substMap;
+        private readonly IDictionary<int, IList<ContextualSubstRule>> substMap;
 
+        /// <summary>Creates a new Chaining Contextual Substitution Subtable.</summary>
+        /// <param name="openReader">the OpenType font reader</param>
+        /// <param name="lookupFlag">
+        /// specifies processing options, e.g. whether to skip base glyphs, marks or
+        /// ligatures during glyph substitution or positioning. See
+        /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+        /// </param>
+        /// <param name="substMap">the substitution map</param>
         public SubTableLookup6Format1(OpenTypeFontTableReader openReader, int lookupFlag, IDictionary<int, IList<ContextualSubstRule
             >> substMap)
             : base(openReader, lookupFlag) {
@@ -43,17 +51,23 @@ namespace iText.IO.Font.Otf.Lookuptype6 {
             return JavaCollectionsUtil.EmptyList<ContextualSubstRule>();
         }
 
+        /// <summary>Represents the substitution rule format1 of an OpenType font.</summary>
         public class SubstRuleFormat1 : ContextualSubstRule {
             // inputGlyphIds array omits the first glyph in the sequence,
             // the first glyph is defined by corresponding coverage glyph
-            private int[] inputGlyphIds;
+            private readonly int[] inputGlyphIds;
 
-            private int[] backtrackGlyphIds;
+            private readonly int[] backtrackGlyphIds;
 
-            private int[] lookAheadGlyphIds;
+            private readonly int[] lookAheadGlyphIds;
 
-            private SubstLookupRecord[] substLookupRecords;
+            private readonly SubstLookupRecord[] substLookupRecords;
 
+            /// <summary>Creates a new substitution rule format1.</summary>
+            /// <param name="backtrackGlyphIds">the backtrack glyph ids</param>
+            /// <param name="inputGlyphIds">the input glyph ids</param>
+            /// <param name="lookAheadGlyphIds">the look ahead glyph ids</param>
+            /// <param name="substLookupRecords">the substitution lookup records</param>
             public SubstRuleFormat1(int[] backtrackGlyphIds, int[] inputGlyphIds, int[] lookAheadGlyphIds, SubstLookupRecord
                 [] substLookupRecords) {
                 this.backtrackGlyphIds = backtrackGlyphIds;

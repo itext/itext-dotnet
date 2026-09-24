@@ -20,9 +20,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-using Microsoft.Extensions.Logging;
-using iText.Commons;
-using iText.Commons.Utils;
+using iText.Commons.Logs;
 using iText.IO.Font.Otf;
 using iText.Kernel.Font;
 using iText.Layout.Element;
@@ -37,6 +35,9 @@ namespace iText.Forms.Form.Renderer {
     /// trimming strategy matches Acrobat's behavior
     /// </remarks>
     internal class FormFieldValueNonTrimmingTextRenderer : TextRenderer {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Forms.Form.Renderer.FormFieldValueNonTrimmingTextRenderer
+            ));
+
         // Determines whether we want to trim leading space. In particular, we don't want to trim
         // the very first leading spaces of the text value. When text overflows to the next lines,
         // whether we should trim the text depends on why the overflow happened
@@ -71,10 +72,7 @@ namespace iText.Forms.Form.Renderer {
         /// <summary><inheritDoc/></summary>
         protected override TextRenderer CreateCopy(GlyphLine gl, PdfFont font) {
             if (typeof(iText.Forms.Form.Renderer.FormFieldValueNonTrimmingTextRenderer) != this.GetType()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Form.Renderer.FormFieldValueNonTrimmingTextRenderer
-                    ));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.CREATE_COPY_SHOULD_BE_OVERRIDDEN
-                    ));
+                LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.CREATE_COPY_SHOULD_BE_OVERRIDDEN);
             }
             iText.Forms.Form.Renderer.FormFieldValueNonTrimmingTextRenderer copy = new iText.Forms.Form.Renderer.FormFieldValueNonTrimmingTextRenderer
                 ((Text)this.modelElement);

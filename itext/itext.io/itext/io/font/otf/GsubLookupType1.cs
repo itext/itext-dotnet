@@ -25,9 +25,18 @@ using System.Collections.Generic;
 using iText.IO.Util;
 
 namespace iText.IO.Font.Otf {
+    /// <summary>Applies GSUB OpenType single substitutions.</summary>
     public class GsubLookupType1 : OpenTableLookup {
         private IntHashtable substMap;
 
+        /// <summary>Creates a new GSUB Lookup Type 1.</summary>
+        /// <param name="openReader">the OpenType font reader</param>
+        /// <param name="lookupFlag">
+        /// specifies processing options, e.g. whether to skip base glyphs, marks or
+        /// ligatures during glyph substitution or positioning. See
+        /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+        /// </param>
+        /// <param name="subTableLocations">the sub table locations</param>
         public GsubLookupType1(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations)
             : base(openReader, lookupFlag, subTableLocations) {
             substMap = new IntHashtable();

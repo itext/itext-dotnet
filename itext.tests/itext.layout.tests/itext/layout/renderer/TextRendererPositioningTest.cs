@@ -43,11 +43,16 @@ namespace iText.Layout.Renderer {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void MarginTopTest() {
             String outFileName = DESTINATION_FOLDER + "marginTopTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_marginTopTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Text text1 = new Text("Text1");
             text1.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
@@ -67,7 +72,7 @@ namespace iText.Layout.Renderer {
         public virtual void MarginBottomTest() {
             String outFileName = DESTINATION_FOLDER + "marginBottomTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_marginBottomTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Text text1 = new Text("Text1");
             text1.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
@@ -87,7 +92,7 @@ namespace iText.Layout.Renderer {
         public virtual void MarginTopBottomTest() {
             String outFileName = DESTINATION_FOLDER + "marginTopBottomTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_marginTopBottomTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Text text1 = new Text("Text1");
             text1.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
@@ -108,7 +113,7 @@ namespace iText.Layout.Renderer {
         public virtual void DiffFontSizeTest() {
             String outFileName = DESTINATION_FOLDER + "diffFontSizeTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_diffFontSizeTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Text text1 = new Text("Text1");
             text1.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));
@@ -129,7 +134,7 @@ namespace iText.Layout.Renderer {
         public virtual void MarginAndPaddingTest() {
             String outFileName = DESTINATION_FOLDER + "marginAndPaddingTest.pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_marginAndPaddingTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName));
             Document doc = new Document(pdfDocument);
             Text text1 = new Text("Text1");
             text1.SetBorder(new SolidBorder(ColorConstants.BLUE, 1));

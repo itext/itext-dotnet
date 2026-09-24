@@ -53,11 +53,16 @@ namespace iText.Forms.Form.Element {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void EmptyListBoxFieldTest() {
             String outPdf = DESTINATION_FOLDER + "emptyListBoxField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_emptyListBoxField.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 ListBoxField flattenListBoxField = new ListBoxField("flatten empty list box field", 0, false);
                 flattenListBoxField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flattenListBoxField.SetBackgroundColor(ColorConstants.RED);
@@ -70,7 +75,7 @@ namespace iText.Forms.Form.Element {
         public virtual void BasicListBoxFieldTest() {
             String outPdf = DESTINATION_FOLDER + "basicListBoxField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_basicListBoxField.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 ListBoxField formListBoxField = new ListBoxField("form list box field", 2, false);
                 formListBoxField.SetInteractive(true);
                 formListBoxField.AddOption("option 1", false);
@@ -101,7 +106,7 @@ namespace iText.Forms.Form.Element {
         public virtual void ListBoxFieldWithFontSizeTest() {
             String outPdf = DESTINATION_FOLDER + "listBoxFieldWithFontSize.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_listBoxFieldWithFontSize.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 ListBoxField formListBoxFieldWithFont = new ListBoxField("flatten list box field with font", 0, false);
                 formListBoxFieldWithFont.SetInteractive(true);
                 formListBoxFieldWithFont.SetBackgroundColor(ColorConstants.RED);
@@ -137,7 +142,7 @@ namespace iText.Forms.Form.Element {
         public virtual void ListBoxFieldWithMarginsTest() {
             String outPdf = DESTINATION_FOLDER + "listBoxFieldWithMargins.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_listBoxFieldWithMargins.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Paragraph option1 = new Paragraph("option 1");
                 option1.SetProperty(FormProperty.FORM_FIELD_LABEL, "option 1");
                 option1.SetMargin(4);
@@ -163,7 +168,7 @@ namespace iText.Forms.Form.Element {
         public virtual void ListBoxFieldWithHeightTest() {
             String outPdf = DESTINATION_FOLDER + "listBoxFieldWithHeight.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_listBoxFieldWithHeight.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 ListBoxField listBoxField = new ListBoxField("list box field with height", 0, false);
                 listBoxField.SetInteractive(false);
                 listBoxField.SetBackgroundColor(ColorConstants.RED);
@@ -181,7 +186,7 @@ namespace iText.Forms.Form.Element {
         public virtual void ListBoxFieldWithMinHeightTest() {
             String outPdf = DESTINATION_FOLDER + "listBoxFieldWithMinHeight.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_listBoxFieldWithMinHeight.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 ListBoxField listBoxField = new ListBoxField("list box field with height", 0, false);
                 listBoxField.SetInteractive(false);
                 listBoxField.SetBackgroundColor(ColorConstants.RED);
@@ -200,7 +205,7 @@ namespace iText.Forms.Form.Element {
         public virtual void ListBoxFieldWithMaxHeightTest() {
             String outPdf = DESTINATION_FOLDER + "listBoxFieldWithMaxHeight.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_listBoxFieldWithMaxHeight.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 ListBoxField listBoxField = new ListBoxField("list box field with height", 0, false);
                 listBoxField.SetInteractive(false);
                 listBoxField.SetBackgroundColor(ColorConstants.RED);
@@ -218,7 +223,7 @@ namespace iText.Forms.Form.Element {
         public virtual void ListBoxFieldCannotFitTest() {
             String outPdf = DESTINATION_FOLDER + "listBoxFieldCannotFit.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_listBoxFieldCannotFit.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Div div = new Div();
                 div.SetWidth(UnitValue.CreatePointValue(400));
                 div.SetHeight(UnitValue.CreatePointValue(740));
@@ -238,7 +243,7 @@ namespace iText.Forms.Form.Element {
         public virtual void ListBoxFieldCannotFitByWidthTest() {
             String outPdf = DESTINATION_FOLDER + "listBoxFieldCannotFitByWidth.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_listBoxFieldCannotFitByWidth.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Paragraph option1 = new Paragraph("option 1");
                 option1.SetProperty(FormProperty.FORM_FIELD_SELECTED, true);
                 option1.SetProperty(FormProperty.FORM_FIELD_LABEL, "option 1");
@@ -262,7 +267,7 @@ namespace iText.Forms.Form.Element {
         public virtual void ListBoxFieldWithLangTest() {
             String outPdf = DESTINATION_FOLDER + "listBoxFieldWithLang.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_listBoxFieldWithLang.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 document.GetPdfDocument().SetTagged();
                 ListBoxField listBoxField = new ListBoxField("list box field with lang", 0, false);
                 listBoxField.SetInteractive(false);
@@ -281,7 +286,7 @@ namespace iText.Forms.Form.Element {
         public virtual void ColorsBordersTest() {
             String outPdf = DESTINATION_FOLDER + "colorsBorders.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_colorsBorders.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 ListBoxField listBoxField = new ListBoxField("coloured list box field with borders", 0, false);
                 listBoxField.SetInteractive(false);
                 listBoxField.SetBackgroundColor(ColorConstants.RED);
@@ -300,7 +305,7 @@ namespace iText.Forms.Form.Element {
         public virtual void LongListTest() {
             String outPdf = DESTINATION_FOLDER + "longList.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_longList.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 ListBoxField listBoxField = new ListBoxField("long list box field", 4, true);
                 listBoxField.SetInteractive(false);
                 listBoxField.AddOption("option 1");
@@ -325,7 +330,7 @@ namespace iText.Forms.Form.Element {
         public virtual void JustificationTest() {
             String outPdf = DESTINATION_FOLDER + "justification.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_justification.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 ListBoxField listBoxField = new ListBoxField("left box field", 0, false);
                 listBoxField.SetInteractive(false);
                 listBoxField.SetWidth(200);
@@ -361,7 +366,7 @@ namespace iText.Forms.Form.Element {
         public virtual void ExportValueTest() {
             String outPdf = DESTINATION_FOLDER + "exportValue.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_exportValue.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 ListBoxField listBoxField = new ListBoxField("export value field", 0, true);
                 listBoxField.SetInteractive(false);
                 listBoxField.SetWidth(200);
@@ -379,7 +384,7 @@ namespace iText.Forms.Form.Element {
         public virtual void InvalidOptionsTest() {
             String outPdf = DESTINATION_FOLDER + "invalidOptions.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_invalidOptions.pdf";
-            using (PdfDocument doc = new PdfDocument(new PdfWriter(outPdf))) {
+            using (PdfDocument doc = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
                 ListBoxField listBoxField = new ListBoxField("invalid", 0, true);
                 listBoxField.SetInteractive(true);
                 listBoxField.SetWidth(200);
@@ -412,7 +417,7 @@ namespace iText.Forms.Form.Element {
         public virtual void ListBoxIsBiggerThanPage() {
             String outPdf = DESTINATION_FOLDER + "listBoxIsBiggerThenPage.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_listBoxIsBiggerThenPage.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outPdf)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)));
             ListBoxField list = (ListBoxField)new ListBoxField("name", 200, false).SetInteractive(true);
             list.SetBackgroundColor(ColorConstants.RED);
             list.AddOption("value1");
@@ -428,7 +433,7 @@ namespace iText.Forms.Form.Element {
         public virtual void ListBoxIsBiggerThanPageNonI() {
             String outPdf = DESTINATION_FOLDER + "listBoxIsBiggerThenPageNonI.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_listBoxIsBiggerThenPageNonI.pdf";
-            Document document = new Document(new PdfDocument(new PdfWriter(outPdf)));
+            Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)));
             ListBoxField list = (ListBoxField)new ListBoxField("name", 200, false);
             list.SetBackgroundColor(ColorConstants.RED);
             list.AddOption("value1");

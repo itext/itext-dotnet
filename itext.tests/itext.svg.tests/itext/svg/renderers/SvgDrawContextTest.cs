@@ -55,6 +55,41 @@ namespace iText.Svg.Renderers {
         }
 
         [NUnit.Framework.Test]
+        public virtual void MaskIdCycleDetectionTest() {
+            SvgDrawContext context = new SvgDrawContext(null, null);
+            NUnit.Framework.Assert.IsFalse(context.IsCurrentMaskId("first"));
+            NUnit.Framework.Assert.IsTrue(context.PushMaskId("first"));
+            NUnit.Framework.Assert.IsTrue(context.IsCurrentMaskId("first"));
+            NUnit.Framework.Assert.IsTrue(context.PushMaskId("second"));
+            NUnit.Framework.Assert.IsTrue(context.IsCurrentMaskId("second"));
+            NUnit.Framework.Assert.IsFalse(context.IsCurrentMaskId("first"));
+            NUnit.Framework.Assert.IsFalse(context.PushMaskId("first"));
+            NUnit.Framework.Assert.IsTrue(context.IsCurrentMaskId("second"));
+            context.PopMaskId();
+            NUnit.Framework.Assert.IsTrue(context.IsCurrentMaskId("first"));
+            context.PopMaskId();
+            NUnit.Framework.Assert.IsFalse(context.IsCurrentMaskId("first"));
+            NUnit.Framework.Assert.IsTrue(context.PushMaskId("first"));
+            context.PopMaskId();
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NestedMaskRenderingModesTest() {
+            SvgDrawContext context = new SvgDrawContext(null, null);
+            NUnit.Framework.Assert.IsFalse(context.IsRenderingLuminosityMask());
+            context.PushMaskRenderingMode(true);
+            NUnit.Framework.Assert.IsTrue(context.IsRenderingLuminosityMask());
+            context.PushMaskRenderingMode(false);
+            NUnit.Framework.Assert.IsFalse(context.IsRenderingLuminosityMask());
+            context.PopMaskRenderingMode();
+            NUnit.Framework.Assert.IsTrue(context.IsRenderingLuminosityMask());
+            context.PopMaskRenderingMode();
+            NUnit.Framework.Assert.IsFalse(context.IsRenderingLuminosityMask());
+            context.PopMaskRenderingMode();
+            NUnit.Framework.Assert.IsFalse(context.IsRenderingLuminosityMask());
+        }
+
+        [NUnit.Framework.Test]
         public virtual void DrawContextPushCountTest() {
             using (PdfDocument tokenDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {
                 PdfCanvas page1 = new PdfCanvas(tokenDoc.AddNewPage());

@@ -24,12 +24,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Datastructures;
 using iText.Commons.Internal.Runtime;
 using iText.Commons.Json;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Signatures;
@@ -54,7 +53,7 @@ namespace iText.Signatures.Validation.Lotl {
     /// so that the certificates from the LOTL file are used for signature validation.
     /// </remarks>
     public class SingleFileLotlService : LotlService {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Signatures.Validation.Lotl.SingleFileLotlService
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Signatures.Validation.Lotl.SingleFileLotlService
             ));
 
         private readonly CountrySpecificLotl countrySpecificLotl;
@@ -87,7 +86,7 @@ namespace iText.Signatures.Validation.Lotl {
             this.certificates = GetGenerallyTrustedCertificates(certificates);
             // TODO DEVSIX-9710: Split LotlFetchingProperties onto classes relevant for specific services
             if (!lotlFetchingProperties.GetSchemaNames().IsEmpty()) {
-                LOGGER.LogWarning(SignLogMessageConstant.SCHEMA_NAMES_CONFIGURATION_PROPERTY_IGNORED);
+                LOGGER.Warn(() => SignLogMessageConstant.SCHEMA_NAMES_CONFIGURATION_PROPERTY_IGNORED);
             }
         }
 

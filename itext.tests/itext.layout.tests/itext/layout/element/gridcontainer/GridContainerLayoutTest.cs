@@ -40,20 +40,25 @@ using iText.Test.Attributes;
 namespace iText.Layout.Element.Gridcontainer {
     [NUnit.Framework.Category("IntegrationTest")]
     public class GridContainerLayoutTest : ExtendedITextTest {
-        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/GridContainerTest/";
+        public static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/GridContainerLayoutTest/";
 
         public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/layout/GridContainerTest/";
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/GridContainerLayoutTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Setup() {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void SimpleBorderBoxSizingTestTest() {
             String fileName = DESTINATION_FOLDER + "border.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(fileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(fileName));
             Document document = new Document(pdfDocument);
             GridContainer gridcontainer0 = CreateGridBoxWithText();
             document.Add(new Paragraph("BOX_SIZING: BORDER_BOX"));
@@ -73,7 +78,7 @@ namespace iText.Layout.Element.Gridcontainer {
         [NUnit.Framework.Test]
         public virtual void SimpleMarginTest() {
             String fileName = DESTINATION_FOLDER + "margin.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(fileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(fileName));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("Margin "));
             GridContainer gridcontainer0 = CreateGridBoxWithText();
@@ -91,7 +96,7 @@ namespace iText.Layout.Element.Gridcontainer {
         [NUnit.Framework.Test]
         public virtual void SimplePaddingTest() {
             String fileName = DESTINATION_FOLDER + "padding.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(fileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(fileName));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("Padding "));
             GridContainer gridcontainer0 = CreateGridBoxWithText();
@@ -109,7 +114,7 @@ namespace iText.Layout.Element.Gridcontainer {
         [NUnit.Framework.Test]
         public virtual void SimpleBackGroundTest() {
             String fileName = DESTINATION_FOLDER + "background.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(fileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(fileName));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("Background "));
             GridContainer gridcontainer0 = CreateGridBoxWithText();
@@ -124,7 +129,7 @@ namespace iText.Layout.Element.Gridcontainer {
         [NUnit.Framework.Test]
         public virtual void BackgroundWithImageTest() {
             String fileName = DESTINATION_FOLDER + "backgroundWithImage.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(fileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(fileName));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("Background with image "));
             GridContainer gridcontainer0 = CreateGridBoxWithText();
@@ -143,7 +148,7 @@ namespace iText.Layout.Element.Gridcontainer {
         [NUnit.Framework.Test]
         public virtual void EmptyGridContainerTest() {
             String fileName = DESTINATION_FOLDER + "emptyGridContainer.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(fileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(fileName));
             Document document = new Document(pdfDocument);
             GridContainer gridcontainer0 = new GridContainer();
             gridcontainer0.SetProperty(Property.COLUMN_GAP_BORDER, null);
@@ -160,7 +165,7 @@ namespace iText.Layout.Element.Gridcontainer {
         [NUnit.Framework.Test]
         public virtual void OverflowGridContainerTest() {
             String fileName = DESTINATION_FOLDER + "overflowGridContainer.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(fileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(fileName));
             Document document = new Document(pdfDocument);
             GridContainer gridcontainer0 = CreateGridBoxWithText();
             gridcontainer0.SetBackgroundColor(ColorConstants.MAGENTA);
@@ -178,7 +183,7 @@ namespace iText.Layout.Element.Gridcontainer {
         [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, LogLevel = LogLevelConstants.WARN)]
         public virtual void NothingResultTest() {
             String fileName = DESTINATION_FOLDER + "nothingResult.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(fileName));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(fileName));
             Document document = new Document(pdfDocument);
             GridContainer gridcontainer = new GridContainer();
             gridcontainer.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(SOURCE_FOLDER + "rock_texture.jpg"

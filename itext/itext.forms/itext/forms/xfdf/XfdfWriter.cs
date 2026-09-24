@@ -24,18 +24,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
 
 namespace iText.Forms.Xfdf {
 //\cond DO_NOT_DOCUMENT
     internal class XfdfWriter {
-        private Stream outputStream;
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Forms.Xfdf.XfdfWriter));
 
-        private static ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Xfdf.XfdfWriter));
+        private readonly Stream outputStream;
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>Creates a XfdfWriter for output stream specified.</summary>
@@ -67,19 +66,19 @@ namespace iText.Forms.Xfdf {
             IList<FieldObject> childrenFields = FindChildrenFields(fieldObject, fieldList);
             XmlElement field = document.CreateElement("field");
             field.SetAttribute("name", fieldObject.GetName());
-            if (!childrenFields.IsEmpty()) {
-                foreach (FieldObject childField in childrenFields) {
-                    AddField(childField, field, document, fieldList);
+            if (childrenFields.IsEmpty()) {
+                if (fieldObject.GetValue() == null || String.IsNullOrEmpty(fieldObject.GetValue())) {
+                    LOGGER.Info(() => XfdfConstants.EMPTY_FIELD_VALUE_ELEMENT);
                 }
-            }
-            else {
-                if (fieldObject.GetValue() != null && !String.IsNullOrEmpty(fieldObject.GetValue())) {
+                else {
                     XmlElement value = document.CreateElement("value");
                     value.InnerText = fieldObject.GetValue();
                     field.AppendChild(value);
                 }
-                else {
-                    logger.LogInformation(XfdfConstants.EMPTY_FIELD_VALUE_ELEMENT);
+            }
+            else {
+                foreach (FieldObject childField in childrenFields) {
+                    AddField(childField, field, document, fieldList);
                 }
             }
             parentElement.AppendChild(field);
@@ -199,7 +198,7 @@ namespace iText.Forms.Xfdf {
                         annot.AppendChild(onActivation);
                     }
                     else {
-                        logger.LogError("Dest and OnActivation elements are both missing");
+                        LOGGER.Error(() => "Dest and OnActivation elements are both missing");
                     }
                 }
                 if (annotObject.GetBorderStyleAlt() != null) {
@@ -401,7 +400,7 @@ namespace iText.Forms.Xfdf {
                                 goToR.AppendChild(file);
                             }
                             else {
-                                logger.LogError("Dest or File elements are missing.");
+                                LOGGER.Error(() => "Dest or File elements are missing.");
                             }
                         }
                         action.AppendChild(goToR);
@@ -421,7 +420,7 @@ namespace iText.Forms.Xfdf {
                                     launch.AppendChild(file);
                                 }
                                 else {
-                                    logger.LogError("File element is missing");
+                                    LOGGER.Error(() => "File element is missing");
                                 }
                                 if (actionObject.IsNewWindow()) {
                                     launch.SetAttribute(XfdfConstants.NEW_WINDOW, "true");

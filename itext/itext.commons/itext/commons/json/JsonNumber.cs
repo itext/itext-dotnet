@@ -24,9 +24,11 @@ using System;
 using iText.Commons.Utils;
 
 namespace iText.Commons.Json {
-    /// <summary>Class representing json number value.</summary>
+    /// <summary>Class representing JSON number value.</summary>
     public sealed class JsonNumber : JsonValue {
-        private readonly double value;
+        private readonly double? doubleValue;
+
+        private readonly long? longValue;
 
         /// <summary>
         /// Creates a new
@@ -39,16 +41,92 @@ namespace iText.Commons.Json {
         /// </param>
         public JsonNumber(double value)
             : base() {
-            this.value = value;
+            this.doubleValue = value;
+            this.longValue = null;
         }
 
         /// <summary>
-        /// Gets a number value wrapped into this
+        /// Creates a new
+        /// <see cref="JsonNumber"/>
+        /// representing a provided value.
+        /// </summary>
+        /// <param name="value">
+        /// to wrap into this
+        /// <see cref="JsonNumber"/>
+        /// </param>
+        public JsonNumber(long value)
+            : base() {
+            this.doubleValue = null;
+            this.longValue = value;
+        }
+
+        /// <summary>
+        /// Gets a
+        /// <c>double</c>
+        /// value wrapped into this
         /// <see cref="JsonNumber"/>.
         /// </summary>
-        /// <returns>a number value</returns>
+        /// <returns>
+        /// a
+        /// <c>double</c>
+        /// value
+        /// </returns>
         public double GetValue() {
-            return value;
+            return GetDoubleValue();
+        }
+
+        /// <summary>
+        /// Gets a
+        /// <c>double</c>
+        /// value wrapped into this
+        /// <see cref="JsonNumber"/>.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <c>double</c>
+        /// value
+        /// </returns>
+        public double GetDoubleValue() {
+            return IsDouble() ? doubleValue.Value : (double)longValue;
+        }
+
+        /// <summary>
+        /// Gets a
+        /// <c>long</c>
+        /// value wrapped into this
+        /// <see cref="JsonNumber"/>.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <c>long</c>
+        /// value
+        /// </returns>
+        public long GetLongValue() {
+            return IsDouble() ? (long)doubleValue : longValue.Value;
+        }
+
+        /// <summary>
+        /// Checks if this
+        /// <see cref="JsonNumber"/>
+        /// represents
+        /// <c>double</c>
+        /// value
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if this
+        /// <see cref="JsonNumber"/>
+        /// represents
+        /// <c>double</c>
+        /// value,
+        /// <see langword="false"/>
+        /// if it represents
+        /// <c>long</c>
+        /// value
+        /// </returns>
+        public bool IsDouble() {
+            return doubleValue != null;
         }
 
         /// <summary><inheritDoc/></summary>
@@ -60,12 +138,12 @@ namespace iText.Commons.Json {
                 return false;
             }
             iText.Commons.Json.JsonNumber that = (iText.Commons.Json.JsonNumber)obj;
-            return Object.Equals(this.value, that.value);
+            return Object.Equals(this.doubleValue, that.doubleValue) && Object.Equals(this.longValue, that.longValue);
         }
 
         /// <summary><inheritDoc/></summary>
         public override int GetHashCode() {
-            return JavaUtil.ArraysHashCode(value);
+            return JavaUtil.ArraysHashCode(doubleValue, longValue);
         }
     }
 }

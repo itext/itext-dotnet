@@ -23,9 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.IO.Source;
 
 namespace iText.IO.Codec {
@@ -45,6 +44,8 @@ namespace iText.IO.Codec {
     /// in a PDF.
     /// </remarks>
     public class Jbig2SegmentReader {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.IO.Codec.Jbig2SegmentReader));
+
         //see 7.4.2.
         public const int SYMBOL_DICTIONARY = 0;
 
@@ -633,8 +634,7 @@ namespace iText.IO.Codec {
                 os.Dispose();
             }
             catch (System.IO.IOException e) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(Jbig2SegmentReader));
-                logger.LogDebug(e.Message);
+                LOGGER.Debug(() => e.Message);
             }
             return streamBytes;
         }

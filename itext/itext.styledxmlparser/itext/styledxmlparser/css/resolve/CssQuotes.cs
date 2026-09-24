@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Parse;
@@ -32,6 +31,9 @@ using iText.StyledXmlParser.Css.Parse;
 namespace iText.StyledXmlParser.Css.Resolve {
     /// <summary>Helper class to deal with quoted values in strings.</summary>
     public class CssQuotes {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.StyledXmlParser.Css.Resolve.CssQuotes
+            ));
+
         /// <summary>The empty quote value.</summary>
         private const String EMPTY_QUOTE = "";
 
@@ -92,9 +94,8 @@ namespace iText.StyledXmlParser.Css.Resolve {
                     return new iText.StyledXmlParser.Css.Resolve.CssQuotes(quotes[0], quotes[1]);
                 }
                 else {
-                    ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Resolve.CssQuotes)).LogError(MessageFormatUtil.
-                        Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.QUOTES_PROPERTY_INVALID, quotesString
-                        ));
+                    LOGGER.Error(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.QUOTES_PROPERTY_INVALID
+                        , quotesString));
                 }
             }
             return fallbackToDefault ? CreateDefaultQuotes() : null;

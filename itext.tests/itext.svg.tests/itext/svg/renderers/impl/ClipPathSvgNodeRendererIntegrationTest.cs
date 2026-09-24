@@ -265,5 +265,10 @@ namespace iText.Svg.Renderers.Impl {
         public virtual void NotUsedClipPathOutsideDefsTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "notUsedClipPathOutsideDefs");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void NestedClipPathsWithTranslationsTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "nestedClipPathsWithTranslations");
+        }
     }
 }

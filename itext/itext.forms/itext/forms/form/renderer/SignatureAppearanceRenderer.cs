@@ -22,8 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Forms;
 using iText.Forms.Fields;
@@ -45,6 +44,9 @@ namespace iText.Forms.Form.Renderer {
     /// implementation for SigFields.
     /// </summary>
     public class SignatureAppearanceRenderer : AbstractTextFieldRenderer {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Forms.Form.Renderer.SignatureAppearanceRenderer
+            ));
+
         /// <summary>Extra space at the top.</summary>
         private const float TOP_SECTION = 0.3f;
 
@@ -196,8 +198,7 @@ namespace iText.Forms.Form.Renderer {
             String name = GetModelId();
             UnitValue fontSize = (UnitValue)this.GetPropertyAsUnitValue(Property.FONT_SIZE);
             if (!fontSize.IsPointValue()) {
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Forms.Form.Renderer.SignatureAppearanceRenderer));
-                logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
+                LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.PROPERTY_IN_PERCENTS_NOT_SUPPORTED
                     , Property.FONT_SIZE));
             }
             PdfDocument doc = drawContext.GetDocument();

@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.Forms.Form;
@@ -117,7 +116,7 @@ namespace iText.Forms.Form.Renderer {
             bool isForcedPlacement = true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT));
             LayoutResult result = base.Layout(layoutContext);
             if (childRenderers.IsEmpty()) {
-                ITextLogManager.GetLogger(GetType()).LogError(FormsLogMessageConstants.ERROR_WHILE_LAYOUT_OF_FORM_FIELD);
+                new LazyLogger(GetType()).Error(() => FormsLogMessageConstants.ERROR_WHILE_LAYOUT_OF_FORM_FIELD);
                 occupiedArea.GetBBox().SetWidth(0).SetHeight(0);
             }
             else {
@@ -151,7 +150,7 @@ namespace iText.Forms.Form.Renderer {
                     MinMaxWidth());
             }
             if (result.GetStatus() != LayoutResult.FULL || !IsRendererFit(parentWidth, parentHeight)) {
-                ITextLogManager.GetLogger(GetType()).LogWarning(FormsLogMessageConstants.INPUT_FIELD_DOES_NOT_FIT);
+                new LazyLogger(GetType()).Warn(() => FormsLogMessageConstants.INPUT_FIELD_DOES_NOT_FIT);
             }
             return new MinMaxWidthLayoutResult(LayoutResult.FULL, occupiedArea, this, null).SetMinMaxWidth(new MinMaxWidth
                 (occupiedArea.GetBBox().GetWidth(), occupiedArea.GetBBox().GetWidth(), 0));

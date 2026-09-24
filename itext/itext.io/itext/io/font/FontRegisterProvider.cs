@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font.Constants;
 
@@ -36,8 +35,7 @@ namespace iText.IO.Font {
     /// without having to enter a path as parameter.
     /// </summary>
     internal class FontRegisterProvider {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.IO.Font.FontRegisterProvider
-            ));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.IO.Font.FontRegisterProvider));
 
         /// <summary>This is a map of postscriptfontnames of fonts and the path of their font file.</summary>
         private readonly IDictionary<String, String> fontNames = new Dictionary<String, String>();
@@ -271,7 +269,7 @@ namespace iText.IO.Font {
                         }
                     }
                 }
-                LOGGER.LogTrace(MessageFormatUtil.Format("Registered {0}", path));
+                LOGGER.Trace(() => MessageFormatUtil.Format("Registered {0}", path));
             }
             catch (System.IO.IOException e) {
                 throw new iText.IO.Exceptions.IOException(e);
@@ -309,7 +307,7 @@ namespace iText.IO.Font {
         /// <param name="scanSubdirectories">recursively scan subdirectories if <c>true</c></param>
         /// <returns>the number of fonts registered</returns>
         internal virtual int RegisterFontDirectory(String dir, bool scanSubdirectories) {
-            LOGGER.LogDebug(MessageFormatUtil.Format("Registering directory {0}, looking for fonts", dir));
+            LOGGER.Debug(() => MessageFormatUtil.Format("Registering directory {0}, looking for fonts", dir));
             int count = 0;
             try {
                 String[] files = FileUtil.ListFilesInDirectory(dir, scanSubdirectories);

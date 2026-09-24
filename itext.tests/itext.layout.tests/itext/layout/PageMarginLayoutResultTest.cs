@@ -52,6 +52,11 @@ namespace iText.Layout {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void ShortElementFullResultWithModestMarginsAssertTest() {
             using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new MemoryStream()))) {

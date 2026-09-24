@@ -50,11 +50,16 @@ namespace iText.Forms.Form.Element {
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void BasicInputFieldTest() {
             String outPdf = DESTINATION_FOLDER + "basicInputField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_basicInputField.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 InputField formInputField = new InputField("form input field");
                 formInputField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formInputField.SetProperty(FormProperty.FORM_FIELD_VALUE, "form input field");
@@ -71,7 +76,7 @@ namespace iText.Forms.Form.Element {
         public virtual void NoValueInputFieldTest() {
             String outPdf = DESTINATION_FOLDER + "noValueInputField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_noValueInputField.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 InputField flattenInputField = new InputField("no value input field");
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, null);
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_VALUE, null);
@@ -85,7 +90,7 @@ namespace iText.Forms.Form.Element {
         public virtual void InputFieldDoesNotFitTest() {
             String outPdf = DESTINATION_FOLDER + "inputFieldDoesNotFit.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_inputFieldDoesNotFit.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 Div div = new Div();
                 div.SetWidth(UnitValue.CreatePointValue(400));
                 div.SetHeight(UnitValue.CreatePointValue(752));
@@ -104,7 +109,7 @@ namespace iText.Forms.Form.Element {
         public virtual void InputFieldWithLangTest() {
             String outPdf = DESTINATION_FOLDER + "inputFieldWithLang.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_inputFieldWithLang.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 document.GetPdfDocument().SetTagged();
                 InputField flattenInputField = new InputField("input field with lang");
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
@@ -120,7 +125,7 @@ namespace iText.Forms.Form.Element {
         public virtual void InputFieldWithNullLangTest() {
             String outPdf = DESTINATION_FOLDER + "inputFieldWithNullLang.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_inputFieldWithNullLang.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 document.GetPdfDocument().SetTagged();
                 InputField flattenInputField = new InputField("input field with null lang");
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
@@ -136,7 +141,7 @@ namespace iText.Forms.Form.Element {
         public virtual void InputFieldWithPasswordTest() {
             String outPdf = DESTINATION_FOLDER + "inputFieldWithPassword.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_inputFieldWithPassword.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 InputField formInputField = new InputField("form input field with password");
                 formInputField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, false);
                 formInputField.SetProperty(FormProperty.FORM_FIELD_VALUE, "form input field with password");
@@ -157,7 +162,7 @@ namespace iText.Forms.Form.Element {
         public virtual void HeightInputFieldTest() {
             String outPdf = DESTINATION_FOLDER + "heightInputField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_heightInputField.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 InputField flattenInputField = new InputField("flatten input field with height");
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_VALUE, "flatten input field with height");
@@ -172,7 +177,7 @@ namespace iText.Forms.Form.Element {
         public virtual void MinHeightInputFieldTest() {
             String outPdf = DESTINATION_FOLDER + "minHeightInputField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_minHeightInputField.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 InputField flattenInputField = new InputField("flatten input field with height");
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_VALUE, "flatten input field with height");
@@ -187,7 +192,7 @@ namespace iText.Forms.Form.Element {
         public virtual void MaxHeightInputFieldTest() {
             String outPdf = DESTINATION_FOLDER + "maxHeightInputField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_maxHeightInputField.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 InputField flattenInputField = new InputField("flatten input field with height");
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_FLATTEN, true);
                 flattenInputField.SetProperty(FormProperty.FORM_FIELD_VALUE, "flatten input field with height");
@@ -202,7 +207,7 @@ namespace iText.Forms.Form.Element {
         public virtual void InputFieldWithJustificationTest() {
             String outPdf = DESTINATION_FOLDER + "inputFieldWithJustification.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_inputFieldWithJustification.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 InputField flattenInputField = new InputField("input field");
                 flattenInputField.SetValue("input field");
                 flattenInputField.SetInteractive(true);
@@ -216,7 +221,7 @@ namespace iText.Forms.Form.Element {
         public virtual void InputFieldWithBorderTest() {
             String outPdf = DESTINATION_FOLDER + "inputFieldWithBorder.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_inputFieldWithBorder.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 InputField flattenInputField = new InputField("input field");
                 flattenInputField.SetValue("input field");
                 flattenInputField.SetInteractive(true);
@@ -230,7 +235,7 @@ namespace iText.Forms.Form.Element {
         public virtual void RotationTest() {
             String outPdf = DESTINATION_FOLDER + "rotationTest.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_rotationTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 String value = "Long long text";
                 Border border = new SolidBorder(ColorConstants.BLUE, 1);
                 InputField inputField0 = new InputField("1");
@@ -277,7 +282,7 @@ namespace iText.Forms.Form.Element {
         public virtual void BorderBoxesTest() {
             String outPdf = DESTINATION_FOLDER + "borderBoxes.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_borderBoxes.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 // BORDER_BOX
                 InputField interactiveInputField = new InputField("interactiveInputField").SetBorder(new SolidBorder(ColorConstants
                     .PINK, 10));
@@ -318,7 +323,7 @@ namespace iText.Forms.Form.Element {
         public virtual void SetFontInputFieldTest() {
             String outPdf = DESTINATION_FOLDER + "setFontInputField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_setFontInputField.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(outPdf)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf)))) {
                 InputField inputField = new InputField("inputField");
                 inputField.SetInteractive(true);
                 inputField.SetFont(PdfFontFactory.CreateFont(StandardFonts.COURIER));
@@ -333,7 +338,7 @@ namespace iText.Forms.Form.Element {
         public virtual void MultiPageInputFieldTest() {
             String outPdf = DESTINATION_FOLDER + "multiPageInputField.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_multiPageInputField.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfWriter(outPdf))) {
+            using (PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(document, true);
                 for (int i = 0; i < 10; i++) {
                     document.AddNewPage();
@@ -355,7 +360,7 @@ namespace iText.Forms.Form.Element {
         public virtual void MultiPageInputFieldFormFlushTest() {
             String outPdf = DESTINATION_FOLDER + "multiPageInputFieldFormFlush.pdf";
             String cmpPdf = SOURCE_FOLDER + "cmp_multiPageInputFieldFormFlush.pdf";
-            using (PdfDocument document = new PdfDocument(new PdfWriter(outPdf))) {
+            using (PdfDocument document = new PdfDocument(CompareTool.CreateTestPdfWriter(outPdf))) {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(document, true);
                 for (int i = 0; i < 10; i++) {
                     document.AddNewPage();

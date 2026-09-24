@@ -88,7 +88,8 @@ namespace iText.Pdfua.Checkers {
             // present in the resulting file.
             // Even though the file is valid, there was clearly an attempt to create human-readable PdfString with
             // Unicode PUA, that's why we fail.
-            framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.TEXT_STRING_USES_UNICODE_PUA);
+            framework.AssertITextFailVeraPdfValid(filename, PdfUAExceptionMessageConstants.TEXT_STRING_USES_UNICODE_PUA
+                );
         }
 
         [NUnit.Framework.TestCaseSource("PrivateUseAreaSymbols")]
@@ -104,7 +105,8 @@ namespace iText.Pdfua.Checkers {
             }
             );
             // VeraPdf doesn't fail because they mistakenly don't check all the PdfString entries in the document.
-            framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.TEXT_STRING_USES_UNICODE_PUA);
+            framework.AssertITextFailVeraPdfValid(filename, PdfUAExceptionMessageConstants.TEXT_STRING_USES_UNICODE_PUA
+                );
         }
 
         [NUnit.Framework.TestCaseSource("PrivateUseAreaSymbols")]
@@ -120,7 +122,8 @@ namespace iText.Pdfua.Checkers {
             }
             );
             // VeraPdf doesn't fail because they mistakenly don't check all the PdfString entries in the document.
-            framework.AssertOnlyITextFail(filename, PdfUAExceptionMessageConstants.TEXT_STRING_USES_UNICODE_PUA);
+            framework.AssertITextFailVeraPdfValid(filename, PdfUAExceptionMessageConstants.TEXT_STRING_USES_UNICODE_PUA
+                );
         }
 
         [NUnit.Framework.TestCaseSource("PrivateUseAreaSymbols")]

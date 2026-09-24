@@ -22,11 +22,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
-using Microsoft.Extensions.Logging;
 using iText.Bouncycastleconnector;
-using iText.Commons;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Digest;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Crypto;
 using iText.Kernel.Exceptions;
@@ -34,10 +33,10 @@ using iText.Kernel.Logs;
 
 namespace iText.Kernel.Crypto.Securityhandler {
     public abstract class SecurityHandler {
-        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
-
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Crypto.Securityhandler.SecurityHandler
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Crypto.Securityhandler.SecurityHandler
             ));
+
+        private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
         /// <summary>The global encryption key</summary>
         protected internal byte[] mkey = new byte[0];
@@ -130,7 +129,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
             try {
                 md5 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateIDigest("MD5");
                 if (FACTORY.IsInApprovedOnlyMode()) {
-                    LOGGER.LogWarning(KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT);
+                    LOGGER.Warn(() => KernelLogMessageConstant.MD5_IS_NOT_FIPS_COMPLIANT);
                 }
             }
             catch (Exception e) {

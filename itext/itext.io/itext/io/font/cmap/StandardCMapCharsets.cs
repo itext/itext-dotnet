@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Commons.Internal.Runtime;
 
 namespace iText.IO.Font.Cmap {
+    /// <summary>Maintains charset encoders for standard non-identity CMaps.</summary>
     public sealed class StandardCMapCharsets {
         private static readonly IDictionary<String, CMapCharsetEncoder> encoders = new Dictionary<String, CMapCharsetEncoder
             >();
@@ -65,6 +66,13 @@ namespace iText.IO.Font.Cmap {
             RegisterHV("UniKS-UTF16", UTF16_ENCODER);
         }
 
+        /// <summary>Retrieves the encoder registered for a standard CMap.</summary>
+        /// <param name="stdCmapName">the standard CMap name</param>
+        /// <returns>
+        /// the registered encoder, or
+        /// <see langword="null"/>
+        /// when none is enabled
+        /// </returns>
         public static CMapCharsetEncoder GetEncoder(String stdCmapName) {
             return encoders.Get(stdCmapName);
         }

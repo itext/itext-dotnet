@@ -27,29 +27,29 @@ using iText.Test;
 namespace iText.Svg.Googlecharts {
     [NUnit.Framework.Category("IntegrationTest")]
     public class SteppedAreaChartTest : SvgIntegrationTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/svg/googlecharts/SteppedAreaChartsTest/";
 
-        public static readonly String destinationFolder = TestUtil.GetOutputPath() + "/svg/googlecharts/SteppedAreaChartsTest/";
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/svg/googlecharts/SteppedAreaChartsTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            ITextTest.CreateDestinationFolder(destinationFolder);
+            ITextTest.CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
         [NUnit.Framework.Test]
         public virtual void SteppedAreaChart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "steppedAreaChart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "steppedAreaChart");
         }
 
         [NUnit.Framework.Test]
         public virtual void SteppedArea2Chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "steppedArea2Chart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "steppedArea2Chart");
         }
 
         [NUnit.Framework.Test]
         public virtual void SteppedArea3Chart() {
-            ConvertAndCompare(sourceFolder, destinationFolder, "steppedArea3Chart");
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "steppedArea3Chart");
         }
     }
 }

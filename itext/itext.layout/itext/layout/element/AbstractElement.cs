@@ -116,6 +116,50 @@ namespace iText.Layout.Element {
             return (T)(Object)this;
         }
 
+        /// <summary>
+        /// Adds a new style that contains only those properties from the given style
+        /// that are not already defined on this element (either directly or via
+        /// previously added styles).
+        /// </summary>
+        /// <remarks>
+        /// Adds a new style that contains only those properties from the given style
+        /// that are not already defined on this element (either directly or via
+        /// previously added styles).
+        /// <para />
+        /// Properties that are already present are ignored. If no properties are added,
+        /// this method leaves the element unchanged.
+        /// </remarks>
+        /// <param name="style">the source style to copy absent properties from</param>
+        /// <returns>this element</returns>
+        /// <seealso cref="AbstractElement{T}.AddStyle(iText.Layout.Style)"/>
+        public virtual T AddStyleIfAbsent(Style style) {
+            if (style == null) {
+                throw new ArgumentException("Style can not be null.");
+            }
+            if (styles == null) {
+                styles = new LinkedHashSet<Style>();
+            }
+            Style newStyle = new Style();
+            bool hasAbsentProperties = false;
+            foreach (int property in style.GetOwnProperties().Keys) {
+                if (!HasProperty(property)) {
+                    newStyle.SetProperty(property, style.GetProperty<Object>(property));
+                    hasAbsentProperties = true;
+                }
+            }
+            if (hasAbsentProperties) {
+                styles.Add(newStyle);
+            }
+            return (T)(Object)this;
+        }
+
+        /// <summary>Gets the styles added to this element.</summary>
+        /// <returns>unmodifiable styles set or an empty set if no styles were added</returns>
+        public virtual ICollection<Style> GetStyles() {
+            return styles == null ? JavaCollectionsUtil.EmptySet<Style>() : JavaCollectionsUtil.UnmodifiableSet<Style>
+                ((LinkedHashSet<Style>)styles);
+        }
+
         /// <summary>Gets the child elements of this elements</summary>
         /// <returns>a list of children</returns>
         public virtual IList<IElement> GetChildren() {

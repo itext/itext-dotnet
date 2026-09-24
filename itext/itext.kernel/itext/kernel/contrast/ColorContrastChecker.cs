@@ -23,8 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Logs;
@@ -54,7 +53,7 @@ namespace iText.Kernel.Contrast {
     /// for details.
     /// </remarks>
     public class ColorContrastChecker : IValidationChecker {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Contrast.ColorContrastChecker
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Contrast.ColorContrastChecker
             ));
 
         /// <summary>Flag indicating whether to analyze contrast at the individual glyph level.</summary>
@@ -203,7 +202,7 @@ namespace iText.Kernel.Contrast {
         /// </remarks>
         private void LogWarningIfBothChecksDisabled() {
             if (!checkWcagAA && !checkWcagAAA) {
-                LOGGER.LogWarning(KernelLogMessageConstant.BOTH_WCAG_AA_AND_AAA_COMPLIANCE_CHECKS_DISABLED);
+                LOGGER.Warn(() => KernelLogMessageConstant.BOTH_WCAG_AA_AND_AAA_COMPLIANCE_CHECKS_DISABLED);
             }
         }
 
@@ -244,11 +243,10 @@ namespace iText.Kernel.Contrast {
                         String message = GenerateMessage(isCompliantAAA, isCompliantAA, contrastResult, overlappingArea.GetContrastRatio
                             ());
                         if (this.throwExceptionOnFailure) {
-                            message = "Color contrast check failed: " + message;
-                            throw new PdfException(message);
+                            throw new PdfException("Color contrast check failed: " + message);
                         }
                         else {
-                            LOGGER.LogWarning(message);
+                            LOGGER.Warn(() => message);
                         }
                     }
                 }

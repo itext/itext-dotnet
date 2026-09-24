@@ -1,30 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
-  <PropertyGroup Label="Configuration">
-    <SignAssembly>True</SignAssembly>
-    <DelaySign>False</DelaySign>
-    <WarningLevel>0</WarningLevel>
-  </PropertyGroup>
+  <!-- The .csrpoj file uses ../Directory.Build.props as a source for some configurations -->
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>itext.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <ApplicationIcon />
-    <OutputTypeEx>library</OutputTypeEx>
-    <StartupObject />
     <AssemblyName>itext.forms.tests</AssemblyName>
-    <RootNamespace />
-  </PropertyGroup>
-  <PropertyGroup>
-    <NoWarn>1701;1702;1591;1570;1572;1573;1574;1580;1584;1658</NoWarn>
-    <!-- TODO DEVSIX-9075: remove this suppression -->
-    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
   </PropertyGroup>
  <ItemGroup>
     <ProjectReference Include="..\..\itext\itext.forms\itext.forms.csproj" />
-    <ProjectReference Include="..\..\itext\itext.io\itext.io.csproj" />
-    <ProjectReference Include="..\..\itext\itext.kernel\itext.kernel.csproj" />
-    <ProjectReference Include="..\..\itext\itext.layout\itext.layout.csproj" />
     <ProjectReference Include="..\..\itext\itext.pdftest\itext.pdftest.csproj" />
     <ProjectReference Include="..\..\itext\itext.font-asian\itext.font-asian.csproj" />
     <ProjectReference Include="..\..\itext\itext.bouncy-castle-adapter\itext.bouncy-castle-adapter.csproj" />

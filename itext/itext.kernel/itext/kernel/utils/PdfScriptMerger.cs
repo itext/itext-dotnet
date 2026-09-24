@@ -21,8 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Logs;
 using iText.Kernel.Pdf;
@@ -30,7 +29,7 @@ using iText.Kernel.Pdf;
 namespace iText.Kernel.Utils {
     /// <summary>Utility class which provides functionality to merge ECMA scripts from pdf documents</summary>
     public class PdfScriptMerger {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(PdfScriptMerger));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(PdfScriptMerger));
 
         private static readonly ICollection<PdfName> allowedAAEntries = JavaCollectionsUtil.UnmodifiableSet(new HashSet
             <PdfName>(JavaUtil.ArraysAsList(PdfName.WC, PdfName.WS, PdfName.DS, PdfName.WP)));
@@ -62,7 +61,7 @@ namespace iText.Kernel.Utils {
             }
             foreach (KeyValuePair<PdfName, PdfObject> entry in sourceAA.EntrySet()) {
                 if (destinationAA.ContainsKey(entry.Key)) {
-                    LOGGER.LogError(MessageFormatUtil.Format(KernelLogMessageConstant.CANNOT_MERGE_ENTRY, entry.Key));
+                    LOGGER.Error(() => MessageFormatUtil.Format(KernelLogMessageConstant.CANNOT_MERGE_ENTRY, entry.Key));
                     return;
                 }
                 if (!allowedAAEntries.Contains(entry.Key)) {
@@ -88,7 +87,8 @@ namespace iText.Kernel.Utils {
             }
             PdfObject destinationOpenAction = destination.GetCatalog().GetPdfObject().Get(PdfName.OpenAction);
             if (destinationOpenAction != null) {
-                LOGGER.LogError(MessageFormatUtil.Format(KernelLogMessageConstant.CANNOT_MERGE_ENTRY, PdfName.OpenAction));
+                LOGGER.Error(() => MessageFormatUtil.Format(KernelLogMessageConstant.CANNOT_MERGE_ENTRY, PdfName.OpenAction
+                    ));
                 return;
             }
             destination.GetCatalog().GetPdfObject().Put(PdfName.OpenAction, CopyECMAScriptActionsDictionary(destination
@@ -107,7 +107,8 @@ namespace iText.Kernel.Utils {
                 );
             if ((destinationNamesDict != null && destinationNamesDict.Get(PdfName.JavaScript) != null) || destination.
                 GetCatalog().NameTreeContainsKey(PdfName.JavaScript)) {
-                LOGGER.LogError(MessageFormatUtil.Format(KernelLogMessageConstant.CANNOT_MERGE_ENTRY, PdfName.JavaScript));
+                LOGGER.Error(() => MessageFormatUtil.Format(KernelLogMessageConstant.CANNOT_MERGE_ENTRY, PdfName.JavaScript
+                    ));
                 return;
             }
             PdfNameTree sourceTree = new PdfNameTree(source.GetCatalog(), PdfName.JavaScript);

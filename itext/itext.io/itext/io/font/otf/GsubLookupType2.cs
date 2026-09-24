@@ -29,6 +29,14 @@ namespace iText.IO.Font.Otf {
     public class GsubLookupType2 : OpenTableLookup {
         private IDictionary<int, int[]> substMap;
 
+        /// <summary>Creates a new GSUB Lookup Type 2.</summary>
+        /// <param name="openReader">the OpenType font reader</param>
+        /// <param name="lookupFlag">
+        /// specifies processing options, e.g. whether to skip base glyphs, marks or
+        /// ligatures during glyph substitution or positioning. See
+        /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+        /// </param>
+        /// <param name="subTableLocations">the sub table locations</param>
         public GsubLookupType2(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations)
             : base(openReader, lookupFlag, subTableLocations) {
             substMap = new Dictionary<int, int[]>();

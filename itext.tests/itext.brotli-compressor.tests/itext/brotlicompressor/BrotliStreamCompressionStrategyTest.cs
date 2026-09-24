@@ -550,12 +550,12 @@ namespace iText.Brotlicompressor {
             using (PdfDocument pdfDoc_1 = new PdfDocument(new PdfReader(signed))) {
                 PdfAnnotation signatureAnnot = pdfDoc_1.GetPage(1).GetAnnotations()[0];
                 PdfDictionary signatureObject = signatureAnnot.GetPdfObject();
-                Assert.AreEqual(PdfName.Widget, signatureAnnot.GetSubtype());
-                Assert.AreEqual(new PdfString("Signature1"), signatureAnnot.GetTitle());
-                Assert.AreEqual(PdfName.Sig, signatureObject.GetAsName(PdfName.FT));
+                NUnit.Framework.Assert.AreEqual(PdfName.Widget, signatureAnnot.GetSubtype());
+                NUnit.Framework.Assert.AreEqual(new PdfString("Signature1"), signatureAnnot.GetTitle());
+                NUnit.Framework.Assert.AreEqual(PdfName.Sig, signatureObject.GetAsName(PdfName.FT));
                 SignatureUtil sigUtil = new SignatureUtil(pdfDoc_1);
                 PdfPKCS7 signature1 = sigUtil.ReadSignatureData("Signature1");
-                Assert.IsTrue(signature1.VerifySignatureIntegrityAndAuthenticity());
+                NUnit.Framework.Assert.IsTrue(signature1.VerifySignatureIntegrityAndAuthenticity());
             }
         }
 

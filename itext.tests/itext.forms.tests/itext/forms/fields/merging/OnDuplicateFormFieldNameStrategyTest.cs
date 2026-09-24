@@ -49,6 +49,11 @@ namespace iText.Forms.Fields.Merging {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void AlwaysThrowExceptionOnDuplicateFormFieldName01() {
             MemoryStream baos = new MemoryStream();
@@ -76,7 +81,7 @@ namespace iText.Forms.Fields.Merging {
         [NUnit.Framework.Test]
         public virtual void IncrementFieldNameEven() {
             String destination = DESTINATION_FOLDER + "incrementFieldNameEven.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destination))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destination))) {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDocument, true, new AddIndexStrategy());
                 for (int i = 1; i < 3; i++) {
                     Rectangle rect = new Rectangle(20, 20);
@@ -108,7 +113,7 @@ namespace iText.Forms.Fields.Merging {
         [NUnit.Framework.Test]
         public virtual void TestAddFormFieldWithoutConfiguration() {
             String destination = DESTINATION_FOLDER + "testAddFormFieldWithoutConfiguration.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destination))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destination))) {
                 Rectangle rect = new Rectangle(20, 20);
                 rect.SetY(100);
                 rect.SetX(100);
@@ -136,7 +141,7 @@ namespace iText.Forms.Fields.Merging {
         [NUnit.Framework.Test]
         public virtual void IncrementFieldNameUnEven() {
             String destination = DESTINATION_FOLDER + "incrementFieldNameUnEven.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destination));
+            PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateTestPdfWriter(destination));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDocument, true, new AddIndexStrategy());
             for (int i = 1; i < 4; i++) {
                 Rectangle rect = new Rectangle(20, 20);
@@ -200,7 +205,7 @@ namespace iText.Forms.Fields.Merging {
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 4)]
         public virtual void FlattenReadOnlyAddIndexTo() {
             String destination = DESTINATION_FOLDER + "flattenReadOnlyAddIndexTo.pdf";
-            PdfWriter writer = new PdfWriter(destination);
+            PdfWriter writer = CompareTool.CreateTestPdfWriter(destination);
             PdfDocument pdfDoc = new PdfDocument(writer);
             String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext.CurrentContext
                 .TestDirectory) + "/resources/itext/forms/FormFieldFlatteningTest/";
@@ -241,8 +246,8 @@ namespace iText.Forms.Fields.Merging {
         [NUnit.Framework.Test]
         public virtual void MergeFieldsStrategyTest() {
             String destination = SOURCE_FOLDER + "mergeFieldsStrategyTest.pdf";
-            using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(destination), new PdfWriter(new MemoryStream
-                ()))) {
+            using (PdfDocument pdfDocument = new PdfDocument(CompareTool.CreateOutputReader(destination), new PdfWriter
+                (new MemoryStream()))) {
                 PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDocument, true, new MergeFieldsStrategy());
                 PdfTextFormField firstField = new TextFormFieldBuilder(pdfDocument, "samplefield").SetWidgetRectangle(new 
                     Rectangle(30, 850, 100, 30)).CreateText();
@@ -256,8 +261,9 @@ namespace iText.Forms.Fields.Merging {
         [NUnit.Framework.Test]
         public virtual void AddIndexStrategySeparatesTheFields() {
             try {
-                PdfFormCreator.SetFactory(new _PdfFormFactory_303());
-                using (PdfDocument pdfInnerDoc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "add_index.pdf"))) {
+                PdfFormCreator.SetFactory(new _PdfFormFactory_309());
+                using (PdfDocument pdfInnerDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(DESTINATION_FOLDER + "add_index.pdf"
+                    ))) {
                     Document doc = new Document(pdfInnerDoc);
                     doc.Add(new CheckBox("test1").SetBorder(new SolidBorder(ColorConstants.RED, 1)));
                     doc.Add(new CheckBox("test1").SetBorder(new SolidBorder(ColorConstants.RED, 1)));
@@ -272,8 +278,8 @@ namespace iText.Forms.Fields.Merging {
             }
         }
 
-        private sealed class _PdfFormFactory_303 : PdfFormFactory {
-            public _PdfFormFactory_303() {
+        private sealed class _PdfFormFactory_309 : PdfFormFactory {
+            public _PdfFormFactory_309() {
             }
 
             public override PdfAcroForm GetAcroForm(PdfDocument document, bool createIfNotExist) {

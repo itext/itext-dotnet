@@ -21,13 +21,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Utils;
 
 namespace iText.Kernel.Pdf {
     public abstract class PdfPrimitiveObject : PdfObject {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.PdfPrimitiveObject));
+
         protected internal byte[] content = null;
 
         protected internal bool directOnly;
@@ -63,23 +64,21 @@ namespace iText.Kernel.Pdf {
         protected internal abstract void GenerateContent();
 
         public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference) {
-            if (!directOnly) {
-                return base.MakeIndirect(document, reference);
+            if (directOnly) {
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
+                return this;
             }
             else {
-                ILogger logger = ITextLogManager.GetLogger(typeof(PdfObject));
-                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
+                return base.MakeIndirect(document, reference);
             }
-            return this;
         }
 
         protected internal override PdfObject SetIndirectReference(PdfIndirectReference indirectReference) {
-            if (!directOnly) {
-                base.SetIndirectReference(indirectReference);
+            if (directOnly) {
+                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
             }
             else {
-                ILogger logger = ITextLogManager.GetLogger(typeof(PdfObject));
-                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
+                base.SetIndirectReference(indirectReference);
             }
             return this;
         }
@@ -97,8 +96,10 @@ namespace iText.Kernel.Pdf {
                 if (content[i] > o.content[i]) {
                     return 1;
                 }
-                if (content[i] < o.content[i]) {
-                    return -1;
+                else {
+                    if (content[i] < o.content[i]) {
+                        return -1;
+                    }
                 }
             }
             return JavaUtil.IntegerCompare(content.Length, o.content.Length);

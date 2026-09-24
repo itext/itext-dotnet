@@ -26,6 +26,7 @@ using System.Text;
 using iText.Commons.Internal.Runtime;
 
 namespace iText.IO.Font.Otf {
+    /// <summary>Represents a mutable glyph sequence used during OpenType layout.</summary>
     public class GlyphLine {
         private int start;
 
@@ -33,10 +34,13 @@ namespace iText.IO.Font.Otf {
 
         private int idx;
 
+        /// <summary>Stores glyphs.</summary>
         protected internal IList<Glyph> glyphs;
 
+        /// <summary>Stores actual text.</summary>
         protected internal IList<GlyphLine.ActualText> actualText;
 
+        /// <summary>Creates a new empty line of Glyphs.</summary>
         public GlyphLine() {
             this.glyphs = new List<Glyph>();
         }
@@ -151,6 +155,8 @@ namespace iText.IO.Font.Otf {
             return str.ToString();
         }
 
+        /// <summary>Returns a string representation of this glyph.</summary>
+        /// <returns>the requested result</returns>
         public override String ToString() {
             return ToUnicodeString(start, end);
         }
@@ -191,6 +197,8 @@ namespace iText.IO.Font.Otf {
             }
         }
 
+        /// <summary>Updates the glyphs.</summary>
+        /// <param name="replacementGlyphs">the replacement glyphs</param>
         public virtual void SetGlyphs(IList<Glyph> replacementGlyphs) {
             glyphs = new List<Glyph>(replacementGlyphs);
             start = 0;
@@ -244,10 +252,21 @@ namespace iText.IO.Font.Otf {
             end = other.GetEnd();
         }
 
+        /// <summary>Returns the number of glyphs in this line.</summary>
+        /// <returns>the number of glyphs</returns>
         public virtual int Size() {
             return glyphs.Count;
         }
 
+        /// <summary>Applies the many-to-one glyph substitution.</summary>
+        /// <param name="tableReader">the table reader</param>
+        /// <param name="lookupFlag">
+        /// specifies processing options, e.g. whether to skip base glyphs, marks or
+        /// ligatures during glyph substitution or positioning. See
+        /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+        /// </param>
+        /// <param name="rightPartLen">the right part length</param>
+        /// <param name="substitutionGlyphIndex">the substitution glyph index</param>
         public virtual void SubstituteManyToOne(OpenTypeFontTableReader tableReader, int lookupFlag, int rightPartLen
             , int substitutionGlyphIndex) {
             OpenTableLookup.GlyphIndexer gidx = new OpenTableLookup.GlyphIndexer();
@@ -285,6 +304,9 @@ namespace iText.IO.Font.Otf {
             end -= rightPartLen;
         }
 
+        /// <summary>Applies the one-to-one glyph substitution.</summary>
+        /// <param name="tableReader">the table reader</param>
+        /// <param name="substitutionGlyphIndex">the substitution glyph index</param>
         public virtual void SubstituteOneToOne(OpenTypeFontTableReader tableReader, int substitutionGlyphIndex) {
             Glyph oldGlyph = glyphs[idx];
             Glyph newGlyph = new Glyph(tableReader.GetGlyph(substitutionGlyphIndex));
@@ -304,6 +326,9 @@ namespace iText.IO.Font.Otf {
             glyphs[idx] = newGlyph;
         }
 
+        /// <summary>Applies the one-to-many glyph substitution.</summary>
+        /// <param name="tableReader">the table reader</param>
+        /// <param name="substGlyphIds">the substitution glyph ids</param>
         public virtual void SubstituteOneToMany(OpenTypeFontTableReader tableReader, int[] substGlyphIds) {
             //sequence length shall be at least 1
             int substCode = substGlyphIds[0];
@@ -357,6 +382,10 @@ namespace iText.IO.Font.Otf {
             }
         }
 
+        /// <summary>Updates the actual text.</summary>
+        /// <param name="left">the start index</param>
+        /// <param name="right">the end index</param>
+        /// <param name="text">the text</param>
         public virtual void SetActualText(int left, int right, String text) {
             if (this.actualText == null) {
                 this.actualText = new List<GlyphLine.ActualText>(glyphs.Count);
@@ -438,10 +467,19 @@ namespace iText.IO.Font.Otf {
             }
         }
 
+        /// <summary>Represents the glyph line filter.</summary>
         public interface IGlyphLineFilter {
+            /// <summary>Determines whether a glyph is retained in a filtered line.</summary>
+            /// <param name="glyph">the glyph to inspect</param>
+            /// <returns>
+            /// 
+            /// <see langword="true"/>
+            /// if the glyph is accepted
+            /// </returns>
             bool Accept(Glyph glyph);
         }
 
+        /// <summary>Represents the glyph line part.</summary>
         public class GlyphLinePart {
             private int start;
 
@@ -530,9 +568,12 @@ namespace iText.IO.Font.Otf {
             }
         }
 
+        /// <summary>Represents the actual text.</summary>
         protected internal class ActualText {
             private readonly String value;
 
+            /// <summary>Creates a new actual text.</summary>
+            /// <param name="value">the value</param>
             public ActualText(String value) {
                 this.value = value;
             }

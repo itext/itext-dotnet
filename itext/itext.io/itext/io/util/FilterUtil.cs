@@ -83,6 +83,11 @@ namespace iText.IO.Util {
             System.Array.Copy(outp, 0, inflated, 0, Math.Min(outp.Length, inflated.Length));
         }
 
+        /// <summary>
+        /// Wraps an input stream in an inflater stream.
+        /// </summary>
+        /// <param name="input">the compressed input stream</param>
+        /// <returns>a stream that decompresses data read from <see langword="input"/></returns>
         public static Stream GetInflaterInputStream(Stream input) {
             return new ZInflaterInputStream(input);
         }

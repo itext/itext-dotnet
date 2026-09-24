@@ -21,7 +21,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using iText.StyledXmlParser.Node;
+using iText.StyledXmlParser.Node.Impl.Jsoup.Node;
+using iText.Svg;
 using iText.Svg.Exceptions;
+using iText.Svg.Renderers;
 using iText.Test;
 
 namespace iText.Svg.Renderers.Factories {
@@ -33,6 +37,41 @@ namespace iText.Svg.Renderers.Factories {
             Exception e = NUnit.Framework.Assert.Catch(typeof(SvgProcessingException), () => nodeRendererFactory.CreateSvgNodeRendererForTag
                 (null, null));
             NUnit.Framework.Assert.AreEqual(SvgExceptionMessageConstant.TAG_PARAMETER_NULL, e.Message);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MaskRendererDoesNotHaveParentTest() {
+            ISvgNodeRendererFactory nodeRendererFactory = new DefaultSvgNodeRendererFactory();
+            ISvgNodeRenderer parent = nodeRendererFactory.CreateSvgNodeRendererForTag(CreateElementNode(SvgConstants.Tags
+                .G), null);
+            ISvgNodeRenderer mask = nodeRendererFactory.CreateSvgNodeRendererForTag(CreateElementNode(SvgConstants.Tags
+                .MASK), parent);
+            NUnit.Framework.Assert.IsNull(mask.GetParent());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SymbolRendererDoesNotHaveParentTest() {
+            ISvgNodeRendererFactory nodeRendererFactory = new DefaultSvgNodeRendererFactory();
+            ISvgNodeRenderer parent = nodeRendererFactory.CreateSvgNodeRendererForTag(CreateElementNode(SvgConstants.Tags
+                .G), null);
+            ISvgNodeRenderer symbol = nodeRendererFactory.CreateSvgNodeRendererForTag(CreateElementNode(SvgConstants.Tags
+                .SYMBOL), parent);
+            NUnit.Framework.Assert.IsNull(symbol.GetParent());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DrawableRendererHasParentTest() {
+            ISvgNodeRendererFactory nodeRendererFactory = new DefaultSvgNodeRendererFactory();
+            ISvgNodeRenderer parent = nodeRendererFactory.CreateSvgNodeRendererForTag(CreateElementNode(SvgConstants.Tags
+                .G), null);
+            ISvgNodeRenderer rectangle = nodeRendererFactory.CreateSvgNodeRendererForTag(CreateElementNode(SvgConstants.Tags
+                .RECT), parent);
+            NUnit.Framework.Assert.AreSame(parent, rectangle.GetParent());
+        }
+
+        private static IElementNode CreateElementNode(String tagName) {
+            return new JsoupElementNode(new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
+                .ValueOf(tagName), ""));
         }
     }
 }

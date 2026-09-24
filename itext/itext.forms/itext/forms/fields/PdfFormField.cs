@@ -23,10 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Datastructures;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Forms.Fields.Properties;
 using iText.Forms.Logs;
@@ -82,8 +81,7 @@ namespace iText.Forms.Fields {
         /// <summary>List of all allowable keys in form fields.</summary>
         private static readonly ICollection<PdfName> FORM_FIELD_KEYS = new HashSet<PdfName>();
 
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Forms.Fields.PdfFormField)
-            );
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Forms.Fields.PdfFormField));
 
         protected internal String text;
 
@@ -154,7 +152,7 @@ namespace iText.Forms.Fields {
             else {
                 foreach (PdfObject kid in kidsArray) {
                     if (kid.IsFlushed()) {
-                        LOGGER.LogInformation(FormsLogMessageConstants.FORM_FIELD_WAS_FLUSHED);
+                        LOGGER.Info(() => FormsLogMessageConstants.FORM_FIELD_WAS_FLUSHED);
                         continue;
                     }
                     AbstractPdfFormField childField = iText.Forms.Fields.PdfFormField.MakeFormFieldOrAnnotation(kid, GetDocument
@@ -163,7 +161,7 @@ namespace iText.Forms.Fields {
                         this.SetChildField(childField);
                     }
                     else {
-                        LOGGER.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.CANNOT_CREATE_FORMFIELD, pdfObject.GetIndirectReference
+                        LOGGER.Warn(() => MessageFormatUtil.Format(FormsLogMessageConstants.CANNOT_CREATE_FORMFIELD, pdfObject.GetIndirectReference
                             () == null ? pdfObject : (PdfObject)pdfObject.GetIndirectReference()));
                     }
                 }
@@ -504,7 +502,7 @@ namespace iText.Forms.Fields {
         /// <returns>the edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField SetValue(String value, String displayValue) {
             if (value == null) {
-                LOGGER.LogWarning(FormsLogMessageConstants.FIELD_VALUE_CANNOT_BE_NULL);
+                LOGGER.Warn(() => FormsLogMessageConstants.FIELD_VALUE_CANNOT_BE_NULL);
                 return this;
             }
             // Not valid for checkboxes and radiobuttons
@@ -1474,7 +1472,7 @@ namespace iText.Forms.Fields {
                             pdfStream.WriteSpace().WriteFloats(textColor.GetColorValue()).WriteSpace().WriteBytes(k);
                         }
                         else {
-                            LOGGER.LogError(FormsLogMessageConstants.UNSUPPORTED_COLOR_IN_DA);
+                            LOGGER.Error(() => FormsLogMessageConstants.UNSUPPORTED_COLOR_IN_DA);
                         }
                     }
                 }
@@ -1512,7 +1510,7 @@ namespace iText.Forms.Fields {
 
         private iText.Forms.Fields.PdfFormField SetFieldValue(String value, bool generateAppearance) {
             if (value == null) {
-                LOGGER.LogWarning(FormsLogMessageConstants.FIELD_VALUE_CANNOT_BE_NULL);
+                LOGGER.Warn(() => FormsLogMessageConstants.FIELD_VALUE_CANNOT_BE_NULL);
                 return this;
             }
             // First, get rid of displayValue

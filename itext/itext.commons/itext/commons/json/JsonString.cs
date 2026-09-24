@@ -24,7 +24,7 @@ using System;
 using iText.Commons.Utils;
 
 namespace iText.Commons.Json {
-    /// <summary>Class representing json string value.</summary>
+    /// <summary>Class representing JSON string value.</summary>
     public sealed class JsonString : JsonValue {
         private readonly String value;
 

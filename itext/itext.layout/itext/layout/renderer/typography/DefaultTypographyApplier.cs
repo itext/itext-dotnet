@@ -23,12 +23,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Actions.Sequence;
 using iText.Commons.Datastructures;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
@@ -38,7 +37,7 @@ namespace iText.Layout.Renderer.Typography {
     public sealed class DefaultTypographyApplier : AbstractTypographyApplier {
         private const String SCRIPT = "script";
 
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.Typography.DefaultTypographyApplier
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Renderer.Typography.DefaultTypographyApplier
             ));
 
         private static readonly ConcurrentWeakMap<SequenceId, ICollection<String>> IDS_WITH_WARNING = new ConcurrentWeakMap
@@ -127,7 +126,7 @@ namespace iText.Layout.Renderer.Typography {
         }
 
         private static void LogWarning(SequenceId id, String script, params String[] messageParts) {
-            if (LOGGER.IsEnabled(LogLevel.Warning)) {
+            if (LOGGER.IsWarnEnabled()) {
                 if (IDS_WITH_WARNING.ContainsKey(id)) {
                     if (IDS_WITH_WARNING.Get(id).Contains(script)) {
                         return;
@@ -141,13 +140,13 @@ namespace iText.Layout.Renderer.Typography {
                 foreach (String part in messageParts) {
                     message.Append(part).Append(' ');
                 }
-                LOGGER.LogWarning(MessageFormatUtil.Format(LayoutLogMessageConstant.TYPOGRAPHY_NOT_FOUND_WARNING, message)
+                LOGGER.Warn(() => MessageFormatUtil.Format(LayoutLogMessageConstant.TYPOGRAPHY_NOT_FOUND_WARNING, message)
                     );
             }
         }
 
         private static void LogInfo(SequenceId id, String script, String features) {
-            if (LOGGER.IsEnabled(LogLevel.Information)) {
+            if (LOGGER.IsInfoEnabled()) {
                 if ((IDS_WITH_WARNING.ContainsKey(id) && IDS_WITH_WARNING.Get(id).Contains(script)) || (IDS_WITH_INFO.ContainsKey
                     (id) && IDS_WITH_INFO.Get(id).Contains(script))) {
                     return;
@@ -158,8 +157,8 @@ namespace iText.Layout.Renderer.Typography {
                 else {
                     IDS_WITH_INFO.Put(id, new HashSet<String>(JavaCollectionsUtil.Singleton(script)));
                 }
-                LOGGER.LogInformation(MessageFormatUtil.Format(LayoutLogMessageConstant.TYPOGRAPHY_NOT_FOUND_INFO, script, 
-                    features));
+                LOGGER.Info(() => MessageFormatUtil.Format(LayoutLogMessageConstant.TYPOGRAPHY_NOT_FOUND_INFO, script, features
+                    ));
             }
         }
     }

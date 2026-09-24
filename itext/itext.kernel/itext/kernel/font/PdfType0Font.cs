@@ -24,11 +24,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Datastructures;
 using iText.Commons.Exceptions;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
@@ -40,6 +39,8 @@ using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Font {
     public class PdfType0Font : PdfFont {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Font.PdfType0Font));
+
         /// <summary>This is the default encoding to use.</summary>
         private const String DEFAULT_ENCODING = "";
 
@@ -149,8 +150,7 @@ namespace iText.Kernel.Font {
                     toUnicodeCMap = FontUtil.GetToUnicodeFromUniMap(uniMap);
                     if (toUnicodeCMap == null) {
                         toUnicodeCMap = FontUtil.GetToUnicodeFromUniMap(PdfEncodings.IDENTITY_H);
-                        ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
-                        logger.LogError(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.UNKNOWN_CMAP, uniMap));
+                        LOGGER.Error(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.UNKNOWN_CMAP, uniMap));
                     }
                 }
                 fontProgram = DocTrueTypeFont.CreateFontProgram(cidFont, toUnicodeCMap);
@@ -199,8 +199,7 @@ namespace iText.Kernel.Font {
                     cidFontType = CID_FONT_TYPE_2;
                 }
                 else {
-                    ITextLogManager.GetLogger(GetType()).LogError(iText.IO.Logs.IoLogMessageConstant.FAILED_TO_DETERMINE_CID_FONT_SUBTYPE
-                        );
+                    LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.FAILED_TO_DETERMINE_CID_FONT_SUBTYPE);
                 }
             }
             utilizedGlyphs = new SortedDictionary<int, Glyph>();
@@ -662,16 +661,17 @@ namespace iText.Kernel.Font {
                     }
                 }
                 if (glyph == null) {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
-                    if (logger.IsEnabled(LogLevel.Warning)) {
+                    int logIndex = i;
+                    LOGGER.Warn(() => {
                         StringBuilder failedCodes = new StringBuilder();
-                        for (int codeLength = 1; codeLength <= MAX_CID_CODE_LENGTH && i + codeLength <= charCodesSequence.Length; 
-                            codeLength++) {
-                            failedCodes.Append((int)charCodesSequence[i + codeLength - 1]).Append(" ");
+                        for (int codeLength = 1; codeLength <= MAX_CID_CODE_LENGTH && logIndex + codeLength <= charCodesSequence.Length
+                            ; codeLength++) {
+                            failedCodes.Append((int)charCodesSequence[logIndex + codeLength - 1]).Append(" ");
                         }
-                        logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE
-                            , failedCodes.ToString()));
+                        return MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, failedCodes
+                            .ToString());
                     }
+                    );
                     i += codeSpaceMatchedLength - 1;
                 }
                 if (glyph == null || glyph.GetChars() == null) {
@@ -831,8 +831,7 @@ namespace iText.Kernel.Font {
                                 ttfBytes = subsetData.GetSecond();
                             }
                             catch (iText.IO.Exceptions.IOException) {
-                                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
-                                logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.FONT_SUBSET_ISSUE);
+                                LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.FONT_SUBSET_ISSUE);
                                 ttfBytes = null;
                             }
                         }
@@ -910,17 +909,16 @@ namespace iText.Kernel.Font {
             cidInfo.Put(PdfName.Ordering, new PdfString(cmapEncoding.GetOrdering()));
             cidInfo.Put(PdfName.Supplement, new PdfNumber(cmapEncoding.GetSupplement()));
             cidFont.Put(PdfName.CIDSystemInfo, cidInfo);
-            if (!vertical) {
+            if (vertical) {
+                // TODO DEVSIX-31
+                LOGGER.Warn(() => "Vertical writing has not been implemented yet.");
+            }
+            else {
                 cidFont.Put(PdfName.DW, new PdfNumber(FontProgram.DEFAULT_WIDTH));
                 PdfObject widthsArray = GenerateWidthsArray();
                 if (widthsArray != null) {
                     cidFont.Put(PdfName.W, widthsArray);
                 }
-            }
-            else {
-                // TODO DEVSIX-31
-                ILogger logger = ITextLogManager.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
-                logger.LogWarning("Vertical writing has not been implemented yet.");
             }
             return cidFont;
         }

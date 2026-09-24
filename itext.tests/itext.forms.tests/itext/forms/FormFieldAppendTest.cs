@@ -21,7 +21,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using System.IO;
 using iText.Forms.Fields;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -40,6 +39,11 @@ namespace iText.Forms {
             CreateDestinationFolder(destinationFolder);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(destinationFolder);
+        }
+
         [NUnit.Framework.Test]
         public virtual void FormFillingAppend_form_empty_Test() {
             String srcFilename = sourceFolder + "Form_Empty.pdf";
@@ -47,15 +51,15 @@ namespace iText.Forms {
             String filename = destinationFolder + "formFillingAppend_form_empty.pdf";
             StampingProperties props = new StampingProperties();
             props.UseAppendMode();
-            PdfDocument doc = new PdfDocument(new PdfReader(srcFilename), new PdfWriter(temp), props);
+            PdfDocument doc = new PdfDocument(new PdfReader(srcFilename), CompareTool.CreateTestPdfWriter(temp), props
+                );
             PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             foreach (PdfFormField field in form.GetAllFormFields().Values) {
                 field.SetValue("Test");
             }
             doc.Close();
             Flatten(temp, filename);
-            FileInfo toDelete = new FileInfo(temp);
-            toDelete.Delete();
+            CompareTool.Cleanup(temp);
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_formFillingAppend_form_empty.pdf"
                 , destinationFolder, "diff_");
@@ -71,14 +75,15 @@ namespace iText.Forms {
             String filename = destinationFolder + "formFillingAppend_form_filled.pdf";
             StampingProperties props = new StampingProperties();
             props.UseAppendMode();
-            PdfDocument doc = new PdfDocument(new PdfReader(srcFilename), new PdfWriter(temp), props);
+            PdfDocument doc = new PdfDocument(new PdfReader(srcFilename), CompareTool.CreateTestPdfWriter(temp), props
+                );
             PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             foreach (PdfFormField field in form.GetAllFormFields().Values) {
                 field.SetValue("Different");
             }
             doc.Close();
             Flatten(temp, filename);
-            new FileInfo(temp).Delete();
+            CompareTool.Cleanup(temp);
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_formFillingAppend_form_filled.pdf"
                 , destinationFolder, "diff_");
@@ -88,7 +93,8 @@ namespace iText.Forms {
         }
 
         private void Flatten(String src, String dest) {
-            PdfDocument doc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
+            PdfDocument doc = new PdfDocument(CompareTool.CreateOutputReader(src), CompareTool.CreateTestPdfWriter(dest
+                ));
             PdfAcroForm form = PdfFormCreator.GetAcroForm(doc, true);
             form.FlattenFields();
             doc.Close();

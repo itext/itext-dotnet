@@ -79,6 +79,8 @@ namespace iText.StyledXmlParser.Css.Validate.Impl {
                 .INITIAL, CommonCssConstants.INHERIT, CommonCssConstants.NONE), new CssQuotesValidator()));
             defaultValidators.Put(CommonCssConstants.TRANSFORM, new SingleTypeDeclarationValidator(new CssTransformValidator
                 ()));
+            defaultValidators.Put(CommonCssConstants.TEXT_COMBINE_UPRIGHT, new MultiTypeDeclarationValidator(new CssEnumValidator
+                (CommonCssConstants.NONE, CommonCssConstants.ALL), inheritInitialUnsetValidator));
             defaultValidators.Put(CommonCssConstants.FONT_SIZE, new MultiTypeDeclarationValidator(new CssLengthValueValidator
                 (false), new CssPercentageValueValidator(false), relativeSizeValidator, absoluteSizeValidator));
             defaultValidators.Put(CommonCssConstants.WORD_SPACING, new MultiTypeDeclarationValidator(new CssLengthValueValidator

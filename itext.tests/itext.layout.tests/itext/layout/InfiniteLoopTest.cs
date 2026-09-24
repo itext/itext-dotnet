@@ -38,7 +38,7 @@ using iText.Test.Attributes;
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
     public class InfiniteLoopTest : ExtendedITextTest {
-        public static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+        private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/InfiniteLoopTest/";
 
         private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/layout/InfiniteLoopTest/";
@@ -50,7 +50,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.OneTimeTearDown]
         public static void AfterClass() {
-            //We need to clean this because it generate a very big pdf file which is not used.
+            // We need to clean this because it generates a very big pdf file which is not used
             CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
@@ -59,7 +59,7 @@ namespace iText.Layout {
             String outFileName = DESTINATION_FOLDER + "infiniteLoopWithPartialResult.pdf";
             DocumentProperties documentProperties = new DocumentProperties();
             documentProperties.RegisterDependency(typeof(LayoutInfiniteLoopResolver), () => new LayoutInfiniteLoopResolver
-                (10_000));
+                (100));
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName), documentProperties)) {
                 using (Document document = new Document(pdfDocument)) {
                     Paragraph paragraph = new _Paragraph_77();
@@ -78,17 +78,17 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 450)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 15)]
         public virtual void VeryBigLayoutThrowsTest() {
             String outFileName = DESTINATION_FOLDER + "veryBigLayoutThrows.pdf";
             DocumentProperties documentProperties = new DocumentProperties();
             documentProperties.RegisterDependency(typeof(LayoutInfiniteLoopResolver), () => new LayoutInfiniteLoopResolver
-                (300));
+                (10));
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName), documentProperties)) {
                 pdfDocument.SetDefaultPageSize(PageSize.A10);
                 using (Document document = new Document(pdfDocument)) {
                     Div container = new Div();
-                    for (int i = 0; i < 451; ++i) {
+                    for (int i = 0; i < 16; ++i) {
                         PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "Desert.jpg"));
                         iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 50);
                         container.Add(image);
@@ -99,17 +99,17 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 450)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 15)]
         public virtual void NotBigEnoughLayoutDoesntThrowTest() {
             String outFileName = DESTINATION_FOLDER + "notBigEnoughLayoutDoesntThrow.pdf";
             DocumentProperties documentProperties = new DocumentProperties();
             documentProperties.RegisterDependency(typeof(LayoutInfiniteLoopResolver), () => new LayoutInfiniteLoopResolver
-                (300));
+                (10));
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName), documentProperties)) {
                 pdfDocument.SetDefaultPageSize(PageSize.A10);
                 using (Document document = new Document(pdfDocument)) {
                     Div container = new Div();
-                    for (int i = 0; i < 450; ++i) {
+                    for (int i = 0; i < 15; ++i) {
                         PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "Desert.jpg"));
                         iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 50);
                         container.Add(image);
@@ -120,17 +120,17 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 600)]
+        [LogMessage(LayoutLogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 20)]
         public virtual void LimitWithKeepTogetherEvenSmallerTest() {
             String outFileName = DESTINATION_FOLDER + "limitWithKeepTogetherEvenSmaller.pdf";
             DocumentProperties documentProperties = new DocumentProperties();
             documentProperties.RegisterDependency(typeof(LayoutInfiniteLoopResolver), () => new LayoutInfiniteLoopResolver
-                (300));
+                (10));
             using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName), documentProperties)) {
                 pdfDocument.SetDefaultPageSize(PageSize.A10);
                 using (Document document = new Document(pdfDocument)) {
                     Div container = new Div();
-                    for (int i = 0; i < 301; ++i) {
+                    for (int i = 0; i < 11; ++i) {
                         PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(SOURCE_FOLDER + "Desert.jpg"));
                         iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 50);
                         image.SetProperty(Property.KEEP_TOGETHER, true);

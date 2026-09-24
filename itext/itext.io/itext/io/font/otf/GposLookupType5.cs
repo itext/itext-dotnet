@@ -31,6 +31,14 @@ namespace iText.IO.Font.Otf {
     public class GposLookupType5 : OpenTableLookup {
         private readonly IList<GposLookupType5.MarkToLigature> marksligatures;
 
+        /// <summary>Creates a new GPOS Lookup Type 5.</summary>
+        /// <param name="openReader">the OpenType font reader</param>
+        /// <param name="lookupFlag">
+        /// specifies processing options, e.g. whether to skip base glyphs, marks or
+        /// ligatures during glyph substitution or positioning. See
+        /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+        /// </param>
+        /// <param name="subTableLocations">the sub table locations</param>
         public GposLookupType5(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations)
             : base(openReader, lookupFlag, subTableLocations) {
             marksligatures = new List<GposLookupType5.MarkToLigature>();
@@ -129,11 +137,15 @@ namespace iText.IO.Font.Otf {
             marksligatures.Add(markToLigature);
         }
 
+        /// <summary>Represents the mark to ligature mapping.</summary>
         public class MarkToLigature {
+            /// <summary>Maps mark glyph identifiers to their mark records.</summary>
             public readonly IDictionary<int, OtfMarkRecord> marks = new Dictionary<int, OtfMarkRecord>();
 
-            // Glyph id to list of components, each component has a separate list of attachment points
-            // defined for different mark classes
+            /// <summary>
+            /// Glyph id to list of components, each component has a separate list of attachment points
+            /// defined for different mark classes
+            /// </summary>
             public readonly IDictionary<int, IList<GposAnchor[]>> ligatures = new Dictionary<int, IList<GposAnchor[]>>
                 ();
         }

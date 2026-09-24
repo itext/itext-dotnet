@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 
 namespace iText.Commons.Json {
-    /// <summary>Class representing generic json value.</summary>
+    /// <summary>Class representing generic JSON value.</summary>
     public abstract class JsonValue {
         /// <summary>
         /// Creates a new
@@ -59,6 +59,19 @@ namespace iText.Commons.Json {
         /// </returns>
         public String ToJson() {
             return JsonValueConverter.ToJson(this);
+        }
+
+        /// <summary>
+        /// Converts this
+        /// <see cref="JsonValue"/>
+        /// into a prettified JSON string with indentation and line breaks.
+        /// </summary>
+        /// <returns>
+        /// prettified JSON string representing this
+        /// <see cref="JsonValue"/>
+        /// </returns>
+        public String ToPrettifiedJson() {
+            return JsonValueConverter.ToPrettifiedJson(this);
         }
     }
 }

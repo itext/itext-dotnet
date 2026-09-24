@@ -21,26 +21,37 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
+using iText.Commons.Logs;
 using iText.IO.Codec;
 using iText.IO.Exceptions;
 using iText.IO.Source;
 
 namespace iText.IO.Image {
+    /// <summary>Image data for a selected page of a JBIG2 image.</summary>
     public class Jbig2ImageData : ImageData {
         private int page;
 
+        /// <summary>Creates JBIG2 image data to be loaded from a URL.</summary>
+        /// <param name="url">
+        /// source URL, not
+        /// <see langword="null"/>
+        /// </param>
+        /// <param name="page">one-based JBIG2 page number</param>
         protected internal Jbig2ImageData(Uri url, int page)
             : base(url, ImageType.JBIG2) {
             this.page = page;
         }
 
+        /// <summary>Creates JBIG2 image data from encoded bytes.</summary>
+        /// <param name="bytes">encoded JBIG2 bytes; the array is retained</param>
+        /// <param name="page">one-based JBIG2 page number</param>
         protected internal Jbig2ImageData(byte[] bytes, int page)
             : base(bytes, ImageType.JBIG2) {
             this.page = page;
         }
 
+        /// <summary>Gets the selected page number.</summary>
+        /// <returns>one-based JBIG2 page number</returns>
         public virtual int GetPage() {
             return page;
         }
@@ -71,9 +82,15 @@ namespace iText.IO.Image {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
+        /// <returns>
+        /// 
+        /// <see langword="false"/>
+        /// , because JBIG2 images require a JBIG2Decode filter
+        /// </returns>
         public override bool CanImageBeInline() {
-            ILogger logger = ITextLogManager.GetLogger(typeof(ImageData));
-            logger.LogWarning(iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER);
+            LazyLogger logger = new LazyLogger(typeof(ImageData));
+            logger.Warn(() => iText.IO.Logs.IoLogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER);
             return false;
         }
     }

@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Forms.Fields;
 using iText.Forms.Logs;
@@ -45,6 +44,8 @@ namespace iText.Forms {
     /// in case of the reusing of the same instance.
     /// </remarks>
     public class PdfPageFormCopier : IPdfPageFormCopier {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(PdfPageFormCopier));
+
         private PdfAcroForm formFrom;
 
         private PdfAcroForm formTo;
@@ -54,8 +55,6 @@ namespace iText.Forms {
         private PdfDocument documentTo;
 
         private readonly ICollection<PdfObject> collectedFieldObjects = new LinkedHashSet<PdfObject>();
-
-        private static ILogger logger = ITextLogManager.GetLogger(typeof(PdfPageFormCopier));
 
         public virtual void Copy(PdfPage fromPage, PdfPage toPage) {
             if (documentFrom != fromPage.GetDocument()) {
@@ -87,7 +86,7 @@ namespace iText.Forms {
             try {
                 foreach (PdfAnnotation annot in annots) {
                     if (annot.GetSubtype() == null) {
-                        logger.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.ANNOTATION_WITHOUT_SUBTYPE_NOT_COPIED, 
+                        LOGGER.Warn(() => MessageFormatUtil.Format(FormsLogMessageConstants.ANNOTATION_WITHOUT_SUBTYPE_NOT_COPIED, 
                             annot.GetPdfObject().GetIndirectReference()));
                         continue;
                     }
@@ -119,7 +118,7 @@ namespace iText.Forms {
         private AbstractPdfFormField MakeFormField(PdfObject fieldDict) {
             AbstractPdfFormField field = PdfFormField.MakeFormFieldOrAnnotation(fieldDict, documentTo);
             if (field == null) {
-                logger.LogWarning(MessageFormatUtil.Format(FormsLogMessageConstants.CANNOT_CREATE_FORMFIELD, fieldDict.GetIndirectReference
+                LOGGER.Warn(() => MessageFormatUtil.Format(FormsLogMessageConstants.CANNOT_CREATE_FORMFIELD, fieldDict.GetIndirectReference
                     ()));
             }
             return field;
@@ -141,10 +140,7 @@ namespace iText.Forms {
             }
             else {
                 PdfString annotName = currentAnnot.GetPdfObject().GetAsString(PdfName.T);
-                String annotNameString = null;
-                if (annotName != null) {
-                    annotNameString = annotName.ToUnicodeString();
-                }
+                String annotNameString = annotName == null ? null : annotName.ToUnicodeString();
                 if (annotNameString != null && fieldsFrom.ContainsKey(annotNameString)) {
                     // In this piece on code we expect annotation with T field
                     // It could mean only merged form field and annotation
@@ -155,7 +151,7 @@ namespace iText.Forms {
                     }
                     if (!collectedFieldObjects.Contains(field.GetPdfObject())) {
                         if (fieldsTo.Get(annotNameString) != null) {
-                            logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, 
+                            LOGGER.Warn(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, 
                                 annotNameString));
                         }
                         collectedFieldObjects.Add(field.GetPdfObject());
@@ -172,7 +168,7 @@ namespace iText.Forms {
             PdfFormField field = CreateParentFieldCopy(annot.GetPdfObject(), documentTo);
             if (!collectedFieldObjects.Contains(field.GetPdfObject())) {
                 if (existingField != null) {
-                    logger.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, 
+                    LOGGER.Warn(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, 
                         parentName));
                 }
                 collectedFieldObjects.Add(field.GetPdfObject());

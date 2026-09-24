@@ -45,6 +45,11 @@ namespace iText.Layout.Element {
             CreateDestinationFolder(DESTINATION_FOLDER);
         }
 
+        [NUnit.Framework.OneTimeTearDown]
+        public static void AfterClass() {
+            CompareTool.Cleanup(DESTINATION_FOLDER);
+        }
+
         [NUnit.Framework.Test]
         public virtual void BasicThreeColumnsTest() {
             String filename = DESTINATION_FOLDER + "basicThreeColumnsTest.pdf";
@@ -54,7 +59,7 @@ namespace iText.Layout.Element {
             templateColumns.Add(new PointValue(150.0f));
             templateColumns.Add(new PointValue(150.0f));
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
                 for (int i = 0; i < 5; ++i) {
@@ -73,7 +78,7 @@ namespace iText.Layout.Element {
             IList<TemplateValue> templateColumns = new List<TemplateValue>();
             templateColumns.Add(new PointValue(150.0f));
             templateColumns.Add(new PointValue(150.0f));
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
                 Paragraph child = new Paragraph("First");
@@ -93,7 +98,7 @@ namespace iText.Layout.Element {
             templateColumns.Add(new PointValue(150.0f));
             templateColumns.Add(new PointValue(150.0f));
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
                 grid.Add(new Paragraph("One").SetBorder(border));
@@ -115,7 +120,7 @@ namespace iText.Layout.Element {
             templateRows.Add(new PointValue(150.0f));
             templateRows.Add(new PointValue(150.0f));
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_TEMPLATE_ROWS, templateRows);
                 grid.SetProperty(Property.GRID_FLOW, GridFlow.COLUMN);
@@ -135,7 +140,7 @@ namespace iText.Layout.Element {
             String filename = DESTINATION_FOLDER + "basicAutoColumnsTest.pdf";
             String cmpName = SOURCE_FOLDER + "cmp_basicAutoColumnsTest.pdf";
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_AUTO_COLUMNS, new PointValue(150.0f));
                 for (int i = 0; i < 5; ++i) {
@@ -152,7 +157,7 @@ namespace iText.Layout.Element {
             String filename = DESTINATION_FOLDER + "basicAutoRowsTest.pdf";
             String cmpName = SOURCE_FOLDER + "cmp_basicAutoRowsTest.pdf";
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_AUTO_ROWS, new PointValue(70.0f));
                 grid.Add(new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, "
@@ -175,7 +180,7 @@ namespace iText.Layout.Element {
             templateColumns.Add(new PointValue(100.0f));
             templateColumns.Add(new PointValue(100.0f));
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
                 Paragraph paragraph1 = new Paragraph("One").SetBorder(border);
@@ -203,7 +208,7 @@ namespace iText.Layout.Element {
             templateColumns.Add(new PointValue(100.0f));
             templateColumns.Add(new PointValue(100.0f));
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
                 Paragraph paragraph1 = new Paragraph("One").SetBorder(border);
@@ -231,7 +236,7 @@ namespace iText.Layout.Element {
             templateColumns.Add(new PointValue(100.0f));
             templateColumns.Add(new PointValue(100.0f));
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
                 Paragraph paragraph1 = new Paragraph("One").SetBorder(border);
@@ -263,7 +268,7 @@ namespace iText.Layout.Element {
             templateColumns.Add(new PointValue(100.0f));
             templateColumns.Add(new PointValue(100.0f));
             templateColumns.Add(new PointValue(100.0f));
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
@@ -299,7 +304,7 @@ namespace iText.Layout.Element {
             templateColumns.Add(new PointValue(100.0f));
             templateColumns.Add(new PointValue(100.0f));
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
                 Paragraph paragraph1 = new Paragraph("One").SetBorder(border);
@@ -326,7 +331,7 @@ namespace iText.Layout.Element {
             templateColumns.Add(new PointValue(100.0f));
             templateColumns.Add(new PointValue(100.0f));
             templateColumns.Add(new PointValue(100.0f));
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
@@ -355,7 +360,7 @@ namespace iText.Layout.Element {
             templateColumns.Add(new PointValue(100.0f));
             templateColumns.Add(new PointValue(100.0f));
             templateColumns.Add(new PointValue(100.0f));
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
@@ -392,7 +397,7 @@ namespace iText.Layout.Element {
             templateColumns.Add(new PointValue(100.0f));
             templateColumns.Add(new PointValue(100.0f));
             templateColumns.Add(new PointValue(100.0f));
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
@@ -427,7 +432,7 @@ namespace iText.Layout.Element {
             templateColumns.Add(new PointValue(100.0f));
             templateColumns.Add(new PointValue(100.0f));
             templateColumns.Add(new PointValue(100.0f));
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
@@ -473,7 +478,7 @@ namespace iText.Layout.Element {
             templateColumns.Add(MinContentValue.VALUE);
             templateColumns.Add(MinContentValue.VALUE);
             templateColumns.Add(MinContentValue.VALUE);
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
@@ -508,7 +513,7 @@ namespace iText.Layout.Element {
             templateColumns.Add(MinContentValue.VALUE);
             templateColumns.Add(MinContentValue.VALUE);
             templateColumns.Add(MinContentValue.VALUE);
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
@@ -544,7 +549,7 @@ namespace iText.Layout.Element {
             templateColumns.Add(new PercentValue(50.0f));
             templateColumns.Add(new PointValue(100.0f));
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
                 for (int i = 0; i < 5; ++i) {
@@ -565,7 +570,7 @@ namespace iText.Layout.Element {
             templateColumns.Add(new PointValue(200.0f));
             templateColumns.Add(new PointValue(200.0f));
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
                 for (int i = 0; i < 5; ++i) {
@@ -585,7 +590,7 @@ namespace iText.Layout.Element {
             templateColumns.Add(new PointValue(100.0f));
             templateColumns.Add(new PointValue(100.0f));
             templateColumns.Add(new PointValue(100.0f));
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
@@ -619,7 +624,7 @@ namespace iText.Layout.Element {
             templateColumns.Add(new PointValue(100.0f));
             templateColumns.Add(new PointValue(100.0f));
             templateColumns.Add(new PointValue(100.0f));
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetBackgroundColor(ColorConstants.GREEN);
                 SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
@@ -650,7 +655,7 @@ namespace iText.Layout.Element {
             templateColumns.Add(new PointValue(100.0f));
             templateColumns.Add(new PointValue(100.0f));
             templateColumns.Add(new PointValue(100.0f));
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
@@ -682,7 +687,7 @@ namespace iText.Layout.Element {
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
             IList<TemplateValue> templateColumns = new List<TemplateValue>();
             templateColumns.Add(MinContentValue.VALUE);
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
                 grid.Add(new Paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + "sed do eiusmod tempor incididunt ut labore et dolore"
@@ -701,7 +706,7 @@ namespace iText.Layout.Element {
             IList<TemplateValue> template = new List<TemplateValue>();
             template.Add(new PointValue(50.0f));
             template.Add(new PointValue(50.0f));
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, template);
                 grid.SetProperty(Property.GRID_TEMPLATE_ROWS, template);
@@ -731,7 +736,7 @@ namespace iText.Layout.Element {
             IList<TemplateValue> rowsTemplate = new List<TemplateValue>();
             rowsTemplate.Add(new AutoRepeatValue(true, JavaCollectionsUtil.SingletonList((GridValue)new PointValue(100.0f
                 ))));
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, columnsTemplate);
                 grid.SetProperty(Property.GRID_TEMPLATE_ROWS, rowsTemplate);
@@ -765,7 +770,7 @@ namespace iText.Layout.Element {
             rowsTemplate.Add(new AutoRepeatValue(true, JavaCollectionsUtil.SingletonList((GridValue)new PointValue(100.0f
                 ))));
             rowsTemplate.Add(new PointValue(200.0f));
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetHeight(500.0f);
                 grid.SetBackgroundColor(ColorConstants.GREEN);
@@ -788,7 +793,7 @@ namespace iText.Layout.Element {
             IList<TemplateValue> rowsTemplate = new List<TemplateValue>();
             rowsTemplate.Add(new AutoRepeatValue(true, JavaCollectionsUtil.SingletonList((GridValue)new PointValue(100.0f
                 ))));
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetBackgroundColor(ColorConstants.GREEN);
                 grid.SetHeight(500.0f);
@@ -808,7 +813,7 @@ namespace iText.Layout.Element {
             template.Add(new PointValue(50.0f));
             template.Add(new PointValue(50.0f));
             template.Add(new PointValue(50.0f));
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, template);
                 grid.SetProperty(Property.GRID_TEMPLATE_ROWS, template);
@@ -847,7 +852,7 @@ namespace iText.Layout.Element {
             template.Add(new PointValue(50.0f));
             template.Add(new PointValue(50.0f));
             template.Add(new PointValue(50.0f));
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_FLOW, GridFlow.COLUMN);
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, template);
@@ -887,7 +892,7 @@ namespace iText.Layout.Element {
             IList<TemplateValue> template = new List<TemplateValue>();
             template.Add(new FlexValue(1f));
             template.Add(new FlexValue(3f));
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_TEMPLATE_ROWS, template);
                 grid.SetProperty(Property.ROW_GAP, 20.0f);
@@ -909,7 +914,7 @@ namespace iText.Layout.Element {
             templateColumns.Add(AutoValue.VALUE);
             templateColumns.Add(new FlexValue(3f));
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
                 grid.Add(new Paragraph("Test1").SetBorder(border));
@@ -936,7 +941,7 @@ namespace iText.Layout.Element {
             templateColumns.Add(new FlexValue(3f));
             templateColumns.Add(new FitContentValue(UnitValue.CreatePercentValue(5.0f)));
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
                 grid.Add(new Paragraph("Test1").SetBorder(border));
@@ -963,7 +968,7 @@ namespace iText.Layout.Element {
             templateColumns.Add(new PointValue(100.0f));
             templateColumns.Add(new PointValue(100.0f));
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, templateColumns);
                 Paragraph paragraph1 = new Paragraph("One").SetBorder(border);
@@ -988,7 +993,7 @@ namespace iText.Layout.Element {
             template.Add(new PointValue(100.0f));
             template.Add(new PointValue(100.0f));
             SolidBorder border = new SolidBorder(ColorConstants.BLUE, 1);
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetProperty(Property.GRID_TEMPLATE_COLUMNS, template);
                 grid.SetProperty(Property.GRID_TEMPLATE_ROWS, template);
@@ -1011,7 +1016,7 @@ namespace iText.Layout.Element {
             String cmpName = SOURCE_FOLDER + "cmp_autoRepeatPaddingsBordersMarginsTest.pdf";
             IList<TemplateValue> columnsTemplate = new List<TemplateValue>();
             columnsTemplate.Add(new AutoRepeatValue(true, JavaUtil.ArraysAsList((GridValue)new PointValue(200))));
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetWidth(420);
                 grid.SetBorder(new SolidBorder(20));
@@ -1038,7 +1043,7 @@ namespace iText.Layout.Element {
         public virtual void MarginsCollapsingIssueTest() {
             String filename = DESTINATION_FOLDER + "marginsCollapsingIssueTest.pdf";
             String cmpName = SOURCE_FOLDER + "cmp_marginsCollapsingIssueTest.pdf";
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 Div grid = new GridContainer().SetBackgroundColor(ColorConstants.BLUE);
                 grid.Add(new Paragraph("some grid text"));
                 Div div = new Div().SetBackgroundColor(ColorConstants.RED).Add(new Paragraph("some div text")).Add(grid);
@@ -1055,7 +1060,7 @@ namespace iText.Layout.Element {
             String cmpName = SOURCE_FOLDER + "cmp_splitPageTest.pdf";
             IList<TemplateValue> columnsTemplate = new List<TemplateValue>();
             columnsTemplate.Add(new AutoRepeatValue(true, JavaUtil.ArraysAsList((GridValue)new PointValue(200))));
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetWidth(420);
                 grid.SetBorder(new SolidBorder(20));
@@ -1088,7 +1093,7 @@ namespace iText.Layout.Element {
             String cmpName = SOURCE_FOLDER + "cmp_borderBoxSizingTest.pdf";
             IList<TemplateValue> columnsTemplate = new List<TemplateValue>();
             columnsTemplate.Add(new AutoRepeatValue(true, JavaUtil.ArraysAsList((GridValue)new PointValue(200))));
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetWidth(420);
                 grid.SetBorder(new SolidBorder(20));
@@ -1122,7 +1127,7 @@ namespace iText.Layout.Element {
             String cmpName = SOURCE_FOLDER + "cmp_marginCollapsingTest.pdf";
             IList<TemplateValue> columnsTemplate = new List<TemplateValue>();
             columnsTemplate.Add(new AutoRepeatValue(true, JavaUtil.ArraysAsList((GridValue)new PointValue(200))));
-            using (Document document = new Document(new PdfDocument(new PdfWriter(filename)))) {
+            using (Document document = new Document(new PdfDocument(CompareTool.CreateTestPdfWriter(filename)))) {
                 GridContainer grid = new GridContainer();
                 grid.SetWidth(420);
                 grid.SetBorder(new SolidBorder(20));

@@ -61,6 +61,10 @@ namespace iText.Layout.Logs {
 
         public const String AREA_BREAK_IGNORED = "Area break has been ignored. Most likely it was put inside an element that does not support it.";
 
+        public const String ROTATED_LAYOUT_ELEMENT_DOES_NOT_FIT_AREA = "Layout element does not fit current area with infinite height.";
+
+        public const String UNSUPPORTED_PROPERTY = "Property {1} is not supported for {0} and can result in" + " unexpected behaviour.";
+
         private LayoutLogMessageConstant() {
         }
         // Private constructor will prevent the instantiation of this class directly.

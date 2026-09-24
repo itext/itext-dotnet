@@ -62,6 +62,7 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
         public override ISvgNodeRenderer CreateDeepCopy() {
             PolygonSvgNodeRenderer copy = new PolygonSvgNodeRenderer();
             DeepCopyAttributesAndStyles(copy);
@@ -69,9 +70,19 @@ namespace iText.Svg.Renderers.Impl {
         }
 
 //\cond DO_NOT_DOCUMENT
+        /// <summary><inheritDoc/></summary>
         internal override void DoStrokeOrFill(String fillRuleRawValue, PdfCanvas currentCanvas) {
             DrawUtils.DoStrokeOrFillForClosedFigure(fillRuleRawValue, currentCanvas, doStroke);
         }
 //\endcond
+
+        /// <summary><inheritDoc/></summary>
+        protected internal override void DoDraw(SvgDrawContext context) {
+            base.DoDraw(context);
+            if (points.Count > 1) {
+                PdfCanvas canvas = context.GetCurrentCanvas();
+                canvas.ClosePath();
+            }
+        }
     }
 }

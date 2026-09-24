@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
@@ -55,6 +54,8 @@ namespace iText.Layout.Element {
     /// to the canvas, in order to reclaim memory that is locked up.
     /// </remarks>
     public class Table : BlockElement<iText.Layout.Element.Table>, ILargeElement {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Element.Table));
+
         protected internal DefaultAccessibilityProperties tagProperties;
 
         private IList<Cell[]> rows;
@@ -805,8 +806,7 @@ namespace iText.Layout.Element {
                     return renderer;
                 }
                 else {
-                    ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Element.Table));
-                    logger.LogError("Invalid renderer for Table: must be inherited from TableRenderer");
+                    LOGGER.Error(() => "Invalid renderer for Table: must be inherited from TableRenderer");
                 }
             }
             // In case of large tables, we only add to the renderer the cells from complete row groups,

@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Layout.Exceptions;
@@ -42,7 +41,7 @@ namespace iText.Layout.Renderer {
 
         private const float FLEX_SHRINK_INITIAL_VALUE = 1F;
 
-        private static readonly ILogger logger = ITextLogManager.GetLogger(typeof(iText.Layout.Renderer.FlexUtil));
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Layout.Renderer.FlexUtil));
 
         private FlexUtil() {
         }
@@ -719,9 +718,9 @@ namespace iText.Layout.Renderer {
                         }
                     }
                     else {
-                        logger.LogError(LayoutLogMessageConstant.FLEX_ITEM_LAYOUT_RESULT_IS_NOT_FULL);
+                        LOGGER.Error(() => LayoutLogMessageConstant.FLEX_ITEM_LAYOUT_RESULT_IS_NOT_FULL);
                         if (result.GetAreaBreak() != null || result.GetSectionBreak() != null) {
-                            logger.LogWarning(LayoutLogMessageConstant.FLEX_ITEM_CONTAINS_AREA_BREAK_OR_SECTION_BREAK);
+                            LOGGER.Warn(() => LayoutLogMessageConstant.FLEX_ITEM_CONTAINS_AREA_BREAK_OR_SECTION_BREAK);
                         }
                         info.hypotheticalCrossSize = 0;
                     }

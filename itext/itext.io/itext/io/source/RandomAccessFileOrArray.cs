@@ -500,6 +500,11 @@ namespace iText.IO.Source {
             return ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + ch4);
         }
 
+        /// <summary>Reads an unsigned 32-bit value in little-endian order.</summary>
+        /// <returns>
+        /// the next four bytes interpreted as an unsigned integer in a
+        /// <c>long</c>
+        /// </returns>
         public long ReadUnsignedIntLE() {
             long ch1 = this.Read();
             long ch2 = this.Read();
@@ -516,6 +521,11 @@ namespace iText.IO.Source {
             return ((long)(ReadInt()) << 32) + (ReadInt() & 0xFFFFFFFFL);
         }
 
+        /// <summary>Reads a signed 64-bit value in little-endian order.</summary>
+        /// <returns>
+        /// the next eight bytes interpreted as a
+        /// <c>long</c>
+        /// </returns>
         public long ReadLongLE() {
             int i1 = ReadIntLE();
             int i2 = ReadIntLE();
@@ -527,6 +537,11 @@ namespace iText.IO.Source {
             return JavaUtil.IntBitsToFloat(ReadInt());
         }
 
+        /// <summary>Reads an IEEE 754 single-precision value in little-endian order.</summary>
+        /// <returns>
+        /// the next four bytes interpreted as a
+        /// <c>float</c>
+        /// </returns>
         public float ReadFloatLE() {
             return JavaUtil.IntBitsToFloat(ReadIntLE());
         }
@@ -536,6 +551,11 @@ namespace iText.IO.Source {
             return JavaUtil.LongBitsToDouble(ReadLong());
         }
 
+        /// <summary>Reads an IEEE 754 double-precision value in little-endian order.</summary>
+        /// <returns>
+        /// the next eight bytes interpreted as a
+        /// <c>double</c>
+        /// </returns>
         public double ReadDoubleLE() {
             return JavaUtil.LongBitsToDouble(ReadLongLE());
         }

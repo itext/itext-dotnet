@@ -22,12 +22,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Actions;
 using iText.Commons.Actions.Data;
 using iText.Commons.Actions.Processors;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.Kernel.Actions.Data;
 using iText.Kernel.Logs;
@@ -38,7 +37,7 @@ namespace iText.Kernel.Actions.Events {
     public sealed class AddFingerPrintEvent : AbstractITextConfigurationEvent {
         private readonly WeakReference document;
 
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Actions.Events.AddFingerPrintEvent
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Actions.Events.AddFingerPrintEvent
             ));
 
         private const String AGPL_MODE = "AGPL";
@@ -74,7 +73,7 @@ namespace iText.Kernel.Actions.Events {
                 if (nonAGPLMode) {
                     return;
                 }
-                LOGGER.LogWarning(KernelLogMessageConstant.FINGERPRINT_DISABLED_BUT_NO_REQUIRED_LICENCE);
+                LOGGER.Warn(() => KernelLogMessageConstant.FINGERPRINT_DISABLED_BUT_NO_REQUIRED_LICENCE);
             }
             PdfWriter writer = pdfDocument.GetWriter();
             if (products.IsEmpty()) {

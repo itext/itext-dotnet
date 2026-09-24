@@ -58,7 +58,7 @@ namespace iText.Layout {
             String fileName = "divPercentHeightTopMargin" + percent;
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div marginContent = new Div().SetHeight(UnitValue.CreatePercentValue(percent)).SetBackgroundColor(new DeviceRgb
                         (255, 200, 200));
@@ -77,7 +77,7 @@ namespace iText.Layout {
             String fileName = "divPercentWidthTopMargin" + percent;
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div marginContent = new Div().SetWidth(UnitValue.CreatePercentValue(percent)).SetBackgroundColor(new DeviceRgb
                         (200, 255, 200));
@@ -96,7 +96,7 @@ namespace iText.Layout {
             String fileName = "divPercentHeightBottomMargin50";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div marginContent = new Div().SetHeight(UnitValue.CreatePercentValue(50)).SetBackgroundColor(new DeviceRgb
                         (200, 200, 255));
@@ -115,7 +115,7 @@ namespace iText.Layout {
             String fileName = "divPercentWidthBottomMargin50";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div marginContent = new Div().SetWidth(UnitValue.CreatePercentValue(50)).SetBackgroundColor(new DeviceRgb(
                         200, 200, 255));
@@ -134,7 +134,7 @@ namespace iText.Layout {
             String fileName = "divPercentWidthLeftMargin50";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div marginContent = new Div().SetWidth(UnitValue.CreatePercentValue(50)).SetBackgroundColor(new DeviceRgb(
                         255, 255, 200));
@@ -153,7 +153,7 @@ namespace iText.Layout {
             String fileName = "divPercentHeightLeftMargin50";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div marginContent = new Div().SetHeight(UnitValue.CreatePercentValue(50)).SetBackgroundColor(new DeviceRgb
                         (255, 255, 200));
@@ -172,7 +172,7 @@ namespace iText.Layout {
             String fileName = "divPercentWidthRightMargin50";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div marginContent = new Div().SetWidth(UnitValue.CreatePercentValue(50)).SetBackgroundColor(new DeviceRgb(
                         255, 220, 180));
@@ -191,7 +191,7 @@ namespace iText.Layout {
             String fileName = "divPercentHeightAndWidthTopMargin";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div marginContent = new Div().SetHeight(UnitValue.CreatePercentValue(50)).SetWidth(UnitValue.CreatePercentValue
                         (50)).SetBackgroundColor(new DeviceRgb(255, 180, 255));
@@ -210,7 +210,7 @@ namespace iText.Layout {
             String fileName = "nestedDivPercentHeightTopMargin";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div inner = new Div().SetHeight(UnitValue.CreatePercentValue(50)).SetBackgroundColor(new DeviceRgb(100, 200
                         , 255));
@@ -231,7 +231,7 @@ namespace iText.Layout {
             String fileName = "nestedDivPercentWidthTopMargin";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div inner = new Div().SetWidth(UnitValue.CreatePercentValue(50)).SetBackgroundColor(new DeviceRgb(100, 200
                         , 255));
@@ -253,7 +253,7 @@ namespace iText.Layout {
             String fileName = "imgPercentHeightTopMargin50";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     iText.Layout.Element.Image image = new Image(ImageDataFactory.Create(SOURCE_FOLDER + "bee.png")).SetHeight
                         (UnitValue.CreatePercentValue(50));
@@ -275,7 +275,7 @@ namespace iText.Layout {
             String fileName = "imagePercentWidthTopMargin50";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(SOURCE_FOLDER + 
                         "bee.png")).SetWidth(UnitValue.CreatePercentValue(50));
@@ -297,7 +297,7 @@ namespace iText.Layout {
             String fileName = "imagePercentHeightAndWidthTopMargin";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(SOURCE_FOLDER + 
                         "bee.png")).SetHeight(UnitValue.CreatePercentValue(50)).SetWidth(UnitValue.CreatePercentValue(50));
@@ -318,7 +318,7 @@ namespace iText.Layout {
             String fileName = "imgPercentHeightBottomMargin50";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(SOURCE_FOLDER + 
                         "bee.png")).SetHeight(UnitValue.CreatePercentValue(50));
@@ -340,7 +340,7 @@ namespace iText.Layout {
             String fileName = "imagePercentWidthBottomMargin50";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(SOURCE_FOLDER + 
                         "bee.png")).SetWidth(UnitValue.CreatePercentValue(50));
@@ -360,7 +360,7 @@ namespace iText.Layout {
             String fileName = "paragraphPercentHeightTopMargin50";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Paragraph p = new Paragraph("50% height paragraph in top margin").SetHeight(UnitValue.CreatePercentValue(50
                         )).SetBackgroundColor(new DeviceRgb(220, 255, 220));
@@ -379,7 +379,7 @@ namespace iText.Layout {
             String fileName = "paragraphPercentWidthTopMargin50";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Paragraph p = new Paragraph("50% width paragraph in top margin").SetWidth(UnitValue.CreatePercentValue(50)
                         ).SetBackgroundColor(new DeviceRgb(220, 255, 220));
@@ -398,7 +398,7 @@ namespace iText.Layout {
             String fileName = "paragraphPercentHeightBottomMargin50";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Paragraph p = new Paragraph("50% height paragraph in bottom margin").SetHeight(UnitValue.CreatePercentValue
                         (50)).SetBackgroundColor(new DeviceRgb(255, 220, 255));
@@ -417,7 +417,7 @@ namespace iText.Layout {
             String fileName = "paragraphPercentWidthBottomMargin50";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Paragraph p = new Paragraph("50% width paragraph in bottom margin").SetWidth(UnitValue.CreatePercentValue(
                         50)).SetBackgroundColor(new DeviceRgb(255, 220, 255));
@@ -436,7 +436,7 @@ namespace iText.Layout {
             String fileName = "mixedPercentageTopAndBottomMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div topContent = new Div().SetHeight(UnitValue.CreatePercentValue(20)).SetWidth(UnitValue.CreatePercentValue
                         (100)).SetBackgroundColor(new DeviceRgb(255, 200, 200));
@@ -458,7 +458,7 @@ namespace iText.Layout {
             String fileName = "mixedPercentageAllFourMargins";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
-            using (PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName))) {
+            using (PdfDocument pdfDoc = new PdfDocument(CompareTool.CreateTestPdfWriter(outFileName))) {
                 using (Document document = new Document(pdfDoc)) {
                     Div topContent = new Div().SetHeight(UnitValue.CreatePercentValue(20)).SetBackgroundColor(new DeviceRgb(255
                         , 200, 200));

@@ -21,9 +21,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System.IO;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.Kernel.Crypto;
@@ -32,6 +31,8 @@ using iText.Kernel.Pdf.Filters;
 
 namespace iText.Kernel.Pdf {
     public class PdfOutputStream : HighPrecisionOutputStream<iText.Kernel.Pdf.PdfOutputStream> {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Kernel.Pdf.PdfOutputStream));
+
         private static readonly byte[] stream = ByteUtils.GetIsoBytes("stream\n");
 
         private static readonly byte[] endstream = ByteUtils.GetIsoBytes("\nendstream");
@@ -43,9 +44,6 @@ namespace iText.Kernel.Pdf {
         private static readonly byte[] endIndirect = ByteUtils.GetIsoBytes(" R");
 
         private static readonly byte[] endIndirectWithZeroGenNr = ByteUtils.GetIsoBytes(" 0 R");
-
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.Kernel.Pdf.PdfOutputStream
-            ));
 
         /// <summary>Document associated with PdfOutputStream.</summary>
         protected internal PdfDocument document = null;
@@ -460,7 +458,7 @@ namespace iText.Kernel.Pdf {
                 Write(key);
                 PdfObject value = pdfDictionary.Get(key, false);
                 if (value == null) {
-                    LOGGER.LogWarning(MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.INVALID_KEY_VALUE_KEY_0_HAS_NULL_VALUE
+                    LOGGER.Warn(() => MessageFormatUtil.Format(iText.IO.Logs.IoLogMessageConstant.INVALID_KEY_VALUE_KEY_0_HAS_NULL_VALUE
                         , key));
                     value = PdfNull.PDF_NULL;
                 }
@@ -489,13 +487,13 @@ namespace iText.Kernel.Pdf {
                 throw new PdfException(KernelExceptionMessageConstant.PDF_INDIRECT_OBJECT_BELONGS_TO_OTHER_PDF_DOCUMENT);
             }
             if (indirectReference.IsFree()) {
-                LOGGER.LogError(iText.IO.Logs.IoLogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE);
+                LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.FLUSHED_OBJECT_CONTAINS_FREE_REFERENCE);
                 Write(PdfNull.PDF_NULL);
             }
             else {
                 if (indirectReference.refersTo == null && (indirectReference.CheckState(PdfObject.MODIFIED) || indirectReference
                     .GetReader() == null || !(indirectReference.GetOffset() > 0 || indirectReference.GetIndex() >= 0))) {
-                    LOGGER.LogError(iText.IO.Logs.IoLogMessageConstant.FLUSHED_OBJECT_CONTAINS_REFERENCE_WHICH_NOT_REFER_TO_ANY_OBJECT
+                    LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.FLUSHED_OBJECT_CONTAINS_REFERENCE_WHICH_NOT_REFER_TO_ANY_OBJECT
                         );
                     Write(PdfNull.PDF_NULL);
                 }
@@ -553,15 +551,6 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        private bool IsNotMetadataPdfStream(PdfStream pdfStream) {
-            return pdfStream.GetAsName(PdfName.Type) == null || (pdfStream.GetAsName(PdfName.Type) != null && !pdfStream
-                .GetAsName(PdfName.Type).Equals(PdfName.Metadata));
-        }
-
-        private bool IsXRefStream(PdfStream pdfStream) {
-            return PdfName.XRef.Equals(pdfStream.GetAsName(PdfName.Type));
-        }
-
         private void Write(PdfStream pdfStream) {
             try {
                 bool userDefinedCompression = pdfStream.GetCompressionLevel() != CompressionConstants.UNDEFINED_COMPRESSION;
@@ -572,49 +561,7 @@ namespace iText.Kernel.Pdf {
                 }
                 bool toCompress = pdfStream.GetCompressionLevel() != CompressionConstants.NO_COMPRESSION;
                 bool allowCompression = !pdfStream.ContainsKey(PdfName.Filter) && IsNotMetadataPdfStream(pdfStream);
-                if (pdfStream.GetInputStream() != null) {
-                    Stream fout = this;
-                    Stream def = null;
-                    OutputStreamEncryption ose = null;
-                    long beginStreamContent;
-                    if (crypto != null && (!crypto.IsEmbeddedFilesOnly() || document.DoesStreamBelongToEmbeddedFile(pdfStream)
-                        )) {
-                        UpdateCryptFilterForEmbeddedFilesOnlyMode(pdfStream);
-                        // We should store current position here because crypto.getEncryptionStream(fout) may already
-                        // output something into the stream (iv vector for AES256)
-                        beginStreamContent = WritePdfStreamAndGetPosition(pdfStream);
-                        fout = ose = crypto.GetEncryptionStream(fout);
-                    }
-                    else {
-                        if (toCompress && (allowCompression || userDefinedCompression)) {
-                            UpdateCompressionFilter(pdfStream);
-                            beginStreamContent = WritePdfStreamAndGetPosition(pdfStream);
-                            fout = def = GetCompressionStrategy().CreateNewOutputStream(fout, pdfStream);
-                        }
-                        else {
-                            beginStreamContent = WritePdfStreamAndGetPosition(pdfStream);
-                        }
-                    }
-                    byte[] buf = new byte[4192];
-                    while (true) {
-                        int n = pdfStream.GetInputStream().JRead(buf);
-                        if (n <= 0) {
-                            break;
-                        }
-                        fout.Write(buf, 0, n);
-                    }
-                    if (def is IFinishable) {
-                        ((IFinishable)def).Finish();
-                    }
-                    if (ose != null) {
-                        ose.Finish();
-                    }
-                    PdfNumber length = pdfStream.GetAsNumber(PdfName.Length);
-                    length.SetValue((int)(GetCurrentPos() - beginStreamContent));
-                    pdfStream.UpdateLength(length.IntValue());
-                    WriteBytes(iText.Kernel.Pdf.PdfOutputStream.endstream);
-                }
-                else {
+                if (pdfStream.GetInputStream() == null) {
                     //When document is opened in stamping mode the output stream can be uninitialized.
                     //We have to initialize it and write all data from streams input to streams output.
                     if (pdfStream.GetOutputStream() == null && pdfStream.GetIndirectReference().GetReader() != null) {
@@ -681,10 +628,61 @@ namespace iText.Kernel.Pdf {
                     byteArrayStream.Dispose();
                     WriteBytes(iText.Kernel.Pdf.PdfOutputStream.endstream);
                 }
+                else {
+                    Stream fout = this;
+                    Stream def = null;
+                    OutputStreamEncryption ose = null;
+                    long beginStreamContent;
+                    if (crypto != null && (!crypto.IsEmbeddedFilesOnly() || document.DoesStreamBelongToEmbeddedFile(pdfStream)
+                        )) {
+                        UpdateCryptFilterForEmbeddedFilesOnlyMode(pdfStream);
+                        // We should store current position here because crypto.getEncryptionStream(fout) may already
+                        // output something into the stream (iv vector for AES256)
+                        beginStreamContent = WritePdfStreamAndGetPosition(pdfStream);
+                        fout = ose = crypto.GetEncryptionStream(fout);
+                    }
+                    else {
+                        if (toCompress && (allowCompression || userDefinedCompression)) {
+                            UpdateCompressionFilter(pdfStream);
+                            beginStreamContent = WritePdfStreamAndGetPosition(pdfStream);
+                            fout = def = GetCompressionStrategy().CreateNewOutputStream(fout, pdfStream);
+                        }
+                        else {
+                            beginStreamContent = WritePdfStreamAndGetPosition(pdfStream);
+                        }
+                    }
+                    byte[] buf = new byte[4192];
+                    while (true) {
+                        int n = pdfStream.GetInputStream().JRead(buf);
+                        if (n <= 0) {
+                            break;
+                        }
+                        fout.Write(buf, 0, n);
+                    }
+                    if (def is IFinishable) {
+                        ((IFinishable)def).Finish();
+                    }
+                    if (ose != null) {
+                        ose.Finish();
+                    }
+                    PdfNumber length = pdfStream.GetAsNumber(PdfName.Length);
+                    length.SetValue((int)(GetCurrentPos() - beginStreamContent));
+                    pdfStream.UpdateLength(length.IntValue());
+                    WriteBytes(iText.Kernel.Pdf.PdfOutputStream.endstream);
+                }
             }
             catch (System.IO.IOException e) {
                 throw new PdfException(KernelExceptionMessageConstant.CANNOT_WRITE_TO_PDF_STREAM, e, pdfStream);
             }
+        }
+
+        private bool IsNotMetadataPdfStream(PdfStream pdfStream) {
+            return pdfStream.GetAsName(PdfName.Type) == null || (pdfStream.GetAsName(PdfName.Type) != null && !pdfStream
+                .GetAsName(PdfName.Type).Equals(PdfName.Metadata));
+        }
+
+        private bool IsXRefStream(PdfStream pdfStream) {
+            return PdfName.XRef.Equals(pdfStream.GetAsName(PdfName.Type));
         }
 
         private long WritePdfStreamAndGetPosition(PdfStream pdfStream) {

@@ -109,11 +109,11 @@ namespace iText.Kernel.Pdf {
 
         public virtual int CompareTo(iText.Kernel.Pdf.PdfVersion o) {
             int majorResult = JavaUtil.IntegerCompare(major, o.major);
-            if (majorResult != 0) {
-                return majorResult;
+            if (majorResult == 0) {
+                return JavaUtil.IntegerCompare(minor, o.minor);
             }
             else {
-                return JavaUtil.IntegerCompare(minor, o.minor);
+                return majorResult;
             }
         }
 

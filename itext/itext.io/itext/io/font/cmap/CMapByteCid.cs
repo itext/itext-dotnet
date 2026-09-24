@@ -25,12 +25,17 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace iText.IO.Font.Cmap {
+    /// <summary>Maps variable-length character codes to CID values.</summary>
     public class CMapByteCid : AbstractCMap {
+        /// <summary>Tracks the unread portion of a byte sequence during CID decoding.</summary>
         protected internal class Cursor {
             private int offset;
 
             private int length;
 
+            /// <summary>Creates a cursor over a byte sequence segment.</summary>
+            /// <param name="offset">the zero-based first unread byte offset</param>
+            /// <param name="length">the number of unread bytes</param>
             public Cursor(int offset, int length) {
                 this.offset = offset;
                 this.length = length;
@@ -63,6 +68,7 @@ namespace iText.IO.Font.Cmap {
 
         private readonly IList<int[]> planes = new List<int[]>();
 
+        /// <summary>Creates an empty byte code to CID map.</summary>
         public CMapByteCid() {
             planes.Add(new int[256]);
         }
@@ -90,6 +96,14 @@ namespace iText.IO.Font.Cmap {
             return sb.ToString();
         }
 
+        /// <summary>Decodes one CID and advances the supplied cursor.</summary>
+        /// <param name="cidBytes">the source byte array</param>
+        /// <param name="cursor">the mutable segment cursor to advance</param>
+        /// <returns>
+        /// the decoded CID, or
+        /// <c>-1</c>
+        /// when the segment ends before a complete CID
+        /// </returns>
         protected internal virtual int DecodeSingle(byte[] cidBytes, CMapByteCid.Cursor cursor) {
             int end = cursor.GetOffset() + cursor.GetLength();
             int currentPlane = 0;

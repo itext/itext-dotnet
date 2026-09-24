@@ -25,6 +25,7 @@ using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 
 namespace iText.IO.Font.Otf {
+    /// <summary>Represents a glyph and its Unicode mapping, metrics, and layout adjustments.</summary>
     public class Glyph {
         private const char REPLACEMENT_CHARACTER = '\ufffd';
 
@@ -172,71 +173,121 @@ namespace iText.IO.Font.Otf {
             : this(glyph.code, glyph.width, unicode, GetChars(unicode), glyph.IsMark()) {
         }
 
+        /// <summary>
+        /// Returns the
+        /// <c>code</c>
+        /// or
+        /// <c>id</c>
+        /// by which this is represented in the Font File.
+        /// </summary>
+        /// <returns>the requested result</returns>
         public virtual int GetCode() {
             return code;
         }
 
+        /// <summary>Returns the normalized width of this Glyph.</summary>
+        /// <returns>the requested result</returns>
         public virtual int GetWidth() {
             return width;
         }
 
+        /// <summary>Returns the normalized bbox of this Glyph.</summary>
+        /// <returns>the requested result</returns>
         public virtual int[] GetBbox() {
             return bbox;
         }
 
+        /// <summary>Determines whether valid unicode applies.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the operation succeeds; otherwise
+        /// <see langword="false"/>
+        /// </returns>
         public virtual bool HasValidUnicode() {
             return unicode > -1;
         }
 
+        /// <summary>Returns the unicode (utf-32 representation of Glyph).</summary>
+        /// <returns>the requested result</returns>
         public virtual int GetUnicode() {
             return unicode;
         }
 
+        /// <summary>Updates the Unicode text represented by this Glyph.</summary>
+        /// <param name="unicode">the utf-32 representation of Glyph</param>
         public virtual void SetUnicode(int unicode) {
             this.unicode = unicode;
             this.chars = GetChars(unicode);
         }
 
+        /// <summary>Returns the Unicode text represented by this Glyph.</summary>
+        /// <returns>the requested result</returns>
         public virtual char[] GetChars() {
             return chars;
         }
 
+        /// <summary>Updates the Unicode text represented by this Glyph.</summary>
+        /// <param name="chars">the Unicode text represented by this Glyph</param>
         public virtual void SetChars(char[] chars) {
             this.chars = chars;
         }
 
+        /// <summary>Determines whether this Glyph is Mark.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if this Glyph is Mark; otherwise
+        /// <see langword="false"/>
+        /// </returns>
         public virtual bool IsMark() {
             return isMark;
         }
 
+        /// <summary>Returns the placement x offset.</summary>
+        /// <returns>the requested result</returns>
         public virtual short GetXPlacement() {
             return xPlacement;
         }
 
+        /// <summary>Updates the placement x offset.</summary>
+        /// <param name="xPlacement">the x offset for placement</param>
         public virtual void SetXPlacement(short xPlacement) {
             this.xPlacement = xPlacement;
         }
 
+        /// <summary>Returns the placement y offset.</summary>
+        /// <returns>the requested result</returns>
         public virtual short GetYPlacement() {
             return yPlacement;
         }
 
+        /// <summary>Updates the placement y offset.</summary>
+        /// <param name="yPlacement">the y offset for placement</param>
         public virtual void SetYPlacement(short yPlacement) {
             this.yPlacement = yPlacement;
         }
 
+        /// <summary>Returns the advance x offset.</summary>
+        /// <returns>the requested result</returns>
         public virtual short GetXAdvance() {
             return xAdvance;
         }
 
+        /// <summary>Updates the advance x offset.</summary>
+        /// <param name="xAdvance">the x advance</param>
         public virtual void SetXAdvance(short xAdvance) {
             this.xAdvance = xAdvance;
         }
 
+        /// <summary>Returns the advance y offset.</summary>
+        /// <returns>the requested result</returns>
         public virtual short GetYAdvance() {
             return yAdvance;
         }
 
+        /// <summary>Updates the advance y offset.</summary>
+        /// <param name="yAdvance">the y advance</param>
         public virtual void SetYAdvance(short yAdvance) {
             this.yAdvance = yAdvance;
         }
@@ -362,6 +413,8 @@ namespace iText.IO.Font.Otf {
             }
         }
 
+        /// <summary>Returns a string representation of this glyph.</summary>
+        /// <returns>the requested result</returns>
         public override String ToString() {
             return MessageFormatUtil.Format("[id={0}, chars={1}, uni={2}, width={3}]", ToHex(code), chars != null ? JavaUtil.ArraysToString
                 (chars) : "null", ToHex(unicode), width);

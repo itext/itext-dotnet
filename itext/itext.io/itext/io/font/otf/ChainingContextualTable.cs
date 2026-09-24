@@ -23,12 +23,24 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 
 namespace iText.IO.Font.Otf {
+    /// <summary>Represents the chaining contextual table component of an OpenType font.</summary>
+    /// <typeparam name="T">the contextual rule type stored by this table</typeparam>
     public abstract class ChainingContextualTable<T> : ContextualTable<T>
         where T : ContextualRule {
+        /// <summary>Creates a new chaining contextual table.</summary>
+        /// <param name="openReader">the OpenType font reader</param>
+        /// <param name="lookupFlag">
+        /// specifies processing options, e.g. whether to skip base glyphs, marks or
+        /// ligatures during glyph substitution or positioning. See
+        /// <a href="https://learn.microsoft.com/en-us/typography/opentype/spec/chapter2#lookup-table">Lookup table</a>
+        /// </param>
         protected internal ChainingContextualTable(OpenTypeFontTableReader openReader, int lookupFlag)
             : base(openReader, lookupFlag) {
         }
 
+        /// <summary>Returns the matching context rule.</summary>
+        /// <param name="line">the glyph line</param>
+        /// <returns>the matching context rule</returns>
         public override T GetMatchingContextRule(GlyphLine line) {
             if (line.GetIdx() >= line.GetEnd()) {
                 return null;

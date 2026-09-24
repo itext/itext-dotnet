@@ -22,9 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using iText.Commons;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Logs;
 using iText.Commons.Utils;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Resolve.Shorthand;
@@ -36,7 +35,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
     /// implementation for grid items column/row start and end positions.
     /// </summary>
     public abstract class GridItemShorthandResolver : IShorthandResolver {
-        private static readonly ILogger LOGGER = ITextLogManager.GetLogger(typeof(iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.GridItemShorthandResolver
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.StyledXmlParser.Css.Resolve.Shorthand.Impl.GridItemShorthandResolver
             ));
 
         private readonly String propertyTemplate;
@@ -50,7 +49,7 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
         public virtual IList<CssDeclaration> ResolveShorthand(String shorthandExpression) {
             shorthandExpression = shorthandExpression.Trim();
             if (String.IsNullOrEmpty(shorthandExpression)) {
-                LOGGER.LogWarning(MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
+                LOGGER.Warn(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.SHORTHAND_PROPERTY_CANNOT_BE_EMPTY
                     , propertyTemplate.JSubstring(0, propertyTemplate.Length - 4)));
                 return new List<CssDeclaration>();
             }

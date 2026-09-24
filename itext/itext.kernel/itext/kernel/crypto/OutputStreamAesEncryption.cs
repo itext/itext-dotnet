@@ -22,11 +22,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using iText.Bouncycastleconnector;
 using iText.Commons.Internal.Runtime;
 using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Crypto {
     public class OutputStreamAesEncryption : OutputStreamEncryption {
+        private static readonly BouncyCastleSecureRandomHolder RNG = new BouncyCastleSecureRandomHolder();
+
         protected internal AESCipher cipher;
 
         private bool finished;
@@ -45,7 +48,8 @@ namespace iText.Kernel.Crypto {
         /// <param name="len">the length of the key in the byte array</param>
         public OutputStreamAesEncryption(Stream @out, byte[] key, int off, int len)
             : base(@out) {
-            byte[] iv = IVGenerator.GetIV();
+            byte[] iv = new byte[16];
+            RNG.GetSecureRandom().GetBytes(iv);
             byte[] nkey = new byte[len];
             Array.Copy(key, off, nkey, 0, len);
             cipher = new AESCipher(true, nkey, iv);

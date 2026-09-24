@@ -29,7 +29,7 @@ using iText.Test;
 namespace iText.Svg.Utils {
     [NUnit.Framework.Category("UnitTest")]
     public class SvgTextUtilTest : ExtendedITextTest {
-        public static float EPS = 0.0001f;
+        private static float EPS = 0.0001f;
 
         //Trim leading tests
         [NUnit.Framework.Test]
