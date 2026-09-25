@@ -94,6 +94,26 @@ namespace iText.Kernel.Colors {
         }
 
         [NUnit.Framework.Test]
+        public virtual void GetRGBAColorBy4DigitCodeTest() {
+            String hexString = "#9009";
+            float[] cmpRgba = new float[] { (float)(0x99 / RGB_MAX_VAL), (float)(0.0), (float)(0.0), (float)(0x99 / RGB_MAX_VAL
+                ) };
+            float delta = (float)(0.0001);
+            float[] resultRgba = WebColors.GetRGBAColor(hexString);
+            iText.Test.TestUtil.AreEqual(cmpRgba, resultRgba, delta);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GetRGBAColorBy8DigitCodeTest() {
+            String hexString = "#90000090";
+            float[] cmpRgba = new float[] { (float)(0x90 / RGB_MAX_VAL), (float)(0.0), (float)(0.0), (float)(0x90 / RGB_MAX_VAL
+                ) };
+            float delta = (float)(0.0001);
+            float[] resultRgba = WebColors.GetRGBAColor(hexString);
+            iText.Test.TestUtil.AreEqual(cmpRgba, resultRgba, delta);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void GetRGBAColorByRgbObjectTest() {
             //corresponding color name = "violet"
             String rgbString = "rgb(238,130,238)";

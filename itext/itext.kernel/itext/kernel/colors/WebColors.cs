@@ -251,12 +251,12 @@ namespace iText.Kernel.Colors {
             return color;
         }
 
-        /// <summary>Gives an array of four floats that contain RGBA values, each value is between 0 and 1.</summary>
+        /// <summary>Provides an array of four floats that contain RGBA values, each value is between 0 and 1.</summary>
         /// <param name="name">
-        /// a name such as black, violet, cornflowerblue or #RGB or
-        /// #RRGGBB or RGB or RRGGBB or rgb(R,G,B) or rgb(R,G,B,A)
+        /// a name such as black, violet, cornflowerblue or #RGB or #RGBA or
+        /// #RRGGBB or #RRGGBBAA or RGB or RRGGBB or rgb(R,G,B) or rgb(R,G,B,A)
         /// </param>
-        /// <returns>the corresponding array of four floats, or <c>null</c> if parsing failed.</returns>
+        /// <returns>the corresponding array of four floats, or <c>null</c> if parsing failed</returns>
         public static float[] GetRGBAColor(String name) {
             float[] color = null;
             try {
@@ -267,21 +267,28 @@ namespace iText.Kernel.Colors {
                         // lop off the # to unify hex parsing.
                         colorName = colorName.Substring(1);
                     }
-                    if (colorName.Length == 3) {
+                    if (colorName.Length == 3 || colorName.Length == 4) {
                         String red = colorName.JSubstring(0, 1);
                         color = new float[] { 0, 0, 0, 1 };
                         color[0] = (float)(Convert.ToInt32(red + red, 16) / RGB_MAX_VAL);
                         String green = colorName.JSubstring(1, 2);
                         color[1] = (float)(Convert.ToInt32(green + green, 16) / RGB_MAX_VAL);
-                        String blue = colorName.Substring(2);
+                        String blue = colorName.JSubstring(2, 3);
                         color[2] = (float)(Convert.ToInt32(blue + blue, 16) / RGB_MAX_VAL);
+                        if (colorName.Length == 4) {
+                            String alpha = colorName.JSubstring(3, 4);
+                            color[3] = (float)(Convert.ToInt32(alpha + alpha, 16) / RGB_MAX_VAL);
+                        }
                     }
                     else {
-                        if (colorName.Length == 6) {
+                        if (colorName.Length == 6 || colorName.Length == 8) {
                             color = new float[] { 0, 0, 0, 1 };
                             color[0] = (float)(Convert.ToInt32(colorName.JSubstring(0, 2), 16) / RGB_MAX_VAL);
                             color[1] = (float)(Convert.ToInt32(colorName.JSubstring(2, 4), 16) / RGB_MAX_VAL);
-                            color[2] = (float)(Convert.ToInt32(colorName.Substring(4), 16) / RGB_MAX_VAL);
+                            color[2] = (float)(Convert.ToInt32(colorName.JSubstring(4, 6), 16) / RGB_MAX_VAL);
+                            if (colorName.Length == 8) {
+                                color[3] = (float)(Convert.ToInt32(colorName.JSubstring(6, 8), 16) / RGB_MAX_VAL);
+                            }
                         }
                         else {
                             LOGGER.Error(() => iText.IO.Logs.IoLogMessageConstant.UNKNOWN_COLOR_FORMAT_MUST_BE_RGB_OR_RRGGBB);

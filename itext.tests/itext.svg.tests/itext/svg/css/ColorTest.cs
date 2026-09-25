@@ -70,5 +70,10 @@ namespace iText.Svg.Css {
             //TODO DEVSIX-8748: update cmp files after supporting
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "color-types");
         }
+
+        [NUnit.Framework.Test]
+        public virtual void RgbaTypesTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "rgba-types");
+        }
     }
 }

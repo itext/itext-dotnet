@@ -345,11 +345,12 @@ namespace iText.IO.Logs {
 
         public const String UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING = "Unexpected behaviour during table row collapsing. Calculated rowspan was less then 1.";
 
+        [Obsolete]
         public const String UNEXPECTED_EVENT_HANDLER_SERVICE_THREAD_EXCEPTION = "Unexpected exception encountered in service thread. Shutting it down.";
 
         public const String UNKNOWN_CMAP = "Unknown CMap {0}";
 
-        public const String UNKNOWN_COLOR_FORMAT_MUST_BE_RGB_OR_RRGGBB = "Unknown color format: must be rgb or rrggbb.";
+        public const String UNKNOWN_COLOR_FORMAT_MUST_BE_RGB_OR_RRGGBB = "Unknown color format: must be rgb or rgba or rrggbb or rrggbbaa.";
 
         public const String UNKNOWN_ERROR_WHILE_PROCESSING_CMAP = "Unknown error while processing CMap.";
 
