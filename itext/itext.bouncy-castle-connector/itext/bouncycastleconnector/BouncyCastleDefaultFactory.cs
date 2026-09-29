@@ -48,6 +48,7 @@ using iText.Commons.Bouncycastle.Crypto.Modes;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Openssl;
 using iText.Commons.Bouncycastle.Operator;
+using iText.Commons.Bouncycastle.Rsa;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Bouncycastle.X509;
@@ -699,6 +700,10 @@ namespace iText.Bouncycastleconnector {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
 
+        public IPemReader CreatePEMParser(TextReader reader) {
+            return CreatePEMParser(reader, null);
+        }
+
         public IPemReader CreatePEMParser(TextReader reader, char[] password) {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
@@ -789,6 +794,14 @@ namespace iText.Bouncycastleconnector {
         }
 
         public INameConstraints CreateNameConstraints(IAsn1Object primitive) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
+
+        public ICipherParams CreatePublicKey(ISubjectPublicKeyInfo subjectPublicKeyInfo) {
+            throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
+        }
+
+        public IRSADigestSigner CreateRSADigestSignerWithSha1Digest() {
             throw new NotSupportedException(BouncyCastleLogMessageConstant.BOUNCY_CASTLE_DEPENDENCY_MUST_PRESENT);
         }
     }

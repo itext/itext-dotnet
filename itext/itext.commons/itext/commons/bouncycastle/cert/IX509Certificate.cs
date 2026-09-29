@@ -25,6 +25,7 @@ using System.Collections;
 using System.Collections.Generic;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X500;
+using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Math;
 
@@ -189,5 +190,10 @@ namespace iText.Commons.Bouncycastle.Cert {
         /// <returns>array of IDerObjectIdentifier representing subject attribute types</returns>
         IDerObjectIdentifier[] GetSubjectAttributeTypes();
 
+        /// <summary>
+        /// Retrieves subject public key info from the certificate.
+        /// </summary>
+        /// <returns>ISubjectPublicKeyInfo representing subject public key info</returns>
+        ISubjectPublicKeyInfo GetSubjectPublicKeyInfo();
     }
 }

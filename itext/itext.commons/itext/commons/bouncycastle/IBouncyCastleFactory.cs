@@ -46,6 +46,7 @@ using iText.Commons.Bouncycastle.Crypto.Modes;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Openssl;
 using iText.Commons.Bouncycastle.Operator;
+using iText.Commons.Bouncycastle.Rsa;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Bouncycastle.X509;
@@ -1566,6 +1567,18 @@ namespace iText.Commons.Bouncycastle {
         /// <summary>Create Rsa 2048 key pair generator wrapper without parameters.</summary>
         /// <returns>created Rsa 2048 key pair generator wrapper</returns>
         IRsaKeyPairGenerator CreateRsa2048KeyPairGenerator();
+        
+        /// <summary>
+        /// Create PEM Parser wrapper from
+        /// <see cref="System.IO.TextReader"/>.
+        /// </summary>
+        /// <param name="reader">
+        /// 
+        /// <see cref="System.IO.TextReader"/>
+        /// to create PEM Parser wrapper from
+        /// </param>
+        /// <returns>created PEM Parser wrapper</returns>
+        IPemReader CreatePEMParser(TextReader reader);
 
         /// <summary>
         /// Create PEM Parser wrapper from
@@ -1779,5 +1792,20 @@ namespace iText.Commons.Bouncycastle {
         /// <param name="primitive">ASN1 Object wrapper from which name constraints wrapper is created</param>
         /// <returns>name constraints wrapper</returns>
         INameConstraints CreateNameConstraints(IAsn1Object primitive);
+        
+        /// <summary>
+        /// Creates public key parameters from the provided subject public key info.
+        /// </summary>
+        /// <param name="subjectPublicKeyInfo">
+        /// ISubjectPublicKeyInfo from which public key parameters are created
+        /// </param>
+        /// <returns>ICipherParams public key parameters</returns>
+        ICipherParams CreatePublicKey(ISubjectPublicKeyInfo subjectPublicKeyInfo);
+        
+        /// <summary>
+        /// Creates an instance of IRSADigestSigner with SHA-1 digest.
+        /// </summary>
+        /// <returns>IRSADigestSigner instance</returns>
+        IRSADigestSigner CreateRSADigestSignerWithSha1Digest();
     }
 }

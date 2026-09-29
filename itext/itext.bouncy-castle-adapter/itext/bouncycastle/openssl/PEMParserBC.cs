@@ -78,6 +78,14 @@ namespace iText.Bouncycastle.Openssl {
             }
             return readObject;
         }
+        
+        /// <summary>
+        /// Disposes the parser.
+        /// </summary>
+        public void Dispose()
+        {
+            parser.Dispose();
+        }
 
         /// <summary>Indicates whether some other object is "equal to" this one.</summary>
         /// <remarks>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</remarks>

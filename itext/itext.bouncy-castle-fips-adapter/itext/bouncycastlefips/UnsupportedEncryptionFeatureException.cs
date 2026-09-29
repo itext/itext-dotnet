@@ -28,8 +28,14 @@ namespace iText.Bouncycastlefips
     public class UnsupportedEncryptionFeatureException : ITextException {
         public const String ENCRYPTION_WITH_CERTIFICATE_ISNT_SUPPORTED_IN_FIPS =
             "Encryption with certificated is currently not supported in Bouncy Castle FIPS mode.";
-        
-        public UnsupportedEncryptionFeatureException(string msg): base(msg) {
+
+        public const String PUBLIC_KEY_CREATION_ISNT_SUPPORTED_IN_FIPS =
+            "Creation of public key is not supported by BouncyCastle-FIPS yet.";
+
+        public const String RSA_SHA1_SIGNER_ISNT_SUPPORTED_IN_FIPS =
+            "Creation of RSA Digest Signer with SHA-1 is not supported by BouncyCastle-FIPS.";
+
+        public UnsupportedEncryptionFeatureException(string msg) : base(msg) {
         }
     }
 }

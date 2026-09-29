@@ -27,7 +27,7 @@ namespace iText.Commons.Bouncycastle.Openssl {
     /// This interface represents the wrapper for PEMParser that provides the ability
     /// to switch between bouncy-castle and bouncy-castle FIPS implementations.
     /// </summary>
-    public interface IPemReader {
+    public interface IPemReader : IDisposable {
         /// <summary>
         /// Calls actual
         /// <c>readObject</c>

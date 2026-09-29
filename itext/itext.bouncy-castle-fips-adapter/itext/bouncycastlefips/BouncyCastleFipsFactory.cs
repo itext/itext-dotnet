@@ -79,6 +79,7 @@ using iText.Commons.Bouncycastle.Crypto.Modes;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Openssl;
 using iText.Commons.Bouncycastle.Operator;
+using iText.Commons.Bouncycastle.Rsa;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Bouncycastle.X509;
@@ -1180,6 +1181,12 @@ namespace iText.Bouncycastlefips {
         }
 
         /// <summary><inheritDoc/></summary>
+        public IPemReader CreatePEMParser(TextReader reader)
+        {
+            return CreatePEMParser(reader, null);
+        }
+
+        /// <summary><inheritDoc/></summary>
         public IPemReader CreatePEMParser(TextReader reader, char[] password) {
             return new PEMParserBCFips(new OpenSslPemReader(reader), password);
         }
@@ -1380,6 +1387,20 @@ namespace iText.Bouncycastlefips {
         /// <summary><inheritDoc/></summary>
         public INameConstraints CreateNameConstraints(IAsn1Object primitive) {
             return new NameConstraintsBCFips(NameConstraints.GetInstance(((Asn1ObjectBCFips) primitive).GetPrimitive()));
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public ICipherParams CreatePublicKey(ISubjectPublicKeyInfo subjectPublicKeyInfo)
+        {
+            throw new UnsupportedEncryptionFeatureException(
+                UnsupportedEncryptionFeatureException.PUBLIC_KEY_CREATION_ISNT_SUPPORTED_IN_FIPS);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IRSADigestSigner CreateRSADigestSignerWithSha1Digest()
+        {
+            throw new UnsupportedEncryptionFeatureException(
+                UnsupportedEncryptionFeatureException.RSA_SHA1_SIGNER_ISNT_SUPPORTED_IN_FIPS);
         }
 
         private static RSAParameters ToRsaParameters(AsymmetricRsaPublicKey rsaKey) {

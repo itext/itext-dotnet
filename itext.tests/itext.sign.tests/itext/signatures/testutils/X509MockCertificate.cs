@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Collections;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X500;
+using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Math;
@@ -146,6 +147,11 @@ namespace iText.Signatures.Testutils
         }
 
         public IDerObjectIdentifier[] GetSubjectAttributeTypes()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ISubjectPublicKeyInfo GetSubjectPublicKeyInfo()
         {
             throw new NotImplementedException();
         }

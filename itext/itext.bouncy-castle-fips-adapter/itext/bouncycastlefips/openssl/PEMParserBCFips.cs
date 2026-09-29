@@ -128,7 +128,15 @@ namespace iText.Bouncycastlefips.Openssl {
         public override String ToString() {
             return parser.ToString();
         }
-        
+
+        /// <summary>
+        /// Disposes the parser.
+        /// </summary>
+        public void Dispose()
+        {
+            // do nothing
+        }
+
         private static IAsymmetricPrivateKey GeneratePrivateKey(
             Pkcs8EncryptedPrivateKeyInfo encryptedPrivateKeyInfo, char[] password) {
             PrivateKeyInfo privateKeyInfo = encryptedPrivateKeyInfo.DecryptPrivateKeyInfo(

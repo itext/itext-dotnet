@@ -56,6 +56,7 @@ using iText.Bouncycastle.Math;
 using iText.Bouncycastle.Openssl;
 using iText.Bouncycastle.Operator;
 using iText.Bouncycastle.Pkix;
+using iText.Bouncycastle.Rsa;
 using iText.Bouncycastle.Security;
 using iText.Bouncycastle.Tsp;
 using iText.Bouncycastle.X509;
@@ -81,6 +82,7 @@ using iText.Commons.Bouncycastle.Crypto.Modes;
 using iText.Commons.Bouncycastle.Math;
 using iText.Commons.Bouncycastle.Openssl;
 using iText.Commons.Bouncycastle.Operator;
+using iText.Commons.Bouncycastle.Rsa;
 using iText.Commons.Bouncycastle.Security;
 using iText.Commons.Bouncycastle.Tsp;
 using iText.Commons.Bouncycastle.X509;
@@ -93,6 +95,7 @@ using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Modes;
 using Org.BouncyCastle.Crypto.Operators;
 using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Crypto.Signers;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Pkix;
 using Org.BouncyCastle.Security;
@@ -1152,6 +1155,11 @@ namespace iText.Bouncycastle {
         }
 
         /// <summary><inheritDoc/></summary>
+        public IPemReader CreatePEMParser(TextReader reader) {
+            return CreatePEMParser(reader, null);
+        }
+
+        /// <summary><inheritDoc/></summary>
         public IContentSigner CreateContentSigner(string signatureAlgorithm, IPrivateKey signingKey) {
             return new ContentSignerBC(new Asn1SignatureFactory(signatureAlgorithm, 
                 (AsymmetricKeyParameter)((PrivateKeyBC) signingKey).GetPrivateKey()));
@@ -1325,6 +1333,20 @@ namespace iText.Bouncycastle {
         /// <summary><inheritDoc/></summary>
         public INameConstraints CreateNameConstraints(IAsn1Object primitive) {
             return new NameConstraintsBC(NameConstraints.GetInstance(((Asn1ObjectBC) primitive).GetPrimitive()));
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public ICipherParams CreatePublicKey(ISubjectPublicKeyInfo subjectPublicKeyInfo) {
+            ICipherParameters cipherParameters = subjectPublicKeyInfo == null
+                ? null
+                : PublicKeyFactory.CreateKey(((SubjectPublicKeyInfoBC) subjectPublicKeyInfo).GetSubjectPublicKeyInfo());
+            return new CipherParamsBC(cipherParameters);
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public IRSADigestSigner CreateRSADigestSignerWithSha1Digest()
+        {
+            return new RSADigestSignerBC(new RsaDigestSigner(new Sha1Digest()));
         }
 
         //\cond DO_NOT_DOCUMENT

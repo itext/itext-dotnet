@@ -31,6 +31,7 @@ using iText.Bouncycastle.Math;
 using iText.Bouncycastle.Security;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X500;
+using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using iText.Commons.Bouncycastle.Math;
@@ -187,6 +188,11 @@ namespace iText.Bouncycastle.X509 {
                 subjectAttributeTypesWrapper[i] = new DerObjectIdentifierBC(subjectAttributeTypes[i]);
             }
             return subjectAttributeTypesWrapper;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public ISubjectPublicKeyInfo GetSubjectPublicKeyInfo() {
+            return new SubjectPublicKeyInfoBC(certificate.SubjectPublicKeyInfo);
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>

@@ -25,11 +25,13 @@ using System.Collections;
 using System.Collections.Generic;
 using iText.Bouncycastlefips.Asn1;
 using iText.Bouncycastlefips.Asn1.X500;
+using iText.Bouncycastlefips.Asn1.X509;
 using iText.Bouncycastlefips.Crypto;
 using iText.Bouncycastlefips.Math;
 using iText.Bouncycastlefips.Security;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.X500;
+using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
 using iText.Commons.Bouncycastle.Crypto;
 using Org.BouncyCastle.Cert;
@@ -198,6 +200,11 @@ namespace iText.Bouncycastlefips.Cert {
                 subjectAttributeTypesWrapper[i] = new DerObjectIdentifierBCFips(subjectAttributeTypes[i]);
             }
             return subjectAttributeTypesWrapper;
+        }
+
+        /// <summary><inheritDoc/></summary>
+        public ISubjectPublicKeyInfo GetSubjectPublicKeyInfo() {
+            return new SubjectPublicKeyInfoBCFips(certificate.SubjectPublicKeyInfo);
         }
 
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
