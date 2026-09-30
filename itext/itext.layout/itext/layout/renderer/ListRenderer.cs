@@ -323,6 +323,11 @@ namespace iText.Layout.Renderer {
             // Notice that placed item is a son of the first ListItemRenderer (otherwise there would be now
             // FORCED_PLACEMENT applied)
             IRenderer firstListItemRenderer = splitRenderer.GetChildRenderers()[0];
+            if (!(firstListItemRenderer is ListItemRenderer) && firstListItemRenderer is BlockRenderer) {
+                // If the first child is not a ListItemRenderer, fall back to default behaviour
+                return new LayoutResult(null == overflowRenderer ? LayoutResult.FULL : LayoutResult.PARTIAL, occupiedArea, 
+                    splitRenderer, overflowRenderer, this);
+            }
             iText.Layout.Renderer.ListRenderer newOverflowRenderer = (iText.Layout.Renderer.ListRenderer)CreateOverflowRenderer
                 (LayoutResult.PARTIAL);
             newOverflowRenderer.DeleteOwnProperty(Property.FORCED_PLACEMENT);
@@ -367,6 +372,11 @@ namespace iText.Layout.Renderer {
                 IList<IRenderer> symbolRenderers = new List<IRenderer>();
                 int listItemNum = (int)this.GetProperty<int?>(Property.LIST_START, 1);
                 foreach (IRenderer renderer in childRenderers) {
+                     if (!(renderer is ListItemRenderer) && (renderer is ParagraphRenderer || renderer is iText.Layout.Renderer.ListRenderer)) {
+                        // Non-ListItem children (e.g. Paragraph, nested List) do not get list symbols
+                        symbolRenderers.Add(null);
+                        continue;
+                    }
                     renderer.SetParent(this);
                     listItemNum = (renderer.GetProperty<int?>(Property.LIST_SYMBOL_ORDINAL_VALUE) != null) ? (int)renderer.GetProperty
                         <int?>(Property.LIST_SYMBOL_ORDINAL_VALUE) : listItemNum;
@@ -407,8 +417,30 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
+                float? nestedListIndent = this.GetPropertyAsFloat(Property.LIST_INDENT);
                 listItemNum = 0;
                 foreach (IRenderer childRenderer in childRenderers) {
+                    IRenderer symbolRenderer = symbolRenderers[listItemNum++];
+                    if (!(childRenderer is ListItemRenderer)) {
+                        // Non-ListItem children (e.g. Paragraph, nested List) do not get list symbols
+                        // Apply indent to nested lists so they are visually offset from the parent list
+                        if (childRenderer is iText.Layout.Renderer.ListRenderer) {
+                            if (nestedListIndent != null) {
+                                bool isRtlNested = BaseDirection.RIGHT_TO_LEFT == childRenderer.GetProperty<BaseDirection?>(Property.BASE_DIRECTION);
+                                int nestedMarginToSet = isRtlNested ? Property.MARGIN_RIGHT : Property.MARGIN_LEFT;
+                                UnitValue existingMargin = childRenderer.GetProperty<UnitValue>(nestedMarginToSet, UnitValue.CreatePointValue(0f));
+                                float nestedCalculatedMargin = existingMargin.IsPointValue() ? existingMargin.GetValue() : 0f;
+                                nestedCalculatedMargin += (float)nestedListIndent;
+                                childRenderer.SetProperty(nestedMarginToSet, UnitValue.CreatePointValue(nestedCalculatedMargin));
+                            }
+                            continue;
+                        }
+                        else if (childRenderer is ParagraphRenderer) {
+                            // Paragraphs - no list symbol
+                            continue;
+                        }
+                        // Other non-ListItem types (e.g. DivRenderer) will fall through to the throw below
+                    }
                     // Symbol indent's value should be summed with the margin's value
                     bool isRtl = BaseDirection.RIGHT_TO_LEFT == childRenderer.GetProperty<BaseDirection?>(Property.BASE_DIRECTION
                         );
@@ -426,7 +458,6 @@ namespace iText.Layout.Renderer {
                         calculatedMargin += maxSymbolWidth + (float)(symbolIndent != null ? symbolIndent : 0f);
                     }
                     childRenderer.SetProperty(marginToSet, UnitValue.CreatePointValue(calculatedMargin));
-                    IRenderer symbolRenderer = symbolRenderers[listItemNum++];
                     if (childRenderer is ListItemRenderer) {
                         ((ListItemRenderer)childRenderer).AddSymbolRenderer(symbolRenderer, maxSymbolWidth);
                     }

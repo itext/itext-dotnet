@@ -180,6 +180,40 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        [NUnit.Framework.Test]
+        public virtual void NestedListDirectChildDoesNotThrowOnLayoutTest() {
+            using (Document document = CreateDummyDocument()) {
+                List nestedList = new List(ListNumberingType.ENGLISH_LOWER).Add("nested-1").Add("nested-2");
+                List parentList = new List(ListNumberingType.DECIMAL);
+                parentList.Add(new ListItem("parent-1"));
+                parentList.Add(nestedList);
+                parentList.Add(new ListItem("parent-2"));
+                NUnit.Framework.Assert.DoesNotThrow(() => document.Add(parentList));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NestedListIndentAppliedToDirectNestedListRendererTest() {
+            List nestedList = new List(ListNumberingType.ENGLISH_LOWER).SetMarginLeft(7).Add("nested-1");
+            List parentList = new List(ListNumberingType.DECIMAL).SetListIndent(15);
+            parentList.Add(new ListItem("parent-1"));
+            parentList.Add(nestedList);
+            parentList.Add(new ListItem("parent-2"));
+            ListRenderer parentRenderer = (ListRenderer)parentList.CreateRendererSubTree();
+            using (Document document = CreateDummyDocument()) {
+                parentRenderer.SetParent(document.GetRenderer());
+                LayoutResult result = parentRenderer.Layout(CreateLayoutContext(400, 400));
+                NUnit.Framework.Assert.AreNotEqual(LayoutResult.NOTHING, result.GetStatus());
+            }
+            NUnit.Framework.Assert.AreEqual(3, parentRenderer.GetChildRenderers().Count);
+            IRenderer nestedRenderer = parentRenderer.GetChildRenderers()[1];
+            NUnit.Framework.Assert.IsTrue(nestedRenderer is ListRenderer);
+            UnitValue nestedMarginLeft = nestedRenderer.GetProperty<UnitValue>(Property.MARGIN_LEFT);
+            NUnit.Framework.Assert.IsNotNull(nestedMarginLeft);
+            NUnit.Framework.Assert.IsTrue(nestedMarginLeft.IsPointValue());
+            NUnit.Framework.Assert.AreEqual(22f, nestedMarginLeft.GetValue(), 0.0001f);
+        }
+
         private static ListRenderer CreateInsideListRenderer() {
             List list = new List();
             list.SetListSymbol(new iText.Layout.Element.Text("*"));
