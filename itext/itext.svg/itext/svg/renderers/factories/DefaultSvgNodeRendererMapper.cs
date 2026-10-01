@@ -45,6 +45,9 @@ namespace iText.Svg.Renderers.Factories {
 
         private static readonly String TEXT_LEAF_LC = StringNormalizer.ToLowerCase(SvgConstants.Tags.TEXT_LEAF);
 
+        private static readonly String FOREIGN_OBJECT_LC = StringNormalizer.ToLowerCase(SvgConstants.Tags.FOREIGN_OBJECT
+            );
+
 //\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Creates a new
@@ -82,6 +85,8 @@ namespace iText.Svg.Renderers.Factories {
             result.Put(SvgConstants.Tags.SVG, () => new SvgTagSvgNodeRenderer());
             result.Put(SvgConstants.Tags.SYMBOL, () => new SymbolSvgNodeRenderer());
             result.Put(SvgConstants.Tags.TEXT, () => new TextSvgBranchRenderer());
+            result.Put(SvgConstants.Tags.A, () => new ANodeRenderer());
+            result.Put(SvgConstants.Tags.FOREIGN_OBJECT, () => new ForeignObjectNodeRenderer());
             result.Put(SvgConstants.Tags.TSPAN, () => new TextSvgTSpanBranchRenderer());
             result.Put(SvgConstants.Tags.USE, () => new UseSvgNodeRenderer());
             result.Put(SvgConstants.Tags.TEXT_LEAF, () => new TextLeafSvgNodeRenderer());
@@ -90,10 +95,10 @@ namespace iText.Svg.Renderers.Factories {
             result.Put(LINEAR_GRADIENT_LC, () => new LinearGradientSvgNodeRenderer());
             result.Put(RADIAL_GRADIENT_LC, () => new RadialGradientSvgNodeRenderer());
             result.Put(TEXT_LEAF_LC, () => new TextLeafSvgNodeRenderer());
+            result.Put(FOREIGN_OBJECT_LC, () => new ForeignObjectNodeRenderer());
             mapping = JavaCollectionsUtil.UnmodifiableMap(result);
             // Not supported tags as of yet
             ICollection<String> ignoredTags = new HashSet<String>();
-            ignoredTags.Add(SvgConstants.Tags.A);
             ignoredTags.Add(SvgConstants.Tags.ALT_GLYPH);
             ignoredTags.Add(SvgConstants.Tags.ALT_GLYPH_DEF);
             ignoredTags.Add(SvgConstants.Tags.ALT_GLYPH_ITEM);
@@ -130,7 +135,6 @@ namespace iText.Svg.Renderers.Factories {
             ignoredTags.Add(SvgConstants.Tags.FONT_FACE_NAME);
             ignoredTags.Add(SvgConstants.Tags.FONT_FACE_SRC);
             ignoredTags.Add(SvgConstants.Tags.FONT_FACE_URI);
-            ignoredTags.Add(SvgConstants.Tags.FOREIGN_OBJECT);
             ignoredTags.Add(SvgConstants.Tags.GLYPH);
             ignoredTags.Add(SvgConstants.Tags.GLYPH_REF);
             ignoredTags.Add(SvgConstants.Tags.HKERN);

@@ -121,7 +121,7 @@ namespace iText.Svg.Converter {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, Count = 6)]
+        [LogMessage(SvgLogMessageConstant.UNMAPPED_TAG, Count = 5)]
         public virtual void CaseSensitiveTagTest() {
             String contents = "<svg width='100pt' height='100pt'>" + "<altGlyph /><altglyph />" + "<feMergeNode /><femergeNode /><feMergenode /><femergenode />"
                  + "<foreignObject /><foreignobject />" + "<glyphRef /><glyphref />" + "<linearGradient /><lineargradient />"

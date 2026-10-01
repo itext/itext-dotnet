@@ -63,6 +63,8 @@ namespace iText.Svg.Processors.Impl {
         private readonly AccessibilityProperties accessibilityProperties = new DefaultAccessibilityProperties(SvgConverter
             .SVG_DEFAULT_ROLE);
 
+        private ResourceResolver resourceResolver;
+
         /// <summary>
         /// Creates a new
         /// <see cref="SvgConverterProperties"/>
@@ -87,7 +89,8 @@ namespace iText.Svg.Processors.Impl {
         /// </remarks>
         /// <returns>the custom viewport</returns>
         public virtual Rectangle GetCustomViewport() {
-            // TODO DEVSIX-8808 add this getter to the interface ISvgConverterProperties and remove class casting where getCustomViewport is called
+            // TODO DEVSIX-8808 add this getter to the interface ISvgConverterProperties and remove class casting where
+            //  getCustomViewport is called
             return customViewport;
         }
 
@@ -204,6 +207,7 @@ namespace iText.Svg.Processors.Impl {
         /// <summary>Sets the resource retriever.</summary>
         /// <remarks>
         /// Sets the resource retriever.
+        /// <para />
         /// The resourceRetriever is used to retrieve data from resources by URL.
         /// </remarks>
         /// <param name="resourceRetriever">the resource retriever</param>
@@ -237,6 +241,31 @@ namespace iText.Svg.Processors.Impl {
             ) {
             this.cssStyleSheet = cssStyleSheet;
             return this;
+        }
+
+        /// <summary>
+        /// gets the
+        /// <see cref="iText.StyledXmlParser.Resolver.Resource.ResourceResolver"/>
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.StyledXmlParser.Resolver.Resource.ResourceResolver"/>
+        /// </returns>
+        public virtual ResourceResolver GetResourceResolver() {
+            return this.resourceResolver;
+        }
+
+        /// <summary>
+        /// Sets the
+        /// <see cref="iText.StyledXmlParser.Resolver.Resource.ResourceResolver"/>
+        /// </summary>
+        /// <param name="resolver">
+        /// the
+        /// <see cref="iText.StyledXmlParser.Resolver.Resource.ResourceResolver"/>
+        /// to set.
+        /// </param>
+        public virtual void SetResourceResolver(ResourceResolver resolver) {
+            this.resourceResolver = resolver;
         }
     }
 }

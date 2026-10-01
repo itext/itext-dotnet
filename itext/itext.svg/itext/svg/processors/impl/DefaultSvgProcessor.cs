@@ -88,6 +88,46 @@ namespace iText.Svg.Processors.Impl {
             }
         }
 
+        /// <summary>
+        /// Handles the foreign object handling, currently we just render the plain text content
+        /// for nodes which use the xhtml namespace.
+        /// </summary>
+        /// <remarks>
+        /// Handles the foreign object handling, currently we just render the plain text content
+        /// for nodes which use the xhtml namespace. Content not having this namespace will not be displayed.
+        /// </remarks>
+        /// <param name="node">
+        /// the
+        /// <c>foreignObject</c>
+        /// node
+        /// </param>
+        protected internal virtual void VisitForeignObject(INode node) {
+            if (node is IElementNode) {
+                IElementNode element = (IElementNode)node;
+                if (!IsXhtmlElement(element)) {
+                    return;
+                }
+                String name = element.Name();
+                name = name.Substring(name.IndexOf(':') + 1);
+                if ("script".EqualsIgnoreCase(name) || SvgConstants.Tags.STYLE.EqualsIgnoreCase(name)) {
+                    return;
+                }
+                foreach (INode child in node.ChildNodes()) {
+                    VisitForeignObject(child);
+                }
+            }
+            else {
+                if (node is ITextNode && node.ParentNode() is IElementNode) {
+                    IElementNode parent = (IElementNode)node.ParentNode();
+                    bool shouldShowText = IsXhtmlElement(parent) || SvgConstants.Tags.FOREIGN_OBJECT.EqualsIgnoreCase(parent.Name
+                        ());
+                    if (shouldShowText) {
+                        ProcessText((ITextNode)node);
+                    }
+                }
+            }
+        }
+
 //\cond DO_NOT_DOCUMENT
         /// <summary>Load in configuration, set initial processorState and create/fill-in context of the processor</summary>
         /// <param name="converterProps">that contains configuration properties and operations</param>
@@ -147,6 +187,11 @@ namespace iText.Svg.Processors.Impl {
         /// </remarks>
         /// <param name="node">INode to visit</param>
         private void Visit(INode node) {
+            if (processorState.Top() is ForeignObjectNodeRenderer) {
+                // Foreign gets flattened to only text, even for tag names shared with SVG.
+                VisitForeignObject(node);
+                return;
+            }
             if (node is IElementNode) {
                 IElementNode element = (IElementNode)node;
                 if (!rendererFactory.IsTagIgnored(element)) {
@@ -170,8 +215,9 @@ namespace iText.Svg.Processors.Impl {
                             }
                         }
                         else {
-                            // DefsSvgNodeRenderer should not have parental relationship with any renderer, it only serves as a storage
                             if (!(renderer is INoDrawSvgNodeRenderer) && !(parentRenderer is DefsSvgNodeRenderer)) {
+                                // DefsSvgNodeRenderer should not have parental relationship with any renderer, it only
+                                // serves as a storage
                                 if (parentRenderer is IBranchSvgNodeRenderer) {
                                     ((IBranchSvgNodeRenderer)parentRenderer).AddChild(renderer);
                                 }
@@ -200,6 +246,24 @@ namespace iText.Svg.Processors.Impl {
             }
         }
 
+        private static bool IsXhtmlElement(IElementNode element) {
+            String name = element.Name();
+            int prefixEnd = name.IndexOf(':');
+            String namespaceAttribute = prefixEnd < 0 ? SvgConstants.Attributes.XMLNS : (SvgConstants.Attributes.XMLNS
+                 + ":" + name.JSubstring(0, prefixEnd));
+            for (INode current = element; current != null; current = current.ParentNode()) {
+                if (!(current is IElementNode)) {
+                    continue;
+                }
+                String @namespace = ((IElementNode)current).GetAttribute(namespaceAttribute);
+                if (@namespace == null) {
+                    continue;
+                }
+                return "http://www.w3.org/1999/xhtml".Equals(@namespace);
+            }
+            return false;
+        }
+
         /// <summary>Check if this node is a text node that needs to be processed by the parent</summary>
         /// <param name="node">node to check</param>
         /// <returns>true if the node should be processed as text, false otherwise</returns>
@@ -211,24 +275,32 @@ namespace iText.Svg.Processors.Impl {
         /// <param name="textNode">node containing text to process</param>
         private void ProcessText(ITextNode textNode) {
             ISvgNodeRenderer parentRenderer = this.processorState.Top();
-            if (parentRenderer is TextSvgBranchRenderer) {
+            bool isForeignObject = parentRenderer is ForeignObjectNodeRenderer;
+            if (parentRenderer is TextSvgBranchRenderer || isForeignObject) {
                 String wholeText = textNode.WholeText();
-                if (!"".Equals(wholeText) && !SvgTextUtil.IsOnlyWhiteSpace(wholeText)) {
+                if (!"".Equals(wholeText) && (isForeignObject || !SvgTextUtil.IsOnlyWhiteSpace(wholeText))) {
                     IElementNode textLeafElement = new JsoupElementNode(new iText.StyledXmlParser.Jsoup.Nodes.Element(iText.StyledXmlParser.Jsoup.Parser.Tag
                         .ValueOf(SvgConstants.Tags.TEXT_LEAF), ""));
                     ISvgTextNodeRenderer textLeaf = (ISvgTextNodeRenderer)this.rendererFactory.CreateSvgNodeRendererForTag(textLeafElement
                         , parentRenderer);
                     textLeaf.SetParent(parentRenderer);
                     textLeaf.SetAttribute(SvgConstants.Attributes.TEXT_CONTENT, wholeText);
-                    ((TextSvgBranchRenderer)parentRenderer).AddChild(textLeaf);
+                    if (isForeignObject) {
+                        ((ForeignObjectNodeRenderer)parentRenderer).AddChild(textLeaf);
+                    }
+                    else {
+                        ((TextSvgBranchRenderer)parentRenderer).AddChild(textLeaf);
+                    }
                 }
             }
         }
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>Find the first element in the node-tree that corresponds with the passed tag-name.</summary>
-        /// <remarks>Find the first element in the node-tree that corresponds with the passed tag-name. Search is performed depth-first
-        ///     </remarks>
+        /// <remarks>
+        /// Find the first element in the node-tree that corresponds with the passed tag-name. Search is performed
+        /// depth-first
+        /// </remarks>
         /// <param name="node">root-node to start with</param>
         /// <param name="tagName">name of the tag that needs to be fonund</param>
         /// <returns>IElementNode</returns>

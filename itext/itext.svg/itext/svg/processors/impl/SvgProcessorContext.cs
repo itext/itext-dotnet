@@ -39,7 +39,7 @@ namespace iText.Svg.Processors.Impl {
         /// <summary>Temporary set of fonts used in the PDF.</summary>
         private FontSet tempFonts;
 
-        private readonly ResourceResolver resourceResolver;
+        private ResourceResolver resourceResolver;
 
         /// <summary>The device description.</summary>
         private MediaDeviceDescription deviceDescription;
@@ -68,8 +68,13 @@ namespace iText.Svg.Processors.Impl {
             if (fontProvider == null) {
                 fontProvider = new BasicFontProvider();
             }
-            resourceResolver = new ResourceResolver(converterProperties.GetBaseUri(), converterProperties.GetResourceRetriever
-                ());
+            if (converterProperties is SvgConverterProperties) {
+                resourceResolver = ((SvgConverterProperties)converterProperties).GetResourceResolver();
+            }
+            if (resourceResolver == null) {
+                resourceResolver = new ResourceResolver(converterProperties.GetBaseUri(), converterProperties.GetResourceRetriever
+                    ());
+            }
             cssStyleSheet = converterProperties.GetCssStyleSheet();
             if (cssStyleSheet == null) {
                 cssStyleSheet = new CssStyleSheet();
