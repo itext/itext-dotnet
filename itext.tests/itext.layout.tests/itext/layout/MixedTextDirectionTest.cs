@@ -29,6 +29,7 @@ using iText.Kernel.Utils;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout {
     [NUnit.Framework.Category("IntegrationTest")]
@@ -48,6 +49,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void ParagraphMixedTextTest() {
             String fileName = "paragraphMixedTextTest";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
@@ -82,8 +84,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.TestCaseSource("MixedVertical")]
         public virtual void ParagraphMixedVerticalTextTest(WritingMode? paragraphWritingMode) {
-            // TODO DEVSIX-10200 Consider text elements with different writing-mode as inline-blocks,
-            //  after that vertical RTL text chunks in vertical LTR paragraphs and vice versa will be fixed.
             String fileName = "paragraphMixedVerticalText_" + paragraphWritingMode.ToString();
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
             String cmpFileName = SOURCE_FOLDER + "cmp_" + fileName + ".pdf";
@@ -126,8 +126,6 @@ namespace iText.Layout {
 
         [NUnit.Framework.TestCaseSource("MixedVertical")]
         public virtual void ParagraphMixedVerticalTextNoHeightTest(WritingMode? paragraphWritingMode) {
-            // TODO DEVSIX-10200 Consider text elements with different writing-mode as inline-blocks,
-            //  after that vertical RTL text chunks in vertical LTR paragraphs and vice versa should be fixed.
             // No line breaks in vertical text with different writing-mode looks like workaround for horizontal text.
             String fileName = "paragraphMixedVerticalTextNoHeight_" + paragraphWritingMode.ToString();
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
@@ -507,6 +505,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void VerticalWritingAtTextLevelLongTextTest() {
             String fileName = "verticalWritingAtTextLevelLongTextTest";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";

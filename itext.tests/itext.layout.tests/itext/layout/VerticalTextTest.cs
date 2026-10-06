@@ -260,7 +260,9 @@ namespace iText.Layout {
                     verticalText.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_LR);
                     verticalText.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
                     verticalText.SetBorder(new SolidBorder(ColorConstants.RED, 1));
-                    paragraph.Add(verticalText);
+                    VerticalParagraph verticalParagraph = new VerticalParagraph(false);
+                    verticalParagraph.Add(verticalText);
+                    paragraph.Add(verticalParagraph);
                     paragraph.Add(new Text("horizontal text.").SetBorder(new SolidBorder(ColorConstants.BLUE, 1)));
                     document.Add(paragraph);
                 }

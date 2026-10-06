@@ -30,8 +30,12 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout {
+    // Most tests in this class look wrong. The reason is that text elements, which writing-mode is different from their parent,
+    // are supposed to be wrapped inside a paragraph. We do that at html2pdf level, but we don't do that in pure layout,
+    // mostly because in our high level API users can't add a child with different writing-mode to a VerticalParagraph.
     [NUnit.Framework.Category("IntegrationTest")]
     public class VerticalTextRTLTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
@@ -117,11 +121,13 @@ namespace iText.Layout {
                     Paragraph paragraph = new Paragraph();
                     paragraph.SetProperty(Property.OVERFLOW_X, OverflowPropertyValue.VISIBLE);
                     paragraph.SetHeight(300).SetFontSize(16).SetBorder(new SolidBorder(1));
+                    VerticalParagraph verticalParagraph = new VerticalParagraph(true);
                     Text text = new Text("The quick brown fox jumps over the lazy dog. 1234567890 ABCDEFG abcdefg.");
                     text.SetProperty(Property.WRITING_MODE, WritingMode.VERTICAL_RL);
                     text.SetProperty(Property.TEXT_ORIENTATION, VerticalTextOrientation.UPRIGHT);
                     text.SetBackgroundColor(ColorConstants.YELLOW);
-                    paragraph.Add(text);
+                    verticalParagraph.Add(text);
+                    paragraph.Add(verticalParagraph);
                     document.Add(paragraph);
                 }
             }
@@ -130,6 +136,7 @@ namespace iText.Layout {
         }
 
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.Logs.IoLogMessageConstant.CLIP_ELEMENT)]
         public virtual void SeveralInnerTextVerticalRlTest() {
             String fileName = "severalInnerTextVerticalRl";
             String outFileName = DESTINATION_FOLDER + fileName + ".pdf";
