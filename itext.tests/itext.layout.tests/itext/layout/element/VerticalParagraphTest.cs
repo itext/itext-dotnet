@@ -20,16 +20,37 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+using System;
+using System.Collections.Generic;
+using System.IO;
+using NUnit.Framework;
+using iText.Commons.Actions.Contexts;
+using iText.Commons.Actions.Sequence;
+using iText.Commons.Utils;
+using iText.IO.Font;
+using iText.IO.Font.Otf;
+using iText.Kernel.Font;
+using iText.Kernel.Pdf;
+using iText.Layout;
 using iText.Layout.Layout;
 using iText.Layout.Logs;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
+using iText.Layout.Renderer.Typography;
 using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Layout.Element {
     [NUnit.Framework.Category("UnitTest")]
     public class VerticalParagraphTest : ExtendedITextTest {
+        private static readonly String CJK_FONT = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/fonts/BioRhymeExpanded-Regular.ttf";
+
+        [NUnit.Framework.TearDown]
+        public virtual void Cleanup() {
+            TypographyUtils.SetTypographyApplierInstance(new DefaultTypographyApplier());
+        }
+
         [NUnit.Framework.Test]
         [LogMessage(LayoutLogMessageConstant.UNSUPPORTED_PROPERTY, LogLevel = LogLevelConstants.WARN)]
         public virtual void SettingUnsupportedPropertiesMustLogWarning() {
@@ -54,6 +75,46 @@ namespace iText.Layout.Element {
             NUnit.Framework.Assert.IsNull(verticalParagraph.GetProperty<TextAnchor?>(Property.TEXT_ANCHOR));
         }
 
+        [NonParallelizable]
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.TYPOGRAPHY_NOT_FOUND_WARNING)]
+        public virtual void VerticalTextShouldUseDefaultTypographyApplierWhenTypographyAvailable() {
+            PdfFont font = PdfFontFactory.CreateFont(CJK_FONT);
+            VerticalParagraphTest.TestTypographyApplier testApplier = new VerticalParagraphTest.TestTypographyApplier(
+                true);
+            TypographyUtils.SetTypographyApplierInstance(testApplier);
+            Document dummyDocument = new Document(new PdfDocument(new PdfWriter(new MemoryStream())));
+            VerticalParagraph p = new VerticalParagraph("Hello world!", false);
+            p.Add("\u0E2D\u0E32\u0E01\u0E32\u0E28");
+            p.SetFont(font);
+            p.SetProperty(Property.TYPOGRAPHY_CONFIG, true);
+            p.SetProperty(Property.FONT_KERNING, FontKerning.YES);
+            dummyDocument.Add(p);
+            dummyDocument.Close();
+            NUnit.Framework.Assert.IsFalse(testApplier.called, "Default typography applier should be used for vertical text"
+                );
+        }
+
+        [NonParallelizable]
+        [NUnit.Framework.Test]
+        [LogMessage(LayoutLogMessageConstant.TYPOGRAPHY_NOT_FOUND_WARNING)]
+        public virtual void VerticalTextShouldUseDefaultTypographyApplierWhenTypographyNotAvailable() {
+            PdfFont font = PdfFontFactory.CreateFont(CJK_FONT);
+            VerticalParagraphTest.TestTypographyApplier testApplier = new VerticalParagraphTest.TestTypographyApplier(
+                false);
+            TypographyUtils.SetTypographyApplierInstance(testApplier);
+            Document dummyDocument = new Document(new PdfDocument(new PdfWriter(new MemoryStream())));
+            VerticalParagraph p = new VerticalParagraph("Hello world!", false);
+            p.Add("\u0E2D\u0E32\u0E01\u0E32\u0E28");
+            p.SetFont(font);
+            p.SetProperty(Property.TYPOGRAPHY_CONFIG, true);
+            p.SetProperty(Property.FONT_KERNING, FontKerning.YES);
+            dummyDocument.Add(p);
+            dummyDocument.Close();
+            NUnit.Framework.Assert.IsFalse(testApplier.called, "Default typography applier should be used for vertical text"
+                );
+        }
+
         private class TestRenderer : AbstractRenderer {
             public TestRenderer()
                 : base() {
@@ -65,6 +126,66 @@ namespace iText.Layout.Element {
 
             public override IRenderer GetNextRenderer() {
                 return null;
+            }
+        }
+
+        private class TestTypographyApplier : AbstractTypographyApplier {
+            public readonly bool emulatePdfCalligraphInstance;
+
+            public bool called = false;
+
+            public TestTypographyApplier(bool emulatePdfCalligraphInstance)
+                : base() {
+                this.emulatePdfCalligraphInstance = emulatePdfCalligraphInstance;
+            }
+
+            public override bool IsPdfCalligraphInstance() {
+                //This one is not counted
+                return emulatePdfCalligraphInstance;
+            }
+
+            public override ICollection<UnicodeScript> GetSupportedScripts() {
+                called = true;
+                return JavaCollectionsUtil.EmptyList<UnicodeScript>();
+            }
+
+            public override ICollection<UnicodeScript> GetSupportedScripts(Object configurator) {
+                called = true;
+                return base.GetSupportedScripts(configurator);
+            }
+
+            public override bool ApplyOtfScript(TrueTypeFont font, GlyphLine glyphLine, UnicodeScript? script, Object 
+                configurator, SequenceId id, IMetaInfo metaInfo) {
+                called = true;
+                return base.ApplyOtfScript(font, glyphLine, script, configurator, id, metaInfo);
+            }
+
+            public override bool ApplyKerning(FontProgram fontProgram, GlyphLine text, SequenceId sequenceId, IMetaInfo
+                 metaInfo) {
+                called = true;
+                return base.ApplyKerning(fontProgram, text, sequenceId, metaInfo);
+            }
+
+            public override byte[] GetBidiLevels(BaseDirection? baseDirection, int[] unicodeIds, SequenceId sequenceId
+                , IMetaInfo metaInfo) {
+                called = true;
+                return base.GetBidiLevels(baseDirection, unicodeIds, sequenceId, metaInfo);
+            }
+
+            public override int[] ReorderLine(IList<LineRenderer.RendererGlyph> line, byte[] lineLevels, byte[] levels
+                ) {
+                called = true;
+                return base.ReorderLine(line, lineLevels, levels);
+            }
+
+            public override IList<int> GetPossibleBreaks(String str) {
+                called = true;
+                return base.GetPossibleBreaks(str);
+            }
+
+            public override IDictionary<String, byte[]> LoadShippedFonts() {
+                called = true;
+                return base.LoadShippedFonts();
             }
         }
     }

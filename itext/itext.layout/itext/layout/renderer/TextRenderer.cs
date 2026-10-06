@@ -845,6 +845,7 @@ namespace iText.Layout.Renderer {
         }
 
         public virtual void ApplyOtf() {
+            AbstractTypographyApplier typographyApplier = TypographyUtils.GetApplierInstance(IsVerticalWriting());
             UpdateFontAndText();
             UnicodeScript? script = this.GetProperty<UnicodeScript?>(Property.FONT_SCRIPT);
             if (!otfFeaturesApplied && text.GetStart() < text.GetEnd()) {
@@ -856,10 +857,10 @@ namespace iText.Layout.Renderer {
                     Object typographyConfig = this.GetProperty<Object>(Property.TYPOGRAPHY_CONFIG);
                     ICollection<UnicodeScript> supportedScripts = null;
                     if (typographyConfig != null) {
-                        supportedScripts = TypographyUtils.GetSupportedScripts(typographyConfig);
+                        supportedScripts = typographyApplier.GetSupportedScripts(typographyConfig);
                     }
                     if (supportedScripts == null) {
-                        supportedScripts = TypographyUtils.GetSupportedScripts();
+                        supportedScripts = typographyApplier.GetSupportedScripts();
                     }
                     IList<TextRenderer.ScriptRange> scriptsRanges = new List<TextRenderer.ScriptRange>();
                     if (script != null) {
@@ -910,14 +911,8 @@ namespace iText.Layout.Renderer {
                             // from text renderers (see LineRenderer#applyOtf).
                             SetProperty(Property.BASE_DIRECTION, BaseDirection.DEFAULT_BIDI);
                         }
-                        if (IsVerticalWriting()) {
-                            new DefaultTypographyApplier().ApplyOtfScript((TrueTypeFont)font.GetFontProgram(), text, scriptsRange.script
-                                , typographyConfig, sequenceId, metaInfo);
-                        }
-                        else {
-                            TypographyUtils.ApplyOtfScript(font.GetFontProgram(), text, scriptsRange.script, typographyConfig, sequenceId
-                                , metaInfo);
-                        }
+                        typographyApplier.ApplyOtfScript((TrueTypeFont)font.GetFontProgram(), text, scriptsRange.script, typographyConfig
+                            , sequenceId, metaInfo);
                         delta += text.GetEnd() - scriptsRange.rangeEnd;
                         scriptsRange.rangeEnd = shapingRangeStart = text.GetEnd();
                     }
@@ -927,12 +922,7 @@ namespace iText.Layout.Renderer {
                 FontKerning fontKerning = (FontKerning)this.GetProperty<FontKerning?>(Property.FONT_KERNING, FontKerning.NO
                     );
                 if (fontKerning == FontKerning.YES) {
-                    if (IsVerticalWriting()) {
-                        new DefaultTypographyApplier().ApplyKerning(font.GetFontProgram(), text, sequenceId, metaInfo);
-                    }
-                    else {
-                        TypographyUtils.ApplyKerning(font.GetFontProgram(), text, sequenceId, metaInfo);
-                    }
+                    typographyApplier.ApplyKerning(font.GetFontProgram(), text, sequenceId, metaInfo);
                 }
                 otfFeaturesApplied = true;
             }

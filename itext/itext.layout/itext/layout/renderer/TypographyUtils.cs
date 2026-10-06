@@ -45,6 +45,8 @@ namespace iText.Layout.Renderer {
 
         private static AbstractTypographyApplier applierInstance;
 
+        private static AbstractTypographyApplier defaultApplierInstance;
+
         static TypographyUtils() {
             try {
                 Type type = GetTypographyClass(TYPOGRAPHY_PACKAGE + TYPOGRAPHY_APPLIER);
@@ -58,8 +60,9 @@ namespace iText.Layout.Renderer {
             catch (Exception) {
             }
             // do nothing
+            defaultApplierInstance = new DefaultTypographyApplier();
             if (applierInstance == null) {
-                SetTypographyApplierInstance(new DefaultTypographyApplier());
+                SetTypographyApplierInstance(defaultApplierInstance);
             }
         }
 
@@ -92,6 +95,13 @@ namespace iText.Layout.Renderer {
 
         public static IDictionary<String, byte[]> LoadShippedFonts() {
             return applierInstance.LoadShippedFonts();
+        }
+
+        public static AbstractTypographyApplier GetApplierInstance(bool vertical) {
+            if (vertical) {
+                return defaultApplierInstance;
+            }
+            return applierInstance;
         }
 
 //\cond DO_NOT_DOCUMENT
