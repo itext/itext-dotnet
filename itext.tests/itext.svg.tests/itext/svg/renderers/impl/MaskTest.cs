@@ -82,7 +82,6 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void MaskWithGradientWithStopOpacity() {
-            //TODO DEVSIX-4136 update after gradient opacity support implementation
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "maskWithGradientWithStopOpacity", properties
                 );
         }

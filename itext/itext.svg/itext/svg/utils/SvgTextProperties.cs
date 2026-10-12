@@ -44,7 +44,11 @@ namespace iText.Svg.Utils {
     public class SvgTextProperties {
         private Color fillColor = PdfCanvasConstants.DEFAULT_FILL_COLOR;
 
+        private Color fillOpacityMaskColor = null;
+
         private Color strokeColor = PdfCanvasConstants.DEFAULT_STROKE_COLOR;
+
+        private Color strokeOpacityMaskColor = null;
 
         private float fillOpacity = PdfCanvasConstants.DEFAULT_FILL_OPACITY;
 
@@ -85,7 +89,9 @@ namespace iText.Svg.Utils {
         /// </param>
         public SvgTextProperties(iText.Svg.Utils.SvgTextProperties textProperties) {
             this.fillColor = textProperties.GetFillColor();
+            this.fillOpacityMaskColor = textProperties.GetFillOpacityMaskColor();
             this.strokeColor = textProperties.GetStrokeColor();
+            this.strokeOpacityMaskColor = textProperties.GetStrokeOpacityMaskColor();
             this.fillOpacity = textProperties.GetFillOpacity();
             this.strokeOpacity = textProperties.GetStrokeOpacity();
             this.dashArray = textProperties.GetDashArray();
@@ -169,6 +175,24 @@ namespace iText.Svg.Utils {
             return this;
         }
 
+        /// <summary>Gets the opacity mask color used for text stroke gradients with translucent stops.</summary>
+        /// <returns>stroke opacity mask color</returns>
+        public virtual Color GetStrokeOpacityMaskColor() {
+            return strokeOpacityMaskColor;
+        }
+
+        /// <summary>Sets the opacity mask color used for text stroke gradients with translucent stops.</summary>
+        /// <param name="strokeOpacityMaskColor">stroke opacity mask color to set</param>
+        /// <returns>
+        /// this same
+        /// <see cref="SvgTextProperties"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Svg.Utils.SvgTextProperties SetStrokeOpacityMaskColor(Color strokeOpacityMaskColor) {
+            this.strokeOpacityMaskColor = strokeOpacityMaskColor;
+            return this;
+        }
+
         /// <summary>Gets text fill color.</summary>
         /// <returns>fill color</returns>
         public virtual Color GetFillColor() {
@@ -184,6 +208,24 @@ namespace iText.Svg.Utils {
         /// </returns>
         public virtual iText.Svg.Utils.SvgTextProperties SetFillColor(Color fillColor) {
             this.fillColor = fillColor;
+            return this;
+        }
+
+        /// <summary>Gets the opacity mask color used for text fill gradients with translucent stops.</summary>
+        /// <returns>fill opacity mask color</returns>
+        public virtual Color GetFillOpacityMaskColor() {
+            return fillOpacityMaskColor;
+        }
+
+        /// <summary>Sets the opacity mask color used for text fill gradients with translucent stops.</summary>
+        /// <param name="fillOpacityMaskColor">fill opacity mask color to set</param>
+        /// <returns>
+        /// this same
+        /// <see cref="SvgTextProperties"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Svg.Utils.SvgTextProperties SetFillOpacityMaskColor(Color fillOpacityMaskColor) {
+            this.fillOpacityMaskColor = fillOpacityMaskColor;
             return this;
         }
 

@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Commons.Internal.Runtime;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
@@ -108,12 +109,21 @@ namespace iText.Svg.Renderers.Impl {
         protected internal override void DoDraw(SvgDrawContext context) {
             if (this.attributesAndStyles != null && this.attributesAndStyles.ContainsKey(SvgConstants.Attributes.TEXT_CONTENT
                 )) {
-                text.SetText(this.attributesAndStyles.Get(SvgConstants.Attributes.TEXT_CONTENT));
-                ((TextSvgBranchRenderer)GetParent()).ApplyFontProperties(text, context);
-                ((TextSvgBranchRenderer)GetParent()).ApplyTextRenderingMode(text);
-                ApplyTransform(context);
-                ApplyGraphicsState(context);
-                ((TextSvgBranchRenderer)GetParent()).AddTextChild(text, context);
+                String textContent = this.attributesAndStyles.Get(SvgConstants.Attributes.TEXT_CONTENT);
+                text.SetText(textContent);
+                TextSvgBranchRenderer parent = (TextSvgBranchRenderer)GetParent();
+                SvgTextProperties textProperties = context.GetSvgTextProperties();
+                parent.ApplyFontProperties(text, context);
+                parent.ApplyTextRenderingMode(text);
+                ApplyTransform(text, context);
+                ApplyGraphicsState(text, textProperties);
+                // Identical layout of the "opacity" text element
+                Color fillMaskColor = textProperties.GetFillOpacityMaskColor();
+                Color strokeMaskColor = textProperties.GetStrokeOpacityMaskColor();
+                Text opacityMaskText = new Text(textContent);
+                ApplyTransform(opacityMaskText, context);
+                ApplyOpacityMaskGraphicsState(opacityMaskText, textProperties, fillMaskColor, strokeMaskColor);
+                parent.AddTextChild(text, opacityMaskText, fillMaskColor != null || strokeMaskColor != null, context);
             }
         }
 
@@ -121,24 +131,30 @@ namespace iText.Svg.Renderers.Impl {
             return false;
         }
 
-        private void ApplyTransform(SvgDrawContext context) {
+        private static void ApplyTransform(Text targetText, SvgDrawContext context) {
             AffineTransform transform = context.GetRootTransform();
-            text.SetHorizontalScaling((float)transform.GetScaleX());
-            text.SetProperty(Property.VERTICAL_SCALING, transform.GetScaleY());
-            text.SetProperty(Property.SKEW, new float[] { (float)transform.GetShearX(), (float)transform.GetShearY() }
-                );
+            targetText.SetHorizontalScaling((float)transform.GetScaleX());
+            targetText.SetProperty(Property.VERTICAL_SCALING, transform.GetScaleY());
+            targetText.SetProperty(Property.SKEW, new float[] { (float)transform.GetShearX(), (float)transform.GetShearY
+                () });
         }
 
-        private void ApplyGraphicsState(SvgDrawContext context) {
-            SvgTextProperties textProperties = context.GetSvgTextProperties();
-            text.SetFontColor(textProperties.GetFillColor(), textProperties.GetFillOpacity());
-            text.SetStrokeWidth(textProperties.GetLineWidth());
-            text.SetStrokeColor(textProperties.GetStrokeColor(), textProperties.GetStrokeOpacity());
-            text.SetDashPattern(textProperties.GetDashArray(), textProperties.GetDashPhase());
-            text.SetProperty(Property.UNDERLINE, textProperties.GetTextDecoration());
-            text.SetLineCapStyle(textProperties.GetLineCapStyle());
-            text.SetLineJoinStyle(textProperties.GetLineJoinStyle());
-            text.SetMiterLimit(textProperties.GetMiterLimit());
+        private static void ApplyGraphicsState(Text targetText, SvgTextProperties textProperties) {
+            targetText.SetFontColor(textProperties.GetFillColor(), textProperties.GetFillOpacity());
+            targetText.SetStrokeWidth(textProperties.GetLineWidth());
+            targetText.SetStrokeColor(textProperties.GetStrokeColor(), textProperties.GetStrokeOpacity());
+            targetText.SetDashPattern(textProperties.GetDashArray(), textProperties.GetDashPhase());
+            targetText.SetProperty(Property.UNDERLINE, textProperties.GetTextDecoration());
+            targetText.SetLineCapStyle(textProperties.GetLineCapStyle());
+            targetText.SetLineJoinStyle(textProperties.GetLineJoinStyle());
+            targetText.SetMiterLimit(textProperties.GetMiterLimit());
+        }
+
+        private static void ApplyOpacityMaskGraphicsState(Text targetText, SvgTextProperties textProperties, Color
+             fillMaskColor, Color strokeMaskColor) {
+            ApplyGraphicsState(targetText, textProperties);
+            targetText.SetFontColor(fillMaskColor != null ? fillMaskColor : ColorConstants.WHITE, 1f);
+            targetText.SetStrokeColor(strokeMaskColor != null ? strokeMaskColor : ColorConstants.WHITE, 1f);
         }
 
         private LineRenderer LayoutText(SvgDrawContext context) {

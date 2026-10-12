@@ -45,19 +45,16 @@ namespace iText.Svg.Googlecharts {
 
         [NUnit.Framework.Test]
         public virtual void WordTrees2Chart() {
-            //TODO update cmp file after DEVSIX-4136 will be fixed (opacity gradient)
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "wordTrees2Chart", PageSize.A1);
         }
 
         [NUnit.Framework.Test]
         public virtual void WordTrees3Chart() {
-            //TODO update cmp file after DEVSIX-4136 will be fixed (opacity gradient)
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "wordTrees3Chart", PageSize.A1);
         }
 
         [NUnit.Framework.Test]
         public virtual void WordTrees4Chart() {
-            //TODO update cmp file after DEVSIX-4136 will be fixed (opacity gradient)
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "wordTrees4Chart", PageSize.A1);
         }
     }

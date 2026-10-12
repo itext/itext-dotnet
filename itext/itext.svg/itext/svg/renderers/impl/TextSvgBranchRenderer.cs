@@ -22,11 +22,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Datastructures;
 using iText.Commons.Internal.Runtime;
 using iText.Commons.Utils;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout.Element;
 using iText.Layout.Font;
@@ -46,9 +49,14 @@ namespace iText.Svg.Renderers.Impl {
     /// implementation for the &lt;text&gt; and &lt;tspan&gt; tag.
     /// </summary>
     public class TextSvgBranchRenderer : AbstractSvgNodeRenderer, ISvgTextNodeRenderer {
-        /// <summary>Top level transformation to flip the y-axis results in the character glyphs being mirrored, this tf corrects for this behaviour
-        ///     </summary>
+        /// <summary>
+        /// Top level transformation to flip the y-axis results in the character glyphs being mirrored,
+        /// this tf corrects for this behavior
+        /// </summary>
         protected internal static readonly AffineTransform TEXTFLIP = new AffineTransform(1, 0, 0, -1, 0, 0);
+
+        // Large area used for forms of text chunks composited with an opacity mask
+        private static readonly Rectangle FORM_BBOX = new Rectangle(0, 0, 1e6F, 1e6F);
 
         private readonly IList<ISvgTextNodeRenderer> children = new List<ISvgTextNodeRenderer>();
 
@@ -57,7 +65,11 @@ namespace iText.Svg.Renderers.Impl {
 
         private Paragraph paragraph;
 
+        private Paragraph opacityMaskParagraph;
+
         private Rectangle objectBoundingBox;
+
+        private bool paragraphHasOpacityMask;
 
         private bool moveResolved;
 
@@ -315,25 +327,27 @@ namespace iText.Svg.Renderers.Impl {
             if (!whiteSpaceProcessed) {
                 SvgTextUtil.ProcessWhiteSpace(this, true, context);
             }
-            this.paragraph = new Paragraph();
-            this.paragraph.SetProperty(Property.FORCED_PLACEMENT, true);
-            this.paragraph.SetProperty(Property.RENDERING_MODE, RenderingMode.SVG_MODE);
-            this.paragraph.SetProperty(Property.NO_SOFT_WRAP_INLINE, true);
+            this.paragraph = CreateTextParagraph();
+            this.opacityMaskParagraph = CreateTextParagraph();
+            this.paragraphHasOpacityMask = false;
             if (GetParentClipPath() != null) {
                 this.paragraph.SetProperty(Property.BEFORE_TEXT_RESTORE_EXECUTOR, new TextSvgBranchRenderer.ClippedElementDrawer
                     (GetParentClipPath(), context));
             }
-            this.paragraph.SetMargin(0);
             String direction = this.attributesAndStyles.Get(SvgConstants.Attributes.DIRECTION);
             bool isRtl = "rtl".Equals(direction);
             if (isRtl) {
                 paragraph.SetProperty(Property.BASE_DIRECTION, BaseDirection.RIGHT_TO_LEFT);
+                opacityMaskParagraph.SetProperty(Property.BASE_DIRECTION, BaseDirection.RIGHT_TO_LEFT);
             }
             else {
                 paragraph.SetProperty(Property.BASE_DIRECTION, BaseDirection.LEFT_TO_RIGHT);
+                opacityMaskParagraph.SetProperty(Property.BASE_DIRECTION, BaseDirection.LEFT_TO_RIGHT);
             }
             ApplyTextRenderingMode(paragraph);
+            ApplyTextRenderingMode(opacityMaskParagraph);
             ApplyFontProperties(paragraph, context);
+            ApplyFontProperties(opacityMaskParagraph, context);
             // We resolve and draw absolutely positioned text chunks similar to getTextRectangle method. We are interested
             // not only in building of properly positioned rectangles, but also in drawing and text properties applying.
             StartNewTextChunk(context, TEXTFLIP);
@@ -382,15 +396,16 @@ namespace iText.Svg.Renderers.Impl {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal virtual void AddTextChild(Text text, SvgDrawContext drawContext) {
+        internal virtual void AddTextChild(Text text, Text opacityMaskText, bool hasOpacityMask, SvgDrawContext drawContext
+            ) {
             if (GetParent() is iText.Svg.Renderers.Impl.TextSvgBranchRenderer) {
-                ((iText.Svg.Renderers.Impl.TextSvgBranchRenderer)GetParent()).AddTextChild(text, drawContext);
+                ((iText.Svg.Renderers.Impl.TextSvgBranchRenderer)GetParent()).AddTextChild(text, opacityMaskText, hasOpacityMask
+                    , drawContext);
                 return;
             }
-            text.SetProperty(Property.POSITION, LayoutPosition.RELATIVE);
-            text.SetProperty(Property.LEFT, drawContext.GetRelativePosition()[0]);
-            text.SetProperty(Property.BOTTOM, drawContext.GetRelativePosition()[1]);
-            paragraph.Add(text);
+            AddTextToParagraph(paragraph, text, drawContext);
+            AddTextToParagraph(opacityMaskParagraph, opacityMaskText, drawContext);
+            paragraphHasOpacityMask |= hasOpacityMask;
         }
 //\endcond
 
@@ -432,16 +447,12 @@ namespace iText.Svg.Renderers.Impl {
             if (paragraph.GetChildren().IsEmpty()) {
                 return;
             }
-            ParagraphRenderer paragraphRenderer = new ParagraphRenderer(paragraph);
-            paragraph.SetNextRenderer(paragraphRenderer);
-            using (iText.Layout.Canvas canvas = new iText.Layout.Canvas(context.GetCurrentCanvas(), new Rectangle((float
-                )context.GetRootTransform().GetTranslateX(), (float)context.GetRootTransform().GetTranslateY(), 1e6f, 
-                0))) {
-                canvas.Add(paragraph);
-            }
-            float textLength = paragraphRenderer.GetLines()[0].GetOccupiedAreaBBox().GetWidth();
+            float textLength = paragraphHasOpacityMask && GetParentClipPath() == null ? DrawTextChunkWithOpacityMask(context
+                ) : DrawTextChunkNormal(context);
             context.AddTextMove(textLength, 0);
             paragraph.GetChildren().Clear();
+            opacityMaskParagraph.GetChildren().Clear();
+            paragraphHasOpacityMask = false;
         }
 
 //\cond DO_NOT_DOCUMENT
@@ -450,6 +461,7 @@ namespace iText.Svg.Renderers.Impl {
             if (fillProperties != null) {
                 context.GetSvgTextProperties().SetFillColor(context.IsRenderingLuminosityMask() ? ColorUtils.ToDeviceGrayForSvgLuminanceMode
                     (fillProperties.GetColor()) : fillProperties.GetColor());
+                context.GetSvgTextProperties().SetFillOpacityMaskColor(fillProperties.GetOpacityMaskColor());
                 if (!CssUtils.CompareFloats(fillProperties.GetOpacity(), 1f)) {
                     context.GetSvgTextProperties().SetFillOpacity(fillProperties.GetOpacity());
                 }
@@ -465,6 +477,7 @@ namespace iText.Svg.Renderers.Impl {
                     context.GetSvgTextProperties().SetStrokeColor(context.IsRenderingLuminosityMask() ? ColorUtils.ToDeviceGrayForSvgLuminanceMode
                         (strokeProperties.GetColor()) : strokeProperties.GetColor());
                 }
+                context.GetSvgTextProperties().SetStrokeOpacityMaskColor(strokeProperties.GetOpacityMaskColor());
                 context.GetSvgTextProperties().SetLineWidth(strokeProperties.GetWidth());
                 if (!CssUtils.CompareFloats(strokeProperties.GetOpacity(), 1f)) {
                     context.GetSvgTextProperties().SetStrokeOpacity(strokeProperties.GetOpacity());
@@ -477,6 +490,68 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 //\endcond
+
+        private static Paragraph CreateTextParagraph() {
+            Paragraph result = new Paragraph();
+            result.SetProperty(Property.FORCED_PLACEMENT, true);
+            result.SetProperty(Property.RENDERING_MODE, RenderingMode.SVG_MODE);
+            result.SetProperty(Property.NO_SOFT_WRAP_INLINE, true);
+            result.SetMargin(0);
+            return result;
+        }
+
+        private static void AddTextToParagraph(Paragraph targetParagraph, Text targetText, SvgDrawContext drawContext
+            ) {
+            targetText.SetProperty(Property.POSITION, LayoutPosition.RELATIVE);
+            targetText.SetProperty(Property.LEFT, drawContext.GetRelativePosition()[0]);
+            targetText.SetProperty(Property.BOTTOM, drawContext.GetRelativePosition()[1]);
+            targetParagraph.Add(targetText);
+        }
+
+        private float DrawTextChunkNormal(SvgDrawContext context) {
+            ParagraphRenderer paragraphRenderer = new ParagraphRenderer(paragraph);
+            paragraph.SetNextRenderer(paragraphRenderer);
+            using (iText.Layout.Canvas canvas = new iText.Layout.Canvas(context.GetCurrentCanvas(), new Rectangle((float
+                )context.GetRootTransform().GetTranslateX(), (float)context.GetRootTransform().GetTranslateY(), 1e6f, 
+                0))) {
+                canvas.Add(paragraph);
+            }
+            return paragraphRenderer.GetLines()[0].GetOccupiedAreaBBox().GetWidth();
+        }
+
+        private float DrawTextChunkWithOpacityMask(SvgDrawContext context) {
+            Tuple2<PdfFormXObject, float> contentForm = CreateTextForm(context, paragraph, false);
+            Tuple2<PdfFormXObject, float> opacityMaskForm = CreateTextForm(context, opacityMaskParagraph, true);
+            PdfCanvas currentCanvas = context.GetCurrentCanvas();
+            currentCanvas.SaveState();
+            currentCanvas.SetExtGState(MaskSvgNodeRenderer.CreateSoftMaskExtGState(opacityMaskForm.GetFirst(), PdfName
+                .Luminosity));
+            currentCanvas.AddXObjectAt(contentForm.GetFirst(), FORM_BBOX.GetX(), FORM_BBOX.GetY());
+            currentCanvas.RestoreState();
+            return contentForm.GetSecond();
+        }
+
+        private static Tuple2<PdfFormXObject, float> CreateTextForm(SvgDrawContext context, Paragraph paragraph, bool
+             isOpacityMask) {
+            PdfFormXObject textForm = new PdfFormXObject(FORM_BBOX);
+            PdfTransparencyGroup group = new PdfTransparencyGroup();
+            if (isOpacityMask) {
+                group.SetColorSpace(PdfName.DeviceGray);
+            }
+            else {
+                group.SetIsolated(true);
+            }
+            textForm.SetGroup(group);
+            ParagraphRenderer paragraphRenderer = new ParagraphRenderer(paragraph);
+            paragraph.SetNextRenderer(paragraphRenderer);
+            using (iText.Layout.Canvas canvas = new iText.Layout.Canvas(new PdfCanvas(textForm, context.GetCurrentCanvas
+                ().GetDocument()), new Rectangle((float)context.GetRootTransform().GetTranslateX(), (float)context.GetRootTransform
+                ().GetTranslateY(), 1e6F, 0))) {
+                canvas.Add(paragraph);
+            }
+            return new Tuple2<PdfFormXObject, float>(textForm, paragraphRenderer.GetLines()[0].GetOccupiedAreaBBox().GetWidth
+                ());
+        }
 
         private void ResolveRelativeTextMove(SvgDrawContext context) {
             if (this.attributesAndStyles != null) {
@@ -591,14 +666,17 @@ namespace iText.Svg.Renderers.Impl {
             }
             if (SvgConstants.Values.TEXT_ANCHOR_MIDDLE.Equals(textAnchorValue)) {
                 paragraph.SetProperty(Property.TEXT_ANCHOR, TextAnchor.MIDDLE);
+                opacityMaskParagraph.SetProperty(Property.TEXT_ANCHOR, TextAnchor.MIDDLE);
                 return;
             }
             if (SvgConstants.Values.TEXT_ANCHOR_END.Equals(textAnchorValue) && !isRtl || !SvgConstants.Values.TEXT_ANCHOR_END
                 .Equals(textAnchorValue) && isRtl) {
                 paragraph.SetProperty(Property.TEXT_ANCHOR, TextAnchor.END);
+                opacityMaskParagraph.SetProperty(Property.TEXT_ANCHOR, TextAnchor.END);
                 return;
             }
             paragraph.SetProperty(Property.TEXT_ANCHOR, TextAnchor.START);
+            opacityMaskParagraph.SetProperty(Property.TEXT_ANCHOR, TextAnchor.START);
         }
 
         private Point GetStartPoint(SvgDrawContext context, Point basePoint) {

@@ -276,8 +276,6 @@ namespace iText.Svg.Renderers.Impl {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectMultipleStopsWithSameOffsetRepeat");
         }
 
-        // TODO: DEVSIX-4136 update cmp_ after fix
-        //  (opacity is not implemented. No stops defines no color, i.e. transparent color or black with 100% opacity)
         [NUnit.Framework.Test]
         public virtual void RectNoStopsTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "rectNoStops");
@@ -675,6 +673,76 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void LowerCaseGradientUnitsTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "lowerCaseGradientUnits");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GradientWithStrokeOpacityTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "gradientWithStrokeOpacity");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GradientFillAndStrokeOpacityTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "gradientFillAndStrokeOpacity");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void MarkerGradientStopOpacityTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerGradientStopOpacity");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextGradientStopOpacityTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textGradientStopOpacity");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void LinearGradientOpacityTransformTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "linearGradientOpacityTransform");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ClipPathWithGradientOpacityTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "clipPathWithGradientOpacity");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void InheritedGradientOpacityTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "inheritedGradientOpacity");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextLinearGradientOpacityTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textLinearGradientOpacity");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextGradientStrokeOpacityTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textGradientStrokeOpacity");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextGradientFillAndStrokeOpacityTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textGradientFillAndStrokeOpacity");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TspanGradientOpacityTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "tspanGradientOpacity");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ClippedGradientTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "clippedGradient");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ImageWithGradientTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "imageWithGradient");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void GradientPercentStopOpacityTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "gradientPercentStopOpacity");
         }
     }
 }

@@ -130,6 +130,17 @@ namespace iText.Svg.Renderers.Impl {
             throw new NotSupportedException(SvgExceptionMessageConstant.DRAW_NO_DRAW);
         }
 
+//\cond DO_NOT_DOCUMENT
+        internal static PdfExtGState CreateSoftMaskExtGState(PdfFormXObject maskForm, PdfName alphaType) {
+            PdfDictionary softMask = new PdfDictionary();
+            softMask.Put(PdfName.S, alphaType);
+            softMask.Put(PdfName.G, maskForm.GetPdfObject());
+            PdfExtGState extGState = new PdfExtGState();
+            extGState.SetSoftMask(softMask);
+            return extGState;
+        }
+//\endcond
+
         private static PdfFormXObject CreateMaskedContentForm(Rectangle maskArea, AbstractSvgNodeRenderer maskedRenderer
             , SvgDrawContext context, PdfCanvas currentCanvas) {
             PdfFormXObject maskedContentForm = new PdfFormXObject(maskArea);
@@ -246,20 +257,12 @@ namespace iText.Svg.Renderers.Impl {
 
         private void ApplySoftMaskAndDrawMaskedContent(PdfCanvas currentCanvas, PdfFormXObject maskedContentForm, 
             PdfFormXObject maskForm, Rectangle maskArea) {
-            PdfExtGState extGState = CreateSoftMaskExtGState(maskForm);
+            PdfExtGState extGState = CreateSoftMaskExtGState(maskForm, IsAlphaMaskType() ? PdfName.Alpha : PdfName.Luminosity
+                );
             currentCanvas.SaveState();
             currentCanvas.SetExtGState(extGState);
             currentCanvas.AddXObjectAt(maskedContentForm, maskArea.GetX(), maskArea.GetY());
             currentCanvas.RestoreState();
-        }
-
-        private PdfExtGState CreateSoftMaskExtGState(PdfFormXObject maskForm) {
-            PdfDictionary softMask = new PdfDictionary();
-            softMask.Put(PdfName.S, IsAlphaMaskType() ? PdfName.Alpha : PdfName.Luminosity);
-            softMask.Put(PdfName.G, maskForm.GetPdfObject());
-            PdfExtGState extGState = new PdfExtGState();
-            extGState.SetSoftMask(softMask);
-            return extGState;
         }
 
         private static bool IsValidArea(Rectangle area) {

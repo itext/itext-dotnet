@@ -48,8 +48,6 @@ namespace iText.Kernel.Colors.Gradients {
     public class GradientColorStop {
         private readonly float[] rgb;
 
-        private readonly float opacity;
-
         private GradientColorStop.OffsetType offsetType;
 
         private double offset;
@@ -66,10 +64,10 @@ namespace iText.Kernel.Colors.Gradients {
         /// </summary>
         /// <param name="rgb">the color value</param>
         public GradientColorStop(float[] rgb)
-            : this(rgb, 1f, 0d, GradientColorStop.OffsetType.AUTO) {
+            : this(rgb, 0d, GradientColorStop.OffsetType.AUTO) {
         }
 
-        /// <summary>Constructor of stop color with with specified rgb color and offset</summary>
+        /// <summary>Constructor of stop color with the specified rgb color and offset.</summary>
         /// <param name="rgb">the color value</param>
         /// <param name="offset">
         /// the offset value. Makes sense only if the
@@ -77,9 +75,25 @@ namespace iText.Kernel.Colors.Gradients {
         /// is not
         /// <see cref="OffsetType.AUTO"/>
         /// </param>
-        /// <param name="offsetType">the offset's type</param>
-        public GradientColorStop(float[] rgb, double offset, GradientColorStop.OffsetType offsetType)
-            : this(rgb, 1f, offset, offsetType) {
+        /// <param name="offsetType">the offset type</param>
+        public GradientColorStop(float[] rgb, double offset, GradientColorStop.OffsetType offsetType) {
+            this.rgb = CopyRgbArray(rgb);
+            SetOffset(offset, offsetType);
+        }
+
+        /// <summary>Constructor of stop color with the same rgb value for all channels and offset.</summary>
+        /// <param name="stopOpacity">the color value for all channels</param>
+        /// <param name="offset">
+        /// the offset value. Makes sense only if the
+        /// <paramref name="offsetType"/>
+        /// is not
+        /// <see cref="OffsetType.AUTO"/>
+        /// </param>
+        /// <param name="offsetType">the offset type</param>
+        public GradientColorStop(float stopOpacity, double offset, GradientColorStop.OffsetType offsetType) {
+            float normalizedStopOpacity = Normalize(stopOpacity);
+            this.rgb = new float[] { normalizedStopOpacity, normalizedStopOpacity, normalizedStopOpacity };
+            SetOffset(offset, offsetType);
         }
 
         /// <summary>Constructor that creates the stop with the same color as the another stop and new offset</summary>
@@ -93,27 +107,13 @@ namespace iText.Kernel.Colors.Gradients {
         /// <param name="offsetType">the new offset's type</param>
         public GradientColorStop(iText.Kernel.Colors.Gradients.GradientColorStop gradientColorStop, double offset, 
             GradientColorStop.OffsetType offsetType)
-            : this(gradientColorStop.GetRgbArray(), gradientColorStop.GetOpacity(), offset, offsetType) {
-        }
-
-        private GradientColorStop(float[] rgb, float opacity, double offset, GradientColorStop.OffsetType offsetType
-            ) {
-            this.rgb = CopyRgbArray(rgb);
-            this.opacity = Normalize(opacity);
-            SetOffset(offset, offsetType);
+            : this(gradientColorStop.GetRgbArray(), offset, offsetType) {
         }
 
         /// <summary>Get the stop color rgb value</summary>
         /// <returns>the copy of stop's rgb value</returns>
         public virtual float[] GetRgbArray() {
             return CopyRgbArray(this.rgb);
-        }
-
-        // TODO: DEVSIX-4136 make public with opacity logic implementation
-        /// <summary>Get the stop color opacity value</summary>
-        /// <returns>the stop color opacity value</returns>
-        private float GetOpacity() {
-            return this.opacity;
         }
 
         /// <summary>Get the offset type</summary>
@@ -193,13 +193,13 @@ namespace iText.Kernel.Colors.Gradients {
                 return false;
             }
             iText.Kernel.Colors.Gradients.GradientColorStop that = (iText.Kernel.Colors.Gradients.GradientColorStop)o;
-            return JavaUtil.FloatCompare(that.opacity, opacity) == 0 && JavaUtil.DoubleCompare(that.offset, offset) ==
-                 0 && JavaUtil.DoubleCompare(that.hintOffset, hintOffset) == 0 && JavaUtil.ArraysEquals(rgb, that.rgb)
-                 && offsetType == that.offsetType && hintOffsetType == that.hintOffsetType;
+            return JavaUtil.DoubleCompare(that.offset, offset) == 0 && JavaUtil.DoubleCompare(that.hintOffset, hintOffset
+                ) == 0 && JavaUtil.ArraysEquals(rgb, that.rgb) && offsetType == that.offsetType && hintOffsetType == that
+                .hintOffsetType;
         }
 
         public override int GetHashCode() {
-            int result = JavaUtil.ArraysHashCode(opacity, offset, hintOffset);
+            int result = JavaUtil.ArraysHashCode(offset, hintOffset);
             result = 31 * result + offsetType.GetHashCode();
             result = 31 * result + hintOffsetType.GetHashCode();
             result = 31 * result + JavaUtil.ArraysHashCode(rgb);

@@ -169,6 +169,15 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
+        public virtual void GetStopOpacityPercentageValueTest() {
+            IDictionary<String, String> styles = new Dictionary<String, String>();
+            styles.Put(SvgConstants.Tags.STOP_OPACITY, "20%");
+            StopSvgNodeRenderer renderer = new StopSvgNodeRenderer();
+            renderer.SetAttributesAndStyles(styles);
+            NUnit.Framework.Assert.AreEqual(0.2F, renderer.GetStopOpacity(), DELTA);
+        }
+
+        [NUnit.Framework.Test]
         public virtual void GetStopOpacityNoneValueTest() {
             IDictionary<String, String> styles = new Dictionary<String, String>();
             styles.Put(SvgConstants.Tags.STOP_OPACITY, null);

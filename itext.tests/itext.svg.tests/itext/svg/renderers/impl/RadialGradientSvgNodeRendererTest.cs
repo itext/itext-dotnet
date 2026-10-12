@@ -95,8 +95,6 @@ namespace iText.Svg.Renderers.Impl {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "invalidSpreadMethod");
         }
 
-        // TODO: DEVSIX-4136 update cmp_ after fix
-        //  (opacity is not implemented. No stops defines no color, i.e. transparent color or black with 100% opacity)
         [NUnit.Framework.Test]
         public virtual void NoStopsTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "noStops");
@@ -396,19 +394,16 @@ namespace iText.Svg.Renderers.Impl {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "radialGradXlinkNegativeOffset");
         }
 
-        // TODO: DEVSIX-4136 change cmp when gradient opacity is added
         [NUnit.Framework.Test]
         public virtual void RadialGradXlinkNegativeOpacityTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "radialGradXlinkNegativeOpacity");
         }
 
-        // TODO: DEVSIX-4136 change cmp when gradient opacity is added
         [NUnit.Framework.Test]
         public virtual void RadialGradXlinkOpacityTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "radialGradXlinkOpacity");
         }
 
-        // TODO: DEVSIX-4136 change cmp when gradient opacity is added
         [NUnit.Framework.Test]
         public virtual void RadialGradXlinkOpacity2Test() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "radialGradXlinkOpacity2");
@@ -434,13 +429,11 @@ namespace iText.Svg.Renderers.Impl {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "radialGradXlinkHreOffsetSwap");
         }
 
-        // TODO: DEVSIX-4136 change cmp when gradient opacity is added
         [NUnit.Framework.Test]
         public virtual void RadialGradTransitiveHrefOpacityTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "radialGradTransitiveHrefOpacity");
         }
 
-        // TODO: DEVSIX-4136 change cmp when gradient opacity is added
         [NUnit.Framework.Test]
         public virtual void RadialGradTransitiveHrefNegativeOpacityTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "radialGradTransitiveHrefNegativeOpacity");
@@ -643,6 +636,21 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void LowerCaseGradientUnitsTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "lowerCaseGradientUnits");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void RadialGradientStrokeTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "radialGradientStroke");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ElementWithGradientAndMaskTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "elementWithGradientAndMask");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TextRadialGradientOpacityTest() {
+            ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "textRadialGradientOpacity");
         }
     }
 }

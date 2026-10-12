@@ -46,5 +46,13 @@ namespace iText.Kernel.Colors.Gradients {
             NUnit.Framework.Assert.AreEqual(0, stopToTest.GetHintOffset(), 1e-10);
             NUnit.Framework.Assert.AreEqual(GradientColorStop.HintOffsetType.NONE, stopToTest.GetHintOffsetType());
         }
+
+        [NUnit.Framework.Test]
+        public virtual void ColorOpacityTest() {
+            GradientColorStop colorOpacity = new GradientColorStop(0.2F, 1.5, GradientColorStop.OffsetType.AUTO);
+            iText.Test.TestUtil.AreEqual(new float[] { 0.2F, 0.2F, 0.2F }, colorOpacity.GetRgbArray(), 1e-10F);
+            colorOpacity = new GradientColorStop(2F, 1.5, GradientColorStop.OffsetType.AUTO);
+            iText.Test.TestUtil.AreEqual(new float[] { 1F, 1F, 1F }, colorOpacity.GetRgbArray(), 1e-10F);
+        }
     }
 }

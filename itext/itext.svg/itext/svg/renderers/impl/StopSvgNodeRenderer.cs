@@ -75,9 +75,15 @@ namespace iText.Svg.Renderers.Impl {
             float? result = null;
             String opacityValue = GetAttribute(SvgConstants.Tags.STOP_OPACITY);
             if (opacityValue != null && !SvgConstants.Values.NONE.EqualsIgnoreCase(opacityValue)) {
-                result = CssDimensionParsingUtils.ParseFloat(opacityValue);
+                opacityValue = opacityValue.Trim();
+                if (CssTypesValidationUtils.IsPercentageValue(opacityValue)) {
+                    result = CssDimensionParsingUtils.ParseRelativeValue(opacityValue, 1F);
+                }
+                else {
+                    result = CssDimensionParsingUtils.ParseFloat(opacityValue);
+                }
             }
-            return result != null ? result.Value : 1f;
+            return result != null ? result.Value : 1F;
         }
 
         public override ISvgNodeRenderer CreateDeepCopy() {

@@ -88,8 +88,6 @@ namespace iText.Kernel.Colors.Gradients {
         /// <summary><inheritDoc/></summary>
         public virtual Color BuildColor(Rectangle targetBoundingBox, AffineTransform contextTransform, PdfDocument
              document) {
-            // TODO: DEVSIX-4136 the document argument would be required for opaque gradients
-            //  (as we would need to create a mask form xObject)
             Tuple2<T[], AffineTransform> gradientVectorWithTransform = GetGradientVectorWithTransform(targetBoundingBox
                 , contextTransform);
             T[] baseCoordinatesVector = gradientVectorWithTransform == null ? null : gradientVectorWithTransform.GetFirst

@@ -65,11 +65,32 @@ namespace iText.Svg.Renderers.Impl {
             if (builder == null) {
                 return null;
             }
-            ConfigureGradientBuilderStopsAndSpread(builder, parentOpacity);
+            foreach (GradientColorStop stopColor in ParseStops()) {
+                builder.AddStopColor(stopColor);
+            }
+            builder.SetSpread(ParseSpreadMethod());
             builder.SetSvgLuminanceMode(context.IsRenderingLuminosityMask());
-            return builder.BuildColor(objectBoundingBox.ApplyMargins(objectBoundingBoxMargin, objectBoundingBoxMargin, 
-                objectBoundingBoxMargin, objectBoundingBoxMargin, true), context.GetCurrentCanvasTransform(), context.
-                GetCurrentCanvas().GetDocument());
+            Color mainColor = builder.BuildColor(objectBoundingBox.ApplyMargins(objectBoundingBoxMargin, objectBoundingBoxMargin
+                , objectBoundingBoxMargin, objectBoundingBoxMargin, true), context.GetCurrentCanvasTransform(), context
+                .GetCurrentCanvas().GetDocument());
+            // Check if there is an opacity
+            if (!HasStopOpacity(parentOpacity)) {
+                return mainColor;
+            }
+            IGradientBuilder opacityColorBuilder = CreateGradientBuilderAndConfigureGeometry(context, objectBoundingBox
+                );
+            if (opacityColorBuilder == null) {
+                return null;
+            }
+            foreach (GradientColorStop stopColor in ParseOpacityStops(parentOpacity)) {
+                opacityColorBuilder.AddStopColor(stopColor);
+            }
+            opacityColorBuilder.SetSpread(ParseSpreadMethod());
+            opacityColorBuilder.SetSvgLuminanceMode(true);
+            Color opacityColor = opacityColorBuilder.BuildColor(objectBoundingBox.ApplyMargins(objectBoundingBoxMargin
+                , objectBoundingBoxMargin, objectBoundingBoxMargin, objectBoundingBoxMargin, true), context.GetCurrentCanvasTransform
+                (), context.GetCurrentCanvas().GetDocument());
+            return new GradientColor(mainColor, opacityColor);
         }
 
         /// <summary>Creates and configures gradient builder specific to concrete gradient type.</summary>
@@ -220,29 +241,63 @@ namespace iText.Svg.Renderers.Impl {
             }
         }
 
-        private void ConfigureGradientBuilderStopsAndSpread(IGradientBuilder builder, float parentOpacity) {
-            foreach (GradientColorStop stopColor in ParseStops(parentOpacity)) {
-                builder.AddStopColor(stopColor);
+        private bool HasStopOpacity(float parentOpacity) {
+            foreach (StopSvgNodeRenderer stopRenderer in GetChildStopRenderers()) {
+                float stopOpacity = GetStopOpacity(stopRenderer, parentOpacity);
+                if (JavaUtil.FloatCompare(stopOpacity, 1F) < 0) {
+                    return true;
+                }
             }
-            builder.SetSpread(ParseSpreadMethod());
+            return false;
         }
 
         /// <summary>Parses gradient stop children into a normalized list of color stops.</summary>
-        /// <param name="parentOpacity">parent element opacity; currently reserved for future stop opacity support</param>
         /// <returns>
         /// a list of parsed and normalized
         /// <see cref="iText.Kernel.Colors.Gradients.GradientColorStop"/>
         /// instances
         /// </returns>
-        private IList<GradientColorStop> ParseStops(float parentOpacity) {
-            // TODO: DEVSIX-4136 opacity is not supported now.
-            //  The opacity should be equal to 'parentOpacity * stopRenderer.getStopOpacity() * stopColor[3]'
-            IList<GradientColorStop> stopsList = new List<GradientColorStop>();
-            foreach (StopSvgNodeRenderer stopRenderer in GetChildStopRenderers()) {
+        private IList<GradientColorStop> ParseStops() {
+            IList<StopSvgNodeRenderer> stopRenderers = GetChildStopRenderers();
+            IList<GradientColorStop> stopsList = new List<GradientColorStop>(stopRenderers.Count);
+            foreach (StopSvgNodeRenderer stopRenderer in stopRenderers) {
                 float[] stopColor = stopRenderer.GetStopColor();
                 double offset = stopRenderer.GetOffset();
                 stopsList.Add(new GradientColorStop(stopColor, offset, GradientColorStop.OffsetType.RELATIVE));
             }
+            return NormalizeStops(stopsList);
+        }
+
+        private IList<GradientColorStop> ParseOpacityStops(float parentOpacity) {
+            IList<StopSvgNodeRenderer> stopRenderers = GetChildStopRenderers();
+            IList<GradientColorStop> stopsList = new List<GradientColorStop>(stopRenderers.Count);
+            foreach (StopSvgNodeRenderer stopRenderer in stopRenderers) {
+                float stopOpacity = GetStopOpacity(stopRenderer, parentOpacity);
+                double offset = stopRenderer.GetOffset();
+                stopsList.Add(new GradientColorStop(stopOpacity, offset, GradientColorStop.OffsetType.RELATIVE));
+            }
+            return NormalizeStops(stopsList);
+        }
+
+        private static float GetStopOpacity(StopSvgNodeRenderer stopRenderer, float parentOpacity) {
+            // From https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/stop-opacity
+            // The opacity value used for the gradient calculation is the product of the value of stop-opacity
+            // and the opacity of the value of the stop-color attribute. For stop-color values that don't include
+            // explicit opacity information, the opacity is treated as 1.
+            // And from https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/opacity
+            // opacity is applied to whole objects or groups, and is more like a post-processing operation
+            // on the rendered image of the object or group. Therefore, when you have both opacity
+            // and the other opacity attributes in the same area, they will be overlaid on top of each other
+            // and cause the opacity to be multiplied.
+            float[] stopColor = stopRenderer.GetStopColor();
+            float colorOpacity = stopColor.Length > 3 ? stopColor[3] : 1F;
+            float normalizedParentOpacity = Math.Max(0F, Math.Min(1F, parentOpacity));
+            float stopOpacity = Math.Max(0F, Math.Min(1F, stopRenderer.GetStopOpacity()));
+            colorOpacity = Math.Max(0F, Math.Min(1F, colorOpacity));
+            return normalizedParentOpacity * stopOpacity * colorOpacity;
+        }
+
+        private static IList<GradientColorStop> NormalizeStops(IList<GradientColorStop> stopsList) {
             if (!stopsList.IsEmpty()) {
                 GradientColorStop firstStop = stopsList[0];
                 if (firstStop.GetOffset() > 0) {

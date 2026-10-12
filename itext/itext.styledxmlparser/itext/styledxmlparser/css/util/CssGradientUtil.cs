@@ -318,8 +318,6 @@ namespace iText.StyledXmlParser.Css.Util {
                     offsetValue = offset.GetValue() / 100;
                 }
             }
-            // TODO: DEVSIX-4136 when opacity would be implemented - check the 4th element of
-            //  the rgba array and use it as the opacity
             return new GradientColorStop(rgba, offsetValue, offsetType);
         }
     }

@@ -100,9 +100,10 @@ namespace iText.Svg.Renderers.Impl {
             AffineTransform originalClippingElementTransform = new AffineTransform(context.GetClippingElementTransform
                 ());
             context.ResetClippingElementTransform();
-            clippedRenderer.PreDraw(context);
-            clippedRenderer.DoDraw(context);
-            clippedRenderer.PostDraw(context);
+            // Route clipped painting through the deferred opacity path when needed, without recursively
+            // reentering clip path handling. The clippedRenderer's fill/stroke properties are already
+            // calculated from the draw() method before drawInClipPath was called.
+            clippedRenderer.DrawAsClippedElement(context);
             context.ResetClippingElementTransform();
             context.GetClippingElementTransform().Concatenate(originalClippingElementTransform);
         }
