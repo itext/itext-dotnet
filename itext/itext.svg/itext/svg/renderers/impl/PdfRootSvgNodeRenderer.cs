@@ -22,18 +22,26 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.Collections.Generic;
+using iText.Commons.Logs;
+using iText.Commons.Utils;
+using iText.Kernel.Colors;
+using iText.Kernel.Colors.Gradients;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Properties;
 using iText.StyledXmlParser.Css;
 using iText.StyledXmlParser.Css.Util;
+using iText.StyledXmlParser.Exceptions;
 using iText.Svg.Exceptions;
 using iText.Svg.Renderers;
 
 namespace iText.Svg.Renderers.Impl {
     /// <summary>Root renderer responsible for applying the initial axis-flipping transform</summary>
     public class PdfRootSvgNodeRenderer : ISvgNodeRenderer {
+        private static readonly LazyLogger LOGGER = new LazyLogger(typeof(iText.Svg.Renderers.Impl.PdfRootSvgNodeRenderer
+            ));
+
 //\cond DO_NOT_DOCUMENT
         internal ISvgNodeRenderer subTreeRoot;
 //\endcond
@@ -61,9 +69,10 @@ namespace iText.Svg.Renderers.Impl {
             //Set viewport and transformation for pdf-context
             context.AddViewPort(CalculateViewPort(context));
             PdfCanvas currentCanvas = context.GetCurrentCanvas();
+            ApplyBackgroundColor(context);
+            ApplyBackgroundImage(context);
             currentCanvas.ConcatMatrix(this.CalculateTransformation(context));
             currentCanvas.WriteLiteral("% svg root\n");
-            ApplyBackgroundColor(context);
             subTreeRoot.Draw(context);
         }
 
@@ -135,6 +144,37 @@ namespace iText.Svg.Renderers.Impl {
                 color.ApplyFillTransparency(context.GetCurrentCanvas());
                 context.GetCurrentCanvas().Rectangle((double)backgroundArea.GetX(), (double)backgroundArea.GetY(), (double
                     )backgroundArea.GetWidth(), (double)backgroundArea.GetHeight()).Fill().RestoreState();
+            }
+        }
+
+        // TODO DEVSIX-8832 this method needs to support more types of images
+        private void ApplyBackgroundImage(SvgDrawContext context) {
+            String backgroundImageStr = subTreeRoot.GetAttribute(CommonCssConstants.BACKGROUND_IMAGE);
+            if (!CssGradientUtil.IsCssGradientValue(backgroundImageStr)) {
+                return;
+            }
+            float emValue = subTreeRoot is AbstractSvgNodeRenderer ? ((AbstractSvgNodeRenderer)subTreeRoot).GetCurrentFontSize
+                (context) : context.GetCssContext().GetRootFontSize();
+            float remValue = context.GetCssContext().GetRootFontSize();
+            IGradientBuilder gradientBuilder;
+            try {
+                gradientBuilder = CssGradientUtil.ParseCssGradient(backgroundImageStr, emValue, remValue);
+            }
+            catch (StyledXMLParserException) {
+                LOGGER.Warn(() => MessageFormatUtil.Format(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.INVALID_CSS_PROPERTY_DECLARATION
+                    , backgroundImageStr));
+                return;
+            }
+            if (gradientBuilder == null) {
+                return;
+            }
+            Rectangle backgroundArea = context.GetCurrentViewPort();
+            PdfCanvas canvas = context.GetCurrentCanvas();
+            Color gradientColor = gradientBuilder.BuildColor(backgroundArea, context.GetCurrentCanvasTransform(), canvas
+                .GetDocument());
+            if (gradientColor != null) {
+                canvas.SaveState().SetFillColor(gradientColor).Rectangle((double)backgroundArea.GetX(), (double)backgroundArea
+                    .GetY(), (double)backgroundArea.GetWidth(), (double)backgroundArea.GetHeight()).Fill().RestoreState();
             }
         }
     }

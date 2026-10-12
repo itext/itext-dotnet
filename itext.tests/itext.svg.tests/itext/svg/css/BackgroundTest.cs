@@ -65,10 +65,20 @@ namespace iText.Svg.Css {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(iText.StyledXmlParser.Logs.StyledXmlParserLogMessageConstant.WAS_NOT_ABLE_TO_DEFINE_BACKGROUND_CSS_SHORTHAND_PROPERTIES
-            )]
         public virtual void BackgroundTopLevelRadGradTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "backgroundTopLevelRadGrad", properties);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundTopLevelLinGradToTopTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "backgroundTopLevelLinGradToTop", properties
+                );
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void BackgroundTopLevelRadGradAtTopTest() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "backgroundTopLevelRadGradAtTop", properties
+                );
         }
 
         [NUnit.Framework.Test]

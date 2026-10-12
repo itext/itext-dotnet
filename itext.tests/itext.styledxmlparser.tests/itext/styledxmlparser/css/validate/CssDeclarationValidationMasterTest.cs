@@ -279,6 +279,8 @@ namespace iText.StyledXmlParser.Css.Validate {
             NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
                 .BACKGROUND_IMAGE, "linear-gradient(red,green,blue)")));
             NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .BACKGROUND_IMAGE, "radial-gradient(circle,red,green,blue)")));
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
                 .BACKGROUND_IMAGE, "url()")));
             NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
                 .BACKGROUND_IMAGE, "none")));
@@ -288,6 +290,8 @@ namespace iText.StyledXmlParser.Css.Validate {
                 .BACKGROUND_IMAGE, "none,url(img2.jpg)")));
             NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
                 .BACKGROUND_IMAGE, "linear-gradient(red,green,blue),url(img2.jpg)")));
+            NUnit.Framework.Assert.IsTrue(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
+                .BACKGROUND_IMAGE, "radial-gradient(circle,red,green,blue),url(img2.jpg)")));
             NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants
                 .BACKGROUND_IMAGE, "ja")));
             NUnit.Framework.Assert.IsFalse(CssDeclarationValidationMaster.CheckDeclaration(new CssDeclaration(CommonCssConstants

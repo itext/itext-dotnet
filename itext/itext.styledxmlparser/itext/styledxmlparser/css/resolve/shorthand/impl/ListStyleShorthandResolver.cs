@@ -61,8 +61,8 @@ namespace iText.StyledXmlParser.Css.Resolve.Shorthand.Impl {
             String listStylePositionValue = null;
             String listStyleImageValue = null;
             foreach (String value in props) {
-                if (value.Contains("url(") || CssGradientUtil.IsCssLinearGradientValue(value) || (CommonCssConstants.NONE.
-                    Equals(value) && listStyleTypeValue != null)) {
+                if (value.Contains("url(") || CssGradientUtil.IsCssGradientValue(value) || (CommonCssConstants.NONE.Equals
+                    (value) && listStyleTypeValue != null)) {
                     listStyleImageValue = value;
                 }
                 else {

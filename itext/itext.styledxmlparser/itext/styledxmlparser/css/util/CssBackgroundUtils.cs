@@ -124,7 +124,7 @@ namespace iText.StyledXmlParser.Css.Util {
                 1) {
                 return CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_IMAGE;
             }
-            if (CssGradientUtil.IsCssLinearGradientValue(value) || CommonCssConstants.NONE.Equals(value)) {
+            if (CssGradientUtil.IsCssGradientValue(value) || CommonCssConstants.NONE.Equals(value)) {
                 return CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_IMAGE;
             }
             if (CommonCssConstants.BACKGROUND_REPEAT_VALUES.Contains(value)) {

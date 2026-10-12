@@ -156,6 +156,8 @@ namespace iText.StyledXmlParser.Css.Validate {
             NUnit.Framework.Assert.IsTrue(validator.IsValid("url(img.png),none,url(img3.jpg)"));
             NUnit.Framework.Assert.IsTrue(validator.IsValid("linear-gradient(red, red, red),url(img2.png),url(img3.jpg)"
                 ));
+            NUnit.Framework.Assert.IsTrue(validator.IsValid("radial-gradient(circle, red, red, red),url(img2.png),url(img3.jpg)"
+                ));
         }
     }
 }

@@ -58,6 +58,8 @@ namespace iText.Kernel.Colors.Gradients {
 
         private bool yRadiusRelative = false;
 
+        private bool radiusRelativeToScaledDiagonal = false;
+
         // from center based radius definition
         private StrategyBasedRadialGradientBuilder.GradientStrategy gradientStrategy = StrategyBasedRadialGradientBuilder.GradientStrategy
             .FARTHEST_CORNER;
@@ -93,10 +95,10 @@ namespace iText.Kernel.Colors.Gradients {
         /// <param name="bottomToTop">
         /// if
         /// <see langword="true"/>
-        /// then Y offset would be subtracted from the top side Y value,
+        /// then Y offset would be added to the bottom side Y value,
         /// if
         /// <see langword="false"/>
-        /// then Y offset would be added to the bottom side Y value
+        /// then Y offset would be subtracted from the top side Y value
         /// </param>
         /// <param name="yOffset">the offset value to add/subtract for Y</param>
         /// <param name="yOffsetRelative">
@@ -145,6 +147,21 @@ namespace iText.Kernel.Colors.Gradients {
             this.xRadiusRelative = xRadiusRelative;
             this.yRadius = yRadius;
             this.yRadiusRelative = yRadiusRelative;
+            this.radiusRelativeToScaledDiagonal = false;
+            this.isFromCenterStrategy = false;
+            return this;
+        }
+
+        /// <summary>Sets a circular radius as a percentage of the gradient box's scaled diagonal.</summary>
+        /// <param name="radius">the radius as a fraction of the scaled diagonal</param>
+        /// <returns>the current builder instance</returns>
+        public virtual iText.Kernel.Colors.Gradients.StrategyBasedRadialGradientBuilder SetRadiusRelativeToScaledDiagonal
+            (double radius) {
+            this.xRadius = radius;
+            this.xRadiusRelative = true;
+            this.yRadius = radius;
+            this.yRadiusRelative = true;
+            this.radiusRelativeToScaledDiagonal = true;
             this.isFromCenterStrategy = false;
             return this;
         }
@@ -159,8 +176,138 @@ namespace iText.Kernel.Colors.Gradients {
             this.isCircular = isCircular;
             this.gradientStrategy = gradientStrategy != null ? gradientStrategy : StrategyBasedRadialGradientBuilder.GradientStrategy
                 .FARTHEST_CORNER;
+            this.radiusRelativeToScaledDiagonal = false;
             this.isFromCenterStrategy = true;
             return this;
+        }
+
+        /// <summary>Checks if the from-center radius strategy is used.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if from-center radius strategy is used,
+        /// <see langword="false"/>
+        /// otherwise
+        /// </returns>
+        public virtual bool IsFromCenterStrategy() {
+            return isFromCenterStrategy;
+        }
+
+        /// <summary>Checks if the gradient strategy is circular.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if circular,
+        /// <see langword="false"/>
+        /// if elliptical
+        /// </returns>
+        public virtual bool IsCircular() {
+            return isCircular;
+        }
+
+        /// <summary>Gets the gradient strategy.</summary>
+        /// <returns>
+        /// the
+        /// <see cref="GradientStrategy"/>
+        /// </returns>
+        public virtual StrategyBasedRadialGradientBuilder.GradientStrategy GetGradientStrategy() {
+            return gradientStrategy;
+        }
+
+        /// <summary>Checks if the horizontal offset is measured from left to right.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if offset from left,
+        /// <see langword="false"/>
+        /// if from right
+        /// </returns>
+        public virtual bool IsLeftToRight() {
+            return leftToRight;
+        }
+
+        /// <summary>Gets the X offset.</summary>
+        /// <returns>the X offset value</returns>
+        public virtual double GetXOffset() {
+            return xOffset;
+        }
+
+        /// <summary>Checks if the X offset is relative.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if X offset is relative,
+        /// <see langword="false"/>
+        /// if absolute
+        /// </returns>
+        public virtual bool IsXOffsetRelative() {
+            return xOffsetRelative;
+        }
+
+        /// <summary>Checks if the vertical offset is measured from bottom to top.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if offset from bottom,
+        /// <see langword="false"/>
+        /// if from top
+        /// </returns>
+        public virtual bool IsBottomToTop() {
+            return bottomToTop;
+        }
+
+        /// <summary>Gets the Y offset.</summary>
+        /// <returns>the Y offset value</returns>
+        public virtual double GetYOffset() {
+            return yOffset;
+        }
+
+        /// <summary>Checks if the Y offset is relative.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if Y offset is relative,
+        /// <see langword="false"/>
+        /// if absolute
+        /// </returns>
+        public virtual bool IsYOffsetRelative() {
+            return yOffsetRelative;
+        }
+
+        /// <summary>Gets the X radius for manual radius definition.</summary>
+        /// <returns>the X radius value</returns>
+        public virtual double GetXRadius() {
+            return xRadius;
+        }
+
+        /// <summary>Checks if the X radius is relative.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if X radius is relative,
+        /// <see langword="false"/>
+        /// if absolute
+        /// </returns>
+        public virtual bool IsXRadiusRelative() {
+            return xRadiusRelative;
+        }
+
+        /// <summary>Gets the Y radius for manual radius definition.</summary>
+        /// <returns>the Y radius value</returns>
+        public virtual double GetYRadius() {
+            return yRadius;
+        }
+
+        /// <summary>Checks if the Y radius is relative.</summary>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if Y radius is relative,
+        /// <see langword="false"/>
+        /// if absolute
+        /// </returns>
+        public virtual bool IsYRadiusRelative() {
+            return yRadiusRelative;
         }
 
         /// <summary><inheritDoc/></summary>
@@ -300,6 +447,12 @@ namespace iText.Kernel.Colors.Gradients {
         }
 
         private double[] GetRadiusForManualStrategy(Rectangle targetBoundingBox) {
+            if (radiusRelativeToScaledDiagonal) {
+                double scaledDiagonal = Math.Sqrt(Math.Pow(targetBoundingBox.GetWidth(), 2) + Math.Pow(targetBoundingBox.GetHeight
+                    (), 2)) / Math.Sqrt(2);
+                double radius = scaledDiagonal * xRadius;
+                return new double[] { radius, radius };
+            }
             double rX = EvaluateValueOnSegment(0, targetBoundingBox.GetWidth(), true, xRadius, xRadiusRelative);
             double rY = EvaluateValueOnSegment(0, targetBoundingBox.GetHeight(), true, yRadius, yRadiusRelative);
             return new double[] { rX, rY };

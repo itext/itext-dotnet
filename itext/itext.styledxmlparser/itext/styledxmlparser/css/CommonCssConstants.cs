@@ -609,6 +609,9 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant ARMENIAN.</summary>
         public const String ARMENIAN = "armenian";
 
+        /// <summary>The Constant AT.</summary>
+        public const String AT = "at";
+
         /// <summary>The Constant AVOID.</summary>
         public const String AVOID = "avoid";
 
@@ -644,6 +647,12 @@ namespace iText.StyledXmlParser.Css {
 
         /// <summary>The Constant CIRCLE.</summary>
         public const String CIRCLE = "circle";
+
+        /// <summary>The Constant CLOSEST_CORNER.</summary>
+        public const String CLOSEST_CORNER = "closest-corner";
+
+        /// <summary>The Constant CLOSEST_SIDE.</summary>
+        public const String CLOSEST_SIDE = "closest-side";
 
         /// <summary>The Constant CJK_IDEOGRAPHIC.</summary>
         public const String CJK_IDEOGRAPHIC = "cjk-ideographic";
@@ -702,8 +711,17 @@ namespace iText.StyledXmlParser.Css {
         /// <summary>The Constant EACH_LINE.</summary>
         public const String EACH_LINE = "each-line";
 
+        /// <summary>The Constant ELLIPSE.</summary>
+        public const String ELLIPSE = "ellipse";
+
         /// <summary>The Constant END.</summary>
         public const String END = "end";
+
+        /// <summary>The Constant FARTHEST_CORNER.</summary>
+        public const String FARTHEST_CORNER = "farthest-corner";
+
+        /// <summary>The Constant FARTHEST_SIDE.</summary>
+        public const String FARTHEST_SIDE = "farthest-side";
 
         /// <summary>The Constant FIRST.</summary>
         public const String FIRST = "first";

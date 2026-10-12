@@ -71,6 +71,8 @@ namespace iText.StyledXmlParser.Css.Util {
             NUnit.Framework.Assert.AreEqual(CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_IMAGE, CssBackgroundUtils
                 .ResolveBackgroundPropertyType("linear-gradient(#e66465, #9198e5)"));
             NUnit.Framework.Assert.AreEqual(CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_IMAGE, CssBackgroundUtils
+                .ResolveBackgroundPropertyType("radial-gradient(circle, #e66465, #9198e5)"));
+            NUnit.Framework.Assert.AreEqual(CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_IMAGE, CssBackgroundUtils
                 .ResolveBackgroundPropertyType("none"));
             NUnit.Framework.Assert.AreEqual(CssBackgroundUtils.BackgroundPropertyType.BACKGROUND_REPEAT, CssBackgroundUtils
                 .ResolveBackgroundPropertyType("repeat-x"));
