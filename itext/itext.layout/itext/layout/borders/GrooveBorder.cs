@@ -67,7 +67,7 @@ namespace iText.Layout.Borders {
         }
 
         /// <summary>
-        /// Creates a GrooveBorder instance with the specified width and the
+        /// Creates a GrooveBorder instance with the specified width and color.
         /// <see cref="iText.Kernel.Colors.DeviceGray">gray color</see>.
         /// </summary>
         /// <param name="width">width of the border</param>
