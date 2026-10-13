@@ -572,6 +572,12 @@ namespace iText.Layout.Renderer {
                         }
                     }
                     cell.SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
+                    if (cellResult.GetStatus() != LayoutResult.FULL) {
+                        if (cellResult.GetSplitRenderer() != null) {
+                            cellResult.GetSplitRenderer().SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
+                        }
+                        cellResult.GetOverflowRenderer().SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
+                    }
                     // width of BlockRenderer depends on child areas, while in cell case it is hardly define.
                     if (cellResult.GetStatus() != LayoutResult.NOTHING) {
                         cell.GetOccupiedArea().GetBBox().SetWidth(cellWidth);

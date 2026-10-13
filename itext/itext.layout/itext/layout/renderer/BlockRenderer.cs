@@ -561,15 +561,26 @@ namespace iText.Layout.Renderer {
         /// </summary>
         protected internal virtual void ApplyVerticalAlignment() {
             VerticalAlignment? verticalAlignment = this.GetProperty<VerticalAlignment?>(Property.VERTICAL_ALIGNMENT);
-            if (verticalAlignment == null || verticalAlignment == VerticalAlignment.TOP || childRenderers.IsEmpty()) {
+            if (childRenderers.IsEmpty() || verticalAlignment == null) {
                 return;
             }
-            float lowestChildBottom = float.MaxValue;
+            bool isVerticalWriting = IsVerticalWriting();
+            bool isVerticalRl = isVerticalWriting && WritingMode.VERTICAL_RL == this.GetProperty<WritingMode?>(Property
+                .WRITING_MODE);
+            if (!isVerticalRl && verticalAlignment == VerticalAlignment.TOP) {
+                return;
+            }
+            float extremeChildCoordinate = isVerticalWriting ? -float.MaxValue : float.MaxValue;
             if (FloatingHelper.IsRendererFloating(this) || this is CellRenderer) {
-                // include floats in vertical alignment
+                // Include floats in vertical alignment.
                 foreach (IRenderer child in childRenderers) {
-                    if (child.GetOccupiedArea() != null && child.GetOccupiedArea().GetBBox().GetBottom() < lowestChildBottom) {
-                        lowestChildBottom = child.GetOccupiedArea().GetBBox().GetBottom();
+                    if (child.GetOccupiedArea() == null) {
+                        continue;
+                    }
+                    float coordinate = isVerticalWriting ? child.GetOccupiedArea().GetBBox().GetRight() : child.GetOccupiedArea
+                        ().GetBBox().GetBottom();
+                    if (isVerticalWriting ? (coordinate > extremeChildCoordinate) : (coordinate < extremeChildCoordinate)) {
+                        extremeChildCoordinate = coordinate;
                     }
                 }
             }
@@ -578,32 +589,44 @@ namespace iText.Layout.Renderer {
                 while (lastChildIndex >= 0) {
                     IRenderer child = childRenderers[lastChildIndex--];
                     if (!FloatingHelper.IsRendererFloating(child) && child.GetOccupiedArea() != null) {
-                        lowestChildBottom = child.GetOccupiedArea().GetBBox().GetBottom();
+                        extremeChildCoordinate = isVerticalWriting ? child.GetOccupiedArea().GetBBox().GetRight() : child.GetOccupiedArea
+                            ().GetBBox().GetBottom();
                         break;
                     }
                 }
             }
-            if (lowestChildBottom == float.MaxValue) {
+            if ((!isVerticalWriting && extremeChildCoordinate == float.MaxValue) || (isVerticalWriting && extremeChildCoordinate
+                 == -float.MaxValue)) {
                 return;
             }
-            float deltaY = lowestChildBottom - GetInnerAreaBBox().GetY();
-            if (deltaY < 0) {
+            float delta = isVerticalWriting ? (GetInnerAreaBBox().GetRight() - extremeChildCoordinate) : (extremeChildCoordinate
+                 - GetInnerAreaBBox().GetY());
+            if (delta < 0) {
                 return;
             }
+            float shift;
             switch (verticalAlignment) {
                 case VerticalAlignment.BOTTOM: {
-                    foreach (IRenderer child in childRenderers) {
-                        child.Move(0, -deltaY);
-                    }
+                    shift = isVerticalRl ? 0 : delta;
                     break;
                 }
 
                 case VerticalAlignment.MIDDLE: {
-                    foreach (IRenderer child in childRenderers) {
-                        child.Move(0, -deltaY / 2);
-                    }
+                    shift = delta / 2;
                     break;
                 }
+
+                case VerticalAlignment.TOP:
+                default: {
+                    shift = isVerticalRl ? delta : 0;
+                    break;
+                }
+            }
+            if (shift == 0) {
+                return;
+            }
+            foreach (IRenderer child in childRenderers) {
+                child.Move(isVerticalWriting ? shift : 0, isVerticalWriting ? 0 : -shift);
             }
         }
 

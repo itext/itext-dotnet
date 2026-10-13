@@ -140,6 +140,13 @@ namespace iText.Layout.Renderer {
             return rect;
         }
 
+        protected internal override void ApplyVerticalAlignment() {
+            if (IsVerticalWriting()) {
+                CorrectChildrenHeight();
+            }
+            base.ApplyVerticalAlignment();
+        }
+
         /// <summary>Applies spacings on the given rectangle.</summary>
         /// <param name="rect">a rectangle spacings will be applied on</param>
         /// <param name="reverse">
@@ -209,6 +216,42 @@ namespace iText.Layout.Renderer {
         public override IRenderer GetNextRenderer() {
             LogWarningIfGetNextRendererNotOverridden(typeof(iText.Layout.Renderer.CellRenderer), this.GetType());
             return new iText.Layout.Renderer.CellRenderer((Cell)GetModelElement());
+        }
+
+        private void CorrectChildrenHeight() {
+            // We need this check since we don't support vertical writing mode in cells,
+            // so this logic is disabled in case we have several child renderers.
+            // After it will be supported, we'd need to replace it to childRenderers.isEmpty().
+            // See vertLrTableCellSeveralParagraphsTest in html2pdf module for more details.
+            if (childRenderers.Count != 1) {
+                return;
+            }
+            Rectangle innerAreaBBox = GetInnerAreaBBox();
+            float cellHeight = innerAreaBBox.GetHeight();
+            foreach (IRenderer child in childRenderers) {
+                if (child.GetOccupiedArea() == null || !(child is AbstractRenderer)) {
+                    continue;
+                }
+                float? blockMaxHeight = ((AbstractRenderer)child).RetrieveMaxHeight();
+                if (blockMaxHeight == null) {
+                    Rectangle childBBox = child.GetOccupiedArea().GetBBox();
+                    TextAlignment? textAlignment = (TextAlignment?)child.GetProperty<TextAlignment?>(Property.TEXT_ALIGNMENT);
+                    if (TextAlignment.LEFT == textAlignment) {
+                    }
+                    else {
+                        // Do nothing here. The child is already aligned to the left (top).
+                        if (TextAlignment.CENTER == textAlignment) {
+                            child.Move(0, -(cellHeight - childBBox.GetHeight()) / 2);
+                        }
+                        else {
+                            if (TextAlignment.RIGHT == textAlignment) {
+                                child.Move(0, -(cellHeight - childBBox.GetHeight()));
+                            }
+                        }
+                    }
+                    childBBox.SetY(innerAreaBBox.GetY()).SetHeight(cellHeight);
+                }
+            }
         }
     }
 }
