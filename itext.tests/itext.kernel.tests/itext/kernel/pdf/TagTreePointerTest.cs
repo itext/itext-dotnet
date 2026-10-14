@@ -24,11 +24,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Internal.Runtime;
+using iText.Commons.Utils;
 using iText.IO.Exceptions;
 using iText.IO.Font.Constants;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Utils;
@@ -51,6 +53,29 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.OneTimeTearDown]
         public static void AfterClass() {
             CompareTool.Cleanup(destinationFolder);
+        }
+
+        public static IEnumerable<Object[]> NameSpaceDuplicationArguments() {
+            PdfFileSpec schema1 = PdfFileSpec.WrapFileSpecObject(new PdfString("https://itextpdf.com/customSchema_1"));
+            PdfDictionary roleMapNs = new PdfDictionary();
+            return JavaUtil.ArraysAsList(new Object[] { PdfVersion.PDF_2_0, "PDF2.0_simple_NS", new PdfNamespace(StandardNamespaces
+                .PDF_1_7), new PdfNamespace(StandardNamespaces.PDF_1_7), "cmp_nameSpaceDuplication_PDF2.0_simple_NS.pdf"
+                 }, new Object[] { PdfVersion.PDF_2_0, "PDF2.0_same_schema", new PdfNamespace(StandardNamespaces.PDF_2_0
+                ).SetSchema(schema1), new PdfNamespace(StandardNamespaces.PDF_2_0).SetSchema(schema1), "cmp_nameSpaceDuplication_PDF2.0_same_schema.pdf"
+                 }, new Object[] { PdfVersion.PDF_2_0, "PDF2.0_same_role_mapping", new PdfNamespace(StandardNamespaces
+                .PDF_2_0).SetNamespaceRoleMap(roleMapNs), new PdfNamespace(StandardNamespaces.PDF_2_0).SetNamespaceRoleMap
+                (roleMapNs), "cmp_nameSpaceDuplication_PDF2.0_same_role_mapping.pdf" }, new Object[] { PdfVersion.PDF_2_0
+                , "PDF2.0_same_diff_schema", new PdfNamespace(StandardNamespaces.PDF_2_0), new PdfNamespace(StandardNamespaces
+                .PDF_2_0).SetSchema(schema1), "cmp_nameSpaceDuplication_PDF2.0_same_diff_schema.pdf" }, new Object[] { 
+                PdfVersion.PDF_1_7, "PDF1.7_simple_NS", new PdfNamespace(StandardNamespaces.PDF_1_7), new PdfNamespace
+                (StandardNamespaces.PDF_1_7), "cmp_nameSpaceDuplication_PDF1.7.pdf" }, new Object[] { PdfVersion.PDF_1_7
+                , "PDF1.7_same_schema", new PdfNamespace(StandardNamespaces.PDF_1_7).SetSchema(schema1), new PdfNamespace
+                (StandardNamespaces.PDF_1_7).SetSchema(schema1), "cmp_nameSpaceDuplication_PDF1.7.pdf" }, new Object[]
+                 { PdfVersion.PDF_1_7, "PDF1.7_same_role_mapping", new PdfNamespace(StandardNamespaces.PDF_1_7).SetNamespaceRoleMap
+                (roleMapNs), new PdfNamespace(StandardNamespaces.PDF_1_7).SetNamespaceRoleMap(roleMapNs), "cmp_nameSpaceDuplication_PDF1.7.pdf"
+                 }, new Object[] { PdfVersion.PDF_1_7, "PDF1.7_same_diff_schema", new PdfNamespace(StandardNamespaces.
+                PDF_1_7), new PdfNamespace(StandardNamespaces.PDF_1_7).SetSchema(schema1), "cmp_nameSpaceDuplication_PDF1.7.pdf"
+                 });
         }
 
         [NUnit.Framework.Test]
@@ -199,13 +224,12 @@ namespace iText.Kernel.Pdf {
             PdfDocument document = new PdfDocument(reader, writer);
             TagTreePointer tagPointer = new TagTreePointer(document);
             tagPointer.SetRole(StandardRoles.PART);
-            NUnit.Framework.Assert.AreEqual(tagPointer.GetRole(), "Part");
+            NUnit.Framework.Assert.AreEqual("Part", tagPointer.GetRole());
             tagPointer.MoveToKid(StandardRoles.TABLE).GetProperties().SetLanguage("en-US");
             tagPointer.MoveToKid(StandardRoles.P);
             String actualText1 = "Some looong latin text";
             tagPointer.GetProperties().SetActualText(actualText1);
             WaitingTagsManager waitingTagsManager = document.GetTagStructureContext().GetWaitingTagsManager();
-            //        assertNull(waitingTagsManager.getAssociatedObject(tagPointer));
             Object associatedObj = new Object();
             waitingTagsManager.AssignWaitingState(tagPointer, associatedObj);
             tagPointer.MoveToRoot().MoveToKid(StandardRoles.TABLE).MoveToKid(1, StandardRoles.TR).GetProperties().SetActualText
@@ -213,7 +237,7 @@ namespace iText.Kernel.Pdf {
             waitingTagsManager.TryMovePointerToWaitingTag(tagPointer, associatedObj);
             tagPointer.SetRole(StandardRoles.DIV);
             tagPointer.GetProperties().SetLanguage("en-Us");
-            NUnit.Framework.Assert.AreEqual(tagPointer.GetProperties().GetActualText(), actualText1);
+            NUnit.Framework.Assert.AreEqual(actualText1, tagPointer.GetProperties().GetActualText());
             document.Close();
             CompareResult("tagTreePointerTest06.pdf", "cmp_tagTreePointerTest06.pdf", "diff06_");
         }
@@ -399,8 +423,8 @@ namespace iText.Kernel.Pdf {
             TagStructureContext tagStructure = document.GetTagStructureContext();
             tagStructure.FlushPageTags(document.GetPage(1));
             IList<IStructureNode> kids = document.GetStructTreeRoot().GetKids();
-            NUnit.Framework.Assert.IsTrue(!((PdfStructElem)kids[0]).GetPdfObject().IsFlushed());
-            NUnit.Framework.Assert.IsTrue(!((PdfStructElem)kids[0].GetKids()[0]).GetPdfObject().IsFlushed());
+            NUnit.Framework.Assert.IsFalse(((PdfStructElem)kids[0]).GetPdfObject().IsFlushed());
+            NUnit.Framework.Assert.IsFalse(((PdfStructElem)kids[0].GetKids()[0]).GetPdfObject().IsFlushed());
             PdfArray rowsTags = (PdfArray)((PdfStructElem)kids[0].GetKids()[0]).GetK();
             NUnit.Framework.Assert.IsTrue(rowsTags.Get(0).IsFlushed());
             document.Close();
@@ -1079,6 +1103,53 @@ namespace iText.Kernel.Pdf {
                 NUnit.Framework.Assert.AreEqual(StandardNamespaces.PDF_1_7, defaultSame.GetNamespaceName());
                 NUnit.Framework.Assert.AreEqual(defaultNew.GetPdfObject(), defaultSame.GetPdfObject());
             }
+        }
+
+        [NUnit.Framework.TestCaseSource("NameSpaceDuplicationArguments")]
+        public virtual void NameSpaceDuplicationTest(PdfVersion pdfVersion, String descriptor, PdfNamespace namespaceFirst
+            , PdfNamespace namespaceSecond, String cmpFileName) {
+            NUnit.Framework.Assert.AreNotSame(namespaceFirst, namespaceSecond);
+            NUnit.Framework.Assert.AreEqual(namespaceFirst.GetNamespaceName(), namespaceSecond.GetNamespaceName());
+            String fileName = "nameSpaceDuplication_" + descriptor + ".pdf";
+            using (PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + fileName, new WriterProperties
+                ().SetPdfVersion(pdfVersion)).SetCompressionLevel(CompressionConstants.NO_COMPRESSION)) {
+                using (PdfDocument document = new PdfDocument(writer)) {
+                    document.SetTagged();
+                    document.AddNewPage();
+                    TagTreePointer pointer = new TagTreePointer(document);
+                    AccessibilityProperties properties1 = new DefaultAccessibilityProperties("P");
+                    properties1.SetNamespace(namespaceFirst);
+                    pointer.AddTag(properties1);
+                    // to add both tags on the same level
+                    pointer.MoveToParent();
+                    AccessibilityProperties properties2 = new DefaultAccessibilityProperties("Div");
+                    properties2.SetNamespace(namespaceSecond);
+                    pointer.AddTag(properties2);
+                }
+            }
+            CompareResult(fileName, cmpFileName, "diffNSDup01_");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void DefaultNSWithExistedCustomSchemaTest() {
+            String fileName = "defaultNSWithExistedCustomSchema.pdf";
+            using (PdfWriter writer = CompareTool.CreateTestPdfWriter(destinationFolder + fileName, new WriterProperties
+                ().SetPdfVersion(PdfVersion.PDF_2_0)).SetCompressionLevel(CompressionConstants.NO_COMPRESSION)) {
+                using (PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + fileName), writer)) {
+                    TagTreePointer pointer = new TagTreePointer(document);
+                    AccessibilityProperties properties1 = new DefaultAccessibilityProperties("P");
+                    PdfNamespace namespaceWithSchema = new PdfNamespace(StandardNamespaces.PDF_1_7);
+                    namespaceWithSchema.SetSchema(PdfFileSpec.WrapFileSpecObject(new PdfString("https://itextpdf.com/customSchema"
+                        )));
+                    properties1.SetNamespace(namespaceWithSchema);
+                    pointer.AddTag(properties1);
+                    AccessibilityProperties properties2 = new DefaultAccessibilityProperties("P");
+                    PdfNamespace namespaceAsDefault = new PdfNamespace(StandardNamespaces.PDF_1_7);
+                    properties2.SetNamespace(namespaceAsDefault);
+                    pointer.AddTag(properties2);
+                }
+            }
+            CompareResult(fileName, "cmp_" + fileName, "diffNSDup01_");
         }
 
         private void CompareResult(String outFileName, String cmpFileName, String diffNamePrefix) {

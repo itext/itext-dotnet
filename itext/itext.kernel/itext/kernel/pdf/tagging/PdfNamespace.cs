@@ -95,7 +95,8 @@ namespace iText.Kernel.Pdf.Tagging {
             }
             foreach (iText.Kernel.Pdf.Tagging.PdfNamespace @namespace in pdfDocument.GetStructTreeRoot().GetNamespaces
                 ()) {
-                if (StandardNamespaces.GetDefault().Equals(@namespace.GetNamespaceName())) {
+                if (StandardNamespaces.GetDefault().Equals(@namespace.GetNamespaceName()) && @namespace.GetSchema() == null
+                     && @namespace.GetNamespaceRoleMap() == null) {
                     return @namespace;
                 }
             }

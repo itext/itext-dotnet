@@ -884,9 +884,10 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         private void ActualizeNamespacesInStructTreeRoot() {
             if (namespaces.Count > 0) {
+                ICollection<PdfDictionary> newNamespaces = new LinkedHashSet<PdfDictionary>(namespaces);
+                NormalizeDefaultNS(newNamespaces);
                 PdfStructTreeRoot structTreeRoot = GetDocument().GetStructTreeRoot();
                 PdfArray rootNamespaces = structTreeRoot.GetNamespacesObject();
-                ICollection<PdfDictionary> newNamespaces = new LinkedHashSet<PdfDictionary>(namespaces);
                 for (int i = 0; i < rootNamespaces.Size(); ++i) {
                     newNamespaces.Remove(rootNamespaces.GetAsDictionary(i));
                 }
@@ -895,6 +896,21 @@ namespace iText.Kernel.Pdf.Tagutils {
                 }
                 if (!newNamespaces.IsEmpty()) {
                     structTreeRoot.SetModified();
+                }
+            }
+        }
+
+        private void NormalizeDefaultNS(ICollection<PdfDictionary> newNamespaces) {
+            foreach (PdfDictionary nsDict in namespaces) {
+                PdfNamespace ns = new PdfNamespace(nsDict);
+                // replace newly created default ns with the one that is already registered in the document
+                if (StandardNamespaces.GetDefault().Equals(ns.GetNamespaceName()) && ns.GetSchema() == null && ns.GetNamespaceRoleMap
+                    () == null) {
+                    // register default
+                    PdfNamespace fromDoc = PdfNamespace.GetDefault(GetDocument());
+                    if (fromDoc.GetSchema() == null && fromDoc.GetNamespaceRoleMap() == null) {
+                        newNamespaces.Remove(nsDict);
+                    }
                 }
             }
         }

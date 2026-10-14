@@ -30,11 +30,24 @@ namespace iText.Kernel.Pdf.Tagutils {
 //\cond DO_NOT_DOCUMENT
     internal sealed class AccessibilityPropertiesToStructElem {
 //\cond DO_NOT_DOCUMENT
-        internal static void Apply(AccessibilityProperties properties, PdfStructElem elem) {
+        internal static void Apply(AccessibilityProperties properties, PdfStructElem elem, TagStructureContext tagStructureContext
+            ) {
             SetTextualAids(properties, elem);
             SetAttributes(properties.GetAttributesList(), elem);
-            if (properties.GetNamespace() != null) {
-                elem.SetNamespace(properties.GetNamespace());
+            PdfNamespace elementNamespace = properties.GetNamespace();
+            // namespaces are supported only in PDF 2.0 and later, so no point in setting them for earlier versions of PDF
+            if (elementNamespace != null && PdfVersion.PDF_2_0.CompareTo(tagStructureContext.GetDocument().GetPdfVersion
+                ()) <= 0) {
+                // Avoid namespace duplication. Since the proper fetching of the exactly same namespace
+                // is not an easy task, we will just avoid duplication of simple namespaces (without role map and schema)
+                // for now.
+                if (elementNamespace.GetNamespaceRoleMap() == null && elementNamespace.GetSchema() == null) {
+                    PdfNamespace candidate = tagStructureContext.FetchNamespace(elementNamespace.GetNamespaceName());
+                    if (candidate.GetNamespaceRoleMap() == null && candidate.GetSchema() == null) {
+                        elementNamespace = candidate;
+                    }
+                }
+                elem.SetNamespace(elementNamespace);
             }
             if (properties.GetStructureElementId() != null) {
                 elem.SetStructureElementId(new PdfString(properties.GetStructureElementId()));

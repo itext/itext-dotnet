@@ -333,9 +333,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer AddTag(int index, String role) {
-            tagStructureContext.ThrowExceptionIfRoleIsInvalid(role, currentNamespace);
-            SetNextNewKidIndex(index);
-            SetCurrentStructElem(AddNewKid(role));
+            AddTag(index, new DefaultAccessibilityProperties(role));
             return this;
         }
 
@@ -1026,7 +1024,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// </remarks>
         /// <param name="properties">the properties to be applied to the current tag.</param>
         public virtual void ApplyProperties(AccessibilityProperties properties) {
-            AccessibilityPropertiesToStructElem.Apply(properties, GetCurrentStructElem());
+            AccessibilityPropertiesToStructElem.Apply(properties, GetCurrentStructElem(), tagStructureContext);
         }
 
         private int GetNextNewKidPosition() {
@@ -1035,16 +1033,10 @@ namespace iText.Kernel.Pdf.Tagutils {
             return nextPos;
         }
 
-        private PdfStructElem AddNewKid(String role) {
-            PdfStructElem kid = new PdfStructElem(GetDocument(), PdfStructTreeRoot.ConvertRoleToPdfName(role));
-            ProcessKidNamespace(kid);
-            return AddNewKid(kid);
-        }
-
         private PdfStructElem AddNewKid(AccessibilityProperties properties) {
             PdfStructElem kid = new PdfStructElem(GetDocument(), PdfStructTreeRoot.ConvertRoleToPdfName(properties.GetRole
                 ()));
-            AccessibilityPropertiesToStructElem.Apply(properties, kid);
+            AccessibilityPropertiesToStructElem.Apply(properties, kid, tagStructureContext);
             ProcessKidNamespace(kid);
             return AddNewKid(kid);
         }
