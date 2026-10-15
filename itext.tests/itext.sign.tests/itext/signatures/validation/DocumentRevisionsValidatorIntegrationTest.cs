@@ -26,6 +26,8 @@ using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Utils;
 using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
 using iText.Signatures;
 using iText.Signatures.Validation.Context;
 using iText.Signatures.Validation.Report;
@@ -37,6 +39,8 @@ namespace iText.Signatures.Validation {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/DocumentRevisionsValidatorIntegrationTest/";
 
+        private static readonly String DESTINATION_FOLDER = TestUtil.GetOutputPath() + "/signatures/validation/DocumentRevisionsValidatorIntegrationTest/";
+
         private static readonly IBouncyCastleFactory FACTORY = BouncyCastleFactoryCreator.GetFactory();
 
         private ValidatorChainBuilder builder;
@@ -46,6 +50,7 @@ namespace iText.Signatures.Validation {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void Before() {
+            CreateOrClearDestinationFolder(DESTINATION_FOLDER);
         }
 
         public virtual void SetUp(bool continueValidationAfterFail) {
@@ -83,6 +88,49 @@ namespace iText.Signatures.Validation {
                     (0).HasNumberOfLogs(0));
                 NUnit.Framework.Assert.AreEqual(AccessPermissions.ANNOTATION_MODIFICATION, validator.GetAccessPermissions(
                     ));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FakeLinearizedMarkerInjectedBeforeSigningTest() {
+            SetUp(false);
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "linearizedInjectedBeforeSigning.pdf"
+                ), new PdfWriter(DESTINATION_FOLDER + "fakelinearizedInjectedBeforeSigning.pdf"), new StampingProperties
+                ().UseAppendMode())) {
+                using (Document doc = new Document(pdfDoc)) {
+                    doc.Add(new Paragraph("Extra content to make the signature invalid."));
+                }
+            }
+            using (PdfDocument document = new PdfDocument(new PdfReader(DESTINATION_FOLDER + "fakelinearizedInjectedBeforeSigning.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
+                    .PAGE_MODIFIED).WithStatus(ReportItem.ReportItemStatus.INVALID)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FakeLinearizedMarkerInjectedAfterSigningTest() {
+            SetUp(false);
+            using (PdfDocument pdfDoc = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signedDocNoModifications.pdf"), 
+                new PdfWriter(DESTINATION_FOLDER + "fakeLinearizedMarkerInjectedAfterSigning.pdf"), new StampingProperties
+                ().UseAppendMode())) {
+                using (Document doc = new Document(pdfDoc)) {
+                    PdfDictionary marker = new PdfDictionary();
+                    marker.Put(PdfName.Linearized, new PdfNumber(1));
+                    marker.MakeIndirect(pdfDoc);
+                    doc.Add(new Paragraph("Extra content to make the signature invalid."));
+                }
+            }
+            using (PdfDocument document = new PdfDocument(new PdfReader(DESTINATION_FOLDER + "fakeLinearizedMarkerInjectedAfterSigning.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
+                    .PAGE_MODIFIED).WithStatus(ReportItem.ReportItemStatus.INVALID)));
             }
         }
 
