@@ -42,91 +42,123 @@ namespace iText.Layout.Renderer {
             : base(rows, numberOfColumns, tableBoundingBorders, largeTableIndexOffset) {
         }
 
-        protected internal override TableBorders DrawHorizontalBorder(PdfCanvas canvas, TableBorderDescriptor borderDescriptor
+//\cond DO_NOT_DOCUMENT
+        internal override TableBorders DrawHorizontalBorder(PdfCanvas canvas, TableBorderDescriptor borderDescriptor
             ) {
             return this;
         }
+//\endcond
 
-        protected internal override TableBorders DrawVerticalBorder(PdfCanvas canvas, TableBorderDescriptor borderDescriptor
+//\cond DO_NOT_DOCUMENT
+        internal override TableBorders DrawVerticalBorder(PdfCanvas canvas, TableBorderDescriptor borderDescriptor
             ) {
             return this;
         }
+//\endcond
 
-        protected internal override TableBorders ApplyTopTableBorder(Rectangle occupiedBox, Rectangle layoutBox, bool
-             isEmpty, bool force, bool reverse) {
+//\cond DO_NOT_DOCUMENT
+        internal override TableBorders ApplyTopTableBorder(Rectangle occupiedBox, Rectangle layoutBox, bool isEmpty
+            , bool force, bool reverse) {
             return ApplyTopTableBorder(occupiedBox, layoutBox, reverse);
         }
+//\endcond
 
-        protected internal override TableBorders ApplyTopTableBorder(Rectangle occupiedBox, Rectangle layoutBox, bool
-             reverse) {
+//\cond DO_NOT_DOCUMENT
+        internal override TableBorders ApplyTopTableBorder(Rectangle occupiedBox, Rectangle layoutBox, bool reverse
+            ) {
             float topIndent = (reverse ? -1 : 1) * GetMaxTopWidth();
             layoutBox.DecreaseHeight(topIndent);
             occupiedBox.MoveDown(topIndent).IncreaseHeight(topIndent);
             return this;
         }
+//\endcond
 
-        protected internal override TableBorders ApplyBottomTableBorder(Rectangle occupiedBox, Rectangle layoutBox
-            , bool isEmpty, bool force, bool reverse) {
+//\cond DO_NOT_DOCUMENT
+        internal override TableBorders ApplyBottomTableBorder(Rectangle occupiedBox, Rectangle layoutBox, bool isEmpty
+            , bool force, bool reverse) {
             return ApplyBottomTableBorder(occupiedBox, layoutBox, reverse);
         }
+//\endcond
 
-        protected internal override TableBorders ApplyBottomTableBorder(Rectangle occupiedBox, Rectangle layoutBox
-            , bool reverse) {
+//\cond DO_NOT_DOCUMENT
+        internal override TableBorders ApplyBottomTableBorder(Rectangle occupiedBox, Rectangle layoutBox, bool reverse
+            ) {
             float bottomTableBorderWidth = (reverse ? -1 : 1) * GetMaxBottomWidth();
             layoutBox.DecreaseHeight(bottomTableBorderWidth);
             occupiedBox.MoveDown(bottomTableBorderWidth).IncreaseHeight(bottomTableBorderWidth);
             return this;
         }
+//\endcond
 
-        protected internal override TableBorders ApplyLeftAndRightTableBorder(Rectangle layoutBox, bool reverse) {
+//\cond DO_NOT_DOCUMENT
+        internal override TableBorders ApplyLeftAndRightTableBorder(Rectangle layoutBox, bool reverse) {
             if (null != layoutBox) {
                 layoutBox.ApplyMargins(0, rightBorderMaxWidth, 0, leftBorderMaxWidth, reverse);
             }
             return this;
         }
+//\endcond
 
-        protected internal override TableBorders SkipFooter(Border[] borders) {
+//\cond DO_NOT_DOCUMENT
+        internal override TableBorders SkipFooter(Border[] borders) {
             SetTableBoundingBorders(borders);
             return this;
         }
+//\endcond
 
-        protected internal override TableBorders SkipHeader(Border[] borders) {
+//\cond DO_NOT_DOCUMENT
+        internal override TableBorders SkipHeader(Border[] borders) {
             return this;
         }
+//\endcond
 
-        protected internal override TableBorders CollapseTableWithFooter(TableBorders footerBordersHandler, bool hasContent
+//\cond DO_NOT_DOCUMENT
+        internal override TableBorders CollapseTableWithFooter(TableBorders footerBordersHandler, bool hasContent) {
+            return this;
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal override TableBorders CollapseTableWithHeader(TableBorders headerBordersHandler, bool updateBordersHandler
             ) {
             return this;
         }
+//\endcond
 
-        protected internal override TableBorders CollapseTableWithHeader(TableBorders headerBordersHandler, bool updateBordersHandler
-            ) {
+//\cond DO_NOT_DOCUMENT
+        internal override TableBorders FixHeaderOccupiedArea(Rectangle occupiedBox, Rectangle layoutBox) {
             return this;
         }
+//\endcond
 
-        protected internal override TableBorders FixHeaderOccupiedArea(Rectangle occupiedBox, Rectangle layoutBox) {
-            return this;
-        }
-
-        protected internal override TableBorders ApplyCellIndents(Rectangle box, float topIndent, float rightIndent
-            , float bottomIndent, float leftIndent, bool reverse) {
+//\cond DO_NOT_DOCUMENT
+        internal override TableBorders ApplyCellIndents(Rectangle box, float topIndent, float rightIndent, float bottomIndent
+            , float leftIndent, bool reverse) {
             box.ApplyMargins(topIndent, rightIndent, bottomIndent, leftIndent, false);
             return this;
         }
+//\endcond
 
-        public override IList<Border> GetVerticalBorder(int index) {
+//\cond DO_NOT_DOCUMENT
+        internal override IList<Border> GetVerticalBorder(int index) {
             return verticalBorders[index];
         }
+//\endcond
 
-        public override IList<Border> GetHorizontalBorder(int index) {
+//\cond DO_NOT_DOCUMENT
+        internal override IList<Border> GetHorizontalBorder(int index) {
             return horizontalBorders[index - largeTableIndexOffset];
         }
+//\endcond
 
-        protected internal override float GetCellVerticalAddition(float[] indents) {
+//\cond DO_NOT_DOCUMENT
+        internal override float GetCellVerticalAddition(float[] indents) {
             return 0;
         }
+//\endcond
 
-        protected internal override TableBorders UpdateBordersOnNewPage(bool isOriginalNonSplitRenderer, bool isFooterOrHeader
+//\cond DO_NOT_DOCUMENT
+        internal override TableBorders UpdateBordersOnNewPage(bool isOriginalNonSplitRenderer, bool isFooterOrHeader
             , TableRenderer currentRenderer, TableRenderer headerRenderer, TableRenderer footerRenderer) {
             if (!isFooterOrHeader) {
                 // collapse all cell borders
@@ -152,12 +184,16 @@ namespace iText.Layout.Renderer {
             }
             return this;
         }
+//\endcond
 
-        public override float[] GetCellBorderIndents(int row, int col, int rowspan, int colspan) {
+//\cond DO_NOT_DOCUMENT
+        internal override float[] GetCellBorderIndents(int row, int col, int rowspan, int colspan) {
             return new float[] { 0, 0, 0, 0 };
         }
+//\endcond
 
-        protected internal override void BuildBordersArrays(CellRenderer cell, int row, int col) {
+//\cond DO_NOT_DOCUMENT
+        internal override void BuildBordersArrays(CellRenderer cell, int row, int col) {
             int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
             int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
             int colN = ((Cell)cell.GetModelElement()).GetCol();
@@ -183,9 +219,11 @@ namespace iText.Layout.Renderer {
                 CheckAndReplaceBorderInArray(verticalBorders, 2 * (colN + colspan) - 1, i, cellBorders[1], true);
             }
         }
+//\endcond
 
-        protected internal virtual bool CheckAndReplaceBorderInArray(IList<IList<Border>> borderArray, int i, int 
-            j, Border borderToAdd, bool hasPriority) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual bool CheckAndReplaceBorderInArray(IList<IList<Border>> borderArray, int i, int j, Border 
+            borderToAdd, bool hasPriority) {
             IList<Border> borders = borderArray[i];
             Border neighbour = borders[j];
             if (neighbour == null) {
@@ -197,8 +235,10 @@ namespace iText.Layout.Renderer {
             }
             return true;
         }
+//\endcond
 
-        protected internal override TableBorders InitializeBorders() {
+//\cond DO_NOT_DOCUMENT
+        internal override TableBorders InitializeBorders() {
             IList<Border> tempBorders;
             // initialize vertical borders
             while (2 * Math.Max(numberOfColumns, 1) > verticalBorders.Count) {
@@ -218,30 +258,43 @@ namespace iText.Layout.Renderer {
             }
             return this;
         }
+//\endcond
 
-        public override IList<Border> GetFirstHorizontalBorder() {
+//\cond DO_NOT_DOCUMENT
+        internal override IList<Border> GetFirstHorizontalBorder() {
             return GetHorizontalBorder(2 * startRow);
         }
+//\endcond
 
-        public override IList<Border> GetLastHorizontalBorder() {
+//\cond DO_NOT_DOCUMENT
+        internal override IList<Border> GetLastHorizontalBorder() {
             return GetHorizontalBorder(2 * finishRow + 1);
         }
+//\endcond
 
-        public override float GetMaxTopWidth() {
+//\cond DO_NOT_DOCUMENT
+        internal override float GetMaxTopWidth() {
             return null == tableBoundingBorders[0] ? 0 : tableBoundingBorders[0].GetWidth();
         }
+//\endcond
 
-        public override float GetMaxBottomWidth() {
+//\cond DO_NOT_DOCUMENT
+        internal override float GetMaxBottomWidth() {
             return null == tableBoundingBorders[2] ? 0 : tableBoundingBorders[2].GetWidth();
         }
+//\endcond
 
-        public override float GetMaxRightWidth() {
+//\cond DO_NOT_DOCUMENT
+        internal override float GetMaxRightWidth() {
             return null == tableBoundingBorders[1] ? 0 : tableBoundingBorders[1].GetWidth();
         }
+//\endcond
 
-        public override float GetMaxLeftWidth() {
+//\cond DO_NOT_DOCUMENT
+        internal override float GetMaxLeftWidth() {
             return null == tableBoundingBorders[3] ? 0 : tableBoundingBorders[3].GetWidth();
         }
+//\endcond
     }
 //\endcond
 }

@@ -177,9 +177,11 @@ namespace iText.Pdfa {
             }
 //\endcond
 
-            public virtual int GetCounter() {
+//\cond DO_NOT_DOCUMENT
+            internal virtual int GetCounter() {
                 return counter;
             }
+//\endcond
 
             protected override void OnAcceptedEvent(AbstractPdfDocumentEvent @event) {
                 counter++;

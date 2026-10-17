@@ -62,14 +62,17 @@ namespace iText.Signatures.Validation.Report.Xml {
             MESSAGE_TYPE_VALUE_MAP.Put(SignatureValidationStatus.MessageType.ERROR, "urn:cef:dss:message:error");
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Creates an empty
         /// <see cref="SignatureValidationStatus"/>
         /// instance.
         /// </summary>
-        public SignatureValidationStatus() {
+        internal SignatureValidationStatus() {
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Declaring default constructor explicitly to avoid removing it unintentionally.
         /// <summary>Sets the main status indication.</summary>
         /// <param name="mainIndication">
@@ -77,66 +80,81 @@ namespace iText.Signatures.Validation.Report.Xml {
         /// <see cref="MainIndication"/>
         /// value
         /// </param>
-        public virtual void SetMainIndication(SignatureValidationStatus.MainIndication mainIndication) {
+        internal virtual void SetMainIndication(SignatureValidationStatus.MainIndication mainIndication) {
             this.mainIndication = mainIndication;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets the main status indication.</summary>
-        public virtual SignatureValidationStatus.MainIndication GetMainIndication() {
+        internal virtual SignatureValidationStatus.MainIndication GetMainIndication() {
             return mainIndication;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets URI representation of the validation status (see ETSI TS 119 102 4.3.4.2).</summary>
         /// <returns>validation status as string</returns>
-        public virtual String GetMainIndicationAsString() {
+        internal virtual String GetMainIndicationAsString() {
             return MAIN_INDICATION_VALUE_MAP.Get(mainIndication);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets sub-indication that shall clearly identify the reason for the main status indication.</summary>
         /// <param name="subIndication">
         /// 
         /// <see cref="SubIndication"/>
         /// value
         /// </param>
-        public virtual void SetSubIndication(SignatureValidationStatus.SubIndication subIndication) {
+        internal virtual void SetSubIndication(SignatureValidationStatus.SubIndication subIndication) {
             this.subIndication = subIndication;
             this.subIndicationSet = true;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets sub-indication that shall clearly identify the reason for the main status indication.</summary>
         /// <returns>
         /// 
         /// <see cref="SubIndication"/>
         /// value
         /// </returns>
-        public virtual SignatureValidationStatus.SubIndication GetSubIndication() {
+        internal virtual SignatureValidationStatus.SubIndication GetSubIndication() {
             return subIndication;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets sub-indication that shall clearly identify the reason for the main status indication.</summary>
         /// <returns>sub-indication value as string</returns>
-        public virtual String GetSubIndicationAsString() {
+        internal virtual String GetSubIndicationAsString() {
             if (!subIndicationSet) {
                 return null;
             }
             return subIndication.ToString();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Adds message for validation report data.</summary>
         /// <param name="reason">message reason as string</param>
         /// <param name="messageType">
         /// 
         /// <see cref="MessageType"/>
         /// </param>
-        public virtual void AddMessage(String reason, SignatureValidationStatus.MessageType messageType) {
+        internal virtual void AddMessage(String reason, SignatureValidationStatus.MessageType messageType) {
             this.messages.Add(new Tuple2<String, String>(reason, MESSAGE_TYPE_VALUE_MAP.Get(messageType)));
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets all reported messages.</summary>
         /// <returns>Collection of reported messages</returns>
-        public virtual ICollection<Tuple2<String, String>> GetMessages() {
+        internal virtual ICollection<Tuple2<String, String>> GetMessages() {
             return messages;
         }
+//\endcond
 
         /// <summary>This enum holds all possible MainIndication values</summary>
         public enum MainIndication {

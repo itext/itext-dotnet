@@ -32,13 +32,14 @@ namespace iText.IO.Image {
     internal class Jbig2ImageHelper {
         private byte[] globals;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Gets a byte array that can be used as a /JBIG2Globals,
         /// or null if not applicable to the given jbig2.
         /// </summary>
         /// <param name="ra">an random access file or array</param>
         /// <returns>a byte array</returns>
-        public static byte[] GetGlobalSegment(RandomAccessFileOrArray ra) {
+        internal static byte[] GetGlobalSegment(RandomAccessFileOrArray ra) {
             try {
                 Jbig2SegmentReader sr = new Jbig2SegmentReader(ra);
                 sr.Read();
@@ -48,10 +49,12 @@ namespace iText.IO.Image {
                 return null;
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Parses the selected page of a JBIG2 image and populates its image attributes.</summary>
         /// <param name="jbig2">JBIG2 image data to process</param>
-        public static void ProcessImage(ImageData jbig2) {
+        internal static void ProcessImage(ImageData jbig2) {
             if (jbig2.GetOriginalType() != ImageType.JBIG2) {
                 throw new ArgumentException("JBIG2 image expected");
             }
@@ -86,6 +89,7 @@ namespace iText.IO.Image {
                 throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.JBIG2_IMAGE_EXCEPTION, e);
             }
         }
+//\endcond
     }
 //\endcond
 }

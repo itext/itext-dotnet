@@ -41,9 +41,8 @@ using iText.Test;
 using iText.Test.Attributes;
 
 namespace iText.Signatures {
-//\cond DO_NOT_DOCUMENT
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
-    internal class IssuingCertificateRetrieverTest : ExtendedITextTest {
+    public class IssuingCertificateRetrieverTest : ExtendedITextTest {
         private static readonly String CERTS_SRC = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
@@ -167,13 +166,13 @@ namespace iText.Signatures {
             IX509Certificate multipleAiaCert = (IX509Certificate)PemFileHelper.ReadFirstChain(SOURCE_FOLDER + "multiple_aia_cert.pem"
                 )[0];
             int[] counter = new int[] { 0 };
-            IssuingCertificateRetriever issuingCertificateRetriever = new _IssuingCertificateRetriever_186(counter);
+            IssuingCertificateRetriever issuingCertificateRetriever = new _IssuingCertificateRetriever_184(counter);
             issuingCertificateRetriever.RetrieveIssuerCertificate(multipleAiaCert);
             NUnit.Framework.Assert.AreEqual(3, counter[0]);
         }
 
-        private sealed class _IssuingCertificateRetriever_186 : IssuingCertificateRetriever {
-            public _IssuingCertificateRetriever_186(int[] counter) {
+        private sealed class _IssuingCertificateRetriever_184 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_184(int[] counter) {
                 this.counter = counter;
             }
 
@@ -190,13 +189,13 @@ namespace iText.Signatures {
         public virtual void MultipleAiaExtensionsCrlTest() {
             byte[] crlBytes = File.ReadAllBytes(System.IO.Path.Combine(SOURCE_FOLDER + "multiple_aia.crl"));
             int[] counter = new int[] { 0 };
-            IssuingCertificateRetriever issuingCertificateRetriever = new _IssuingCertificateRetriever_204(counter);
+            IssuingCertificateRetriever issuingCertificateRetriever = new _IssuingCertificateRetriever_202(counter);
             issuingCertificateRetriever.GetCrlIssuerCertificates(CertificateUtil.ParseCrlFromBytes(crlBytes));
             NUnit.Framework.Assert.AreEqual(3, counter[0]);
         }
 
-        private sealed class _IssuingCertificateRetriever_204 : IssuingCertificateRetriever {
-            public _IssuingCertificateRetriever_204(int[] counter) {
+        private sealed class _IssuingCertificateRetriever_202 : IssuingCertificateRetriever {
+            public _IssuingCertificateRetriever_202(int[] counter) {
                 this.counter = counter;
             }
 
@@ -208,5 +207,4 @@ namespace iText.Signatures {
             private readonly int[] counter;
         }
     }
-//\endcond
 }

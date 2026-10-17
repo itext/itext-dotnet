@@ -35,9 +35,12 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             : base(CommonCssConstants.FIRST_OF_TYPE) {
         }
 
-        public static iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassFirstOfTypeSelectorItem GetInstance() {
+//\cond DO_NOT_DOCUMENT
+        internal static iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassFirstOfTypeSelectorItem GetInstance(
+            ) {
             return instance;
         }
+//\endcond
 
         public override bool Matches(INode node) {
             if (!(node is IElementNode) || node is ICustomElementNode || node is IDocumentNode) {

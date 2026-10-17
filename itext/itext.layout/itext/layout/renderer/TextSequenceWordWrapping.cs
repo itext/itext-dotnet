@@ -36,11 +36,13 @@ namespace iText.Layout.Renderer {
         private TextSequenceWordWrapping() {
         }
 
-        public static bool IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing(IRenderer childRenderer) {
+//\cond DO_NOT_DOCUMENT
+        internal static bool IsTextRendererAndRequiresSpecialScriptPreLayoutProcessing(IRenderer childRenderer) {
             return childRenderer is TextRenderer && ((TextRenderer)childRenderer).GetSpecialScriptsWordBreakPoints() ==
                  null && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs(false) && !LineRenderer.IsChildFloating
                 (childRenderer);
         }
+//\endcond
 
         public static bool IsTextRendererAndParentWritingCorrespondsToChild(IRenderer childRenderer, bool forSpecialScripts
             ) {
@@ -48,6 +50,7 @@ namespace iText.Layout.Renderer {
                 ) == forSpecialScripts;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Preprocess a continuous sequence of TextRenderer containing special scripts
         /// prior to layouting the first TextRenderer in the sequence.
@@ -88,7 +91,7 @@ namespace iText.Layout.Renderer {
         /// index of the childRenderer in LineRenderer#childRenderers
         /// from which the a continuous sequence of TextRenderer containing special scripts starts
         /// </param>
-        public static void ProcessSpecialScriptPreLayout(LineRenderer lineRenderer, int childPos) {
+        internal static void ProcessSpecialScriptPreLayout(LineRenderer lineRenderer, int childPos) {
             TextSequenceWordWrapping.SpecialScriptsContainingTextRendererSequenceInfo info = GetSpecialScriptsContainingTextRendererSequenceInfo
                 (lineRenderer, childPos);
             int numberOfSequentialTextRenderers = info.numberOfSequentialTextRenderers;
@@ -98,16 +101,20 @@ namespace iText.Layout.Renderer {
             DistributePossibleBreakPointsOverSequentialTextRenderers(lineRenderer, childPos, numberOfSequentialTextRenderers
                 , possibleBreakPointsGlobal, indicesOfFloating);
         }
+//\endcond
 
-        public static void UpdateTextSequenceLayoutResults(IDictionary<int, LayoutResult> textRendererLayoutResults
+//\cond DO_NOT_DOCUMENT
+        internal static void UpdateTextSequenceLayoutResults(IDictionary<int, LayoutResult> textRendererLayoutResults
             , bool specialScripts, IRenderer childRenderer, int childPos, LayoutResult childResult) {
             if (IsTextRendererAndParentWritingCorrespondsToChild(childRenderer, specialScripts)) {
                 textRendererLayoutResults.Put(childPos, childResult);
             }
         }
+//\endcond
 
-        public static void ResetTextSequenceIfItEnded(IDictionary<int, LayoutResult> textRendererLayoutResults, bool
-             specialScripts, IRenderer childRenderer, int childPos, TextSequenceWordWrapping.MinMaxWidthOfTextRendererSequenceHelper
+//\cond DO_NOT_DOCUMENT
+        internal static void ResetTextSequenceIfItEnded(IDictionary<int, LayoutResult> textRendererLayoutResults, 
+            bool specialScripts, IRenderer childRenderer, int childPos, TextSequenceWordWrapping.MinMaxWidthOfTextRendererSequenceHelper
              minMaxWidthOfTextRendererSequenceHelper, bool noSoftWrap, AbstractWidthHandler widthHandler, bool isVerticalWriting
             ) {
             if (IsTextRendererAndParentWritingCorrespondsToChild(childRenderer, specialScripts) && !LineRenderer.IsChildFloating
@@ -132,8 +139,10 @@ namespace iText.Layout.Renderer {
                 textRendererLayoutResults.Clear();
             }
         }
+//\endcond
 
-        public static LineRenderer.LineAscentDescentState UpdateTextRendererSequenceAscentDescent(LineRenderer lineRenderer
+//\cond DO_NOT_DOCUMENT
+        internal static LineRenderer.LineAscentDescentState UpdateTextRendererSequenceAscentDescent(LineRenderer lineRenderer
             , IDictionary<int, float[]> textRendererSequenceAscentDescent, int childPos, float[] childAscentDescent
             , LineRenderer.LineAscentDescentState preTextSequenceAscentDescent) {
             IRenderer childRenderer = GetRenderer(lineRenderer, childPos);
@@ -152,8 +161,10 @@ namespace iText.Layout.Renderer {
             }
             return preTextSequenceAscentDescent;
         }
+//\endcond
 
-        public static TextSequenceWordWrapping.MinMaxWidthOfTextRendererSequenceHelper UpdateTextRendererSequenceMinMaxWidth
+//\cond DO_NOT_DOCUMENT
+        internal static TextSequenceWordWrapping.MinMaxWidthOfTextRendererSequenceHelper UpdateTextRendererSequenceMinMaxWidth
             (LineRenderer lineRenderer, AbstractWidthHandler widthHandler, int childPos, TextSequenceWordWrapping.MinMaxWidthOfTextRendererSequenceHelper
              minMaxWidthOfTextRendererSequenceHelper, bool anythingPlaced, IDictionary<int, LayoutResult> textRendererLayoutResults
             , IDictionary<int, LayoutResult> specialScriptLayoutResults, float textIndent) {
@@ -173,8 +184,10 @@ namespace iText.Layout.Renderer {
                 return null;
             }
         }
+//\endcond
 
-        public static TextSequenceWordWrapping.LastFittingChildRendererData GetIndexAndLayoutResultOfTheLastTextRendererWithNoSpecialScripts
+//\cond DO_NOT_DOCUMENT
+        internal static TextSequenceWordWrapping.LastFittingChildRendererData GetIndexAndLayoutResultOfTheLastTextRendererWithNoSpecialScripts
             (LineRenderer lineRenderer, int childPos, IDictionary<int, LayoutResult> textSequenceLayoutResults, bool
              wasParentsHeightClipped, bool isOverflowFit, bool floatsPlaced) {
             LayoutResult lastAnalyzedTextLayoutResult = textSequenceLayoutResults.Get(childPos);
@@ -274,8 +287,10 @@ namespace iText.Layout.Renderer {
                 return null;
             }
         }
+//\endcond
 
-        public static TextSequenceWordWrapping.LastFittingChildRendererData GetIndexAndLayoutResultOfTheLastTextRendererContainingSpecialScripts
+//\cond DO_NOT_DOCUMENT
+        internal static TextSequenceWordWrapping.LastFittingChildRendererData GetIndexAndLayoutResultOfTheLastTextRendererContainingSpecialScripts
             (LineRenderer lineRenderer, int childPos, IDictionary<int, LayoutResult> specialScriptLayoutResults, bool
              wasParentsHeightClipped, bool isOverflowFit) {
             int indexOfRendererContainingLastFullyFittingWord = childPos;
@@ -381,7 +396,9 @@ namespace iText.Layout.Renderer {
             return new TextSequenceWordWrapping.LastFittingChildRendererData(indexOfRendererContainingLastFullyFittingWord
                 , returnLayoutResult);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Performs some settings on
         /// <see cref="LineRenderer"/>
@@ -423,7 +440,7 @@ namespace iText.Layout.Renderer {
         /// <see cref="iText.Layout.Properties.Property.OVERFLOW_Y"/>
         /// for vertical text
         /// </param>
-        public static void PreprocessTextSequenceOverflow(LineRenderer lineRenderer, bool textSequenceOverflowProcessing
+        internal static void PreprocessTextSequenceOverflow(LineRenderer lineRenderer, bool textSequenceOverflowProcessing
             , IRenderer childRenderer, bool wasOverflowChanged, OverflowPropertyValue? oldOverflow, int overflowProperty
             ) {
             bool specialScripts = childRenderer is TextRenderer && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs
@@ -442,7 +459,9 @@ namespace iText.Layout.Renderer {
                 lineRenderer.SetProperty(overflowProperty, oldOverflow);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Checks if the layouting should be stopped on current child and resets configurations set on
         /// <see cref="PreprocessTextSequenceOverflow(LineRenderer, bool, IRenderer, bool, iText.Layout.Properties.OverflowPropertyValue?, int)
@@ -472,7 +491,7 @@ namespace iText.Layout.Renderer {
         /// <see cref="iText.Layout.Properties.Property.OVERFLOW_Y"/>
         /// for vertical text
         /// </param>
-        public static bool PostprocessTextSequenceOverflow(LineRenderer lineRenderer, bool textSequenceOverflowProcessing
+        internal static bool PostprocessTextSequenceOverflow(LineRenderer lineRenderer, bool textSequenceOverflowProcessing
             , int childPos, IRenderer childRenderer, LayoutResult childResult, bool wasOverflowChanged, int overflowProperty
             ) {
             bool specialScripts = childRenderer is TextRenderer && ((TextRenderer)childRenderer).TextContainsSpecialScriptGlyphs
@@ -501,6 +520,7 @@ namespace iText.Layout.Renderer {
             }
             return shouldBreakLayouting;
         }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         internal static TextSequenceWordWrapping.SpecialScriptsContainingTextRendererSequenceInfo GetSpecialScriptsContainingTextRendererSequenceInfo
@@ -773,11 +793,17 @@ namespace iText.Layout.Renderer {
 
 //\cond DO_NOT_DOCUMENT
         internal class MinMaxWidthOfTextRendererSequenceHelper {
-            public float minWidthPreSequence;
+//\cond DO_NOT_DOCUMENT
+            internal float minWidthPreSequence;
+//\endcond
 
-            public float textIndent;
+//\cond DO_NOT_DOCUMENT
+            internal float textIndent;
+//\endcond
 
-            public bool anythingPlacedBeforeTextRendererSequence;
+//\cond DO_NOT_DOCUMENT
+            internal bool anythingPlacedBeforeTextRendererSequence;
+//\endcond
 
             public MinMaxWidthOfTextRendererSequenceHelper(float minWidthPreSequence, float textIndent, bool anythingPlacedBeforeTextRendererSequence
                 ) {
@@ -790,9 +816,13 @@ namespace iText.Layout.Renderer {
 
 //\cond DO_NOT_DOCUMENT
         internal class LastFittingChildRendererData {
-            public int childIndex;
+//\cond DO_NOT_DOCUMENT
+            internal int childIndex;
+//\endcond
 
-            public LayoutResult childLayoutResult;
+//\cond DO_NOT_DOCUMENT
+            internal LayoutResult childLayoutResult;
+//\endcond
 
             public LastFittingChildRendererData(int childIndex, LayoutResult childLayoutResult) {
                 this.childIndex = childIndex;
@@ -807,9 +837,13 @@ namespace iText.Layout.Renderer {
         // sequentialTextContent - converted to String and concatenated TextRenderer#text-s;
         // indicesOfFloating - indices of ignored floating child renderers of this LineRenderer
         internal class SpecialScriptsContainingTextRendererSequenceInfo {
-            public int numberOfSequentialTextRenderers;
+//\cond DO_NOT_DOCUMENT
+            internal int numberOfSequentialTextRenderers;
+//\endcond
 
-            public String sequentialTextContent;
+//\cond DO_NOT_DOCUMENT
+            internal String sequentialTextContent;
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
             internal IList<int> indicesOfFloating;

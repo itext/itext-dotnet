@@ -33,9 +33,11 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             : base(CommonCssConstants.ROOT) {
         }
 
-        public static iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassRootSelectorItem GetInstance() {
+//\cond DO_NOT_DOCUMENT
+        internal static iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassRootSelectorItem GetInstance() {
             return instance;
         }
+//\endcond
 
         public override bool Matches(INode node) {
             if (!(node is IElementNode) || node is ICustomElementNode || node is IDocumentNode) {

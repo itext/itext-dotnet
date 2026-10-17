@@ -2074,23 +2074,32 @@ namespace iText.Layout.Renderer {
                 starterNonTextRenderers = new List<IRenderer>();
             }
 
-            public virtual IList<LineRenderer.RendererGlyph> GetLineGlyphs() {
+//\cond DO_NOT_DOCUMENT
+            internal virtual IList<LineRenderer.RendererGlyph> GetLineGlyphs() {
                 return lineGlyphs;
             }
+//\endcond
 
-            public virtual IList<IRenderer> GetInsertAfterAndRemove(TextRenderer afterRenderer) {
+//\cond DO_NOT_DOCUMENT
+            internal virtual IList<IRenderer> GetInsertAfterAndRemove(TextRenderer afterRenderer) {
                 return insertAfter.JRemove(afterRenderer);
             }
+//\endcond
 
-            public virtual IList<IRenderer> GetStarterNonTextRenderers() {
+//\cond DO_NOT_DOCUMENT
+            internal virtual IList<IRenderer> GetStarterNonTextRenderers() {
                 return starterNonTextRenderers;
             }
+//\endcond
 
-            public virtual void AddLineGlyph(LineRenderer.RendererGlyph glyph) {
+//\cond DO_NOT_DOCUMENT
+            internal virtual void AddLineGlyph(LineRenderer.RendererGlyph glyph) {
                 lineGlyphs.Add(glyph);
             }
+//\endcond
 
-            public virtual void AddInsertAfter(TextRenderer afterRenderer, IRenderer toInsert) {
+//\cond DO_NOT_DOCUMENT
+            internal virtual void AddInsertAfter(TextRenderer afterRenderer, IRenderer toInsert) {
                 if (afterRenderer == null) {
                     // null indicates that there were no previous renderers
                     starterNonTextRenderers.Add(toInsert);
@@ -2102,6 +2111,7 @@ namespace iText.Layout.Renderer {
                     insertAfter.Get(afterRenderer).Add(toInsert);
                 }
             }
+//\endcond
         }
 //\endcond
     }

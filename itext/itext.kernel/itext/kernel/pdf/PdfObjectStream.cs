@@ -28,19 +28,27 @@ using iText.Kernel.Exceptions;
 namespace iText.Kernel.Pdf {
 //\cond DO_NOT_DOCUMENT
     internal class PdfObjectStream : PdfStream {
+//\cond DO_NOT_DOCUMENT
         /// <summary>Max number of objects in object stream.</summary>
-        public const int MAX_OBJ_STREAM_SIZE = 200;
+        internal const int MAX_OBJ_STREAM_SIZE = 200;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Current object stream size (number of objects inside).</summary>
-        protected internal PdfNumber size = new PdfNumber(0);
+        internal PdfNumber size = new PdfNumber(0);
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Stream containing object indices, a heading part of object stream.</summary>
-        protected internal PdfOutputStream indexStream;
+        internal PdfOutputStream indexStream;
+//\endcond
 
-        public PdfObjectStream(PdfDocument doc)
+//\cond DO_NOT_DOCUMENT
+        internal PdfObjectStream(PdfDocument doc)
             : this(doc, new ByteArrayOutputStream()) {
             indexStream = new PdfOutputStream(new ByteArrayOutputStream());
         }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>This constructor is for reusing ByteArrayOutputStreams of indexStream and outputStream.</summary>
@@ -68,9 +76,10 @@ namespace iText.Kernel.Pdf {
             Put(PdfName.First, new PdfNumber(0));
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Adds object to the object stream.</summary>
         /// <param name="object">object to add.</param>
-        public virtual void AddObject(PdfObject @object) {
+        internal virtual void AddObject(PdfObject @object) {
             if (size.IntValue() == MAX_OBJ_STREAM_SIZE) {
                 throw new PdfException(KernelExceptionMessageConstant.PDF_OBJECT_STREAM_REACH_MAX_SIZE);
             }
@@ -84,16 +93,21 @@ namespace iText.Kernel.Pdf {
             size.Increment();
             GetAsNumber(PdfName.First).SetValue(indexStream.GetCurrentPos());
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets object stream size (number of objects inside).</summary>
         /// <returns>object stream size.</returns>
-        public virtual int GetSize() {
+        internal virtual int GetSize() {
             return size.IntValue();
         }
+//\endcond
 
-        public virtual PdfOutputStream GetIndexStream() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual PdfOutputStream GetIndexStream() {
             return indexStream;
         }
+//\endcond
 
         protected internal override void ReleaseContent() {
             ReleaseContent(false);

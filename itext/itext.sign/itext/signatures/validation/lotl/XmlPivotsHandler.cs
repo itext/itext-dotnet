@@ -70,9 +70,11 @@ namespace iText.Signatures.Validation.Lotl {
             }
         }
 
-        public virtual IList<String> GetPivots() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual IList<String> GetPivots() {
             return new List<String>(pivots);
         }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         internal static bool IsOfficialJournal(String uriLink) {

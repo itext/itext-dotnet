@@ -35,9 +35,11 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             : base(CommonCssConstants.LAST_OF_TYPE) {
         }
 
-        public static iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassLastOfTypeSelectorItem GetInstance() {
+//\cond DO_NOT_DOCUMENT
+        internal static iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassLastOfTypeSelectorItem GetInstance() {
             return instance;
         }
+//\endcond
 
         public override bool Matches(INode node) {
             if (!(node is IElementNode) || node is ICustomElementNode || node is IDocumentNode) {

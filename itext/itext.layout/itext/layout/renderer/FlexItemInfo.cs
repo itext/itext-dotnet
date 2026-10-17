@@ -29,18 +29,24 @@ namespace iText.Layout.Renderer {
 
         private Rectangle rectangle;
 
-        public FlexItemInfo(AbstractRenderer renderer, Rectangle rectangle) {
+//\cond DO_NOT_DOCUMENT
+        internal FlexItemInfo(AbstractRenderer renderer, Rectangle rectangle) {
             this.renderer = renderer;
             this.rectangle = rectangle;
         }
+//\endcond
 
-        public virtual AbstractRenderer GetRenderer() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual AbstractRenderer GetRenderer() {
             return renderer;
         }
+//\endcond
 
-        public virtual Rectangle GetRectangle() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual Rectangle GetRectangle() {
             return rectangle;
         }
+//\endcond
     }
 //\endcond
 }

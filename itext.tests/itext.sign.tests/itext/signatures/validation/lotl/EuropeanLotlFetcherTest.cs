@@ -27,9 +27,8 @@ using iText.IO.Resolver.Resource;
 using iText.Test;
 
 namespace iText.Signatures.Validation.Lotl {
-//\cond DO_NOT_DOCUMENT
     [NUnit.Framework.Category("IntegrationTest")]
-    internal class EuropeanLotlFetcherTest : ExtendedITextTest {
+    public class EuropeanLotlFetcherTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER_LOTL = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation" + "/lotl/LotlState2025_08_08/";
 
@@ -66,7 +65,7 @@ namespace iText.Signatures.Validation.Lotl {
         public virtual void DummyRetrieverCausesException() {
             EuropeanLotlFetcher fetcher;
             using (LotlService service = new LotlService(new LotlFetchingProperties(new RemoveOnFailingCountryData()))
-                .WithCustomResourceRetriever(new _IResourceRetriever_78())) {
+                .WithCustomResourceRetriever(new _IResourceRetriever_76())) {
                 fetcher = new EuropeanLotlFetcher(service);
             }
             EuropeanLotlFetcher.Result result = fetcher.Fetch();
@@ -75,8 +74,8 @@ namespace iText.Signatures.Validation.Lotl {
             NUnit.Framework.Assert.IsFalse(result.GetLocalReport().GetLogs().IsEmpty());
         }
 
-        private sealed class _IResourceRetriever_78 : IResourceRetriever {
-            public _IResourceRetriever_78() {
+        private sealed class _IResourceRetriever_76 : IResourceRetriever {
+            public _IResourceRetriever_76() {
             }
 
             public Stream GetInputStreamByUrl(Uri url) {
@@ -88,5 +87,4 @@ namespace iText.Signatures.Validation.Lotl {
             }
         }
     }
-//\endcond
 }

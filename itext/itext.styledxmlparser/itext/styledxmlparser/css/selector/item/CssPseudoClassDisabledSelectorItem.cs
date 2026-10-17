@@ -29,9 +29,11 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         private static readonly iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassDisabledSelectorItem instance
              = new iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassDisabledSelectorItem();
 
-        public static iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassDisabledSelectorItem GetInstance() {
+//\cond DO_NOT_DOCUMENT
+        internal static iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassDisabledSelectorItem GetInstance() {
             return instance;
         }
+//\endcond
 
         private CssPseudoClassDisabledSelectorItem()
             : base(CommonCssConstants.DISABLED) {

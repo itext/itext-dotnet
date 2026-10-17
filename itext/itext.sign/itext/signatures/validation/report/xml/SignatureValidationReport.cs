@@ -31,23 +31,29 @@ namespace iText.Signatures.Validation.Report.Xml {
 
         private SignatureValidationStatus status;
 
-        public SignatureValidationReport(ValidationObjects validationObjects, CMSContainer signature, String signatureName
+//\cond DO_NOT_DOCUMENT
+        internal SignatureValidationReport(ValidationObjects validationObjects, CMSContainer signature, String signatureName
             , DateTime signingDate)
             : base("S") {
             signatureIdentifier = new SignatureIdentifier(validationObjects, signature, signatureName, signingDate);
         }
+//\endcond
 
-        public virtual SignatureIdentifier GetSignatureIdentifier() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual SignatureIdentifier GetSignatureIdentifier() {
             return signatureIdentifier;
         }
+//\endcond
 
         public virtual void SetSignatureValidationStatus(SignatureValidationStatus status) {
             this.status = status;
         }
 
-        public virtual SignatureValidationStatus GetSignatureValidationStatus() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual SignatureValidationStatus GetSignatureValidationStatus() {
             return status;
         }
+//\endcond
 
         public override bool Equals(Object o) {
             if (this == o) {

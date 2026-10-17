@@ -29,7 +29,9 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
 //\cond DO_NOT_DOCUMENT
     /// <summary>Base class for pseudo-classes that accept a forgiving selector list (e.g. :is(), :where()).</summary>
     internal abstract class CssPseudoClassForgivingSelectorListSelectorItem : CssPseudoClassSelectorItem {
-        protected internal readonly IList<ICssSelector> selectorList;
+//\cond DO_NOT_DOCUMENT
+        internal readonly IList<ICssSelector> selectorList;
+//\endcond
 
         protected internal CssPseudoClassForgivingSelectorListSelectorItem(String pseudoClass, IList<ICssSelector>
              selectorList, String argumentsString)

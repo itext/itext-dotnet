@@ -57,13 +57,14 @@ namespace iText.Kernel.Pdf {
 
         private PdfPages root;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Creates a PdfPages tree.</summary>
         /// <param name="pdfCatalog">
         /// a
         /// <see cref="PdfCatalog"/>
         /// which will be used to create the tree
         /// </param>
-        public PdfPagesTree(PdfCatalog pdfCatalog) {
+        internal PdfPagesTree(PdfCatalog pdfCatalog) {
             this.document = pdfCatalog.GetDocument();
             this.parents = new List<PdfPages>();
             IPageTreeListFactory pageTreeFactory = document.GetDiContainer().GetInstance<IPageTreeListFactory>();
@@ -88,7 +89,9 @@ namespace iText.Kernel.Pdf {
                 this.pageRefs = pageTreeFactory.CreateList<PdfIndirectReference>(null);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         //in read mode we will create PdfPages from 0 to Count
         // and reserve null indexes for pageRefs and pages.
         /// <summary>
@@ -102,7 +105,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfPage"/>
         /// at the specified position in this list
         /// </returns>
-        public virtual PdfPage GetPage(int pageNum) {
+        internal virtual PdfPage GetPage(int pageNum) {
             if (pageNum < 1 || pageNum > GetNumberOfPages()) {
                 throw new IndexOutOfRangeException(MessageFormatUtil.Format(KernelExceptionMessageConstant.REQUESTED_PAGE_NUMBER_IS_OUT_OF_BOUNDS
                     , pageNum));
@@ -137,7 +140,9 @@ namespace iText.Kernel.Pdf {
             }
             return pdfPage;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Returns the
         /// <see cref="PdfPage"/>
@@ -150,33 +155,39 @@ namespace iText.Kernel.Pdf {
         /// object, that wraps
         /// <paramref name="pageDictionary"/>.
         /// </returns>
-        public virtual PdfPage GetPage(PdfDictionary pageDictionary) {
+        internal virtual PdfPage GetPage(PdfDictionary pageDictionary) {
             int pageNum = GetPageNumber(pageDictionary);
             if (pageNum > 0) {
                 return GetPage(pageNum);
             }
             return null;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets total number of @see PdfPages.</summary>
         /// <returns>total number of pages</returns>
-        public virtual int GetNumberOfPages() {
+        internal virtual int GetNumberOfPages() {
             return pageRefs.Size();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Returns the index of the first occurrence of the specified page
         /// in this tree, or 0 if this tree does not contain the page.
         /// </summary>
-        public virtual int GetPageNumber(PdfPage page) {
+        internal virtual int GetPageNumber(PdfPage page) {
             return pages.IndexOf(page) + 1;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Returns the index of the first occurrence of the page in this tree
         /// specified by its PdfDictionary, or 0 if this tree does not contain the page.
         /// </summary>
-        public virtual int GetPageNumber(PdfDictionary pageDictionary) {
+        internal virtual int GetPageNumber(PdfDictionary pageDictionary) {
             int pageNum = pageRefs.IndexOf(pageDictionary.GetIndirectReference());
             if (pageNum >= 0) {
                 return pageNum + 1;
@@ -191,7 +202,9 @@ namespace iText.Kernel.Pdf {
             }
             return 0;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Appends the specified
         /// <see cref="PdfPage"/>
@@ -202,7 +215,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfPage"/>
         /// to be added
         /// </param>
-        public virtual void AddPage(PdfPage pdfPage) {
+        internal virtual void AddPage(PdfPage pdfPage) {
             PdfPages pdfPages;
             if (root != null) {
                 // in this case we save tree structure
@@ -227,7 +240,9 @@ namespace iText.Kernel.Pdf {
             pageRefs.Add(pdfPage.GetPdfObject().GetIndirectReference());
             pages.Add(pdfPage);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Inserts
         /// <see cref="PdfPage"/>
@@ -239,7 +254,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfPage"/>
         /// to insert.
         /// </param>
-        public virtual void AddPage(int index, PdfPage pdfPage) {
+        internal virtual void AddPage(int index, PdfPage pdfPage) {
             --index;
             if (index > pageRefs.Size()) {
                 throw new IndexOutOfRangeException("index");
@@ -258,7 +273,9 @@ namespace iText.Kernel.Pdf {
             pageRefs.Add(index, pdfPage.GetPdfObject().GetIndirectReference());
             pages.Add(index, pdfPage);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Removes the page at the specified position in this tree.</summary>
         /// <remarks>
         /// Removes the page at the specified position in this tree.
@@ -267,7 +284,7 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         /// <param name="pageNum">the one-based index of the PdfPage to be removed</param>
         /// <returns>the page that was removed from the list</returns>
-        public virtual PdfPage RemovePage(int pageNum) {
+        internal virtual PdfPage RemovePage(int pageNum) {
             PdfPage pdfPage = GetPage(pageNum);
             if (pdfPage.IsFlushed()) {
                 LOGGER.Warn(() => iText.IO.Logs.IoLogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED);
@@ -279,6 +296,7 @@ namespace iText.Kernel.Pdf {
                 return null;
             }
         }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         internal virtual void ReleasePage(int pageNumber) {
@@ -291,12 +309,13 @@ namespace iText.Kernel.Pdf {
         }
 //\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Generate PdfPages tree.</summary>
         /// <returns>
         /// root
         /// <see cref="PdfPages"/>
         /// </returns>
-        protected internal virtual PdfObject GenerateTree() {
+        internal virtual PdfObject GenerateTree() {
             if (pageRefs.IsEmpty()) {
                 LOGGER.Info(() => iText.IO.Logs.IoLogMessageConstant.ATTEMPT_TO_GENERATE_PDF_PAGES_TREE_WITHOUT_ANY_PAGES);
                 document.AddNewPage();
@@ -322,25 +341,34 @@ namespace iText.Kernel.Pdf {
             generated = true;
             return root.GetPdfObject();
         }
+//\endcond
 
-        protected internal virtual void ClearPageRefs() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual void ClearPageRefs() {
             pageRefs = null;
             pages = null;
         }
+//\endcond
 
-        protected internal virtual IList<PdfPages> GetParents() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual IList<PdfPages> GetParents() {
             return parents;
         }
+//\endcond
 
-        protected internal virtual PdfPages GetRoot() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual PdfPages GetRoot() {
             return root;
         }
+//\endcond
 
-        protected internal virtual PdfPages FindPageParent(PdfPage pdfPage) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual PdfPages FindPageParent(PdfPage pdfPage) {
             int pageNum = GetPageNumber(pdfPage) - 1;
             int parentIndex = FindPageParent(pageNum);
             return parents[parentIndex];
         }
+//\endcond
 
         private void LoadPage(int pageNum) {
             LoadPage(pageNum, new HashSet<PdfIndirectReference>());

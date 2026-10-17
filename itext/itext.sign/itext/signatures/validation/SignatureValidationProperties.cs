@@ -320,39 +320,39 @@ namespace iText.Signatures.Validation {
 
             private IList<CertificateExtension> requiredExtensions;
 
-            public ContextProperties() {
+            internal ContextProperties() {
             }
 
             // Empty constructor.
-            public virtual bool? GetContinueAfterFailure() {
+            internal virtual bool? GetContinueAfterFailure() {
                 return continueAfterFailure;
             }
 
-            public virtual void SetContinueAfterFailure(bool? continueAfterFailure) {
+            internal virtual void SetContinueAfterFailure(bool? continueAfterFailure) {
                 this.continueAfterFailure = continueAfterFailure;
             }
 
-            public virtual TimeSpan GetFreshness() {
+            internal virtual TimeSpan GetFreshness() {
                 return freshness;
             }
 
-            public virtual void SetFreshness(TimeSpan value) {
+            internal virtual void SetFreshness(TimeSpan value) {
                 freshness = value;
             }
 
-            public virtual SignatureValidationProperties.OnlineFetching GetOnlineFetching() {
+            internal virtual SignatureValidationProperties.OnlineFetching GetOnlineFetching() {
                 return onlineFetching;
             }
 
-            public virtual void SetOnlineFetching(SignatureValidationProperties.OnlineFetching onlineFetching) {
+            internal virtual void SetOnlineFetching(SignatureValidationProperties.OnlineFetching onlineFetching) {
                 this.onlineFetching = onlineFetching;
             }
 
-            public virtual IList<CertificateExtension> GetRequiredExtensions() {
+            internal virtual IList<CertificateExtension> GetRequiredExtensions() {
                 return requiredExtensions;
             }
 
-            public virtual void SetRequiredExtensions(IList<CertificateExtension> requiredExtensions) {
+            internal virtual void SetRequiredExtensions(IList<CertificateExtension> requiredExtensions) {
                 this.requiredExtensions = requiredExtensions;
             }
         }

@@ -1510,7 +1510,8 @@ namespace iText.Signatures {
                 this.reader = null;
             }
 
-            public virtual void Apply(PdfSigner.ISignatureDataProvider signatureDataProvider) {
+//\cond DO_NOT_DOCUMENT
+            internal virtual void Apply(PdfSigner.ISignatureDataProvider signatureDataProvider) {
                 StampingProperties properties = new StampingProperties().PreserveEncryption();
                 properties.RegisterDependency(typeof(IMacContainerLocator), () => new SignatureMacContainerLocator());
                 // This IdleOutputStream writer does nothing and only required to be able to apply MAC if needed.
@@ -1533,6 +1534,7 @@ namespace iText.Signatures {
                     }
                 }
             }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
             internal virtual void Apply(PdfDocument document, PdfSigner.ISignatureDataProvider signatureDataProvider) {
@@ -1580,9 +1582,11 @@ namespace iText.Signatures {
             }
 //\endcond
 
-            public virtual Stream GetDataToSign() {
+//\cond DO_NOT_DOCUMENT
+            internal virtual Stream GetDataToSign() {
                 return new RASInputStream(new RandomAccessSourceFactory().CreateRanged(readerSource, gaps));
             }
+//\endcond
         }
 //\endcond
 

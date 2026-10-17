@@ -34,24 +34,24 @@ namespace iText.Forms.Xfa
 	internal class Xml2Som
 	{
 		/// <summary>The order the names appear in the XML, depth first.</summary>
-		protected internal IList<String> order;
+		internal IList<String> order;
 
 		/// <summary>The mapping of full names to nodes.</summary>
-		protected internal IDictionary<String, XNode> name2Node;
+		internal IDictionary<String, XNode> name2Node;
 
 		/// <summary>The data to do a search from the bottom hierarchy.</summary>
-		protected internal IDictionary<String, InverseStore> inverseSearch;
+		internal IDictionary<String, InverseStore> inverseSearch;
 
 		/// <summary>A som parts list in LIFO order as encountered when parsing dataset.</summary>
-		protected internal List<String> somParts;
+		internal List<String> somParts;
 
 		/// <summary>A temporary store for the repetition count.</summary>
-		protected internal int anform;
+		internal int anform;
 
 		/// <summary>Escapes a SOM string fragment replacing "." with "\.".</summary>
 		/// <param name="s">the unescaped string</param>
 		/// <returns>the escaped string</returns>
-		public static String EscapeSom(String s)
+		internal static String EscapeSom(String s)
 		{
 			if (s == null)
 			{
@@ -78,7 +78,7 @@ namespace iText.Forms.Xfa
 		/// <summary>Unescapes a SOM string fragment replacing "\." with ".".</summary>
 		/// <param name="s">the escaped string</param>
 		/// <returns>the unescaped string</returns>
-		public static String UnescapeSom(String s)
+		internal static String UnescapeSom(String s)
 		{
 			int idx = s.IndexOf('\\');
 			if (idx < 0)
@@ -102,7 +102,7 @@ namespace iText.Forms.Xfa
 		/// by '.'.
 		/// </summary>
 		/// <returns>the som name</returns>
-		protected internal virtual String PrintStack()
+		internal virtual String PrintStack()
 		{
 			if (somParts.Count == 0)
 			{
@@ -120,7 +120,7 @@ namespace iText.Forms.Xfa
 		/// <summary>Gets the name with the <CODE>#subform</CODE> removed.</summary>
 		/// <param name="s">the long name</param>
 		/// <returns>the short name</returns>
-		public static String GetShortName(String s)
+		internal static String GetShortName(String s)
 		{
 			int idx = s.IndexOf(".#subform[");
 			if (idx < 0)
@@ -146,7 +146,7 @@ namespace iText.Forms.Xfa
 
 		/// <summary>Adds a SOM name to the search node chain.</summary>
 		/// <param name="somName">the SOM name</param>
-		public virtual void InverseSearchAdd(String somName)
+		internal virtual void InverseSearchAdd(String somName)
 		{
 			InverseSearchAdd(inverseSearch, somParts, somName);
 		}
@@ -155,7 +155,7 @@ namespace iText.Forms.Xfa
 		/// <param name="inverseSearch">the start point</param>
 		/// <param name="somParts">the list with the separated SOM parts in LIFO order</param>
 		/// <param name="somName">the full name</param>
-		public static void InverseSearchAdd(IDictionary<String, InverseStore> inverseSearch
+		internal static void InverseSearchAdd(IDictionary<String, InverseStore> inverseSearch
 			, List<String> somParts, String somName)
 		{
 			String last = somParts[somParts.Count - 1];
@@ -189,7 +189,7 @@ namespace iText.Forms.Xfa
 		/// <summary>Searches the SOM hierarchy from the bottom.</summary>
 		/// <param name="parts">the SOM parts</param>
 		/// <returns>the full name or <CODE>null</CODE> if not found</returns>
-		public virtual String InverseSearchGlobal(IList<String> parts)
+		internal virtual String InverseSearchGlobal(IList<String> parts)
 		{
 			if (parts.Count == 0)
 			{
@@ -220,7 +220,7 @@ namespace iText.Forms.Xfa
 		/// <summary>Splits a SOM name in the individual parts.</summary>
 		/// <param name="name">the full SOM name</param>
 		/// <returns>the split name</returns>
-		public static List<String> SplitParts(String name)
+		internal static List<String> SplitParts(String name)
 		{
 			while (name.StartsWith("."))
 			{
@@ -272,42 +272,42 @@ namespace iText.Forms.Xfa
 
 		/// <summary>Gets the order the names appear in the XML, depth first.</summary>
 		/// <returns>the order the names appear in the XML, depth first</returns>
-		public virtual IList<String> GetOrder()
+		internal virtual IList<String> GetOrder()
 		{
 			return order;
 		}
 
 		/// <summary>Sets the order the names appear in the XML, depth first</summary>
 		/// <param name="order">the order the names appear in the XML, depth first</param>
-		public virtual void SetOrder(IList<String> order)
+		internal virtual void SetOrder(IList<String> order)
 		{
 			this.order = order;
 		}
 
 		/// <summary>Gets the mapping of full names to nodes.</summary>
 		/// <returns>the mapping of full names to nodes</returns>
-		public virtual IDictionary<String, XNode> GetName2Node()
+		internal virtual IDictionary<String, XNode> GetName2Node()
 		{
 			return name2Node;
 		}
 
 		/// <summary>Sets the mapping of full names to nodes.</summary>
 		/// <param name="name2Node">the mapping of full names to nodes</param>
-		public virtual void SetName2Node(IDictionary<String, XNode> name2Node)
+		internal virtual void SetName2Node(IDictionary<String, XNode> name2Node)
 		{
 			this.name2Node = name2Node;
 		}
 
 		/// <summary>Gets the data to do a search from the bottom hierarchy.</summary>
 		/// <returns>the data to do a search from the bottom hierarchy</returns>
-		public virtual IDictionary<String, InverseStore> GetInverseSearch()
+		internal virtual IDictionary<String, InverseStore> GetInverseSearch()
 		{
 			return inverseSearch;
 		}
 
 		/// <summary>Sets the data to do a search from the bottom hierarchy.</summary>
 		/// <param name="inverseSearch">the data to do a search from the bottom hierarchy</param>
-		public virtual void SetInverseSearch(IDictionary<String, InverseStore> inverseSearch
+		internal virtual void SetInverseSearch(IDictionary<String, InverseStore> inverseSearch
 			)
 		{
 			this.inverseSearch = inverseSearch;

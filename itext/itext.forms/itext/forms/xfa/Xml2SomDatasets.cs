@@ -38,7 +38,7 @@ namespace iText.Forms.Xfa
 		/// not the datasets but the data node that comes below.
 		/// </remarks>
 		/// <param name="n">the datasets node</param>
-		public Xml2SomDatasets(XNode n)
+		internal Xml2SomDatasets(XNode n)
 		{
 			order = new List<String>();
 			name2Node = new Dictionary<String, XNode>();
@@ -52,7 +52,7 @@ namespace iText.Forms.Xfa
 		/// <param name="n">the datasets top <CODE>Node</CODE></param>
 		/// <param name="shortName">the short name</param>
 		/// <returns>the new <CODE>Node</CODE> of the inserted name</returns>
-		public virtual XNode InsertNode(XNode n, String shortName)
+		internal virtual XNode InsertNode(XNode n, String shortName)
 		{
 			List<String> somNameParts = SplitParts(shortName);
 			XDocument doc = n.Document;

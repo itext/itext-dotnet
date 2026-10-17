@@ -283,13 +283,17 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 return new LinkedHashSet<EventType>(JavaCollectionsUtil.SingletonList(EventType.RENDER_TEXT));
             }
 
-            public virtual IList<Rectangle> GetRectangles() {
+//\cond DO_NOT_DOCUMENT
+            internal virtual IList<Rectangle> GetRectangles() {
                 return rectangles;
             }
+//\endcond
 
-            public virtual void Clear() {
+//\cond DO_NOT_DOCUMENT
+            internal virtual void Clear() {
                 rectangles.Clear();
             }
+//\endcond
         }
 //\endcond
 

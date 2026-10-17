@@ -26,26 +26,36 @@ namespace iText.IO.Font.Woff2 {
 //\cond DO_NOT_DOCUMENT
     /// <summary>Helper class to deal with unsigned primitives in java</summary>
     internal class JavaUnsignedUtil {
-        public static int AsU16(short number) {
+//\cond DO_NOT_DOCUMENT
+        internal static int AsU16(short number) {
             return number & 0xffff;
         }
+//\endcond
 
-        public static int AsU8(byte number) {
+//\cond DO_NOT_DOCUMENT
+        internal static int AsU8(byte number) {
             return number & 0xff;
         }
+//\endcond
 
-        public static byte ToU8(int number) {
+//\cond DO_NOT_DOCUMENT
+        internal static byte ToU8(int number) {
             return (byte)(number & 0xff);
         }
+//\endcond
 
-        public static short ToU16(int number) {
+//\cond DO_NOT_DOCUMENT
+        internal static short ToU16(int number) {
             return (short)(number & 0xffff);
         }
+//\endcond
 
-        public static int CompareAsUnsigned(int left, int right) {
+//\cond DO_NOT_DOCUMENT
+        internal static int CompareAsUnsigned(int left, int right) {
             return Convert.ToInt64(left & unchecked((long)(0xffffffffL))).CompareTo(right & unchecked((long)(0xffffffffL
                 )));
         }
+//\endcond
     }
 //\endcond
 }

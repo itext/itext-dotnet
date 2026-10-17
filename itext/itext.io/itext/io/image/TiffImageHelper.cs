@@ -54,9 +54,10 @@ namespace iText.IO.Image {
 //\endcond
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Processes the ImageData as a TIFF image.</summary>
         /// <param name="image">image to process.</param>
-        public static void ProcessImage(ImageData image) {
+        internal static void ProcessImage(ImageData image) {
             if (image.GetOriginalType() != ImageType.TIFF) {
                 throw new ArgumentException("TIFF image expected");
             }
@@ -78,6 +79,7 @@ namespace iText.IO.Image {
                 throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TIFF_IMAGE_EXCEPTION, e);
             }
         }
+//\endcond
 
         private static void ProcessTiffImage(RandomAccessFileOrArray s, TiffImageHelper.TiffParameters tiff) {
             bool recoverFromImageError = tiff.image.IsRecoverFromImageError();

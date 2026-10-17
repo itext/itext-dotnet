@@ -172,13 +172,14 @@ namespace iText.IO.Image {
 
         private const int BI_BITFIELDS = 3;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Process the passed Image data as a BMP image.</summary>
         /// <remarks>
         /// Process the passed Image data as a BMP image.
         /// Image is loaded and all image attributes are initialized and/or updated
         /// </remarks>
         /// <param name="image">the image to process as a BMP image</param>
-        public static void ProcessImage(ImageData image) {
+        internal static void ProcessImage(ImageData image) {
             if (image.GetOriginalType() != ImageType.BMP) {
                 throw new ArgumentException("BMP image expected");
             }
@@ -203,6 +204,7 @@ namespace iText.IO.Image {
             }
             RawImageHelper.UpdateImageAttributes(bmp.image, bmp.additional);
         }
+//\endcond
 
         private static void Process(BmpImageHelper.BmpParameters bmp, Stream stream) {
             bmp.inputStream = stream;

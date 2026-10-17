@@ -43,19 +43,24 @@ namespace iText.Layout.Properties.Margins {
         private readonly IDictionary<IPropertyContainer, TaggingHintKey> footnoteTaggingHints = new Dictionary<IPropertyContainer
             , TaggingHintKey>();
 
-        protected internal DefaultAccessibilityProperties tagProperties;
+//\cond DO_NOT_DOCUMENT
+        internal DefaultAccessibilityProperties tagProperties;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Creates new
         /// <see cref="FootnotesContainer"/>
         /// instance.
         /// </summary>
         /// <param name="pageNum">number of the page to which this container will be added</param>
-        public FootnotesContainer(int pageNum) {
+        internal FootnotesContainer(int pageNum) {
             this.pageNumber = pageNum;
             this.SetNeutralRole();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Adds
         /// <see cref="Footnote"/>
@@ -71,16 +76,18 @@ namespace iText.Layout.Properties.Margins {
         /// <see cref="FootnotesContainer"/>
         /// instance
         /// </returns>
-        public virtual iText.Layout.Properties.Margins.FootnotesContainer Add(Footnote footnote, TaggingHintKey taggingHint
-            ) {
+        internal virtual iText.Layout.Properties.Margins.FootnotesContainer Add(Footnote footnote, TaggingHintKey 
+            taggingHint) {
             this.childElements.Add(footnote);
             footnoteTaggingHints.Put(footnote, taggingHint);
             return this;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Adds footnoted from another FootnotesContainer.</summary>
         /// <param name="otherContainer">the other FootnotesContainer to add the footnotes from</param>
-        public virtual void AddFootnotesFromOtherContainer(iText.Layout.Properties.Margins.FootnotesContainer otherContainer
+        internal virtual void AddFootnotesFromOtherContainer(iText.Layout.Properties.Margins.FootnotesContainer otherContainer
             ) {
             foreach (IElement childElement in otherContainer.childElements) {
                 if (childElement is Footnote) {
@@ -88,6 +95,7 @@ namespace iText.Layout.Properties.Margins {
                 }
             }
         }
+//\endcond
 
         /// <summary><inheritDoc/></summary>
         /// <returns>

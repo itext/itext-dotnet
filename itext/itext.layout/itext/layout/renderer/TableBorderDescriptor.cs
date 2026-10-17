@@ -45,21 +45,29 @@ namespace iText.Layout.Renderer {
             this.mainCoordinateWidths = mainCoordinateWidths;
         }
 
-        public virtual int GetBorderIndex() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual int GetBorderIndex() {
             return borderIndex;
         }
+//\endcond
 
-        public virtual float GetMainCoordinateStart() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual float GetMainCoordinateStart() {
             return mainCoordinateStart;
         }
+//\endcond
 
-        public virtual float GetCrossCoordinate() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual float GetCrossCoordinate() {
             return crossCoordinate;
         }
+//\endcond
 
-        public virtual float[] GetMainCoordinateWidths() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual float[] GetMainCoordinateWidths() {
             return mainCoordinateWidths;
         }
+//\endcond
     }
 //\endcond
 }

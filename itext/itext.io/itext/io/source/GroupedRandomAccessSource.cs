@@ -43,13 +43,14 @@ namespace iText.IO.Source {
         /// <summary>Cached size of the underlying channel</summary>
         private readonly long size;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Constructs a new
         /// <see cref="GroupedRandomAccessSource"/>
         /// based on the specified set of sources
         /// </summary>
         /// <param name="sources">the sources used to build this group</param>
-        public GroupedRandomAccessSource(IRandomAccessSource[] sources) {
+        internal GroupedRandomAccessSource(IRandomAccessSource[] sources) {
             this.sources = new GroupedRandomAccessSource.SourceEntry[sources.Length];
             long totalSize = 0;
             for (int i = 0; i < sources.Length; i++) {
@@ -60,7 +61,9 @@ namespace iText.IO.Source {
             currentSourceEntry = this.sources[sources.Length - 1];
             SourceInUse(currentSourceEntry.source);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>For a given offset, return the index of the source that contains the specified offset.</summary>
         /// <remarks>
         /// For a given offset, return the index of the source that contains the specified offset.
@@ -74,12 +77,13 @@ namespace iText.IO.Source {
         /// </remarks>
         /// <param name="offset">the offset</param>
         /// <returns>the index of the input source that contains the specified offset, or 0 if unknown</returns>
-        protected internal virtual int GetStartingSourceIndex(long offset) {
+        internal virtual int GetStartingSourceIndex(long offset) {
             if (offset >= currentSourceEntry.firstByte) {
                 return currentSourceEntry.index;
             }
             return 0;
         }
+//\endcond
 
         /// <summary>
         /// Returns the SourceEntry that contains the byte at the specified offset
@@ -108,20 +112,24 @@ namespace iText.IO.Source {
             return null;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Called when a given source is no longer the active source.</summary>
         /// <remarks>Called when a given source is no longer the active source.  This gives subclasses the abilty to release resources, if appropriate.
         ///     </remarks>
         /// <param name="source">the source that is no longer the active source</param>
-        protected internal virtual void SourceReleased(IRandomAccessSource source) {
+        internal virtual void SourceReleased(IRandomAccessSource source) {
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // by default, do nothing
         /// <summary>Called when a given source is about to become the active source.</summary>
         /// <remarks>Called when a given source is about to become the active source.  This gives subclasses the abilty to retrieve resources, if appropriate.
         ///     </remarks>
         /// <param name="source">the source that is about to become the active source</param>
-        protected internal virtual void SourceInUse(IRandomAccessSource source) {
+        internal virtual void SourceInUse(IRandomAccessSource source) {
         }
+//\endcond
 
         // by default, do nothing
         /// <summary>

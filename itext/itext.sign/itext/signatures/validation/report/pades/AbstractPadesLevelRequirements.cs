@@ -38,72 +38,127 @@ namespace iText.Signatures.Validation.Report.Pades {
     /// It also executes all those rules to define the achieved level.
     /// </remarks>
     internal abstract class AbstractPadesLevelRequirements {
-        public const String COMMITMENT_TYPE_AND_REASON_SHALL_NOT_BE_USED_TOGETHER = "commitment-type-indication " 
-            + "or the reason dictionary item cannot be present together";
+//\cond DO_NOT_DOCUMENT
+        internal const String COMMITMENT_TYPE_AND_REASON_SHALL_NOT_BE_USED_TOGETHER = "commitment-type-indication "
+             + "or the reason dictionary item cannot be present together";
+//\endcond
 
-        public const String SIGNED_DATA_CERTIFICATES_MUST_BE_INCLUDED = "SignedData.certificates must be included";
+//\cond DO_NOT_DOCUMENT
+        internal const String SIGNED_DATA_CERTIFICATES_MUST_BE_INCLUDED = "SignedData.certificates must be included";
+//\endcond
 
-        public const String SIGNED_DATA_CERTIFICATES_MUST_INCLUDE_SIGNING_CERTIFICATE = "SignedData.certificates "
+//\cond DO_NOT_DOCUMENT
+        internal const String SIGNED_DATA_CERTIFICATES_MUST_INCLUDE_SIGNING_CERTIFICATE = "SignedData.certificates "
              + "must include signing certificate";
+//\endcond
 
-        public const String SIGNED_DATA_CERTIFICATES_SHOULD_INCLUDE_THE_ENTIRE_CERTIFICATE_CHAIN = "SignedData" + 
-            ".certificates should include the entire certificate chain";
+//\cond DO_NOT_DOCUMENT
+        internal const String SIGNED_DATA_CERTIFICATES_SHOULD_INCLUDE_THE_ENTIRE_CERTIFICATE_CHAIN = "SignedData" 
+            + ".certificates should include the entire certificate chain";
+//\endcond
 
-        public const String SIGNED_DATA_CERTIFICATES_SHOULD_INCLUDE_THE_ENTIRE_CERTIFICATE_CHAIN_AND_INCLUDE_CA = 
+//\cond DO_NOT_DOCUMENT
+        internal const String SIGNED_DATA_CERTIFICATES_SHOULD_INCLUDE_THE_ENTIRE_CERTIFICATE_CHAIN_AND_INCLUDE_CA = 
             SIGNED_DATA_CERTIFICATES_SHOULD_INCLUDE_THE_ENTIRE_CERTIFICATE_CHAIN + " including the certificate authority";
+//\endcond
 
-        public const String CMS_CONTENT_TYPE_MUST_BE_ID_DATA = "CMS content-type entry value is not id-data";
+//\cond DO_NOT_DOCUMENT
+        internal const String CMS_CONTENT_TYPE_MUST_BE_ID_DATA = "CMS content-type entry value is not id-data";
+//\endcond
 
-        public const String CMS_MESSAGE_DIGEST_IS_MISSING = "CMS message-digest is missing";
+//\cond DO_NOT_DOCUMENT
+        internal const String CMS_MESSAGE_DIGEST_IS_MISSING = "CMS message-digest is missing";
+//\endcond
 
-        public const String CLAIMED_TIME_OF_SIGNING_SHALL_NOT_BE_INCLUDED_IN_THE_CMS = "Claimed time of signing " 
-            + "shall not be included in the CMS";
+//\cond DO_NOT_DOCUMENT
+        internal const String CLAIMED_TIME_OF_SIGNING_SHALL_NOT_BE_INCLUDED_IN_THE_CMS = "Claimed time of signing "
+             + "shall not be included in the CMS";
+//\endcond
 
-        public const String DICTIONARY_ENTRY_M_IS_MISSING = "Dictionary entry M is missing";
+//\cond DO_NOT_DOCUMENT
+        internal const String DICTIONARY_ENTRY_M_IS_MISSING = "Dictionary entry M is missing";
+//\endcond
 
-        public const String DICTIONARY_ENTRY_M_IS_NOT_IN_THE_CORRECT_FORMAT = "Dictionary entry M is not in the " 
-            + "correct format";
+//\cond DO_NOT_DOCUMENT
+        internal const String DICTIONARY_ENTRY_M_IS_NOT_IN_THE_CORRECT_FORMAT = "Dictionary entry M is not in the "
+             + "correct format";
+//\endcond
 
-        public const String CONTENTS_ENTRY_IS_MISSING_FROM_THE_SIGNATURE_DICTIONARY = "Contents entry is missing "
+//\cond DO_NOT_DOCUMENT
+        internal const String CONTENTS_ENTRY_IS_MISSING_FROM_THE_SIGNATURE_DICTIONARY = "Contents entry is missing "
              + "from the signature dictionary";
+//\endcond
 
-        public const String FILTER_ENTRY_IS_MISSING_FROM_THE_SIGNATURE_DICTIONARY = "Filter entry is missing from "
+//\cond DO_NOT_DOCUMENT
+        internal const String FILTER_ENTRY_IS_MISSING_FROM_THE_SIGNATURE_DICTIONARY = "Filter entry is missing from "
              + "the signature dictionary";
+//\endcond
 
-        public const String BYTE_RANGE_ENTRY_IS_MISSING_FROM_THE_SIGNATURE_DICTIONARY = "ByteRange entry is " + "missing from the signature dictionary";
+//\cond DO_NOT_DOCUMENT
+        internal const String BYTE_RANGE_ENTRY_IS_MISSING_FROM_THE_SIGNATURE_DICTIONARY = "ByteRange entry is " + 
+            "missing from the signature dictionary";
+//\endcond
 
-        public const String FILTER_ENTRY_IS_MISSING_FROM_THE_SIGNATURE_DICTIONARY1 = "SubFilter entry is missing "
+//\cond DO_NOT_DOCUMENT
+        internal const String FILTER_ENTRY_IS_MISSING_FROM_THE_SIGNATURE_DICTIONARY1 = "SubFilter entry is missing "
              + "from the signature dictionary";
+//\endcond
 
-        public const String CERT_ENTRY_IS_ADDED_TO_THE_SIGNATURE_DICTIONARY = "Cert entry is added to the " + "signature dictionary";
+//\cond DO_NOT_DOCUMENT
+        internal const String CERT_ENTRY_IS_ADDED_TO_THE_SIGNATURE_DICTIONARY = "Cert entry is added to the " + "signature dictionary";
+//\endcond
 
-        public const String A_DISCOURAGED_HASH_OR_SIGNING_ALGORITHM_WAS_USED = "A hash or signing " + "algorithm was used that is not allowed according to ETSI 119 312 :\n";
+//\cond DO_NOT_DOCUMENT
+        internal const String A_DISCOURAGED_HASH_OR_SIGNING_ALGORITHM_WAS_USED = "A hash or signing " + "algorithm was used that is not allowed according to ETSI 119 312 :\n";
+//\endcond
 
-        public const String A_FORBIDDEN_HASH_OR_SIGNING_ALGORITHM_WAS_USED = "A hash or signing " + "algorithm was used that is not allowed according to ETSI 319 142-1 :\n";
+//\cond DO_NOT_DOCUMENT
+        internal const String A_FORBIDDEN_HASH_OR_SIGNING_ALGORITHM_WAS_USED = "A hash or signing " + "algorithm was used that is not allowed according to ETSI 319 142-1 :\n";
+//\endcond
 
-        public const String SIGNED_ATTRIBUTES_MUST_CONTAIN_SINGING_CERTIFICATE = "The singing certificate must be added as a signed attribute";
+//\cond DO_NOT_DOCUMENT
+        internal const String SIGNED_ATTRIBUTES_MUST_CONTAIN_SINGING_CERTIFICATE = "The singing certificate must be added as a signed attribute";
+//\endcond
 
-        public const String SIGNED_ATTRIBUTES_SHOULD_CONTAIN_SIGNING_CERTIFICATE_V2 = "The singing certificate should be added as a singing-certificate-v2 signed attribute";
+//\cond DO_NOT_DOCUMENT
+        internal const String SIGNED_ATTRIBUTES_SHOULD_CONTAIN_SIGNING_CERTIFICATE_V2 = "The singing certificate should be added as a singing-certificate-v2 signed attribute";
+//\endcond
 
-        public const String THERE_MUST_BE_A_SIGNATURE_OR_DOCUMENT_TIMESTAMP_AVAILABLE = "There must be a signature "
+//\cond DO_NOT_DOCUMENT
+        internal const String THERE_MUST_BE_A_SIGNATURE_OR_DOCUMENT_TIMESTAMP_AVAILABLE = "There must be a signature "
              + "or document timestamp available";
+//\endcond
 
-        public const String DSS_DICTIONARY_IS_MISSING = "A DSS dictionary is missing";
+//\cond DO_NOT_DOCUMENT
+        internal const String DSS_DICTIONARY_IS_MISSING = "A DSS dictionary is missing";
+//\endcond
 
-        public const String ISSUER_FOR_THESE_CERTIFICATES_IS_MISSING = "Issuer for the following certificates is "
+//\cond DO_NOT_DOCUMENT
+        internal const String ISSUER_FOR_THESE_CERTIFICATES_IS_MISSING = "Issuer for the following certificates is "
              + "missing:\n";
+//\endcond
 
-        public const String ISSUER_FOR_THESE_CERTIFICATES_IS_NOT_IN_DSS = "Issuer for the following certificates is "
+//\cond DO_NOT_DOCUMENT
+        internal const String ISSUER_FOR_THESE_CERTIFICATES_IS_NOT_IN_DSS = "Issuer for the following certificates is "
              + "missing from the DSS dictionary:\n";
+//\endcond
 
-        public const String REVOCATION_DATA_FOR_THESE_CERTIFICATES_IS_MISSING = "Revocation data for the " + "following certificates is missing:\n";
+//\cond DO_NOT_DOCUMENT
+        internal const String REVOCATION_DATA_FOR_THESE_CERTIFICATES_IS_MISSING = "Revocation data for the " + "following certificates is missing:\n";
+//\endcond
 
-        public const String REVOCATION_DATA_FOR_THESE_CERTIFICATES_NOT_TIMESTAMPED = "Revocation data for the " + 
-            "following certificates is not timestamped:\n";
+//\cond DO_NOT_DOCUMENT
+        internal const String REVOCATION_DATA_FOR_THESE_CERTIFICATES_NOT_TIMESTAMPED = "Revocation data for the " 
+            + "following certificates is not timestamped:\n";
+//\endcond
 
-        public const String DOCUMENT_TIMESTAMP_IS_MISSING = "A document timestamp is missing";
+//\cond DO_NOT_DOCUMENT
+        internal const String DOCUMENT_TIMESTAMP_IS_MISSING = "A document timestamp is missing";
+//\endcond
 
-        public const String DSS_IS_NOT_COVERED_BY_TIMESTAMP = "The DSS entry is not covered by a document timestamp";
+//\cond DO_NOT_DOCUMENT
+        internal const String DSS_IS_NOT_COVERED_BY_TIMESTAMP = "The DSS entry is not covered by a document timestamp";
+//\endcond
 
         private static readonly IDictionary<PAdESLevel, AbstractPadesLevelRequirements.LevelChecks> CHECKS = new Dictionary
             <PAdESLevel, AbstractPadesLevelRequirements.LevelChecks>();
@@ -119,93 +174,155 @@ namespace iText.Signatures.Validation.Report.Pades {
 
         private readonly String name;
 
+//\cond DO_NOT_DOCUMENT
         //section 6.2.1
-        protected internal IList<String> discouragedAlgorithmUsage = new List<String>();
+        internal IList<String> discouragedAlgorithmUsage = new List<String>();
+//\endcond
 
-        protected internal IList<String> forbiddenAlgorithmUsage = new List<String>();
+//\cond DO_NOT_DOCUMENT
+        internal IList<String> forbiddenAlgorithmUsage = new List<String>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 1
-        protected internal bool signedDataCertificatesPresent;
+        internal bool signedDataCertificatesPresent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 1 note a
-        protected internal bool signatureCertificatesContainsSigningCertificate;
+        internal bool signatureCertificatesContainsSigningCertificate;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 1 note b
-        protected internal bool signatureCertificatesContainsCertificatePathIncludingCA;
+        internal bool signatureCertificatesContainsCertificatePathIncludingCA;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 1 note b
-        protected internal bool signatureCertificatesContainsCertificatePath;
+        internal bool signatureCertificatesContainsCertificatePath;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 2 note c
-        protected internal bool contentTypeValueIsIdData;
+        internal bool contentTypeValueIsIdData;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 3
-        protected internal bool messageDigestPresent;
+        internal bool messageDigestPresent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 7
-        protected internal bool commitmentTypeIndicationPresent;
+        internal bool commitmentTypeIndicationPresent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 9
-        protected internal bool essSigningCertificateV1Present;
+        internal bool essSigningCertificateV1Present;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 10
-        protected internal bool essSigningCertificateV2Present;
+        internal bool essSigningCertificateV2Present;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 12
-        protected internal bool dictionaryEntryMPresent;
+        internal bool dictionaryEntryMPresent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 12 note g
-        protected internal bool dictionaryEntryMHasCorrectFormat;
+        internal bool dictionaryEntryMHasCorrectFormat;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 13
-        protected internal bool cmsSigningTimeAttributePresent;
+        internal bool cmsSigningTimeAttributePresent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 14
-        protected internal bool dictionaryEntryContentsPresent;
+        internal bool dictionaryEntryContentsPresent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 15
-        protected internal bool dictionaryEntryFilterPresent;
+        internal bool dictionaryEntryFilterPresent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 16
-        protected internal bool dictionaryEntryByteRangePresent;
+        internal bool dictionaryEntryByteRangePresent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 17
-        protected internal bool dictionaryEntrySubFilterPresent;
+        internal bool dictionaryEntrySubFilterPresent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 17 note l
-        protected internal bool signatureDictionaryEntrySubFilterValueIsETSICadesDetached;
+        internal bool signatureDictionaryEntrySubFilterValueIsETSICadesDetached;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 19
-        protected internal bool dictionaryEntryReasonPresent;
+        internal bool dictionaryEntryReasonPresent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 22
-        protected internal bool dictionaryEntryCertPresent;
+        internal bool dictionaryEntryCertPresent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 23n
-        protected internal bool poeSignaturePresent;
+        internal bool poeSignaturePresent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 25
-        protected internal bool documentTimestampPresent;
+        internal bool documentTimestampPresent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 27
-        protected internal bool isDSSPresent;
+        internal bool isDSSPresent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 29
-        protected internal bool poeDssPresent;
+        internal bool poeDssPresent;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 30 note x
-        protected internal IList<IX509Certificate> certificateIssuerMissing = new List<IX509Certificate>();
+        internal IList<IX509Certificate> certificateIssuerMissing = new List<IX509Certificate>();
+//\endcond
 
-        protected internal IList<IX509Certificate> certificatesIssuerNotInDSS = new List<IX509Certificate>();
+//\cond DO_NOT_DOCUMENT
+        internal IList<IX509Certificate> certificatesIssuerNotInDSS = new List<IX509Certificate>();
+//\endcond
 
-        protected internal IList<IX509Certificate> revocationDataNotInDSS = new List<IX509Certificate>();
+//\cond DO_NOT_DOCUMENT
+        internal IList<IX509Certificate> revocationDataNotInDSS = new List<IX509Certificate>();
+//\endcond
 
-        protected internal IList<IX509Certificate> revocationDataNotTimestamped = new List<IX509Certificate>();
+//\cond DO_NOT_DOCUMENT
+        internal IList<IX509Certificate> revocationDataNotTimestamped = new List<IX509Certificate>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Table 1 row 30 note y
-        protected internal bool timestampDictionaryEntrySubFilterValueEtsiRfc3161;
+        internal bool timestampDictionaryEntrySubFilterValueEtsiRfc3161;
+//\endcond
 
-        protected internal bool signatureIsValid = false;
+//\cond DO_NOT_DOCUMENT
+        internal bool signatureIsValid = false;
+//\endcond
 
         static AbstractPadesLevelRequirements() {
             AbstractPadesLevelRequirements.LevelChecks bbChecks = new AbstractPadesLevelRequirements.LevelChecks();
@@ -269,16 +386,19 @@ namespace iText.Signatures.Validation.Report.Pades {
             this.name = name;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Returns the signature name.</summary>
         /// <returns>the signature name</returns>
-        public virtual String GetSignatureName() {
+        internal virtual String GetSignatureName() {
             return name;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Calculates the highest achieved PAdES level for the signature being checked.</summary>
         /// <param name="timestampReports">PAdES level reports for already checked timestamp signatures</param>
         /// <returns>the highest achieved level</returns>
-        public virtual PAdESLevel GetHighestAchievedPadesLevel(IEnumerable<PAdESLevelReport> timestampReports) {
+        internal virtual PAdESLevel GetHighestAchievedPadesLevel(IEnumerable<PAdESLevelReport> timestampReports) {
             foreach (PAdESLevel level in PADES_LEVELS) {
                 ICollection<String> messages = new HashSet<String>();
                 this.nonConformaties.Put(level, messages);
@@ -323,260 +443,331 @@ namespace iText.Signatures.Validation.Report.Pades {
             }
             return PAdESLevel.INDETERMINATE;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Adds a message about a non-approved algorithm, according to ETSI TS 119 312,  being used.</summary>
         /// <param name="message">a message about a non-approved, according to ETSI TS 119 312, algorithm being used</param>
-        public virtual void AddDiscouragedAlgorithmUsage(String message) {
+        internal virtual void AddDiscouragedAlgorithmUsage(String message) {
             this.discouragedAlgorithmUsage.Add(message);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Adds a message about a forbidden algorithm, according to ETSI TS 319 142,  being used.</summary>
         /// <param name="message">a message about a forbidden, according to ETSI TS 319 142, algorithm being used</param>
-        public virtual void AddForbiddenAlgorithmUsage(String message) {
+        internal virtual void AddForbiddenAlgorithmUsage(String message) {
             this.forbiddenAlgorithmUsage.Add(message);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether the signatures container contains the certificate entry.</summary>
         /// <param name="signedDataCertificatesPresent">whether the signatures container contains the certificate entry
         ///     </param>
-        public virtual void SetSignedDataCertificatesPresent(bool signedDataCertificatesPresent) {
+        internal virtual void SetSignedDataCertificatesPresent(bool signedDataCertificatesPresent) {
             this.signedDataCertificatesPresent = signedDataCertificatesPresent;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether the signatures container contains the certificate chain includes the signing certificate.
         ///     </summary>
         /// <param name="signatureCertificatesContainsSigningCertificate">
         /// whether the signatures container contains
         /// the certificate chain includes the signing certificate
         /// </param>
-        public virtual void SetSignatureCertificatesContainsSigningCertificate(bool signatureCertificatesContainsSigningCertificate
+        internal virtual void SetSignatureCertificatesContainsSigningCertificate(bool signatureCertificatesContainsSigningCertificate
             ) {
             this.signatureCertificatesContainsSigningCertificate = signatureCertificatesContainsSigningCertificate;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether the signatures container contains the certificate chain.</summary>
         /// <param name="signedDataCertificatesContainsCertificatePath">
         /// whether the signatures container contains
         /// the certificate chain
         /// </param>
-        public virtual void SetSignedDataCertificatesContainsCertificatePath(bool signedDataCertificatesContainsCertificatePath
+        internal virtual void SetSignedDataCertificatesContainsCertificatePath(bool signedDataCertificatesContainsCertificatePath
             ) {
             this.signatureCertificatesContainsCertificatePath = signedDataCertificatesContainsCertificatePath;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether the signatures container contains the certificate chain includes the CA.</summary>
         /// <param name="signatureCertificatesContainsCertificatePathIncludingCA">
         /// whether the signatures containers contains the
         /// certificate chain includes the CA
         /// </param>
-        public virtual void SetSignatureCertificatesContainsCertificatePathIncludingCA(bool signatureCertificatesContainsCertificatePathIncludingCA
+        internal virtual void SetSignatureCertificatesContainsCertificatePathIncludingCA(bool signatureCertificatesContainsCertificatePathIncludingCA
             ) {
             this.signatureCertificatesContainsCertificatePathIncludingCA = signatureCertificatesContainsCertificatePathIncludingCA;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether the signatures container contains the certificate path.</summary>
         /// <param name="signatureCertificatesContainsCertificatePath">
         /// whether the signatures container
         /// contains the certificate path
         /// </param>
-        public virtual void SetSignatureCertificatesContainsCertificatePath(bool signatureCertificatesContainsCertificatePath
+        internal virtual void SetSignatureCertificatesContainsCertificatePath(bool signatureCertificatesContainsCertificatePath
             ) {
             this.signatureCertificatesContainsCertificatePath = signatureCertificatesContainsCertificatePath;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether the CMS signed attributes contain the content type and whether that content type is IdData.
         ///     </summary>
         /// <param name="contentTypeValueIsIdData">
         /// whether the CMS signed attributes contain the content type and
         /// whether that content type is IdData.
         /// </param>
-        public virtual void SetContentTypeValueIsIdData(bool contentTypeValueIsIdData) {
+        internal virtual void SetContentTypeValueIsIdData(bool contentTypeValueIsIdData) {
             this.contentTypeValueIsIdData = contentTypeValueIsIdData;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether the CMS signed attributes contain the MessageDigest.</summary>
         /// <param name="messageDigestPresent">whether the CMS signed attributes contain the MessageDigest</param>
-        public virtual void SetMessageDigestPresent(bool messageDigestPresent) {
+        internal virtual void SetMessageDigestPresent(bool messageDigestPresent) {
             this.messageDigestPresent = messageDigestPresent;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether the CMS signed attributes contain the commitment type indication.</summary>
         /// <param name="commitmentTypeIndicationPresent">whether the CMS signed attributes contain the commitment type indication
         ///     </param>
-        public virtual void SetCommitmentTypeIndicationPresent(bool commitmentTypeIndicationPresent) {
+        internal virtual void SetCommitmentTypeIndicationPresent(bool commitmentTypeIndicationPresent) {
             this.commitmentTypeIndicationPresent = commitmentTypeIndicationPresent;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether the CMS signed attributes contain the signing certificate in V1 format.</summary>
         /// <param name="essSigningCertificatePresent">
         /// whether the CMS signed attributes contain the
         /// signing certificate in V1 format
         /// </param>
-        public virtual void SetEssSigningCertificateV1Present(bool essSigningCertificatePresent) {
+        internal virtual void SetEssSigningCertificateV1Present(bool essSigningCertificatePresent) {
             this.essSigningCertificateV1Present = essSigningCertificatePresent;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether the CMS signed attributes contain the signing certificate in Vs format.</summary>
         /// <param name="essSigningCertificateV2Present">
         /// whether the CMS signed attributes contain the
         /// signing certificate in V2 format
         /// </param>
-        public virtual void SetEssSigningCertificateV2Present(bool essSigningCertificateV2Present) {
+        internal virtual void SetEssSigningCertificateV2Present(bool essSigningCertificateV2Present) {
             this.essSigningCertificateV2Present = essSigningCertificateV2Present;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether the signature dictionary contains the M entry.</summary>
         /// <param name="dictionaryEntryMPresent">whether the signature dictionary contains the M entry</param>
-        public virtual void SetDictionaryEntryMPresent(bool dictionaryEntryMPresent) {
+        internal virtual void SetDictionaryEntryMPresent(bool dictionaryEntryMPresent) {
             this.dictionaryEntryMPresent = dictionaryEntryMPresent;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether the signature dictionary entry M is correctly formatted.</summary>
         /// <param name="dictionaryEntryMHasCorrectFormat">whether the signature dictionary entry M is correctly formatted
         ///     </param>
-        public virtual void SetDictionaryEntryMHasCorrectFormat(bool dictionaryEntryMHasCorrectFormat) {
+        internal virtual void SetDictionaryEntryMHasCorrectFormat(bool dictionaryEntryMHasCorrectFormat) {
             this.dictionaryEntryMHasCorrectFormat = dictionaryEntryMHasCorrectFormat;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether the CMS signed attributes contains the signing time attribute.</summary>
         /// <param name="cmsSigningTimeAttributePresent">whether the CMS signed attributes contains the signing time attribute
         ///     </param>
-        public virtual void SetCmsSigningTimeAttributePresent(bool cmsSigningTimeAttributePresent) {
+        internal virtual void SetCmsSigningTimeAttributePresent(bool cmsSigningTimeAttributePresent) {
             this.cmsSigningTimeAttributePresent = cmsSigningTimeAttributePresent;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether the signature dictionary contains the Contents entry.</summary>
         /// <param name="dictionaryEntryContentsPresent">whether the signature dictionary contains the Contents entry</param>
-        public virtual void SetDictionaryEntryContentsPresent(bool dictionaryEntryContentsPresent) {
+        internal virtual void SetDictionaryEntryContentsPresent(bool dictionaryEntryContentsPresent) {
             this.dictionaryEntryContentsPresent = dictionaryEntryContentsPresent;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether the signature dictionary contains the Filter entry.</summary>
         /// <param name="dictionaryEntryFilterPresent">whether the signature dictionary contains the Filter entry</param>
-        public virtual void SetDictionaryEntryFilterPresent(bool dictionaryEntryFilterPresent) {
+        internal virtual void SetDictionaryEntryFilterPresent(bool dictionaryEntryFilterPresent) {
             this.dictionaryEntryFilterPresent = dictionaryEntryFilterPresent;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether the signature dictionary contains the Byte range entry.</summary>
         /// <param name="dictionaryEntryByteRangePresent">whether the signature dictionary contains the byte range entry
         ///     </param>
-        public virtual void SetDictionaryEntryByteRangePresent(bool dictionaryEntryByteRangePresent) {
+        internal virtual void SetDictionaryEntryByteRangePresent(bool dictionaryEntryByteRangePresent) {
             this.dictionaryEntryByteRangePresent = dictionaryEntryByteRangePresent;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether the signature dictionary contains the Subfilter entry.</summary>
         /// <param name="dictionaryEntrySubFilterPresent">whether the signature dictionary contains the Subfilter entry
         ///     </param>
-        public virtual void SetDictionaryEntrySubFilterPresent(bool dictionaryEntrySubFilterPresent) {
+        internal virtual void SetDictionaryEntrySubFilterPresent(bool dictionaryEntrySubFilterPresent) {
             this.dictionaryEntrySubFilterPresent = dictionaryEntrySubFilterPresent;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether the signature dictionary entry SubFilter has value ETSI.CAdES.detached.</summary>
         /// <param name="signatureDictionaryEntrySubFilterValueIsETSICadesDetached">
         /// whether the signature dictionary entry
         /// SubFilter has value ETSI.CAdES.detached
         /// </param>
-        public virtual void SetSignatureDictionaryEntrySubFilterValueIsETSICadesDetached(bool signatureDictionaryEntrySubFilterValueIsETSICadesDetached
+        internal virtual void SetSignatureDictionaryEntrySubFilterValueIsETSICadesDetached(bool signatureDictionaryEntrySubFilterValueIsETSICadesDetached
             ) {
             this.signatureDictionaryEntrySubFilterValueIsETSICadesDetached = signatureDictionaryEntrySubFilterValueIsETSICadesDetached;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether the signature dictionary entry SubFilter has value ETSI.RFC3161.</summary>
         /// <param name="timestampDictionaryEntrySubFilterValueEtsiRfc3161">
         /// whether the signature dictionary entry SubFilter
         /// has value ETSI.RFC3161
         /// </param>
-        public virtual void SetTimestampDictionaryEntrySubFilterValueEtsiRfc3161(bool timestampDictionaryEntrySubFilterValueEtsiRfc3161
+        internal virtual void SetTimestampDictionaryEntrySubFilterValueEtsiRfc3161(bool timestampDictionaryEntrySubFilterValueEtsiRfc3161
             ) {
             this.timestampDictionaryEntrySubFilterValueEtsiRfc3161 = timestampDictionaryEntrySubFilterValueEtsiRfc3161;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether the signature dictionary contains the entry Reason.</summary>
         /// <param name="dictionaryEntryReasonPresent">whether the signature dictionary contains the entry Reason</param>
-        public virtual void SetDictionaryEntryReasonPresent(bool dictionaryEntryReasonPresent) {
+        internal virtual void SetDictionaryEntryReasonPresent(bool dictionaryEntryReasonPresent) {
             this.dictionaryEntryReasonPresent = dictionaryEntryReasonPresent;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether the signature dictionary contains the entry Cert.</summary>
         /// <param name="dictionaryEntryCertPresent">whether the signature dictionary contains the entry Cert</param>
-        public virtual void SetDictionaryEntryCertPresent(bool dictionaryEntryCertPresent) {
+        internal virtual void SetDictionaryEntryCertPresent(bool dictionaryEntryCertPresent) {
             this.dictionaryEntryCertPresent = dictionaryEntryCertPresent;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether there is a Proof of existence covering the signature.</summary>
         /// <param name="poeSignaturePresent">whether there is a Proof of existence covering the signature</param>
-        public virtual void SetPoeSignaturePresent(bool poeSignaturePresent) {
+        internal virtual void SetPoeSignaturePresent(bool poeSignaturePresent) {
             this.poeSignaturePresent = poeSignaturePresent;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether there is a document timestamp covering the signature.</summary>
         /// <param name="documentTimestampPresent">whether there is a document timestamp covering the signature</param>
-        public virtual void SetDocumentTimestampPresent(bool documentTimestampPresent) {
+        internal virtual void SetDocumentTimestampPresent(bool documentTimestampPresent) {
             this.documentTimestampPresent = documentTimestampPresent;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether there is a DSS covering the signature.</summary>
         /// <param name="isDSSPresent">whether there is a DSS covering the signature</param>
-        public virtual void SetDSSPresent(bool isDSSPresent) {
+        internal virtual void SetDSSPresent(bool isDSSPresent) {
             this.isDSSPresent = isDSSPresent;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Adds a certificate for which the issuer missing in the DSS.</summary>
         /// <param name="certificateUnderInvestigation">a certificate for which the issuer missing in the DSS</param>
-        public virtual void AddCertificateIssuerNotInDSS(IX509Certificate certificateUnderInvestigation) {
+        internal virtual void AddCertificateIssuerNotInDSS(IX509Certificate certificateUnderInvestigation) {
             certificatesIssuerNotInDSS.Add(certificateUnderInvestigation);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Adds a certificate for which the issuer missing in the DSS.</summary>
         /// <param name="certificateUnderInvestigation">a certificate for which the issuer missing in the DSS</param>
-        public virtual void AddCertificateIssuerMissing(IX509Certificate certificateUnderInvestigation) {
+        internal virtual void AddCertificateIssuerMissing(IX509Certificate certificateUnderInvestigation) {
             certificateIssuerMissing.Add(certificateUnderInvestigation);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Adds a certificate for which no revocation data was available in the DSS.</summary>
         /// <param name="certificateUnderInvestigation">a certificate for which no revocation data was available in the DSS
         ///     </param>
-        public virtual void AddRevocationDataNotInDSS(IX509Certificate certificateUnderInvestigation) {
+        internal virtual void AddRevocationDataNotInDSS(IX509Certificate certificateUnderInvestigation) {
             revocationDataNotInDSS.Add(certificateUnderInvestigation);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether there is a Proof of Existence covering the DSS.</summary>
         /// <param name="poeDssPresent">whether there is a Proof of Existence covering the DSS</param>
-        public virtual void SetPoeDssPresent(bool poeDssPresent) {
+        internal virtual void SetPoeDssPresent(bool poeDssPresent) {
             this.poeDssPresent = poeDssPresent;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Adds a certificate for which no revocation data was available in a timestamped DSS.</summary>
         /// <param name="certificateUnderInvestigation">a certificate for which no revocation data was available in the DSS
         ///     </param>
-        public virtual void AddRevocationDataNotTimestamped(IX509Certificate certificateUnderInvestigation) {
+        internal virtual void AddRevocationDataNotTimestamped(IX509Certificate certificateUnderInvestigation) {
             revocationDataNotTimestamped.Add(certificateUnderInvestigation);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets whether the signature validation was successful.</summary>
         /// <param name="validationSucceeded">whether the signature validation was successful</param>
-        public virtual void SetValidationSucceeded(bool validationSucceeded) {
+        internal virtual void SetValidationSucceeded(bool validationSucceeded) {
             signatureIsValid = validationSucceeded;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Returns all non conformaties per level, the SHALL HAVE rules that were broken, per PAdES level.</summary>
         /// <returns>all non conformaties per level, the SHALL HAVE rules that were broken, per PAdES level</returns>
-        public virtual IDictionary<PAdESLevel, ICollection<String>> GetNonConformaties() {
+        internal virtual IDictionary<PAdESLevel, ICollection<String>> GetNonConformaties() {
             return nonConformaties;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Returns all warnings, the SHOULD HAVE rules that were broken, per PAdES level.</summary>
         /// <returns>all warnings, the SHOULD HAVE rules that were broken, per PAdES level</returns>
-        public virtual IDictionary<PAdESLevel, ICollection<String>> GetWarnings() {
+        internal virtual IDictionary<PAdESLevel, ICollection<String>> GetWarnings() {
             return warnings;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Abstract method to retrieve the specific rules sets from the implementors.</summary>
         /// <returns>the specific rules sets from the implementors</returns>
-        protected internal abstract IDictionary<PAdESLevel, AbstractPadesLevelRequirements.LevelChecks> GetChecks(
-            );
+        internal abstract IDictionary<PAdESLevel, AbstractPadesLevelRequirements.LevelChecks> GetChecks();
+//\endcond
 
-        protected internal static AbstractPadesLevelRequirements.CheckAndMessage CreateRevocationDssUsageCheck() {
+//\cond DO_NOT_DOCUMENT
+        internal static AbstractPadesLevelRequirements.CheckAndMessage CreateRevocationDssUsageCheck() {
             return new AbstractPadesLevelRequirements.CheckAndMessage((r) => 
                         // is DSS is not present, there will be a non conformity reported fot it.
                         
@@ -593,8 +784,10 @@ namespace iText.Signatures.Validation.Report.Pades {
             }
             );
         }
+//\endcond
 
-        protected internal static AbstractPadesLevelRequirements.CheckAndMessage CreateCertificatesDssUsageCheck() {
+//\cond DO_NOT_DOCUMENT
+        internal static AbstractPadesLevelRequirements.CheckAndMessage CreateCertificatesDssUsageCheck() {
             return new AbstractPadesLevelRequirements.CheckAndMessage((r) => 
                         // if DSS is not present, there will be a non conformity reported fot it.
                         
@@ -611,8 +804,10 @@ namespace iText.Signatures.Validation.Report.Pades {
             }
             );
         }
+//\endcond
 
-        protected internal static AbstractPadesLevelRequirements.CheckAndMessage CreateRevocationDssPoECoverage() {
+//\cond DO_NOT_DOCUMENT
+        internal static AbstractPadesLevelRequirements.CheckAndMessage CreateRevocationDssPoECoverage() {
             return new AbstractPadesLevelRequirements.CheckAndMessage((r) => r.revocationDataNotTimestamped.IsEmpty(), 
                 (r) => {
                 StringBuilder message = new StringBuilder();
@@ -626,9 +821,10 @@ namespace iText.Signatures.Validation.Report.Pades {
             }
             );
         }
+//\endcond
 
-        protected internal static AbstractPadesLevelRequirements.CheckAndMessage CreateCertificateExternalRetrievalCheck
-            () {
+//\cond DO_NOT_DOCUMENT
+        internal static AbstractPadesLevelRequirements.CheckAndMessage CreateCertificateExternalRetrievalCheck() {
             return new AbstractPadesLevelRequirements.CheckAndMessage((r) => r.certificateIssuerMissing.IsEmpty(), (r) => {
                 StringBuilder message = new StringBuilder();
                 if (!r.certificateIssuerMissing.IsEmpty()) {
@@ -641,6 +837,7 @@ namespace iText.Signatures.Validation.Report.Pades {
             }
             );
         }
+//\endcond
 
         /// <summary>A class to hold all rules for a level</summary>
         protected internal class LevelChecks {

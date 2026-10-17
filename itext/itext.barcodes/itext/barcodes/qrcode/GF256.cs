@@ -30,12 +30,17 @@ namespace iText.Barcodes.Qrcode {
     /// Only the bottom 8 bits are really used.
     /// </remarks>
     internal sealed class GF256 {
+//\cond DO_NOT_DOCUMENT
         // x^8 + x^4 + x^3 + x^2 + 1
-        public static readonly iText.Barcodes.Qrcode.GF256 QR_CODE_FIELD = new iText.Barcodes.Qrcode.GF256(0x011D);
-
-        // x^8 + x^5 + x^3 + x^2 + 1
-        public static readonly iText.Barcodes.Qrcode.GF256 DATA_MATRIX_FIELD = new iText.Barcodes.Qrcode.GF256(0x012D
+        internal static readonly iText.Barcodes.Qrcode.GF256 QR_CODE_FIELD = new iText.Barcodes.Qrcode.GF256(0x011D
             );
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        // x^8 + x^5 + x^3 + x^2 + 1
+        internal static readonly iText.Barcodes.Qrcode.GF256 DATA_MATRIX_FIELD = new iText.Barcodes.Qrcode.GF256(0x012D
+            );
+//\endcond
 
         private readonly int[] expTable;
 

@@ -1697,9 +1697,11 @@ namespace iText.Forms {
             }
 //\endcond
 
-            public virtual int GetCounter() {
+//\cond DO_NOT_DOCUMENT
+            internal virtual int GetCounter() {
                 return counter;
             }
+//\endcond
 
             public override bool RegenerateField() {
                 bool isRegenerated = base.RegenerateField();

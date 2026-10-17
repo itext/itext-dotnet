@@ -37,8 +37,9 @@ namespace iText.Signatures.Validation {
         private DocumentRevisionPdfObjectComparator() {
         }
 
+//\cond DO_NOT_DOCUMENT
         //Empty constructor used to avoid instantiation of utility class
-        public static bool IsSameReference(PdfIndirectReference indirectReference1, PdfIndirectReference indirectReference2
+        internal static bool IsSameReference(PdfIndirectReference indirectReference1, PdfIndirectReference indirectReference2
             ) {
             if (indirectReference1 == null || indirectReference2 == null) {
                 return false;
@@ -46,18 +47,24 @@ namespace iText.Signatures.Validation {
             return indirectReference1.GetObjNumber() == indirectReference2.GetObjNumber() && indirectReference1.GetGenNumber
                 () == indirectReference2.GetGenNumber();
         }
+//\endcond
 
-        public static bool ComparePdfObjects(PdfObject pdfObject1, PdfObject pdfObject2, Tuple2<ICollection<PdfIndirectReference
+//\cond DO_NOT_DOCUMENT
+        internal static bool ComparePdfObjects(PdfObject pdfObject1, PdfObject pdfObject2, Tuple2<ICollection<PdfIndirectReference
             >, ICollection<PdfIndirectReference>> usuallyModifiedObjects) {
             return ComparePdfObjects(pdfObject1, pdfObject2, new List<Tuple2<PdfObject, PdfObject>>(), usuallyModifiedObjects
                 );
         }
+//\endcond
 
-        public static bool IsMaxGenerationObject(PdfIndirectReference indirectReference) {
+//\cond DO_NOT_DOCUMENT
+        internal static bool IsMaxGenerationObject(PdfIndirectReference indirectReference) {
             return indirectReference.GetObjNumber() == 0 && indirectReference.GetGenNumber() == PdfXrefTable.MAX_GENERATION;
         }
+//\endcond
 
-        public static bool ComparePdfDictionaries(PdfDictionary dictionary1, PdfDictionary dictionary2, IList<Tuple2
+//\cond DO_NOT_DOCUMENT
+        internal static bool ComparePdfDictionaries(PdfDictionary dictionary1, PdfDictionary dictionary2, IList<Tuple2
             <PdfObject, PdfObject>> visitedObjects, Tuple2<ICollection<PdfIndirectReference>, ICollection<PdfIndirectReference
             >> usuallyModifiedObjects) {
             ICollection<KeyValuePair<PdfName, PdfObject>> entrySet1 = dictionary1.EntrySet();
@@ -73,6 +80,7 @@ namespace iText.Signatures.Validation {
             }
             return true;
         }
+//\endcond
 
         private static bool ComparePdfObjects(PdfObject pdfObject1, PdfObject pdfObject2, IList<Tuple2<PdfObject, 
             PdfObject>> visitedObjects, Tuple2<ICollection<PdfIndirectReference>, ICollection<PdfIndirectReference

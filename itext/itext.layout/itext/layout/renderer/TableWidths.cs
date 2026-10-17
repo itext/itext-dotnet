@@ -1070,7 +1070,8 @@ namespace iText.Layout.Renderer {
                 return str;
             }
 
-            public virtual void SetParent(TableRenderer tableRenderer) {
+//\cond DO_NOT_DOCUMENT
+            internal virtual void SetParent(TableRenderer tableRenderer) {
                 if (region == HEADER) {
                     cell.SetParent(tableRenderer.headerRenderer);
                 }
@@ -1083,6 +1084,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+//\endcond
         }
 //\endcond
         //endregion

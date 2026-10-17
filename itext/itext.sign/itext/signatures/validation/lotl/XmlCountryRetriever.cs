@@ -43,6 +43,7 @@ namespace iText.Signatures.Validation.Lotl {
         public XmlCountryRetriever() {
         }
 
+//\cond DO_NOT_DOCUMENT
         // Empty constructor
         /// <summary>
         /// This method reads an XML file containing country-specific TSL locations and returns a list of
@@ -51,7 +52,7 @@ namespace iText.Signatures.Validation.Lotl {
         /// </summary>
         /// <param name="data">the InputStream of the XML data containing country-specific TSL locations</param>
         /// <returns>a list of CountrySpecificLotl objects, each containing the scheme territory and TSL location.</returns>
-        public IList<CountrySpecificLotl> GetAllCountriesLotlFilesLocation(Stream data, LotlFetchingProperties lotlFetchingProperties
+        internal IList<CountrySpecificLotl> GetAllCountriesLotlFilesLocation(Stream data, LotlFetchingProperties lotlFetchingProperties
             ) {
             XmlCountryRetriever.TSLLocationExtractor tslLocationExtractor = new XmlCountryRetriever.TSLLocationExtractor
                 ();
@@ -61,6 +62,7 @@ namespace iText.Signatures.Validation.Lotl {
             return countrySpecificLotls.Where((countrySpecificLotl) => lotlFetchingProperties.ShouldProcessCountry(countrySpecificLotl
                 .GetSchemeTerritory())).ToList();
         }
+//\endcond
 
         private sealed class TSLLocationExtractor : IDefaultXmlHandler {
             private static readonly ICollection<String> INFORMATION_TAGS = new HashSet<String>();

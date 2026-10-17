@@ -24,6 +24,7 @@ namespace iText.Barcodes.Qrcode {
 
         private readonly IList<GF256Poly> cachedGenerators;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Creates a SolomonEncoder object based on a
         /// <see cref="GF256"/>
@@ -36,7 +37,7 @@ namespace iText.Barcodes.Qrcode {
         /// Only QR codes are supported at the moment.
         /// </remarks>
         /// <param name="field">the galois field</param>
-        public ReedSolomonEncoder(GF256 field) {
+        internal ReedSolomonEncoder(GF256 field) {
             if (!GF256.QR_CODE_FIELD.Equals(field)) {
                 throw new NotSupportedException("Only QR Code is supported at this time");
             }
@@ -44,6 +45,7 @@ namespace iText.Barcodes.Qrcode {
             this.cachedGenerators = new List<GF256Poly>();
             cachedGenerators.Add(new GF256Poly(field, new int[] { 1 }));
         }
+//\endcond
 
         private GF256Poly BuildGenerator(int degree) {
             if (degree >= cachedGenerators.Count) {
@@ -57,10 +59,11 @@ namespace iText.Barcodes.Qrcode {
             return cachedGenerators[degree];
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Encodes the provided data.</summary>
         /// <param name="toEncode">data to encode</param>
         /// <param name="ecBytes">error correction bytes</param>
-        public void Encode(int[] toEncode, int ecBytes) {
+        internal void Encode(int[] toEncode, int ecBytes) {
             if (ecBytes == 0) {
                 throw new ArgumentException("No error correction bytes");
             }
@@ -81,6 +84,7 @@ namespace iText.Barcodes.Qrcode {
             }
             Array.Copy(coefficients, 0, toEncode, dataBytes + numZeroCoefficients, coefficients.Length);
         }
+//\endcond
     }
 //\endcond
 }

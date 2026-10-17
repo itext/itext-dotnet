@@ -29,6 +29,7 @@ namespace iText.Kernel.Pdf.Annot {
         private InteriorColorUtil() {
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The interior color which is used to fill areas specific for different types of annotation.</summary>
         /// <remarks>
         /// The interior color which is used to fill areas specific for different types of annotation. For
@@ -56,7 +57,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// type which defines
         /// interior color of the annotation, or null if interior color is not specified.
         /// </returns>
-        public static Color ParseInteriorColor(PdfArray color) {
+        internal static Color ParseInteriorColor(PdfArray color) {
             if (color == null) {
                 return null;
             }
@@ -80,6 +81,7 @@ namespace iText.Kernel.Pdf.Annot {
                 }
             }
         }
+//\endcond
     }
 //\endcond
 }

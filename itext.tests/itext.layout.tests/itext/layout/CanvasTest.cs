@@ -328,9 +328,11 @@ namespace iText.Layout {
                 : base(page) {
             }
 
-            public virtual bool GetDrawingOnPage() {
+//\cond DO_NOT_DOCUMENT
+            internal virtual bool GetDrawingOnPage() {
                 return this.drawingOnPage;
             }
+//\endcond
         }
 //\endcond
     }

@@ -38,13 +38,14 @@ namespace iText.Kernel.Pdf {
         private OcgPropertiesCopier() {
         }
 
+//\cond DO_NOT_DOCUMENT
         // Empty constructor
         /// <summary>Copy unique page OCGs stored inside annotations/xobjects/resources from source pages to destination pages.
         ///     </summary>
         /// <param name="sourceDocument">document from which OCGs should be copied</param>
         /// <param name="destinationDocument">document to which OCGs should be copied</param>
         /// <param name="sourceToDestPageMapping">page mapping, linking source pages to destination ones</param>
-        public static void CopyOCGProperties(PdfDocument sourceDocument, PdfDocument destinationDocument, IDictionary
+        internal static void CopyOCGProperties(PdfDocument sourceDocument, PdfDocument destinationDocument, IDictionary
             <PdfPage, PdfPage> sourceToDestPageMapping) {
             try {
                 // Configs are not copied
@@ -69,6 +70,7 @@ namespace iText.Kernel.Pdf {
                     ()));
             }
         }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         internal static void GetUsedNonFlushedOCGsFromAnnotation(PdfAnnotation toAnnot, PdfAnnotation fromAnnot, ICollection

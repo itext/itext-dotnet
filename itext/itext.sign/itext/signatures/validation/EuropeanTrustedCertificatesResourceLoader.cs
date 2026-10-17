@@ -78,7 +78,7 @@ namespace iText.Signatures.Validation {
         /// And verifies if they match the expected SHA-256 hash.
         /// </remarks>
         /// <returns>A list of X509Certificates.</returns>
-        public virtual IList<IX509Certificate> LoadCertificates() {
+        internal virtual IList<IX509Certificate> LoadCertificates() {
             List<IX509Certificate> result = new List<IX509Certificate>();
             foreach (var pemContainer in config
                          .GetCertificates()) {

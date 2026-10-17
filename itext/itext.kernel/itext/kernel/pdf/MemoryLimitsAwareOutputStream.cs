@@ -51,7 +51,7 @@ namespace iText.Kernel.Pdf {
         /// Creates a new byte array output stream. The buffer capacity is
         /// initially 32 bytes, though its size increases if necessary.
         /// </remarks>
-        public MemoryLimitsAwareOutputStream()
+        internal MemoryLimitsAwareOutputStream()
             : base() {
         }
 
@@ -60,13 +60,13 @@ namespace iText.Kernel.Pdf {
         /// the specified size, in bytes.
         /// </summary>
         /// <param name="size">the initial size.</param>
-        public MemoryLimitsAwareOutputStream(int size)
+        internal MemoryLimitsAwareOutputStream(int size)
             : base(size) {
         }
 
         /// <summary>Gets the maximum size which can be occupied by this output stream.</summary>
         /// <returns>the maximum size which can be occupied by this output stream.</returns>
-        public virtual long GetMaxStreamSize() {
+        internal virtual long GetMaxStreamSize() {
             return maxStreamSize;
         }
 
@@ -76,7 +76,7 @@ namespace iText.Kernel.Pdf {
         /// this
         /// <see cref="MemoryLimitsAwareOutputStream"/>
         /// </returns>
-        public virtual iText.Kernel.Pdf.MemoryLimitsAwareOutputStream SetMaxStreamSize(int maxStreamSize) {
+        internal virtual iText.Kernel.Pdf.MemoryLimitsAwareOutputStream SetMaxStreamSize(int maxStreamSize) {
             this.maxStreamSize = maxStreamSize;
             return this;
         }

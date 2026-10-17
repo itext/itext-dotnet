@@ -37,7 +37,8 @@ namespace iText.Kernel.Font {
         protected internal DocFontEncoding() {
         }
 
-        public static FontEncoding CreateDocFontEncoding(PdfObject encoding, CMapToUnicode toUnicode) {
+//\cond DO_NOT_DOCUMENT
+        internal static FontEncoding CreateDocFontEncoding(PdfObject encoding, CMapToUnicode toUnicode) {
             if (encoding != null) {
                 if (encoding.IsName()) {
                     return FontEncoding.CreateFontEncoding(((PdfName)encoding).GetValue());
@@ -63,6 +64,7 @@ namespace iText.Kernel.Font {
                 return FontEncoding.CreateFontSpecificEncoding();
             }
         }
+//\endcond
 
         private static void FillBaseEncoding(iText.Kernel.Font.DocFontEncoding fontEncoding, PdfName baseEncodingName
             ) {

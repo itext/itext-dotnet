@@ -65,6 +65,7 @@ namespace iText.Signatures.Validation.Lotl {
             return jsonObject;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Deserializes
         /// <see cref="iText.Commons.Json.JsonValue"/>
@@ -80,7 +81,7 @@ namespace iText.Signatures.Validation.Lotl {
         /// deserialized
         /// <see cref="SimpleServiceContext"/>
         /// </returns>
-        public static iText.Signatures.Validation.Lotl.SimpleServiceContext FromJson(JsonValue jsonValue) {
+        internal static iText.Signatures.Validation.Lotl.SimpleServiceContext FromJson(JsonValue jsonValue) {
             JsonObject simpleServiceContextJson = (JsonObject)jsonValue;
             JsonArray certificatesJson = (JsonArray)simpleServiceContextJson.GetField(JSON_KEY_CERTIFICATES);
             IList<IX509Certificate> certificatesFromJson = certificatesJson.GetValues().Select((certificateJson) => SignJsonSerializerHelper
@@ -90,6 +91,7 @@ namespace iText.Signatures.Validation.Lotl {
             simpleServiceContextFromJson.certificates = certificatesFromJson;
             return simpleServiceContextFromJson;
         }
+//\endcond
 
         public virtual IList<IX509Certificate> GetCertificates() {
             return new List<IX509Certificate>(certificates);

@@ -1014,13 +1014,17 @@ namespace iText.Svg.Renderers.Impl {
                 }
             }
 
-            public float GetOpacity() {
+//\cond DO_NOT_DOCUMENT
+            internal float GetOpacity() {
                 return opacity;
             }
+//\endcond
 
-            public Color GetColor() {
+//\cond DO_NOT_DOCUMENT
+            internal Color GetColor() {
                 return color;
             }
+//\endcond
 
             public Color GetOpacityMaskColor() {
                 return opacityMaskColor;

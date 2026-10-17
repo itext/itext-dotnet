@@ -72,15 +72,17 @@ namespace iText.IO.Image {
 
         private const int JPX_JPXB = 0x6a707862;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Parses JPEG 2000 image data.</summary>
         /// <param name="image">JPEG 2000 image data to process</param>
-        public static void ProcessImage(ImageData image) {
+        internal static void ProcessImage(ImageData image) {
             if (image.GetOriginalType() != ImageType.JPEG2000) {
                 throw new ArgumentException("JPEG2000 image expected");
             }
             ProcessParameters((Jpeg2000ImageData)image);
             image.SetFilter("JPXDecode");
         }
+//\endcond
 
         /// <summary>This method checks if the image is a valid JPEG and processes some parameters.</summary>
         private static void ProcessParameters(Jpeg2000ImageData jp2) {

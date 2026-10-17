@@ -146,38 +146,60 @@ namespace iText.IO.Image {
 //\endcond
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Some PNG specific values.</summary>
-        public static readonly int[] PNGID = new int[] { 137, 80, 78, 71, 13, 10, 26, 10 };
+        internal static readonly int[] PNGID = new int[] { 137, 80, 78, 71, 13, 10, 26, 10 };
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>A PNG marker.</summary>
-        public const String IHDR = "IHDR";
+        internal const String IHDR = "IHDR";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>A PNG marker.</summary>
-        public const String PLTE = "PLTE";
+        internal const String PLTE = "PLTE";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>A PNG marker.</summary>
-        public const String IDAT = "IDAT";
+        internal const String IDAT = "IDAT";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>A PNG marker.</summary>
-        public const String IEND = "IEND";
+        internal const String IEND = "IEND";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>A PNG marker.</summary>
-        public const String tRNS = "tRNS";
+        internal const String tRNS = "tRNS";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>A PNG marker.</summary>
-        public const String pHYs = "pHYs";
+        internal const String pHYs = "pHYs";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>A PNG marker.</summary>
-        public const String gAMA = "gAMA";
+        internal const String gAMA = "gAMA";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>A PNG marker.</summary>
-        public const String cHRM = "cHRM";
+        internal const String cHRM = "cHRM";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>A PNG marker.</summary>
-        public const String sRGB = "sRGB";
+        internal const String sRGB = "sRGB";
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>A PNG marker.</summary>
-        public const String iCCP = "iCCP";
+        internal const String iCCP = "iCCP";
+//\endcond
 
         private const int TRANSFERSIZE = 4096;
 
@@ -195,7 +217,8 @@ namespace iText.IO.Image {
             .RELATIVE_COLORIMETRIC, PngImageHelperConstants.SATURATION, PngImageHelperConstants.ABSOLUTE_COLORMETRIC
              };
 
-        public static void ProcessImage(ImageData image) {
+//\cond DO_NOT_DOCUMENT
+        internal static void ProcessImage(ImageData image) {
             if (image.GetOriginalType() != ImageType.PNG) {
                 throw new ArgumentException("PNG image expected");
             }
@@ -224,6 +247,7 @@ namespace iText.IO.Image {
             }
             RawImageHelper.UpdateImageAttributes(png.image, png.additional);
         }
+//\endcond
 
         private static void ProcessPng(Stream pngStream, PngImageHelper.PngParameters png) {
             ReadPng(pngStream, png);
@@ -925,31 +949,37 @@ namespace iText.IO.Image {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets an <c>int</c> from an <c>InputStream</c>.</summary>
         /// <param name="pngStream">an <c>InputStream</c></param>
         /// <returns>the value of an <c>int</c></returns>
-        public static int GetInt(Stream pngStream) {
+        internal static int GetInt(Stream pngStream) {
             return (pngStream.ReadByte() << 24) + (pngStream.ReadByte() << 16) + (pngStream.ReadByte() << 8) + pngStream
                 .ReadByte();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets a <c>word</c> from an <c>InputStream</c>.</summary>
         /// <param name="pngStream">an <c>InputStream</c></param>
         /// <returns>the value of an <c>int</c></returns>
-        public static int GetWord(Stream pngStream) {
+        internal static int GetWord(Stream pngStream) {
             return (pngStream.ReadByte() << 8) + pngStream.ReadByte();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets a <c>String</c> from an <c>InputStream</c>.</summary>
         /// <param name="pngStream">an <c>InputStream</c></param>
         /// <returns>the value of an <c>int</c></returns>
-        public static String GetString(Stream pngStream) {
+        internal static String GetString(Stream pngStream) {
             StringBuilder buf = new StringBuilder();
             for (int i = 0; i < 4; i++) {
                 buf.Append((char)pngStream.ReadByte());
             }
             return buf.ToString();
         }
+//\endcond
     }
 //\endcond
 }

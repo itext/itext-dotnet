@@ -1810,9 +1810,13 @@ namespace iText.Layout {
 
 //\cond DO_NOT_DOCUMENT
         internal class GenerationContext {
-            public PdfDocument pdf;
+//\cond DO_NOT_DOCUMENT
+            internal PdfDocument pdf;
+//\endcond
 
-            public FontProvider fontProvider;
+//\cond DO_NOT_DOCUMENT
+            internal FontProvider fontProvider;
+//\endcond
         }
 //\endcond
     }

@@ -31,9 +31,8 @@ using iText.Signatures.Validation.Report;
 using iText.Test;
 
 namespace iText.Signatures.Validation.Lotl {
-//\cond DO_NOT_DOCUMENT
     [NUnit.Framework.Category("BouncyCastleUnitTest")]
-    internal class LotlTrustedStoreTest : ExtendedITextTest {
+    public class LotlTrustedStoreTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/certs/";
 
@@ -246,15 +245,15 @@ namespace iText.Signatures.Validation.Lotl {
                 lotlService.WithCustomResourceRetriever(new FromDiskResourceRetriever(SOURCE_FOLDER_LOTL_FILES));
                 chainBuilder.WithLotlService(() => lotlService);
                 lotlService.InitializeCache();
-                LotlValidator invalidValidator = new _LotlValidator_341(lotlService);
+                LotlValidator invalidValidator = new _LotlValidator_340(lotlService);
                 lotlService.WithLotlValidator(() => invalidValidator);
             }
             LotlTrustedStore trustedStore = chainBuilder.GetLotlTrustedStore();
             NUnit.Framework.Assert.IsTrue(trustedStore.GetCertificates().IsEmpty());
         }
 
-        private sealed class _LotlValidator_341 : LotlValidator {
-            public _LotlValidator_341(LotlService baseArg1)
+        private sealed class _LotlValidator_340 : LotlValidator {
+            public _LotlValidator_340(LotlService baseArg1)
                 : base(baseArg1) {
             }
 
@@ -265,5 +264,4 @@ namespace iText.Signatures.Validation.Lotl {
             }
         }
     }
-//\endcond
 }

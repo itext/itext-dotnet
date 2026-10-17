@@ -25,54 +25,69 @@ namespace iText.Barcodes.Qrcode {
 
         private int size;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Creates a new ByteArray instance with size 0.</summary>
-        public ByteArray() {
+        internal ByteArray() {
             bytes = null;
             size = 0;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Creates a new ByteArray instance of the specified size.</summary>
         /// <param name="size">size of the array</param>
-        public ByteArray(int size) {
+        internal ByteArray(int size) {
             bytes = new byte[size];
             this.size = size;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Creates a new ByteArray instance based on an existing byte[].</summary>
         /// <param name="byteArray">the byte[]</param>
-        public ByteArray(byte[] byteArray) {
+        internal ByteArray(byte[] byteArray) {
             bytes = byteArray;
             size = bytes.Length;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Access an unsigned byte at location index.</summary>
         /// <param name="index">The index in the array to access.</param>
         /// <returns>The unsigned value of the byte as an int.</returns>
-        public int At(int index) {
+        internal int At(int index) {
             return bytes[index] & 0xff;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Set the value at "index" to "value"</summary>
         /// <param name="index">position in the byte-array</param>
         /// <param name="value">new value</param>
-        public void Set(int index, int value) {
+        internal void Set(int index, int value) {
             bytes[index] = (byte)value;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>size of the array</returns>
-        public int Size() {
+        internal int Size() {
             return size;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>true if size is equal to 0, false otherwise</returns>
-        public bool IsEmpty() {
+        internal bool IsEmpty() {
             return size == 0;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Append a byte to the end of the array.</summary>
         /// <remarks>Append a byte to the end of the array. If the array is too small, it's capacity is doubled.</remarks>
         /// <param name="value">byte to append.</param>
-        public void AppendByte(int value) {
+        internal void AppendByte(int value) {
             if (size == 0 || size >= bytes.Length) {
                 int newSize = Math.Max(INITIAL_SIZE, size << 1);
                 Reserve(newSize);
@@ -80,10 +95,12 @@ namespace iText.Barcodes.Qrcode {
             bytes[size] = (byte)value;
             size++;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Increase the capacity of the array to "capacity" if the current capacity is smaller</summary>
         /// <param name="capacity">the new capacity</param>
-        public void Reserve(int capacity) {
+        internal void Reserve(int capacity) {
             if (bytes == null || bytes.Length < capacity) {
                 byte[] newArray = new byte[capacity];
                 if (bytes != null) {
@@ -92,18 +109,21 @@ namespace iText.Barcodes.Qrcode {
                 bytes = newArray;
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Copy count bytes from array source starting at offset.</summary>
         /// <param name="source">source of the copied bytes</param>
         /// <param name="offset">offset to start at</param>
         /// <param name="count">number of bytes to copy</param>
-        public void Set(byte[] source, int offset, int count) {
+        internal void Set(byte[] source, int offset, int count) {
             bytes = new byte[count];
             size = count;
             for (int x = 0; x < count; x++) {
                 bytes[x] = source[offset + x];
             }
         }
+//\endcond
     }
 //\endcond
 }

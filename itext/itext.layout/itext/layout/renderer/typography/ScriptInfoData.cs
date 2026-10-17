@@ -39,7 +39,7 @@ namespace iText.Layout.Renderer.Typography {
         }
 //\endcond
 
-        public virtual ICollection<UnicodeScript> GetSupportedScripts() {
+        internal virtual ICollection<UnicodeScript> GetSupportedScripts() {
             return JavaCollectionsUtil.UnmodifiableCollection<UnicodeScript>(this.SUPPORTED_SCRIPTS);
         }
 

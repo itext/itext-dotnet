@@ -36,9 +36,8 @@ using iText.Signatures.Validation.Report;
 using iText.Test;
 
 namespace iText.Signatures.Validation.Report.Xml {
-//\cond DO_NOT_DOCUMENT
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
-    internal class XmlReportGeneratorTest : ExtendedITextTest {
+    public class XmlReportGeneratorTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/signatures/validation/SignatureValidatorTest/";
 
@@ -145,5 +144,4 @@ namespace iText.Signatures.Validation.Report.Xml {
             }
         }
     }
-//\endcond
 }

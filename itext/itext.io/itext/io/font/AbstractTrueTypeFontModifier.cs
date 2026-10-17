@@ -54,6 +54,7 @@ namespace iText.IO.Font {
 
         private const int HEAD_LOCA_FORMAT_OFFSET = 51;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Contains the location of the several tables.</summary>
         /// <remarks>
         /// Contains the location of the several tables. The key is the name of the table and the
@@ -66,35 +67,50 @@ namespace iText.IO.Font {
         /// is 54 we should write 2 extra zeroes at the end, and it should be taken into account for calculating the start
         /// offset of the next table (but not the length of the current table).
         /// </remarks>
-        protected internal IDictionary<String, int[]> tableDirectory;
+        internal IDictionary<String, int[]> tableDirectory;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Contains glyph data from `glyf` table.</summary>
         /// <remarks>Contains glyph data from `glyf` table. The key is the GID (glyph ID) and the value is a raw data of glyph.
         ///     </remarks>
-        protected internal IDictionary<int, byte[]> glyphDataMap;
+        internal IDictionary<int, byte[]> glyphDataMap;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Contains font tables which have been changed during the modification.</summary>
         /// <remarks>
         /// Contains font tables which have been changed during the modification. The key is the name of table which has
         /// been changed and the value is raw data of the modified table.
         /// </remarks>
-        protected internal readonly IDictionary<String, byte[]> modifiedTables = new Dictionary<String, byte[]>();
+        internal readonly IDictionary<String, byte[]> modifiedTables = new Dictionary<String, byte[]>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Font raw data on which new modified font will be built.</summary>
-        protected internal RandomAccessFileOrArray raf;
+        internal RandomAccessFileOrArray raf;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Table directory offset which corresponds to font's raw data from
         /// <see cref="raf"/>.
         /// </summary>
-        protected internal int directoryOffset;
+        internal int directoryOffset;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>the name of font which will be modified</summary>
-        protected internal readonly String fontName;
+        internal readonly String fontName;
+//\endcond
 
-        protected internal IDictionary<int, byte[]> horizontalMetricMap;
+//\cond DO_NOT_DOCUMENT
+        internal IDictionary<int, byte[]> horizontalMetricMap;
+//\endcond
 
-        protected internal int numberOfHMetrics;
+//\cond DO_NOT_DOCUMENT
+        internal int numberOfHMetrics;
+//\endcond
 
         private AbstractTrueTypeFontModifier.FontRawData outFont;
 
@@ -146,7 +162,8 @@ namespace iText.IO.Font {
         internal abstract int MergeTables();
 //\endcond
 
-        protected internal virtual int CreateModifiedTables() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual int CreateModifiedTables() {
             int[] activeGlyphs = new int[glyphDataMap.Count];
             int i = 0;
             int glyfSize = 0;
@@ -201,6 +218,7 @@ namespace iText.IO.Font {
             modifiedTables.Put("hmtx", newHtmx);
             return maxGlyphId + 1;
         }
+//\endcond
 
         /// <summary>Creates new hmtx table.</summary>
         /// <remarks>

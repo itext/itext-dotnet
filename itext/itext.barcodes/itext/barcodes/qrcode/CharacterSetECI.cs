@@ -60,15 +60,19 @@ namespace iText.Barcodes.Qrcode {
             this.value = value;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>name of the encoding.</returns>
-        public String GetEncodingName() {
+        internal String GetEncodingName() {
             return encodingName;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>the value of the encoding.</returns>
-        public int GetValue() {
+        internal int GetValue() {
             return value;
         }
+//\endcond
 
         private static void AddCharacterSet(int value, String encodingName, IDictionary<String, iText.Barcodes.Qrcode.CharacterSetECI
             > n) {
@@ -85,6 +89,7 @@ namespace iText.Barcodes.Qrcode {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <param name="name">character set ECI encoding name</param>
         /// <returns>
         /// 
@@ -92,12 +97,13 @@ namespace iText.Barcodes.Qrcode {
         /// representing ECI for character encoding, or null if it is legal
         /// but unsupported
         /// </returns>
-        public static iText.Barcodes.Qrcode.CharacterSetECI GetCharacterSetECIByName(String name) {
+        internal static iText.Barcodes.Qrcode.CharacterSetECI GetCharacterSetECIByName(String name) {
             if (NAME_TO_ECI == null) {
                 Initialize();
             }
             return NAME_TO_ECI.Get(name);
         }
+//\endcond
     }
 //\endcond
 }

@@ -54,6 +54,7 @@ namespace iText.Barcodes.Qrcode {
             return penalty;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Encode "bytes" with the error correction level "ecLevel".</summary>
         /// <remarks>
         /// Encode "bytes" with the error correction level "ecLevel". The encoding mode will be chosen
@@ -69,10 +70,12 @@ namespace iText.Barcodes.Qrcode {
         /// <param name="content">String to encode</param>
         /// <param name="ecLevel">Error-correction level to use</param>
         /// <param name="qrCode">QR code to store the result in</param>
-        public static void Encode(String content, ErrorCorrectionLevel ecLevel, QRCode qrCode) {
+        internal static void Encode(String content, ErrorCorrectionLevel ecLevel, QRCode qrCode) {
             Encode(content, ecLevel, null, qrCode);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Encode "bytes" with the error correction level "ecLevel".</summary>
         /// <remarks>
         /// Encode "bytes" with the error correction level "ecLevel". The encoding mode will be chosen
@@ -89,7 +92,7 @@ namespace iText.Barcodes.Qrcode {
         /// <param name="ecLevel">Error-correction level to use</param>
         /// <param name="hints">Optional Map containing  encoding and suggested minimum version to use</param>
         /// <param name="qrCode">QR code to store the result in</param>
-        public static void Encode(String content, ErrorCorrectionLevel ecLevel, IDictionary<EncodeHintType, Object
+        internal static void Encode(String content, ErrorCorrectionLevel ecLevel, IDictionary<EncodeHintType, Object
             > hints, QRCode qrCode) {
             String encoding = hints == null ? null : (String)hints.Get(EncodeHintType.CHARACTER_SET);
             if (encoding == null) {
@@ -143,6 +146,7 @@ namespace iText.Barcodes.Qrcode {
                 throw new WriterException("Invalid QR code: " + qrCode.ToString());
             }
         }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         /// <returns>
@@ -157,13 +161,16 @@ namespace iText.Barcodes.Qrcode {
         }
 //\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Choose the best mode by examining the content.</summary>
         /// <param name="content">content to examine</param>
         /// <returns>mode to use</returns>
-        public static Mode ChooseMode(String content) {
+        internal static Mode ChooseMode(String content) {
             return ChooseMode(content, null);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Choose the best mode by examining the content.</summary>
         /// <remarks>
         /// Choose the best mode by examining the content. Note that 'encoding' is used as a hint;
@@ -173,7 +180,7 @@ namespace iText.Barcodes.Qrcode {
         /// <param name="content">content to examine</param>
         /// <param name="encoding">hint for the encoding to use</param>
         /// <returns>mode to use</returns>
-        public static Mode ChooseMode(String content, String encoding) {
+        internal static Mode ChooseMode(String content, String encoding) {
             if ("Shift_JIS".Equals(encoding)) {
                 // Choose Kanji mode if all input are double-byte characters
                 return IsOnlyDoubleByteKanji(content) ? Mode.KANJI : Mode.BYTE;
@@ -204,6 +211,7 @@ namespace iText.Barcodes.Qrcode {
             }
             return Mode.BYTE;
         }
+//\endcond
 
         private static bool IsOnlyDoubleByteKanji(String content) {
             byte[] bytes;

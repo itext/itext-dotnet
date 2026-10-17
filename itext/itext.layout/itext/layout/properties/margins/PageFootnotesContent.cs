@@ -29,6 +29,7 @@ namespace iText.Layout.Properties.Margins {
     internal class PageFootnotesContent : AbstractPageContent {
         private int pageNumber = 0;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Creates new
         /// <see cref="PageFootnotesContent"/>
@@ -39,10 +40,12 @@ namespace iText.Layout.Properties.Margins {
         /// <see cref="FootnotesContainer"/>
         /// container with all page footnotes
         /// </param>
-        public PageFootnotesContent(FootnotesContainer footnotesContent)
+        internal PageFootnotesContent(FootnotesContainer footnotesContent)
             : base(footnotesContent) {
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Creates new
         /// <see cref="PageFootnotesContent"/>
@@ -53,11 +56,13 @@ namespace iText.Layout.Properties.Margins {
         /// <see cref="PageFootnotesContent"/>
         /// instance to copy
         /// </param>
-        public PageFootnotesContent(iText.Layout.Properties.Margins.PageFootnotesContent other)
+        internal PageFootnotesContent(iText.Layout.Properties.Margins.PageFootnotesContent other)
             : base(other) {
             this.pageNumber = other.pageNumber;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Sets page number for this
         /// <see cref="PageFootnotesContent"/>.
@@ -73,11 +78,13 @@ namespace iText.Layout.Properties.Margins {
         /// <see cref="PageFootnotesContent"/>
         /// instance
         /// </returns>
-        public virtual iText.Layout.Properties.Margins.PageFootnotesContent SetPageNumber(int pageNumber) {
+        internal virtual iText.Layout.Properties.Margins.PageFootnotesContent SetPageNumber(int pageNumber) {
             this.pageNumber = pageNumber;
             return this;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Gets page number for this
         /// <see cref="PageFootnotesContent"/>.
@@ -86,9 +93,10 @@ namespace iText.Layout.Properties.Margins {
         /// page number for this
         /// <see cref="PageFootnotesContent"/>
         /// </returns>
-        public virtual int GetPageNumber() {
+        internal virtual int GetPageNumber() {
             return pageNumber;
         }
+//\endcond
     }
 //\endcond
 }

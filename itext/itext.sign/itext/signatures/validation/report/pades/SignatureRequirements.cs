@@ -70,10 +70,11 @@ namespace iText.Signatures.Validation.Report.Pades {
             : base(name) {
         }
 
-        protected internal override IDictionary<PAdESLevel, AbstractPadesLevelRequirements.LevelChecks> GetChecks(
-            ) {
+//\cond DO_NOT_DOCUMENT
+        internal override IDictionary<PAdESLevel, AbstractPadesLevelRequirements.LevelChecks> GetChecks() {
             return CHECKS;
         }
+//\endcond
     }
 //\endcond
 }

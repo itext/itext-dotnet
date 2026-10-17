@@ -30,9 +30,10 @@ namespace iText.Forms.Xfa {
     internal class AcroFieldsSearch : Xml2Som {
         private IDictionary<String, String> acroShort2LongName;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Creates a new instance from a Collection with the full names.</summary>
         /// <param name="items">the Collection</param>
-        public AcroFieldsSearch(ICollection<String> items) {
+        internal AcroFieldsSearch(ICollection<String> items) {
             inverseSearch = new Dictionary<String, InverseStore>();
             acroShort2LongName = new Dictionary<String, String>();
             foreach (String itemName in items) {
@@ -41,26 +42,31 @@ namespace iText.Forms.Xfa {
                 InverseSearchAdd(inverseSearch, SplitParts(itemShort), itemName);
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets the mapping from short names to long names.</summary>
         /// <remarks>
         /// Gets the mapping from short names to long names. A long
         /// name may contain the #subform name part.
         /// </remarks>
         /// <returns>the mapping from short names to long names</returns>
-        public virtual IDictionary<String, String> GetAcroShort2LongName() {
+        internal virtual IDictionary<String, String> GetAcroShort2LongName() {
             return acroShort2LongName;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets the mapping from short names to long names.</summary>
         /// <remarks>
         /// Sets the mapping from short names to long names. A long
         /// name may contain the #subform name part.
         /// </remarks>
         /// <param name="acroShort2LongName">the mapping from short names to long names</param>
-        public virtual void SetAcroShort2LongName(IDictionary<String, String> acroShort2LongName) {
+        internal virtual void SetAcroShort2LongName(IDictionary<String, String> acroShort2LongName) {
             this.acroShort2LongName = acroShort2LongName;
         }
+//\endcond
     }
 //\endcond
 }

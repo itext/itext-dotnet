@@ -27,7 +27,7 @@ using iText.Commons.Utils;
 
 namespace iText.StyledXmlParser.Resolver.Resource {
     [NUnit.Framework.Category("IntegrationTest")]
-    internal class DefaultResourceRetrieverTest : ExtendedITextTest
+    public class DefaultResourceRetrieverTest : ExtendedITextTest
     {
         [NUnit.Framework.Test]
         public virtual void RetrieveResourceConnectTimeoutTest()

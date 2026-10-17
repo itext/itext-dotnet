@@ -72,14 +72,17 @@ namespace iText.Layout.Renderer {
         }
 //\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Resolves grid track sizes.</summary>
-        public virtual void SizeGrid() {
+        internal virtual void SizeGrid() {
             // 1. First, the track sizing algorithm is used to resolve the sizes of the grid columns.
             ResolveGridColumns();
             // 2. Next, the track sizing algorithm resolves the sizes of the grid rows.
             ResolveGridRows();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets grid container height.</summary>
         /// <remarks>
         /// Gets grid container height.
@@ -87,9 +90,10 @@ namespace iText.Layout.Renderer {
         /// <see cref="SizeGrid()"/>.
         /// </remarks>
         /// <returns>grid container height covered by row template</returns>
-        public virtual float GetContainerHeight() {
+        internal virtual float GetContainerHeight() {
             return containerHeight;
         }
+//\endcond
 
         private void ResolveGridRows() {
             IList<GridValue> rowsValues = new List<GridValue>();

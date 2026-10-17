@@ -30,7 +30,9 @@ using iText.StyledXmlParser.Node;
 namespace iText.StyledXmlParser.Css.Selector.Item {
 //\cond DO_NOT_DOCUMENT
     internal class CssPseudoClassNotSelectorItem : CssPseudoClassSelectorItem {
-        protected internal readonly IList<ICssSelector> selectorList;
+//\cond DO_NOT_DOCUMENT
+        internal readonly IList<ICssSelector> selectorList;
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         internal CssPseudoClassNotSelectorItem(IList<ICssSelector> selectorList, String argumentsString)
@@ -39,14 +41,16 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         }
 //\endcond
 
-        public static iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassNotSelectorItem CreateNotSelectorItem(
-            String arguments) {
+//\cond DO_NOT_DOCUMENT
+        internal static iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassNotSelectorItem CreateNotSelectorItem
+            (String arguments) {
             IList<ICssSelector> selectors = ParseSelectorListWithoutPseudoElements(arguments, false);
             if (selectors == null) {
                 return null;
             }
             return new iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassNotSelectorItem(selectors, arguments);
         }
+//\endcond
 
         public override int GetSpecificity() {
             int max = 0;
@@ -58,9 +62,11 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             return max;
         }
 
-        public virtual IList<ICssSelectorItem> GetArgumentsSelector() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual IList<ICssSelectorItem> GetArgumentsSelector() {
             return CssSelectorParser.ParseSelectorItems(arguments);
         }
+//\endcond
 
         public override bool Matches(INode node) {
             if (!(node is IElementNode) || node is ICustomElementNode || node is IDocumentNode) {

@@ -31,7 +31,8 @@ namespace iText.Kernel.Pdf {
 
         private readonly iText.Kernel.Pdf.PdfPages parent;
 
-        public PdfPages(int from, PdfDocument pdfDocument, iText.Kernel.Pdf.PdfPages parent)
+//\cond DO_NOT_DOCUMENT
+        internal PdfPages(int from, PdfDocument pdfDocument, iText.Kernel.Pdf.PdfPages parent)
             : base(new PdfDictionary()) {
             if (pdfDocument.GetWriter() != null) {
                 GetPdfObject().MakeIndirect(pdfDocument);
@@ -48,12 +49,16 @@ namespace iText.Kernel.Pdf {
                 GetPdfObject().Put(PdfName.Parent, this.parent.GetPdfObject());
             }
         }
+//\endcond
 
-        public PdfPages(int from, PdfDocument pdfDocument)
+//\cond DO_NOT_DOCUMENT
+        internal PdfPages(int from, PdfDocument pdfDocument)
             : this(from, pdfDocument, null) {
         }
+//\endcond
 
-        public PdfPages(int from, int maxCount, PdfDictionary pdfObject, iText.Kernel.Pdf.PdfPages parent)
+//\cond DO_NOT_DOCUMENT
+        internal PdfPages(int from, int maxCount, PdfDictionary pdfObject, iText.Kernel.Pdf.PdfPages parent)
             : base(pdfObject) {
             SetForbidRelease();
             this.from = from;
@@ -71,15 +76,19 @@ namespace iText.Kernel.Pdf {
             this.kids = pdfObject.GetAsArray(PdfName.Kids);
             pdfObject.Put(PdfName.Type, PdfName.Pages);
         }
+//\endcond
 
-        public virtual void AddPage(PdfDictionary page) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual void AddPage(PdfDictionary page) {
             kids.Add(page);
             IncrementCount();
             page.Put(PdfName.Parent, GetPdfObject());
             page.SetModified();
         }
+//\endcond
 
-        public virtual bool AddPage(int index, PdfPage pdfPage) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual bool AddPage(int index, PdfPage pdfPage) {
             if (index < from || index > from + GetCount()) {
                 return false;
             }
@@ -89,8 +98,10 @@ namespace iText.Kernel.Pdf {
             IncrementCount();
             return true;
         }
+//\endcond
 
-        public virtual bool RemovePage(int pageNum) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual bool RemovePage(int pageNum) {
             if (pageNum < from || pageNum >= from + GetCount()) {
                 return false;
             }
@@ -98,17 +109,21 @@ namespace iText.Kernel.Pdf {
             kids.Remove(pageNum - from);
             return true;
         }
+//\endcond
 
-        public virtual void AddPages(iText.Kernel.Pdf.PdfPages pdfPages) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual void AddPages(iText.Kernel.Pdf.PdfPages pdfPages) {
             kids.Add(pdfPages.GetPdfObject());
             count.SetValue(count.IntValue() + pdfPages.GetCount());
             pdfPages.GetPdfObject().Put(PdfName.Parent, GetPdfObject());
             pdfPages.SetModified();
             SetModified();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // remove empty PdfPage.
-        public virtual void RemoveFromParent() {
+        internal virtual void RemoveFromParent() {
             if (parent != null) {
                 System.Diagnostics.Debug.Assert(GetCount() == 0);
                 parent.kids.Remove(GetPdfObject().GetIndirectReference());
@@ -117,44 +132,60 @@ namespace iText.Kernel.Pdf {
                 }
             }
         }
+//\endcond
 
-        public virtual int GetFrom() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual int GetFrom() {
             return from;
         }
+//\endcond
 
-        public virtual int GetCount() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual int GetCount() {
             return count.IntValue();
         }
+//\endcond
 
-        public virtual void CorrectFrom(int correction) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual void CorrectFrom(int correction) {
             from += correction;
         }
+//\endcond
 
-        public virtual PdfArray GetKids() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual PdfArray GetKids() {
             return GetPdfObject().GetAsArray(PdfName.Kids);
         }
+//\endcond
 
-        public virtual iText.Kernel.Pdf.PdfPages GetParent() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual iText.Kernel.Pdf.PdfPages GetParent() {
             return parent;
         }
+//\endcond
 
-        public virtual void IncrementCount() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual void IncrementCount() {
             count.Increment();
             SetModified();
             if (parent != null) {
                 parent.IncrementCount();
             }
         }
+//\endcond
 
-        public virtual void DecrementCount() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual void DecrementCount() {
             count.Decrement();
             SetModified();
             if (parent != null) {
                 parent.DecrementCount();
             }
         }
+//\endcond
 
-        public virtual int CompareTo(int index) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual int CompareTo(int index) {
             if (index < from) {
                 return 1;
             }
@@ -163,6 +194,7 @@ namespace iText.Kernel.Pdf {
             }
             return 0;
         }
+//\endcond
 
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;

@@ -99,7 +99,7 @@ namespace iText.StyledXmlParser.Resolver.Resource
         /// </summary>
         /// <param name="s">the original string</param>
         /// <returns>the encoded string</returns>
-        public static String Encode(String s)
+        internal static String Encode(String s)
         {
             return Encode(s, dfltEncName);
         }
@@ -110,7 +110,7 @@ namespace iText.StyledXmlParser.Resolver.Resource
         /// <param name="s">the original string</param>
         /// <param name="enc">the encoding</param>
         /// <returns>the encoded string</returns>
-        public static String Encode(String s, String enc)
+        internal static String Encode(String s, String enc)
         {
             bool needToChange = false;
             StringBuilder @out = new StringBuilder(s.Length);

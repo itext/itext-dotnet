@@ -48,6 +48,7 @@ namespace iText.Kernel.Pdf.Tagging {
             ignoreKeysForClone.Add(PdfName.P);
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Copies structure to a
         /// <paramref name="destDocument"/>.
@@ -63,14 +64,16 @@ namespace iText.Kernel.Pdf.Tagging {
         /// </remarks>
         /// <param name="destDocument">document to copy structure to. Shall not be current document.</param>
         /// <param name="page2page">association between original page and copied page.</param>
-        public static void CopyTo(PdfDocument destDocument, IDictionary<PdfPage, PdfPage> page2page, PdfDocument callingDocument
-            ) {
+        internal static void CopyTo(PdfDocument destDocument, IDictionary<PdfPage, PdfPage> page2page, PdfDocument
+             callingDocument) {
             if (!destDocument.IsTagged()) {
                 return;
             }
             CopyTo(destDocument, page2page, callingDocument, false);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Copies structure to a
         /// <paramref name="destDocument"/>
@@ -92,20 +95,22 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <param name="destDocument">document to copy structure to.</param>
         /// <param name="insertBeforePage">indicates where the structure to be inserted.</param>
         /// <param name="page2page">association between original page and copied page.</param>
-        public static void CopyTo(PdfDocument destDocument, int insertBeforePage, IDictionary<PdfPage, PdfPage> page2page
-            , PdfDocument callingDocument) {
+        internal static void CopyTo(PdfDocument destDocument, int insertBeforePage, IDictionary<PdfPage, PdfPage> 
+            page2page, PdfDocument callingDocument) {
             if (!destDocument.IsTagged()) {
                 return;
             }
             CopyTo(destDocument, insertBeforePage, page2page, callingDocument, false);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Move tag structure of page to other place in the same document</summary>
         /// <param name="document">document in which modifications will take place (should be opened in read-write mode)
         ///     </param>
         /// <param name="from">page, which tag structure will be moved</param>
         /// <param name="insertBefore">indicates before what page number structure will be inserted to</param>
-        public static void Move(PdfDocument document, PdfPage from, int insertBefore) {
+        internal static void Move(PdfDocument document, PdfPage from, int insertBefore) {
             if (!document.IsTagged() || insertBefore < 1 || insertBefore > document.GetNumberOfPages() + 1) {
                 return;
             }
@@ -154,6 +159,7 @@ namespace iText.Kernel.Pdf.Tagging {
                 document.GetStructTreeRoot().AddKidObject(destStruct++, top);
             }
         }
+//\endcond
 
         /// <returns>structure tree index of first separated (cloned) top</returns>
         private static int SeparateStructure(PdfDocument document, int beforePage) {

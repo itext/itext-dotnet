@@ -28,6 +28,7 @@ namespace iText.Kernel.Pdf.Annot {
         private BorderStyleUtil() {
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Setter for the border style.</summary>
         /// <remarks>
         /// Setter for the border style. Possible values are
@@ -58,14 +59,16 @@ namespace iText.Kernel.Pdf.Annot {
         /// <param name="bs">original border style dictionary.</param>
         /// <param name="style">The new value for the annotation's border style.</param>
         /// <returns>Updated border style dictionary entry.</returns>
-        public static PdfDictionary SetStyle(PdfDictionary bs, PdfName style) {
+        internal static PdfDictionary SetStyle(PdfDictionary bs, PdfName style) {
             if (null == bs) {
                 bs = new PdfDictionary();
             }
             bs.Put(PdfName.S, style);
             return bs;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Setter for the dashed border style.</summary>
         /// <remarks>
         /// Setter for the dashed border style. This property has affect only if
@@ -80,13 +83,14 @@ namespace iText.Kernel.Pdf.Annot {
         /// shall be used in drawing a dashed border.
         /// </param>
         /// <returns>Updated border style dictionary entry.</returns>
-        public static PdfDictionary SetDashPattern(PdfDictionary bs, PdfArray dashPattern) {
+        internal static PdfDictionary SetDashPattern(PdfDictionary bs, PdfArray dashPattern) {
             if (null == bs) {
                 bs = new PdfDictionary();
             }
             bs.Put(PdfName.D, dashPattern);
             return bs;
         }
+//\endcond
     }
 //\endcond
 }

@@ -318,43 +318,50 @@ namespace iText.Layout.Renderer {
             }
 //\endcond
 
+//\cond DO_NOT_DOCUMENT
             /// <summary>
             /// Set number of columns for a grid, the result will be either a provided one or if some elements
             /// have a property defining more columns on a grid than provided value it will be set instead.
             /// </summary>
             /// <param name="explicitColumnCount">explicit column count of a grid</param>
             /// <returns>current builder instance</returns>
-            public Grid.Builder Columns(int explicitColumnCount) {
+            internal Grid.Builder Columns(int explicitColumnCount) {
                 this.explicitColumnCount = explicitColumnCount;
                 return this;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             /// <summary>
             /// Set number of rows for a grid, the result will be either a provided one or if some elements
             /// have a property defining more rows on a grid than provided value it will be set instead.
             /// </summary>
             /// <param name="explicitRowCount">explicit height of a grid</param>
             /// <returns>current builder instance</returns>
-            public Grid.Builder Rows(int explicitRowCount) {
+            internal Grid.Builder Rows(int explicitRowCount) {
                 this.explicitRowCount = explicitRowCount;
                 return this;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             /// <summary>Set iteration flow for a grid.</summary>
             /// <param name="flow">iteration flow</param>
             /// <returns>current builder instance</returns>
-            public Grid.Builder Flow(GridFlow flow) {
+            internal Grid.Builder Flow(GridFlow flow) {
                 this.flow = flow;
                 return this;
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             /// <summary>Build a grid with provided properties.</summary>
             /// <returns>
             /// new
             /// <c>Grid</c>
             /// instance.
             /// </returns>
-            public iText.Layout.Renderer.Grid Build() {
+            internal iText.Layout.Renderer.Grid Build() {
                 //Those values are atomic, because primitive values stored on stack and can't be passed inside lambda
                 //and wrapper types are immutable, so have to use mutable analogue.
                 //Using long for .NET porting compatibility
@@ -405,6 +412,7 @@ namespace iText.Layout.Renderer {
                 }
                 return grid;
             }
+//\endcond
 
             private static int CalculateInitialColumnsCount(ICollection<GridCell> cells) {
                 int initialColumnsCount = 1;

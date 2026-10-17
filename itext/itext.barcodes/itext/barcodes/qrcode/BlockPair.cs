@@ -29,15 +29,19 @@ namespace iText.Barcodes.Qrcode {
         }
 //\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>data block of the pair</returns>
-        public ByteArray GetDataBytes() {
+        internal ByteArray GetDataBytes() {
             return dataBytes;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>error correction block of the pair</returns>
-        public ByteArray GetErrorCorrectionBytes() {
+        internal ByteArray GetErrorCorrectionBytes() {
             return errorCorrectionBytes;
         }
+//\endcond
     }
 //\endcond
 }

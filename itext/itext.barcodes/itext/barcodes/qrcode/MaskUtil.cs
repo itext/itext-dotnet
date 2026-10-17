@@ -21,6 +21,7 @@ namespace iText.Barcodes.Qrcode {
         private MaskUtil() {
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Apply mask penalty rule 1 and return the penalty.</summary>
         /// <remarks>
         /// Apply mask penalty rule 1 and return the penalty. Find repetitive cells with the same color and
@@ -28,10 +29,12 @@ namespace iText.Barcodes.Qrcode {
         /// </remarks>
         /// <param name="matrix">ByteMatrix to apply the penalty rule to</param>
         /// <returns>the rule 1 penalty</returns>
-        public static int ApplyMaskPenaltyRule1(ByteMatrix matrix) {
+        internal static int ApplyMaskPenaltyRule1(ByteMatrix matrix) {
             return ApplyMaskPenaltyRule1Internal(matrix, true) + ApplyMaskPenaltyRule1Internal(matrix, false);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Apply mask penalty rule 2 and return the penalty.</summary>
         /// <remarks>
         /// Apply mask penalty rule 2 and return the penalty. Find 2x2 blocks with the same color and give
@@ -39,7 +42,7 @@ namespace iText.Barcodes.Qrcode {
         /// </remarks>
         /// <param name="matrix">ByteMatrix to apply the penalty rule to</param>
         /// <returns>the rule 2 penalty</returns>
-        public static int ApplyMaskPenaltyRule2(ByteMatrix matrix) {
+        internal static int ApplyMaskPenaltyRule2(ByteMatrix matrix) {
             int penalty = 0;
             byte[][] array = matrix.GetArray();
             int width = matrix.GetWidth();
@@ -54,7 +57,9 @@ namespace iText.Barcodes.Qrcode {
             }
             return penalty;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Apply mask penalty rule 3 and return the penalty.</summary>
         /// <remarks>
         /// Apply mask penalty rule 3 and return the penalty. Find consecutive cells of 00001011101 or
@@ -63,7 +68,7 @@ namespace iText.Barcodes.Qrcode {
         /// </remarks>
         /// <param name="matrix">ByteMatrix to apply the penalty rule to</param>
         /// <returns>the rule 3 penalty</returns>
-        public static int ApplyMaskPenaltyRule3(ByteMatrix matrix) {
+        internal static int ApplyMaskPenaltyRule3(ByteMatrix matrix) {
             int penalty = 0;
             byte[][] array = matrix.GetArray();
             int width = matrix.GetWidth();
@@ -87,7 +92,9 @@ namespace iText.Barcodes.Qrcode {
             }
             return penalty;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Apply mask penalty rule 4 and return the penalty.</summary>
         /// <remarks>
         /// Apply mask penalty rule 4 and return the penalty. Calculate the ratio of dark cells and give
@@ -102,7 +109,7 @@ namespace iText.Barcodes.Qrcode {
         /// </remarks>
         /// <param name="matrix">Bytematrix to apply the rule to</param>
         /// <returns>the rule 4 penalty</returns>
-        public static int ApplyMaskPenaltyRule4(ByteMatrix matrix) {
+        internal static int ApplyMaskPenaltyRule4(ByteMatrix matrix) {
             int numDarkCells = 0;
             byte[][] array = matrix.GetArray();
             int width = matrix.GetWidth();
@@ -118,7 +125,9 @@ namespace iText.Barcodes.Qrcode {
             double darkRatio = (double)numDarkCells / numTotalCells;
             return Math.Abs((int)(darkRatio * 100 - 50)) / 5 * 10;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Return the mask bit for "getMaskPattern" at "x" and "y".</summary>
         /// <remarks>
         /// Return the mask bit for "getMaskPattern" at "x" and "y". See 8.8 of JISX0510:2004 for mask
@@ -128,7 +137,7 @@ namespace iText.Barcodes.Qrcode {
         /// <param name="x">width coordiante</param>
         /// <param name="y">height-coordinate</param>
         /// <returns>the mask bit at that position</returns>
-        public static bool GetDataMaskBit(int maskPattern, int x, int y) {
+        internal static bool GetDataMaskBit(int maskPattern, int x, int y) {
             if (!QRCode.IsValidMaskPattern(maskPattern)) {
                 throw new ArgumentException("Invalid mask pattern");
             }
@@ -184,6 +193,7 @@ namespace iText.Barcodes.Qrcode {
             }
             return intermediate == 0;
         }
+//\endcond
 
         // Helper function for applyMaskPenaltyRule1. We need this for doing this calculation in both
         // vertical and horizontal orders respectively.

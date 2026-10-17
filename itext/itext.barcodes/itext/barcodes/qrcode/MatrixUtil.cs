@@ -134,14 +134,17 @@ namespace iText.Barcodes.Qrcode {
 
         private const int TYPE_INFO_MASK_PATTERN = 0x5412;
 
+//\cond DO_NOT_DOCUMENT
         // Set all cells to -1.  -1 means that the cell is empty (not set yet).
         //
         // JAVAPORT: We shouldn't need to do this at all. The code should be rewritten to begin encoding
         // with the ByteMatrix initialized all to zero.
-        public static void ClearMatrix(ByteMatrix matrix) {
+        internal static void ClearMatrix(ByteMatrix matrix) {
             matrix.Clear((byte)0xff);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Build 2D matrix of QR Code from "dataBits" with "ecLevel", "version" and "getMaskPattern".</summary>
         /// <remarks>
         /// Build 2D matrix of QR Code from "dataBits" with "ecLevel", "version" and "getMaskPattern". On
@@ -152,7 +155,7 @@ namespace iText.Barcodes.Qrcode {
         /// <param name="version">Version of the QR code, [1 .. 40]</param>
         /// <param name="maskPattern">masking pattern</param>
         /// <param name="matrix">Bytematrix in which the output will be stored</param>
-        public static void BuildMatrix(BitVector dataBits, ErrorCorrectionLevel ecLevel, int version, int maskPattern
+        internal static void BuildMatrix(BitVector dataBits, ErrorCorrectionLevel ecLevel, int version, int maskPattern
             , ByteMatrix matrix) {
             ClearMatrix(matrix);
             EmbedBasicPatterns(version, matrix);
@@ -163,7 +166,9 @@ namespace iText.Barcodes.Qrcode {
             // Data should be embedded at end.
             EmbedDataBits(dataBits, maskPattern, matrix);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Embed basic patterns.</summary>
         /// <remarks>
         /// Embed basic patterns. On success, modify the matrix.
@@ -175,7 +180,7 @@ namespace iText.Barcodes.Qrcode {
         /// </remarks>
         /// <param name="version">Version of the QR code, [1 .. 40]</param>
         /// <param name="matrix">Bytematrix in which the output will be stored</param>
-        public static void EmbedBasicPatterns(int version, ByteMatrix matrix) {
+        internal static void EmbedBasicPatterns(int version, ByteMatrix matrix) {
             // Let's get started with embedding big squares at corners.
             EmbedPositionDetectionPatternsAndSeparators(matrix);
             // Then, embed the dark dot at the left bottom corner.
@@ -185,12 +190,14 @@ namespace iText.Barcodes.Qrcode {
             // Timing patterns should be embedded after position adj. patterns.
             EmbedTimingPatterns(matrix);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Embed type information into the matrix</summary>
         /// <param name="ecLevel">The error correction level (L,M,Q,H)</param>
         /// <param name="maskPattern">the masking pattern</param>
         /// <param name="matrix">Bytematrix in which the output will be stored</param>
-        public static void EmbedTypeInfo(ErrorCorrectionLevel ecLevel, int maskPattern, ByteMatrix matrix) {
+        internal static void EmbedTypeInfo(ErrorCorrectionLevel ecLevel, int maskPattern, ByteMatrix matrix) {
             BitVector typeInfoBits = new BitVector();
             MakeTypeInfoBits(ecLevel, maskPattern, typeInfoBits);
             for (int i = 0; i < typeInfoBits.Size(); ++i) {
@@ -215,7 +222,9 @@ namespace iText.Barcodes.Qrcode {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         //
         //
         /// <summary>Embed version information if need be.</summary>
@@ -227,7 +236,7 @@ namespace iText.Barcodes.Qrcode {
         /// </remarks>
         /// <param name="version">QR code version</param>
         /// <param name="matrix">Byte matrix representing the QR code</param>
-        public static void MaybeEmbedVersionInfo(int version, ByteMatrix matrix) {
+        internal static void MaybeEmbedVersionInfo(int version, ByteMatrix matrix) {
             // Version info is necessary if version >= 7.
             if (version < 7) {
                 // Don't need version info.
@@ -249,7 +258,9 @@ namespace iText.Barcodes.Qrcode {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Embed "dataBits" using "getMaskPattern".</summary>
         /// <remarks>
         /// Embed "dataBits" using "getMaskPattern". On success, the matrix is modified
@@ -259,7 +270,7 @@ namespace iText.Barcodes.Qrcode {
         /// <param name="dataBits">data bits to embed in the QR code</param>
         /// <param name="maskPattern">masking pattern to apply to the data bits</param>
         /// <param name="matrix">Byte matrix representing the QR code</param>
-        public static void EmbedDataBits(BitVector dataBits, int maskPattern, ByteMatrix matrix) {
+        internal static void EmbedDataBits(BitVector dataBits, int maskPattern, ByteMatrix matrix) {
             int bitIndex = 0;
             int direction = -1;
             // Start from the right bottom cell.
@@ -308,7 +319,9 @@ namespace iText.Barcodes.Qrcode {
                 throw new WriterException("Not all bits consumed: " + bitIndex + '/' + dataBits.Size());
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Return the position of the most significant bit set (to one) in the "value".</summary>
         /// <remarks>
         /// Return the position of the most significant bit set (to one) in the "value".
@@ -319,7 +332,7 @@ namespace iText.Barcodes.Qrcode {
         /// </remarks>
         /// <param name="value">bitstring as integer</param>
         /// <returns>the position of the most significant bit set to 1 in the bit-representation of value</returns>
-        public static int FindMSBSet(int value) {
+        internal static int FindMSBSet(int value) {
             int numDigits = 0;
             while (value != 0) {
                 value = (int)(((uint)value) >> 1);
@@ -327,7 +340,9 @@ namespace iText.Barcodes.Qrcode {
             }
             return numDigits;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Calculate BCH (Bose-Chaudhuri-Hocquenghem) code for "value" using polynomial "poly".</summary>
         /// <remarks>
         /// Calculate BCH (Bose-Chaudhuri-Hocquenghem) code for "value" using polynomial "poly". The BCH
@@ -358,7 +373,7 @@ namespace iText.Barcodes.Qrcode {
         /// </remarks>
         /// <param name="value">the bitstring to calculate the BCH Code from</param>
         /// <param name="poly">the polynomial in GF[2^n] to use</param>
-        public static int CalculateBCHCode(int value, int poly) {
+        internal static int CalculateBCHCode(int value, int poly) {
             // If poly is "1 1111 0010 0101" (version info poly), msbSetInPoly is 13. We'll subtract 1
             // from 13 to make it 12.
             int msbSetInPoly = FindMSBSet(poly);
@@ -370,7 +385,9 @@ namespace iText.Barcodes.Qrcode {
             // Now the "value" is the remainder (i.e. the BCH code)
             return value;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Make bit vector of type information.</summary>
         /// <remarks>
         /// Make bit vector of type information. On success, store the result in "bits".
@@ -379,7 +396,7 @@ namespace iText.Barcodes.Qrcode {
         /// <param name="ecLevel">error correction level of the QR code</param>
         /// <param name="maskPattern">masking pattern to use</param>
         /// <param name="bits">Vactor of bits to contain the result</param>
-        public static void MakeTypeInfoBits(ErrorCorrectionLevel ecLevel, int maskPattern, BitVector bits) {
+        internal static void MakeTypeInfoBits(ErrorCorrectionLevel ecLevel, int maskPattern, BitVector bits) {
             if (!QRCode.IsValidMaskPattern(maskPattern)) {
                 throw new WriterException("Invalid mask pattern");
             }
@@ -395,7 +412,9 @@ namespace iText.Barcodes.Qrcode {
                 throw new WriterException("should not happen but we got: " + bits.Size());
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         //
         //
         /// <summary>Make bit vector of version information.</summary>
@@ -405,7 +424,7 @@ namespace iText.Barcodes.Qrcode {
         /// </remarks>
         /// <param name="version">Version of the QR-code</param>
         /// <param name="bits">Vector of bits to contain the result</param>
-        public static void MakeVersionInfoBits(int version, BitVector bits) {
+        internal static void MakeVersionInfoBits(int version, BitVector bits) {
             bits.AppendBits(version, 6);
             int bchCode = CalculateBCHCode(version, VERSION_INFO_POLY);
             bits.AppendBits(bchCode, 12);
@@ -414,6 +433,7 @@ namespace iText.Barcodes.Qrcode {
                 throw new WriterException("should not happen but we got: " + bits.Size());
             }
         }
+//\endcond
 
         // Check if "value" is empty.
         private static bool IsEmpty(byte value) {

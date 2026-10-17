@@ -57,12 +57,15 @@ namespace iText.Layout.Renderer {
         }
 //\endcond
 
-        public virtual bool HasNext() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual bool HasNext() {
             return cursor.y < grid.GetRows().Length - bottomMargin && cursor.x < grid.GetRows()[0].Length - rightMargin
                  && hasNext;
         }
+//\endcond
 
-        public virtual GridView.Pos Next() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual GridView.Pos Next() {
             //If cell has fixed both x and y, then no need to iterate over the grid.
             if (IsFixed()) {
                 hasNext = false;
@@ -88,6 +91,7 @@ namespace iText.Layout.Renderer {
             cursor.Increment(iterationOrder, boundaries);
             return new GridView.Pos(cursor);
         }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>
@@ -216,11 +220,15 @@ namespace iText.Layout.Renderer {
 //\cond DO_NOT_DOCUMENT
         /// <summary>Represents position on a grid.</summary>
         internal class Pos {
+//\cond DO_NOT_DOCUMENT
             /// <summary>column index.</summary>
-            protected internal int x;
+            internal int x;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             /// <summary>row index.</summary>
-            protected internal int y;
+            internal int y;
+//\endcond
 
             /// <summary>Creates a position from two integers.</summary>
             /// <param name="y">row index.</param>
@@ -237,13 +245,17 @@ namespace iText.Layout.Renderer {
                 this.x = other.x;
             }
 
-            public virtual int GetX() {
+//\cond DO_NOT_DOCUMENT
+            internal virtual int GetX() {
                 return x;
             }
+//\endcond
 
-            public virtual int GetY() {
+//\cond DO_NOT_DOCUMENT
+            internal virtual int GetY() {
                 return y;
             }
+//\endcond
         }
 //\endcond
 
@@ -260,7 +272,8 @@ namespace iText.Layout.Renderer {
                 this.densePacking = densePacking;
             }
 
-            public virtual void SetX(int x) {
+//\cond DO_NOT_DOCUMENT
+            internal virtual void SetX(int x) {
                 if (densePacking) {
                     this.x = Math.Max(x, 0);
                 }
@@ -276,8 +289,10 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+//\endcond
 
-            public virtual void SetY(int y) {
+//\cond DO_NOT_DOCUMENT
+            internal virtual void SetY(int y) {
                 if (densePacking) {
                     this.y = Math.Max(y, 0);
                 }
@@ -293,14 +308,16 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
             /// <summary>
             /// Increment cursor in specified flow axis and if it exceeds the boundary in that axis
             /// make a carriage return.
             /// </summary>
             /// <param name="flow">flow which determines in which axis cursor will be increased</param>
             /// <param name="boundaries">grid view boundaries</param>
-            public virtual void Increment(Grid.GridOrder flow, GridView.Pos boundaries) {
+            internal virtual void Increment(Grid.GridOrder flow, GridView.Pos boundaries) {
                 if (Grid.GridOrder.ROW.Equals(flow)) {
                     ++x;
                     if (x == boundaries.x) {
@@ -318,11 +335,14 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+//\endcond
 
-            public virtual void Reset() {
+//\cond DO_NOT_DOCUMENT
+            internal virtual void Reset() {
                 this.x = 0;
                 this.y = 0;
             }
+//\endcond
         }
 //\endcond
     }

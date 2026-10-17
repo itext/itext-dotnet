@@ -31,9 +31,11 @@ namespace iText.Signatures.Validation.Report.Xml {
             this.id = id;
         }
 
-        public virtual String GetId() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual String GetId() {
             return id;
         }
+//\endcond
 
         public override String ToString() {
             return id;

@@ -87,9 +87,11 @@ namespace iText.Layout.Renderer {
             return dummyRenderer.Layout(copiedContext);
         }
 
-        public virtual IRenderer GetWrappedRenderer() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual IRenderer GetWrappedRenderer() {
             return wrappedRenderer;
         }
+//\endcond
 
         public virtual T1 GetProperty<T1>(int property, T1 defaultValue) {
             if (Property.POSITION == property) {

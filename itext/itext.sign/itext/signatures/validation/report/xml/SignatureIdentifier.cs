@@ -41,8 +41,9 @@ namespace iText.Signatures.Validation.Report.Xml {
 
         private readonly CertificateWrapper signingCertificate;
 
-        public SignatureIdentifier(ValidationObjects signatureValidationObjects, CMSContainer signature, String signatureName
-            , DateTime signingDate)
+//\cond DO_NOT_DOCUMENT
+        internal SignatureIdentifier(ValidationObjects signatureValidationObjects, CMSContainer signature, String 
+            signatureName, DateTime signingDate)
             : base("S") {
             this.signature = signature;
             this.signatureName = signatureName;
@@ -50,12 +51,16 @@ namespace iText.Signatures.Validation.Report.Xml {
             this.signingCertificate = signatureValidationObjects.AddObject(new CertificateWrapper(signature.GetSignerInfo
                 ().GetSigningCertificate()));
         }
+//\endcond
 
-        public virtual String GetDigestMethodAlgorithm() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual String GetDigestMethodAlgorithm() {
             return "http://www.w3.org/2001/04/xmlenc#sha256";
         }
+//\endcond
 
-        public virtual String GetDigestValue() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual String GetDigestValue() {
             try {
                 using (MemoryStream bos = new MemoryStream()) {
                     using (BinaryWriter dos = new BinaryWriter(bos)) {
@@ -77,18 +82,25 @@ namespace iText.Signatures.Validation.Report.Xml {
                 throw new Exception("Error creating output stream.", e);
             }
         }
+//\endcond
 
-        public virtual String GetBase64SignatureValue() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual String GetBase64SignatureValue() {
             return Convert.ToBase64String(signature.GetSignerInfo().GetSignatureData());
         }
+//\endcond
 
-        public virtual bool IsHashOnly() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual bool IsHashOnly() {
             return false;
         }
+//\endcond
 
-        public virtual bool IsDocHashOnly() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual bool IsDocHashOnly() {
             return false;
         }
+//\endcond
 
         public override bool Equals(Object o) {
             if (this == o) {

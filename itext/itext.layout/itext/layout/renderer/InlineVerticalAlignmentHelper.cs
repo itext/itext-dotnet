@@ -41,7 +41,8 @@ namespace iText.Layout.Renderer {
         private InlineVerticalAlignmentHelper() {
         }
 
-        public static void AdjustChildrenYLineHtmlMode(LineRenderer lineRenderer) {
+//\cond DO_NOT_DOCUMENT
+        internal static void AdjustChildrenYLineHtmlMode(LineRenderer lineRenderer) {
             float actualYLine = lineRenderer.occupiedArea.GetBBox().GetY() + lineRenderer.occupiedArea.GetBBox().GetHeight
                 () - lineRenderer.maxDescent;
             // first round, all text based alignments
@@ -54,6 +55,7 @@ namespace iText.Layout.Renderer {
             ProcessRenderers(lineRenderer, sortedRenderers, actualYLine, (alignment) => IsBoxOrientedVerticalAlignment
                 (alignment), (alignment) => true);
         }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         internal static void AdjustChildrenXLineVerticalText(LineRenderer lineRenderer, MinMaxWidth minMaxWidth) {

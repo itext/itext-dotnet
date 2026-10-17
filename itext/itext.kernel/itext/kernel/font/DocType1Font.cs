@@ -139,9 +139,11 @@ namespace iText.Kernel.Font {
             return false;
         }
 
-        public virtual int GetMissingWidth() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual int GetMissingWidth() {
             return missingWidth;
         }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         internal static void FillFontDescriptor(iText.Kernel.Font.DocType1Font font, PdfDictionary fontDesc) {

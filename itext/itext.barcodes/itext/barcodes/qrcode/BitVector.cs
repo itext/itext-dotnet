@@ -35,38 +35,47 @@ namespace iText.Barcodes.Qrcode {
         // For efficiency, start out with some room to work.
         private const int DEFAULT_SIZE_IN_BYTES = 32;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Create a bitvector usng the default size</summary>
-        public BitVector() {
+        internal BitVector() {
             sizeInBits = 0;
             array = new byte[DEFAULT_SIZE_IN_BYTES];
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Return the bit value at "index".
         /// <summary>Return the bit value at "index".</summary>
         /// <param name="index">index in the vector</param>
         /// <returns>bit value at "index"</returns>
-        public int At(int index) {
+        internal int At(int index) {
             if (index < 0 || index >= sizeInBits) {
                 throw new ArgumentException("Bad index: " + index);
             }
             int value = array[index >> 3] & 0xff;
             return (value >> (7 - (index & 0x7))) & 1;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>the number of bits in the bit vector.</returns>
-        public int Size() {
+        internal int Size() {
             return sizeInBits;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>the number of bytes in the bit vector.</returns>
-        public int SizeInBytes() {
+        internal int SizeInBytes() {
             return (sizeInBits + 7) >> 3;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Append one bit to the bit vector.
         /// <summary>Append the a bit to the bit vector</summary>
         /// <param name="bit">0 or 1</param>
-        public void AppendBit(int bit) {
+        internal void AppendBit(int bit) {
             if (!(bit == 0 || bit == 1)) {
                 throw new ArgumentException("Bad bit");
             }
@@ -80,7 +89,9 @@ namespace iText.Barcodes.Qrcode {
             array[sizeInBits >> 3] |= (byte)(bit << (7 - numBitsInLastByte));
             ++sizeInBits;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         //
         // REQUIRES:
         //
@@ -98,7 +109,7 @@ namespace iText.Barcodes.Qrcode {
         /// </remarks>
         /// <param name="value">int interpreted as bitvector</param>
         /// <param name="numBits">0 &lt;= numBits &lt;= 32.</param>
-        public void AppendBits(int value, int numBits) {
+        internal void AppendBits(int value, int numBits) {
             if (numBits < 0 || numBits > 32) {
                 throw new ArgumentException("Num bits must be between 0 and 32");
             }
@@ -117,19 +128,23 @@ namespace iText.Barcodes.Qrcode {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Append a different BitVector to this BitVector</summary>
         /// <param name="bits">BitVector to append</param>
-        public void AppendBitVector(iText.Barcodes.Qrcode.BitVector bits) {
+        internal void AppendBitVector(iText.Barcodes.Qrcode.BitVector bits) {
             int size = bits.Size();
             for (int i = 0; i < size; ++i) {
                 AppendBit(bits.At(i));
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>XOR the contents of this bitvector with the contetns of "other"</summary>
         /// <param name="other">Bitvector of equal length</param>
-        public void Xor(iText.Barcodes.Qrcode.BitVector other) {
+        internal void Xor(iText.Barcodes.Qrcode.BitVector other) {
             if (sizeInBits != other.Size()) {
                 throw new ArgumentException("BitVector sizes don't match");
             }
@@ -140,6 +155,7 @@ namespace iText.Barcodes.Qrcode {
                 array[i] ^= other.array[i];
             }
         }
+//\endcond
 
         // Return String like "01110111" for debugging.
         /// <returns>String representation of the bitvector</returns>
@@ -161,6 +177,7 @@ namespace iText.Barcodes.Qrcode {
             return result.ToString();
         }
 
+//\cond DO_NOT_DOCUMENT
         //
         //
         /// <summary>
@@ -168,9 +185,10 @@ namespace iText.Barcodes.Qrcode {
         /// sizeInBits - it will typically be larger for efficiency.
         /// </summary>
         /// <returns>size of the array containing the bitvector</returns>
-        public byte[] GetArray() {
+        internal byte[] GetArray() {
             return array;
         }
+//\endcond
 
         //
         //

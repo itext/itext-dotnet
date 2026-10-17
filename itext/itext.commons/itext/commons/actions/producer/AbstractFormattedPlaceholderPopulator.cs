@@ -35,8 +35,10 @@ namespace iText.Commons.Actions.Producer {
     /// outputted value.
     /// </remarks>
     internal abstract class AbstractFormattedPlaceholderPopulator : IPlaceholderPopulator {
+//\cond DO_NOT_DOCUMENT
         /// <summary>Escaping character.</summary>
-        protected internal const char APOSTROPHE = '\'';
+        internal const char APOSTROPHE = '\'';
+//\endcond
 
         private const char ESCAPE_CHARACTER = '\\';
 
@@ -48,6 +50,7 @@ namespace iText.Commons.Actions.Producer {
 
         private const char Z_LOWERCASE = 'z';
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Processes quoted string inside format array.</summary>
         /// <remarks>
         /// Processes quoted string inside format array. It is expected that provided index points to the
@@ -66,7 +69,7 @@ namespace iText.Commons.Actions.Producer {
         /// </param>
         /// <param name="formatArray">is a format representation</param>
         /// <returns>index of the character after the closing apostrophe</returns>
-        protected internal virtual int AttachQuotedString(int index, StringBuilder builder, char[] formatArray) {
+        internal virtual int AttachQuotedString(int index, StringBuilder builder, char[] formatArray) {
             bool isEscaped = false;
             index++;
             while (index < formatArray.Length && (formatArray[index] != APOSTROPHE || isEscaped)) {
@@ -81,13 +84,16 @@ namespace iText.Commons.Actions.Producer {
             }
             return index;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Checks if provided character is a latin letter.</summary>
         /// <param name="ch">is character to check</param>
         /// <returns><c>true</c> if character is a latin letter and <c>false</c> otherwise</returns>
-        protected internal bool IsLetter(char ch) {
+        internal bool IsLetter(char ch) {
             return (A_LOWERCASE <= ch && Z_LOWERCASE >= ch) || (A_UPPERCASE <= ch && Z_UPPERCASE >= ch);
         }
+//\endcond
 
         public abstract String Populate(IList<ConfirmedEventWrapper> arg1, String arg2);
     }

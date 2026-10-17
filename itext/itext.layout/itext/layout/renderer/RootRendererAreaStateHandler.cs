@@ -35,7 +35,8 @@ namespace iText.Layout.Renderer {
 
         private IList<Rectangle> storedNextFloatRenderAreas = null;
 
-        public virtual bool AttemptGoBackToStoredPreviousStateAndStoreNextState(RootRenderer rootRenderer) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual bool AttemptGoBackToStoredPreviousStateAndStoreNextState(RootRenderer rootRenderer) {
             bool result = false;
             if (storedPreviousArea != null) {
                 storedNextArea = rootRenderer.currentArea;
@@ -48,8 +49,10 @@ namespace iText.Layout.Renderer {
             }
             return result;
         }
+//\endcond
 
-        public virtual bool AttemptGoForwardToStoredNextState(RootRenderer rootRenderer) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual bool AttemptGoForwardToStoredNextState(RootRenderer rootRenderer) {
             if (storedNextArea != null) {
                 rootRenderer.currentArea = storedNextArea;
                 rootRenderer.floatRendererAreas = storedNextFloatRenderAreas;
@@ -61,12 +64,15 @@ namespace iText.Layout.Renderer {
                 return false;
             }
         }
+//\endcond
 
-        public virtual RootRendererAreaStateHandler StorePreviousState(RootRenderer rootRenderer) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual RootRendererAreaStateHandler StorePreviousState(RootRenderer rootRenderer) {
             storedPreviousArea = rootRenderer.currentArea;
             storedPreviousFloatRenderAreas = new List<Rectangle>(rootRenderer.floatRendererAreas);
             return this;
         }
+//\endcond
     }
 //\endcond
 }

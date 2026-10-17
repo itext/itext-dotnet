@@ -46,6 +46,7 @@ namespace iText.Layout.Renderer {
         private FlexUtil() {
         }
 
+//\cond DO_NOT_DOCUMENT
         // Do nothing
         /// <summary>Performs flex layout algorithm.</summary>
         /// <remarks>
@@ -57,7 +58,7 @@ namespace iText.Layout.Renderer {
         /// <param name="flexContainerBBox">bounding box in which flex container should be rendered</param>
         /// <param name="flexContainerRenderer">flex container's renderer</param>
         /// <returns>list of lines</returns>
-        public static IList<IList<FlexItemInfo>> CalculateChildrenRectangles(Rectangle flexContainerBBox, FlexContainerRenderer
+        internal static IList<IList<FlexItemInfo>> CalculateChildrenRectangles(Rectangle flexContainerBBox, FlexContainerRenderer
              flexContainerRenderer) {
             Rectangle layoutBox = flexContainerBBox.Clone();
             flexContainerRenderer.ApplyMarginsBordersPaddings(layoutBox, false);
@@ -160,6 +161,7 @@ namespace iText.Layout.Renderer {
             }
             return layoutTable;
         }
+//\endcond
 
         private static void ApplyAlignContent(IList<IList<FlexUtil.FlexItemCalculationInfo>> lines, FlexContainerRenderer
              renderer, float? crossSize, Rectangle layoutBox, float gap) {
@@ -1281,10 +1283,12 @@ namespace iText.Layout.Renderer {
                 }
             }
 
-            public virtual Rectangle ToRectangle() {
+//\cond DO_NOT_DOCUMENT
+            internal virtual Rectangle ToRectangle() {
                 return isColumnDirection ? new Rectangle(xShift, yShift, GetOuterCrossSize(crossSize), GetOuterMainSize(mainSize
                     )) : new Rectangle(xShift, yShift, GetOuterMainSize(mainSize), GetOuterCrossSize(crossSize));
             }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
             internal virtual float GetOuterMainSize(float size) {

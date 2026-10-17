@@ -47,19 +47,22 @@ namespace iText.IO.Font {
 
         private RandomAccessSourceFactory sourceFactory = new RandomAccessSourceFactory();
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Creates a new Type1 font file.</summary>
         /// <param name="afm">the AFM file if the input is made with a <c>byte</c> array</param>
         /// <param name="pfb">the PFB file if the input is made with a <c>byte</c> array</param>
         /// <param name="metricsPath">the name of one of the 14 built-in fonts or the location of an AFM file. The file must end in '.afm'
         ///     </param>
-        public Type1Parser(String metricsPath, String binaryPath, byte[] afm, byte[] pfb) {
+        internal Type1Parser(String metricsPath, String binaryPath, byte[] afm, byte[] pfb) {
             this.afmData = afm;
             this.pfbData = pfb;
             this.afmPath = metricsPath;
             this.pfbPath = binaryPath;
         }
+//\endcond
 
-        public virtual RandomAccessFileOrArray GetMetricsFile() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual RandomAccessFileOrArray GetMetricsFile() {
             isBuiltInFont = false;
             if (StandardFonts.IsStandardFont(afmPath)) {
                 isBuiltInFont = true;
@@ -134,8 +137,10 @@ namespace iText.IO.Font {
                 }
             }
         }
+//\endcond
 
-        public virtual RandomAccessFileOrArray GetPostscriptBinary() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual RandomAccessFileOrArray GetPostscriptBinary() {
             if (pfbData != null) {
                 return new RandomAccessFileOrArray(sourceFactory.CreateSource(pfbData));
             }
@@ -149,14 +154,19 @@ namespace iText.IO.Font {
                 }
             }
         }
+//\endcond
 
-        public virtual bool IsBuiltInFont() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual bool IsBuiltInFont() {
             return isBuiltInFont;
         }
+//\endcond
 
-        public virtual String GetAfmPath() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual String GetAfmPath() {
             return afmPath;
         }
+//\endcond
 
         private bool IsAfmFile(RandomAccessFileOrArray raf) {
             StringBuilder builder = new StringBuilder(AFM_HEADER.Length);

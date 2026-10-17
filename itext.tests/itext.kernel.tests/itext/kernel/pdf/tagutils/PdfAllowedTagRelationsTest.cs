@@ -24,9 +24,8 @@ using iText.Kernel.Pdf.Tagging;
 using iText.Test;
 
 namespace iText.Kernel.Pdf.Tagutils {
-//\cond DO_NOT_DOCUMENT
     [NUnit.Framework.Category("UnitTest")]
-    internal class PdfAllowedTagRelationsTest : ExtendedITextTest {
+    public class PdfAllowedTagRelationsTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void IsRelationAllowed() {
             PdfAllowedTagRelations pdfAllowedTagRelations = new PdfAllowedTagRelations();
@@ -61,5 +60,4 @@ namespace iText.Kernel.Pdf.Tagutils {
                 (StandardRoles.H2));
         }
     }
-//\endcond
 }

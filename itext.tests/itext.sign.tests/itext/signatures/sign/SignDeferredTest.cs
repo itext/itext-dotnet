@@ -302,9 +302,11 @@ namespace iText.Signatures.Sign {
                 this.subFilter = subFilter;
             }
 
-            public virtual byte[] GetDocBytesHash() {
+//\cond DO_NOT_DOCUMENT
+            internal virtual byte[] GetDocBytesHash() {
                 return docBytesHash;
             }
+//\endcond
 
             public virtual byte[] Sign(Stream docBytes) {
                 docBytesHash = CalcDocBytesHash(docBytes);
@@ -341,12 +343,14 @@ namespace iText.Signatures.Sign {
                 : base(reader, outputStream, properties) {
             }
 
-            public virtual void DummyClose(PdfDictionary content) {
+//\cond DO_NOT_DOCUMENT
+            internal virtual void DummyClose(PdfDictionary content) {
                 preClosed = true;
                 exclusionLocations = new Dictionary<PdfName, PdfLiteral>();
                 exclusionLocations.Put(PdfName.Contents, new PdfLiteral(1));
                 Close(content);
             }
+//\endcond
         }
 //\endcond
     }

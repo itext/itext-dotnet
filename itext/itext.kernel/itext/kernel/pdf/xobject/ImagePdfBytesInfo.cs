@@ -73,7 +73,8 @@ namespace iText.Kernel.Pdf.Xobject {
 
         private byte[] iccData;
 
-        public ImagePdfBytesInfo(PdfImageXObject imageXObject, PdfImageXObject.ImageBytesRetrievalProperties properties
+//\cond DO_NOT_DOCUMENT
+        internal ImagePdfBytesInfo(PdfImageXObject imageXObject, PdfImageXObject.ImageBytesRetrievalProperties properties
             ) {
             this.properties = properties;
             this.imageXObject = imageXObject;
@@ -84,12 +85,16 @@ namespace iText.Kernel.Pdf.Xobject {
             width = (int)imageXObject.GetWidth();
             height = (int)imageXObject.GetHeight();
         }
+//\endcond
 
-        public virtual ImagePdfBytesInfo.OutputFileType GetImageType() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual ImagePdfBytesInfo.OutputFileType GetImageType() {
             return outputFileType;
         }
+//\endcond
 
-        public virtual byte[] GetProcessedImageData(byte[] intialBytes) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual byte[] GetProcessedImageData(byte[] intialBytes) {
             if (channels > 1 && colorDepth != 8 && colorDepth != 16) {
                 throw new iText.IO.Exceptions.IOException(KernelExceptionMessageConstant.COLOR_DEPTH_IS_NOT_SUPPORTED_FOR_COLORSPACE
                     ).SetMessageParams(colorDepth, sourceColorSpace.GetColorspaceName());
@@ -115,6 +120,7 @@ namespace iText.Kernel.Pdf.Xobject {
             }
             return proc.ProcessImage();
         }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         internal virtual int GetPngColorType() {

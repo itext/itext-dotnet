@@ -27,13 +27,21 @@ using iText.Layout.Properties;
 namespace iText.Layout.Renderer {
 //\cond DO_NOT_DOCUMENT
     internal class LineHeightHelper {
-        public const int ASCENDER_INDEX = 0;
+//\cond DO_NOT_DOCUMENT
+        internal const int ASCENDER_INDEX = 0;
+//\endcond
 
-        public const int DESCENDER_INDEX = 1;
+//\cond DO_NOT_DOCUMENT
+        internal const int DESCENDER_INDEX = 1;
+//\endcond
 
-        public const int XHEIGHT_INDEX = 2;
+//\cond DO_NOT_DOCUMENT
+        internal const int XHEIGHT_INDEX = 2;
+//\endcond
 
-        public const int LEADING_INDEX = 3;
+//\cond DO_NOT_DOCUMENT
+        internal const int LEADING_INDEX = 3;
+//\endcond
 
         private const float DEFAULT_LINE_HEIGHT_COEFF = 1.15f;
 

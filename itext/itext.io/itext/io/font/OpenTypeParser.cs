@@ -329,42 +329,60 @@ namespace iText.IO.Font {
         }
 //\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The file name.</summary>
-        protected internal String fileName;
+        internal String fileName;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The file in use.</summary>
-        protected internal RandomAccessFileOrArray raf;
+        internal RandomAccessFileOrArray raf;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The index for the TTC font.</summary>
         /// <remarks>
         /// The index for the TTC font. It is -1
         /// <c>int</c>
         /// for a TTF file.
         /// </remarks>
-        protected internal int ttcIndex = -1;
+        internal int ttcIndex = -1;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The offset from the start of the file to the table directory.</summary>
         /// <remarks>
         /// The offset from the start of the file to the table directory.
         /// It is 0 for TTF and may vary for TTC depending on the chosen font.
         /// </remarks>
-        protected internal int directoryOffset;
+        internal int directoryOffset;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The font name.</summary>
         /// <remarks>The font name. This name is usually extracted from the table 'name' with the 'Name ID' 6.</remarks>
-        protected internal String fontName;
+        internal String fontName;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>All the names of the Names-Table.</summary>
-        protected internal IDictionary<int, IList<String[]>> allNameEntries;
+        internal IDictionary<int, IList<String[]>> allNameEntries;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Indicate, that the font contains 'CFF ' table.</summary>
-        protected internal bool cff = false;
+        internal bool cff = false;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Offset to 'CFF ' table.</summary>
-        protected internal int cffOffset;
+        internal int cffOffset;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Length of 'CFF ' table.</summary>
-        protected internal int cffLength;
+        internal int cffLength;
+//\endcond
 
         private int[] glyphWidthsByIndex;
 
@@ -373,16 +391,27 @@ namespace iText.IO.Font {
         // In case of lenient mode parsing 'name' and 'OS/2' table can be missed
         private bool isLenientMode = false;
 
-        protected internal OpenTypeParser.HeaderTable head;
+//\cond DO_NOT_DOCUMENT
+        internal OpenTypeParser.HeaderTable head;
+//\endcond
 
-        protected internal OpenTypeParser.HorizontalHeader hhea;
+//\cond DO_NOT_DOCUMENT
+        internal OpenTypeParser.HorizontalHeader hhea;
+//\endcond
 
-        protected internal OpenTypeParser.WindowsMetrics os_2;
+//\cond DO_NOT_DOCUMENT
+        internal OpenTypeParser.WindowsMetrics os_2;
+//\endcond
 
-        protected internal OpenTypeParser.PostTable post;
+//\cond DO_NOT_DOCUMENT
+        internal OpenTypeParser.PostTable post;
+//\endcond
 
-        protected internal OpenTypeParser.CmapTable cmaps;
+//\cond DO_NOT_DOCUMENT
+        internal OpenTypeParser.CmapTable cmaps;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Contains the location of the several tables.</summary>
         /// <remarks>
         /// Contains the location of the several tables. The key is the name of
@@ -390,18 +419,22 @@ namespace iText.IO.Font {
         /// is the offset from the start of the file and position 1 is the length
         /// of the table.
         /// </remarks>
-        protected internal IDictionary<String, int[]> tables;
+        internal IDictionary<String, int[]> tables;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Instantiates a new
         /// <see cref="OpenTypeParser"/>
         /// instance based on raw font data.
         /// </summary>
         /// <param name="ttf">the raw font data</param>
-        public OpenTypeParser(byte[] ttf)
+        internal OpenTypeParser(byte[] ttf)
             : this(ttf, false) {
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Instantiates a new
         /// <see cref="OpenTypeParser"/>
@@ -410,25 +443,31 @@ namespace iText.IO.Font {
         /// <param name="ttf">the raw font data</param>
         /// <param name="isLenientMode">whether font parsing will be in lenient mode (when 'name' and 'OS/2' tables are allowed to be absent) or not
         ///     </param>
-        public OpenTypeParser(byte[] ttf, bool isLenientMode) {
+        internal OpenTypeParser(byte[] ttf, bool isLenientMode) {
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(ttf));
             this.isLenientMode = isLenientMode;
             InitializeSfntTables();
         }
+//\endcond
 
-        public OpenTypeParser(byte[] ttc, int ttcIndex) {
+//\cond DO_NOT_DOCUMENT
+        internal OpenTypeParser(byte[] ttc, int ttcIndex) {
             this.ttcIndex = ttcIndex;
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(ttc));
             InitializeSfntTables();
         }
+//\endcond
 
-        public OpenTypeParser(String ttcPath, int ttcIndex) {
+//\cond DO_NOT_DOCUMENT
+        internal OpenTypeParser(String ttcPath, int ttcIndex) {
             this.ttcIndex = ttcIndex;
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource(ttcPath));
             InitializeSfntTables();
         }
+//\endcond
 
-        public OpenTypeParser(String name) {
+//\cond DO_NOT_DOCUMENT
+        internal OpenTypeParser(String name) {
             String ttcName = GetTTCName(name);
             this.fileName = ttcName;
             if (ttcName.Length < name.Length) {
@@ -438,9 +477,11 @@ namespace iText.IO.Font {
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource(fileName));
             InitializeSfntTables();
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets the Postscript font name.</summary>
-        public virtual String GetPsFontName() {
+        internal virtual String GetPsFontName() {
             if (fontName == null) {
                 if (!allNameEntries.IsEmpty()) {
                     IList<String[]> names = allNameEntries.Get(6);
@@ -454,36 +495,52 @@ namespace iText.IO.Font {
             }
             return fontName;
         }
+//\endcond
 
-        public virtual IDictionary<int, IList<String[]>> GetAllNameEntries() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual IDictionary<int, IList<String[]>> GetAllNameEntries() {
             return allNameEntries;
         }
+//\endcond
 
-        public virtual OpenTypeParser.PostTable GetPostTable() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual OpenTypeParser.PostTable GetPostTable() {
             return post;
         }
+//\endcond
 
-        public virtual OpenTypeParser.WindowsMetrics GetOs_2Table() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual OpenTypeParser.WindowsMetrics GetOs_2Table() {
             return os_2;
         }
+//\endcond
 
-        public virtual OpenTypeParser.HorizontalHeader GetHheaTable() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual OpenTypeParser.HorizontalHeader GetHheaTable() {
             return hhea;
         }
+//\endcond
 
-        public virtual OpenTypeParser.HeaderTable GetHeadTable() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual OpenTypeParser.HeaderTable GetHeadTable() {
             return head;
         }
+//\endcond
 
-        public virtual OpenTypeParser.CmapTable GetCmapTable() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual OpenTypeParser.CmapTable GetCmapTable() {
             return cmaps;
         }
+//\endcond
 
-        public virtual int[] GetGlyphWidthsByIndex() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual int[] GetGlyphWidthsByIndex() {
             return glyphWidthsByIndex;
         }
+//\endcond
 
-        public virtual FontNames GetFontNames() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual FontNames GetFontNames() {
             FontNames fontNames = new FontNames();
             fontNames.SetAllNames(GetAllNameEntries());
             fontNames.SetFontName(GetPsFontName());
@@ -518,14 +575,18 @@ namespace iText.IO.Font {
             fontNames.SetAllowEmbedding(os_2.fsType != 2);
             return fontNames;
         }
+//\endcond
 
-        public virtual bool IsCff() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual bool IsCff() {
             return cff;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets the raw bytes of parsed font.</summary>
         /// <returns>the raw bytes of parsed font</returns>
-        public virtual byte[] GetFullFont() {
+        internal virtual byte[] GetFullFont() {
             RandomAccessFileOrArray rf2 = null;
             try {
                 rf2 = raf.CreateView();
@@ -543,11 +604,13 @@ namespace iText.IO.Font {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets glyph data from `glyph` table for passed GID (glyph ID).</summary>
         /// <param name="gid">the glyph ID to get data for</param>
         /// <returns>the raw glyph data</returns>
-        public virtual byte[] GetGlyphDataForGid(int gid) {
+        internal virtual byte[] GetGlyphDataForGid(int gid) {
             int[] tableLocation = tables.Get("glyf");
             if (tableLocation == null) {
                 throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN).SetMessageParams
@@ -573,11 +636,13 @@ namespace iText.IO.Font {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets horizontal metric data from `hmtx` table for passed GID (glyph ID).</summary>
         /// <param name="gid">the glyph ID to get data for</param>
         /// <returns>the raw horizontal metric data</returns>
-        public virtual byte[] GetHorizontalMetricForGid(int gid) {
+        internal virtual byte[] GetHorizontalMetricForGid(int gid) {
             int[] tableLocation = tables.Get("hmtx");
             if (tableLocation == null) {
                 throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.TABLE_DOES_NOT_EXISTS_IN).SetMessageParams
@@ -611,7 +676,9 @@ namespace iText.IO.Font {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// If this font file is using the Compact Font File Format, then this method
         /// will return the raw bytes needed for the font stream.
@@ -622,7 +689,7 @@ namespace iText.IO.Font {
         /// ever made public: make sure to add a test if (cff == true).
         /// </remarks>
         /// <returns>a byte array</returns>
-        public virtual byte[] ReadCffFont() {
+        internal virtual byte[] ReadCffFont() {
             if (!IsCff()) {
                 return null;
             }
@@ -644,6 +711,7 @@ namespace iText.IO.Font {
                 }
             }
         }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>Gets raw bytes of subset of parsed font and a number of glyphs in a subset.</summary>
@@ -673,6 +741,7 @@ namespace iText.IO.Font {
             raf = null;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets flatten glyphs based on passed glyphs.</summary>
         /// <remarks>
         /// Gets flatten glyphs based on passed glyphs. Flattening means that for all
@@ -680,7 +749,7 @@ namespace iText.IO.Font {
         /// </remarks>
         /// <param name="glyphs">the glyphs to flatten</param>
         /// <returns>the list of passed glyphs plus their contours (if there are)</returns>
-        public virtual IList<int> GetFlatGlyphs(ICollection<int> glyphs) {
+        internal virtual IList<int> GetFlatGlyphs(ICollection<int> glyphs) {
             ICollection<int> glyphsUsed = new HashSet<int>(glyphs);
             IList<int> glyphsInList = new List<int>(glyphs);
             int glyph0 = 0;
@@ -700,6 +769,7 @@ namespace iText.IO.Font {
             }
             return glyphsInList;
         }
+//\endcond
 
         private void CheckGlyphComposite(int glyph, ICollection<int> glyphsUsed, IList<int> glyphsInList, int glyfOffset
             ) {
@@ -818,13 +888,14 @@ namespace iText.IO.Font {
             }
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Reads the font data.</summary>
         /// <param name="all">
         /// if
         /// <see langword="true"/>
         /// , all tables will be read, otherwise only 'head', 'name', and 'os/2'
         /// </param>
-        protected internal virtual void LoadTables(bool all) {
+        internal virtual void LoadTables(bool all) {
             ReadNameTable();
             ReadHeadTable();
             ReadOs_2Table();
@@ -839,7 +910,9 @@ namespace iText.IO.Font {
                 ReadLoca();
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets the name from a composed TTC file name.</summary>
         /// <remarks>
         /// Gets the name from a composed TTC file name.
@@ -848,7 +921,7 @@ namespace iText.IO.Font {
         /// </remarks>
         /// <param name="name">the full name</param>
         /// <returns>the simple file name</returns>
-        protected internal static String GetTTCName(String name) {
+        internal static String GetTTCName(String name) {
             if (name == null) {
                 return null;
             }
@@ -860,8 +933,10 @@ namespace iText.IO.Font {
                 return name.JSubstring(0, idx + 4);
             }
         }
+//\endcond
 
-        protected internal virtual void CheckCff() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual void CheckCff() {
             int[] tableLocation = tables.Get("CFF ");
             if (tableLocation != null) {
                 cff = true;
@@ -869,7 +944,9 @@ namespace iText.IO.Font {
                 cffLength = tableLocation[1];
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Reads the glyphs widths.</summary>
         /// <remarks>
         /// Reads the glyphs widths. The widths are extracted from the table 'hmtx'.
@@ -879,7 +956,7 @@ namespace iText.IO.Font {
         /// and
         /// <see cref="HeaderTable.unitsPerEm"/>.
         /// </remarks>
-        protected internal virtual void ReadGlyphWidths() {
+        internal virtual void ReadGlyphWidths() {
             int numberOfHMetrics = hhea.numberOfHMetrics;
             int unitsPerEm = head.unitsPerEm;
             int[] table_location = tables.Get("hmtx");
@@ -907,13 +984,15 @@ namespace iText.IO.Font {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Reads the kerning information from the 'kern' table.</summary>
         /// <param name="unitsPerEm">
         /// 
         /// <see cref="HeaderTable.unitsPerEm"/>.
         /// </param>
-        protected internal virtual IntHashtable ReadKerning(int unitsPerEm) {
+        internal virtual IntHashtable ReadKerning(int unitsPerEm) {
             int[] table_location;
             table_location = tables.Get("kern");
             IntHashtable kerning = new IntHashtable();
@@ -942,13 +1021,15 @@ namespace iText.IO.Font {
             }
             return kerning;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Read the glyf bboxes from 'glyf' table.</summary>
         /// <param name="unitsPerEm">
         /// 
         /// <see cref="HeaderTable.unitsPerEm"/>
         /// </param>
-        protected internal virtual int[][] ReadBbox(int unitsPerEm) {
+        internal virtual int[][] ReadBbox(int unitsPerEm) {
             if (locaTable == null) {
                 return null;
             }
@@ -976,8 +1057,10 @@ namespace iText.IO.Font {
             }
             return bboxes;
         }
+//\endcond
 
-        protected internal virtual int ReadNumGlyphs() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual int ReadNumGlyphs() {
             int[] table_location = tables.Get("maxp");
             if (table_location == null) {
                 return 65536;
@@ -987,6 +1070,7 @@ namespace iText.IO.Font {
                 return raf.ReadUnsignedShort();
             }
         }
+//\endcond
 
         private void ReadLoca() {
             int[] tableLocation = tables.Get("head");
@@ -1383,15 +1467,17 @@ namespace iText.IO.Font {
             return buf.ToString();
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets a glyph width.</summary>
         /// <param name="glyph">the glyph to get the width of</param>
         /// <returns>the width of the glyph in normalized 1000 units (TrueTypeFont.UNITS_NORMALIZATION)</returns>
-        protected internal virtual int GetGlyphWidth(int glyph) {
+        internal virtual int GetGlyphWidth(int glyph) {
             if (glyph >= glyphWidthsByIndex.Length) {
                 glyph = glyphWidthsByIndex.Length - 1;
             }
             return glyphWidthsByIndex[glyph];
         }
+//\endcond
 
         /// <summary>The information in the maps of the table 'cmap' is coded in several formats.</summary>
         /// <remarks>

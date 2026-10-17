@@ -23,34 +23,53 @@ namespace iText.Barcodes.Qrcode {
     /// data can be encoded to bits in the QR code standard.
     /// </remarks>
     internal sealed class Mode {
+//\cond DO_NOT_DOCUMENT
         // Not really a mode...
-        public static readonly iText.Barcodes.Qrcode.Mode TERMINATOR = new iText.Barcodes.Qrcode.Mode(new int[] { 
-            0, 0, 0 }, 0x00, "TERMINATOR");
+        internal static readonly iText.Barcodes.Qrcode.Mode TERMINATOR = new iText.Barcodes.Qrcode.Mode(new int[] 
+            { 0, 0, 0 }, 0x00, "TERMINATOR");
+//\endcond
 
-        public static readonly iText.Barcodes.Qrcode.Mode NUMERIC = new iText.Barcodes.Qrcode.Mode(new int[] { 10, 
-            12, 14 }, 0x01, "NUMERIC");
+//\cond DO_NOT_DOCUMENT
+        internal static readonly iText.Barcodes.Qrcode.Mode NUMERIC = new iText.Barcodes.Qrcode.Mode(new int[] { 10
+            , 12, 14 }, 0x01, "NUMERIC");
+//\endcond
 
-        public static readonly iText.Barcodes.Qrcode.Mode ALPHANUMERIC = new iText.Barcodes.Qrcode.Mode(new int[] 
-            { 9, 11, 13 }, 0x02, "ALPHANUMERIC");
+//\cond DO_NOT_DOCUMENT
+        internal static readonly iText.Barcodes.Qrcode.Mode ALPHANUMERIC = new iText.Barcodes.Qrcode.Mode(new int[
+            ] { 9, 11, 13 }, 0x02, "ALPHANUMERIC");
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Not supported
-        public static readonly iText.Barcodes.Qrcode.Mode STRUCTURED_APPEND = new iText.Barcodes.Qrcode.Mode(new int
-            [] { 0, 0, 0 }, 0x03, "STRUCTURED_APPEND");
+        internal static readonly iText.Barcodes.Qrcode.Mode STRUCTURED_APPEND = new iText.Barcodes.Qrcode.Mode(new 
+            int[] { 0, 0, 0 }, 0x03, "STRUCTURED_APPEND");
+//\endcond
 
-        public static readonly iText.Barcodes.Qrcode.Mode BYTE = new iText.Barcodes.Qrcode.Mode(new int[] { 8, 16, 
-            16 }, 0x04, "BYTE");
+//\cond DO_NOT_DOCUMENT
+        internal static readonly iText.Barcodes.Qrcode.Mode BYTE = new iText.Barcodes.Qrcode.Mode(new int[] { 8, 16
+            , 16 }, 0x04, "BYTE");
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // character counts don't apply
-        public static readonly iText.Barcodes.Qrcode.Mode ECI = new iText.Barcodes.Qrcode.Mode(null, 0x07, "ECI");
+        internal static readonly iText.Barcodes.Qrcode.Mode ECI = new iText.Barcodes.Qrcode.Mode(null, 0x07, "ECI"
+            );
+//\endcond
 
-        public static readonly iText.Barcodes.Qrcode.Mode KANJI = new iText.Barcodes.Qrcode.Mode(new int[] { 8, 10
-            , 12 }, 0x08, "KANJI");
+//\cond DO_NOT_DOCUMENT
+        internal static readonly iText.Barcodes.Qrcode.Mode KANJI = new iText.Barcodes.Qrcode.Mode(new int[] { 8, 
+            10, 12 }, 0x08, "KANJI");
+//\endcond
 
-        public static readonly iText.Barcodes.Qrcode.Mode FNC1_FIRST_POSITION = new iText.Barcodes.Qrcode.Mode(null
+//\cond DO_NOT_DOCUMENT
+        internal static readonly iText.Barcodes.Qrcode.Mode FNC1_FIRST_POSITION = new iText.Barcodes.Qrcode.Mode(null
             , 0x05, "FNC1_FIRST_POSITION");
+//\endcond
 
-        public static readonly iText.Barcodes.Qrcode.Mode FNC1_SECOND_POSITION = new iText.Barcodes.Qrcode.Mode(null
-            , 0x09, "FNC1_SECOND_POSITION");
+//\cond DO_NOT_DOCUMENT
+        internal static readonly iText.Barcodes.Qrcode.Mode FNC1_SECOND_POSITION = new iText.Barcodes.Qrcode.Mode(
+            null, 0x09, "FNC1_SECOND_POSITION");
+//\endcond
 
         private readonly int[] characterCountBitsForVersions;
 
@@ -64,13 +83,14 @@ namespace iText.Barcodes.Qrcode {
             this.name = name;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <param name="bits">four bits encoding a QR Code data mode</param>
         /// <returns>
         /// 
         /// <see cref="Mode"/>
         /// encoded by these bits
         /// </returns>
-        public static iText.Barcodes.Qrcode.Mode ForBits(int bits) {
+        internal static iText.Barcodes.Qrcode.Mode ForBits(int bits) {
             switch (bits) {
                 case 0x0: {
                     return TERMINATOR;
@@ -113,7 +133,9 @@ namespace iText.Barcodes.Qrcode {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <param name="version">version in question</param>
         /// <returns>
         /// number of bits used, in this QR Code symbol
@@ -122,7 +144,7 @@ namespace iText.Barcodes.Qrcode {
         /// count of characters that will follow encoded in this
         /// <see cref="Mode"/>
         /// </returns>
-        public int GetCharacterCountBits(Version version) {
+        internal int GetCharacterCountBits(Version version) {
             if (characterCountBitsForVersions == null) {
                 throw new ArgumentException("Character count doesn't apply to this mode");
             }
@@ -141,16 +163,21 @@ namespace iText.Barcodes.Qrcode {
             }
             return characterCountBitsForVersions[offset];
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>the bits of the mode</returns>
-        public int GetBits() {
+        internal int GetBits() {
             return bits;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>the name of the mode.</returns>
-        public String GetName() {
+        internal String GetName() {
             return name;
         }
+//\endcond
 
         /// <returns>the name of the mode.</returns>
         public override String ToString() {

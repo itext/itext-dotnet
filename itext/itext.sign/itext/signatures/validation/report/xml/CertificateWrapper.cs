@@ -55,7 +55,8 @@ namespace iText.Signatures.Validation.Report.Xml {
             return JavaUtil.ArraysHashCode(certificate);
         }
 
-        public virtual String GetBase64ASN1Structure() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual String GetBase64ASN1Structure() {
             try {
                 return Convert.ToBase64String(certificate.GetEncoded());
             }
@@ -63,6 +64,7 @@ namespace iText.Signatures.Validation.Report.Xml {
                 throw new Exception("Error encoding certificate.", e);
             }
         }
+//\endcond
     }
 //\endcond
 }

@@ -25,9 +25,8 @@ using iText.Signatures.Exceptions;
 using iText.Test;
 
 namespace iText.Signatures.Validation.Lotl {
-//\cond DO_NOT_DOCUMENT
     [NUnit.Framework.Category("UnitTest")]
-    internal class LotlFetchingPropertiesTest : ExtendedITextTest {
+    public class LotlFetchingPropertiesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestAddCountryName() {
             LotlFetchingProperties properties = new LotlFetchingProperties(new RemoveOnFailingCountryData());
@@ -81,5 +80,4 @@ namespace iText.Signatures.Validation.Lotl {
                 e.Message);
         }
     }
-//\endcond
 }

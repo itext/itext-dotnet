@@ -32,6 +32,7 @@ using iText.Layout.Properties;
 namespace iText.Layout.Renderer {
 //\cond DO_NOT_DOCUMENT
     internal abstract class TableBorders {
+//\cond DO_NOT_DOCUMENT
         /// <summary>Horizontal borders of the table.</summary>
         /// <remarks>
         /// Horizontal borders of the table.
@@ -40,8 +41,10 @@ namespace iText.Layout.Renderer {
         /// The amount of the lists is the number of rows + 1, the size of each of these lists
         /// corresponds to the number of columns.
         /// </remarks>
-        protected internal IList<IList<Border>> horizontalBorders = new List<IList<Border>>();
+        internal IList<IList<Border>> horizontalBorders = new List<IList<Border>>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Vertical borders of the table.</summary>
         /// <remarks>
         /// Vertical borders of the table.
@@ -50,29 +53,39 @@ namespace iText.Layout.Renderer {
         /// The amount of the lists is the number of columns + 1, the size of each of these lists
         /// corresponds to the number of rows.
         /// </remarks>
-        protected internal IList<IList<Border>> verticalBorders = new List<IList<Border>>();
+        internal IList<IList<Border>> verticalBorders = new List<IList<Border>>();
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The number of the table's columns.</summary>
-        protected internal readonly int numberOfColumns;
+        internal readonly int numberOfColumns;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The outer borders of the table (as body).</summary>
-        protected internal Border[] tableBoundingBorders = new Border[4];
+        internal Border[] tableBoundingBorders = new Border[4];
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>All the cells of the table.</summary>
         /// <remarks>
         /// All the cells of the table.
         /// Each item of the list represents a row and consists of its cells.
         /// </remarks>
-        protected internal IList<CellRenderer[]> rows;
+        internal IList<CellRenderer[]> rows;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The first row, which should be processed on this area.</summary>
         /// <remarks>
         /// The first row, which should be processed on this area.
         /// The value of this field varies from area to area.
         /// It's zero-based and inclusive.
         /// </remarks>
-        protected internal int startRow;
+        internal int startRow;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The last row, which should be processed on this area.</summary>
         /// <remarks>
         /// The last row, which should be processed on this area.
@@ -80,20 +93,27 @@ namespace iText.Layout.Renderer {
         /// It's zero-based and inclusive. The last border will have index (finishRow+1) because
         /// the number of borders is greater by one than the number of rows
         /// </remarks>
-        protected internal int finishRow;
+        internal int finishRow;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The width of the widest left border.</summary>
-        protected internal float leftBorderMaxWidth;
+        internal float leftBorderMaxWidth;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The width of the widest right border.</summary>
-        protected internal float rightBorderMaxWidth;
+        internal float rightBorderMaxWidth;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The number of rows flushed to the table.</summary>
         /// <remarks>
         /// The number of rows flushed to the table.
         /// Its value is zero for regular tables. The field makes sense only for large tables.
         /// </remarks>
-        protected internal int largeTableIndexOffset = 0;
+        internal int largeTableIndexOffset = 0;
+//\endcond
 
         public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns, Border[] tableBoundingBorders) {
             this.rows = rows;
@@ -107,64 +127,101 @@ namespace iText.Layout.Renderer {
             this.largeTableIndexOffset = largeTableIndexOffset;
         }
 
+//\cond DO_NOT_DOCUMENT
         // region abstract
         // region draw
-        protected internal abstract iText.Layout.Renderer.TableBorders DrawHorizontalBorder(PdfCanvas canvas, TableBorderDescriptor
+        internal abstract iText.Layout.Renderer.TableBorders DrawHorizontalBorder(PdfCanvas canvas, TableBorderDescriptor
              borderDescriptor);
+//\endcond
 
-        protected internal abstract iText.Layout.Renderer.TableBorders DrawVerticalBorder(PdfCanvas canvas, TableBorderDescriptor
+//\cond DO_NOT_DOCUMENT
+        internal abstract iText.Layout.Renderer.TableBorders DrawVerticalBorder(PdfCanvas canvas, TableBorderDescriptor
              borderDescriptor);
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // endregion
         // region area occupation
-        protected internal abstract iText.Layout.Renderer.TableBorders ApplyTopTableBorder(Rectangle occupiedBox, 
-            Rectangle layoutBox, bool isEmpty, bool force, bool reverse);
+        internal abstract iText.Layout.Renderer.TableBorders ApplyTopTableBorder(Rectangle occupiedBox, Rectangle 
+            layoutBox, bool isEmpty, bool force, bool reverse);
+//\endcond
 
-        protected internal abstract iText.Layout.Renderer.TableBorders ApplyTopTableBorder(Rectangle occupiedBox, 
-            Rectangle layoutBox, bool reverse);
+//\cond DO_NOT_DOCUMENT
+        internal abstract iText.Layout.Renderer.TableBorders ApplyTopTableBorder(Rectangle occupiedBox, Rectangle 
+            layoutBox, bool reverse);
+//\endcond
 
-        protected internal abstract iText.Layout.Renderer.TableBorders ApplyBottomTableBorder(Rectangle occupiedBox
-            , Rectangle layoutBox, bool isEmpty, bool force, bool reverse);
+//\cond DO_NOT_DOCUMENT
+        internal abstract iText.Layout.Renderer.TableBorders ApplyBottomTableBorder(Rectangle occupiedBox, Rectangle
+             layoutBox, bool isEmpty, bool force, bool reverse);
+//\endcond
 
-        protected internal abstract iText.Layout.Renderer.TableBorders ApplyBottomTableBorder(Rectangle occupiedBox
-            , Rectangle layoutBox, bool reverse);
+//\cond DO_NOT_DOCUMENT
+        internal abstract iText.Layout.Renderer.TableBorders ApplyBottomTableBorder(Rectangle occupiedBox, Rectangle
+             layoutBox, bool reverse);
+//\endcond
 
-        protected internal abstract iText.Layout.Renderer.TableBorders ApplyLeftAndRightTableBorder(Rectangle layoutBox
-            , bool reverse);
+//\cond DO_NOT_DOCUMENT
+        internal abstract iText.Layout.Renderer.TableBorders ApplyLeftAndRightTableBorder(Rectangle layoutBox, bool
+             reverse);
+//\endcond
 
-        protected internal abstract iText.Layout.Renderer.TableBorders SkipFooter(Border[] borders);
+//\cond DO_NOT_DOCUMENT
+        internal abstract iText.Layout.Renderer.TableBorders SkipFooter(Border[] borders);
+//\endcond
 
-        protected internal abstract iText.Layout.Renderer.TableBorders SkipHeader(Border[] borders);
+//\cond DO_NOT_DOCUMENT
+        internal abstract iText.Layout.Renderer.TableBorders SkipHeader(Border[] borders);
+//\endcond
 
-        protected internal abstract iText.Layout.Renderer.TableBorders CollapseTableWithFooter(iText.Layout.Renderer.TableBorders
+//\cond DO_NOT_DOCUMENT
+        internal abstract iText.Layout.Renderer.TableBorders CollapseTableWithFooter(iText.Layout.Renderer.TableBorders
              footerBordersHandler, bool hasContent);
+//\endcond
 
-        protected internal abstract iText.Layout.Renderer.TableBorders CollapseTableWithHeader(iText.Layout.Renderer.TableBorders
+//\cond DO_NOT_DOCUMENT
+        internal abstract iText.Layout.Renderer.TableBorders CollapseTableWithHeader(iText.Layout.Renderer.TableBorders
              headerBordersHandler, bool updateBordersHandler);
+//\endcond
 
-        protected internal abstract iText.Layout.Renderer.TableBorders FixHeaderOccupiedArea(Rectangle occupiedBox
-            , Rectangle layoutBox);
+//\cond DO_NOT_DOCUMENT
+        internal abstract iText.Layout.Renderer.TableBorders FixHeaderOccupiedArea(Rectangle occupiedBox, Rectangle
+             layoutBox);
+//\endcond
 
-        protected internal abstract iText.Layout.Renderer.TableBorders ApplyCellIndents(Rectangle box, float topIndent
-            , float rightIndent, float bottomIndent, float leftIndent, bool reverse);
+//\cond DO_NOT_DOCUMENT
+        internal abstract iText.Layout.Renderer.TableBorders ApplyCellIndents(Rectangle box, float topIndent, float
+             rightIndent, float bottomIndent, float leftIndent, bool reverse);
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // endregion
         // region getters
-        public abstract IList<Border> GetVerticalBorder(int index);
+        internal abstract IList<Border> GetVerticalBorder(int index);
+//\endcond
 
-        public abstract IList<Border> GetHorizontalBorder(int index);
+//\cond DO_NOT_DOCUMENT
+        internal abstract IList<Border> GetHorizontalBorder(int index);
+//\endcond
 
-        protected internal abstract float GetCellVerticalAddition(float[] indents);
+//\cond DO_NOT_DOCUMENT
+        internal abstract float GetCellVerticalAddition(float[] indents);
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // endregion
-        protected internal abstract void BuildBordersArrays(CellRenderer cell, int row, int col);
+        internal abstract void BuildBordersArrays(CellRenderer cell, int row, int col);
+//\endcond
 
-        protected internal abstract iText.Layout.Renderer.TableBorders UpdateBordersOnNewPage(bool isOriginalNonSplitRenderer
+//\cond DO_NOT_DOCUMENT
+        internal abstract iText.Layout.Renderer.TableBorders UpdateBordersOnNewPage(bool isOriginalNonSplitRenderer
             , bool isFooterOrHeader, TableRenderer currentRenderer, TableRenderer headerRenderer, TableRenderer footerRenderer
             );
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // endregion
-        protected internal virtual iText.Layout.Renderer.TableBorders ProcessAllBordersAndEmptyRows() {
+        internal virtual iText.Layout.Renderer.TableBorders ProcessAllBordersAndEmptyRows() {
             CellRenderer[] currentRow;
             int numOfRowsToRemove = 0;
             if (!rows.IsEmpty()) {
@@ -212,9 +269,11 @@ namespace iText.Layout.Renderer {
             }
             return this;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // region init
-        protected internal virtual iText.Layout.Renderer.TableBorders InitializeBorders() {
+        internal virtual iText.Layout.Renderer.TableBorders InitializeBorders() {
             IList<Border> tempBorders;
             // initialize vertical borders
             while (numberOfColumns + 1 > verticalBorders.Count) {
@@ -234,10 +293,12 @@ namespace iText.Layout.Renderer {
             }
             return this;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // endregion
         // region setters
-        protected internal virtual iText.Layout.Renderer.TableBorders SetTableBoundingBorders(Border[] borders) {
+        internal virtual iText.Layout.Renderer.TableBorders SetTableBoundingBorders(Border[] borders) {
             tableBoundingBorders = new Border[4];
             if (null != borders) {
                 for (int i = 0; i < borders.Length; i++) {
@@ -246,34 +307,46 @@ namespace iText.Layout.Renderer {
             }
             return this;
         }
+//\endcond
 
-        protected internal virtual iText.Layout.Renderer.TableBorders SetRowRange(int startRow, int finishRow) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual iText.Layout.Renderer.TableBorders SetRowRange(int startRow, int finishRow) {
             this.startRow = startRow;
             this.finishRow = finishRow;
             return this;
         }
+//\endcond
 
-        protected internal virtual iText.Layout.Renderer.TableBorders SetStartRow(int row) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual iText.Layout.Renderer.TableBorders SetStartRow(int row) {
             this.startRow = row;
             return this;
         }
+//\endcond
 
-        protected internal virtual iText.Layout.Renderer.TableBorders SetFinishRow(int row) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual iText.Layout.Renderer.TableBorders SetFinishRow(int row) {
             this.finishRow = row;
             return this;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // endregion
         // region getters
-        public virtual float GetLeftBorderMaxWidth() {
+        internal virtual float GetLeftBorderMaxWidth() {
             return leftBorderMaxWidth;
         }
+//\endcond
 
-        public virtual float GetRightBorderMaxWidth() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual float GetRightBorderMaxWidth() {
             return rightBorderMaxWidth;
         }
+//\endcond
 
-        public virtual float GetMaxTopWidth() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual float GetMaxTopWidth() {
             float width = 0;
             Border widestBorder = GetWidestHorizontalBorder(startRow);
             if (null != widestBorder && widestBorder.GetWidth() >= width) {
@@ -281,8 +354,10 @@ namespace iText.Layout.Renderer {
             }
             return width;
         }
+//\endcond
 
-        public virtual float GetMaxBottomWidth() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual float GetMaxBottomWidth() {
             float width = 0;
             Border widestBorder = GetWidestHorizontalBorder(finishRow + 1);
             if (null != widestBorder && widestBorder.GetWidth() >= width) {
@@ -290,8 +365,10 @@ namespace iText.Layout.Renderer {
             }
             return width;
         }
+//\endcond
 
-        public virtual float GetMaxRightWidth() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual float GetMaxRightWidth() {
             float width = 0;
             Border widestBorder = GetWidestVerticalBorder(verticalBorders.Count - 1);
             if (null != widestBorder && widestBorder.GetWidth() >= width) {
@@ -299,8 +376,10 @@ namespace iText.Layout.Renderer {
             }
             return width;
         }
+//\endcond
 
-        public virtual float GetMaxLeftWidth() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual float GetMaxLeftWidth() {
             float width = 0;
             Border widestBorder = GetWidestVerticalBorder(0);
             if (null != widestBorder && widestBorder.GetWidth() >= width) {
@@ -308,56 +387,82 @@ namespace iText.Layout.Renderer {
             }
             return width;
         }
+//\endcond
 
-        public virtual Border GetWidestVerticalBorder(int col) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual Border GetWidestVerticalBorder(int col) {
             return TableBorderUtil.GetWidestBorder(GetVerticalBorder(col));
         }
+//\endcond
 
-        public virtual Border GetWidestVerticalBorder(int col, int start, int end) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual Border GetWidestVerticalBorder(int col, int start, int end) {
             return TableBorderUtil.GetWidestBorder(GetVerticalBorder(col), start, end);
         }
+//\endcond
 
-        public virtual Border GetWidestHorizontalBorder(int row) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual Border GetWidestHorizontalBorder(int row) {
             return TableBorderUtil.GetWidestBorder(GetHorizontalBorder(row));
         }
+//\endcond
 
-        public virtual Border GetWidestHorizontalBorder(int row, int start, int end) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual Border GetWidestHorizontalBorder(int row, int start, int end) {
             return TableBorderUtil.GetWidestBorder(GetHorizontalBorder(row), start, end);
         }
+//\endcond
 
-        public virtual IList<Border> GetFirstHorizontalBorder() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual IList<Border> GetFirstHorizontalBorder() {
             return GetHorizontalBorder(startRow);
         }
+//\endcond
 
-        public virtual IList<Border> GetLastHorizontalBorder() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual IList<Border> GetLastHorizontalBorder() {
             return GetHorizontalBorder(finishRow + 1);
         }
+//\endcond
 
-        public virtual IList<Border> GetFirstVerticalBorder() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual IList<Border> GetFirstVerticalBorder() {
             return GetVerticalBorder(0);
         }
+//\endcond
 
-        public virtual IList<Border> GetLastVerticalBorder() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual IList<Border> GetLastVerticalBorder() {
             return GetVerticalBorder(verticalBorders.Count - 1);
         }
+//\endcond
 
-        public virtual int GetNumberOfColumns() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual int GetNumberOfColumns() {
             return numberOfColumns;
         }
+//\endcond
 
-        public virtual int GetStartRow() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual int GetStartRow() {
             return startRow;
         }
+//\endcond
 
-        public virtual int GetFinishRow() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual int GetFinishRow() {
             return finishRow;
         }
+//\endcond
 
-        public virtual Border[] GetTableBoundingBorders() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual Border[] GetTableBoundingBorders() {
             return tableBoundingBorders;
         }
+//\endcond
 
-        public virtual float[] GetCellBorderIndents(int row, int col, int rowspan, int colspan) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual float[] GetCellBorderIndents(int row, int col, int rowspan, int colspan) {
             float[] indents = new float[4];
             IList<Border> borderList;
             Border border;
@@ -395,6 +500,7 @@ namespace iText.Layout.Renderer {
             }
             return indents;
         }
+//\endcond
 
         // endregion
         private void RemoveRows(int startRow, int numOfRows) {

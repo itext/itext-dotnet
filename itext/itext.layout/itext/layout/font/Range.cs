@@ -154,7 +154,8 @@ namespace iText.Layout.Font {
                 return low - o.low;
             }
 
-            public virtual int CompareTo(int n) {
+//\cond DO_NOT_DOCUMENT
+            internal virtual int CompareTo(int n) {
                 if (n < low) {
                     return 1;
                 }
@@ -163,6 +164,7 @@ namespace iText.Layout.Font {
                 }
                 return 0;
             }
+//\endcond
 
             public override bool Equals(Object o) {
                 if (this == o) {

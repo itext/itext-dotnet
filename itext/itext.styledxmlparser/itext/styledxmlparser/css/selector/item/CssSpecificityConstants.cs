@@ -32,14 +32,20 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         private CssSpecificityConstants() {
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The Constant ID_SPECIFICITY.</summary>
-        public const int ID_SPECIFICITY = 1 << 20;
+        internal const int ID_SPECIFICITY = 1 << 20;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The Constant CLASS_SPECIFICITY.</summary>
-        public const int CLASS_SPECIFICITY = 1 << 10;
+        internal const int CLASS_SPECIFICITY = 1 << 10;
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>The Constant ELEMENT_SPECIFICITY.</summary>
-        public const int ELEMENT_SPECIFICITY = 1;
+        internal const int ELEMENT_SPECIFICITY = 1;
+//\endcond
     }
 //\endcond
 }

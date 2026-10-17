@@ -39,7 +39,8 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             return 0;
         }
 
-        public static iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassWhereSelectorItem CreateWhereSelectorItem
+//\cond DO_NOT_DOCUMENT
+        internal static iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassWhereSelectorItem CreateWhereSelectorItem
             (String arguments) {
             IList<ICssSelector> selectors = ParseSelectorListWithoutPseudoElements(arguments, true);
             if (selectors == null) {
@@ -47,6 +48,7 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             }
             return new iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassWhereSelectorItem(selectors, arguments);
         }
+//\endcond
     }
 //\endcond
 }

@@ -24,60 +24,75 @@ namespace iText.Barcodes.Qrcode {
 
         private readonly int size;
 
-        public BitArray(int size) {
+//\cond DO_NOT_DOCUMENT
+        internal BitArray(int size) {
             if (size < 1) {
                 throw new ArgumentException("size must be at least 1");
             }
             this.size = size;
             this.bits = MakeArray(size);
         }
+//\endcond
 
-        public int GetSize() {
+//\cond DO_NOT_DOCUMENT
+        internal int GetSize() {
             return size;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <param name="i">bit to get.</param>
         /// <returns>true iff bit i is set</returns>
-        public bool Get(int i) {
+        internal bool Get(int i) {
             return (bits[i >> 5] & (1 << (i & 0x1F))) != 0;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets bit i.</summary>
         /// <param name="i">bit to set</param>
-        public void Set(int i) {
+        internal void Set(int i) {
             bits[i >> 5] |= 1 << (i & 0x1F);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Flips bit i.</summary>
         /// <param name="i">bit to set</param>
-        public void Flip(int i) {
+        internal void Flip(int i) {
             bits[i >> 5] ^= 1 << (i & 0x1F);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets a block of 32 bits, starting at bit i.</summary>
         /// <param name="i">first bit to set</param>
         /// <param name="newBits">
         /// the new value of the next 32 bits. Note again that the least-significant bit
         /// corresponds to bit i, the next-least-significant to i+1, and so on.
         /// </param>
-        public void SetBulk(int i, int newBits) {
+        internal void SetBulk(int i, int newBits) {
             bits[i >> 5] = newBits;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Clears all bits (sets to false).</summary>
-        public void Clear() {
+        internal void Clear() {
             int max = bits.Length;
             for (int i = 0; i < max; i++) {
                 bits[i] = 0;
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Efficient method to check if a range of bits is set, or not set.</summary>
         /// <param name="start">start of range, inclusive.</param>
         /// <param name="end">end of range, exclusive</param>
         /// <param name="value">if true, checks that bits in range are set, otherwise checks that they are not set</param>
         /// <returns>true iff all bits are set or not set in range, according to value argument</returns>
-        public bool IsRange(int start, int end, bool value) {
+        internal bool IsRange(int start, int end, bool value) {
             if (end < start) {
                 throw new ArgumentException();
             }
@@ -110,17 +125,21 @@ namespace iText.Barcodes.Qrcode {
             }
             return true;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>
         /// underlying array of ints. The first element holds the first 32 bits, and the least
         /// significant bit is bit 0.
         /// </returns>
-        public int[] GetBitArray() {
+        internal int[] GetBitArray() {
             return bits;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Reverses all bits in the array.</summary>
-        public void Reverse() {
+        internal void Reverse() {
             int[] newBits = new int[bits.Length];
             int size = this.size;
             for (int i = 0; i < size; i++) {
@@ -130,6 +149,7 @@ namespace iText.Barcodes.Qrcode {
             }
             bits = newBits;
         }
+//\endcond
 
         private static int[] MakeArray(int size) {
             int arraySize = size >> 5;

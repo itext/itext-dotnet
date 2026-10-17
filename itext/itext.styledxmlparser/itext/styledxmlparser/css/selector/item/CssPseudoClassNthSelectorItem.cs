@@ -46,8 +46,9 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             return !children.IsEmpty() && ResolveNth(node, children);
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets the nth arguments.</summary>
-        protected internal virtual void GetNthArguments() {
+        internal virtual void GetNthArguments() {
             if (arguments.Matches("((-|\\+)?[0-9]*n(\\s*(-|\\+)\\s*[0-9]+)?|(-|\\+)?[0-9]+|odd|even)")) {
                 if (arguments.Equals("odd")) {
                     this.nthA = 2;
@@ -94,12 +95,14 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
                 this.nthB = 0;
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Resolves the nth.</summary>
         /// <param name="node">a node</param>
         /// <param name="children">the children</param>
         /// <returns>true, if successful</returns>
-        protected internal virtual bool ResolveNth(INode node, IList<INode> children) {
+        internal virtual bool ResolveNth(INode node, IList<INode> children) {
             if (!children.Contains(node)) {
                 return false;
             }
@@ -117,6 +120,7 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
                 }
             }
         }
+//\endcond
     }
 //\endcond
 }

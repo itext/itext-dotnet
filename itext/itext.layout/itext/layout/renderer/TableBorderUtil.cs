@@ -32,15 +32,18 @@ namespace iText.Layout.Renderer {
         private TableBorderUtil() {
         }
 
-        public static Border GetCellSideBorder(Cell cellModel, int borderType) {
+//\cond DO_NOT_DOCUMENT
+        internal static Border GetCellSideBorder(Cell cellModel, int borderType) {
             Border cellModelSideBorder = cellModel.GetProperty<Border>(borderType);
             if (null == cellModelSideBorder && !cellModel.HasProperty(borderType)) {
                 cellModelSideBorder = cellModel.GetDefaultProperty<Border>(borderType);
             }
             return cellModelSideBorder;
         }
+//\endcond
 
-        public static Border GetWidestBorder(IList<Border> borderList) {
+//\cond DO_NOT_DOCUMENT
+        internal static Border GetWidestBorder(IList<Border> borderList) {
             Border theWidestBorder = null;
             if (0 != borderList.Count) {
                 foreach (Border border in borderList) {
@@ -51,8 +54,10 @@ namespace iText.Layout.Renderer {
             }
             return theWidestBorder;
         }
+//\endcond
 
-        public static Border GetWidestBorder(IList<Border> borderList, int start, int end) {
+//\cond DO_NOT_DOCUMENT
+        internal static Border GetWidestBorder(IList<Border> borderList, int start, int end) {
             Border theWidestBorder = null;
             if (0 != borderList.Count) {
                 foreach (Border border in borderList.SubList(start, end)) {
@@ -63,17 +68,21 @@ namespace iText.Layout.Renderer {
             }
             return theWidestBorder;
         }
+//\endcond
 
-        public static IList<Border> CreateAndFillBorderList(Border border, int size) {
+//\cond DO_NOT_DOCUMENT
+        internal static IList<Border> CreateAndFillBorderList(Border border, int size) {
             IList<Border> borderList = new List<Border>();
             for (int i = 0; i < size; i++) {
                 borderList.Add(border);
             }
             return borderList;
         }
+//\endcond
 
-        public static IList<Border> CreateAndFillBorderList(IList<Border> originalList, Border borderToCollapse, int
-             size) {
+//\cond DO_NOT_DOCUMENT
+        internal static IList<Border> CreateAndFillBorderList(IList<Border> originalList, Border borderToCollapse, 
+            int size) {
             IList<Border> borderList;
             if (null != originalList) {
                 borderList = new List<Border>(originalList.Count + size);
@@ -94,6 +103,7 @@ namespace iText.Layout.Renderer {
             }
             return borderList;
         }
+//\endcond
     }
 //\endcond
 }

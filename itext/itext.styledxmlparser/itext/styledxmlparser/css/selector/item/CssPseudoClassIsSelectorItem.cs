@@ -44,14 +44,16 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
             return max;
         }
 
-        public static iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassIsSelectorItem CreateIsSelectorItem(String
-             arguments) {
+//\cond DO_NOT_DOCUMENT
+        internal static iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassIsSelectorItem CreateIsSelectorItem(
+            String arguments) {
             IList<ICssSelector> selectors = ParseSelectorListWithoutPseudoElements(arguments, true);
             if (selectors == null) {
                 return null;
             }
             return new iText.StyledXmlParser.Css.Selector.Item.CssPseudoClassIsSelectorItem(selectors, arguments);
         }
+//\endcond
     }
 //\endcond
 }

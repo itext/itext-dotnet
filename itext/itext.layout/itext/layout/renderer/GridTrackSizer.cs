@@ -1045,27 +1045,34 @@ namespace iText.Layout.Renderer {
             internal bool isInfinityGrowable = false;
 //\endcond
 
-            public virtual float DefiniteGrowthLimit() {
+//\cond DO_NOT_DOCUMENT
+            internal virtual float DefiniteGrowthLimit() {
                 // For infinite growth limits, substitute the track's base size.
                 return JavaUtil.FloatCompare(growthLimit, -1f) == 0 ? baseSize : growthLimit;
             }
+//\endcond
 
-            public virtual bool IsFlexibleTrack() {
+//\cond DO_NOT_DOCUMENT
+            internal virtual bool IsFlexibleTrack() {
                 // Flex is replaced by minmax in GridTrackSizer constructor
                 if (value.GetType() == TemplateValue.ValueType.MINMAX) {
                     return ((MinMaxValue)value).GetMax().GetType() == TemplateValue.ValueType.FLEX;
                 }
                 return false;
             }
+//\endcond
 
-            public virtual bool HasAutoMax() {
+//\cond DO_NOT_DOCUMENT
+            internal virtual bool HasAutoMax() {
                 if (value.GetType() == TemplateValue.ValueType.MINMAX) {
                     return ((MinMaxValue)value).GetMax().GetType() == TemplateValue.ValueType.AUTO;
                 }
                 return value.GetType() == TemplateValue.ValueType.AUTO;
             }
+//\endcond
 
-            public virtual float GetFlexFactor() {
+//\cond DO_NOT_DOCUMENT
+            internal virtual float GetFlexFactor() {
                 // Flex is replaced by minmax in GridTrackSizer constructor
                 if (value.GetType() == TemplateValue.ValueType.MINMAX) {
                     BreadthValue max = ((MinMaxValue)value).GetMax();
@@ -1073,12 +1080,15 @@ namespace iText.Layout.Renderer {
                 }
                 return 0f;
             }
+//\endcond
 
-            public virtual void EnsureGrowthLimitIsNotLessThanBaseSize() {
+//\cond DO_NOT_DOCUMENT
+            internal virtual void EnsureGrowthLimitIsNotLessThanBaseSize() {
                 if (JavaUtil.FloatCompare(growthLimit, -1) != 0 && growthLimit < baseSize) {
                     growthLimit = baseSize;
                 }
             }
+//\endcond
         }
 //\endcond
     }

@@ -1051,11 +1051,13 @@ namespace iText.Pdfua.Checkers {
                 : base(owner) {
             }
 
-            public virtual PdfStructureAttributes AddPdfObject(PdfName headers, PdfArray pdfObjects) {
+//\cond DO_NOT_DOCUMENT
+            internal virtual PdfStructureAttributes AddPdfObject(PdfName headers, PdfArray pdfObjects) {
                 GetPdfObject().Put(headers, pdfObjects);
                 SetModified();
                 return this;
             }
+//\endcond
         }
 //\endcond
     }

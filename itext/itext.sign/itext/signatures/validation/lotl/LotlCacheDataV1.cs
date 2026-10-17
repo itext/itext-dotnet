@@ -72,7 +72,8 @@ namespace iText.Signatures.Validation.Lotl {
         }
 //\endcond
 
-        public static iText.Signatures.Validation.Lotl.LotlCacheDataV1 Deserialize(Stream inputStream) {
+//\cond DO_NOT_DOCUMENT
+        internal static iText.Signatures.Validation.Lotl.LotlCacheDataV1 Deserialize(Stream inputStream) {
             try {
                 using (Stream @is = inputStream) {
                     using (MemoryStream buffer = new MemoryStream()) {
@@ -91,30 +92,43 @@ namespace iText.Signatures.Validation.Lotl {
                 throw new PdfException(SignExceptionMessageConstant.COULD_NOT_INITIALIZE_FROM_FILE, e);
             }
         }
+//\endcond
 
-        public virtual void Serialize(Stream os) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual void Serialize(Stream os) {
             os.Write(ToJson().ToJson().GetBytes(System.Text.Encoding.UTF8));
         }
+//\endcond
 
-        public virtual EuropeanResourceFetcher.Result GetEuropeanResourceFetcherCache() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual EuropeanResourceFetcher.Result GetEuropeanResourceFetcherCache() {
             return europeanResourceFetcherCache;
         }
+//\endcond
 
-        public virtual IDictionary<String, long?> GetTimeStamps() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual IDictionary<String, long?> GetTimeStamps() {
             return timeStamps;
         }
+//\endcond
 
-        public virtual PivotFetcher.Result GetPivotCache() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual PivotFetcher.Result GetPivotCache() {
             return pivotCache;
         }
+//\endcond
 
-        public virtual IDictionary<String, CountrySpecificLotlFetcher.Result> GetCountrySpecificLotlCache() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual IDictionary<String, CountrySpecificLotlFetcher.Result> GetCountrySpecificLotlCache() {
             return countrySpecificLotlCache;
         }
+//\endcond
 
-        public virtual EuropeanLotlFetcher.Result GetLotlCache() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual EuropeanLotlFetcher.Result GetLotlCache() {
             return lotlCache;
         }
+//\endcond
 
         /// <summary>
         /// <inheritDoc/>.

@@ -75,7 +75,9 @@ namespace iText.Layout.Renderer {
 
 //\cond DO_NOT_DOCUMENT
         internal class CustomRenderer : DivRenderer {
-            public int counter = 0;
+//\cond DO_NOT_DOCUMENT
+            internal int counter = 0;
+//\endcond
 
             public CustomRenderer(Div modelElement)
                 : base(modelElement) {

@@ -31,7 +31,9 @@ namespace iText.Barcodes.Qrcode {
     /// alphanumeric, (iii) byte or binary, and (iv) kanji.[3]
     /// </remarks>
     internal sealed class QRCode {
-        public const int NUM_MASK_PATTERNS = 8;
+//\cond DO_NOT_DOCUMENT
+        internal const int NUM_MASK_PATTERNS = 8;
+//\endcond
 
         private Mode mode;
 
@@ -53,8 +55,9 @@ namespace iText.Barcodes.Qrcode {
 
         private ByteMatrix matrix;
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Create a QR-code object with unitialized parameters</summary>
-        public QRCode() {
+        internal QRCode() {
             mode = null;
             ecLevel = null;
             version = -1;
@@ -66,68 +69,90 @@ namespace iText.Barcodes.Qrcode {
             numRSBlocks = -1;
             matrix = null;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Mode used by the QR code to encode data into bits.</summary>
         /// <remarks>
         /// Mode used by the QR code to encode data into bits.
         /// Possible values: TERMINATOR, NUMERIC, ALPHANUMERIC, STRUCTURED_APPEND, BYTE, ECI, KANJI, FNC1_FIRST_POSITION, FNC2_SECOND_POSITION
         /// </remarks>
         /// <returns>Mode of the QR Code.</returns>
-        public Mode GetMode() {
+        internal Mode GetMode() {
             return mode;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Possible error correction level values ranked from lowest error correction capability to highest: L, M, Q, H
         ///     </summary>
         /// <returns>Error correction level of the QR Code.</returns>
-        public ErrorCorrectionLevel GetECLevel() {
+        internal ErrorCorrectionLevel GetECLevel() {
             return ecLevel;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Together with error correction level, the version determines the information capacity of the QR code.
         ///     </summary>
         /// <remarks>Together with error correction level, the version determines the information capacity of the QR code. Higher version numbers correspond with higher capacity. Ranges from 1 to 40.
         ///     </remarks>
         /// <returns>Version of the QR Code.</returns>
-        public int GetVersion() {
+        internal int GetVersion() {
             return version;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>ByteMatrix width of the QR Code.</returns>
-        public int GetMatrixWidth() {
+        internal int GetMatrixWidth() {
             return matrixWidth;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>Mask pattern of the QR Code.</returns>
-        public int GetMaskPattern() {
+        internal int GetMaskPattern() {
             return maskPattern;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>Number of total bytes in the QR Code.</returns>
-        public int GetNumTotalBytes() {
+        internal int GetNumTotalBytes() {
             return numTotalBytes;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>Number of data bytes in the QR Code.</returns>
-        public int GetNumDataBytes() {
+        internal int GetNumDataBytes() {
             return numDataBytes;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>Number of error correction bytes in the QR Code.</returns>
-        public int GetNumECBytes() {
+        internal int GetNumECBytes() {
             return numECBytes;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>Number of Reedsolomon blocks in the QR Code.</returns>
-        public int GetNumRSBlocks() {
+        internal int GetNumRSBlocks() {
             return numRSBlocks;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>ByteMatrix data of the QR Code.</returns>
-        public ByteMatrix GetMatrix() {
+        internal ByteMatrix GetMatrix() {
             return matrix;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Retrieve the value of the module (cell) pointed by "x" and "y" in the matrix of the QR Code.</summary>
         /// <remarks>
         /// Retrieve the value of the module (cell) pointed by "x" and "y" in the matrix of the QR Code.
@@ -136,7 +161,7 @@ namespace iText.Barcodes.Qrcode {
         /// <param name="x">width coordinate</param>
         /// <param name="y">height coordinate</param>
         /// <returns>1 for a black cell, 0 for a white cell</returns>
-        public int At(int x, int y) {
+        internal int At(int x, int y) {
             // The value must be zero or one.
             int value = matrix.Get(x, y);
             if (!(value == 0 || value == 1)) {
@@ -145,10 +170,12 @@ namespace iText.Barcodes.Qrcode {
             }
             return value;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Check the validity of all member variables</summary>
         /// <returns>true if all variables are valid, false otherwise</returns>
-        public bool IsValid() {
+        internal bool IsValid() {
             return 
                         // First check if all version are not uninitialized.
                         mode != null && ecLevel != null && version != -1 && matrixWidth != -1 && maskPattern != -1 && numTotalBytes
@@ -162,6 +189,7 @@ namespace iText.Barcodes.Qrcode {
                         // See 7.3.1 of JISX0510:2004 (p.5).
                         matrix.GetWidth() == matrix.GetHeight();
         }
+//\endcond
 
         /// <summary>Prints all parameters</summary>
         /// <returns>string containing all parameters</returns>
@@ -197,25 +225,30 @@ namespace iText.Barcodes.Qrcode {
             return result.ToString();
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>
         /// Set the data encoding mode of the QR code
         /// Possible modes: TERMINATOR, NUMERIC, ALPHANUMERIC, STRUCTURED_APPEND, BYTE, ECI, KANJI, FNC1_FIRST_POSITION, FNC2_SECOND_POSITION
         /// </summary>
         /// <param name="value">new data encoding mode</param>
-        public void SetMode(Mode value) {
+        internal void SetMode(Mode value) {
             mode = value;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Set the error correction level of th QR code.</summary>
         /// <remarks>
         /// Set the error correction level of th QR code.
         /// Possible error correction level values ranked from lowest error correction capability to highest: L, M, Q, H
         /// </remarks>
         /// <param name="value">new error correction level</param>
-        public void SetECLevel(ErrorCorrectionLevel value) {
+        internal void SetECLevel(ErrorCorrectionLevel value) {
             ecLevel = value;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Set the version of the QR code.</summary>
         /// <remarks>
         /// Set the version of the QR code.
@@ -223,58 +256,75 @@ namespace iText.Barcodes.Qrcode {
         /// Range: 1 to 40.
         /// </remarks>
         /// <param name="value">the new version of the QR code</param>
-        public void SetVersion(int value) {
+        internal void SetVersion(int value) {
             version = value;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets the width of the byte matrix</summary>
         /// <param name="value">the new width of the matrix</param>
-        public void SetMatrixWidth(int value) {
+        internal void SetMatrixWidth(int value) {
             matrixWidth = value;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Set the masking pattern</summary>
         /// <param name="value">new masking pattern of the QR code</param>
-        public void SetMaskPattern(int value) {
+        internal void SetMaskPattern(int value) {
             maskPattern = value;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Set the number of total bytes</summary>
         /// <param name="value">new number of total bytes</param>
-        public void SetNumTotalBytes(int value) {
+        internal void SetNumTotalBytes(int value) {
             numTotalBytes = value;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Set the number of data bytes</summary>
         /// <param name="value">new number of data bytes</param>
-        public void SetNumDataBytes(int value) {
+        internal void SetNumDataBytes(int value) {
             numDataBytes = value;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Set the number of error correction blocks</summary>
         /// <param name="value">new number of error correction blocks</param>
-        public void SetNumECBytes(int value) {
+        internal void SetNumECBytes(int value) {
             numECBytes = value;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Set the number of Reed-Solomon blocks</summary>
         /// <param name="value">new number of Reed-Solomon blocks</param>
-        public void SetNumRSBlocks(int value) {
+        internal void SetNumRSBlocks(int value) {
             numRSBlocks = value;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Set the byte-matrix</summary>
         /// <param name="value">the new byte-matrix</param>
-        public void SetMatrix(ByteMatrix value) {
+        internal void SetMatrix(ByteMatrix value) {
             matrix = value;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Check if "mask_pattern" is valid.</summary>
         /// <param name="maskPattern">masking pattern to check</param>
         /// <returns>true if the pattern is valid, false otherwise</returns>
-        public static bool IsValidMaskPattern(int maskPattern) {
+        internal static bool IsValidMaskPattern(int maskPattern) {
             return maskPattern >= 0 && maskPattern < NUM_MASK_PATTERNS;
         }
+//\endcond
     }
 //\endcond
 }

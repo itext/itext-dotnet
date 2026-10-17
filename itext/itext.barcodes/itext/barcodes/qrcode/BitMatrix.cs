@@ -40,12 +40,15 @@ namespace iText.Barcodes.Qrcode {
 
         private readonly int[] bits;
 
+//\cond DO_NOT_DOCUMENT
         // A helper to construct a square matrix.
-        public BitMatrix(int dimension)
+        internal BitMatrix(int dimension)
             : this(dimension, dimension) {
         }
+//\endcond
 
-        public BitMatrix(int width, int height) {
+//\cond DO_NOT_DOCUMENT
+        internal BitMatrix(int width, int height) {
             if (width < 1 || height < 1) {
                 throw new ArgumentException("Both dimensions must be greater than 0");
             }
@@ -58,46 +61,56 @@ namespace iText.Barcodes.Qrcode {
             this.rowSize = rowSize;
             bits = new int[rowSize * height];
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets the requested bit, where true means black.</summary>
         /// <param name="x">The horizontal component (i.e. which column)</param>
         /// <param name="y">The vertical component (i.e. which row)</param>
         /// <returns>value of given bit in matrix</returns>
-        public bool Get(int x, int y) {
+        internal bool Get(int x, int y) {
             int offset = y * rowSize + (x >> 5);
             return (((int)(((uint)bits[offset]) >> (x & 0x1f))) & 1) != 0;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets the given bit to true.</summary>
         /// <param name="x">The horizontal component (i.e. which column)</param>
         /// <param name="y">The vertical component (i.e. which row)</param>
-        public void Set(int x, int y) {
+        internal void Set(int x, int y) {
             int offset = y * rowSize + (x >> 5);
             bits[offset] |= 1 << (x & 0x1f);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Flips the given bit.</summary>
         /// <param name="x">The horizontal component (i.e. which column)</param>
         /// <param name="y">The vertical component (i.e. which row)</param>
-        public void Flip(int x, int y) {
+        internal void Flip(int x, int y) {
             int offset = y * rowSize + (x >> 5);
             bits[offset] ^= 1 << (x & 0x1f);
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Clears all bits (sets to false).</summary>
-        public void Clear() {
+        internal void Clear() {
             int max = bits.Length;
             for (int i = 0; i < max; i++) {
                 bits[i] = 0;
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Sets a square region of the bit matrix to true.</summary>
         /// <param name="left">The horizontal position to begin at (inclusive)</param>
         /// <param name="top">The vertical position to begin at (inclusive)</param>
         /// <param name="width">The width of the region</param>
         /// <param name="height">The height of the region</param>
-        public void SetRegion(int left, int top, int width, int height) {
+        internal void SetRegion(int left, int top, int width, int height) {
             if (top < 0 || left < 0) {
                 throw new ArgumentException("Left and top must be nonnegative");
             }
@@ -116,7 +129,9 @@ namespace iText.Barcodes.Qrcode {
                 }
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>A fast method to retrieve one row of data from the matrix as a BitArray.</summary>
         /// <param name="y">The row to retrieve</param>
         /// <param name="row">An optional caller-allocated BitArray, will be allocated if null or too small</param>
@@ -124,7 +139,7 @@ namespace iText.Barcodes.Qrcode {
         /// The resulting BitArray - this reference should always be used even when passing
         /// your own row
         /// </returns>
-        public BitArray GetRow(int y, BitArray row) {
+        internal BitArray GetRow(int y, BitArray row) {
             if (row == null || row.GetSize() < width) {
                 row = new BitArray(width);
             }
@@ -134,29 +149,36 @@ namespace iText.Barcodes.Qrcode {
             }
             return row;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>The width of the matrix</returns>
-        public int GetWidth() {
+        internal int GetWidth() {
             return width;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>The height of the matrix</returns>
-        public int GetHeight() {
+        internal int GetHeight() {
             return height;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>This method is for compatibility with older code.</summary>
         /// <remarks>
         /// This method is for compatibility with older code. It's only logical to call if the matrix
         /// is square, so I'm throwing if that's not the case.
         /// </remarks>
         /// <returns>row/column dimension of this matrix</returns>
-        public int GetDimension() {
+        internal int GetDimension() {
             if (width != height) {
                 throw new Exception("Can't call getDimension() on a non-square matrix");
             }
             return width;
         }
+//\endcond
 
         public override String ToString() {
             StringBuilder result = new StringBuilder(height * (width + 1));

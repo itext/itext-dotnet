@@ -32,7 +32,7 @@ using iText.Test.Attributes;
 namespace iText.IO.Resolver.Resource {
 //\cond DO_NOT_DOCUMENT
     [NUnit.Framework.Category("IntegrationTest")]
-    internal class DefaultResourceRetrieverTest : ExtendedITextTest {
+    public class DefaultResourceRetrieverTest : ExtendedITextTest {
         private static readonly String SOURCE_FOLDER = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/io/resolver/resource/";
         [NUnit.Framework.Test]

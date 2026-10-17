@@ -35,11 +35,13 @@ namespace iText.StyledXmlParser.Css.Selector.Item {
         }
 //\endcond
 
-        protected internal override bool ResolveNth(INode node, IList<INode> children) {
+//\cond DO_NOT_DOCUMENT
+        internal override bool ResolveNth(INode node, IList<INode> children) {
             IList<INode> reversedChildren = new List<INode>(children);
             JavaCollectionsUtil.Reverse(reversedChildren);
             return base.ResolveNth(node, reversedChildren);
         }
+//\endcond
     }
 //\endcond
 }

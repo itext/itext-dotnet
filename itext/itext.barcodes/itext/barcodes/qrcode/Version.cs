@@ -55,32 +55,43 @@ namespace iText.Barcodes.Qrcode {
             this.totalCodewords = total;
         }
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>the version number</returns>
-        public int GetVersionNumber() {
+        internal int GetVersionNumber() {
             return versionNumber;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>int[] containing the positions of the alignment pattern centers</returns>
-        public int[] GetAlignmentPatternCenters() {
+        internal int[] GetAlignmentPatternCenters() {
             return alignmentPatternCenters;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>total number of code words</returns>
-        public int GetTotalCodewords() {
+        internal int GetTotalCodewords() {
             return totalCodewords;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <returns>the square dimension for the current version number</returns>
-        public int GetDimensionForVersion() {
+        internal int GetDimensionForVersion() {
             return 17 + 4 * versionNumber;
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <param name="ecLevel">error correction level</param>
         /// <returns>the number of EC blocks for the given error correction level</returns>
-        public Version.ECBlocks GetECBlocksForLevel(ErrorCorrectionLevel ecLevel) {
+        internal Version.ECBlocks GetECBlocksForLevel(ErrorCorrectionLevel ecLevel) {
             return ecBlocks[ecLevel.Ordinal()];
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Deduces version information purely from QR Code dimensions.</summary>
         /// <param name="dimension">dimension in modules</param>
         /// <returns>
@@ -88,7 +99,7 @@ namespace iText.Barcodes.Qrcode {
         /// <see cref="Version"/>
         /// for a QR Code of that dimension
         /// </returns>
-        public static iText.Barcodes.Qrcode.Version GetProvisionalVersionForDimension(int dimension) {
+        internal static iText.Barcodes.Qrcode.Version GetProvisionalVersionForDimension(int dimension) {
             if (dimension % 4 != 1) {
                 throw new ArgumentException();
             }
@@ -99,15 +110,18 @@ namespace iText.Barcodes.Qrcode {
                 throw;
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <param name="versionNumber">Version number</param>
         /// <returns>the version for the given version number</returns>
-        public static iText.Barcodes.Qrcode.Version GetVersionForNumber(int versionNumber) {
+        internal static iText.Barcodes.Qrcode.Version GetVersionForNumber(int versionNumber) {
             if (versionNumber < 1 || versionNumber > 40) {
                 throw new ArgumentException();
             }
             return VERSIONS[versionNumber - 1];
         }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         /// <summary>Decode the version information.</summary>

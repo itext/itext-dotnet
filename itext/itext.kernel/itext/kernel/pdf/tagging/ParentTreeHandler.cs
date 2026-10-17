@@ -67,23 +67,30 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 //\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Gets a list of all marked content references on the page.</summary>
-        public virtual ParentTreeHandler.PageMcrsContainer GetPageMarkedContentReferences(PdfPage page) {
+        internal virtual ParentTreeHandler.PageMcrsContainer GetPageMarkedContentReferences(PdfPage page) {
             return pageToPageMcrs.Get(page.GetPdfObject().GetIndirectReference());
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         // Mind that this method searches among items contained in page's content stream  only
-        public virtual PdfMcr FindMcrByMcid(PdfDictionary pageDict, int mcid) {
+        internal virtual PdfMcr FindMcrByMcid(PdfDictionary pageDict, int mcid) {
             ParentTreeHandler.PageMcrsContainer pageMcrs = pageToPageMcrs.Get(pageDict.GetIndirectReference());
             return pageMcrs != null ? pageMcrs.GetPageContentStreamsMcrs().Get(mcid) : null;
         }
+//\endcond
 
-        public virtual PdfObjRef FindObjRefByStructParentIndex(PdfDictionary pageDict, int structParentIndex) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual PdfObjRef FindObjRefByStructParentIndex(PdfDictionary pageDict, int structParentIndex) {
             ParentTreeHandler.PageMcrsContainer pageMcrs = pageToPageMcrs.Get(pageDict.GetIndirectReference());
             return pageMcrs != null ? (PdfObjRef)pageMcrs.GetObjRefs().Get(structParentIndex) : null;
         }
+//\endcond
 
-        public virtual int GetNextMcidForPage(PdfPage page) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual int GetNextMcidForPage(PdfPage page) {
             ParentTreeHandler.PageMcrsContainer pageMcrs = GetPageMarkedContentReferences(page);
             if (pageMcrs == null || pageMcrs.GetPageContentStreamsMcrs().Count == 0) {
                 return 0;
@@ -92,7 +99,9 @@ namespace iText.Kernel.Pdf.Tagging {
                 return (int)Enumerable.Last(pageMcrs.GetPageContentStreamsMcrs()).Key + 1;
             }
         }
+//\endcond
 
+//\cond DO_NOT_DOCUMENT
         /// <summary>Creates and flushes parent tree entry for the page.</summary>
         /// <remarks>
         /// Creates and flushes parent tree entry for the page.
@@ -104,7 +113,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// for which to create parent tree entry. Typically this page is flushed after this
         /// call.
         /// </param>
-        public virtual void CreateParentTreeEntryForPage(PdfPage page) {
+        internal virtual void CreateParentTreeEntryForPage(PdfPage page) {
             ParentTreeHandler.PageMcrsContainer mcrs = GetPageMarkedContentReferences(page);
             if (mcrs == null) {
                 return;
@@ -114,8 +123,10 @@ namespace iText.Kernel.Pdf.Tagging {
                 structTreeRoot.SetModified();
             }
         }
+//\endcond
 
-        public virtual void SavePageStructParentIndexIfNeeded(PdfPage page) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual void SavePageStructParentIndexIfNeeded(PdfPage page) {
             PdfIndirectReference indRef = page.GetPdfObject().GetIndirectReference();
             if (page.IsFlushed() || pageToPageMcrs.Get(indRef) == null) {
                 return;
@@ -126,14 +137,19 @@ namespace iText.Kernel.Pdf.Tagging {
                 pageToStructParentsInd.Put(indRef, (int?)GetOrCreatePageStructParentIndex(page));
             }
         }
+//\endcond
 
-        public virtual PdfDictionary BuildParentTree() {
+//\cond DO_NOT_DOCUMENT
+        internal virtual PdfDictionary BuildParentTree() {
             return (PdfDictionary)parentTree.BuildTree().MakeIndirect(structTreeRoot.GetDocument());
         }
+//\endcond
 
-        public virtual void RegisterMcr(PdfMcr mcr) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual void RegisterMcr(PdfMcr mcr) {
             RegisterMcr(mcr, false);
         }
+//\endcond
 
         private void RegisterMcr(PdfMcr mcr, bool registeringOnInit) {
             PdfIndirectReference mcrPageIndRef = mcr.GetPageIndirectReference();
@@ -219,7 +235,8 @@ namespace iText.Kernel.Pdf.Tagging {
             }
         }
 
-        public virtual void UnregisterMcr(PdfMcr mcrToUnregister) {
+//\cond DO_NOT_DOCUMENT
+        internal virtual void UnregisterMcr(PdfMcr mcrToUnregister) {
             PdfDictionary pageDict = mcrToUnregister.GetPageObject();
             if (pageDict == null) {
                 // invalid mcr, ignore
@@ -259,6 +276,7 @@ namespace iText.Kernel.Pdf.Tagging {
                 }
             }
         }
+//\endcond
 
         private bool IsModificationAllowed() {
             PdfReader reader = this.structTreeRoot.GetDocument().GetReader();
