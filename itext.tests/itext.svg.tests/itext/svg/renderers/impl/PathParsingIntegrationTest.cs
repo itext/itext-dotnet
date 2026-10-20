@@ -163,6 +163,30 @@ namespace iText.Svg.Renderers.Impl {
         }
 
         [NUnit.Framework.Test]
+        public virtual void CompactArcFlags() {
+            // The arc "a2e1 1E1 ..." is rendered as a straight line: its radii are parsed as 0, because
+            // CssTypesValidationUtils#isNumber does not accept numbers with an exponent
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "compactArcFlags");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignedArcParameters() {
+            // The arc "a-2e1,-1E1,..." is rendered as a straight line: its radii are parsed as 0, because
+            // CssTypesValidationUtils#isNumber does not accept numbers with an exponent
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "signedArcParameters");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CompactArcCutouts() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "compactArcCutouts");
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CompactArcRelativeSegments() {
+            ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "compactArcRelativeSegments");
+        }
+
+        [NUnit.Framework.Test]
         public virtual void PathAFlags() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "pathAFlags");
         }
@@ -174,19 +198,16 @@ namespace iText.Svg.Renderers.Impl {
 
         [NUnit.Framework.Test]
         public virtual void PathAOutOfRange() {
-            //TODO: update cmp when DEVSIX-3010 and DEVSIX-3011 fixed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "pathAOutOfRange");
         }
 
         [NUnit.Framework.Test]
         public virtual void Arcs_end_point() {
-            //TODO: update cmp when DEVSIX-3010 fixed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "arcsEndPoint");
         }
 
         [NUnit.Framework.Test]
         public virtual void Flags_out_of_range() {
-            //TODO: update cmp when DEVSIX-3011 fixed
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "flags_out_of_range");
         }
     }

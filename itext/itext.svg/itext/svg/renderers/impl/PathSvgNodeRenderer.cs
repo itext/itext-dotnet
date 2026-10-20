@@ -85,6 +85,8 @@ namespace iText.Svg.Renderers.Impl {
         private static readonly Regex SPLIT_PATTERN = iText.Commons.Utils.StringUtil.RegexCompile("(?=[mlhvcsqtaz])"
             , System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
+        private static readonly Regex SPACES_PATTERN = iText.Commons.Utils.StringUtil.RegexCompile(" +");
+
         /// <summary>
         /// The
         /// <see cref="iText.Svg.Renderers.Path.Impl.ClosePath"/>
@@ -212,18 +214,26 @@ namespace iText.Svg.Renderers.Impl {
         /// <see langword="null"/>
         /// is passed.
         /// </param>
-        /// <returns>
-        /// a
+        /// <param name="shapes">
+        /// the
         /// <see cref="System.Collections.IList{E}"/>
-        /// of each
+        /// to which each
         /// <see cref="iText.Svg.Renderers.Path.IPathShape"/>
-        /// that should be drawn to represent the operator.
+        /// that should be drawn to represent
+        /// the operator is added
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see langword="false"/>
+        /// if the operator contains an error after which the rest of the path must not be rendered,
+        /// <see langword="true"/>
+        /// otherwise
         /// </returns>
-        private IList<IPathShape> ProcessPathOperator(String[] pathProperties, IPathShape previousShape) {
-            IList<IPathShape> shapes = new List<IPathShape>();
+        private bool ProcessPathOperator(String[] pathProperties, IPathShape previousShape, IList<IPathShape> shapes
+            ) {
             if (pathProperties.Length == 0 || String.IsNullOrEmpty(pathProperties[0]) || SvgPathShapeFactory.GetArgumentCount
                 (pathProperties[0]) < 0) {
-                return shapes;
+                return true;
             }
             int argumentCount = SvgPathShapeFactory.GetArgumentCount(pathProperties[0]);
             if (argumentCount == 0) {
@@ -232,16 +242,21 @@ namespace iText.Svg.Renderers.Impl {
                     throw new SvgProcessingException(SvgExceptionMessageConstant.INVALID_CLOSEPATH_OPERATOR_USE);
                 }
                 shapes.Add(zOperator);
-                return shapes;
+                return true;
             }
+            bool isArc = "a".Equals(pathProperties[0]) || "A".Equals(pathProperties[0]);
             for (int index = 1; index < pathProperties.Length; index += argumentCount) {
                 if (index + argumentCount > pathProperties.Length) {
-                    break;
+                    // Per the SVG error handling rules, the path is rendered up to the arc segment containing an error
+                    return !isArc;
+                }
+                if (isArc && !(IsValidArcFlag(pathProperties[index + 3]) && IsValidArcFlag(pathProperties[index + 4]))) {
+                    return false;
                 }
                 IPathShape pathShape = SvgPathShapeFactory.CreatePathShape(pathProperties[0]);
                 if (pathShape is MoveTo) {
                     shapes.AddAll(AddMoveToShapes(pathShape, pathProperties, previousShape));
-                    return shapes;
+                    return true;
                 }
                 String[] shapeCoordinates = GetShapeCoordinates(pathShape, previousShape, JavaUtil.ArraysCopyOfRange(pathProperties
                     , index, index + argumentCount));
@@ -253,7 +268,12 @@ namespace iText.Svg.Renderers.Impl {
                 }
                 previousShape = pathShape;
             }
-            return shapes;
+            bool isArcWithoutArguments = isArc && pathProperties.Length == 1;
+            return !isArcWithoutArguments;
+        }
+
+        private static bool IsValidArcFlag(String flag) {
+            return "0".Equals(flag) || "1".Equals(flag);
         }
 
         private IList<IPathShape> AddMoveToShapes(IPathShape pathShape, String[] pathProperties, IPathShape beforeMoveShape
@@ -307,9 +327,9 @@ namespace iText.Svg.Renderers.Impl {
         /// objects to be drawn on the canvas.
         /// <para />
         /// Each individual operator is passed to
-        /// <see cref="ProcessPathOperator(System.String[], iText.Svg.Renderers.Path.IPathShape)"/>
-        /// to be
-        /// processed individually.
+        /// <see cref="ProcessPathOperator(System.String[], iText.Svg.Renderers.Path.IPathShape, System.Collections.Generic.IList{E})
+        ///     "/>
+        /// to be processed individually.
         /// </remarks>
         /// <returns>
         /// a
@@ -322,10 +342,15 @@ namespace iText.Svg.Renderers.Impl {
             ICollection<String> parsedResults = ParsePathOperations();
             IList<IPathShape> shapes = new List<IPathShape>();
             foreach (String parsedResult in parsedResults) {
-                String[] pathProperties = iText.Commons.Utils.StringUtil.Split(parsedResult, " +");
+                String[] pathProperties = iText.Commons.Utils.StringUtil.Split(SPACES_PATTERN, parsedResult);
                 IPathShape previousShape = shapes.Count == 0 ? null : shapes[shapes.Count - 1];
-                IList<IPathShape> operatorShapes = ProcessPathOperator(pathProperties, previousShape);
-                shapes.AddAll(operatorShapes);
+                // https://www.w3.org/TR/SVG2/paths.html#PathDataErrorHandling:
+                // "The general rule for error handling in path data is that the SVG user agent shall render a 'path'
+                // element up to (but not including) the path command containing the first error in the path data
+                // specification."
+                if (!ProcessPathOperator(pathProperties, previousShape, shapes)) {
+                    break;
+                }
             }
             return shapes;
         }
@@ -362,8 +387,10 @@ namespace iText.Svg.Renderers.Impl {
                 if (!String.IsNullOrEmpty(instTrim)) {
                     char instruction = instTrim[0];
                     String temp = instruction + SPACE_CHAR + instTrim.Substring(1).Replace(",", SPACE_CHAR).Trim();
-                    // Do a run-through for decimal point separation
                     temp = SeparateDecimalPoints(temp);
+                    if (instruction == 'a' || instruction == 'A') {
+                        temp = SeparateArcFlags(temp);
+                    }
                     result.Add(temp);
                 }
             }
@@ -372,9 +399,33 @@ namespace iText.Svg.Renderers.Impl {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
+        internal static String SeparateArcFlags(String command) {
+            String[] tokens = iText.Commons.Utils.StringUtil.Split(SPACES_PATTERN, command.Trim());
+            StringBuilder result = new StringBuilder(tokens[0]);
+            int arcArgumentCount = SvgPathShapeFactory.GetArgumentCount(SvgConstants.Attributes.PATH_DATA_ELLIPTICAL_ARC_A
+                );
+            int arcArgumentIndex = 0;
+            for (int i = 1; i < tokens.Length; ++i) {
+                String token = tokens[i];
+                int argumentStart = 0;
+                while (argumentStart < token.Length && (arcArgumentIndex == 3 || arcArgumentIndex == 4) && (token[argumentStart
+                    ] == '0' || token[argumentStart] == '1')) {
+                    result.Append(SPACE_CHAR).Append(token[argumentStart++]);
+                    ++arcArgumentIndex;
+                }
+                if (argumentStart < token.Length) {
+                    result.Append(SPACE_CHAR).Append(token.Substring(argumentStart));
+                    arcArgumentIndex = (arcArgumentIndex + 1) % arcArgumentCount;
+                }
+            }
+            return result.ToString();
+        }
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         /// <summary>Iterate over the input string and separate numbers from each other with space chars</summary>
         internal virtual String SeparateDecimalPoints(String input) {
-            // If a space or minus sign is found reset
+            // If a space or sign is found reset
             // If a another point is found, add an extra space on before the point
             StringBuilder res = new StringBuilder();
             // We are now among the digits to the right of the decimal point
@@ -384,15 +435,15 @@ namespace iText.Svg.Renderers.Impl {
             for (int i = 0; i < input.Length; i++) {
                 char c = input[i];
                 // Resetting flags
-                if (c == '-' || iText.IO.Util.TextUtil.IsWhiteSpace(c)) {
+                if (c == '-' || c == '+' || iText.IO.Util.TextUtil.IsWhiteSpace(c)) {
                     fractionalPartAfterDecimalPoint = false;
                 }
                 if (iText.IO.Util.TextUtil.IsWhiteSpace(c)) {
                     exponentSignMagnitude = false;
                 }
-                // Add extra space before the next number starting from '.', or before the next number starting with '-'
-                if (EndsWithNonWhitespace(res) && (c == '.' && fractionalPartAfterDecimalPoint || c == '-' && !exponentSignMagnitude
-                    )) {
+                // Add extra space before the next number starting from '.', '-' or '+'
+                if (EndsWithNonWhitespace(res) && (c == '.' && fractionalPartAfterDecimalPoint || (c == '-' || c == '+') &&
+                     !exponentSignMagnitude)) {
                     res.Append(" ");
                 }
                 if (c == '.') {
