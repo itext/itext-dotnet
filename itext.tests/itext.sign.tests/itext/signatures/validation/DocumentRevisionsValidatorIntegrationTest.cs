@@ -476,6 +476,234 @@ namespace iText.Signatures.Validation {
             }
         }
 
+        [NUnit.Framework.Test]
+        public virtual void TwoSignaturesWithAppearancesTest() {
+            SetUp(false);
+            builder.GetProperties().SetStrictDocumentRevisionsValidation(true);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "simpleTaggedDoc.pdf"))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
+                    .TOO_MANY_SIGNATURES_WITH_APPEARANCES).WithStatus(ReportItem.ReportItemStatus.INVALID)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void TwoSignaturesWith1AppearanceTest() {
+            SetUp(false);
+            builder.GetProperties().SetStrictDocumentRevisionsValidation(true);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "2signatures1Appearance.pdf"))
+                ) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID).HasNumberOfFailures
+                    (0));
+            }
+        }
+
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void ContinueAfterStrictModeValidationFailureTest(bool continueValidationAfterFail) {
+            SetUp(continueValidationAfterFail);
+            builder.GetProperties().SetStrictDocumentRevisionsValidation(true);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "taggedDocRemoveStructTreeElement.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                if (continueValidationAfterFail) {
+                    AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                        (2).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
+                        .TOO_MANY_SIGNATURES_WITH_APPEARANCES).WithStatus(ReportItem.ReportItemStatus.INVALID)).HasLogItem((l) =>
+                         l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator.STRUCT_TREE_ROOT_MODIFIED
+                        ).WithStatus(ReportItem.ReportItemStatus.INVALID)));
+                }
+                else {
+                    AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                        (1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
+                        .TOO_MANY_SIGNATURES_WITH_APPEARANCES).WithStatus(ReportItem.ReportItemStatus.INVALID)));
+                }
+            }
+        }
+
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void SignatureAppearanceModifiedLevel2Test(bool strictDocumentRevisionsValidation) {
+            SetUp(false);
+            builder.GetProperties().SetStrictDocumentRevisionsValidation(strictDocumentRevisionsValidation);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signatureAppearanceModifiedLevel2.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                if (strictDocumentRevisionsValidation) {
+                    AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                        (2).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(MessageFormatUtil
+                        .Format(DocumentRevisionsValidator.FIELD_REMOVED, "Signature1")).WithStatus(ReportItem.ReportItemStatus
+                        .INVALID)).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
+                        .NOT_ALLOWED_ACROFORM_CHANGES).WithStatus(ReportItem.ReportItemStatus.INVALID)));
+                }
+                else {
+                    AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+                }
+            }
+        }
+
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void SignatureAppearanceModifiedLevel3Test(bool strictDocumentRevisionsValidation) {
+            SetUp(false);
+            builder.GetProperties().SetStrictDocumentRevisionsValidation(strictDocumentRevisionsValidation);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signatureAppearanceModifiedLevel3.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                if (strictDocumentRevisionsValidation) {
+                    AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                        (2).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(MessageFormatUtil
+                        .Format(DocumentRevisionsValidator.FIELD_REMOVED, "Signature1")).WithStatus(ReportItem.ReportItemStatus
+                        .INVALID)).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
+                        .NOT_ALLOWED_ACROFORM_CHANGES).WithStatus(ReportItem.ReportItemStatus.INVALID)));
+                }
+                else {
+                    AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+                }
+            }
+        }
+
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void SignatureAppearanceModifiedSplitFieldLevel2Test(bool strictDocumentRevisionsValidation
+            ) {
+            SetUp(false);
+            builder.GetProperties().SetStrictDocumentRevisionsValidation(strictDocumentRevisionsValidation);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signatureAppearanceModifiedSplitFieldLevel2.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                if (strictDocumentRevisionsValidation) {
+                    AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                        (3).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
+                        .ANNOTATIONS_MODIFIED).WithStatus(ReportItem.ReportItemStatus.INVALID)).HasLogItem((l) => l.WithCheckName
+                        (DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(MessageFormatUtil.Format(DocumentRevisionsValidator
+                        .FIELD_REMOVED, "Signature1")).WithStatus(ReportItem.ReportItemStatus.INVALID)).HasLogItem((l) => l.WithCheckName
+                        (DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator.NOT_ALLOWED_ACROFORM_CHANGES
+                        ).WithStatus(ReportItem.ReportItemStatus.INVALID)));
+                }
+                else {
+                    AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+                }
+            }
+        }
+
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void SignatureAppearanceModifiedSplitFieldLevel3Test(bool strictDocumentRevisionsValidation
+            ) {
+            SetUp(false);
+            builder.GetProperties().SetStrictDocumentRevisionsValidation(strictDocumentRevisionsValidation);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signatureAppearanceModifiedSplitFieldLevel3.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                if (strictDocumentRevisionsValidation) {
+                    AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                        (3).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
+                        .STRICT_ANNOTATIONS_MODIFIED).WithStatus(ReportItem.ReportItemStatus.INVALID)).HasLogItem((l) => l.WithCheckName
+                        (DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(MessageFormatUtil.Format(DocumentRevisionsValidator
+                        .FIELD_REMOVED, "Signature1")).WithStatus(ReportItem.ReportItemStatus.INVALID)).HasLogItem((l) => l.WithCheckName
+                        (DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator.NOT_ALLOWED_ACROFORM_CHANGES
+                        ).WithStatus(ReportItem.ReportItemStatus.INVALID)));
+                }
+                else {
+                    AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+                }
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignatureAppearanceModifiedForSigningLevel2Test() {
+            SetUp(false);
+            builder.GetProperties().SetStrictDocumentRevisionsValidation(true);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signatureAppearanceModifiedForSigningLevel2.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void SignatureAppearanceModifiedForSigningLevel3Test() {
+            SetUp(false);
+            builder.GetProperties().SetStrictDocumentRevisionsValidation(true);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signatureAppearanceModifiedForSigningLevel3.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+            }
+        }
+
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void SignatureAppearanceAddedAsKidLevel2Test(bool strictDocumentRevisionsValidation) {
+            SetUp(false);
+            builder.GetProperties().SetStrictDocumentRevisionsValidation(strictDocumentRevisionsValidation);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signatureAppearanceAddedAsKidLevel2.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                // We do not allow adding a new annotation as a kid of an existing signature field even in not strict mode.
+                // Though Acrobat allows.
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (3).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
+                    .ANNOTATIONS_MODIFIED).WithStatus(ReportItem.ReportItemStatus.INVALID)).HasLogItem((l) => l.WithCheckName
+                    (DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(MessageFormatUtil.Format(DocumentRevisionsValidator
+                    .FIELD_REMOVED, "Signature1")).WithStatus(ReportItem.ReportItemStatus.INVALID)).HasLogItem((l) => l.WithCheckName
+                    (DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator.NOT_ALLOWED_ACROFORM_CHANGES
+                    ).WithStatus(ReportItem.ReportItemStatus.INVALID)));
+            }
+        }
+
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void SignatureAppearanceAddedAsKidLevel3Test(bool strictDocumentRevisionsValidation) {
+            SetUp(false);
+            builder.GetProperties().SetStrictDocumentRevisionsValidation(strictDocumentRevisionsValidation);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signatureAppearanceAddedAsKidLevel3.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                if (strictDocumentRevisionsValidation) {
+                    AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                        (3).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
+                        .STRICT_ANNOTATIONS_MODIFIED).WithStatus(ReportItem.ReportItemStatus.INVALID)).HasLogItem((l) => l.WithCheckName
+                        (DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(MessageFormatUtil.Format(DocumentRevisionsValidator
+                        .FIELD_REMOVED, "Signature1")).WithStatus(ReportItem.ReportItemStatus.INVALID)).HasLogItem((l) => l.WithCheckName
+                        (DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator.NOT_ALLOWED_ACROFORM_CHANGES
+                        ).WithStatus(ReportItem.ReportItemStatus.INVALID)));
+                }
+                else {
+                    AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+                }
+            }
+        }
+
+        [NUnit.Framework.TestCaseSource("CreateParameters")]
+        public virtual void SignatureAppearanceAddedAsKidToMergedFieldLevel3Test(bool strictDocumentRevisionsValidation
+            ) {
+            SetUp(false);
+            builder.GetProperties().SetStrictDocumentRevisionsValidation(strictDocumentRevisionsValidation);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "signatureAppearanceAddedAsKidToMergedFieldLevel3.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                if (strictDocumentRevisionsValidation) {
+                    AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                        (2).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(MessageFormatUtil
+                        .Format(DocumentRevisionsValidator.FIELD_REMOVED, "Signature1")).WithStatus(ReportItem.ReportItemStatus
+                        .INVALID)).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator
+                        .NOT_ALLOWED_ACROFORM_CHANGES).WithStatus(ReportItem.ReportItemStatus.INVALID)));
+                }
+                else {
+                    AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+                }
+            }
+        }
+
         [NUnit.Framework.TestCaseSource("CreateParameters")]
         public virtual void SimpleTaggedDocTest(bool continueValidationAfterFail) {
             SetUp(continueValidationAfterFail);

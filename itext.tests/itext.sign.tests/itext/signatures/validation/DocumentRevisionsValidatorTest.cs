@@ -454,6 +454,7 @@ namespace iText.Signatures.Validation {
                 validator.ValidateRevision(documentRevisions[documentRevisions.Count - 2], documentRevisions[documentRevisions
                     .Count - 1], document, validationReport, validationContext);
                 // Between these two revisions new unsigned signature field was added, it is not allowed.
+                // Acrobat allows it though.
                 AssertValidationReport.AssertThat(validationReport, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID
                     ).HasNumberOfFailures(2).HasNumberOfLogs(2).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator
                     .DOC_MDP_CHECK).WithMessage(DocumentRevisionsValidator.UNEXPECTED_FORM_FIELD, (i) => "signature").WithStatus

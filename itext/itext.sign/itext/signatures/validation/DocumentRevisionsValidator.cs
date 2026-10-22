@@ -62,6 +62,10 @@ namespace iText.Signatures.Validation {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
+        internal const String STRICT_ANNOTATIONS_MODIFIED = "Signature field appearance was modified or added in strict mode.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         internal const String BASE_VERSION_DECREASED = "Base version number in developer extension \"{0}\" dictionary was decreased.";
 //\endcond
 
@@ -195,6 +199,10 @@ namespace iText.Signatures.Validation {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
+        internal const String TOO_MANY_SIGNATURES_WITH_APPEARANCES = "The second signature with an appearance stream is not allowed.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         internal const String STRUCT_TREE_CONTENT_MODIFIED = "Struct tree content element is unexpectedly modified.";
 //\endcond
 
@@ -253,6 +261,8 @@ namespace iText.Signatures.Validation {
         private AccessPermissions accessPermissions = AccessPermissions.ANNOTATION_MODIFICATION;
 
         private AccessPermissions requestedAccessPermissions = AccessPermissions.UNSPECIFIED;
+
+        private bool strictDocumentRevisionsValidation;
 
         private ReportItem.ReportItemStatus unexpectedXrefChangesStatus = ReportItem.ReportItemStatus.INFO;
 
@@ -399,6 +409,14 @@ namespace iText.Signatures.Validation {
                 report.AddReportItem(new ReportItem(DOC_MDP_CHECK, DOCUMENT_WITHOUT_SIGNATURES, ReportItem.ReportItemStatus
                     .INFO));
                 return report;
+            }
+            strictDocumentRevisionsValidation = properties.GetStrictDocumentRevisionsValidation(localContext);
+            if (strictDocumentRevisionsValidation && CountSignatureAppearanceStreams(signatureUtil, signatures) > 1) {
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, TOO_MANY_SIGNATURES_WITH_APPEARANCES, ReportItem.ReportItemStatus
+                    .INVALID));
+                if (StopValidation(report, localContext)) {
+                    return report;
+                }
             }
             bool updateAccessPermissions = true;
             bool documentSigned = false;
@@ -586,6 +604,60 @@ namespace iText.Signatures.Validation {
 
         private static PdfObject GetObjectFromStructTreeContent(PdfObject structTreeContent) {
             return structTreeContent is PdfDictionary ? ((PdfDictionary)structTreeContent).Get(PdfName.Obj) : null;
+        }
+
+        private static int CountSignatureAppearanceStreams(SignatureUtil signatureUtil, IList<String> signatures) {
+            int signaturesWithAppearances = 0;
+            foreach (String signatureName in signatures) {
+                PdfDictionary signatureField = signatureUtil.GetSignatureFormFieldDictionary(signatureName);
+                if (HasSignatureAppearanceStream(signatureField)) {
+                    signaturesWithAppearances++;
+                }
+            }
+            return signaturesWithAppearances;
+        }
+
+        private static bool HasSignatureAppearanceStream(PdfDictionary signatureField) {
+            if (signatureField == null) {
+                return false;
+            }
+            PdfObject appearance = signatureField.Get(PdfName.AP);
+            if (appearance != null) {
+                return true;
+            }
+            PdfArray kids = signatureField.GetAsArray(PdfName.Kids);
+            if (kids != null) {
+                for (int i = 0; i < kids.Size(); ++i) {
+                    PdfDictionary kid = kids.GetAsDictionary(i);
+                    if (kid != null && HasSignatureAppearanceStream(kid)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private static bool IsSignatureWidget(PdfDictionary widget) {
+            PdfName widgetType = widget.GetAsName(PdfName.FT);
+            if (PdfName.Sig.Equals(widgetType)) {
+                return true;
+            }
+            else {
+                if (widgetType != null) {
+                    return false;
+                }
+            }
+            PdfDictionary parent = widget.GetAsDictionary(PdfName.Parent);
+            return parent != null && IsSignatureWidget(parent);
+        }
+
+        private static bool HasFieldValue(PdfDictionary widget) {
+            PdfObject fieldValue = widget.Get(PdfName.V);
+            if (fieldValue != null) {
+                return true;
+            }
+            PdfDictionary parent = widget.GetAsDictionary(PdfName.Parent);
+            return parent != null && HasFieldValue(parent);
         }
 
         private bool StopValidation(ValidationReport result, ValidationContext validationContext) {
@@ -782,6 +854,7 @@ namespace iText.Signatures.Validation {
         private void ResetClassFields() {
             lockedFields.Clear();
             accessPermissions = AccessPermissions.ANNOTATION_MODIFICATION;
+            strictDocumentRevisionsValidation = false;
         }
 
         //
@@ -1348,8 +1421,9 @@ namespace iText.Signatures.Validation {
         private PdfDictionary RetrieveTheSameField(ICollection<PdfDictionary> currFields, PdfDictionary previousField
             ) {
             foreach (PdfDictionary currentField in currFields) {
-                PdfDictionary prevFormDict = CopyFieldDictionary(previousField);
-                PdfDictionary currFormDict = CopyFieldDictionary(currentField);
+                bool allowAPModification = AllowAppearanceModification(previousField, currentField);
+                PdfDictionary prevFormDict = CopyFieldDictionary(previousField, allowAPModification);
+                PdfDictionary currFormDict = CopyFieldDictionary(currentField, allowAPModification);
                 if (DocumentRevisionPdfObjectComparator.ComparePdfObjects(prevFormDict, currFormDict, usuallyModifiedObjects
                     ) && CompareIndirectReferencesObjNums(prevFormDict.Get(PdfName.Parent), currFormDict.Get(PdfName.Parent
                     ), new ValidationReport(), "Form field parent") && CompareIndirectReferencesObjNums(prevFormDict.Get(PdfName
@@ -1359,6 +1433,11 @@ namespace iText.Signatures.Validation {
                 }
             }
             return null;
+        }
+
+        private bool AllowAppearanceModification(PdfDictionary prevField, PdfDictionary currField) {
+            return !strictDocumentRevisionsValidation || !IsSignatureWidget(prevField) || !IsSignatureWidget(currField
+                ) || !HasFieldValue(prevField) || !HasFieldValue(currField);
         }
 
         /// <summary>DocMDP level &gt;= 2 allows setting values of the fields and accordingly update the widget appearances of them.
@@ -1463,7 +1542,8 @@ namespace iText.Signatures.Validation {
 
         private bool CompareWidgets(PdfArray prevFields, PdfArray currFields, ValidationReport report) {
             if (GetAccessPermissions() == AccessPermissions.ANNOTATION_MODIFICATION) {
-                return true;
+                return !strictDocumentRevisionsValidation || VerifySignatureWidgetAppearances(prevFields, currFields, report
+                    );
             }
             IList<PdfDictionary> prevAnnots = PopulateWidgetAnnotations(prevFields);
             IList<PdfDictionary> currAnnots = PopulateWidgetAnnotations(currFields);
@@ -1473,10 +1553,11 @@ namespace iText.Signatures.Validation {
                 return false;
             }
             for (int i = 0; i < prevAnnots.Count; i++) {
+                bool allowAPModification = AllowAppearanceModification(prevAnnots[i], currAnnots[i]);
                 PdfDictionary prevAnnot = new PdfDictionary(prevAnnots[i]);
-                RemoveAppearanceRelatedProperties(prevAnnot);
+                RemoveAppearanceRelatedProperties(prevAnnot, allowAPModification);
                 PdfDictionary currAnnot = new PdfDictionary(currAnnots[i]);
-                RemoveAppearanceRelatedProperties(currAnnot);
+                RemoveAppearanceRelatedProperties(currAnnot, allowAPModification);
                 if (!DocumentRevisionPdfObjectComparator.ComparePdfObjects(prevAnnot, currAnnot, usuallyModifiedObjects) ||
                      !CompareIndirectReferencesObjNums(prevAnnots[i].Get(PdfName.P), currAnnots[i].Get(PdfName.P), report, 
                     "Page object with which annotation is associated") || !CompareIndirectReferencesObjNums(prevAnnots[i].
@@ -1489,6 +1570,51 @@ namespace iText.Signatures.Validation {
                 checkedAnnots.Add(currAnnots[i]);
             }
             return true;
+        }
+
+        private bool VerifySignatureWidgetAppearances(PdfArray prevFields, PdfArray currFields, ValidationReport report
+            ) {
+            IList<PdfDictionary> prevSignatureWidgets = PopulateWidgetAnnotations(prevFields).Where((widget) => iText.Signatures.Validation.DocumentRevisionsValidator
+                .IsSignatureWidget(widget)).ToList();
+            IList<PdfDictionary> currSignatureWidgets = PopulateWidgetAnnotations(currFields).Where((widget) => iText.Signatures.Validation.DocumentRevisionsValidator
+                .IsSignatureWidget(widget)).ToList();
+            ICollection<PdfDictionary> currSignatureWidgetsSet = new HashSet<PdfDictionary>(currSignatureWidgets);
+            IList<PdfDictionary> matchedSignatureFields = new List<PdfDictionary>(currSignatureWidgets.Count);
+            foreach (PdfDictionary prevWidget in prevSignatureWidgets) {
+                PdfDictionary currWidget = RetrieveTheSameField(currSignatureWidgetsSet, prevWidget);
+                if (currWidget == null) {
+                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, STRICT_ANNOTATIONS_MODIFIED, ReportItem.ReportItemStatus
+                        .INVALID));
+                    return false;
+                }
+                matchedSignatureFields.Add(GetSignatureField(currWidget));
+                currSignatureWidgetsSet.Remove(currWidget);
+            }
+            // Go over remaining widgets and check if they belong to previously signed fields.
+            // If yes, then it is not allowed to modify them (in strict mode), a new kid was added.
+            foreach (PdfDictionary currWidget in currSignatureWidgetsSet) {
+                if (BelongsToField(currWidget, matchedSignatureFields)) {
+                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, STRICT_ANNOTATIONS_MODIFIED, ReportItem.ReportItemStatus
+                        .INVALID));
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static PdfDictionary GetSignatureField(PdfDictionary widget) {
+            PdfDictionary field = widget.GetAsDictionary(PdfName.Parent);
+            return field == null ? widget : field;
+        }
+
+        private static bool BelongsToField(PdfDictionary widget, IList<PdfDictionary> signatureFields) {
+            PdfDictionary currField = GetSignatureField(widget);
+            foreach (PdfDictionary field in signatureFields) {
+                if (field == currField) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private bool ComparePages(PdfDictionary prevPages, PdfDictionary currPages, ValidationReport report) {
@@ -1749,34 +1875,40 @@ namespace iText.Signatures.Validation {
             return acroFormCopy;
         }
 
-        private PdfDictionary CopyFieldDictionary(PdfDictionary field) {
+        private PdfDictionary CopyFieldDictionary(PdfDictionary field, bool allowAppearanceModification) {
             PdfDictionary formDict = new PdfDictionary(field);
             formDict.Remove(PdfName.V);
             // Value for the choice fields could be specified by the /I key.
             formDict.Remove(PdfName.I);
-            formDict.Remove(PdfName.Parent);
             formDict.Remove(PdfName.Kids);
             // Remove also annotation related properties (e.g. in case of the merged field).
-            RemoveAppearanceRelatedProperties(formDict);
+            RemoveAppearanceRelatedProperties(formDict, allowAppearanceModification);
             return formDict;
         }
 
-        private void RemoveAppearanceRelatedProperties(PdfDictionary annotDict) {
-            annotDict.Remove(PdfName.P);
-            annotDict.Remove(PdfName.Parent);
+        private void RemoveAppearanceRelatedProperties(PdfDictionary annotDict, bool allowAppearanceModification) {
             if (GetAccessPermissions() == AccessPermissions.FORM_FIELDS_MODIFICATION) {
-                annotDict.Remove(PdfName.AP);
+                if (allowAppearanceModification) {
+                    // Do not allow to modify AP of signature field in strict mode
+                    annotDict.Remove(PdfName.AP);
+                }
                 annotDict.Remove(PdfName.AS);
                 annotDict.Remove(PdfName.M);
                 annotDict.Remove(PdfName.F);
             }
-            if (GetAccessPermissions() == AccessPermissions.ANNOTATION_MODIFICATION) {
-                foreach (PdfName key in new PdfDictionary(annotDict).KeySet()) {
-                    if (!PdfFormField.GetFormFieldKeys().Contains(key)) {
-                        annotDict.Remove(key);
+            else {
+                if (GetAccessPermissions() == AccessPermissions.ANNOTATION_MODIFICATION) {
+                    foreach (PdfName key in new PdfDictionary(annotDict).KeySet()) {
+                        if (!PdfFormField.GetFormFieldKeys().Contains(key) && (!PdfName.AP.Equals(key) || allowAppearanceModification
+                            )) {
+                            // Do not allow to modify AP of signature field in strict mode
+                            annotDict.Remove(key);
+                        }
                     }
                 }
             }
+            annotDict.Remove(PdfName.P);
+            annotDict.Remove(PdfName.Parent);
         }
 
         //
