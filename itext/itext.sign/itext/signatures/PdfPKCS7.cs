@@ -81,14 +81,14 @@ namespace iText.Signatures {
 
         // Constructors for creating new signatures
         /// <summary>Assembles all the elements needed to create a signature, except for the data.</summary>
-        /// <param name="privKey">the private key</param>
+        /// <param name="privateKey">the private key</param>
         /// <param name="certChain">the certificate chain</param>
         /// <param name="interfaceDigest">the interface digest</param>
         /// <param name="hashAlgorithm">the hash algorithm</param>
         /// <param name="provider">the provider or <c>null</c> for the default provider</param>
         /// <param name="hasEncapContent"><c>true</c> if the sub-filter is adbe.pkcs7.sha1</param>
-        public PdfPKCS7(IPrivateKey privKey, IX509Certificate[] certChain, String hashAlgorithm, IExternalDigest interfaceDigest
-            , bool hasEncapContent) {
+        public PdfPKCS7(IPrivateKey privateKey, IX509Certificate[] certChain, String hashAlgorithm, IExternalDigest
+             interfaceDigest, bool hasEncapContent) {
             this.interfaceDigest = interfaceDigest;
             // message digest
             digestAlgorithmOid = DigestAlgorithms.GetAllowedDigest(hashAlgorithm);
@@ -104,8 +104,8 @@ namespace iText.Signatures {
             digestalgos = new HashSet<String>();
             digestalgos.Add(digestAlgorithmOid);
             // find the signing algorithm
-            if (privKey != null) {
-                String signatureAlgo = SignUtils.GetPrivateKeyAlgorithm(privKey);
+            if (privateKey != null) {
+                String signatureAlgo = SignUtils.GetPrivateKeyAlgorithm(privateKey);
                 String mechanismOid = SignatureMechanisms.GetSignatureMechanismOid(signatureAlgo, hashAlgorithm);
                 if (mechanismOid == null) {
                     throw new PdfException(SignExceptionMessageConstant.COULD_NOT_DETERMINE_SIGNATURE_MECHANISM_OID).SetMessageParams
@@ -119,20 +119,20 @@ namespace iText.Signatures {
                 messageDigest = DigestAlgorithms.GetMessageDigest(GetDigestAlgorithmName());
             }
             // initialize the Signature object
-            if (privKey != null) {
-                sig = InitSignature(privKey);
+            if (privateKey != null) {
+                sig = InitSignature(privateKey);
             }
         }
 
         /// <summary>Assembles all the elements needed to create a signature, except for the data.</summary>
-        /// <param name="privKey">the private key</param>
+        /// <param name="privateKey">the private key</param>
         /// <param name="certChain">the certificate chain</param>
         /// <param name="hashAlgorithm">the hash algorithm</param>
         /// <param name="provider">the provider or <c>null</c> for the default provider</param>
         /// <param name="hasEncapContent"><c>true</c> if the sub-filter is adbe.pkcs7.sha1</param>
-        public PdfPKCS7(IPrivateKey privKey, IX509Certificate[] certChain, String hashAlgorithm, bool hasEncapContent
+        public PdfPKCS7(IPrivateKey privateKey, IX509Certificate[] certChain, String hashAlgorithm, bool hasEncapContent
             )
-            : this(privKey, certChain, hashAlgorithm, new BouncyCastleDigest(), hasEncapContent) {
+            : this(privateKey, certChain, hashAlgorithm, new BouncyCastleDigest(), hasEncapContent) {
         }
 
         // Constructors for validating existing signatures
@@ -302,7 +302,7 @@ namespace iText.Signatures {
                                     IMessageDigest m2 = SignUtils.GetMessageDigest("SHA-1");
                                     byte[] signCertHash = m2.Digest(enc2);
                                     byte[] hs2 = cerv2.GetCertHash();
-                                    if (!JavaUtil.ArraysEquals(signCertHash, hs2)) {
+                                    if (!JavaUtil.FixedTimeEquals(signCertHash, hs2)) {
                                         throw new ArgumentException("Signing certificate doesn't match the ESS information.");
                                     }
                                     foundCades = true;
@@ -319,7 +319,7 @@ namespace iText.Signatures {
                                         IMessageDigest m2 = SignUtils.GetMessageDigest(DigestAlgorithms.GetDigest(ai2.GetAlgorithm().GetId()));
                                         byte[] signCertHash = m2.Digest(enc2);
                                         byte[] hs2 = cerv2.GetCertHash();
-                                        if (!JavaUtil.ArraysEquals(signCertHash, hs2)) {
+                                        if (!JavaUtil.FixedTimeEquals(signCertHash, hs2)) {
                                             throw new ArgumentException("Signing certificate doesn't match the ESS information.");
                                         }
                                         foundCades = true;
@@ -1159,7 +1159,7 @@ namespace iText.Signatures {
                         }
                         // Ignore.
                         // Check that encapMessageContent is TSTInfo
-                        bool isTSTInfo = JavaUtil.ArraysEquals(tstInfo, encapMessageContent);
+                        bool isTSTInfo = JavaUtil.FixedTimeEquals(tstInfo, encapMessageContent);
                         if (!isTSTInfo) {
                             // This additional fallback is required in cases when encapMessageContent is ber encoded.
                             // In this method we re-encode it into der.
@@ -1167,15 +1167,15 @@ namespace iText.Signatures {
                         }
                         IMessageImprint imprint = timeStampTokenInfo.GetMessageImprint();
                         byte[] imphashed = imprint.GetHashedMessage();
-                        verifySignedMessageContent = isTSTInfo && JavaUtil.ArraysEquals(msgDigestBytes, imphashed);
+                        verifySignedMessageContent = isTSTInfo && JavaUtil.FixedTimeEquals(msgDigestBytes, imphashed);
                     }
                     else {
-                        verifySignedMessageContent = JavaUtil.ArraysEquals(msgDigestBytes, encapMessageContent);
+                        verifySignedMessageContent = JavaUtil.FixedTimeEquals(msgDigestBytes, encapMessageContent);
                     }
                     encContDigest.Update(encapMessageContent);
-                    encContDigestCompare = JavaUtil.ArraysEquals(encContDigest.Digest(), digestAttr);
+                    encContDigestCompare = JavaUtil.FixedTimeEquals(encContDigest.Digest(), digestAttr);
                 }
-                bool absentEncContDigestCompare = JavaUtil.ArraysEquals(msgDigestBytes, digestAttr);
+                bool absentEncContDigestCompare = JavaUtil.FixedTimeEquals(msgDigestBytes, digestAttr);
                 bool concludingDigestCompare = absentEncContDigestCompare || encContDigestCompare;
                 bool sigVerify = VerifySigAttributes(sigAttr) || VerifySigAttributes(sigAttrDer);
                 verifyResult = concludingDigestCompare && sigVerify && verifySignedMessageContent;
@@ -1200,7 +1200,7 @@ namespace iText.Signatures {
             String algOID = imprint.GetHashAlgorithm().GetAlgorithm().GetId();
             byte[] md = SignUtils.GetMessageDigest(DigestAlgorithms.GetDigest(algOID)).Digest(signatureValue);
             byte[] imphashed = imprint.GetHashedMessage();
-            return JavaUtil.ArraysEquals(md, imphashed);
+            return JavaUtil.FixedTimeEquals(md, imphashed);
         }
 
         private bool VerifyTSTInfoDer(byte[] tstInfo) {

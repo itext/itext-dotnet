@@ -65,7 +65,7 @@ namespace iText.Signatures.Validation {
             }
 
             byte[] expectedHash = Convert.FromBase64String(hashB64);
-            if (!certHash.SequenceEqual(expectedHash)) {
+            if (!JavaUtil.FixedTimeEquals(expectedHash, certHash)) {
                 throw new PdfException(MessageFormatUtil.Format(SignExceptionMessageConstant.CERTIFICATE_HASH_MISMATCH,
                     cert
                         .GetIssuerDN().ToString()));

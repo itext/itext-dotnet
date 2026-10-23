@@ -355,5 +355,24 @@ namespace iText.Commons.Utils {
         public static String CharToString(char ch) {
             return ch.ToString();
         }
+
+        // CryptographicOperations.FixedTimeEquals exists starting from netstandard2.1, .NET Core 2.1+, .NET 5+
+        public static bool FixedTimeEquals(byte[] a, byte[] b)
+        {
+            if (a == null || b == null) {
+                return false;
+            }
+
+            if (a.Length != b.Length) {
+                return false;
+            }
+
+            int diff = 0;
+            for (int i = 0; i < a.Length; i++) {
+                diff |= a[i] ^ b[i];
+            }
+
+            return diff == 0;
+        }
     }
 }

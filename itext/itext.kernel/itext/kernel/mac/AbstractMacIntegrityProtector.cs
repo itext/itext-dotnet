@@ -153,8 +153,8 @@ namespace iText.Kernel.Mac {
                     )).GetEncoded();
                 byte[] actualMessageDigest = macContainerReader.ParseMessageDigest().GetEncoded();
                 byte[] actualMac = macContainerReader.ParseMac();
-                if (!JavaUtil.ArraysEquals(expectedMac, actualMac) || !JavaUtil.ArraysEquals(expectedMessageDigest, actualMessageDigest
-                    )) {
+                if (!JavaUtil.FixedTimeEquals(expectedMac, actualMac) || !JavaUtil.FixedTimeEquals(expectedMessageDigest, 
+                    actualMessageDigest)) {
                     throw new MacValidationException(KernelExceptionMessageConstant.MAC_VALIDATION_FAILED);
                 }
             }

@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using iText.Commons.Digest;
+using iText.Commons.Utils;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel.Exceptions;
@@ -88,13 +89,33 @@ namespace iText.Kernel.Crypto.Securityhandler {
             return ByteUtils.GetIsoBytes(@string.GetValue());
         }
 
+        /// <summary>Compares two byte arrays for equality up to a specified size.</summary>
+        /// <remarks>
+        /// Compares two byte arrays for equality up to a specified size.
+        /// <para />
+        /// This method is used to compare cryptographic values in a way that avoids timing attacks.
+        /// </remarks>
+        /// <param name="ar1">the first byte array</param>
+        /// <param name="ar2">the second byte array</param>
+        /// <param name="size">the number of bytes to compare</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the specified number of bytes in both arrays are equal,
+        /// <see langword="false"/>
+        /// otherwise.
+        /// If any of the arrays is smaller than
+        /// <paramref name="size"/>
+        /// , the method returns
+        /// <see langword="false"/>
+        /// </returns>
         protected internal static bool EqualsArray(byte[] ar1, byte[] ar2, int size) {
-            for (int k = 0; k < size; ++k) {
-                if (ar1[k] != ar2[k]) {
-                    return false;
-                }
+            if (ar1.Length < size || ar2.Length < size) {
+                return false;
             }
-            return true;
+            byte[] ba1 = JavaUtil.ArraysCopyOf(ar1, size);
+            byte[] ba2 = JavaUtil.ArraysCopyOf(ar2, size);
+            return JavaUtil.FixedTimeEquals(ba1, ba2);
         }
     }
 }

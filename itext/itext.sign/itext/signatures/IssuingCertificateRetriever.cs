@@ -30,6 +30,7 @@ using iText.Commons.Bouncycastle.Asn1.Ocsp;
 using iText.Commons.Bouncycastle.Asn1.X500;
 using iText.Commons.Bouncycastle.Asn1.X509;
 using iText.Commons.Bouncycastle.Cert;
+using iText.Commons.Digest;
 using iText.Commons.Internal.Runtime;
 using iText.Commons.Logs;
 using iText.Commons.Utils;
@@ -430,7 +431,7 @@ namespace iText.Signatures {
                     // According to RFC2560 hash algorithm is always SHA-1.
                     byte[] publicKeyHash = DigestAlgorithms.Digest(new MemoryStream(publicKeyInfo.GetPublicKeyData().GetBytes(
                         )), DigestAlgorithms.GetMessageDigest(DigestAlgorithms.SHA1));
-                    if (JavaUtil.ArraysEquals(publicKeyHash, keyHash)) {
+                    if (JavaUtil.FixedTimeEquals(publicKeyHash, keyHash)) {
                         return JavaCollectionsUtil.Singleton(cert);
                     }
                 }
