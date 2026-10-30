@@ -955,11 +955,11 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            base.Draw(drawContext);
             bool isRelativePosition = IsRelativePosition();
             if (isRelativePosition) {
                 ApplyRelativePositioningTranslation(false);
             }
+            base.Draw(drawContext);
             if (line.GetEnd() > line.GetStart() || savedWordBreakAtLineEnding != null) {
                 UnitValue fontSize = this.GetPropertyAsUnitValue(Property.FONT_SIZE);
                 if (!fontSize.IsPointValue()) {

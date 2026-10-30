@@ -142,7 +142,7 @@ namespace iText.Layout.Renderer {
 
         protected internal bool? isVerticalMode;
 
-        private bool relativePositioningTranslationApplied = false;
+        private int relativePositioningApplyingCounter = 0;
 
         /// <summary>Creates a renderer.</summary>
         protected internal AbstractRenderer() {
@@ -1974,8 +1974,17 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual void ApplyRelativePositioningTranslation(bool reverse) {
-            if (reverse != relativePositioningTranslationApplied) {
-                return;
+            if (!reverse) {
+                ++relativePositioningApplyingCounter;
+                if (relativePositioningApplyingCounter > 1) {
+                    return;
+                }
+            }
+            else {
+                --relativePositioningApplyingCounter;
+                if (relativePositioningApplyingCounter > 0) {
+                    return;
+                }
             }
             float top = (float)this.GetPropertyAsFloat(Property.TOP, 0f);
             float bottom = (float)this.GetPropertyAsFloat(Property.BOTTOM, 0f);
@@ -1987,7 +1996,6 @@ namespace iText.Layout.Renderer {
             if (dxRight != 0 || dyUp != 0) {
                 Move(dxRight, dyUp);
             }
-            relativePositioningTranslationApplied = !reverse;
         }
 
         protected internal virtual void ApplyDestination(PdfDocument document) {
