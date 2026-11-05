@@ -24,7 +24,9 @@ using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Actions.Contexts;
 using iText.Commons.Utils;
+using iText.IO.Exceptions;
 using iText.IO.Source;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
     /// <summary>Class to retrieve important information about PDF document revisions.</summary>
@@ -103,7 +105,7 @@ namespace iText.Kernel.Pdf {
                         modifiedObjects.Add(xrefTable.Get(i));
                     }
                 }
-                long eofOffset = tokenizer.GetNextEof();
+                long eofOffset = FindEofOffset(tokenizer);
                 documentRevisions.Add(new DocumentRevision(eofOffset, modifiedObjects));
                 xrefTable.ClearAllReferences();
             }
@@ -114,6 +116,40 @@ namespace iText.Kernel.Pdf {
                 return documentRevisions;
             }
 //\endcond
+
+            private static long FindEofOffset(PdfTokenizer tokenizer) {
+                long savedPosition = tokenizer.GetPosition();
+                long eofOffset;
+                try {
+                    bool startxrefFound = false;
+                    eofOffset = -1;
+                    // Go over tokens and look for %%EOF after startxref
+                    while (tokenizer.NextToken()) {
+                        if (tokenizer.GetTokenType() == PdfTokenizer.TokenType.Other && tokenizer.TokenValueEqualsTo(PdfTokenizer.
+                            Startxref)) {
+                            startxrefFound = true;
+                        }
+                        else {
+                            if (startxrefFound) {
+                                if (tokenizer.GetTokenType() == PdfTokenizer.TokenType.Number) {
+                                    eofOffset = tokenizer.GetNextEof();
+                                    break;
+                                }
+                                else {
+                                    throw new PdfException(KernelExceptionMessageConstant.PDF_STARTXREF_IS_NOT_FOLLOWED_BY_A_NUMBER);
+                                }
+                            }
+                        }
+                    }
+                }
+                finally {
+                    tokenizer.Seek(savedPosition);
+                }
+                if (eofOffset >= 0) {
+                    return eofOffset;
+                }
+                throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.PDF_EOF_NOT_FOUND, tokenizer);
+            }
         }
 //\endcond
     }

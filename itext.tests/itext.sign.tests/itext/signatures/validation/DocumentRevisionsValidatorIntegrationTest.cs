@@ -937,5 +937,74 @@ namespace iText.Signatures.Validation {
                 AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
             }
         }
+
+        [NUnit.Framework.Test]
+        public virtual void EofInTrailerTest() {
+            SetUp(false);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "eofTrailer.pdf"))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage
+                    (DocumentRevisionsValidator.PAGE_MODIFIED).WithStatus(ReportItem.ReportItemStatus.INVALID)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void ValidEofInTrailerTest() {
+            SetUp(false);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "validEofInTrailer.pdf"))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EofInCommentTest() {
+            SetUp(false);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "eofComment.pdf"))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage
+                    (DocumentRevisionsValidator.PAGE_MODIFIED).WithStatus(ReportItem.ReportItemStatus.INVALID)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void StartxrefInTrailerTest() {
+            SetUp(false);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "startxrefTrailer.pdf"))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage
+                    (DocumentRevisionsValidator.PAGE_MODIFIED).WithStatus(ReportItem.ReportItemStatus.INVALID)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void NoStartXrefInLastRevisionTest() {
+            SetUp(false);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "noStartxref.pdf"))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.DOC_MDP_CHECK).WithMessage
+                    (DocumentRevisionsValidator.DATA_AFTER_LAST_REVISION).WithStatus(ReportItem.ReportItemStatus.INVALID))
+                    );
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void WhitespacesAfterEofTest() {
+            SetUp(false);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "whitespacesAfterEof.pdf"))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+            }
+        }
     }
 }

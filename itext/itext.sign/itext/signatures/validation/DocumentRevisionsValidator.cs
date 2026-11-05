@@ -191,6 +191,11 @@ namespace iText.Signatures.Validation {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
+        internal const String DATA_AFTER_LAST_REVISION = "PDF document contains data after the last revision's %%EOF marker. "
+             + "This data is not covered by any known revision and may represent hidden modifications.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
         internal const String SIGNATURE_MODIFIED = "Signature {0} was unexpectedly modified.";
 //\endcond
 
@@ -403,6 +408,29 @@ namespace iText.Signatures.Validation {
                 return report;
             }
             MergeRevisionsInLinearizedDocument(document, documentRevisions);
+            // Check if there is any non-whitespace data after the last %%EOF
+            if (!documentRevisions.IsEmpty()) {
+                try {
+                    RandomAccessFileOrArray raf = document.GetReader().GetSafeFile();
+                    long fileLength = raf.Length();
+                    long lastEofOffset = documentRevisions[documentRevisions.Count - 1].GetEofOffset();
+                    if (lastEofOffset < fileLength && HasNonWhitespaceBytesAfter(raf, lastEofOffset, fileLength)) {
+                        report.AddReportItem(new ReportItem(DOC_MDP_CHECK, DATA_AFTER_LAST_REVISION, ReportItem.ReportItemStatus.INVALID
+                            ));
+                        if (StopValidation(report, localContext)) {
+                            return report;
+                        }
+                    }
+                }
+                catch (System.IO.IOException e) {
+                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_READING_EXCEPTION, e, ReportItem.ReportItemStatus
+                        .INDETERMINATE));
+                }
+                catch (Exception e) {
+                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_READING_EXCEPTION, e, ReportItem.ReportItemStatus
+                        .INDETERMINATE));
+                }
+            }
             SignatureUtil signatureUtil = new SignatureUtil(document);
             IList<String> signatures = new List<String>(signatureUtil.GetSignatureNames());
             if (signatures.IsEmpty()) {
@@ -663,6 +691,18 @@ namespace iText.Signatures.Validation {
         private bool StopValidation(ValidationReport result, ValidationContext validationContext) {
             return !properties.GetContinueAfterFailure(validationContext) && result.GetValidationResult() == ValidationReport.ValidationResult
                 .INVALID;
+        }
+
+        private static bool HasNonWhitespaceBytesAfter(RandomAccessFileOrArray raf, long from, long to) {
+            raf.Seek(from);
+            while (raf.GetPosition() < to) {
+                int b = raf.Read();
+                // PDF whitespace: NUL, TAB, LF, FF, CR, SPACE (ISO 32000 table 1)
+                if (b != 0x00 && b != 0x09 && b != 0x0A && b != 0x0C && b != 0x0D && b != 0x20) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void UpdateApprovalSignatureAccessPermissions(PdfDictionary signatureField, ValidationReport report
