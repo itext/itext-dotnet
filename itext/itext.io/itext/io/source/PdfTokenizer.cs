@@ -348,31 +348,46 @@ namespace iText.IO.Source {
             throw new iText.IO.Exceptions.IOException(IoExceptionMessageConstant.PDF_STARTXREF_NOT_FOUND, this);
         }
 
-        /// <summary>Gets next %%EOF marker in current PDF file.</summary>
-        /// <returns>next %%EOF marker position</returns>
+        /// <summary>Gets the position right after the next %%EOF marker in current PDF file.</summary>
+        /// <returns>the position after the %%EOF marker, including up to 4 following CR/LF bytes</returns>
         public virtual long GetNextEof() {
             int arrLength = 128;
             String str;
             do {
                 long currentPosition = file.GetPosition();
                 str = ReadString(arrLength);
-                int eofPosition = str.IndexOf("%%EOF", StringComparison.Ordinal);
-                if (eofPosition >= 0) {
-                    // Now we want to also include following EOL bytes.
-                    file.Seek(currentPosition + eofPosition + 5);
-                    // We only allow 4 next bytes to be EOL markers.
-                    String remainingBytes = ReadString(4);
-                    int eolCount = 0;
-                    foreach (byte b in remainingBytes.GetBytes(System.Text.Encoding.UTF8)) {
-                        if (b == '\n' || b == '\r') {
-                            eolCount++;
-                        }
-                        else {
-                            return currentPosition + eofPosition + eolCount + 5;
-                        }
+                int searchFrom = 0;
+                int eofPosition;
+                while ((eofPosition = str.IndexOf("%%EOF", searchFrom)) >= 0) {
+                    // Check that %%EOF starts at the beginning of the line according to PDF spec 7.5.5
+                    long absoluteEofPos = currentPosition + eofPosition;
+                    bool lineStartsWithEof;
+                    if (eofPosition > 0) {
+                        char preceding = str[eofPosition - 1];
+                        lineStartsWithEof = preceding == '\n' || preceding == '\r';
                     }
-                    // 5 stands for '%%EOF' length
-                    return currentPosition + eofPosition + eolCount + 5;
+                    else {
+                        // eofPosition == 0: check the byte just before this chunk in the file
+                        lineStartsWithEof = absoluteEofPos == 0 || IsLineEndingAt(absoluteEofPos - 1);
+                    }
+                    if (lineStartsWithEof) {
+                        // Now we want to also include following EOL bytes
+                        file.Seek(absoluteEofPos + 5);
+                        // We allow next bytes to be only EOL markers
+                        String remainingBytes = ReadString(4);
+                        int eolCount = 0;
+                        foreach (byte b in remainingBytes.GetBytes(System.Text.Encoding.UTF8)) {
+                            if (b == '\n' || b == '\r') {
+                                eolCount++;
+                            }
+                            else {
+                                return absoluteEofPos + eolCount + 5;
+                            }
+                        }
+                        // 5 stands for '%%EOF' length
+                        return absoluteEofPos + eolCount + 5;
+                    }
+                    searchFrom = eofPosition + 5;
                 }
                 // Change current position to ensure '%%EOF' is not cut in half.
                 file.Seek(file.GetPosition() - 4);
@@ -1125,6 +1140,14 @@ namespace iText.IO.Source {
             }
             // empty on purpose
             return null;
+        }
+
+        private bool IsLineEndingAt(long position) {
+            long savedPosition = file.GetPosition();
+            file.Seek(position);
+            int b = file.Read();
+            file.Seek(savedPosition);
+            return b == '\n' || b == '\r';
         }
 
         void System.IDisposable.Dispose() {
