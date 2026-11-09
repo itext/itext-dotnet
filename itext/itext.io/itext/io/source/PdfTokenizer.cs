@@ -282,10 +282,23 @@ namespace iText.IO.Source {
             do {
                 long currentPosition = file.GetPosition();
                 str = ReadString(arrLength);
-                long eofPosition = str.IndexOf("%%EOF", StringComparison.Ordinal);
+                int eofPosition = str.IndexOf("%%EOF", StringComparison.Ordinal);
                 if (eofPosition >= 0) {
-                    // 6 stands for '%%EOF' length + 1
-                    return currentPosition + eofPosition + 6;
+                    // Now we want to also include following EOL bytes.
+                    file.Seek(currentPosition + eofPosition + 5);
+                    // We only allow 4 next bytes to be EOL markers.
+                    String remainingBytes = ReadString(4);
+                    int eolCount = 0;
+                    foreach (byte b in remainingBytes.GetBytes(System.Text.Encoding.UTF8)) {
+                        if (b == '\n' || b == '\r') {
+                            eolCount++;
+                        }
+                        else {
+                            return currentPosition + eofPosition + eolCount + 5;
+                        }
+                    }
+                    // 5 stands for '%%EOF' length
+                    return currentPosition + eofPosition + eolCount + 5;
                 }
                 // Change current position to ensure '%%EOF' is not cut in half.
                 file.Seek(file.GetPosition() - 4);

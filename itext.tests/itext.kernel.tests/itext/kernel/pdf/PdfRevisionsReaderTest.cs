@@ -66,10 +66,10 @@ namespace iText.Kernel.Pdf {
                 NUnit.Framework.Assert.AreEqual(3, documentRevisions.Count);
                 DocumentRevision firstRevision = documentRevisions[0];
                 AssertResultingRevision(firstRevision, 1, 2, 3, 4, 5, 6);
-                NUnit.Framework.Assert.AreEqual(929, firstRevision.GetEofOffset());
+                NUnit.Framework.Assert.AreEqual(930, firstRevision.GetEofOffset());
                 DocumentRevision secondRevision = documentRevisions[1];
                 AssertResultingRevision(secondRevision, 1, 3, 4, 7, 8, 9, 10, 11, 12, 13, 14, 15);
-                NUnit.Framework.Assert.AreEqual(28119, secondRevision.GetEofOffset());
+                NUnit.Framework.Assert.AreEqual(28120, secondRevision.GetEofOffset());
                 DocumentRevision thirdRevision = documentRevisions[2];
                 AssertResultingRevision(thirdRevision, 1, 3, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28);
                 NUnit.Framework.Assert.AreEqual(36207, thirdRevision.GetEofOffset());
@@ -85,16 +85,16 @@ namespace iText.Kernel.Pdf {
                 NUnit.Framework.Assert.AreEqual(5, documentRevisions.Count);
                 DocumentRevision firstRevision = documentRevisions[0];
                 AssertResultingRevision(firstRevision, 1, 2, 3, 4, 5, 6);
-                NUnit.Framework.Assert.AreEqual(929, firstRevision.GetEofOffset());
+                NUnit.Framework.Assert.AreEqual(930, firstRevision.GetEofOffset());
                 DocumentRevision secondRevision = documentRevisions[1];
                 AssertResultingRevision(secondRevision, 1, 3, 4, 7, 8, 9, 10, 11, 12, 13, 14, 15);
-                NUnit.Framework.Assert.AreEqual(28119, secondRevision.GetEofOffset());
+                NUnit.Framework.Assert.AreEqual(28120, secondRevision.GetEofOffset());
                 DocumentRevision thirdRevision = documentRevisions[2];
                 AssertResultingRevision(thirdRevision, 1, 3, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28);
-                NUnit.Framework.Assert.AreEqual(36207, thirdRevision.GetEofOffset());
+                NUnit.Framework.Assert.AreEqual(36208, thirdRevision.GetEofOffset());
                 DocumentRevision fourthRevision = documentRevisions[3];
                 AssertResultingRevision(fourthRevision, new int[] { 1, 3, 23, 24 }, new int[] { 0, 0, 1, 1 });
-                NUnit.Framework.Assert.AreEqual(37006, fourthRevision.GetEofOffset());
+                NUnit.Framework.Assert.AreEqual(37007, fourthRevision.GetEofOffset());
                 DocumentRevision fifthRevision = documentRevisions[4];
                 AssertResultingRevision(fifthRevision, new int[] { 1, 3, 19, 20, 21, 22, 23, 25 }, new int[] { 0, 0, 1, 1, 
                     1, 1, 1, 1 });
@@ -111,10 +111,10 @@ namespace iText.Kernel.Pdf {
                 NUnit.Framework.Assert.AreEqual(3, documentRevisions.Count);
                 DocumentRevision firstRevision = documentRevisions[0];
                 AssertResultingRevision(firstRevision, 1, 2, 3, 4, 5, 6, 7, 8);
-                NUnit.Framework.Assert.AreEqual(1085, firstRevision.GetEofOffset());
+                NUnit.Framework.Assert.AreEqual(1086, firstRevision.GetEofOffset());
                 DocumentRevision secondRevision = documentRevisions[1];
                 AssertResultingRevision(secondRevision, 1, 3, 4, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19);
-                NUnit.Framework.Assert.AreEqual(28137, secondRevision.GetEofOffset());
+                NUnit.Framework.Assert.AreEqual(28138, secondRevision.GetEofOffset());
                 DocumentRevision thirdRevision = documentRevisions[2];
                 AssertResultingRevision(thirdRevision, 1, 3, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34);
                 NUnit.Framework.Assert.AreEqual(36059, thirdRevision.GetEofOffset());
@@ -130,16 +130,16 @@ namespace iText.Kernel.Pdf {
                 NUnit.Framework.Assert.AreEqual(5, documentRevisions.Count);
                 DocumentRevision firstRevision = documentRevisions[0];
                 AssertResultingRevision(firstRevision, 1, 2, 3, 4, 5, 6, 7, 8);
-                NUnit.Framework.Assert.AreEqual(1085, firstRevision.GetEofOffset());
+                NUnit.Framework.Assert.AreEqual(1086, firstRevision.GetEofOffset());
                 DocumentRevision secondRevision = documentRevisions[1];
                 AssertResultingRevision(secondRevision, 1, 3, 4, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19);
-                NUnit.Framework.Assert.AreEqual(28137, secondRevision.GetEofOffset());
+                NUnit.Framework.Assert.AreEqual(28138, secondRevision.GetEofOffset());
                 DocumentRevision thirdRevision = documentRevisions[2];
                 AssertResultingRevision(thirdRevision, 1, 3, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34);
-                NUnit.Framework.Assert.AreEqual(36059, thirdRevision.GetEofOffset());
+                NUnit.Framework.Assert.AreEqual(36060, thirdRevision.GetEofOffset());
                 DocumentRevision fourthRevision = documentRevisions[3];
                 AssertResultingRevision(fourthRevision, new int[] { 1, 3, 27, 28, 35 }, new int[] { 0, 0, 1, 1, 0 });
-                NUnit.Framework.Assert.AreEqual(36975, fourthRevision.GetEofOffset());
+                NUnit.Framework.Assert.AreEqual(36976, fourthRevision.GetEofOffset());
                 DocumentRevision fifthRevision = documentRevisions[4];
                 AssertResultingRevision(fifthRevision, new int[] { 1, 3, 23, 24, 25, 26, 27, 29, 36 }, new int[] { 0, 0, 1
                     , 1, 1, 1, 1, 1, 0 });
