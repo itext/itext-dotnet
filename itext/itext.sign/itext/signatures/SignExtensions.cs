@@ -88,6 +88,10 @@ namespace iText.Signatures {
                 c[pair.Key] = pair.Value;
             }
         }
+        
+        public static void Add<T>(this IList<T> list, int index, T elem) {
+            list.Insert(index, elem);
+        }
 
         public static T JRemoveAt<T>(this IList<T> list, int index) {
             T value = list[index];
