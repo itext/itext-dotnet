@@ -468,7 +468,7 @@ namespace iText.Signatures.Validation.V1 {
                 // We don't need to populate validation report in case of exceptions, it will happen later
                 CreateDocumentAndPerformOperation(documentRevisions[0], document, new ValidationReport(), (firstRevisionDocument
                     ) => {
-                    if (IsLinearizedPdf(document)) {
+                    if (IsLinearizedPdf(firstRevisionDocument)) {
                         ICollection<PdfIndirectReference> mergedModifiedReferences = new HashSet<PdfIndirectReference>(documentRevisions
                             [0].GetModifiedObjects());
                         mergedModifiedReferences.AddAll(documentRevisions[1].GetModifiedObjects());
@@ -541,12 +541,16 @@ namespace iText.Signatures.Validation.V1 {
             return new RASInputStream(source);
         }
 
-        private static bool IsLinearizedPdf(PdfDocument originalDocument) {
-            for (int i = 0; i < originalDocument.GetNumberOfPdfObjects(); ++i) {
-                PdfObject @object = originalDocument.GetPdfObject(i);
+        private static bool IsLinearizedPdf(PdfDocument firstRevisionDocument) {
+            // The first revision (0 revision if linearized) must not contain any signatures, not linearized otherwise
+            if (!new SignatureUtil(firstRevisionDocument).GetSignatureNames().IsEmpty()) {
+                return false;
+            }
+            for (int i = 0; i < firstRevisionDocument.GetNumberOfPdfObjects(); ++i) {
+                PdfObject @object = firstRevisionDocument.GetPdfObject(i);
                 if (@object is PdfDictionary) {
                     PdfDictionary dictionary = (PdfDictionary)@object;
-                    if (dictionary.ContainsKey(new PdfName("Linearized"))) {
+                    if (dictionary.ContainsKey(PdfName.Linearized)) {
                         return true;
                     }
                 }
