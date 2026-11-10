@@ -257,6 +257,10 @@ namespace iText.Signatures.Validation {
         private static readonly PdfDictionary DUMMY_STRUCT_TREE_ELEMENT = new PdfDictionary(JavaCollectionsUtil.SingletonMap
             (PdfName.K, (PdfObject)new PdfArray()));
 
+        private static readonly IList<PdfName> INHERITABLE_FIELD_PROPERTIES = JavaCollectionsUtil.UnmodifiableList
+            (JavaUtil.ArraysAsList(PdfName.FT, PdfName.Ff, PdfName.DV, PdfName.AA, PdfName.DA, PdfName.Q, PdfName.
+            V, PdfName.MaxLen));
+
         private readonly ICollection<String> lockedFields = new HashSet<String>();
 
         private readonly SignatureValidationProperties properties;
@@ -666,6 +670,7 @@ namespace iText.Signatures.Validation {
         }
 
         private static bool IsSignatureWidget(PdfDictionary widget) {
+            // We are safe from endless recursion here because we fix it on forms level
             PdfName widgetType = widget.GetAsName(PdfName.FT);
             if (PdfName.Sig.Equals(widgetType)) {
                 return true;
@@ -680,12 +685,23 @@ namespace iText.Signatures.Validation {
         }
 
         private static bool HasFieldValue(PdfDictionary widget) {
+            // We are safe from endless recursion here because we fix it on forms level
             PdfObject fieldValue = widget.Get(PdfName.V);
             if (fieldValue != null) {
                 return true;
             }
             PdfDictionary parent = widget.GetAsDictionary(PdfName.Parent);
             return parent != null && HasFieldValue(parent);
+        }
+
+        private static PdfObject GetEffectiveFieldProperty(PdfDictionary field, PdfName key) {
+            // We are safe from endless recursion here because we fix it on forms level
+            PdfObject value = field.Get(key);
+            if (value != null) {
+                return value;
+            }
+            PdfDictionary parent = field.GetAsDictionary(PdfName.Parent);
+            return parent != null ? GetEffectiveFieldProperty(parent, key) : null;
         }
 
         private bool StopValidation(ValidationReport result, ValidationContext validationContext) {
@@ -1331,8 +1347,8 @@ namespace iText.Signatures.Validation {
                     ), ReportItem.ReportItemStatus.INVALID));
                 return false;
             }
-            PdfObject prevValue = previousField.Get(PdfName.V);
-            PdfObject currValue = currentField.Get(PdfName.V);
+            PdfObject prevValue = GetEffectiveFieldProperty(previousField, PdfName.V);
+            PdfObject currValue = GetEffectiveFieldProperty(currentField, PdfName.V);
             if (PdfName.Sig.Equals(currentField.GetAsName(PdfName.FT))) {
                 if (!CompareSignatureDictionaries(prevValue, currValue, report)) {
                     report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, MessageFormatUtil.Format(LOCKED_FIELD_MODIFIED, fieldName
@@ -1342,6 +1358,22 @@ namespace iText.Signatures.Validation {
             }
             else {
                 if (!DocumentRevisionPdfObjectComparator.ComparePdfObjects(prevValue, currValue, usuallyModifiedObjects)) {
+                    report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, MessageFormatUtil.Format(LOCKED_FIELD_MODIFIED, fieldName
+                        ), ReportItem.ReportItemStatus.INVALID));
+                    return false;
+                }
+            }
+            // Here we check all inheritable and inherited field properties, except for V, which is checked above.
+            // Not inherited are checked in the previous step, so we don't need to check them here.
+            foreach (PdfName inheritedKey in INHERITABLE_FIELD_PROPERTIES) {
+                if (PdfName.V.Equals(inheritedKey) || previousField.Get(inheritedKey) != null || currentField.Get(inheritedKey
+                    ) != null) {
+                    continue;
+                }
+                PdfObject prevInherited = GetEffectiveFieldProperty(previousField, inheritedKey);
+                PdfObject currInherited = GetEffectiveFieldProperty(currentField, inheritedKey);
+                if (!DocumentRevisionPdfObjectComparator.ComparePdfObjects(prevInherited, currInherited, usuallyModifiedObjects
+                    )) {
                     report.AddReportItem(new ReportItem(FIELD_MDP_CHECK, MessageFormatUtil.Format(LOCKED_FIELD_MODIFIED, fieldName
                         ), ReportItem.ReportItemStatus.INVALID));
                     return false;

@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle;
 using iText.Commons.Utils;
+using iText.Forms.Logs;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
@@ -32,6 +33,7 @@ using iText.Signatures;
 using iText.Signatures.Validation.Context;
 using iText.Signatures.Validation.Report;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Signatures.Validation {
     [NUnit.Framework.Category("BouncyCastleIntegrationTest")]
@@ -1001,6 +1003,45 @@ namespace iText.Signatures.Validation {
         public virtual void WhitespacesAfterEofTest() {
             SetUp(false);
             using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "whitespacesAfterEof.pdf"))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FieldLockParentInheritedValueChangedTest() {
+            SetUp(false);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fieldLockParentInheritedValueChanged.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.FIELD_MDP_CHECK).WithMessage
+                    (DocumentRevisionsValidator.LOCKED_FIELD_MODIFIED, (i) => "group.child").WithStatus(ReportItem.ReportItemStatus
+                    .INVALID)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void FieldLockParentDAChangedTest() {
+            SetUp(false);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "fieldLockParentDAChanged.pdf"
+                ))) {
+                DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
+                ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
+                AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.INVALID).HasNumberOfFailures
+                    (1).HasNumberOfLogs(1).HasLogItem((l) => l.WithCheckName(DocumentRevisionsValidator.FIELD_MDP_CHECK).WithMessage
+                    (DocumentRevisionsValidator.LOCKED_FIELD_MODIFIED, (i) => "group.child").WithStatus(ReportItem.ReportItemStatus
+                    .INVALID)));
+            }
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(FormsLogMessageConstants.FORM_FIELD_HAS_CYCLED_PARENT_STRUCTURE, Count = 4)]
+        public virtual void ParentRecursionTest() {
+            SetUp(false);
+            using (PdfDocument document = new PdfDocument(new PdfReader(SOURCE_FOLDER + "parentRecursion.pdf"))) {
                 DocumentRevisionsValidator validator = builder.BuildDocumentRevisionsValidator();
                 ValidationReport report = validator.ValidateAllDocumentRevisions(validationContext, document);
                 AssertValidationReport.AssertThat(report, (a) => a.HasStatus(ValidationReport.ValidationResult.VALID));

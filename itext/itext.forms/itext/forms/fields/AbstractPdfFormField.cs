@@ -461,10 +461,10 @@ namespace iText.Forms.Fields {
             PdfDictionary parentDict = GetParent();
             if (parentDict != null) {
                 PdfFormField parentField = GetParentField();
+                if (parentField == null) {
+                    parentField = PdfFormField.MakeFormField(GetParent(), GetDocument());
+                }
                 if (!visited.Contains(parentField)) {
-                    if (parentField == null) {
-                        parentField = PdfFormField.MakeFormField(GetParent(), GetDocument());
-                    }
                     visited.Add(parentField);
                     PdfString pName = parentField.GetFieldName(visited);
                     if (pName != null) {
