@@ -164,5 +164,14 @@ namespace iText.Kernel.Pdf {
             PdfObject expectedFileId = new PdfLiteral("[<3b0d7aede4a34ba612240c65><4e844fc286503a6c82dfab7d168075>]");
             NUnit.Framework.Assert.AreEqual(expectedFileId, fileId);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void GenerateNewDocumentIdIsRandomTest() {
+            byte[] first = PdfEncryption.GenerateNewDocumentId();
+            byte[] second = PdfEncryption.GenerateNewDocumentId();
+            NUnit.Framework.Assert.AreEqual(64, first.Length);
+            NUnit.Framework.Assert.AreEqual(64, second.Length);
+            NUnit.Framework.CollectionAssert.AreNotEqual(first, second);
+        }
     }
 }
