@@ -16,9 +16,9 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("f542854e-7f6b-4207-b6ca-004a5d266e65")]
 
-[assembly: AssemblyVersion("9.8.0.0")]
-[assembly: AssemblyFileVersion("9.8.0.0")]
-[assembly: AssemblyInformationalVersion("9.8.0")]
+[assembly: AssemblyVersion("9.8.1.0")]
+[assembly: AssemblyFileVersion("9.8.1.0")]
+[assembly: AssemblyInformationalVersion("9.8.1")]
 
 [assembly: Parallelizable(ParallelScope.ContextMask)]
 
