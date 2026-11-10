@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
 using System.IO;
+using System.Security.Cryptography;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
@@ -43,7 +44,7 @@ namespace iText.Kernel.Pdf {
 
         private const int AES_256 = 5;
 
-        private static long seq = SystemUtil.GetTimeBasedSeed();
+        private static readonly RNGCryptoServiceProvider RANDOM_ID_GENERATOR = new RNGCryptoServiceProvider();
 
         private int cryptoMode;
 
@@ -328,18 +329,12 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>Generates random document ID.</summary>
+        /// <returns>document ID</returns>
         public static byte[] GenerateNewDocumentId() {
-            IDigest md5;
-            try {
-                md5 = DigestUtilities.GetDigest("MD5");
-            }
-            catch (Exception e) {
-                throw new PdfException(PdfException.PdfEncryption, e);
-            }
-            long time = SystemUtil.GetTimeBasedSeed();
-            long mem = SystemUtil.GetFreeMemory();
-            String s = time + "+" + mem + "+" + (seq++);
-            return md5.Digest(s.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
+            byte[] bytes = new byte[16];
+            RANDOM_ID_GENERATOR.GetBytes(bytes);
+            return bytes;
         }
 
         /// <summary>Creates a PdfLiteral that contains an array of two id entries.</summary>

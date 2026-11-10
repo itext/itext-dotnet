@@ -34,11 +34,11 @@ using Org.BouncyCastle.X509;
 namespace iText.Kernel.Crypto.Securityhandler {
     internal sealed class EncryptionUtils {
 
-        private static readonly SecureRandomHolder RNG = new SecureRandomHolder();
+        private static readonly System.Security.Cryptography.RNGCryptoServiceProvider RNG = new System.Security.Cryptography.RNGCryptoServiceProvider();
         
         internal static byte[] GenerateSeed(int seedLength) {
             byte[] seed = new byte[seedLength];
-            RNG.GetSecureRandom().GetBytes(seed);
+            RNG.GetBytes(seed);
             return seed;
         }
 
@@ -115,12 +115,12 @@ namespace iText.Kernel.Crypto.Securityhandler {
             DerObjectIdentifier derob = new DerObjectIdentifier(s);
             // keyp
             byte[] abyte0 = new byte[16];
-            RNG.GetSecureRandom().GetBytes(abyte0);
+            RNG.GetBytes(abyte0);
 
             IBufferedCipher cf = CipherUtilities.GetCipher(derob);
             KeyParameter kp = new KeyParameter(abyte0);
             byte[] iv = new byte[cf.GetBlockSize()];
-            RNG.GetSecureRandom().GetBytes(iv);
+            RNG.GetBytes(iv);
             ParametersWithIV piv = new ParametersWithIV(kp, iv);
             cf.Init(true, piv);
             int len = cf.DoFinal(@in, outp, 0);
