@@ -16,9 +16,9 @@ using NUnit.Framework;
 
 [assembly: Guid("ae4e5743-0665-4705-9a33-07ea57cdd269")]
 
-[assembly: AssemblyVersion("9.8.0.0")]
-[assembly: AssemblyFileVersion("9.8.0.0")]
-[assembly: AssemblyInformationalVersion("9.8.0")]
+[assembly: AssemblyVersion("9.8.1.0")]
+[assembly: AssemblyFileVersion("9.8.1.0")]
+[assembly: AssemblyInformationalVersion("9.8.1")]
 
 [assembly: Parallelizable(ParallelScope.ContextMask)]
 
