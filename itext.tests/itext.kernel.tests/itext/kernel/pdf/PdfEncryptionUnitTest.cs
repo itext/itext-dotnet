@@ -84,5 +84,14 @@ namespace iText.Kernel.Pdf {
             cryptDictionary.Put(PdfName.CF, cfDictionary);
             NUnit.Framework.Assert.IsFalse(PdfEncryption.ReadEmbeddedFilesOnlyFromEncryptDictionary(cryptDictionary));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void GenerateNewDocumentIdIsRandomTest() {
+            byte[] first = PdfEncryption.GenerateNewDocumentId();
+            byte[] second = PdfEncryption.GenerateNewDocumentId();
+            NUnit.Framework.Assert.AreEqual(16, first.Length);
+            NUnit.Framework.Assert.AreEqual(16, second.Length);
+            NUnit.Framework.CollectionAssert.AreNotEqual(first, second);
+        }
     }
 }

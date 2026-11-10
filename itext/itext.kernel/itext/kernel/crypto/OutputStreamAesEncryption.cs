@@ -47,7 +47,7 @@ using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Crypto {
     public class OutputStreamAesEncryption : OutputStreamEncryption {
-        private static readonly SecureRandomHolder RNG = new SecureRandomHolder();
+        private static readonly System.Security.Cryptography.RNGCryptoServiceProvider RNG = new System.Security.Cryptography.RNGCryptoServiceProvider();
 
         protected internal AESCipher cipher;
 
@@ -68,7 +68,7 @@ namespace iText.Kernel.Crypto {
         public OutputStreamAesEncryption(Stream @out, byte[] key, int off, int len)
             : base(@out) {
             byte[] iv = new byte[16];
-            RNG.GetSecureRandom().GetBytes(iv);
+            RNG.GetBytes(iv);
             byte[] nkey = new byte[len];
             Array.Copy(key, off, nkey, 0, len);
             cipher = new AESCipher(true, nkey, iv);
