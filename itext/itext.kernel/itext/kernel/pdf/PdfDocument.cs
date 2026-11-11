@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -577,6 +577,7 @@ namespace iText.Kernel.Pdf {
         /// Gets document information dictionary.
         /// <see cref="info"/>
         /// is lazy initialized. It will be initialized during the first call of this method.
+        /// The information dictionary values are synchronized with document XMP Metadata.
         /// </remarks>
         /// <returns>document information dictionary.</returns>
         public virtual PdfDocumentInfo GetDocumentInfo() {

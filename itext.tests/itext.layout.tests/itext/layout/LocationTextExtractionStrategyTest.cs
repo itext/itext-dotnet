@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -62,7 +62,7 @@ namespace iText.Layout {
             NUnit.Framework.Assert.AreEqual("A AA B BB C CC D DD", text);
         }
 
-        //        Assert.assertEquals("A\tAA\tB\tBB\tC\tCC\tD\tDD", text);
+        //        Assertions.assertEquals("A\tAA\tB\tBB\tC\tCC\tD\tDD", text);
         [NUnit.Framework.Test]
         public virtual void TestRotatedPage() {
             byte[] bytes = CreateSimplePdf(new Rectangle(792, 612), "A\nB\nC\nD");

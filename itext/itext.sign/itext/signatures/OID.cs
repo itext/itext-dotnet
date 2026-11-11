@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -129,6 +129,10 @@ namespace iText.Signatures {
 
             /// <summary>Extension for certificates from ETSI EN 319 412-1 V1.4.4.</summary>
             public const String VALIDITY_ASSURED_SHORT_TERM = "0.4.0.194121.2.1";
+
+            /// <summary>Extension for certificates from RFC 9608 which indicates that no revocation information is available.
+            ///     </summary>
+            public const String NO_REV_AVAILABLE = "2.5.29.56";
 
             /// <summary>According to https://tools.ietf.org/html/rfc5280 4.2.</summary>
             /// <remarks>

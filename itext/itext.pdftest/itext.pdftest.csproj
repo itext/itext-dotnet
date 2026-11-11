@@ -32,7 +32,7 @@
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BouncyCastle.Cryptography" Version="2.2.1" />
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.7.0" />
     <PackageReference Include="NUnit" Version="3.7.1" />
   </ItemGroup>
   <PropertyGroup>
@@ -47,7 +47,7 @@
     <ProjectReference Include="..\itext.io\itext.io.csproj" />
   </ItemGroup>
   <ItemGroup>
-	<Content Include="lib\verapdf\greenfield-apps-1.25.116.jar">
+	<Content Include="lib\verapdf\greenfield-apps-1.26.2.jar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
 	<Content Include="lib\verapdf\VeraPDF_license.txt">

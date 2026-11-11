@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2024 Apryse Group NV
+    Copyright (c) 1998-2026 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -24,6 +24,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using iText.Commons.Bouncycastle.Asn1;
 using iText.Commons.Bouncycastle.Asn1.Cms;
 using iText.Commons.Bouncycastle.Asn1.Esf;
@@ -1581,6 +1582,12 @@ namespace iText.Commons.Bouncycastle {
         bool IsNullExtension(IX509Extension extNonce);
 
         bool IsNull(IAsn1Encodable encodable);
+        
+        /// <summary>
+        /// Get SecureRandom implementation from the factory.
+        /// </summary>
+        /// <returns>SecureRandom implementation</returns>
+        RNGCryptoServiceProvider GetSecureRandom();
         
         /// <summary>
         /// Create

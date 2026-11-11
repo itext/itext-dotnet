@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2024 Apryse Group NV
+    Copyright (c) 1998-2026 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -45,24 +45,12 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
         public virtual void VerifyNistECDSASha3SignatureTest() {
-            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
-                VerifyIsoExtensionExample("SHA3-256withECDSA", "sample-nistp256-sha3_256.pdf");
-            } else {
-                // Signer SHA3-256WITHECDSA not recognised in BC mode
-                NUnit.Framework.Assert.Catch(typeof(PdfException), () => VerifyIsoExtensionExample("SHA3-256withECDSA", "sample-nistp256-sha3_256.pdf"
-                    ));
-            }
+            VerifyIsoExtensionExample("SHA3-256withECDSA", "sample-nistp256-sha3_256.pdf");
         }
 
         [NUnit.Framework.Test]
         public virtual void VerifyBrainpoolSha3SignatureTest() {
-            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName())) {
-                VerifyIsoExtensionExample("SHA3-384withECDSA", "sample-brainpoolP384r1-sha3_384.pdf");
-            } else {
-                // Signer SHA3-384WITHECDSA not recognised in BC mode
-                NUnit.Framework.Assert.Catch(typeof(PdfException), () => VerifyIsoExtensionExample("SHA3-384withECDSA", "sample-brainpoolP384r1-sha3_384.pdf"
-                    ));
-            }
+            VerifyIsoExtensionExample("SHA3-384withECDSA", "sample-brainpoolP384r1-sha3_384.pdf");
         }
 
         [NUnit.Framework.Test]
@@ -83,5 +71,21 @@ namespace iText.Signatures {
                 NUnit.Framework.Assert.Catch(typeof(PdfException), () => VerifyIsoExtensionExample("RSASSA-PSS", "sample-pss-sha3_256.pdf"));
             }
         }
+
+        [NUnit.Framework.Test]
+        public virtual void VerifyEd448SignatureTest()
+        {
+            // SHAKE256 is not available in BCFIPS
+            if ("BCFIPS".Equals(BOUNCY_CASTLE_FACTORY.GetProviderName()))
+            {
+                NUnit.Framework.Assert.Catch(typeof(PdfException), () => VerifyIsoExtensionExample("Ed448", "sample-ed448-shake256.pdf"
+                    ));
+            }
+            else
+            {
+                VerifyIsoExtensionExample("Ed448", "sample-ed448-shake256.pdf");
+            }
+        }
+
     }
 }

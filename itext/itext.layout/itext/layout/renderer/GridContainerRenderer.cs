@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -158,8 +158,9 @@ namespace iText.Layout.Renderer {
                 cellToRender.SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(itemHeight));
                 // Adjust cell BBox to the remaining part of the layout bbox
                 // This way we can lay out elements partially
-                cellBBox.SetHeight(cellBBox.GetTop() - actualBBox.GetBottom()).SetY(actualBBox.GetY());
-                cellToRender.SetProperty(Property.FILL_AVAILABLE_AREA, true);
+                cellBBox.SetHeight(cellBBox.GetTop() - layoutContext.GetArea().GetBBox().GetBottom()).SetY(layoutContext.GetArea
+                    ().GetBBox().GetY());
+                cellToRender.SetProperty(Property.FILL_AVAILABLE_AREA_ON_SPLIT, true);
                 LayoutResult cellResult = cellToRender.Layout(cellContext);
                 notLayoutedRow = Math.Min(notLayoutedRow, ProcessLayoutResult(layoutResult, cell, cellResult));
             }

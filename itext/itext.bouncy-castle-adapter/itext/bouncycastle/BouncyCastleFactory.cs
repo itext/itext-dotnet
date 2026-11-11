@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2024 Apryse Group NV
+    Copyright (c) 1998-2026 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -24,6 +24,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Esf;
 using Org.BouncyCastle.Asn1.Ess;
@@ -847,7 +848,8 @@ namespace iText.Bouncycastle {
         /// <summary><inheritDoc/></summary>
         public ITimeStampTokenGenerator CreateTimeStampTokenGenerator(IPrivateKey pk, IX509Certificate certificate, 
             string allowedDigest, string policyOid) {
-            return new TimeStampTokenGeneratorBC(pk, certificate, allowedDigest, policyOid);
+            String digestOid = GetDigestAlgorithmOid(allowedDigest.ToUpperInvariant());
+            return new TimeStampTokenGeneratorBC(pk, certificate, digestOid, policyOid);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -1126,6 +1128,11 @@ namespace iText.Bouncycastle {
         /// <summary><inheritDoc/></summary>
         public bool IsNull(IAsn1Encodable encodable) {
             return ((Asn1EncodableBC)encodable).GetEncodable() == null;
+        }
+        
+        /// <summary><inheritDoc/></summary>
+        public RNGCryptoServiceProvider GetSecureRandom() {
+            return new RNGCryptoServiceProvider();
         }
         
         /// <summary><inheritDoc/></summary>

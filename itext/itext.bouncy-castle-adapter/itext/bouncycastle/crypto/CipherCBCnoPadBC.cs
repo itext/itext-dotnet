@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2024 Apryse Group NV
+    Copyright (c) 1998-2026 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -73,7 +73,13 @@ namespace iText.Bouncycastle.Crypto {
             }
             return outp;
         }
-        
+
+        /// <summary><inheritDoc/></summary>
+        public virtual byte[] DoFinal()
+        {
+            return new byte[0];
+        }
+
         /// <summary>Indicates whether some other object is "equal to" this one. Compares wrapped objects.</summary>
         public override bool Equals(Object o) {
             if (this == o) {

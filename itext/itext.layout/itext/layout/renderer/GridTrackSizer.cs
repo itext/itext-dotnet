@@ -32,7 +32,6 @@ using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.Kernel.Geom;
 using iText.Layout.Layout;
-using iText.Layout.Properties;
 using iText.Layout.Properties.Grid;
 
 namespace iText.Layout.Renderer {
@@ -941,7 +940,6 @@ namespace iText.Layout.Renderer {
                 // https://drafts.csswg.org/css-sizing-3/#auto-box-sizes:
                 // min-content block size - For block containers, tables, and
                 // inline boxes, this is equivalent to the max-content block size.
-                cell.GetValue().SetProperty(Property.FILL_AVAILABLE_AREA, false);
                 LayoutContext layoutContext = new LayoutContext(new LayoutArea(1, new Rectangle(cell.GetLayoutArea().GetWidth
                     (), AbstractRenderer.INF)));
                 LayoutResult inifiniteHeighLayoutResult = cell.GetValue().Layout(layoutContext);

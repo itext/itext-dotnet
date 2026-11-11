@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -57,6 +57,30 @@ namespace iText.Signatures {
             SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
             IList<String> signatureNames = signatureUtil.GetSignatureNames();
             NUnit.Framework.Assert.AreEqual(0, signatureNames.Count);
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EolNotIncludedIntoByteRangeTest1() {
+            String inPdf = sourceFolder + "eolNotIncludedIntoByteRange1.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsFalse(signatureUtil.SignatureCoversWholeDocument("Signature1"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EolNotIncludedIntoByteRangeTest2() {
+            String inPdf = sourceFolder + "eolNotIncludedIntoByteRange2.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsTrue(signatureUtil.SignatureCoversWholeDocument("Signature1"));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EolNotIncludedIntoByteRangeTest3() {
+            String inPdf = sourceFolder + "eolNotIncludedIntoByteRange3.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inPdf));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDocument);
+            NUnit.Framework.Assert.IsFalse(signatureUtil.SignatureCoversWholeDocument("Signature1"));
         }
 
         [NUnit.Framework.Test]

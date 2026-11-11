@@ -1,24 +1,6 @@
 /*
-This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
-Authors: Apryse Software.
-
-This program is offered under a commercial and under the AGPL license.
-For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
-
-AGPL licensing:
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+This file is part of jsoup, see NOTICE.txt in the root of the repository.
+It may contain modifications beyond the original version.
 */
 using System;
 using System.Collections.Generic;
@@ -1659,13 +1641,13 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             iText.StyledXmlParser.Jsoup.Nodes.Element div = doc.SelectFirst("div");
             AtomicLong counter = new AtomicLong(0);
             iText.StyledXmlParser.Jsoup.Nodes.Element div2 = (iText.StyledXmlParser.Jsoup.Nodes.Element)div.Traverse(new 
-                _NodeVisitor_1765(counter));
+                _NodeVisitor_1763(counter));
             NUnit.Framework.Assert.AreEqual(7, counter.Get());
             NUnit.Framework.Assert.AreEqual(div2, div);
         }
 
-        private sealed class _NodeVisitor_1765 : NodeVisitor {
-            public _NodeVisitor_1765(AtomicLong counter) {
+        private sealed class _NodeVisitor_1763 : NodeVisitor {
+            public _NodeVisitor_1763(AtomicLong counter) {
                 this.counter = counter;
             }
 
@@ -1685,12 +1667,12 @@ namespace iText.StyledXmlParser.Jsoup.Nodes {
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<div><p>One<p>Two<p>Three");
             iText.StyledXmlParser.Jsoup.Nodes.Element div = doc.SelectFirst("div");
             iText.StyledXmlParser.Jsoup.Nodes.Element div2 = (iText.StyledXmlParser.Jsoup.Nodes.Element)div.Filter(new 
-                _NodeFilter_1787());
+                _NodeFilter_1785());
             NUnit.Framework.Assert.AreSame(div, div2);
         }
 
-        private sealed class _NodeFilter_1787 : NodeFilter {
-            public _NodeFilter_1787() {
+        private sealed class _NodeFilter_1785 : NodeFilter {
+            public _NodeFilter_1785() {
             }
 
             public override NodeFilter.FilterResult Head(iText.StyledXmlParser.Jsoup.Nodes.Node node, int depth) {

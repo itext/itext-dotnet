@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2024 Apryse Group NV
+    Copyright (c) 1998-2026 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -22,6 +22,8 @@
  */
 using iText.Bouncycastleconnector;
 using iText.Commons.Bouncycastle.Crypto;
+using iText.Kernel.Exceptions;
+using System.IO;
 
 namespace iText.Kernel.Crypto {
     /// <summary>Creates an AES Cipher with CBC and no padding.</summary>
@@ -59,5 +61,47 @@ namespace iText.Kernel.Crypto {
         public virtual byte[] ProcessBlock(byte[] inp, int inpOff, int inpLen) {
             return cipher.ProcessBlock(inp, inpOff, inpLen);
         }
+
+        //\cond DO_NOT_DOCUMENT
+        /// <summary>Finishes a multiple-part encryption or decryption operation, depending on how this cipher was initialized.
+        ///     </summary>
+        /// <returns>byte array with the result</returns>
+        internal virtual byte[] DoFinal()
+        {
+            return cipher.DoFinal();
+        }
+        //\endcond
+
+        //\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Performs a multiple-part encryption or decryption operation (depending on how this cipher was initialized),
+        /// processing the full block with finalizing.
+        /// </summary>
+        /// <param name="inp">the input buffer</param>
+        /// <param name="inpOff">the offset in input where the input starts</param>
+        /// <param name="inpLen">the input length</param>
+        internal virtual byte[] ProcessFullBlock(byte[] inp, int inpOff, int inpLen)
+        {
+            try
+            {
+                MemoryStream ba = new MemoryStream();
+                byte[] processRes = ProcessBlock(inp, inpOff, inpLen);
+                if (processRes != null)
+                {
+                    ba.Write(processRes);
+                }
+                byte[] doFinalRes = DoFinal();
+                if (doFinalRes != null)
+                {
+                    ba.Write(doFinalRes);
+                }
+                return ba.ToArray();
+            }
+            catch (System.IO.IOException e)
+            {
+                throw new PdfException(KernelExceptionMessageConstant.PDF_ENCRYPTION, e);
+            }
+        }
+        //\endcond
     }
 }

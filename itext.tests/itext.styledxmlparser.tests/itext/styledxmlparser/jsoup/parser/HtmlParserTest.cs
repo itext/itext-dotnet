@@ -1,24 +1,6 @@
 /*
-This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
-Authors: Apryse Software.
-
-This program is offered under a commercial and under the AGPL license.
-For commercial licensing, contact us at https://itextpdf.com/sales.  For AGPL licensing, see below.
-
-AGPL licensing:
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+This file is part of jsoup, see NOTICE.txt in the root of the repository.
+It may contain modifications beyond the original version.
 */
 using System;
 using System.Collections.Generic;
@@ -87,7 +69,7 @@ namespace iText.StyledXmlParser.Jsoup.Parser {
             // this (used to; now gets cleaner) gets a <p> with attr '=a' and an <a tag with an attribue named '<p'; and then auto-recreated
             Document doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse(html);
             // NOTE: per spec this should be the test case. but impacts too many ppl
-            // Assert.assertEquals("<p =a>One<a <p>Something</a></p>\n<a <p>Else</a>", doc.body().html());
+            // Assertions.assertEquals("<p =a>One<a <p>Something</a></p>\n<a <p>Else</a>", doc.body().html());
             NUnit.Framework.Assert.AreEqual("<p =a>One<a></a></p><p><a>Something</a></p><a>Else</a>", TextUtil.StripNewlines
                 (doc.Body().Html()));
             doc = iText.StyledXmlParser.Jsoup.Jsoup.Parse("<p .....>");

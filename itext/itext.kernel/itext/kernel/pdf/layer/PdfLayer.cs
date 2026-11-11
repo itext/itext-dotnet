@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using iText.Commons.Utils;
 using iText.IO.Font;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Layer {
@@ -114,8 +115,11 @@ namespace iText.Kernel.Pdf.Layer {
         /// <remarks>Adds a child layer. Nested layers can only have one parent.</remarks>
         /// <param name="childLayer">the child layer</param>
         public virtual void AddChild(iText.Kernel.Pdf.Layer.PdfLayer childLayer) {
+            //TODO DEVSIX-8490 implement multiple parent support
             if (childLayer.parent != null) {
-                throw new ArgumentException("Illegal argument: childLayer");
+                PdfIndirectReference @ref = childLayer.GetIndirectReference();
+                throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.UNABLE_TO_ADD_SECOND_PARENT_LAYER
+                    , @ref.ToString()));
             }
             childLayer.parent = this;
             if (children == null) {

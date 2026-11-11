@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -43,15 +43,15 @@ namespace iText.Forms.Fields {
         [NUnit.Framework.Test]
         public virtual void SetMetaInfoToCanvasMetaInfoUsedTest() {
             Canvas canvas = CreateCanvas();
-            MetaInfoContainer metaInfoContainer = new MetaInfoContainer(new _IMetaInfo_56());
+            MetaInfoContainer metaInfoContainer = new MetaInfoContainer(new _IMetaInfo_55());
             FormsMetaInfoStaticContainer.UseMetaInfoDuringTheAction(metaInfoContainer, () => PdfFormAnnotation.SetMetaInfoToCanvas
                 (canvas));
             NUnit.Framework.Assert.AreSame(metaInfoContainer, canvas.GetProperty<MetaInfoContainer>(Property.META_INFO
                 ));
         }
 
-        private sealed class _IMetaInfo_56 : IMetaInfo {
-            public _IMetaInfo_56() {
+        private sealed class _IMetaInfo_55 : IMetaInfo {
+            public _IMetaInfo_55() {
             }
         }
 

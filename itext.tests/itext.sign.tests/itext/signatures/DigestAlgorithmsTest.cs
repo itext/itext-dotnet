@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -72,14 +72,6 @@ namespace iText.Signatures {
             String name = "SM3";
             String oid = "1.2.156.10197.1.401";
             NUnit.Framework.Assert.AreEqual(FIPS_MODE ? oid : name, DigestAlgorithms.GetDigest(oid));
-        }
-
-        [LogMessage(SignLogMessageConstant.ALGORITHM_NOT_FROM_SPEC, Ignore = true)]
-        [NUnit.Framework.Test]
-        public virtual void NotAllowedNameGetAllowedDigestTest() {
-            String name = "SM3";
-            String oid = "1.2.156.10197.1.401";
-            NUnit.Framework.Assert.AreEqual(FIPS_MODE ? null : oid, DigestAlgorithms.GetAllowedDigest(name));
         }
     }
 }

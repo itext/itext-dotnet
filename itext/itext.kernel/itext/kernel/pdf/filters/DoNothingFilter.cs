@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -25,11 +25,8 @@ using iText.Kernel.Pdf;
 namespace iText.Kernel.Pdf.Filters {
     /// <summary>A filter that doesn't modify the stream at all</summary>
     public class DoNothingFilter : IFilterHandler {
-        private PdfName lastFilterName;
-
         public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
             ) {
-            lastFilterName = filterName;
             return b;
         }
     }

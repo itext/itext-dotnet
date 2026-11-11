@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -99,20 +99,17 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         private class InlineImageEventListener : IEventListener {
-            private IList<PdfStream> inlineImages = new List<PdfStream>();
+            private readonly IList<PdfStream> inlineImages = new List<PdfStream>();
 
             public virtual IList<PdfStream> GetInlineImages() {
                 return inlineImages;
             }
 
             public virtual void EventOccurred(IEventData data, EventType type) {
-                switch (type) {
-                    case EventType.RENDER_IMAGE: {
-                        ImageRenderInfo imageEventData = (ImageRenderInfo)data;
-                        if (((ImageRenderInfo)data).IsInline()) {
-                            inlineImages.Add(imageEventData.GetImage().GetPdfObject());
-                        }
-                        break;
+                if (type == EventType.RENDER_IMAGE) {
+                    ImageRenderInfo imageEventData = (ImageRenderInfo)data;
+                    if (((ImageRenderInfo)data).IsInline()) {
+                        inlineImages.Add(imageEventData.GetImage().GetPdfObject());
                     }
                 }
             }

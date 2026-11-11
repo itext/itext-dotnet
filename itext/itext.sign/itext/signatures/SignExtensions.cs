@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2024 Apryse Group NV
+    Copyright (c) 1998-2026 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -87,6 +87,10 @@ namespace iText.Signatures {
             foreach (KeyValuePair<TKey, TValue> pair in collectionToAdd) {
                 c[pair.Key] = pair.Value;
             }
+        }
+        
+        public static void Add<T>(this IList<T> list, int index, T elem) {
+            list.Insert(index, elem);
         }
 
         public static T JRemoveAt<T>(this IList<T> list, int index) {

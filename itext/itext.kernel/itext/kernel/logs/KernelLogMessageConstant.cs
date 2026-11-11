@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -89,6 +89,10 @@ namespace iText.Kernel.Logs {
         public const String STRUCT_PARENT_INDEX_MISSED_AND_RECREATED = "StructParent index not found in tagged object, so index is recreated.";
 
         public const String XOBJECT_STRUCT_PARENT_INDEX_MISSED_AND_RECREATED = "XObject has no StructParents index in its stream, so index is recreated";
+
+        //TODO DEVSIX-8490 remove this log message when implemented
+        public const String DUPLICATE_ENTRIES_IN_ORDER_ARRAY_REMOVED = "Duplicated entries in order array are " + 
+            "removed";
 
         private KernelLogMessageConstant() {
         }

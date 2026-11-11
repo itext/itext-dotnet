@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -933,6 +933,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName Limits = CreateDirectName("Limits");
 
         public static readonly iText.Kernel.Pdf.PdfName Line = CreateDirectName("Line");
+
+        public static readonly iText.Kernel.Pdf.PdfName Linearized = CreateDirectName("Linearized");
 
         public static readonly iText.Kernel.Pdf.PdfName LineArrow = CreateDirectName("LineArrow");
 

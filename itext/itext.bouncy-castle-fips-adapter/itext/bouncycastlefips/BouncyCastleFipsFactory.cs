@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2024 Apryse Group NV
+    Copyright (c) 1998-2026 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -24,6 +24,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using iText.Bouncycastle.Security;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Esf;
@@ -1189,6 +1190,11 @@ namespace iText.Bouncycastlefips {
         }
 
         /// <summary><inheritDoc/></summary>
+        public RNGCryptoServiceProvider GetSecureRandom() {
+            return new RNGCryptoServiceProvider();
+        }
+
+        /// <summary><inheritDoc/></summary>
         public IX509Extension CreateExtension(bool b, IDerOctetString octetString) {
             return new X509ExtensionBCFips(new X509Extension(b, 
                 ((DerOctetStringBCFips)octetString).GetDerOctetString()));
@@ -1214,17 +1220,6 @@ namespace iText.Bouncycastlefips {
                 throw new UnsupportedEncryptionFeatureException(
                     UnsupportedEncryptionFeatureException.ENCRYPTION_WITH_CERTIFICATE_ISNT_SUPPORTED_IN_FIPS);
             }            
-        }
-
-        /// <summary><inheritDoc/></summary>
-        public SecureRandom GetSecureRandom() {
-            byte[] personalizationString = Strings.ToUtf8ByteArray("some personalization string");
-            SecureRandom entropySource = new SecureRandom();
-            return CryptoServicesRegistrar.CreateService(FipsDrbg.Sha512)
-                .FromEntropySource(entropySource,true)
-                .SetPersonalizationString(personalizationString).Build(
-                    entropySource.GenerateSeed(256 / (2 * 8)), true, 
-                    Strings.ToByteArray("number only used once"));
         }
         
         /// <summary><inheritDoc/></summary>

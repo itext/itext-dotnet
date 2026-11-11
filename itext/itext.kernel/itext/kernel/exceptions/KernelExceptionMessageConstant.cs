@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -96,6 +96,8 @@ namespace iText.Kernel.Exceptions {
             + "for page or its parents.";
 
         public const String CANNOT_FIND_IMAGE_DATA_OR_EI = "Cannot find image data or EI.";
+
+        public const String UNSUPPORTED_ENCODING_FOR_INLINE_IMAGE = "Cannot parse inline image: {0} encoding is unsupported.";
 
         public const String CANNOT_FLUSH_DOCUMENT_ROOT_TAG_BEFORE_DOCUMENT_IS_CLOSED = "Cannot flush document root "
              + "tag before document is closed.";
@@ -282,7 +284,7 @@ namespace iText.Kernel.Exceptions {
         public const String INVALID_CROSS_REFERENCE_ENTRY_IN_THIS_XREF_SUBSECTION = "Invalid cross reference entry "
              + "in this xref subsection.";
 
-        public const String INVALID_INDIRECT_REFERENCE = "Invalid indirect reference {0}.";
+        public const String INVALID_INDIRECT_REFERENCE = "Invalid indirect reference {0} {1} R.";
 
         public const String INVALID_INPUT_FOR_TYPE_2_FUNCTION = "Invalid input value for PDF Type 2 Function, value should be a single number.";
 
@@ -500,8 +502,6 @@ namespace iText.Kernel.Exceptions {
 
         public const String UNBALANCED_SAVE_RESTORE_STATE_OPERATORS = "Unbalanced save restore state operators.";
 
-        public const String UNEXPECTED_CHARACTER_FOUND_AFTER_ID_IN_INLINE_IMAGE = "Unexpected character {0} " + "found after ID in inline image.";
-
         public const String UNEXPECTED_COLOR_SPACE = "Unexpected ColorSpace: {0}.";
 
         public const String UNEXPECTED_END_OF_FILE = "Unexpected end of file.";
@@ -540,6 +540,8 @@ namespace iText.Kernel.Exceptions {
         public const String XREF_SUBSECTION_NOT_FOUND = "xref subsection not found.";
 
         public const String XREF_STREAM_HAS_CYCLED_REFERENCES = "Xref stream has cycled references. Prev pointer indicates an already visited xref stream.";
+
+        public const String XREF_STREAM_HAS_SELF_REFERENCED_OBJECT = "Xref stream has self referenced object. Objet {0} refers to itself.";
 
         public const String XREF_STRUCTURE_SIZE_EXCEEDED_THE_LIMIT = "Xref structure contains too many elements " 
             + "and may cause OOM exception. You can increase number of elements by setting custom " + "MemoryLimitsAwareHandler.";
@@ -618,6 +620,12 @@ namespace iText.Kernel.Exceptions {
         public const String UNABLE_TO_READ_STREAM_BYTES = "Unable to read stream bytes because stream is null.";
 
         public const String INVALID_OBJECT_STREAM_NUMBER = "Unable to read object {0} with object stream " + "number {1} and index {2} from object stream.";
+
+        //TODO DEVSIX-8490 remove this exception message when implemented
+        public const String UNABLE_TO_ADD_SECOND_PARENT_LAYER = "Unable to add second parent layer to " + "{0} ocg layer";
+
+        //TODO DEVSIX-8490 remove this exception message when implemented
+        public const String UNABLE_TO_REMOVE_DUPLICATE_LAYER = "Unable to remove duplicated layer {0} " + "because it has child layers.";
 
         private KernelExceptionMessageConstant() {
         }

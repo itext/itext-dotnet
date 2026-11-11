@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -104,10 +104,6 @@ namespace iText.Signatures.Validation.V1 {
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
-        internal const String LINEARIZED_NOT_SUPPORTED = "Linearized PDF documents are not supported by DocumentRevisionsValidator.";
-//\endcond
-
-//\cond DO_NOT_DOCUMENT
         internal const String LOCKED_FIELD_KIDS_ADDED = "Kids were added to locked form field \"{0}\".";
 //\endcond
 
@@ -181,6 +177,11 @@ namespace iText.Signatures.Validation.V1 {
 
 //\cond DO_NOT_DOCUMENT
         internal const String REVISIONS_RETRIEVAL_FAILED_UNEXPECTEDLY = "Unexpected exception while retrieving document revisions.";
+//\endcond
+
+//\cond DO_NOT_DOCUMENT
+        internal const String DATA_AFTER_LAST_REVISION = "PDF document contains data after the last revision's %%EOF marker. "
+             + "This data is not covered by any known revision and may represent hidden modifications.";
 //\endcond
 
 //\cond DO_NOT_DOCUMENT
@@ -348,6 +349,25 @@ namespace iText.Signatures.Validation.V1 {
         /// </returns>
         public virtual ValidationReport ValidateAllDocumentRevisions(ValidationContext context, PdfDocument document
             ) {
+            return ValidateAllDocumentRevisions(context, document, null);
+        }
+
+//\cond DO_NOT_DOCUMENT
+        /// <summary>
+        /// Validate all document revisions according to docMDP and fieldMDP transform methods and collect validation report
+        /// related to the single signature field checks if specified.
+        /// </summary>
+        /// <param name="context">the validation context in which to validate document revisions</param>
+        /// <param name="document">the document to be validated</param>
+        /// <param name="signatureName">signature field to collect validation result for. If null, all signatures will be checked
+        ///     </param>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Signatures.Validation.V1.Report.ValidationReport"/>
+        /// which contains detailed validation results.
+        /// </returns>
+        internal virtual ValidationReport ValidateAllDocumentRevisions(ValidationContext context, PdfDocument document
+            , String signatureName) {
             ResetClassFields();
             ValidationContext localContext = context.SetValidatorContext(ValidatorContext.DOCUMENT_REVISIONS_VALIDATOR
                 );
@@ -368,6 +388,30 @@ namespace iText.Signatures.Validation.V1 {
                     .INDETERMINATE));
                 return report;
             }
+            MergeRevisionsInLinearizedDocument(document, documentRevisions);
+            // Check if there is any non-whitespace data after the last %%EOF
+            if (!documentRevisions.IsEmpty()) {
+                try {
+                    RandomAccessFileOrArray raf = document.GetReader().GetSafeFile();
+                    long fileLength = raf.Length();
+                    long lastEofOffset = documentRevisions[documentRevisions.Count - 1].GetEofOffset();
+                    if (lastEofOffset < fileLength && HasNonWhitespaceBytesAfter(raf, lastEofOffset, fileLength)) {
+                        report.AddReportItem(new ReportItem(DOC_MDP_CHECK, DATA_AFTER_LAST_REVISION, ReportItem.ReportItemStatus.INVALID
+                            ));
+                        if (StopValidation(report, localContext)) {
+                            return report;
+                        }
+                    }
+                }
+                catch (System.IO.IOException e) {
+                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_READING_EXCEPTION, e, ReportItem.ReportItemStatus
+                        .INDETERMINATE));
+                }
+                catch (Exception e) {
+                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_READING_EXCEPTION, e, ReportItem.ReportItemStatus
+                        .INDETERMINATE));
+                }
+            }
             SignatureUtil signatureUtil = new SignatureUtil(document);
             IList<String> signatures = new List<String>(signatureUtil.GetSignatureNames());
             if (signatures.IsEmpty()) {
@@ -375,13 +419,16 @@ namespace iText.Signatures.Validation.V1 {
                     .INFO));
                 return report;
             }
-            bool signatureFound = false;
+            bool updateAccessPermissions = true;
+            bool documentSigned = false;
             bool certificationSignatureFound = false;
-            PdfSignature currentSignature = signatureUtil.GetSignature(signatures[0]);
+            bool collectRevisionsValidationReport = signatureName == null;
+            String currentSignatureName = signatures[0];
+            PdfSignature currentSignature = signatureUtil.GetSignature(currentSignatureName);
             for (int i = 0; i < documentRevisions.Count; i++) {
-                if (currentSignature != null && RevisionContainsSignature(documentRevisions[i], signatures[0], document, report
-                    )) {
-                    signatureFound = true;
+                if (currentSignature != null && RevisionContainsSignature(documentRevisions[i], currentSignatureName, document
+                    , report)) {
+                    documentSigned = true;
                     if (IsCertificationSignature(currentSignature)) {
                         if (certificationSignatureFound) {
                             report.AddReportItem(new ReportItem(DOC_MDP_CHECK, TOO_MANY_CERTIFICATION_SIGNATURES, ReportItem.ReportItemStatus
@@ -389,34 +436,48 @@ namespace iText.Signatures.Validation.V1 {
                         }
                         else {
                             certificationSignatureFound = true;
-                            UpdateCertificationSignatureAccessPermissions(currentSignature, report);
+                            if (updateAccessPermissions) {
+                                UpdateCertificationSignatureAccessPermissions(currentSignature, report);
+                            }
                         }
                     }
-                    UpdateApprovalSignatureAccessPermissions(signatureUtil.GetSignatureFormFieldDictionary(signatures[0]), report
-                        );
-                    UpdateApprovalSignatureFieldLock(documentRevisions[i], signatureUtil.GetSignatureFormFieldDictionary(signatures
-                        [0]), document, report);
+                    if (updateAccessPermissions) {
+                        UpdateApprovalSignatureAccessPermissions(signatureUtil.GetSignatureFormFieldDictionary(currentSignatureName
+                            ), report);
+                        UpdateApprovalSignatureFieldLock(documentRevisions[i], signatureUtil.GetSignatureFormFieldDictionary(currentSignatureName
+                            ), document, report);
+                    }
+                    if (signatureName != null && signatureName.Equals(currentSignatureName)) {
+                        updateAccessPermissions = false;
+                        collectRevisionsValidationReport = true;
+                    }
                     signatures.JRemoveAt(0);
                     if (signatures.IsEmpty()) {
                         currentSignature = null;
                     }
                     else {
-                        currentSignature = signatureUtil.GetSignature(signatures[0]);
+                        currentSignatureName = signatures[0];
+                        currentSignature = signatureUtil.GetSignature(currentSignatureName);
                     }
                 }
-                if (signatureFound && i < documentRevisions.Count - 1) {
-                    ValidateRevision(documentRevisions[i], documentRevisions[i + 1], document, report, localContext);
+                if (documentSigned && i < documentRevisions.Count - 1) {
+                    ValidationReport validationReport = new ValidationReport();
+                    ValidateRevision(documentRevisions[i], documentRevisions[i + 1], document, validationReport, localContext);
+                    if (collectRevisionsValidationReport) {
+                        report.Merge(validationReport);
+                    }
                 }
                 if (StopValidation(report, localContext)) {
                     break;
                 }
             }
-            if (!signatureFound) {
+            if (!documentSigned) {
                 report.AddReportItem(new ReportItem(DOC_MDP_CHECK, SIGNATURE_REVISION_NOT_FOUND, ReportItem.ReportItemStatus
                     .INVALID));
             }
             return report;
         }
+//\endcond
 
 //\cond DO_NOT_DOCUMENT
         internal virtual void ValidateRevision(DocumentRevision previousRevision, DocumentRevision currentRevision
@@ -427,6 +488,29 @@ namespace iText.Signatures.Validation.V1 {
                 )));
         }
 //\endcond
+
+        private void MergeRevisionsInLinearizedDocument(PdfDocument document, IList<DocumentRevision> documentRevisions
+            ) {
+            if (documentRevisions.Count > 1) {
+                // We need to check if document is linearized in first revision
+                // We don't need to populate validation report in case of exceptions, it will happen later
+                CreateDocumentAndPerformOperation(documentRevisions[0], document, new ValidationReport(), (firstRevisionDocument
+                    ) => {
+                    if (IsLinearizedPdf(firstRevisionDocument)) {
+                        ICollection<PdfIndirectReference> mergedModifiedReferences = new HashSet<PdfIndirectReference>(documentRevisions
+                            [0].GetModifiedObjects());
+                        mergedModifiedReferences.AddAll(documentRevisions[1].GetModifiedObjects());
+                        DocumentRevision mergedRevision = new DocumentRevision(documentRevisions[0].GetEofOffset(), mergedModifiedReferences
+                            );
+                        documentRevisions.Add(0, mergedRevision);
+                        documentRevisions.JRemoveAt(1);
+                        documentRevisions.JRemoveAt(1);
+                    }
+                    return true;
+                }
+                );
+            }
+        }
 
         private bool ValidateRevision(ValidationReport validationReport, ValidationContext context, PdfDocument documentWithoutRevision
             , PdfDocument documentWithRevision, DocumentRevision currentRevision) {
@@ -485,12 +569,16 @@ namespace iText.Signatures.Validation.V1 {
             return new RASInputStream(source);
         }
 
-        private static bool IsLinearizedPdf(PdfDocument originalDocument) {
-            for (int i = 0; i < originalDocument.GetNumberOfPdfObjects(); ++i) {
-                PdfObject @object = originalDocument.GetPdfObject(i);
+        private static bool IsLinearizedPdf(PdfDocument firstRevisionDocument) {
+            // The first revision (0 revision if linearized) must not contain any signatures, not linearized otherwise
+            if (!new SignatureUtil(firstRevisionDocument).GetSignatureNames().IsEmpty()) {
+                return false;
+            }
+            for (int i = 0; i < firstRevisionDocument.GetNumberOfPdfObjects(); ++i) {
+                PdfObject @object = firstRevisionDocument.GetPdfObject(i);
                 if (@object is PdfDictionary) {
                     PdfDictionary dictionary = (PdfDictionary)@object;
-                    if (dictionary.ContainsKey(new PdfName("Linearized"))) {
+                    if (dictionary.ContainsKey(PdfName.Linearized)) {
                         return true;
                     }
                 }
@@ -514,6 +602,18 @@ namespace iText.Signatures.Validation.V1 {
         private bool StopValidation(ValidationReport result, ValidationContext validationContext) {
             return !properties.GetContinueAfterFailure(validationContext) && result.GetValidationResult() == ValidationReport.ValidationResult
                 .INVALID;
+        }
+
+        private static bool HasNonWhitespaceBytesAfter(RandomAccessFileOrArray raf, long from, long to) {
+            raf.Seek(from);
+            while (raf.GetPosition() < to) {
+                int b = raf.Read();
+                // PDF whitespace: NUL, TAB, LF, FF, CR, SPACE (ISO 32000 table 1)
+                if (b != 0x00 && b != 0x09 && b != 0x0A && b != 0x0C && b != 0x0D && b != 0x20) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void UpdateApprovalSignatureAccessPermissions(PdfDictionary signatureField, ValidationReport report
@@ -691,25 +791,13 @@ namespace iText.Signatures.Validation.V1 {
                 }
             }
             catch (System.IO.IOException exception) {
-                if (IsLinearizedPdf(originalDocument)) {
-                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, LINEARIZED_NOT_SUPPORTED, exception, ReportItem.ReportItemStatus
-                        .INDETERMINATE));
-                }
-                else {
-                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_READING_EXCEPTION, exception, ReportItem.ReportItemStatus
-                        .INDETERMINATE));
-                }
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_READING_EXCEPTION, exception, ReportItem.ReportItemStatus
+                    .INDETERMINATE));
                 return false;
             }
             catch (Exception exception) {
-                if (IsLinearizedPdf(originalDocument)) {
-                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, LINEARIZED_NOT_SUPPORTED, exception, ReportItem.ReportItemStatus
-                        .INDETERMINATE));
-                }
-                else {
-                    report.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_READING_EXCEPTION, exception, ReportItem.ReportItemStatus
-                        .INDETERMINATE));
-                }
+                report.AddReportItem(new ReportItem(DOC_MDP_CHECK, REVISIONS_READING_EXCEPTION, exception, ReportItem.ReportItemStatus
+                    .INDETERMINATE));
                 return false;
             }
         }

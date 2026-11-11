@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using iText.Commons.Utils;
 using iText.IO.Exceptions;
@@ -64,7 +65,7 @@ namespace iText.Kernel.Utils {
             String cmpPdf = sourceFolder + "cmp_simple_pdf.pdf";
             String result = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder);
             System.Console.Out.WriteLine("\nRESULT:\n" + result);
-            NUnit.Framework.Assert.IsNotNull(result, "CompareTool must return differences found between the files");
+            NUnit.Framework.Assert.IsNotNull("CompareTool must return differences found between the files", result);
             NUnit.Framework.Assert.IsTrue(result.Contains("differs on page [1, 2]."));
             // Comparing the report to the reference one.
             NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(destinationFolder + "simple_pdf.report.xml", sourceFolder
@@ -80,7 +81,7 @@ namespace iText.Kernel.Utils {
             String cmpPdf = sourceFolder + "cmp_tagged_pdf.pdf";
             String result = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder);
             System.Console.Out.WriteLine("\nRESULT:\n" + result);
-            NUnit.Framework.Assert.IsNotNull(result, "CompareTool must return differences found between the files");
+            NUnit.Framework.Assert.IsNotNull("CompareTool must return differences found between the files", result);
             NUnit.Framework.Assert.IsTrue(result.Contains("Compare by content fails. No visual differences"));
             // Comparing the report to the reference one.
             NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(destinationFolder + "tagged_pdf.report.xml", sourceFolder
@@ -96,7 +97,7 @@ namespace iText.Kernel.Utils {
             String cmpPdf = sourceFolder + "cmp_screenAnnotation.pdf";
             String result = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder);
             System.Console.Out.WriteLine("\nRESULT:\n" + result);
-            NUnit.Framework.Assert.IsNotNull(result, "CompareTool must return differences found between the files");
+            NUnit.Framework.Assert.IsNotNull("CompareTool must return differences found between the files", result);
             NUnit.Framework.Assert.IsTrue(result.Contains("Compare by content fails. No visual differences"));
             // Comparing the report to the reference one.
             NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(destinationFolder + "screenAnnotation.report.xml", sourceFolder
@@ -113,7 +114,7 @@ namespace iText.Kernel.Utils {
             String cmpPdf = sourceFolder + "cmp_simple_pdf_with_space .pdf";
             String result = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder);
             System.Console.Out.WriteLine("\nRESULT:\n" + result);
-            NUnit.Framework.Assert.IsNotNull(result, "CompareTool must return differences found between the files");
+            NUnit.Framework.Assert.IsNotNull("CompareTool must return differences found between the files", result);
             NUnit.Framework.Assert.IsTrue(result.Contains("differs on page [1, 2]."));
             // Comparing the report to the reference one.
             NUnit.Framework.Assert.IsTrue(compareTool.CompareXmls(destinationFolder + "simple_pdf.report.xml", sourceFolder
@@ -260,7 +261,7 @@ namespace iText.Kernel.Utils {
         [NUnit.Framework.Test]
         public virtual void ConvertDocInfoToStringsTest() {
             String inPdf = sourceFolder + "test.pdf";
-            CompareTool compareTool = new _T1689272844(this);
+            CompareTool compareTool = new _T798358249(this);
             using (PdfReader reader = new PdfReader(inPdf, compareTool.GetOutReaderProperties())) {
                 using (PdfDocument doc = new PdfDocument(reader)) {
                     String[] docInfo = compareTool.ConvertDocInfoToStrings(doc.GetDocumentInfo());
@@ -274,12 +275,12 @@ namespace iText.Kernel.Utils {
         }
 
 //\cond DO_NOT_DOCUMENT
-        internal class _T1689272844 : CompareTool {
+        internal class _T798358249 : CompareTool {
             protected internal override String[] ConvertDocInfoToStrings(PdfDocumentInfo info) {
                 return base.ConvertDocInfoToStrings(info);
             }
 
-            internal _T1689272844(CompareToolTest _enclosing) {
+            internal _T798358249(CompareToolTest _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -338,6 +339,31 @@ namespace iText.Kernel.Utils {
             NUnit.Framework.Assert.Catch(typeof(ArgumentException), () => CompareTool.Cleanup(null));
             CompareTool.Cleanup(destinationFolder + "cleanupTest");
             NUnit.Framework.Assert.IsNull(MemoryFirstPdfWriter.Get(destinationFolder + "cleanupTest/cleanupTest.pdf"));
+        }
+        
+        [NUnit.Framework.Test]
+        public virtual void CompareVisuallyWithFuzzValueTest() {
+            String outPdf = sourceFolder + "fuzz.pdf";
+            String cmpPdf = sourceFolder + "cmp_fuzz.pdf";
+            String outPath = destinationFolder + "compareVisuallyWithFuzzValueTest/";
+            CompareTool compareTool = new CompareTool();
+            NUnit.Framework.Assert.IsNotNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, 0));
+            NUnit.Framework.Assert.IsNotNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, 3));
+            NUnit.Framework.Assert.IsNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, 15));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void CompareVisuallyWithFuzzAndIgnoredAreasTest() {
+            String outPdf = sourceFolder + "fuzzAndIgnoredAreas.pdf";
+            String cmpPdf = sourceFolder + "cmp_fuzzAndIgnoredAreas.pdf";
+            String outPath = destinationFolder + "compareVisuallyWithFuzzValueTest/";
+            IDictionary<int, IList<Rectangle>> ignoredAreas = new Dictionary<int, IList<Rectangle>>();
+            ignoredAreas.Put(1, JavaUtil.ArraysAsList(new Rectangle(300, 0, 295, 842)));
+            CompareTool compareTool = new CompareTool();
+            NUnit.Framework.Assert.IsNotNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, 0));
+            NUnit.Framework.Assert.IsNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, 0.8));
+            NUnit.Framework.Assert.IsNull(compareTool.CompareVisually(outPdf, cmpPdf, outPath, null, ignoredAreas, 0.4
+            ));
         }
     }
 }

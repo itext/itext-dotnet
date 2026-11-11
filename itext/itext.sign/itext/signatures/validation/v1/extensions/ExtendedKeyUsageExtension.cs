@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -56,8 +56,7 @@ namespace iText.Signatures.Validation.V1.Extensions {
         /// , representing extended key usages OIDs
         /// </param>
         public ExtendedKeyUsageExtension(IList<String> extendedKeyUsageOids)
-            : base(OID.X509Extensions.EXTENDED_KEY_USAGE, FACTORY.CreateExtendedKeyUsage(CreateKeyPurposeIds(extendedKeyUsageOids
-                )).ToASN1Primitive()) {
+            : base(OID.X509Extensions.EXTENDED_KEY_USAGE, CreateExtensionValue(extendedKeyUsageOids)) {
             this.extendedKeyUsageOids = extendedKeyUsageOids;
         }
 
@@ -102,6 +101,13 @@ namespace iText.Signatures.Validation.V1.Extensions {
             }
             return providedExtendedKeyUsage.Contains(ANY_EXTENDED_KEY_USAGE_OID) || new HashSet<String>(providedExtendedKeyUsage
                 ).ContainsAll(extendedKeyUsageOids);
+        }
+
+        private static IAsn1Object CreateExtensionValue(IList<String> extendedKeyUsageOids) {
+            if (extendedKeyUsageOids.Count == 0) {
+                return null;
+            }
+            return FACTORY.CreateExtendedKeyUsage(CreateKeyPurposeIds(extendedKeyUsageOids)).ToASN1Primitive();
         }
 
         private static IDerObjectIdentifier[] CreateKeyPurposeIds(IList<String> extendedKeyUsageOids) {

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -30,13 +30,13 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
         public virtual void GetNextRendererShouldBeOverriddenTest() {
-            TableRenderer tableRenderer = new _TableRenderer_44(new Table(1));
+            TableRenderer tableRenderer = new _TableRenderer_43(new Table(1));
             // Nothing is overridden
             NUnit.Framework.Assert.AreEqual(typeof(TableRenderer), tableRenderer.GetNextRenderer().GetType());
         }
 
-        private sealed class _TableRenderer_44 : TableRenderer {
-            public _TableRenderer_44(Table baseArg1)
+        private sealed class _TableRenderer_43 : TableRenderer {
+            public _TableRenderer_43(Table baseArg1)
                 : base(baseArg1) {
             }
         }

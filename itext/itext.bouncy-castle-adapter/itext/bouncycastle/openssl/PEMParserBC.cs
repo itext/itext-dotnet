@@ -1,6 +1,6 @@
 /*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2024 Apryse Group NV
+    Copyright (c) 1998-2026 Apryse Group NV
     Authors: Apryse Software.
 
     This program is offered under a commercial and under the AGPL license.
@@ -67,7 +67,7 @@ namespace iText.Bouncycastle.Openssl {
             try {
                 readObject = parser.ReadObject();
             }
-            catch (PasswordException) {
+            catch (Org.BouncyCastle.OpenSsl.PasswordException) {
                 return new PrivateKeyBC(null);
             }
             if (readObject is X509Certificate) {

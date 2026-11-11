@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -30,13 +30,13 @@ namespace iText.Layout.Renderer {
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.Logs.IoLogMessageConstant.GET_NEXT_RENDERER_SHOULD_BE_OVERRIDDEN)]
         public virtual void GetNextRendererShouldBeOverriddenTest() {
-            ParagraphRenderer paragraphRenderer = new _ParagraphRenderer_44(new Paragraph());
+            ParagraphRenderer paragraphRenderer = new _ParagraphRenderer_43(new Paragraph());
             // Nothing is overridden
             NUnit.Framework.Assert.AreEqual(typeof(ParagraphRenderer), paragraphRenderer.GetNextRenderer().GetType());
         }
 
-        private sealed class _ParagraphRenderer_44 : ParagraphRenderer {
-            public _ParagraphRenderer_44(Paragraph baseArg1)
+        private sealed class _ParagraphRenderer_43 : ParagraphRenderer {
+            public _ParagraphRenderer_43(Paragraph baseArg1)
                 : base(baseArg1) {
             }
         }

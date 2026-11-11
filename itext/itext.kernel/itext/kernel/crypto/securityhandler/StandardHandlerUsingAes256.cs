@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -25,6 +25,7 @@ using System.IO;
 using Microsoft.Extensions.Logging;
 using iText.Commons;
 using iText.Commons.Bouncycastle.Math;
+using iText.Bouncycastleconnector;
 using iText.Commons.Digest;
 using iText.Commons.Utils;
 using iText.IO.Util;
@@ -34,6 +35,8 @@ using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Crypto.Securityhandler {
     public class StandardHandlerUsingAes256 : StandardSecurityHandler {
+        private static readonly BouncyCastleSecureRandomHolder RNG = new BouncyCastleSecureRandomHolder();
+
         private const int VALIDATION_SALT_OFFSET = 32;
 
         private const int KEY_SALT_OFFSET = 40;
@@ -94,9 +97,12 @@ namespace iText.Kernel.Crypto.Securityhandler {
                     ownerPassword = JavaUtil.ArraysCopyOf(ownerPassword, 127);
                 }
                 // first 8 bytes are validation salt; second 8 bytes are key salt
-                byte[] userValAndKeySalt = IVGenerator.GetIV(16);
-                byte[] ownerValAndKeySalt = IVGenerator.GetIV(16);
-                nextObjectKey = IVGenerator.GetIV(32);
+                byte[] userValAndKeySalt = new byte[16];
+                RNG.GetSecureRandom().GetBytes(userValAndKeySalt);
+                byte[] ownerValAndKeySalt = new byte[16];
+                RNG.GetSecureRandom().GetBytes(ownerValAndKeySalt);
+                nextObjectKey = new byte[32];
+                RNG.GetSecureRandom().GetBytes(nextObjectKey);
                 nextObjectKeySize = 32;
                 byte[] hash;
                 // Algorithm 8.1
@@ -106,7 +112,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 // Algorithm 8.2
                 hash = ComputeHash(userPassword, userValAndKeySalt, 8, 8);
                 AESCipherCBCnoPad ac = new AESCipherCBCnoPad(true, hash);
-                ueKey = ac.ProcessBlock(nextObjectKey, 0, nextObjectKey.Length);
+                ueKey = ac.ProcessFullBlock(nextObjectKey, 0, nextObjectKey.Length);
                 // Algorithm 9.1
                 hash = ComputeHash(ownerPassword, ownerValAndKeySalt, 0, 8, userKey);
                 ownerKey = JavaUtil.ArraysCopyOf(hash, 48);
@@ -114,9 +120,10 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 // Algorithm 9.2
                 hash = ComputeHash(ownerPassword, ownerValAndKeySalt, 8, 8, userKey);
                 ac = new AESCipherCBCnoPad(true, hash);
-                oeKey = ac.ProcessBlock(nextObjectKey, 0, nextObjectKey.Length);
+                oeKey = ac.ProcessFullBlock(nextObjectKey, 0, nextObjectKey.Length);
                 // Algorithm 10
-                byte[] permsp = IVGenerator.GetIV(16);
+                byte[] permsp = new byte[16];
+                RNG.GetSecureRandom().GetBytes(permsp);
                 permsp[0] = (byte)permissions;
                 permsp[1] = (byte)(permissions >> 8);
                 permsp[2] = (byte)(permissions >> 16);
@@ -130,7 +137,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 permsp[10] = (byte)'d';
                 permsp[11] = (byte)'b';
                 ac = new AESCipherCBCnoPad(true, nextObjectKey);
-                aes256Perms = ac.ProcessBlock(permsp, 0, permsp.Length);
+                aes256Perms = ac.ProcessFullBlock(permsp, 0, permsp.Length);
                 this.permissions = permissions;
                 this.encryptMetadata = encryptMetadata;
                 SetStandardHandlerDicEntries(encryptionDictionary, userKey, ownerKey);
@@ -199,7 +206,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 if (usedOwnerPassword) {
                     hash = ComputeHash(password, oValue, KEY_SALT_OFFSET, SALT_LENGTH, uValue);
                     AESCipherCBCnoPad ac = new AESCipherCBCnoPad(false, hash);
-                    nextObjectKey = ac.ProcessBlock(oeValue, 0, oeValue.Length);
+                    nextObjectKey = ac.ProcessFullBlock(oeValue, 0, oeValue.Length);
                 }
                 else {
                     hash = ComputeHash(password, uValue, VALIDATION_SALT_OFFSET, SALT_LENGTH);
@@ -208,11 +215,11 @@ namespace iText.Kernel.Crypto.Securityhandler {
                     }
                     hash = ComputeHash(password, uValue, KEY_SALT_OFFSET, SALT_LENGTH);
                     AESCipherCBCnoPad ac = new AESCipherCBCnoPad(false, hash);
-                    nextObjectKey = ac.ProcessBlock(ueValue, 0, ueValue.Length);
+                    nextObjectKey = ac.ProcessFullBlock(ueValue, 0, ueValue.Length);
                 }
                 nextObjectKeySize = 32;
                 AESCipherCBCnoPad ac_1 = new AESCipherCBCnoPad(false, nextObjectKey);
-                byte[] decPerms = ac_1.ProcessBlock(perms, 0, perms.Length);
+                byte[] decPerms = ac_1.ProcessFullBlock(perms, 0, perms.Length);
                 if (decPerms[9] != (byte)'a' || decPerms[10] != (byte)'d' || decPerms[11] != (byte)'b') {
                     throw new BadPasswordException(KernelExceptionMessageConstant.BAD_USER_PASSWORD);
                 }
@@ -277,10 +284,10 @@ namespace iText.Kernel.Crypto.Securityhandler {
                     // b)
                     AESCipherCBCnoPad cipher = new AESCipherCBCnoPad(true, JavaUtil.ArraysCopyOf(k, 16), JavaUtil.ArraysCopyOfRange
                         (k, 16, 32));
-                    byte[] e = cipher.ProcessBlock(k1, 0, k1.Length);
+                    byte[] e = cipher.ProcessFullBlock(k1, 0, k1.Length);
                     // c)
                     IMessageDigest md = null;
-                    IBigInteger i_1 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateBigInteger(1, 
+                    IBigInteger i_1 = iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateBigInteger(1,
                         JavaUtil.ArraysCopyOf(e, 16));
                     int remainder = i_1.Remainder(iText.Bouncycastleconnector.BouncyCastleFactoryCreator.GetFactory().CreateBigInteger().ValueOf
                         (3)).GetIntValue();

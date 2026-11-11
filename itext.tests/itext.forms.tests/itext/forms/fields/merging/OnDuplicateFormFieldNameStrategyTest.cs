@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -226,7 +226,7 @@ namespace iText.Forms.Fields.Merging {
         [NUnit.Framework.Test]
         public virtual void AddIndexStrategySeparatesTheFields() {
             try {
-                PdfFormCreator.SetFactory(new _PdfFormFactory_269());
+                PdfFormCreator.SetFactory(new _PdfFormFactory_268());
                 using (PdfDocument pdfInnerDoc = new PdfDocument(new PdfWriter(DESTINATION_FOLDER + "add_index.pdf"))) {
                     Document doc = new Document(pdfInnerDoc);
                     doc.Add(new CheckBox("test1").SetBorder(new SolidBorder(ColorConstants.RED, 1)));
@@ -242,8 +242,8 @@ namespace iText.Forms.Fields.Merging {
             }
         }
 
-        private sealed class _PdfFormFactory_269 : PdfFormFactory {
-            public _PdfFormFactory_269() {
+        private sealed class _PdfFormFactory_268 : PdfFormFactory {
+            public _PdfFormFactory_268() {
             }
 
             public override PdfAcroForm GetAcroForm(PdfDocument document, bool createIfNotExist) {

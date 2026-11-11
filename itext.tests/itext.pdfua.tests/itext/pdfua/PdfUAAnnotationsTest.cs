@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -72,12 +72,12 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void Ua1LinkAnnotNoDirectChildOfAnnotTest() {
-            framework.AddSuppliers(new _Generator_123());
+            framework.AddSuppliers(new _Generator_122());
             framework.AssertBothValid("ua1LinkAnnotNoDirectChildOfAnnotTest");
         }
 
-        private sealed class _Generator_123 : UaValidationTestFramework.Generator<IBlockElement> {
-            public _Generator_123() {
+        private sealed class _Generator_122 : UaValidationTestFramework.Generator<IBlockElement> {
+            public _Generator_122() {
             }
 
             public IBlockElement Generate() {
@@ -740,28 +740,30 @@ namespace iText.Pdfua {
 
         [NUnit.Framework.Test]
         public virtual void Ua1PrinterMAnnotNotInTagStructureTest() {
-            String outPdf = DESTINATION_FOLDER + "ua1PrinterMAnnotNotInTagStructureTest.pdf";
-            PdfDocument pdfDoc = new PdfUATestPdfDocument(new PdfWriter(outPdf));
-            PdfPage pdfPage = pdfDoc.AddNewPage();
-            PdfFormXObject form = new PdfFormXObject(PageSize.A4);
-            PdfCanvas canvas = new PdfCanvas(form, pdfDoc);
-            canvas.SaveState().Circle(265, 795, 5).SetColor(ColorConstants.GREEN, true).Fill().RestoreState();
-            canvas.Release();
-            PdfPrinterMarkAnnotation annot = new PdfPrinterMarkAnnotation(PageSize.A4, form);
-            annot.SetContents("link annot");
-            // Put false as 3rd parameter to not tag annotation
-            pdfPage.AddAnnotation(-1, annot, false);
-            PdfUAAnnotationsTest.PdfCustomAnnot annot2 = new PdfUAAnnotationsTest.PdfCustomAnnot(new Rectangle(100, 650
-                , 400, 100));
-            annot2.SetContents("Content of unique annot");
-            pdfPage.AddAnnotation(annot2);
-            NUnit.Framework.Assert.DoesNotThrow(() => pdfDoc.Close());
-            // VeraPdf complains about the fact that PrinterMark annotation isn't wrapped by Annot tag.
-            // But in that test we don't put PrinterMark annot in tag structure at all.
-            NUnit.Framework.Assert.IsNotNull(new VeraPdfValidator().Validate(outPdf));
+            framework.AddBeforeGenerationHook((pdfDoc) => {
+                PdfPage pdfPage = pdfDoc.AddNewPage();
+                PdfFormXObject form = new PdfFormXObject(PageSize.A4);
+                PdfCanvas canvas = new PdfCanvas(form, pdfDoc);
+                canvas.SaveState().Circle(265, 795, 5).SetColor(ColorConstants.GREEN, true).Fill().RestoreState();
+                canvas.Release();
+                PdfPrinterMarkAnnotation annot = new PdfPrinterMarkAnnotation(PageSize.A4, form);
+                annot.SetContents("link annot");
+                // Put false as 3rd parameter to not tag annotation
+                pdfPage.AddAnnotation(-1, annot, false);
+                PdfUAAnnotationsTest.PdfCustomAnnot annot2 = new PdfUAAnnotationsTest.PdfCustomAnnot(new Rectangle(100, 650
+                    , 400, 100));
+                annot2.SetContents("Content of unique annot");
+                pdfPage.AddAnnotation(annot2);
+                PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(0, 0, 100, 50));
+                stamp.SetStampName(PdfName.Approved);
+                stamp.SetContents("stamp contents");
+                stamp.GetPdfObject().Put(PdfName.Type, PdfName.Annot);
+                pdfPage.AddAnnotation(stamp);
+            }
+            );
+            framework.AssertBothValid("ua1PrinterMAnnotNotInTagStructureTest");
         }
 
-        // Android-Conversion-Skip-Line (TODO DEVSIX-7377 introduce pdf/ua validation on Android)
         private PdfTextAnnotation CreateRichTextAnnotation() {
             PdfTextAnnotation annot = new PdfTextAnnotation(new Rectangle(100, 100, 100, 100));
             annot.SetContents("Rich media annot");
