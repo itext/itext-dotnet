@@ -72,12 +72,5 @@ namespace iText.Signatures.Sign {
             TestSignUtils.BasicCheckSignedDoc(destinationFolder + "timestampTest01.pdf", "timestampSig1");
             NUnit.Framework.Assert.IsNull(SignaturesCompareTool.CompareSignatures(outFileName, compareFile));
         }
-        //        TimeStampToken tsWrong = new TimeStampResponse(Files.readAllBytes(Paths.get("c:\\Users\\yulian\\Desktop\\myTs"))).getTimeStampToken();
-        //
-        //        JcaSimpleSignerInfoVerifierBuilder sigVerifBuilder = new JcaSimpleSignerInfoVerifierBuilder();
-        //        X509Certificate caCert = (X509Certificate)Pkcs12FileHelper.readFirstChain(p12FileName, password)[0];
-        //        SignerInformationVerifier signerInfoVerif = sigVerifBuilder.setProvider(BouncyCastleProvider.PROVIDER_NAME).build(caCert.getPublicKey());
-        //        boolean signatureValid = tsWrong.isSignatureValid(signerInfoVerif);
-        //
     }
 }
