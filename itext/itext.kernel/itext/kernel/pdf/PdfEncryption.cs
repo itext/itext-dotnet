@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using System.Security.Cryptography;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
@@ -64,7 +65,7 @@ namespace iText.Kernel.Pdf {
 
         private const int AES_256 = 5;
 
-        private static long seq = SystemUtil.GetTimeBasedSeed();
+        private static readonly RNGCryptoServiceProvider RANDOM_ID_GENERATOR = new RNGCryptoServiceProvider();
 
         private int cryptoMode;
 
@@ -349,18 +350,12 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>Generates random document ID.</summary>
+        /// <returns>document ID</returns>
         public static byte[] GenerateNewDocumentId() {
-            IDigest md5;
-            try {
-                md5 = DigestUtilities.GetDigest("MD5");
-            }
-            catch (Exception e) {
-                throw new PdfException(KernelExceptionMessageConstant.PDF_ENCRYPTION, e);
-            }
-            long time = SystemUtil.GetTimeBasedSeed();
-            long mem = SystemUtil.GetFreeMemory();
-            String s = time + "+" + mem + "+" + (seq++);
-            return md5.Digest(s.GetBytes(iText.Commons.Utils.EncodingUtil.ISO_8859_1));
+            byte[] bytes = new byte[16];
+            RANDOM_ID_GENERATOR.GetBytes(bytes);
+            return bytes;
         }
 
         /// <summary>Creates a PdfLiteral that contains an array of two id entries.</summary>

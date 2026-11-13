@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -56,6 +56,8 @@ using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Crypto.Securityhandler {
     public class StandardHandlerUsingAes256 : StandardSecurityHandler {
+        private static readonly System.Security.Cryptography.RNGCryptoServiceProvider RNG = new System.Security.Cryptography.RNGCryptoServiceProvider();
+
         private const int VALIDATION_SALT_OFFSET = 32;
 
         private const int KEY_SALT_OFFSET = 40;
@@ -116,9 +118,12 @@ namespace iText.Kernel.Crypto.Securityhandler {
                     ownerPassword = JavaUtil.ArraysCopyOf(ownerPassword, 127);
                 }
                 // first 8 bytes are validation salt; second 8 bytes are key salt
-                byte[] userValAndKeySalt = IVGenerator.GetIV(16);
-                byte[] ownerValAndKeySalt = IVGenerator.GetIV(16);
-                nextObjectKey = IVGenerator.GetIV(32);
+                byte[] userValAndKeySalt = new byte[16];
+                RNG.GetBytes(userValAndKeySalt);
+                byte[] ownerValAndKeySalt = new byte[16];
+                RNG.GetBytes(ownerValAndKeySalt);
+                nextObjectKey = new byte[32];
+                RNG.GetBytes(nextObjectKey);
                 nextObjectKeySize = 32;
                 byte[] hash;
                 // Algorithm 8.1
@@ -138,7 +143,8 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 ac = new AESCipherCBCnoPad(true, hash);
                 oeKey = ac.ProcessBlock(nextObjectKey, 0, nextObjectKey.Length);
                 // Algorithm 10
-                byte[] permsp = IVGenerator.GetIV(16);
+                byte[] permsp = new byte[16];
+                RNG.GetBytes(permsp);
                 permsp[0] = (byte)permissions;
                 permsp[1] = (byte)(permissions >> 8);
                 permsp[2] = (byte)(permissions >> 16);

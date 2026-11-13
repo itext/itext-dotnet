@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -56,8 +56,13 @@ using Org.BouncyCastle.X509;
 
 namespace iText.Kernel.Crypto.Securityhandler {
     internal sealed class EncryptionUtils {
+
+        private static readonly System.Security.Cryptography.RNGCryptoServiceProvider RNG = new System.Security.Cryptography.RNGCryptoServiceProvider();
+        
         internal static byte[] GenerateSeed(int seedLength) {
-            return IVGenerator.GetIV(seedLength);
+            byte[] seed = new byte[seedLength];
+            RNG.GetBytes(seed);
+            return seed;
         }
 
         internal static byte[] FetchEnvelopedData(ICipherParameters certificateKey, X509Certificate certificate, PdfArray recipients) {
@@ -132,10 +137,13 @@ namespace iText.Kernel.Crypto.Securityhandler {
             byte[] outp = new byte[100];
             DerObjectIdentifier derob = new DerObjectIdentifier(s);
             // keyp
-            byte[] abyte0 = IVGenerator.GetIV(16);
+            byte[] abyte0 = new byte[16];
+            RNG.GetBytes(abyte0);
+
             IBufferedCipher cf = CipherUtilities.GetCipher(derob);
             KeyParameter kp = new KeyParameter(abyte0);
-            byte[] iv = IVGenerator.GetIV(cf.GetBlockSize());
+            byte[] iv = new byte[cf.GetBlockSize()];
+            RNG.GetBytes(iv);
             ParametersWithIV piv = new ParametersWithIV(kp, iv);
             cf.Init(true, piv);
             int len = cf.DoFinal(@in, outp, 0);

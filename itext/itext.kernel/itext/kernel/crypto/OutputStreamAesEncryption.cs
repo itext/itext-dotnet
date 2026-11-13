@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2024 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -47,6 +47,8 @@ using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Crypto {
     public class OutputStreamAesEncryption : OutputStreamEncryption {
+        private static readonly System.Security.Cryptography.RNGCryptoServiceProvider RNG = new System.Security.Cryptography.RNGCryptoServiceProvider();
+
         protected internal AESCipher cipher;
 
         private bool finished;
@@ -65,7 +67,8 @@ namespace iText.Kernel.Crypto {
         /// <param name="len">the length of the key in the byte array</param>
         public OutputStreamAesEncryption(Stream @out, byte[] key, int off, int len)
             : base(@out) {
-            byte[] iv = IVGenerator.GetIV();
+            byte[] iv = new byte[16];
+            RNG.GetBytes(iv);
             byte[] nkey = new byte[len];
             Array.Copy(key, off, nkey, 0, len);
             cipher = new AESCipher(true, nkey, iv);
