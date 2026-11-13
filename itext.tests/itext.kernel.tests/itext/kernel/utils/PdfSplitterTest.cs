@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -47,7 +47,7 @@ namespace iText.Kernel.Utils {
             String inputFileName = sourceFolder + "iphone_user_guide.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
             IList<int> pageNumbers = JavaUtil.ArraysAsList(30, 100);
-            IList<PdfDocument> splitDocuments = new _PdfSplitter_85(inputPdfDoc).SplitByPageNumbers(pageNumbers);
+            IList<PdfDocument> splitDocuments = new _PdfSplitter_65(inputPdfDoc).SplitByPageNumbers(pageNumbers);
             foreach (PdfDocument doc in splitDocuments) {
                 doc.Close();
             }
@@ -58,8 +58,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _PdfSplitter_85 : PdfSplitter {
-            public _PdfSplitter_85(PdfDocument baseArg1)
+        private sealed class _PdfSplitter_65 : PdfSplitter {
+            public _PdfSplitter_65(PdfDocument baseArg1)
                 : base(baseArg1) {
                 this.partNumber = 1;
             }
@@ -82,7 +82,7 @@ namespace iText.Kernel.Utils {
         public virtual void SplitDocumentTest02() {
             String inputFileName = sourceFolder + "iphone_user_guide.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
-            new _PdfSplitter_115(inputPdfDoc).SplitByPageCount(60, new _IDocumentReadyListener_126());
+            new _PdfSplitter_95(inputPdfDoc).SplitByPageCount(60, new _IDocumentReadyListener_106());
             for (int i = 1; i <= 3; i++) {
                 NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "splitDocument2_" + i
                     .ToString() + ".pdf", sourceFolder + "cmp/" + "cmp_splitDocument2_" + i.ToString() + ".pdf", destinationFolder
@@ -90,8 +90,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _PdfSplitter_115 : PdfSplitter {
-            public _PdfSplitter_115(PdfDocument baseArg1)
+        private sealed class _PdfSplitter_95 : PdfSplitter {
+            public _PdfSplitter_95(PdfDocument baseArg1)
                 : base(baseArg1) {
                 this.partNumber = 1;
             }
@@ -109,8 +109,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _IDocumentReadyListener_126 : PdfSplitter.IDocumentReadyListener {
-            public _IDocumentReadyListener_126() {
+        private sealed class _IDocumentReadyListener_106 : PdfSplitter.IDocumentReadyListener {
+            public _IDocumentReadyListener_106() {
             }
 
             public void DocumentReady(PdfDocument pdfDocument, PageRange pageRange) {
@@ -128,7 +128,7 @@ namespace iText.Kernel.Utils {
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
             PageRange pageRange1 = new PageRange().AddPageSequence(4, 15).AddSinglePage(18).AddPageSequence(1, 2);
             PageRange pageRange2 = new PageRange().AddSinglePage(99).AddSinglePage(98).AddPageSequence(70, 99);
-            IList<PdfDocument> splitDocuments = new _PdfSplitter_154(inputPdfDoc).ExtractPageRanges(JavaUtil.ArraysAsList
+            IList<PdfDocument> splitDocuments = new _PdfSplitter_134(inputPdfDoc).ExtractPageRanges(JavaUtil.ArraysAsList
                 (pageRange1, pageRange2));
             foreach (PdfDocument pdfDocument in splitDocuments) {
                 pdfDocument.Close();
@@ -140,8 +140,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _PdfSplitter_154 : PdfSplitter {
-            public _PdfSplitter_154(PdfDocument baseArg1)
+        private sealed class _PdfSplitter_134 : PdfSplitter {
+            public _PdfSplitter_134(PdfDocument baseArg1)
                 : base(baseArg1) {
                 this.partNumber = 1;
             }
@@ -167,7 +167,7 @@ namespace iText.Kernel.Utils {
             PageRange pageRange1 = new PageRange("even & 80-").AddPageSequence(4, 15).AddSinglePage(18).AddPageSequence
                 (1, 2);
             PageRange pageRange2 = new PageRange("99,98").AddPageSequence(70, 99);
-            IList<PdfDocument> splitDocuments = new _PdfSplitter_188(inputPdfDoc).ExtractPageRanges(JavaUtil.ArraysAsList
+            IList<PdfDocument> splitDocuments = new _PdfSplitter_168(inputPdfDoc).ExtractPageRanges(JavaUtil.ArraysAsList
                 (pageRange1, pageRange2));
             foreach (PdfDocument pdfDocument in splitDocuments) {
                 pdfDocument.Close();
@@ -179,8 +179,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _PdfSplitter_188 : PdfSplitter {
-            public _PdfSplitter_188(PdfDocument baseArg1)
+        private sealed class _PdfSplitter_168 : PdfSplitter {
+            public _PdfSplitter_168(PdfDocument baseArg1)
                 : base(baseArg1) {
                 this.partNumber = 1;
             }
@@ -218,7 +218,7 @@ namespace iText.Kernel.Utils {
         public virtual void SplitDocumentBySize() {
             String inputFileName = sourceFolder + "splitBySize.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
-            PdfSplitter splitter = new _PdfSplitter_234(inputPdfDoc);
+            PdfSplitter splitter = new _PdfSplitter_214(inputPdfDoc);
             IList<PdfDocument> documents = splitter.SplitBySize(100000);
             foreach (PdfDocument doc in documents) {
                 doc.Close();
@@ -229,8 +229,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _PdfSplitter_234 : PdfSplitter {
-            public _PdfSplitter_234(PdfDocument baseArg1)
+        private sealed class _PdfSplitter_214 : PdfSplitter {
+            public _PdfSplitter_214(PdfDocument baseArg1)
                 : base(baseArg1) {
                 this.partNumber = 1;
             }

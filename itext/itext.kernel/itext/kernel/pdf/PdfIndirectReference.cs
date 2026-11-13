@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -23,6 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Text;
 using iText.IO.Util;
+using iText.Kernel;
+using iText.Kernel.Exceptions;
 
 namespace iText.Kernel.Pdf {
     public class PdfIndirectReference : PdfObject, IComparable<iText.Kernel.Pdf.PdfIndirectReference> {
@@ -60,6 +62,10 @@ namespace iText.Kernel.Pdf {
         /// <summary>PdfDocument object belongs to.</summary>
         /// <remarks>PdfDocument object belongs to. For direct objects it is null.</remarks>
         protected internal PdfDocument pdfDocument = null;
+
+        /// <summary>Is reference resolving in process or not.</summary>
+        /// <remarks>Is reference resolving in process or not. Used to prevent cycled references.</remarks>
+        private bool resolvingReferenceInProcess = false;
 
         protected internal PdfIndirectReference(PdfDocument doc, int objNr)
             : this(doc, objNr, 0) {
@@ -114,7 +120,19 @@ namespace iText.Kernel.Pdf {
             if (!recursively) {
                 if (refersTo == null && !CheckState(FLUSHED) && !CheckState(MODIFIED) && !CheckState(FREE) && GetReader() 
                     != null) {
-                    refersTo = GetReader().ReadObject(this);
+                    if (resolvingReferenceInProcess) {
+                        throw new PdfException(MessageFormatUtil.Format(KernelExceptionMessageConstant.XREF_STREAM_HAS_SELF_REFERENCED_OBJECT
+                            , objNr));
+                    }
+                    resolvingReferenceInProcess = true;
+                    try {
+                        // readObject can call getRefersTo, it's why resolvingReferenceInProcess
+                        // is used to prevent StackOverflowException
+                        refersTo = GetReader().ReadObject(this);
+                    }
+                    finally {
+                        resolvingReferenceInProcess = false;
+                    }
                 }
                 return refersTo;
             }

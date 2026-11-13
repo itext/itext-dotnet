@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -204,7 +204,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void ExtendedPdfDocumentNoWriterInfoAndConformanceLevelInitialization() {
-            PdfDocument pdfDocument = new _PdfDocument_265(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"));
+            PdfDocument pdfDocument = new _PdfDocument_244(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"));
             // This class instance extends pdfDocument
             // TODO DEVSIX-5292 These fields shouldn't be initialized during the document's opening
             NUnit.Framework.Assert.IsNotNull(pdfDocument.info);
@@ -214,15 +214,15 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNotNull(pdfDocument.reader.pdfAConformanceLevel);
         }
 
-        private sealed class _PdfDocument_265 : PdfDocument {
-            public _PdfDocument_265(PdfReader baseArg1)
+        private sealed class _PdfDocument_244 : PdfDocument {
+            public _PdfDocument_244(PdfReader baseArg1)
                 : base(baseArg1) {
             }
         }
 
         [NUnit.Framework.Test]
         public virtual void ExtendedPdfDocumentWriterInfoAndConformanceLevelInitialization() {
-            PdfDocument pdfDocument = new _PdfDocument_282(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"), new PdfWriter
+            PdfDocument pdfDocument = new _PdfDocument_261(new PdfReader(sourceFolder + "pdfWithMetadata.pdf"), new PdfWriter
                 (new ByteArrayOutputStream()));
             // This class instance extends pdfDocument
             NUnit.Framework.Assert.IsNotNull(pdfDocument.info);
@@ -233,8 +233,8 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNotNull(pdfDocument.reader.pdfAConformanceLevel);
         }
 
-        private sealed class _PdfDocument_282 : PdfDocument {
-            public _PdfDocument_282(PdfReader baseArg1, PdfWriter baseArg2)
+        private sealed class _PdfDocument_261 : PdfDocument {
+            public _PdfDocument_261(PdfReader baseArg1, PdfWriter baseArg2)
                 : base(baseArg1, baseArg2) {
             }
         }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -123,7 +123,7 @@ namespace iText.Kernel.Pdf {
         [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void OverriddenMemoryHandlerAllStreamsAreSuspiciousTest() {
-            MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_193();
+            MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_173();
             handler.SetMaxSizeOfSingleDecompressedPdfStream(20);
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "timing.pdf", new ReaderProperties
                 ().SetMemoryLimitsAwareHandler(handler)), new PdfWriter(new MemoryStream()))) {
@@ -140,8 +140,8 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        private sealed class _MemoryLimitsAwareHandler_193 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_193() {
+        private sealed class _MemoryLimitsAwareHandler_173 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_173() {
             }
 
             public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {
@@ -153,7 +153,7 @@ namespace iText.Kernel.Pdf {
         [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR_WHILE_READING_TABLE_WILL_BE_REBUILT)]
         public virtual void OverriddenMemoryHandlerNoStreamsAreSuspiciousTest() {
-            MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_228();
+            MemoryLimitsAwareHandler handler = new _MemoryLimitsAwareHandler_208();
             handler.SetMaxSizeOfSingleDecompressedPdfStream(20);
             using (PdfDocument pdfDocument = new PdfDocument(new PdfReader(SOURCE_FOLDER + "timing.pdf", new ReaderProperties
                 ().SetMemoryLimitsAwareHandler(handler)), new PdfWriter(new MemoryStream()))) {
@@ -168,8 +168,8 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        private sealed class _MemoryLimitsAwareHandler_228 : MemoryLimitsAwareHandler {
-            public _MemoryLimitsAwareHandler_228() {
+        private sealed class _MemoryLimitsAwareHandler_208 : MemoryLimitsAwareHandler {
+            public _MemoryLimitsAwareHandler_208() {
             }
 
             public override bool IsMemoryLimitsAwarenessRequiredOnDecompression(PdfArray filters) {

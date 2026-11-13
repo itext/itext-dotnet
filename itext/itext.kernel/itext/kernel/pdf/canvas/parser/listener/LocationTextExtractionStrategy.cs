@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2023 Apryse Group NV
+Copyright (c) 1998-2026 Apryse Group NV
 Authors: Apryse Software.
 
 This program is offered under a commercial and under the AGPL license.
@@ -47,11 +47,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
 
         /// <summary>Creates a new text extraction renderer.</summary>
         public LocationTextExtractionStrategy()
-            : this(new _ITextChunkLocationStrategy_85()) {
+            : this(new _ITextChunkLocationStrategy_64()) {
         }
 
-        private sealed class _ITextChunkLocationStrategy_85 : LocationTextExtractionStrategy.ITextChunkLocationStrategy {
-            public _ITextChunkLocationStrategy_85() {
+        private sealed class _ITextChunkLocationStrategy_64 : LocationTextExtractionStrategy.ITextChunkLocationStrategy {
+            public _ITextChunkLocationStrategy_64() {
             }
 
             public ITextChunkLocation CreateLocation(TextRenderInfo renderInfo, LineSegment baseline) {
