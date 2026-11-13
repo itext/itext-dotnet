@@ -66,7 +66,7 @@ namespace iText.Kernel {
         /// iText Group requests that you retain the iText producer line
         /// in every PDF that is created or manipulated using iText.
         /// </remarks>
-        private const String producerLine = iTextProductName + " " + release + " \u00a92000-2024 iText Group NV";
+        private const String producerLine = iTextProductName + " " + release + " \u00a92000-2026 iText Group NV";
 
         /// <summary>The version info;</summary>
         private readonly VersionInfo info;
