@@ -83,6 +83,23 @@ namespace iText.Signatures.Verify {
             NUnit.Framework.Assert.IsFalse(VerifyTest(crlBuilder));
         }
 
+        [NUnit.Framework.Test]
+        public virtual void InvalidSignatureCrlTest() {
+            String caCertFileName = certsSrc + "rootRsa.pem";
+            IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(caCertFileName)[0];
+            IPrivateKey wrongPrivateKey = PemFileHelper.ReadFirstKey(certsSrc + "signCertRsa01.pem", password);
+            String checkCertFileName = certsSrc + "signCertRsa01.pem";
+            IX509Certificate checkCert = (IX509Certificate)PemFileHelper.ReadFirstChain(checkCertFileName)[0];
+            TestCrlBuilder crlBuilder = new TestCrlBuilder(caCert, wrongPrivateKey, TimeTestUtil.TEST_DATE_TIME.AddDays
+                (-1));
+            ICollection<byte[]> crlBytesCollection = new TestCrlClient().AddBuilderForCertIssuer(crlBuilder).GetEncoded
+                (checkCert, null);
+            IX509Crl crl = (IX509Crl)SignTestPortUtil.ParseCrlFromStream(new MemoryStream(SignTestPortUtil.GetFirstElement
+                (crlBytesCollection)));
+            CRLVerifier verifier = new CRLVerifier(null, null);
+            NUnit.Framework.Assert.IsFalse(verifier.Verify(crl, checkCert, null, TimeTestUtil.TEST_DATE_TIME));
+        }
+
         private bool VerifyTest(TestCrlBuilder crlBuilder) {
             String caCertFileName = certsSrc + "rootRsa.pem";
             IX509Certificate caCert = (IX509Certificate)PemFileHelper.ReadFirstChain(caCertFileName)[0];
