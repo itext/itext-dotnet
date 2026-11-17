@@ -160,6 +160,19 @@ namespace iText.Kernel.Colors.Gradients {
         }
 
         [NUnit.Framework.Test]
+        public virtual void RadialGradientEllipseClosestCornerAtBottomTest() {
+            Rectangle targetBoundingBox = new Rectangle(0, 0, 100, 100);
+            StrategyBasedRadialGradientBuilder gradient = new StrategyBasedRadialGradientBuilder().SetCenterStrategy(true
+                , 0.5, true, true, 0, true).SetRadiusFromCenterStrategy(false, StrategyBasedRadialGradientBuilder.GradientStrategy
+                .CLOSEST_CORNER);
+            gradient.AddStopColor(new GradientColorStop(ColorConstants.RED.GetColorValue(), 0, GradientColorStop.OffsetType
+                .RELATIVE));
+            gradient.AddStopColor(new GradientColorStop(ColorConstants.BLUE.GetColorValue(), 1, GradientColorStop.OffsetType
+                .RELATIVE));
+            NUnit.Framework.Assert.IsNull(gradient.BuildColor(targetBoundingBox, null, null));
+        }
+
+        [NUnit.Framework.Test]
         public virtual void BuilderFarthestSideEllipseTest() {
             IGradientBuilder gradientBuilder = new StrategyBasedRadialGradientBuilder().SetCenterStrategy(true, 0.3, true
                 , true, 0.2, true).SetRadiusFromCenterStrategy(false, StrategyBasedRadialGradientBuilder.GradientStrategy

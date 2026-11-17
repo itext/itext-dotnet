@@ -439,9 +439,9 @@ namespace iText.Kernel.Colors.Gradients {
             else {
                 double xDiff = Math.Abs(corner.GetX() - center.GetX());
                 double yDiff = Math.Abs(corner.GetY() - center.GetY());
-                double aspectRatio = yDiff / xDiff;
-                double xR = Math.Sqrt(xDiff * xDiff + (yDiff / aspectRatio) * (yDiff / aspectRatio));
-                double yR = aspectRatio * xR;
+                double sqrtTwo = Math.Sqrt(2D);
+                double xR = sqrtTwo * xDiff;
+                double yR = sqrtTwo * yDiff;
                 return new double[] { xR, yR };
             }
         }

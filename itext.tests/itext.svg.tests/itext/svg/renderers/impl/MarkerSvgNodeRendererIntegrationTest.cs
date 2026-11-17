@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.IO;
 using iText.Svg.Processors;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
@@ -55,6 +56,14 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void MarkerPathAngleOrientTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "markerPathAngleOrient");
+        }
+
+        // TODO DEVSIX-10290 remove assertion when fixed and use convertAndCompareSinglePage
+        [NUnit.Framework.Ignore("DEVSIX-10290")]
+        [NUnit.Framework.Test]
+        public virtual void SelfReferentialMarkerCausesStackOverflowError() {
+            NUnit.Framework.Assert.Catch(typeof(OutOfMemoryException), () => ConvertToSinglePage(new FileInfo(SOURCE_FOLDER
+                 + "selfReferentialMarker.svg"), new FileInfo(DESTINATION_FOLDER + "selfReferentialMarker.pdf")));
         }
 
         [NUnit.Framework.Test]

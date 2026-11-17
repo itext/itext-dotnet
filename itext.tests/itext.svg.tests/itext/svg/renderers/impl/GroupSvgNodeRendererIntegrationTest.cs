@@ -21,6 +21,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.IO;
+using System.Text;
+using iText.Commons.Internal.Runtime;
 using iText.Svg.Processors.Impl;
 using iText.Svg.Renderers;
 using iText.Test;
@@ -58,6 +61,25 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void NestedGroupTest() {
             ConvertAndCompareSinglePage(SOURCE_FOLDER, DESTINATION_FOLDER, "nestedGroup");
+        }
+
+        // TODO DEVSIX-10276 remove assertion when fixed
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-10276")]
+        public virtual void DeeplyNestedSvgGroupsCauseStackOverflowError() {
+            StringBuilder svg = new StringBuilder("<svg xmlns=\"http://www.w3.org/2000/svg\" " + "width=\"100\" height=\"100\">"
+                );
+            for (int i = 0; i < 5000; i++) {
+                svg.Append("<g>");
+            }
+            svg.Append("<rect width=\"10\" height=\"10\" fill=\"red\"/>");
+            for (int i = 0; i < 5000; i++) {
+                svg.Append("</g>");
+            }
+            svg.Append("</svg>");
+            byte[] svgBytes = svg.ToString().GetBytes(System.Text.Encoding.UTF8);
+            NUnit.Framework.Assert.Catch(typeof(OutOfMemoryException), () => ConvertToSinglePage(new MemoryStream(svgBytes
+                ), new MemoryStream()));
         }
 
         [NUnit.Framework.Test]

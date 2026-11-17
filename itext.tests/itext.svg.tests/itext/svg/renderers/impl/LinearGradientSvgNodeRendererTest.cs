@@ -21,6 +21,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 using System;
+using System.IO;
 using iText.Kernel.Geom;
 using iText.Svg.Logs;
 using iText.Svg.Renderers;
@@ -43,6 +44,14 @@ namespace iText.Svg.Renderers.Impl {
         [NUnit.Framework.Test]
         public virtual void CircleTest() {
             ConvertAndCompare(SOURCE_FOLDER, DESTINATION_FOLDER, "circle");
+        }
+
+        // TODO DEVSIX-10290 remove assertion when fixed and use convertAndCompareSinglePage
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-10290")]
+        public virtual void SelfReferentialGradientCausesStackOverflowError() {
+            NUnit.Framework.Assert.Catch(typeof(OutOfMemoryException), () => ConvertToSinglePage(new FileInfo(SOURCE_FOLDER
+                 + "selfReferentialGradient.svg"), new FileInfo(DESTINATION_FOLDER + "selfReferentialGradient.pdf")));
         }
 
         [NUnit.Framework.Test]
