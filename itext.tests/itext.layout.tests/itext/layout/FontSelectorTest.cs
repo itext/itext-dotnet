@@ -336,6 +336,7 @@ namespace iText.Layout {
             aliasToFontName.Put(greekAlias, "FreeSans.ttf");
             aliasToFontName.Put(japaneseAlias, "Puritan2.otf");
             FontProvider provider = new FontProvider();
+            var r = provider.GetFontSet().AddFont(@"D:\VsCode\Workspace\Shrimp.Pdf\Shrimp.Pdf\Resources\Fonts\微软雅黑\msyh.ttc");
             foreach (KeyValuePair<String, String> e in aliasToFontName) {
                 provider.GetFontSet().AddFont(FONTS_FOLDER + e.Value, PdfEncodings.IDENTITY_H, e.Key);
             }

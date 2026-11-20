@@ -420,7 +420,8 @@ namespace iText.Kernel.Font {
         public override void WriteText(String text, PdfOutputStream stream) {
             StreamUtil.WriteHexedString(stream, ConvertToBytes(text));
         }
-
+        public int CIDFontType => cidFontType;
+        public bool IS_CID_FONT_TYPE_0() => cidFontType == CID_FONT_TYPE_0;
         public override GlyphLine CreateGlyphLine(String content) {
             IList<Glyph> glyphs = new List<Glyph>();
             if (cidFontType == CID_FONT_TYPE_0) {

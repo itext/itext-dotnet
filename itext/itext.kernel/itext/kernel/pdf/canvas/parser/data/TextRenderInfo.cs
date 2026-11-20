@@ -521,7 +521,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <summary>Split PDF string into array of single character PDF strings.</summary>
         /// <param name="string">PDF string to be split.</param>
         /// <returns>split PDF string.</returns>
-        private PdfString[] SplitString(PdfString @string) {
+        public PdfString[] SplitString(PdfString @string) {
             CheckGraphicsState();
             PdfFont font = gs.GetFont();
             if (font is PdfType0Font) {

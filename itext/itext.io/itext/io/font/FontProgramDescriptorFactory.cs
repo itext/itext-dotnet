@@ -125,7 +125,7 @@ namespace iText.IO.Font {
         }
 
         private static FontProgramDescriptor FetchTTCDescriptor(String baseName) {
-            int ttcSplit = StringNormalizer.ToLowerCase(baseName).IndexOf(".ttc,", StringComparison.Ordinal);
+            int ttcSplit = StringNormalizer.ToLowerCase(baseName).IndexOf(".ttc", StringComparison.Ordinal);
             if (ttcSplit > 0) {
                 String ttcName;
                 int ttcIndex;
